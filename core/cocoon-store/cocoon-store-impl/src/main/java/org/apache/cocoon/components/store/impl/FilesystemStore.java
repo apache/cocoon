@@ -32,24 +32,23 @@ import org.apache.excalibur.store.impl.AbstractFilesystemStore;
  *
  * @version $Id$
  */
-public final class FilesystemStore
-    extends AbstractFilesystemStore {
+public final class FilesystemStore extends AbstractFilesystemStore {
 
     private static final boolean USE_CACHE_DIRECTORY = false;
     private static final boolean USE_WORK_DIRECTORY = false;
     
+    /** The default logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    private Settings settings;
     private boolean useCacheDirectory = USE_CACHE_DIRECTORY;
     private boolean useWorkDirectory = USE_WORK_DIRECTORY;
     private String directory;
 
     protected File workDir;
     protected File cacheDir;
+
     
-    /** The default logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
-
-    private Settings settings;
-
     /**
      * @param settings
      */
@@ -72,23 +71,26 @@ public final class FilesystemStore
     }
 
     public void init() throws Exception {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
+        enableLogging(new CLLoggerWrapper(this.logger));
         this.workDir = new File(settings.getWorkDirectory());
         this.cacheDir = new File(settings.getCacheDirectory());
         
         try {
             if (this.useCacheDirectory) {
-                if (this.getLogger().isDebugEnabled())
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Using cache directory: " + cacheDir);
+                }
                 setDirectory(cacheDir);
             } else if (this.useWorkDirectory) {
-                if (this.getLogger().isDebugEnabled())
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Using work directory: " + workDir);
+                }
                 setDirectory(workDir);
             } else if (this.directory != null) {
                 this.directory = IOUtils.getContextFilePath(workDir.getPath(), this.directory);
-                if (this.getLogger().isDebugEnabled())
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Using directory: " + this.directory);
+                }
                 setDirectory(new File(this.directory));
             } else {
                 try {

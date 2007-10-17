@@ -124,9 +124,9 @@ public class EHDefaultStore implements Store {
     private boolean useCacheDirectory = USE_CACHE_DIRECTORY;
     private boolean useWorkDirectory = USE_WORK_DIRECTORY;
     private long diskExpiryThreadIntervalSeconds = DISK_EXPIRY_THREAD_INTERVAL_SECONDS;   
-    private MemoryStoreEvictionPolicy memoryStoreEvictionPolicy = null;
-    private RegisteredEventListeners registeredEventListeners = null;
-    private BootstrapCacheLoader bootstrapCacheLoader = null;
+    private MemoryStoreEvictionPolicy memoryStoreEvictionPolicy;
+    private RegisteredEventListeners registeredEventListeners;
+    private BootstrapCacheLoader bootstrapCacheLoader;
 
     private Settings settings;
     private StoreJanitor storeJanitor;
@@ -134,11 +134,12 @@ public class EHDefaultStore implements Store {
     private String directory;    
     private File workDir;
     private File cacheDir;
-    private String diskStorePath;  // The directory to be used a disk store path. Uses java.io.tmpdir if the argument is null.
+    /** The directory to be used a disk store path. Uses java.io.tmpdir if the argument is null. */
+    private String diskStorePath;
 
     /**
-     *  <li><code>directory</code> - Specify an alternative location of the disk store.
-     * @param directory
+     * <li><code>directory</code> Specify an alternative location of the disk store.
+     * @param directory Specify an alternative location of the disk store.
      */
     public void setDirectory(String directory) {
         this.directory = directory;
@@ -166,7 +167,7 @@ public class EHDefaultStore implements Store {
 
     /**
      * <code>maxMemobjects</code> (10000) - The maximum number of in-memory objects.
-     * @param maxMemobjects
+     * @param maxMemObjects
      */
     public void setMaxMemObjects(int maxMemObjects) {
         this.maxMemObjects = maxMemObjects;
@@ -325,8 +326,7 @@ public class EHDefaultStore implements Store {
     private static String getFullFilename(File file) {
         try {
             return file.getCanonicalPath();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return file.getAbsolutePath();
         }
     }
@@ -340,18 +340,18 @@ public class EHDefaultStore implements Store {
 
         try {
             if (this.useCacheDirectory) {
-                if (this.getLogger().isDebugEnabled()) {
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Using cache directory: " + cacheDir);
                 }
                 setDirectory(cacheDir);
             } else if (this.useWorkDirectory) {
-                if (this.getLogger().isDebugEnabled()) {
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Using work directory: " + workDir);
                 }
                 setDirectory(workDir);
             } else if (this.directory != null) {
                 this.directory = IOUtils.getContextFilePath(workDir.getPath(), this.directory);
-                if (this.getLogger().isDebugEnabled()) {
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Using directory: " + this.directory);
                 }
                 setDirectory(new File(this.directory));
@@ -370,7 +370,7 @@ public class EHDefaultStore implements Store {
         String config = org.apache.commons.io.IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_FILE));
         config = StringUtils.replace(config, "${diskstorepath}", this.diskStorePath);        
         this.cacheManager = CacheManager.create(new ByteArrayInputStream(config.getBytes("utf-8")));        
-        if(this.cacheManager.getCache(DEFAULT_CACHE_NAME) != null) {
+        if (this.cacheManager.getCache(DEFAULT_CACHE_NAME) != null) {
             instanceCount++;
             this.cacheName = DEFAULT_CACHE_NAME + "-" + instanceCount;
         } else {
@@ -396,17 +396,17 @@ public class EHDefaultStore implements Store {
                         this.maxDiskObjects);
         
         this.cacheManager.addCache(this.cache);
-        if(this.storeJanitor != null) {
+        if (this.storeJanitor != null) {
             storeJanitor.register(this);
         }
-        getLogger().info("EHCache cache \"" + this.cacheName + "\" initialized");
+        getLogger().info("EHCache cache '" + this.cacheName + "' initialized");
     }
 
     /**
      * Shutdown the CacheManager.
      */
     public void destroy() {
-        if(this.storeJanitor != null) {
+        if (this.storeJanitor != null) {
             storeJanitor.unregister(this);
         }        
         /*
@@ -423,13 +423,13 @@ public class EHDefaultStore implements Store {
         synchronized (this.cache) {
             if (Status.STATUS_ALIVE == this.cache.getStatus()) {
                 try {
-                    getLogger().info("Disposing EHCache cache \"" + this.cacheName + "\".");
+                    getLogger().info("Disposing EHCache cache '" + this.cacheName + "'.");
                     this.cacheManager.shutdown();
                 } catch (IllegalStateException e) {
-                    getLogger().error("Error disposing EHCache cache \"" + this.cacheName + "\".", e);
+                    getLogger().error("Error disposing EHCache cache '" + this.cacheName + "'.", e);
                 }
             } else {
-                getLogger().info("EHCache cache \"" + this.cacheName + "\" already disposed.");
+                getLogger().info("EHCache cache '" + this.cacheName + "' already disposed.");
             }
         }
     }
@@ -542,7 +542,7 @@ public class EHDefaultStore implements Store {
      * @see org.apache.excalibur.store.Store#keys()
      */
     public Enumeration keys() {
-        List keys = null;
+        List keys;
         try {
             keys = this.cache.getKeys();
         } catch (CacheException e) {
