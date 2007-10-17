@@ -16,15 +16,12 @@
  */
 package org.apache.cocoon.webservices;
 
+import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.handler.MessageContext;
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.rpc.server.ServletEndpointContext;
-import javax.xml.rpc.ServiceException;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-
-import org.apache.cocoon.components.axis.SoapServer; // or use Constants ?
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Base class for providing LogEnabled SOAP services.
@@ -41,9 +38,8 @@ import org.apache.cocoon.components.axis.SoapServer; // or use Constants ?
  *
  * @version $Id$
  */
-public abstract class AbstractLogEnabledService
-        extends AbstractLogEnabled
-        implements ServiceLifecycle {
+public abstract class AbstractLogEnabledService extends AbstractLogEnabled
+                                                implements ServiceLifecycle {
 
     // servlet endpoint context reference
     protected ServletEndpointContext m_endPointContext;
@@ -62,7 +58,6 @@ public abstract class AbstractLogEnabledService
      */
     public void init(final Object context) throws ServiceException {
         setContext(context);
-        setLogger();
     }
 
     /**
@@ -84,14 +79,6 @@ public abstract class AbstractLogEnabledService
         }
 
         m_context = m_endPointContext.getMessageContext();
-    }
-
-    /**
-     * Helper method to obtain the Avalon <code>Logger</code> object out of
-     * the context object and enable logging for this service.
-     */
-    private void setLogger() {
-        enableLogging((Logger) m_context.getProperty(SoapServer.LOGGER));
     }
 
     /**
