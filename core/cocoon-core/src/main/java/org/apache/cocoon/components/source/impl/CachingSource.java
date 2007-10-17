@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -39,9 +38,9 @@ import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.caching.IdentifierCacheKey;
-
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
 
@@ -137,7 +136,7 @@ public class CachingSource extends AbstractLogEnabled
 
     /**
      * Construct a new object.
-     * @param validityStrategy2 
+     * @param validityStrategy
      */
     public CachingSource(final String protocol,
                          final String uri,
@@ -297,7 +296,7 @@ public class CachingSource extends AbstractLogEnabled
      * @throws IOException  if an IO level error occured
      * @throws CascadingIOException  wraps all other exception types
      */
-    protected byte[] getXMLResponse() throws SAXException, IOException, CascadingIOException {
+    protected byte[] getXMLResponse() throws SAXException, IOException {
         CachedSourceResponse response = getResponse();
 
         try {
@@ -316,17 +315,17 @@ public class CachingSource extends AbstractLogEnabled
                 setResponse(response);
             }
         } catch (Exception e) {
-            if(!fail && this.previousResponse != null) {
+            if (!fail && this.previousResponse != null) {
                 response = cloneResponse(this.previousResponse);
-                setResponse(cloneResponse(response));       
-            } else { // rethrow exception
+                setResponse(cloneResponse(response));
+            } else {
+                // rethrow exception
                 if (e instanceof SAXException) {
                     throw (SAXException) e;
                 } else if (e instanceof IOException) {
                     throw (IOException) e;
-                } else if (e instanceof CascadingIOException) {
-                    throw (IOException) e;
                 }
+                throw new CascadingIOException(e);
             }
         }
 
@@ -389,12 +388,8 @@ public class CachingSource extends AbstractLogEnabled
     /**
      * Return an <code>InputStream</code> object to read from the source.
      */
-    public InputStream getInputStream() throws IOException, SourceException {
-        try {
-            return new ByteArrayInputStream(getBinaryResponse());
-        } catch (IOException e) {
-            throw new SourceException("Failure getting input stream", e);
-        }
+    public InputStream getInputStream() throws IOException {
+        return new ByteArrayInputStream(getBinaryResponse());
     }
 
     /**
@@ -523,7 +518,7 @@ public class CachingSource extends AbstractLogEnabled
      * @throws CascadingIOException
      */
     protected byte[] readXMLResponse(Source source, byte[] binary, ServiceManager manager)
-    throws SAXException, IOException, CascadingIOException {
+    throws SAXException, IOException {
         XMLizer xmlizer = null;
         try {
             XMLByteStreamCompiler serializer = new XMLByteStreamCompiler();
@@ -559,7 +554,7 @@ public class CachingSource extends AbstractLogEnabled
      * @throws SourceNotFoundException
      */
     protected byte[] readBinaryResponse(Source source)
-    throws IOException, SourceNotFoundException {
+    throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final byte[] buffer = new byte[2048];
         final InputStream inputStream = source.getInputStream();
@@ -583,7 +578,7 @@ public class CachingSource extends AbstractLogEnabled
         if (this.response == null) {
             return false;
         }
-        return this.validityStrategy.checkValidity(this.response, this.source, this.getExpiration());
+        return this.validityStrategy.checkValidity(this.response, this.source, getExpiration());
     }
 
     protected SourceValidity[] getCacheValidities() {
