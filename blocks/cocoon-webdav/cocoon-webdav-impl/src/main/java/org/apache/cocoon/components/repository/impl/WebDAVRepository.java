@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Properties;
-
 import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -29,24 +28,25 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.cocoon.components.repository.Repository;
-import org.apache.cocoon.components.repository.helpers.CredentialsToken;
-import org.apache.cocoon.components.repository.helpers.RepositoryTransactionHelper;
-import org.apache.cocoon.components.repository.helpers.RepositoryPropertyHelper;
-import org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper;
-import org.apache.cocoon.components.webdav.WebDAVUtil;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.io.IOUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.dom.DOMParser;
 import org.apache.webdav.lib.WebdavResource;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.repository.Repository;
+import org.apache.cocoon.components.repository.helpers.CredentialsToken;
+import org.apache.cocoon.components.repository.helpers.RepositoryPropertyHelper;
+import org.apache.cocoon.components.repository.helpers.RepositoryTransactionHelper;
+import org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper;
+import org.apache.cocoon.components.webdav.WebDAVUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -55,9 +55,11 @@ import org.xml.sax.SAXException;
 
 /**
  * A repository implementation for WebDAV.
+ *
+ * @version $Id$
  */
 public class WebDAVRepository extends AbstractLogEnabled
-implements Repository, Serviceable, Configurable, Initializable, Disposable {
+                              implements Repository, Serviceable, Configurable, Initializable, Disposable {
     
     /** The name of the repository location configuration element */
     public static final String REPO_BASE_CONF = "repo-base";
@@ -105,13 +107,6 @@ implements Repository, Serviceable, Configurable, Initializable, Disposable {
         this.propertyHelper = new WebDAVRepositoryPropertyHelper(this);
         this.transactionHelper = new WebDAVRepositoryTransactionHelper(this.credentials, this);
         this.versioningHelper = new WebDAVRepositoryVersioningHelper(this);
-        LifecycleHelper lh = new LifecycleHelper(this.getLogger(),
-                                                 null,
-                                                 this.manager,
-                                                 null);
-        lh.setupComponent(this.propertyHelper, true);
-        lh.setupComponent(this.transactionHelper, true);
-        lh.setupComponent(this.versioningHelper, true);
     }
 
     /* (non-Javadoc)

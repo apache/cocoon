@@ -19,17 +19,20 @@ package org.apache.cocoon.components.repository.impl;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.commons.httpclient.HttpException;
+
 import org.apache.cocoon.components.repository.helpers.RepositoryVersioningHelper;
 import org.apache.cocoon.components.webdav.WebDAVUtil;
-import org.apache.commons.httpclient.HttpException;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A versioning helper class
  * intended to be used by flowscripts or corresponding wrapper components.
+ *
+ * @version $Id$
  */
 public class WebDAVRepositoryVersioningHelper extends AbstractLogEnabled
-implements RepositoryVersioningHelper {
+                                              implements RepositoryVersioningHelper {
     
     /* The repository component */
     private WebDAVRepository repo;
@@ -39,7 +42,7 @@ implements RepositoryVersioningHelper {
      * 
      * @param repo  a reference to the WebDAVRepository object.
      */
-    public WebDAVRepositoryVersioningHelper (WebDAVRepository repo) {
+    public WebDAVRepositoryVersioningHelper(WebDAVRepository repo) {
         this.repo = repo;
     }
 
@@ -135,5 +138,4 @@ implements RepositoryVersioningHelper {
         //not yet implemented
         throw new UnsupportedOperationException();
     }
-
 }
