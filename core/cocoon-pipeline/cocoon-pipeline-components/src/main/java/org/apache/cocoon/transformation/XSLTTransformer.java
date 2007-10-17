@@ -390,7 +390,7 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
         result.setLexicalHandler(consumer);
         this.transformerHandler.setResult(result);
 
-        this.errorListener = new TraxErrorListener(getLogger(), this.inputSource.getURI());
+        this.errorListener = new TraxErrorListener(this.inputSource.getURI());
         this.transformerHandler.getTransformer().setErrorListener(this.errorListener);
     }
 
