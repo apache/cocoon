@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -29,6 +28,8 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceResolver;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Implementation of a {@link Source} that gets its content from
@@ -56,7 +57,7 @@ public class ZipSourceFactory extends AbstractLogEnabled
         this.manager = manager;
     }
 
-    public Source getSource(String location, Map parameters) throws IOException, MalformedURLException {
+    public Source getSource(String location, Map parameters) throws IOException {
         // Checks URL syntax
         int protocolEnd = location.indexOf(":");
         if (protocolEnd == -1) {
@@ -104,5 +105,4 @@ public class ZipSourceFactory extends AbstractLogEnabled
             this.manager.release(resolver);
         }
     }
-    
 }

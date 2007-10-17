@@ -19,7 +19,7 @@ package org.apache.cocoon.components.xslt;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.TransformerException;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationUtils;
 
@@ -30,9 +30,9 @@ import org.apache.cocoon.util.location.LocationUtils;
  * @version $Id$
  * @since 2.1.8
  */
-public class TraxErrorListener implements ErrorListener{
+public class TraxErrorListener extends AbstractLogEnabled
+                               implements ErrorListener {
 
-    private Logger logger;
     private String uri;
     
     /** The exception we had from warning() */
@@ -41,8 +41,8 @@ public class TraxErrorListener implements ErrorListener{
     /** The exception we had from error() or fatalError() */
     private TransformerException exception;
 
-    public TraxErrorListener(Logger logger, String uri) {
-        this.logger = logger;
+
+    public TraxErrorListener(String uri) {
         this.uri = uri;
     }
 
@@ -77,10 +77,11 @@ public class TraxErrorListener implements ErrorListener{
         // log levels. This can include also deprecation logs for system-defined stylesheets
         // using "DEPRECATED:WARN:Styling 'foo' is replaced by 'bar'".    
 
-        if (logger.isWarnEnabled()) {
+        if (getLogger().isWarnEnabled()) {
             Location loc = LocationUtils.getLocation(ex);
-            logger.warn(ex.getMessage() + " at "+ loc == null ? uri : loc.toString());
+            getLogger().warn(ex.getMessage() + " at " + (loc == null ? uri : loc.toString()));
         }
+
         // Keep the warning (see below)
         warningEx = ex;
     }

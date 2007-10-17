@@ -37,7 +37,7 @@ public abstract class BaseCachingProcessingPipeline extends AbstractProcessingPi
                                                     implements Disposable {
 
     /** This is the Cache holding cached responses */
-    protected Cache  cache;
+    protected Cache cache;
 
     /** The deserializer */
     protected XMLByteStreamInterpreter xmlDeserializer;

@@ -23,12 +23,13 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.util.MIMEUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
-import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.MIMEUtils;
 
 /**
  * @version $Id$
@@ -88,7 +89,7 @@ public class ZipSource extends AbstractLogEnabled
         }
     }
 
-    public InputStream getInputStream() throws IOException, SourceNotFoundException {
+    public InputStream getInputStream() throws IOException {
         ZipInputStream zipStream = new ZipInputStream(this.archive.getInputStream());
         try {
             ZipEntry entry = findEntry(zipStream);
