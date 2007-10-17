@@ -18,12 +18,7 @@ package org.apache.cocoon.components.axis;
 
 import java.io.File;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +28,6 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -54,11 +48,13 @@ import org.apache.axis.transport.http.ServletEndpointContextImpl;
 import org.apache.axis.utils.XMLUtils;
 import org.apache.cocoon.components.axis.providers.AvalonProvider;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.dom.DOMParser;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -80,8 +76,8 @@ import org.xml.sax.InputSource;
  * @version $Id$
  */
 public class SoapServerImpl extends AbstractLogEnabled
-    implements SoapServer, Serviceable, Configurable, Initializable,
-               Disposable, ThreadSafe {
+                            implements SoapServer, Serviceable, Configurable,
+                                       Initializable, Disposable, ThreadSafe {
 
     /**
      * Constant describing the default location of the server configuration file
@@ -210,7 +206,7 @@ public class SoapServerImpl extends AbstractLogEnabled
      *
      * @param config a <code>Configuration</code> instance
      * @exception ConfigurationException if a configuration error occurs
-     * @exception ContextException if a context error occurs
+     * @exception ConfigurationException ext error occurs
      */
     private void setAttachmentDir(final Configuration config)
     throws ConfigurationException {
@@ -235,7 +231,7 @@ public class SoapServerImpl extends AbstractLogEnabled
      *
      * @param config a <code>Configuration</code> instance
      * @exception ConfigurationException if a configuration error occurs
-     * @exception ContextException if a context error occurs
+     * @exception ConfigurationException if a context error occurs
      */
     private void setJWSDir(final Configuration config)
     throws ConfigurationException {
@@ -334,8 +330,7 @@ public class SoapServerImpl extends AbstractLogEnabled
         }
 
         // convert the list of descriptors to an array, for easier iteration
-        m_descriptors =
-            (WSDDDocument[]) descriptors.toArray(new WSDDDocument[]{});
+        m_descriptors = (WSDDDocument[]) descriptors.toArray(new WSDDDocument[descriptors.size()]);
     }
 
     /* (non-Javadoc)

@@ -25,14 +25,10 @@ import org.apache.axis.MessageContext;
 /**
  * <code>SoapServer</code> interface.
  *
- * <p>
- *  This interface describes the operations provided by any Axis
- *  Soap Server implementations.
- * </p>
+ * <p>This interface describes the operations provided by any Axis
+ * Soap Server implementations.</p>
  *
- * <p>
- *  Example use:
- *
+ * <p>Example use:
  *  <pre>
  *    SoapServer server = (SoapServer) manager.lookup(SoapServer.ROLE);
  *    MessageContext message = server.createMessageContext(req, res, con);
@@ -53,6 +49,7 @@ public interface SoapServer {
 
     /**
      * Constant used to key message context entries for an avalon logger
+     * @deprecated Use commons logging instead.
      */
     String LOGGER = "axis-message-context-logger";
 
@@ -64,8 +61,7 @@ public interface SoapServer {
      * @param message a <code>MessageContext</code> instance
      * @exception Exception if an error occurs
      */
-    void invoke(MessageContext message)
-        throws Exception;
+    void invoke(MessageContext message) throws Exception;
 
     /**
      * Method to create a new message context, based on this Axis
@@ -77,9 +73,7 @@ public interface SoapServer {
      * @param con a <code>ServletContext</code> instance
      * @return a <code>MessageContext</code> instance
      */
-    MessageContext createMessageContext(
-        HttpServletRequest req,
-        HttpServletResponse res,
-        ServletContext con
-    );
+    MessageContext createMessageContext(HttpServletRequest req,
+                                        HttpServletResponse res,
+                                        ServletContext con);
 }
