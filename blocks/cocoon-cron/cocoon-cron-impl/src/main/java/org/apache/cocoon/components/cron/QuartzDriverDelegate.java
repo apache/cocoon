@@ -16,9 +16,17 @@
  */
 package org.apache.cocoon.components.cron;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 import org.quartz.Calendar;
 import org.quartz.CronTrigger;
@@ -30,12 +38,6 @@ import org.quartz.impl.jdbcjobstore.DriverDelegate;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.utils.Key;
 import org.quartz.utils.TriggerStatus;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Wrapper around another DriverDelegate instance.
@@ -53,14 +55,14 @@ import java.util.Set;
  * @version $Id$
  * @since 2.1.6
  */
-public class QuartzDriverDelegate implements DriverDelegate {
-    private Logger logger;
+public class QuartzDriverDelegate extends AbstractLogEnabled
+                                  implements DriverDelegate {
+
     private ServiceManager manager;
     private Context context;
     private DriverDelegate delegate;
 
-    public QuartzDriverDelegate(Logger logger, ServiceManager manager, Context context, DriverDelegate delegate) {
-        this.logger = logger;
+    public QuartzDriverDelegate(ServiceManager manager, Context context, DriverDelegate delegate) {
         this.manager = manager;
         this.context = context;
         this.delegate = delegate;
@@ -87,7 +89,7 @@ public class QuartzDriverDelegate implements DriverDelegate {
     private void removeTransientData(JobDetail job) {
         JobDataMap map = job.getJobDataMap();
         if (map != null) {
-            this.logger.debug("QuartzDriverDelegate: Removing transient data");
+            getLogger().debug("QuartzDriverDelegate: Removing transient data");
             map.remove(QuartzJobScheduler.DATA_MAP_LOGGER);
             map.remove(QuartzJobScheduler.DATA_MAP_MANAGER);
             map.remove(QuartzJobScheduler.DATA_MAP_CONTEXT);
@@ -102,8 +104,8 @@ public class QuartzDriverDelegate implements DriverDelegate {
         if (job != null) {
             JobDataMap map = job.getJobDataMap();
             if (map != null) {
-                this.logger.debug("QuartzDriverDelegate: Adding transient data");
-                map.put(QuartzJobScheduler.DATA_MAP_LOGGER, this.logger);
+                getLogger().debug("QuartzDriverDelegate: Adding transient data");
+                map.put(QuartzJobScheduler.DATA_MAP_LOGGER, new CLLoggerWrapper(getLogger()));
                 map.put(QuartzJobScheduler.DATA_MAP_MANAGER, this.manager);
                 map.put(QuartzJobScheduler.DATA_MAP_CONTEXT, this.context);
             }
