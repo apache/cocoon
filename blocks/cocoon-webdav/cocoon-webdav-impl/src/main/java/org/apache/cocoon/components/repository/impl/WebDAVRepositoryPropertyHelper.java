@@ -21,24 +21,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.xml.transform.OutputKeys;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.commons.httpclient.HttpException;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.repository.helpers.RepositoryPropertyHelper;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.cocoon.components.webdav.WebDAVUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.XMLUtils;
-import org.apache.commons.httpclient.HttpException;
+
 import org.w3c.dom.Node;
 
 /**
  * A property helper class for the WebDAV repository
  * intended to be used by flowscripts or corresponding wrapper components.
+ *
+ * @version $Id$
  */
 public class WebDAVRepositoryPropertyHelper extends AbstractLogEnabled
-implements RepositoryPropertyHelper {
+                                            implements RepositoryPropertyHelper {
     
     /* The repository component */
     private WebDAVRepository repo;
@@ -159,5 +162,4 @@ implements RepositoryPropertyHelper {
 
         return false;
     }
-
 }

@@ -18,18 +18,21 @@ package org.apache.cocoon.components.repository.impl;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.commons.httpclient.HttpException;
+
 import org.apache.cocoon.components.repository.helpers.CredentialsToken;
 import org.apache.cocoon.components.repository.helpers.RepositoryTransactionHelper;
 import org.apache.cocoon.components.webdav.WebDAVUtil;
-import org.apache.commons.httpclient.HttpException;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A transaction an locking helper class
  * intended to be used by flowscripts or corresponding wrapper components.
+ *
+ * @version $Id$
  */
 public class WebDAVRepositoryTransactionHelper extends AbstractLogEnabled
-implements RepositoryTransactionHelper {
+                                               implements RepositoryTransactionHelper {
     
     /* The repository component */
     private WebDAVRepository repo;
@@ -138,5 +141,4 @@ implements RepositoryTransactionHelper {
     public boolean supportsLocking() {
         return true;
     }
-
 }
