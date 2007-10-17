@@ -16,28 +16,25 @@
  */
 package org.apache.cocoon.components.source.impl;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import java.io.IOException;
+import java.util.Map;
+
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Map;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A factory for 'blob:' sources.
  *
  * @version $Id$
  */
-public class BlobSourceFactory
-  extends AbstractLogEnabled
-  implements Serviceable, SourceFactory, ThreadSafe {
+public class BlobSourceFactory extends AbstractLogEnabled
+                               implements Serviceable, SourceFactory, ThreadSafe {
     
     /** The ServiceManager instance */
     protected ServiceManager manager;
@@ -46,10 +43,8 @@ public class BlobSourceFactory
      * Get a <code>Source</code> object.
      * @param parameters This is optional.
      */
-    public Source getSource(String location, Map parameters)
-        throws MalformedURLException, IOException, SourceException {
+    public Source getSource(String location, Map parameters) throws IOException {
         BlobSource blob = new BlobSource(location);
-        this.setupLogger(blob);
         blob.service(this.manager);
         return blob;
     }
@@ -67,6 +62,4 @@ public class BlobSourceFactory
 	public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
 	}
-
 }
-    

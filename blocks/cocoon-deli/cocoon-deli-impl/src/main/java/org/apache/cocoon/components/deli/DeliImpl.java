@@ -26,7 +26,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -41,23 +40,24 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.xml.dom.DOMParser;
+
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Request;
-import org.apache.excalibur.xml.dom.DOMParser;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 import com.hp.hpl.deli.Profile;
 import com.hp.hpl.deli.ProfileAttribute;
 import com.hp.hpl.deli.Workspace;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 /**
  * Allows the use of <a href="http://www-uk.hpl.hp.com/people/marbut/">DELI</a>
@@ -70,8 +70,8 @@ import com.hp.hpl.deli.Workspace;
  * @version $Id$
  */
 public final class DeliImpl extends AbstractLogEnabled
-    implements Parameterizable, Deli, Serviceable, Disposable, Initializable,
-               ThreadSafe, Contextualizable {
+                            implements Parameterizable, Deli, Serviceable, Disposable,
+                                       Initializable, ThreadSafe, Contextualizable {
 
     /** The name of the main DELI configuration file */
     private String deliConfig = "deli/config/deliConfig.xml";
@@ -141,17 +141,14 @@ public final class DeliImpl extends AbstractLogEnabled
      * @throws	ServletException
      * @throws	Exception
      */
-    public Profile getProfile(Request theRequest)
-        throws IOException, ServletException, Exception {
-        Profile theProfile = null;
+    public Profile getProfile(Request theRequest) throws IOException, ServletException, Exception {
         try {
             CocoonServletRequest servletRequest = new CocoonServletRequest(theRequest);
-            theProfile = new Profile(servletRequest);
+            return new Profile(servletRequest);
         } catch (Exception e) {
             getLogger().error("DELI Exception while retrieving profile: ", e);
             throw e;
         }
-        return theProfile;
     }
 
     /** Convert a profile stored as a vector of profile attributes
@@ -161,7 +158,7 @@ public final class DeliImpl extends AbstractLogEnabled
      * @return	The DOM tree.
      */
     public Document getUACapabilities(Profile theProfile) throws Exception {
-        Document document = null;
+        Document document;
         try {
             Element rootElement;
             Element attributeNode;
@@ -172,32 +169,31 @@ public final class DeliImpl extends AbstractLogEnabled
             rootElement = document.createElementNS(null, "browser");
             document.appendChild(rootElement);
 
-            Iterator profileIter = theProfile.iterator();
-            while (profileIter.hasNext()) {
-                ProfileAttribute p = (ProfileAttribute)profileIter.next();
+            Iterator i = theProfile.iterator();
+            while (i.hasNext()) {
+                ProfileAttribute p = (ProfileAttribute) i.next();
                 attributeNode = document.createElementNS(null, p.getAttribute());
                 rootElement.appendChild(attributeNode);
                 Vector attributeValue = p.get();
-		if (attributeValue != null)
-		{
-			Iterator complexValueIter = attributeValue.iterator();
-			if (p.getCollectionType().equals("Simple")) {
-				// Simple attribute
-				String value = (String)complexValueIter.next();
-				text = document.createTextNode(value);
-				attributeNode.appendChild(text);
-			} else {
-				// Complex attribute e.g. Seq or Bag
-				while (complexValueIter.hasNext()) {
-					String value = (String)complexValueIter.next();
-					complexAttributeNode = document.createElementNS(null, "li");
-					attributeNode.appendChild(complexAttributeNode);
-					text = document.createTextNode(value);
-					complexAttributeNode.appendChild(text);
-				}
-			}
+                if (attributeValue != null) {
+                    Iterator complexValueIter = attributeValue.iterator();
+                    if (p.getCollectionType().equals("Simple")) {
+                        // Simple attribute
+                        String value = (String)complexValueIter.next();
+                        text = document.createTextNode(value);
+                        attributeNode.appendChild(text);
+                    } else {
+                        // Complex attribute e.g. Seq or Bag
+                        while (complexValueIter.hasNext()) {
+                            String value = (String)complexValueIter.next();
+                            complexAttributeNode = document.createElementNS(null, "li");
+                            attributeNode.appendChild(complexAttributeNode);
+                            text = document.createTextNode(value);
+                            complexAttributeNode.appendChild(text);
+                        }
                     }
                 }
+            }
         } catch (Exception e) {
             getLogger().error("DELI Exception while converting profile to DOM fragment: ", e);
             throw e;
@@ -206,7 +202,7 @@ public final class DeliImpl extends AbstractLogEnabled
     }
 
     public Document getUACapabilities(Request theRequest)
-        throws IOException, Exception {
+    throws IOException, Exception {
         return this.getUACapabilities(this.getProfile(theRequest));
     }
 

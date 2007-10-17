@@ -23,16 +23,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -40,6 +35,11 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.XMLizable;
+
+import org.apache.cocoon.CascadingIOException;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.xml.IncludeXMLConsumer;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -151,16 +151,11 @@ public class XMLDBSource extends AbstractLogEnabled
     /**
      * The constructor.
      *
-     * @param logger the Logger instance.
-     * @param user username 
+     * @param user username
      * @param password password
      * @param srcUrl the URL being queried.
      */
-    public XMLDBSource(Logger logger,
-                       String user, String password,
-                       String srcUrl) {
-        enableLogging(logger);
-
+    public XMLDBSource(String user, String password, String srcUrl) {
         this.user = user;
         this.password = password;
 
@@ -507,7 +502,7 @@ public class XMLDBSource extends AbstractLogEnabled
      * Return an {@link OutputStream} to write to. This method expects an XML document to be
      * written in that stream. To create a binary resource, use {@link #getBinaryOutputStream()}.
      */
-    public OutputStream getOutputStream() throws IOException, MalformedURLException {
+    public OutputStream getOutputStream() throws IOException {
         if (query != null) {
             throw new MalformedURLException("Cannot modify a resource that includes an XPATH expression");
         }
@@ -518,7 +513,7 @@ public class XMLDBSource extends AbstractLogEnabled
     /**
      * Return an {@link OutputStream} to write data to a binary resource.
      */
-    public OutputStream getBinaryOutputStream() throws IOException, MalformedURLException {
+    public OutputStream getBinaryOutputStream() throws IOException {
         if (query != null) {
             throw new MalformedURLException("Cannot modify a resource that includes an XPATH expression");
         }
@@ -600,9 +595,7 @@ public class XMLDBSource extends AbstractLogEnabled
                 service.removeCollection(collection.getName());
                 close(parent);
             }
-        } catch (SourceException se) {
-            throw se;
-        } catch (XMLDBException xdbe) {
+        } catch (XMLDBException e) {
             throw new SourceException("Could not delete " + getURI());
         } finally {
             cleanup();
@@ -656,7 +649,7 @@ public class XMLDBSource extends AbstractLogEnabled
             baos.write(b, off, len);
         }
 
-        public void close() throws IOException, SourceException {
+        public void close() throws IOException {
             if (!isClosed) {
                 writeOutputStream(baos, this.binary);
                 baos.close();
@@ -683,8 +676,6 @@ public class XMLDBSource extends AbstractLogEnabled
     public void makeCollection() throws SourceException {
         try {
             createCollection(url);
-        } catch (SourceException e) {
-            throw e;
         } catch (XMLDBException e) {
             throw new SourceException("Cannot make collection with " + getURI());
         }
@@ -713,15 +704,13 @@ public class XMLDBSource extends AbstractLogEnabled
 
             ArrayList children = new ArrayList(childColl.length + childRes.length);
             for (int i = 0; i < childColl.length; i++) {
-                children.add(new XMLDBSource(getLogger(), user, password, url + childColl[i]));
+                children.add(new XMLDBSource(user, password, url + childColl[i]));
             }
             for (int i = 0; i < childRes.length; i++) {
-                children.add(new XMLDBSource(getLogger(), user, password, url + childRes[i]));
+                children.add(new XMLDBSource(user, password, url + childRes[i]));
             }
             
             return children;
-        } catch (SourceException e) {
-            throw e;
         } catch (XMLDBException e) {
             throw new SourceException("Cannot list children of " + getURI());
         } finally {
@@ -734,7 +723,7 @@ public class XMLDBSource extends AbstractLogEnabled
             throw new SourceException("Resource at " + url + " can not have child resources.");
         }
 
-        return new XMLDBSource(getLogger(), user, password, url + name);
+        return new XMLDBSource(user, password, url + name);
     }
 
     public String getName() {
@@ -749,9 +738,9 @@ public class XMLDBSource extends AbstractLogEnabled
     public Source getParent() throws SourceException {
         if (resName == null) {
             int pos = colPath.lastIndexOf('/');
-            return new XMLDBSource(getLogger(), user, password, colPath.substring(0, pos + 1));
+            return new XMLDBSource(user, password, colPath.substring(0, pos + 1));
         }
 
-        return new XMLDBSource(getLogger(), user, password, colPath);
+        return new XMLDBSource(user, password, colPath);
     }
 }

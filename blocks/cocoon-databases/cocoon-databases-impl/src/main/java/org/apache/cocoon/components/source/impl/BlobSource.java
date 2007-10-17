@@ -31,7 +31,6 @@ import java.sql.Types;
 import java.util.Iterator;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
@@ -41,6 +40,7 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
 
 import org.apache.cocoon.CascadingIOException;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A <code>Source</code> that takes its content in a single JDBC column. Any
@@ -151,7 +151,7 @@ public class BlobSource extends AbstractLogEnabled
     /**
      * Get the input stream for this source.
      */
-    public InputStream getInputStream() throws IOException, SourceException {
+    public InputStream getInputStream() throws IOException {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Opening stream for datasource " + this.datasourceName +
                 ", table " + this.tableName + ", column " + this.columnName +

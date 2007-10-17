@@ -17,28 +17,27 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.HttpsURL;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A factory for WebDAV sources
  *
  * @version $Id$
 */
-public class WebDAVSourceFactory extends AbstractLogEnabled 
-implements SourceFactory, Configurable, ThreadSafe {
+public class WebDAVSourceFactory extends AbstractLogEnabled
+                                 implements SourceFactory, Configurable, ThreadSafe {
 
     private String protocol;
     private boolean secure;
@@ -58,8 +57,7 @@ implements SourceFactory, Configurable, ThreadSafe {
      * Get a <code>Source</code> object.
      * @param parameters This is optional.
      */
-    public Source getSource(String location, Map parameters)
-        throws MalformedURLException, IOException, SourceException {
+    public Source getSource(String location, Map parameters) throws IOException {
         
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Creating source object for " + location);
@@ -77,7 +75,7 @@ implements SourceFactory, Configurable, ThreadSafe {
             url = new HttpURL("http://" + location);
         }
         
-        return WebDAVSource.newWebDAVSource(url, this.protocol, getLogger());
+        return WebDAVSource.newWebDAVSource(url, this.protocol);
     }
 
     public void release(Source source) {

@@ -17,17 +17,17 @@
 package org.apache.cocoon.components.jsp;
 
 import java.io.IOException;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Allows a Servlet or JSP to be used as a generator.
@@ -40,7 +40,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * @version $Id$
  */
 public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
-    implements JSPEngine, Parameterizable, ThreadSafe {
+                                                 implements JSPEngine, Parameterizable, ThreadSafe {
 
     /**
      * 'servlet-name' configuration parameter name for specifying 
@@ -102,13 +102,13 @@ public class JSPEngineImplNamedDispatcherInclude extends AbstractLogEnabled
                              HttpServletRequest servletRequest,
                              HttpServletResponse servletResponse,
                              ServletContext servletContext)
-        throws IOException, ServletException, Exception {
+    throws IOException, ServletException, Exception {
         
         JSPEngineServletOutputStream output = new JSPEngineServletOutputStream();
         JSPEngineServletRequest request = new JSPEngineServletRequest(servletRequest,url);
         JSPEngineServletResponse response = new JSPEngineServletResponse(servletResponse,output);
         
-        byte[] bytes = null;
+        byte[] bytes;
         
         // dispatch to the named servlet
         RequestDispatcher rd = servletContext.getNamedDispatcher(servletName);

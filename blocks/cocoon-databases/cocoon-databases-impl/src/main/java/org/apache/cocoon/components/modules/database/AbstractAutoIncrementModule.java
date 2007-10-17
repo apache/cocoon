@@ -21,8 +21,8 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.HashMap;
 
 /**
@@ -33,13 +33,13 @@ import org.apache.cocoon.util.HashMap;
  * @version $Id$
  */
 public abstract class AbstractAutoIncrementModule extends AbstractLogEnabled
-    implements AutoIncrementModule, Configurable, Disposable {
+                                                  implements AutoIncrementModule, Configurable, Disposable {
 
     /**
      * Stores (global) configuration parameters as <code>key</code> /
      * <code>value</code> pairs.
      */
-    protected HashMap settings = null;
+    protected HashMap settings;
 
     /**
      * Configures the database access module.
