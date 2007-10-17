@@ -32,24 +32,26 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.thread.RunnableManager;
 import org.apache.cocoon.thread.ThreadPool;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.impl.DirectSchedulerFactory;
 import org.quartz.impl.jdbcjobstore.InvalidConfigurationException;
 import org.quartz.impl.jdbcjobstore.JobStoreSupport;
@@ -598,8 +600,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
                                                    blockPolicy,
                                                    m_shutdownGraceful,
                                                    shutdownWaitTimeMs);
-        final QuartzThreadPool pool = new QuartzThreadPool(this.executor);
-        return pool;
+        return new QuartzThreadPool(this.executor);
     }
 
     /**
@@ -642,11 +643,11 @@ public class QuartzJobScheduler extends AbstractLogEnabled
             return new RAMJobStore();
         }
 
-        JobStoreSupport store = null;
+        JobStoreSupport store;
         if (type.equals("tx")) {
-            store = new QuartzJobStoreTX(getLogger(), this.manager, this.context);
+            store = new QuartzJobStoreTX(this.manager, this.context);
         } else if (type.equals("cmt")) {
-            store = new QuartzJobStoreCMT(getLogger(), this.manager, this.context);
+            store = new QuartzJobStoreCMT(this.manager, this.context);
         } else {
             throw new ConfigurationException("Unknown store type: " + type);
         }
@@ -742,7 +743,8 @@ public class QuartzJobScheduler extends AbstractLogEnabled
      *
      * @version $Id$
      */
-    private static class QuartzThreadPool extends AbstractLogEnabled implements org.quartz.spi.ThreadPool {
+    private static class QuartzThreadPool extends AbstractLogEnabled
+                                          implements org.quartz.spi.ThreadPool {
         /** Our executor thread pool */
         private ThreadPool executor;
 

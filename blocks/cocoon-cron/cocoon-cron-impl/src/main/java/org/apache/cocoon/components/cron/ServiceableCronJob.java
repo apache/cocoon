@@ -16,22 +16,21 @@
  */
 package org.apache.cocoon.components.cron;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 
 /**
  * Serviceable CronJob
  *
- * @version $Id$
- *
  * @since 2.1.4
+ * @version $Id$
  */
 public abstract class ServiceableCronJob extends AbstractLogEnabled
-    implements CronJob, Serviceable {
-    
+                                         implements CronJob, Serviceable {
 
     /** The service manager */
     protected ServiceManager manager;
@@ -40,6 +39,4 @@ public abstract class ServiceableCronJob extends AbstractLogEnabled
 	public void service(ServiceManager manager) throws ServiceException {
 		this.manager = manager;
 	}
-
-    
 }
