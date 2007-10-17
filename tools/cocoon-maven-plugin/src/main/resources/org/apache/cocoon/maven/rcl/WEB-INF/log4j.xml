@@ -16,46 +16,45 @@
   limitations under the License.
 -->
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-  <!-- This is a sample configuration for log4j.
-       It simply just logs everything into a single
-       log file.
-       Note, that you can use properties for value substitution.
-  -->
-  <appender name="COCOON_DEFAULT" class="org.apache.log4j.FileAppender">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <!--
+    - This is a sample configuration for log4j.
+    - It simply just logs everything into a single log file.
+    - Note, that you can use properties for value substitution.
+    -->
+  <appender name="CORE" class="org.apache.log4j.FileAppender">
     <param name="File"   value="./target/work/log/log4j.log"/>
     <param name="Append" value="true"/>
     <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{ISO8601} %t %-5p %c{2} - %m%n"/>
+      <param name="ConversionPattern" value="%d %t %-5p %c{2} - %m%n"/>
     </layout>
   </appender>
 
   $if(useConsoleAppender)$
-  <appender name="COCOON_DEFAULT_CONSOLE" class="org.apache.log4j.ConsoleAppender">
+  <appender name="CORE_CONSOLE" class="org.apache.log4j.ConsoleAppender">
     <layout class="org.apache.log4j.PatternLayout">
-        <param name="ConversionPattern" value="%t %-5p %c{2} - %m%n"/>
+      <param name="ConversionPattern" value="%d %-5p %t %c - %m%n"/>
     </layout>
   </appender>
 
   $endif$
   $if(useSocketAppender)$
-  <appender name="COCOON_DEFAULT_SOCKET" class="org.apache.log4j.SocketAppender">
+  <appender name="CORE_SOCKET" class="org.apache.log4j.SocketAppender">
     <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%t %-5p %c{2} - %m%n"/>
+      <param name="ConversionPattern" value="%d %-5p %t %c - %m%n"/>
     </layout>
   </appender>
 
   $endif$
   <root>
     <priority value="\${org.apache.cocoon.log4j.loglevel}"/>
-    <appender-ref ref="COCOON_DEFAULT" />
+    <appender-ref ref="CORE" />
   $if(useConsoleAppender)$
-    <appender-ref ref="COCOON_DEFAULT_CONSOLE" />
+    <appender-ref ref="CORE_CONSOLE"/>
   $endif$
   $if(useConsoleAppender)$
-    <appender-ref ref="COCOON_DEFAULT_SOCKET" />
+    <appender-ref ref="CORE_SOCKET"/>
   $endif$
   </root>
-
 </log4j:configuration>
