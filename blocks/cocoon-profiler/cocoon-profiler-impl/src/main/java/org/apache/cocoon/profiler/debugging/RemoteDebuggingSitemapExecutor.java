@@ -26,12 +26,13 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
+
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.profiler.Profiler;
 import org.apache.cocoon.components.profiler.ProfilerResult;
@@ -47,9 +48,9 @@ import org.apache.cocoon.selection.SwitchSelector;
 import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
-import org.apache.excalibur.source.Source;
 
 /**
  * Sample sitemap executor that prints out everything to a logger
@@ -57,9 +58,9 @@ import org.apache.excalibur.source.Source;
  * @since 2.2
  * @version $Id$
  */
-public class RemoteDebuggingSitemapExecutor 
-    extends AbstractLogEnabled
-    implements ThreadSafe, SitemapExecutor, Serviceable, Contextualizable {
+public class RemoteDebuggingSitemapExecutor extends AbstractLogEnabled
+                                            implements ThreadSafe, SitemapExecutor, Serviceable,
+                                                       Contextualizable {
 
     protected ServiceManager manager;
     protected Context        context;
@@ -225,7 +226,6 @@ public class RemoteDebuggingSitemapExecutor
                     debugger = new Debugger();
                     try {
                         debugger.setDebugInfo(value);
-                        ContainerUtil.enableLogging(debugger, getLogger());
                         ContainerUtil.contextualize(debugger, this.context);
                         ContainerUtil.service(debugger, this.manager);
                         ContainerUtil.initialize(debugger);
@@ -247,7 +247,7 @@ public class RemoteDebuggingSitemapExecutor
             org.apache.excalibur.source.SourceResolver resolver = null;
             Source src = null;
             try {
-                resolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
+                resolver = (org.apache.excalibur.source.SourceResolver) this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
                 src = resolver.resolveURI(source);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 InputStream inputStream = src.getInputStream();
@@ -260,13 +260,13 @@ public class RemoteDebuggingSitemapExecutor
                 baos.close();
                 StringBuffer buf = new StringBuffer("<sitemap src=\"");
                 buf.append(source).append("\">\n");
-                buf.append(new String(baos.toString("utf-8")));
+                buf.append(baos.toString("utf-8"));
                 buf.append("\n</sitemap>\n");
                 debugger.send(buf.toString());
             } catch (Exception ignore ) {
                 // we ignore this for now
             } finally {
-                if ( source != null ) {
+                if (source != null) {
                     resolver.release(src);
                 }
                 this.manager.release(resolver);

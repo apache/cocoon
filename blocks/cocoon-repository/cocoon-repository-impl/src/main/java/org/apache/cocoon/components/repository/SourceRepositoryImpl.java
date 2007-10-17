@@ -19,7 +19,6 @@ package org.apache.cocoon.components.repository;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -32,13 +31,15 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.TraversableSource;
 
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 /**
  * SourceRepository implementation.
  * 
  * @version $Id$
  */
-public class SourceRepositoryImpl extends AbstractLogEnabled 
-implements Serviceable, ThreadSafe, SourceRepository {
+public class SourceRepositoryImpl extends AbstractLogEnabled
+                                  implements Serviceable, ThreadSafe, SourceRepository {
     
     private RepositoryInterceptor m_interceptor = new RepositoryInterceptorBase(){};
     private SourceResolver m_resolver;
@@ -59,7 +60,7 @@ implements Serviceable, ThreadSafe, SourceRepository {
     
     // ---------------------------------------------------- repository operations
     
-    public int save(String in, String out) throws IOException, SourceException {
+    public int save(String in, String out) throws IOException {
         
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("save: "+in+"/"+out);
@@ -126,7 +127,7 @@ implements Serviceable, ThreadSafe, SourceRepository {
         
     }
     
-    public int makeCollection(String location) throws IOException, SourceException {
+    public int makeCollection(String location) throws IOException {
         
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("makeCollection: " + location);
@@ -184,7 +185,7 @@ implements Serviceable, ThreadSafe, SourceRepository {
      * @return  a http status code describing the exit status.
      * @throws IOException
      */
-    public int remove(String location) throws IOException, SourceException {
+    public int remove(String location) throws IOException {
         
         Source source = null;
         try {
@@ -216,40 +217,31 @@ implements Serviceable, ThreadSafe, SourceRepository {
         }
         
         if (!(source instanceof ModifiableSource)) {
-            final String message = 
-                "Conflict in remove(): source is not modifiable";
-            getLogger().warn(message);
+            getLogger().warn("Conflict in remove(): source is not modifiable");
             return STATUS_CONFLICT;         
         }
         
         if (source instanceof TraversableSource) {
             if (((TraversableSource) source).isCollection()) {
-                int status = STATUS_OK;
-                final Iterator iter = ((TraversableSource) source).getChildren().iterator();
-                while (iter.hasNext()) {
-                    Source child = null;
-                    try {
-                        status = remove((Source) iter.next());
-                        if (status != STATUS_OK) {
-                            return status;
-                        }
-                    }
-                    finally {
-                        if (child != null) {
-                            m_resolver.release(child);
-                        }
+                final Iterator i = ((TraversableSource) source).getChildren().iterator();
+                while (i.hasNext()) {
+                    int status = remove((Source) i.next());
+                    if (status != STATUS_OK) {
+                        return status;
                     }
                 }
             }
         }
+
         m_interceptor.preRemoveSource(source);
         ((ModifiableSource) source).delete();
         m_interceptor.postRemoveSource(source);
+
         return STATUS_OK;
     }
     
     public int move(String from, String to, boolean recurse, boolean overwrite) 
-    throws IOException, SourceException {
+    throws IOException {
         
         int status = doCopy(from,to,recurse,overwrite);
         if (status == STATUS_CREATED || status == STATUS_NO_CONTENT) {
@@ -261,18 +253,17 @@ implements Serviceable, ThreadSafe, SourceRepository {
     }
     
     public int copy(String from, String to, boolean recurse, boolean overwrite) 
-    throws IOException, SourceException {
-        
+    throws IOException {
+
         return doCopy(from,to,recurse,overwrite);
-        
     }
     
     private int doCopy(String from, String to, boolean recurse, boolean overwrite) 
     throws IOException {
         
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("copy: " + from + " -> " + to 
-                + " (recurse=" + recurse + ", overwrite=" + overwrite + ")");
+            getLogger().debug("copy: " + from + " -> " + to +
+                              " (recurse=" + recurse + ", overwrite=" + overwrite + ")");
         }
         
         if (from != null && from.equals(to)) {
@@ -352,7 +343,7 @@ implements Serviceable, ThreadSafe, SourceRepository {
         
         if (source instanceof TraversableSource) {
             final TraversableSource origin = (TraversableSource) source;
-            ModifiableTraversableSource target = null;
+            ModifiableTraversableSource target;
             if (origin.isCollection()) {
                 if (!(destination instanceof ModifiableTraversableSource)) {
                     final String message = "copy() is forbidden: " +

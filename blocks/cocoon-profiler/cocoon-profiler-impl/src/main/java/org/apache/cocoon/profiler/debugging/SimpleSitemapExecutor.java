@@ -19,9 +19,9 @@ package org.apache.cocoon.profiler.debugging;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
@@ -32,6 +32,7 @@ import org.apache.cocoon.selection.SwitchSelector;
 import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Sample sitemap executor that prints out everything to a logger
@@ -39,12 +40,11 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  * @since 2.2
  * @version $Id$
  */
-public class SimpleSitemapExecutor 
-    extends AbstractLogEnabled
-    implements ThreadSafe, SitemapExecutor {
+public class SimpleSitemapExecutor extends AbstractLogEnabled
+                                   implements ThreadSafe, SitemapExecutor {
 
     /**
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeAction(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.acting.Action, org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see SitemapExecutor#invokeAction(ExecutionContext, Map, Action, org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.lang.String, Parameters)
      */
     public Map invokeAction(final ExecutionContext context,
                             final Map              objectModel, 
@@ -236,4 +236,3 @@ public class SimpleSitemapExecutor
     }
 
 }
-

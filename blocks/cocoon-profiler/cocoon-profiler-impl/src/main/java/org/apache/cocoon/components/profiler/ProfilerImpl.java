@@ -16,15 +16,16 @@
  */
 package org.apache.cocoon.components.profiler;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.thread.ThreadSafe;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Profiler component implementation. Stores profiler data for
@@ -33,7 +34,7 @@ import java.util.Map;
  * @version $Id$
  */
 public class ProfilerImpl extends AbstractLogEnabled
-    implements Profiler, ThreadSafe, Configurable {
+                          implements Profiler, ThreadSafe, Configurable {
 
     // Maximal count of entries, which should be stored.
     private int results_count = 10;
@@ -94,7 +95,7 @@ public class ProfilerImpl extends AbstractLogEnabled
      * @return Result of the profiling
      */
     public ProfilerResult getResult(Object key) {
-        return (ProfilerResult)results.get(key);
+        return (ProfilerResult) results.get(key);
     }
 
     /** 
@@ -105,11 +106,12 @@ public class ProfilerImpl extends AbstractLogEnabled
      */
     public void addResult(String uri, ProfilerData data) {
         Long key = new Long(data.getKey(uri));
-        ProfilerResult result = (ProfilerResult)results.get(key);
-        if(result == null){
-            synchronized(results){
-                if((result = (ProfilerResult)results.get(key)) == null)
+        ProfilerResult result = (ProfilerResult) results.get(key);
+        if (result == null) {
+            synchronized (results) {
+                if ((result = (ProfilerResult) results.get(key)) == null) {
                     results.put(key, result = new ProfilerResult(uri, results_count));
+                }
             }
         }
 

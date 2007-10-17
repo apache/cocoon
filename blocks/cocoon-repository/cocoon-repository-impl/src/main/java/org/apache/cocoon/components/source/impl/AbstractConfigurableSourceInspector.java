@@ -23,11 +23,12 @@ import java.util.Set;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.components.source.SourceInspector;
-import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+
+import org.apache.cocoon.components.source.SourceInspector;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Abstract base class for SourceInspectors that want to 
@@ -37,10 +38,11 @@ import org.apache.excalibur.source.SourceException;
  * Knowing which properties an inspector handles beforehand
  * greatly improves property management performance.
  * </p>
- * 
+ *
+ * @version $Id$
  */
-public abstract class AbstractConfigurableSourceInspector extends AbstractLogEnabled 
-implements SourceInspector, Configurable {
+public abstract class AbstractConfigurableSourceInspector extends AbstractLogEnabled
+                                                          implements SourceInspector, Configurable {
 
     // the set of properties this inspector is configured to handle
     private Set m_properties;

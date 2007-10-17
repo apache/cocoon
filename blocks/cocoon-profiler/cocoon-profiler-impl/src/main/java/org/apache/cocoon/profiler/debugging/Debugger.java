@@ -27,28 +27,30 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Map.Entry;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.excalibur.xml.dom.DOMParser;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.wrapper.AbstractRequestWrapper;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.dom.DOMUtil;
-import org.apache.excalibur.xml.dom.DOMParser;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -57,9 +59,8 @@ import org.xml.sax.InputSource;
  * @since 2.2
  * @version $Id$
  */
-public class Debugger
-    extends AbstractLogEnabled
-    implements Serviceable, Disposable, Initializable, Contextualizable {
+public class Debugger extends AbstractLogEnabled
+                      implements Serviceable, Disposable, Initializable, Contextualizable {
 
     protected static final String DEBUGGER_KEY = Debugger.class.getName();
     protected static final String SITEMAP_COUNTER_KEY = DEBUGGER_KEY + "/sitemap-counter";
@@ -100,11 +101,13 @@ public class Debugger
         int pos = this.debugInfo.indexOf(':');
         
         String host = this.debugInfo.substring(0, pos);
-        int   port = new Integer(this.debugInfo.substring(pos+1)).intValue();
-        this.getLogger().info("Trying to open connection to: " + host + " using port " + port);
+        int port = Integer.parseInt(this.debugInfo.substring(pos + 1));
+
+        getLogger().info("Trying to open connection to: " + host + " using port " + port);
         this.socket = new Socket(host, port);
         this.socket.setKeepAlive(true);
         this.socket.setSoTimeout(60);
+
         this.writer = new PrintWriter(socket.getOutputStream());
         this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.finished = false;
@@ -179,7 +182,7 @@ public class Debugger
             }
         } while (read > 0);
         
-        Document doc = null;
+        Document doc;
         try {
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(response.toString()));
@@ -200,7 +203,7 @@ public class Debugger
         } catch (ProcessingException any) {
             this.getLogger().warn("Exception during parsing of status - stop debugging.");
             // if an exception during parsing occurs, we simply stop debugging
-            this.close();
+            close();
             return;
         }
         /*

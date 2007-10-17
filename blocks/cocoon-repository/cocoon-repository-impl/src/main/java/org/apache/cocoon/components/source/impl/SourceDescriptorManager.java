@@ -30,27 +30,29 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.source.SourceDescriptor;
-import org.apache.cocoon.components.source.SourceInspector;
-import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
+
+import org.apache.cocoon.components.source.SourceDescriptor;
+import org.apache.cocoon.components.source.SourceInspector;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 /**
  * This source descriptor acts as container for a set of source inspectors/descriptors.
  * 
  * @version $Id$
  */
-public final class SourceDescriptorManager extends AbstractLogEnabled 
-implements SourceDescriptor, Contextualizable, Serviceable, 
-Configurable, Initializable, Disposable, ThreadSafe {
+public final class SourceDescriptorManager extends AbstractLogEnabled
+                                           implements SourceDescriptor, Contextualizable, Serviceable,
+                                                      Configurable, Initializable, Disposable, ThreadSafe {
     
     // the registered inspectors
     private Set m_inspectors;
@@ -98,16 +100,16 @@ Configurable, Initializable, Disposable, ThreadSafe {
                  throw new ConfigurationException(
                     "Could not load class "+className, iae);
             }
-            ContainerUtil.enableLogging(inspector,getLogger());
-            ContainerUtil.contextualize(inspector,m_context);
-            ContainerUtil.service(inspector,m_manager);
-            ContainerUtil.configure(inspector,children[i]);
-            ContainerUtil.parameterize(inspector,
-                Parameters.fromConfiguration(children[i]));
+            ContainerUtil.enableLogging(inspector, new CLLoggerWrapper(getLogger()));
+            ContainerUtil.contextualize(inspector, m_context);
+            ContainerUtil.service(inspector, m_manager);
+            ContainerUtil.configure(inspector, children[i]);
+            ContainerUtil.parameterize(inspector, Parameters.fromConfiguration(children[i]));
             ContainerUtil.initialize(inspector);
-            
+
             m_inspectors.add(inspector);
         }
+
         // done with these
         m_configuration = null;
         m_context = null;
@@ -115,10 +117,11 @@ Configurable, Initializable, Disposable, ThreadSafe {
     }
     
     public void dispose() {
-        Iterator iter = m_inspectors.iterator();
-        while(iter.hasNext()) {
-            ContainerUtil.dispose(iter.next());
+        Iterator i = m_inspectors.iterator();
+        while (i.hasNext()) {
+            ContainerUtil.dispose(i.next());
         }
+
         m_inspectors = null;
     }
     
@@ -222,4 +225,3 @@ Configurable, Initializable, Disposable, ThreadSafe {
         return validity;
     }
 }
-
