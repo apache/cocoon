@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.transform.Result;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -40,15 +39,12 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -59,6 +55,11 @@ import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
 import org.apache.excalibur.xml.xslt.XSLTProcessorException;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -206,12 +207,12 @@ public class TraxProcessor extends AbstractLogEnabled
                 }
                 return handlerAndValidity;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new XSLTProcessorException("Error retrieving template", e);
         }
 
-        TraxErrorListener errorListener = new TraxErrorListener(getLogger(), stylesheet.getURI());
-        try{
+        TraxErrorListener errorListener = new TraxErrorListener(stylesheet.getURI());
+        try {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Creating new Templates for " + id);
             }
@@ -264,7 +265,7 @@ public class TraxProcessor extends AbstractLogEnabled
 
                 // Create transformer handler
                 final TransformerHandler handler = m_factory.newTransformerHandler(template);
-                handler.getTransformer().setErrorListener(new TraxErrorListener(getLogger(), stylesheet.getURI()));
+                handler.getTransformer().setErrorListener(new TraxErrorListener(stylesheet.getURI()));
                 handler.getTransformer().setURIResolver(this);
 
                 // Create aggregated validity
@@ -284,8 +285,9 @@ public class TraxProcessor extends AbstractLogEnabled
                 // Create result
                 handlerAndValidity = new MyTransformerHandlerAndValidity(handler, validity);
             } finally {
-                if (m_checkIncludes)
+                if (m_checkIncludes) {
                     m_includesMap.remove(id);
+                }
             }
 
             return handlerAndValidity;
@@ -308,7 +310,7 @@ public class TraxProcessor extends AbstractLogEnabled
     }
 
     private void sourceToSAX(Source source, ContentHandler handler)
-    throws SAXException, IOException, SourceException, ProcessingException {
+    throws SAXException, IOException, ProcessingException {
         if (source instanceof XMLizable) {
             ((XMLizable) source).toSAX(handler);
         } else {
@@ -320,8 +322,8 @@ public class TraxProcessor extends AbstractLogEnabled
     throws XSLTProcessorException {
         try {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug(
-                        "Transform source = " + source + ", stylesheet = " + stylesheet + ", parameters = " + params + ", result = " + result);
+                getLogger().debug("Transform source = " + source + ", stylesheet = " + stylesheet +
+                                  ", parameters = " + params + ", result = " + result);
             }
             final TransformerHandler handler = getTransformerHandler(stylesheet);
             if (params != null) {
@@ -396,7 +398,7 @@ public class TraxProcessor extends AbstractLogEnabled
             }
         }
 
-        _factory.setErrorListener(new TraxErrorListener(getLogger(), null));
+        _factory.setErrorListener(new TraxErrorListener(null));
         _factory.setURIResolver(this);
 
         // FIXME (SM): implementation-specific parameter passing should be
@@ -488,7 +490,7 @@ public class TraxProcessor extends AbstractLogEnabled
         }
 
         TransformerHandler handler = m_factory.newTransformerHandler((Templates) templateAndValidityAndIncludes[0]);
-        handler.getTransformer().setErrorListener(new TraxErrorListener(getLogger(), stylesheet.getURI()));
+        handler.getTransformer().setErrorListener(new TraxErrorListener(stylesheet.getURI()));
         handler.getTransformer().setURIResolver(this);
         return new MyTransformerHandlerAndValidity(handler, storedValidity);
     }
@@ -618,7 +620,7 @@ public class TraxProcessor extends AbstractLogEnabled
      * @throws IOException
      *             if I/O error occured.
      */
-    private static InputSource getInputSource(final Source source) throws IOException, SourceException {
+    private static InputSource getInputSource(final Source source) throws IOException {
         final InputSource newObject = new InputSource(source.getInputStream());
         newObject.setSystemId(source.getURI());
         return newObject;

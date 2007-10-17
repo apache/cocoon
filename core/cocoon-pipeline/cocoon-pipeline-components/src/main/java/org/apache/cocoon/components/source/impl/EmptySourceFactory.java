@@ -17,10 +17,8 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
@@ -31,8 +29,7 @@ import org.apache.excalibur.source.SourceFactory;
  * @version $Id$
  * @since 2.1.8
  */
-public class EmptySourceFactory extends AbstractLogEnabled
-                                implements SourceFactory, ThreadSafe {
+public class EmptySourceFactory implements SourceFactory, ThreadSafe {
 
     /**
      * Get an {@link EmptySource} object.
@@ -42,8 +39,7 @@ public class EmptySourceFactory extends AbstractLogEnabled
      *
      * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
      */
-    public Source getSource(String location, Map parameters)
-    throws IOException, MalformedURLException {
+    public Source getSource(String location, Map parameters) throws IOException {
         return new EmptySource(location);
     }
 

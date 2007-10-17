@@ -51,6 +51,7 @@ import java.util.List;
  *
  * @since 2.1
  * @version $Id$
+ * @noinspection SynchronizeOnNonFinalField
  */
 public abstract class AbstractCachingProcessingPipeline extends BaseCachingProcessingPipeline {
 
@@ -93,6 +94,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
     /** Cache complete response */
     protected boolean cacheCompleteResponse;
 
+    /** Store for pipeline locks (optional) */
     protected Store transientStore;
 
 
@@ -118,8 +120,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
     public void parameterize(Parameters params) throws ParameterException {
         super.parameterize(params);
 
-        String storeRole = params.getParameter("store-role",Store.TRANSIENT_STORE);
-
+        String storeRole = params.getParameter("store-role", Store.TRANSIENT_STORE);
         try {
             transientStore = (Store) manager.lookup(storeRole);
         } catch (ServiceException e) {
@@ -167,13 +168,11 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
     protected boolean waitForLock(Object key) {
         if (transientStore != null) {
-            Object lock = null;
+            // Get a lock object from the store
+            String lockKey = PIPELOCK_PREFIX + key;
+            Object lock;
             synchronized (transientStore) {
-                String lockKey = PIPELOCK_PREFIX + key;
-                if (transientStore.containsKey(lockKey)) {
-                    // cache content is currently being generated, wait for other thread
-                    lock = transientStore.get(lockKey);
-                }
+                lock = transientStore.get(lockKey);
             }
 
             // Avoid deadlock with self (see JIRA COCOON-1985).
@@ -185,7 +184,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     }
                 } catch (InterruptedException e) {
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Got interrupted waiting for other pipeline to finish processing, retrying...", e);
+                        getLogger().debug("Interrupted waiting for other pipeline to finish processing, retrying...", e);
                     }
                     return false;
                 }
@@ -207,6 +206,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
         if (transientStore != null && key != null) {
             String lockKey = PIPELOCK_PREFIX + key;
+
             synchronized (transientStore) {
                 if (transientStore.containsKey(lockKey)) {
                     succeeded = false;
@@ -238,6 +238,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
         if (transientStore != null && key != null) {
             String lockKey = PIPELOCK_PREFIX + key;
+
             Object lock = null;
             synchronized (transientStore) {
                 if (!transientStore.containsKey(lockKey)) {
@@ -311,7 +312,6 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
             }
 
             generateLock(this.toCacheKey);
-
             try {
                 OutputStream os = null;
 
@@ -412,15 +412,15 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
         // is the generator cacheable?
         Serializable key = null;
         if (super.generator instanceof CacheableProcessingComponent) {
-            key = ((CacheableProcessingComponent)super.generator).getKey();
+            key = ((CacheableProcessingComponent) super.generator).getKey();
         }
 
         if (key != null) {
             this.toCacheKey = new PipelineCacheKey();
             this.toCacheKey.addKey(
-                    this.newComponentCacheKey(
-                        ComponentCacheKey.ComponentType_Generator,
-                        this.generatorRole, key));
+                    newComponentCacheKey(
+                            ComponentCacheKey.ComponentType_Generator,
+                            this.generatorRole, key));
 
             // now testing transformers
             final int transformerSize = super.transformers.size();
@@ -435,11 +435,10 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 }
                 if (key != null) {
                     this.toCacheKey.addKey(
-                            this.newComponentCacheKey(
-                                ComponentCacheKey.ComponentType_Transformer,
-                                (String)this.transformerRoles.get(
-                                                                  this.firstNotCacheableTransformerIndex),
-                                key));
+                            newComponentCacheKey(
+                                    ComponentCacheKey.ComponentType_Transformer,
+                                    (String) this.transformerRoles.get(this.firstNotCacheableTransformerIndex),
+                                    key));
 
                     this.firstNotCacheableTransformerIndex++;
                 } else {
@@ -453,7 +452,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
                 key = null;
                 if (super.serializer instanceof CacheableProcessingComponent) {
-                    key = ((CacheableProcessingComponent)this.serializer).getKey();
+                    key = ((CacheableProcessingComponent) this.serializer).getKey();
                 }
                 if (key != null) {
                     this.toCacheKey.addKey(
@@ -660,7 +659,6 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                             for(int x=0; x < deleteCount; x++) {
                                 this.toCacheKey.removeLastKey();
                             }
-                            finished = false;
                         } else {
                             this.toCacheKey = null;
                         }
@@ -679,12 +677,13 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     } else {
                         this.fromCacheKey = null;
                     }
+
                     finished = false;
                     this.completeResponseIsCached = false;
                 }
             } else {
                 // check if there might be one being generated
-                if(!waitForLock(this.fromCacheKey)) {
+                if (!waitForLock(this.fromCacheKey)) {
                     finished = false;
                     continue;
                 }
@@ -826,7 +825,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                         }
                     } else {
                         // check if something is being generated right now
-                        if(!waitForLock(pcKey)) {
+                        if (!waitForLock(pcKey)) {
                             finished = false;
                             continue;
                         }
@@ -881,11 +880,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     }
 
                 } finally {
-                    if (pcKey != null) {
-                        releaseLock(pcKey);
-                    }
+                    releaseLock(pcKey);
                 }
-
             }
         } catch (Exception e) {
             handleException(e);

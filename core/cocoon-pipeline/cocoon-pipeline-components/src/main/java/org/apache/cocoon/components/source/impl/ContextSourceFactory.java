@@ -22,18 +22,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.Context;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -43,6 +39,10 @@ import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.URIAbsolutizer;
 
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 /**
  * A factory for the context protocol using the context of the servlet api. 
  * It builds the source by asking the environment context for the real URL
@@ -51,13 +51,9 @@ import org.apache.excalibur.source.URIAbsolutizer;
  *
  * @version $Id$
  */
-public class ContextSourceFactory
-extends AbstractLogEnabled
-implements SourceFactory, 
-            Serviceable, 
-            Contextualizable, 
-            ThreadSafe, 
-            URIAbsolutizer {
+public class ContextSourceFactory extends AbstractLogEnabled
+                                  implements SourceFactory, Serviceable, Contextualizable,
+                                             ThreadSafe, URIAbsolutizer {
 
     /** The ServiceManager */
     protected ServiceManager manager;
@@ -83,16 +79,15 @@ implements SourceFactory,
     /**
      * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
      */
-    public Source getSource( String location, Map parameters )
-    throws SourceException, MalformedURLException, IOException {
-        if( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug( "Creating source object for " + location );
+    public Source getSource(String location, Map parameters) throws IOException {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Creating source object for " + location);
         }
 
         // Lookup resolver 
         SourceResolver resolver = null;
         try {
-            resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE );
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
 
             // Remove the protocol and the first '/'
             final int pos = location.indexOf(":/");
@@ -144,22 +139,22 @@ implements SourceFactory,
         // In fact, this method should never be called as this factory
         // returns a source object from a different factory. So that
         // factory should release the source
-        if ( null != source ) {
-            if ( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug("Releasing source " + source.getURI());
+        if (null != source) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Releasing source " + source.getURI());
             }
             SourceResolver resolver = null;
             try {
-                resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE );
-                if ( source instanceof TraversableContextSource ) {
-                    resolver.release(((TraversableContextSource)source).wrappedSource);
+                resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+                if (source instanceof TraversableContextSource) {
+                    resolver.release(((TraversableContextSource) source).wrappedSource);
                 } else {
-                    resolver.release( source );
+                    resolver.release(source);
                 }
             } catch (ServiceException ingore) {
                 // we ignore this
             } finally {
-                this.manager.release( resolver );
+                this.manager.release(resolver);
             }
         }
     }
