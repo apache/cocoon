@@ -201,7 +201,6 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
 
         SaxBuffer saxbuffer = new SaxBuffer();
         LoggingContentHandler handler = new LoggingContentHandler("test", saxbuffer);
-        handler.enableLogging(getLogger().getChildLogger("handler"));
         source.toSAX(handler);
     }
 
