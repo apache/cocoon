@@ -149,8 +149,9 @@ public class WebContinuation extends AbstractLogEnabled
      * @param name the attribute name.
      */
     public Object getAttribute(String name) {
-        if (this.attributes == null)
+        if (this.attributes == null) {
             return null;
+        }
         
         return this.attributes.get(name);
     }
@@ -444,11 +445,12 @@ public class WebContinuation extends AbstractLogEnabled
     }
     
     public boolean interpreterMatches( String interpreterId ) {
-        return StringUtils.equals( this.interpreterId, interpreterId );
+        return StringUtils.equals(this.interpreterId, interpreterId);
     }
 
     public void detachFromParent() {
-        if (getParentContinuation() != null)
+        if (getParentContinuation() != null) {
             getParentContinuation().getChildren().remove(this);
+        }
     }
 }
