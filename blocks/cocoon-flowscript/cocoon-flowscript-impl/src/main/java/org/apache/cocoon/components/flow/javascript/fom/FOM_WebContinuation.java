@@ -45,17 +45,14 @@ public class FOM_WebContinuation extends ScriptableObject {
     }
 
     static private boolean isBookmark(WebContinuation wk) {
-        UserObject userObj = (UserObject)wk.getUserObject();
-        if (userObj == null) {
-            return false;
-        }
-        return userObj.isBookmark;
+        UserObject userObj = (UserObject) wk.getUserObject();
+        return userObj != null && userObj.isBookmark;
     }
+
 
     public FOM_WebContinuation() {
         this(null);
     }
-
 
     public FOM_WebContinuation(WebContinuation wk) {
         this.wk = wk;
@@ -67,21 +64,21 @@ public class FOM_WebContinuation extends ScriptableObject {
     public static Object jsConstructor(Context cx, Object[] args,
                                        Function ctorObj,
                                        boolean inNewExpr)
-        throws Exception {
-        FOM_WebContinuation result = null;
+    throws Exception {
         if (args.length < 1) {
             // error
         }
-        Continuation c = (Continuation)unwrap(args[0]);
+        Continuation c = (Continuation) unwrap(args[0]);
         FOM_WebContinuation parent = null;
         if (args.length > 1) {
-            parent = (FOM_WebContinuation)args[1];
+            parent = (FOM_WebContinuation) args[1];
         }
         int timeToLive = 0;
         if (args.length > 2) {
             timeToLive =
-                (int)org.mozilla.javascript.Context.toNumber(args[2]);
+                    (int) org.mozilla.javascript.Context.toNumber(args[2]);
         }
+
         WebContinuation wk;
         Scriptable scope = getTopLevelScope(c);
         FOM_Cocoon cocoon = (FOM_Cocoon)getProperty(scope, "cocoon");
@@ -91,6 +88,8 @@ public class FOM_WebContinuation extends ScriptableObject {
                                            timeToLive,
                                            cocoon.getInterpreterId(), 
                                            null);
+
+        FOM_WebContinuation result;
         result = new FOM_WebContinuation(wk);
         result.setParentScope(getTopLevelScope(scope));
         result.setPrototype(getClassPrototype(scope, result.getClassName()));
