@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -29,7 +28,6 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -43,11 +41,13 @@ import org.apache.cocoon.forms.binding.Binding;
 import org.apache.cocoon.forms.binding.BindingManager;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.transformation.FormsPipelineConfig;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.dom.DOMParser;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -124,7 +124,7 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
             this.document = loadDocumentFromSource(documentSource); 
             this.binding.loadFormFromModel(this.form, this.document);
 
-            this.getLogger().debug("apple initialisation finished .. ");
+            getLogger().debug("apple initialisation finished .. ");
             this.state = validationDelegate;
 
             completeResult(res, this.formPipeURI, CONTINUE);
@@ -137,16 +137,16 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
             if (binderManager != null) {
                 this.serviceManager.release(binderManager);
             }
+            if (formSource != null) {
+                resolver.release(formSource);
+            }
+            if (bindSource != null) {
+                resolver.release(bindSource);
+            }
+            if (documentSource != null) {
+                resolver.release(documentSource);
+            }
             if (resolver != null) {
-                if (formSource != null) {
-                    resolver.release(formSource);
-                }
-                if (bindSource != null) {
-                    resolver.release(bindSource);
-                }
-                if (documentSource != null) {
-                    resolver.release(documentSource);
-                }
                 this.serviceManager.release(resolver);
             }
         }

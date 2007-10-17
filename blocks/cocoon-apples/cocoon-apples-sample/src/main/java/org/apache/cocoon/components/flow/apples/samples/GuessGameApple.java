@@ -20,11 +20,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.apples.AppleController;
 import org.apache.cocoon.components.flow.apples.AppleRequest;
 import org.apache.cocoon.components.flow.apples.AppleResponse;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * GuessGameApple shows an easy Apples implementation for a number guessing game.
@@ -43,7 +43,7 @@ public class GuessGameApple extends AbstractLogEnabled implements AppleControlle
         String hint      = "No hints yet.";
         String targetURI = "guess/guess.jx";
         
-        int newGuess = -1;
+        int newGuess;
         String newGuessString = req.getCocoonRequest().getParameter("guess");
         
         if (newGuessString != null) {
