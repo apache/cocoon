@@ -16,19 +16,20 @@
  */
 package org.apache.cocoon.ojb.odmg.components;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.ojb.odmg.OJB;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.odmg.Database;
 import org.odmg.Implementation;
 import org.odmg.ODMGException;
-
-import java.util.Iterator;
-import java.util.Set;
-import java.util.HashMap;
 
 /**
  * OJB backed implementation of the ODMG component. Creates a ODMG Implementation

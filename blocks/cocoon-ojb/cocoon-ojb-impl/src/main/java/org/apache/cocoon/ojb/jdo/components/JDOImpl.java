@@ -16,14 +16,12 @@
  */
 package org.apache.cocoon.ojb.jdo.components;
 
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.ojb.jdori.sql.OjbStorePMF;
-
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.ojb.jdori.sql.OjbStorePMF;
 
 /**
  * Implementation of the JDO component. Creates one PersistenceManagerFactory
@@ -31,8 +29,7 @@ import javax.jdo.PersistenceManagerFactory;
  *
  * @version $Id$
 */
-public class JDOImpl extends AbstractLogEnabled
-                     implements JDO, ThreadSafe, Initializable {
+public class JDOImpl implements JDO, ThreadSafe, Initializable {
 
     protected PersistenceManagerFactory factory;
 
