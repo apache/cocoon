@@ -22,10 +22,10 @@ import java.util.Map;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * The default implementation
@@ -35,16 +35,14 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * @deprecated Use the scoped attributes on the Request object instead.
  *             This component will be removed with Cocoon 2.3.
  */
-public class RequestDataStoreImpl
-    extends AbstractLogEnabled
-    implements ThreadSafe, RequestDataStore, Contextualizable {
+public class RequestDataStoreImpl extends AbstractLogEnabled
+                                  implements ThreadSafe, RequestDataStore, Contextualizable {
         
+    protected final String requestDataKey = getClass().getName() + "/RD";
+    protected final String globalRequestDataKey = getClass().getName() + "/GRD";
+
     protected Context context;
 
-    protected final String requestDataKey = this.getClass().getName() + "/RD";
-    
-    protected final String globalRequestDataKey = this.getClass().getName() + "/GRD";
-    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */

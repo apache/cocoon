@@ -16,40 +16,41 @@
  */
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Logging entity resolver to assist in caching.
  *
  * @version $Id$
  */
-public class LoggingEntityResolver extends AbstractLogEnabled implements EntityResolver {
+public class LoggingEntityResolver extends AbstractLogEnabled
+                                   implements EntityResolver {
 
-  protected EntityResolver resolver;
-  protected Set dependencies;
+    protected EntityResolver resolver;
+    protected Set dependencies;
 
-  public LoggingEntityResolver(EntityResolver resolver) {
-    this.resolver = resolver;
-    dependencies = new HashSet();
-  }
+    public LoggingEntityResolver(EntityResolver resolver) {
+        this.resolver = resolver;
+        dependencies = new HashSet();
+    }
 
-  public InputSource resolveEntity(String public_id, String system_id) throws SAXException,IOException {
-    InputSource input_source = resolver.resolveEntity(public_id,system_id);
-    dependencies.add(input_source);
-    getLogger().debug("Dependency: "+input_source.getSystemId());
-    return input_source;
-  }
+    public InputSource resolveEntity(String public_id, String system_id) throws SAXException, IOException {
+        InputSource input_source = resolver.resolveEntity(public_id, system_id);
+        dependencies.add(input_source);
+        getLogger().debug("Dependency: " + input_source.getSystemId());
+        return input_source;
+    }
 
-  public Set getDependencies() {
-    return Collections.unmodifiableSet(dependencies);
-  }
-
+    public Set getDependencies() {
+        return Collections.unmodifiableSet(dependencies);
+    }
 }

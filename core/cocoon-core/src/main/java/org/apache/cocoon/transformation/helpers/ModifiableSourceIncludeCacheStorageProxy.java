@@ -23,40 +23,38 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+
+import org.apache.cocoon.CascadingIOException;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.HashUtil;
 
 /**
  * This is the interface between the {@link IncludeCacheManager} and a
  * {@link Source} object that stores the cached content in a directory
  * manner.
  * 
- *  @version $Id$
- *  @since   2.1
+ * @since   2.1
+ * @version $Id$
  */
-public final class ModifiableSourceIncludeCacheStorageProxy
-    implements IncludeCacheStorageProxy {
+public final class ModifiableSourceIncludeCacheStorageProxy extends AbstractLogEnabled
+                                                            implements IncludeCacheStorageProxy {
 
     private SourceResolver resolver;
     private String         parentURI;
-    private Logger         logger;
-    
+
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param resolver   For source resolving
      * @param parentURI  The "directory"
-     * @param logger     A logger for debugging
      */
     public ModifiableSourceIncludeCacheStorageProxy(SourceResolver resolver,
-                                             String         parentURI,
-                                             Logger         logger) {
+                                             String         parentURI) {
         this.resolver = resolver;
         this.parentURI= parentURI;
-        this.logger = logger;
     }
     
     /**
@@ -81,17 +79,16 @@ public final class ModifiableSourceIncludeCacheStorageProxy
      * @see IncludeCacheStorageProxy#get(java.lang.String)
      */
     public Serializable get(String uri) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("WSCProxy: Getting content for " + uri);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("WSCProxy: Getting content for " + uri);
         }
 
         Source child = null;
         Serializable result = null;
         try {
             child = this.resolver.resolveURI(this.getURI(uri));
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("WSCProxy: Resolved to " + child.getURI());
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("WSCProxy: Resolved to " + child.getURI());
             }
 
             if (child.exists()) {
@@ -105,8 +102,8 @@ public final class ModifiableSourceIncludeCacheStorageProxy
             this.resolver.release( child );
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("WSCProxy: Result for " + uri + " : " + (result == null ? "Not in cache" : "Found"));
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("WSCProxy: Result for " + uri + " : " + (result == null ? "Not in cache" : "Found"));
         }
         return result;
     }
@@ -116,15 +113,15 @@ public final class ModifiableSourceIncludeCacheStorageProxy
      */
     public void put(String uri, Serializable object) 
     throws IOException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("WSCProxy: Storing content for " + uri);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("WSCProxy: Storing content for " + uri);
         }
+
         Source child = null;
         try {
             child = this.resolver.resolveURI(this.getURI(uri));
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("WSCProxy: Resolved to " + child.getURI());
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("WSCProxy: Resolved to " + child.getURI());
             }
 
             OutputStream os;
@@ -150,19 +147,19 @@ public final class ModifiableSourceIncludeCacheStorageProxy
      * @see IncludeCacheStorageProxy#remove(java.lang.String)
      */
     public void remove(String uri) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("WSCProxy: Removing content for " + uri);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("WSCProxy: Removing content for " + uri);
         }
+
         Source child = null;
         try {
             child = this.resolver.resolveURI(this.getURI(uri));
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("WSCProxy: Resolved to " + child.getURI());
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("WSCProxy: Resolved to " + child.getURI());
             }
 
             if (child instanceof ModifiableSource) {
-                ((ModifiableSource)child).delete();
+                ((ModifiableSource) child).delete();
             } else {
                 throw new IOException("Source " + uri + " is not writeable.");
             }
@@ -177,7 +174,7 @@ public final class ModifiableSourceIncludeCacheStorageProxy
      */
     public boolean equals(Object object) {
         if (object instanceof ModifiableSourceIncludeCacheStorageProxy) {
-            return this.parentURI.equals(((ModifiableSourceIncludeCacheStorageProxy)object).parentURI);
+            return this.parentURI.equals(((ModifiableSourceIncludeCacheStorageProxy) object).parentURI);
         }
         return false;
     }
@@ -188,5 +185,4 @@ public final class ModifiableSourceIncludeCacheStorageProxy
     public int hashCode() {
         return this.parentURI.hashCode();
     }
-
 }

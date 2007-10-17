@@ -35,7 +35,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -47,10 +46,9 @@ import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.background.BackgroundEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.thread.RunnableManager;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -61,10 +59,9 @@ import org.apache.excalibur.source.SourceResolver;
  * @since 2.1.1
  * @version $Id$
  */
-public class DelaySourceRefresher implements SourceRefresher {
+public class DelaySourceRefresher extends AbstractLogEnabled
+                                  implements SourceRefresher {
 
-    private Log logger = LogFactory.getLog(getClass());    
-    
     private static final long DEFAULT_INTERVAL = 0;
     
 	private static final String DEFAULT_WRITE_FILE        = "refresher-targets.xml";
@@ -105,15 +102,15 @@ public class DelaySourceRefresher implements SourceRefresher {
                 throw new ConfigurationException("Can not create parent directory for: " +
                                                  this.configFile);
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug("Write source location: " + this.configFile);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Write source location: " + this.configFile);
             }
 
             setupRefreshJobs(readRefreshJobConfiguration());
             startConfigurationTask(writeInterval);
         } else {
-        	if (logger.isInfoEnabled()) {
-				logger.info("Not writing update targets to file.");
+        	if (getLogger().isInfoEnabled()) {
+				getLogger().info("Not writing update targets to file.");
         	}
         }
    
@@ -146,7 +143,6 @@ public class DelaySourceRefresher implements SourceRefresher {
         if (task == null) {
             // New source added.
             task = new RefresherTask(key, uri, interval);
-            task.enableLogging(new CLLoggerWrapper(logger));
             this.entries.put(key, task);
             this.runnable.execute(task, interval, interval);
             this.changed = true;
@@ -184,7 +180,7 @@ public class DelaySourceRefresher implements SourceRefresher {
                 SourceUtil.toSAX(this.manager, source, source.getMimeType(), b);
             }
         } catch (Exception ignore) {
-            logger.warn("Unable to read configuration from " + this.configFile);
+            getLogger().warn("Unable to read configuration from " + this.configFile);
         } finally {
             if (source != null) {
                 this.resolver.release(source);
@@ -205,8 +201,8 @@ public class DelaySourceRefresher implements SourceRefresher {
                     try {
                         setupSingleRefreshJob(children[i]);
                     } catch (CascadingException ignore) {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("Setting up refresh job, ignoring exception:", ignore);
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Setting up refresh job, ignoring exception:", ignore);
                         }
                     }
                 }
@@ -234,7 +230,6 @@ public class DelaySourceRefresher implements SourceRefresher {
      */
     protected void startConfigurationTask(long interval) {
         configurationTask = new ConfigurationTask();
-        configurationTask.enableLogging(new CLLoggerWrapper(logger));
         runnable.execute(configurationTask, interval, interval);
     }
 
@@ -279,8 +274,8 @@ public class DelaySourceRefresher implements SourceRefresher {
                     // Got I/O exception while writing the list.
                     // Will re-try writing the list next time.
                     success = false;
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Error writing targets to file.", e);
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Error writing targets to file.", e);
                     }
                 } finally {
                     if (writer != null) {
@@ -313,8 +308,8 @@ public class DelaySourceRefresher implements SourceRefresher {
 
         public void run() {
             if (this.uri != null) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Refreshing " + this.uri);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Refreshing " + this.uri);
                 }
 
                 // Setup Environment
@@ -322,7 +317,7 @@ public class DelaySourceRefresher implements SourceRefresher {
                 try {
                     org.apache.cocoon.environment.Context ctx =
                             (org.apache.cocoon.environment.Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-                    env = new BackgroundEnvironment(new CLLoggerWrapper(logger), ctx);
+                    env = new BackgroundEnvironment(new CLLoggerWrapper(getLogger()), ctx);
                 } catch (ContextException e) {
                     throw new CascadingRuntimeException("No context found", e);
                 }
@@ -346,7 +341,7 @@ public class DelaySourceRefresher implements SourceRefresher {
                         source = resolver.resolveURI(uri);
                         source.refresh();
                     } catch (IOException e) {
-                        logger.error("Error refreshing source", e);
+                        getLogger().error("Error refreshing source", e);
                     } finally {
                         if (source != null) {
                             resolver.release(source);

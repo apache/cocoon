@@ -30,6 +30,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Proxy like source adding XMLizable.
+ *
+ * @version $Id$
  */
 public class XMLizableSource implements XMLizable, Source {
 
@@ -56,8 +58,7 @@ public class XMLizableSource implements XMLizable, Source {
         return m_source.exists();
     }
 
-    public InputStream getInputStream()
-        throws IOException, SourceNotFoundException {
+    public InputStream getInputStream() throws IOException {
         return m_source.getInputStream();
     }
 
@@ -91,11 +92,9 @@ public class XMLizableSource implements XMLizable, Source {
 
     public void toSAX(ContentHandler handler) throws SAXException {
         try {
-            SourceUtil.toSAX(m_manager,m_source,"text/xml",handler);
-        }
-        catch (Exception e) {
+            SourceUtil.toSAX(m_manager, m_source, "text/xml", handler);
+        } catch (Exception e) {
             throw new SAXException("Failure during toSAX",e);
         }
     }
-
 }

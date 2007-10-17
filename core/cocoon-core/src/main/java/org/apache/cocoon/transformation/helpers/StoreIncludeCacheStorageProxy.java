@@ -19,31 +19,28 @@ package org.apache.cocoon.transformation.helpers;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.excalibur.store.Store;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * This is the interface between the {@link IncludeCacheManager} and the usual
  * store.
  * 
- *  @version $Id$
- *  @since   2.1
+ * @since   2.1
+ * @version $Id$
  */
-public final class StoreIncludeCacheStorageProxy
-    implements IncludeCacheStorageProxy {
+public final class StoreIncludeCacheStorageProxy extends AbstractLogEnabled
+                                                 implements IncludeCacheStorageProxy {
 
-    private Store  store;
-    
-    private Logger logger;
-    
+    private Store store;
+
     /**
      * Constructor
      * @param store  The store for the cached content
-     * @param logger A logger for debugging
      */
-    public StoreIncludeCacheStorageProxy(Store store, Logger logger) {
+    public StoreIncludeCacheStorageProxy(Store store) {
         this.store = store;
-        this.logger = logger;
     }
     
     /** A string representation for a key */
@@ -55,14 +52,14 @@ public final class StoreIncludeCacheStorageProxy
      * @see IncludeCacheStorageProxy#get(java.lang.String)
      */
     public Serializable get(String uri) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("StoreProxy: Getting content for " + uri);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("StoreProxy: Getting content for " + uri);
         }
 
-        Serializable result = (Serializable)this.store.get(this.getKey(uri));
+        Serializable result = (Serializable) this.store.get(getKey(uri));
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("StoreProxy: Result for " + uri + " : " + (result == null ? "Not in cache" : "Found"));
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("StoreProxy: Result for " + uri + " : " + (result == null ? "Not in cache" : "Found"));
         }
         return result;
     }
@@ -72,19 +69,19 @@ public final class StoreIncludeCacheStorageProxy
      */
     public void put(String uri, Serializable object) 
     throws IOException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("StoreProxy: Storing content for " + uri);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("StoreProxy: Storing content for " + uri);
         }
-        this.store.store(this.getKey(uri), object);
+        this.store.store(getKey(uri), object);
     }
 
     /**
      * @see IncludeCacheStorageProxy#remove(java.lang.String)
      */
     public void remove(String uri) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("StoreProxy: Removing content for " + uri);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("StoreProxy: Removing content for " + uri);
         }
-        this.store.remove(this.getKey(uri));
+        this.store.remove(getKey(uri));
     }
 }
