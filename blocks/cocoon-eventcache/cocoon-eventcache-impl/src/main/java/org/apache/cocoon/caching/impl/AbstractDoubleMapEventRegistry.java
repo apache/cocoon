@@ -23,11 +23,12 @@ import java.util.Set;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.collections.MultiHashMap;
+
 import org.apache.cocoon.caching.EventRegistry;
 import org.apache.cocoon.caching.validity.Event;
-import org.apache.commons.collections.MultiHashMap;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * This abstract base implementation of <code>EventRegistry</code> stores 
@@ -43,11 +44,11 @@ import org.apache.commons.collections.MultiHashMap;
  * @since 2.1
  * @version $Id$
  */
-public abstract class AbstractDoubleMapEventRegistry
-    extends AbstractLogEnabled
-    implements Initializable, EventRegistry, Disposable, ThreadSafe {
+public abstract class AbstractDoubleMapEventRegistry extends AbstractLogEnabled
+                                                     implements Initializable, EventRegistry,
+                                                                Disposable, ThreadSafe {
 
-    private boolean m_init_success = false;
+    private boolean m_init_success;
     private MultiHashMap m_keyMMap;
     private MultiHashMap m_eventMMap;
     

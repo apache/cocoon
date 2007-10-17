@@ -20,7 +20,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.Session;
@@ -40,9 +39,10 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * JMSConnection properties container plus utilities.
@@ -65,25 +65,22 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * @version $Id$
  * @deprecated  use {@link org.apache.cocoon.components.jms.JMSConnectionManager} instead
  */
-public class JMSConnectionImpl extends AbstractLogEnabled 
-                               implements Configurable, 
-                                          Disposable, 
-                                          ThreadSafe,
-                                          Initializable,  
-                                          JMSConnection {
+public class JMSConnectionImpl extends AbstractLogEnabled
+                               implements Configurable, Disposable, ThreadSafe,
+                                          Initializable, JMSConnection {
 
-    private boolean available = false;
+    private boolean available;
     protected String topicFactoryName;
     protected String topicName;
     protected String ackModeName = "dups";
     protected String durableSubscriptionID;
 
-    protected TopicConnection connection = null;
-    protected TopicSession session = null;
-    protected List subscribers = null;
-    protected Topic topic = null;
+    protected TopicConnection connection;
+    protected TopicSession session;
+    protected List subscribers;
+    protected Topic topic;
     protected int ackMode = Session.DUPS_OK_ACKNOWLEDGE;
-    protected Context context = null;
+    protected Context context;
     protected TopicConnectionFactory topicConnectionFactory;
 
     private Parameters jndiParams;
@@ -158,7 +155,7 @@ public class JMSConnectionImpl extends AbstractLogEnabled
      */
     public void dispose() {
         try {
-            this.disconnect();
+            disconnect();
         } catch (JMSException e) {
         } catch (NamingException e) {
         }
@@ -180,7 +177,7 @@ public class JMSConnectionImpl extends AbstractLogEnabled
             throw new CascadingException("Attempt to register Listener on unavailable JMS Connection");
         }
         
-        TopicSubscriber subscriber = null;
+        TopicSubscriber subscriber;
         if (this.durableSubscriptionID != null) {
             subscriber =
                 this.getSession().createDurableSubscriber(
@@ -239,7 +236,7 @@ public class JMSConnectionImpl extends AbstractLogEnabled
         InitialContext ctx;
         if (jndiKeys.length > 0) {
             // Params specified in cocoon.xconf
-            Hashtable properties = null;
+            Hashtable properties;
             properties = new Hashtable();
             for (int i = 0 ; i < jndiKeys.length ; i++) {
                 properties.put(jndiKeys[i],jndiParams.getParameter(jndiKeys[i],""));

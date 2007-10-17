@@ -16,21 +16,22 @@
  */
 package org.apache.cocoon.components.jsp;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Locale;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Locale;
+
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Allows WLS JSP to be used as a generator. 
@@ -42,7 +43,7 @@ import java.util.Locale;
  * @version $Id$
  */
 public class JSPEngineImplWLS extends AbstractLogEnabled
-    implements JSPEngine, Parameterizable, ThreadSafe {
+                              implements JSPEngine, Parameterizable, ThreadSafe {
 
     /** The Servlet Include Path */
     public static final String INC_SERVLET_PATH = "javax.servlet.include.servlet_path";
@@ -212,8 +213,7 @@ public class JSPEngineImplWLS extends AbstractLogEnabled
       }
 
       public String getResponseContentAsString() {
-        String s = new String( getResponseContentAsByteArray() );
-        return s;
+          return new String(getResponseContentAsByteArray());
       }
 
       // following methods forwarding from jsp-repsonse to cocoon2-repsonse

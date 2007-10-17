@@ -27,18 +27,12 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
-
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.components.source.InspectableSource;
-import org.apache.cocoon.components.source.helpers.SourceProperty;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.HttpURL;
@@ -60,6 +54,12 @@ import org.apache.webdav.lib.PropertyName;
 import org.apache.webdav.lib.ResponseEntity;
 import org.apache.webdav.lib.WebdavResource;
 import org.apache.webdav.lib.methods.DepthSupport;
+
+import org.apache.cocoon.components.source.InspectableSource;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.xml.XMLUtils;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -192,7 +192,7 @@ public class WebDAVSource extends AbstractLogEnabled
      * @throws SourceException
      * @throws SourceNotFoundException
      */
-    private void initResource(int action, int depth) throws SourceException, SourceNotFoundException {
+    private void initResource(int action, int depth) throws SourceException {
         try {
             boolean update = false;
             if (action != WebdavResource.NOACTION) {
@@ -238,12 +238,9 @@ public class WebDAVSource extends AbstractLogEnabled
      * Static factory method to obtain a Source.
      */
     public static WebDAVSource newWebDAVSource(HttpURL url,
-                                               String protocol,
-                                               Logger logger)
+                                               String protocol)
     throws URIException {
-        final WebDAVSource source = new WebDAVSource(url, protocol);
-        source.enableLogging(logger);
-        return source;
+        return new WebDAVSource(url, protocol);
     }
 
     /**
@@ -251,12 +248,9 @@ public class WebDAVSource extends AbstractLogEnabled
      */
     private static WebDAVSource newWebDAVSource(WebdavResource resource,
                                                 HttpURL url,
-                                                String protocol,
-                                                Logger logger)
+                                                String protocol)
     throws URIException {
-        final WebDAVSource source = new WebDAVSource(resource, url, protocol);
-        source.enableLogging(logger);
-        return source;
+        return new WebDAVSource(resource, url, protocol);
     }
 
     // ---------------------------------------------------- Source implementation
@@ -333,7 +327,7 @@ public class WebDAVSource extends AbstractLogEnabled
      * so if this is Modifiable, you might get different content
      * from two different invocations.
      */
-    public InputStream getInputStream() throws IOException, SourceException {
+    public InputStream getInputStream() throws IOException {
         initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
         try {
             if (this.resource.isCollection()) {
@@ -342,7 +336,7 @@ public class WebDAVSource extends AbstractLogEnabled
                 WebdavResource[] resources = this.resource.listWebdavResources();
                 return resourcesToXml(resources);
             } else {
-                BufferedInputStream bi = null;
+                BufferedInputStream bi;
                 bi = new BufferedInputStream(this.resource.getMethodData());
                 if (!this.resource.exists()) {
                     throw new HttpException(getSecureURI() + " does not exist");
@@ -435,10 +429,9 @@ public class WebDAVSource extends AbstractLogEnabled
         return new ByteArrayInputStream(bOut.toByteArray());
     }
 
-    private void resourcesToSax(
-        WebdavResource[] resources,
-        ContentHandler handler)
-        throws SAXException {
+    private void resourcesToSax(WebdavResource[] resources,
+                                ContentHandler handler)
+    throws SAXException {
         for (int i = 0; i < resources.length; i++) {
             if (getLogger().isDebugEnabled()) {
                 final String message =
@@ -535,7 +528,7 @@ public class WebDAVSource extends AbstractLogEnabled
             } else {
                 childURL = new HttpURL(this.url, childName);
             }
-            return WebDAVSource.newWebDAVSource(childURL, this.protocol, getLogger());
+            return WebDAVSource.newWebDAVSource(childURL, this.protocol);
         } catch (URIException e) {
             throw new SourceException("Failed to create child", e);
         }
@@ -560,9 +553,7 @@ public class WebDAVSource extends AbstractLogEnabled
                 }
                 WebDAVSource src = WebDAVSource.newWebDAVSource(resources[i],
                                                                 childURL,
-                                                                this.protocol,
-                                                                getLogger());
-                src.enableLogging(getLogger());
+                                                                this.protocol);
                 children.add(src);
             }
         } catch (HttpException e) {
@@ -616,7 +607,7 @@ public class WebDAVSource extends AbstractLogEnabled
             } else {
                 parentURL = new HttpURL(this.url, path);
             }
-            return WebDAVSource.newWebDAVSource(parentURL, this.protocol, getLogger());
+            return WebDAVSource.newWebDAVSource(parentURL, this.protocol);
         } catch (URIException e) {
             throw new SourceException("Failed to create parent", e);
         }
@@ -797,8 +788,8 @@ public class WebDAVSource extends AbstractLogEnabled
          initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
 
          Vector sourceproperties = new Vector();
-         Enumeration props= null;
-         org.apache.webdav.lib.Property prop = null;
+         Enumeration props;
+         org.apache.webdav.lib.Property prop;
 
          try {
              Enumeration responses = this.resource.propfindMethod(0);
@@ -839,8 +830,8 @@ public class WebDAVSource extends AbstractLogEnabled
 
         Vector propNames = new Vector(1);
         propNames.add(new PropertyName(namespace,name));
-        Enumeration props= null;
-        org.apache.webdav.lib.Property prop = null;
+        Enumeration props;
+        org.apache.webdav.lib.Property prop;
         try {
             Enumeration responses = this.resource.propfindMethod(0, propNames);
             while (responses.hasMoreElements()) {

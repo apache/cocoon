@@ -33,6 +33,7 @@ import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -40,23 +41,24 @@ import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.components.cron.CronJob;
 import org.apache.cocoon.components.cron.JobScheduler;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * {@link org.apache.cocoon.components.jms.JMSConnectionManager} implementation.
  */
-public class JMSConnectionManagerImpl extends AbstractLogEnabled 
-implements JMSConnectionManager, Serviceable, Configurable, Initializable,
-           Startable, Disposable, ThreadSafe, JMSConnectionEventNotifier {
+public class JMSConnectionManagerImpl extends AbstractLogEnabled
+                                      implements JMSConnectionManager, Serviceable, Configurable,
+                                                 Initializable, Startable, Disposable, ThreadSafe,
+                                                 JMSConnectionEventNotifier {
 
     // ---------------------------------------------------- Constants
     
@@ -453,7 +455,8 @@ implements JMSConnectionManager, Serviceable, Configurable, Initializable,
 
     }
 
-    static final class ReconnectionJob implements CronJob {
+    static final class ReconnectionJob extends AbstractLogEnabled
+                                       implements CronJob {
 
         private final JMSConnectionManagerImpl m_manager;        
         private final ConnectionConfiguration m_configuration;
@@ -465,26 +468,25 @@ implements JMSConnectionManager, Serviceable, Configurable, Initializable,
         }
         
         public void execute(String jobname) {
-            final Logger logger = m_manager.getLogger();
-            if (logger.isInfoEnabled()) {
-                logger.info("Reconnecting JMS connection: " + m_configuration.getName());
+            if (getLogger().isInfoEnabled()) {
+                getLogger().info("Reconnecting JMS connection: " + m_configuration.getName());
             }
             try {
                 final Connection connection = m_manager.createConnection(m_configuration);
                 m_manager.addConnection(m_configuration.getName(), connection);
-                if (logger.isInfoEnabled()) {
-                    logger.info("Successfully reconnected JMS connection: " + m_configuration.getName());
+                if (getLogger().isInfoEnabled()) {
+                    getLogger().info("Successfully reconnected JMS connection: " + m_configuration.getName());
                 }
             }
             catch (NamingException e) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("Failed to reconnect.",e);
+                if (getLogger().isWarnEnabled()) {
+                    getLogger().warn("Failed to reconnect.",e);
                 }
                 m_manager.scheduleReconnectionJob(m_configuration);
             }
             catch (JMSException e) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("Failed to reconnect.",e);
+                if (getLogger().isWarnEnabled()) {
+                    getLogger().warn("Failed to reconnect.",e);
                 }
                 m_manager.scheduleReconnectionJob(m_configuration);
             }

@@ -24,11 +24,13 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
+
+import org.apache.cocoon.components.source.helpers.SourceCredential;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
@@ -125,7 +127,7 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
      * Resolve the source
      */
     public Source getSource(String location, Map parameters)
-    throws MalformedURLException, IOException {
+    throws IOException {
 
         int start = location.indexOf(':') + 1;
         int end = location.indexOf(':', start);
@@ -155,7 +157,7 @@ public final class XMLDBSourceFactory extends AbstractLogEnabled
             }
         }
 
-        return new XMLDBSource(this.getLogger(), credential.getPrincipal(), credential.getPassword(), location);
+        return new XMLDBSource(credential.getPrincipal(), credential.getPassword(), location);
     }
 
     public void release(org.apache.excalibur.source.Source source) {

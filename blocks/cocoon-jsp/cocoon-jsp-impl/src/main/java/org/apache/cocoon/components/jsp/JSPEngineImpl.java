@@ -17,17 +17,17 @@
 package org.apache.cocoon.components.jsp;
 
 import java.io.IOException;
-
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Allows Servlets and JSPs to be used as a generator.
@@ -35,7 +35,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * @version $Id$
  */
 public class JSPEngineImpl extends AbstractLogEnabled
-    implements JSPEngine, Parameterizable, ThreadSafe {
+                           implements JSPEngine, Parameterizable, ThreadSafe {
 
     /** The Default Servlet Class Name for Tomcat 3.X and 4.X */
     public static final String DEFAULT_SERVLET_CLASS = "org.apache.jasper.servlet.JspServlet";
@@ -57,7 +57,7 @@ public class JSPEngineImpl extends AbstractLogEnabled
                              HttpServletRequest servletRequest, 
                              HttpServletResponse servletResponse,
                              ServletContext context)
-        throws IOException, ServletException, Exception {
+    throws IOException, ServletException, Exception {
         
         JSPEngineServletOutputStream output = new JSPEngineServletOutputStream();
         JSPEngineServletRequest request = new JSPEngineServletRequest(servletRequest, url);

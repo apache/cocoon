@@ -23,15 +23,17 @@ import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Abstract {@link javax.jms.MessageListener} implementation. 
@@ -77,8 +79,8 @@ import org.apache.avalon.framework.service.Serviceable;
  * @version $Id$
  */
 public abstract class AbstractMessageListener extends AbstractLogEnabled
-implements MessageListener, Serviceable, Parameterizable, Initializable, Disposable,
-           JMSConnectionEventListener {
+                                              implements MessageListener, Serviceable, Parameterizable,
+                                                         Initializable, Disposable, JMSConnectionEventListener {
 
     // ---------------------------------------------------- Constants
 
