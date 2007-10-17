@@ -16,7 +16,12 @@
  */
 package org.apache.cocoon.i18n;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import java.net.MalformedURLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
@@ -27,18 +32,13 @@ import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.validity.DelayedValidity;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.ParamSaxBuffer;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-
-import java.net.MalformedURLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * Implementation of <code>Bundle</code> interface for XML resources. Represents a

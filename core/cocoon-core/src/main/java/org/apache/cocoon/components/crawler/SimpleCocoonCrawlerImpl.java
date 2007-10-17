@@ -16,17 +16,6 @@
  */
 package org.apache.cocoon.components.crawler;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.Constants;
-import org.apache.commons.lang.StringUtils;
-import org.apache.regexp.RE;
-import org.apache.regexp.RESyntaxException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,13 +27,25 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.commons.lang.StringUtils;
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
+
 /**
  * A simple cocoon crawler.
  *
  * @version $Id$
  */
 public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
-implements CocoonCrawler, Configurable, Disposable, Recyclable {
+                                     implements CocoonCrawler, Configurable, Disposable,
+                                                Recyclable {
 
     /**
      * Config element name specifying expected link content-typ.
@@ -383,9 +384,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * @since
      */
     private List getLinks(URL url) {
-        ArrayList url_links = null;
         String sURL = url.toString();
-
         if (!isIncludedURL(sURL) || isExcludedURL(sURL)) {
             return null;
         }
@@ -402,6 +401,8 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Getting links of URL " + sURL);
         }
+
+        ArrayList url_links = null;
         BufferedReader br = null;
         try {
             sURL = url.getFile();
@@ -478,7 +479,6 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             if (br != null) {
                 try {
                     br.close();
-                    br = null;
                 } catch (IOException ignored) {
                 }
             }
@@ -498,11 +498,10 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             return false;
         }
 
-        final String s = url.toString();
         Iterator i = excludeCrawlingURL.iterator();
         while (i.hasNext()) {
             RE pattern = (RE) i.next();
-            if (pattern.match(s)) {
+            if (pattern.match(url)) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Excluded URL " + url);
                 }
@@ -527,11 +526,10 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             return true;
         }
 
-        final String s = url.toString();
         Iterator i = includeCrawlingURL.iterator();
         while (i.hasNext()) {
             RE pattern = (RE) i.next();
-            if (pattern.match(s)) {
+            if (pattern.match(url)) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Included URL " + url);
                 }

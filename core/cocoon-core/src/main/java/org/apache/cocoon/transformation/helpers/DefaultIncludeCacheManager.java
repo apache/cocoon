@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -28,23 +27,25 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.store.Store;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
-
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.CocoonRunnable;
 import org.apache.cocoon.thread.RunnableManager;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.store.Store;
-import org.xml.sax.SAXException;
+
 import EDU.oswego.cs.dl.util.concurrent.CountDown;
+import org.xml.sax.SAXException;
 
 /**
  * Default implementation of a {@link IncludeCacheManager}.
@@ -61,23 +62,19 @@ import EDU.oswego.cs.dl.util.concurrent.CountDown;
  *  @version $Id$
  *  @since   2.1
  */
-public final class DefaultIncludeCacheManager
-    extends AbstractLogEnabled
-    implements IncludeCacheManager, 
-                ThreadSafe, 
-                Serviceable, 
-                Disposable,
-                Parameterizable {
+public final class DefaultIncludeCacheManager extends AbstractLogEnabled
+                                              implements IncludeCacheManager, ThreadSafe, Serviceable,
+                                                         Disposable, Parameterizable {
 
     private ServiceManager manager;
     
-    private SourceResolver   resolver;
+    private SourceResolver resolver;
     
-    private Store            store;
+    private Store          store;
     
     private IncludeCacheStorageProxy defaultCacheStorage;
     
-    private String            preemptiveLoaderURI;
+    private String         preemptiveLoaderURI;
     
     /**
      * @see IncludeCacheManager#getSession(org.apache.avalon.framework.parameters.Parameters)
@@ -91,7 +88,7 @@ public final class DefaultIncludeCacheManager
             Source source = null;
             try {
                 source = this.resolver.resolveURI(sourceURI);
-                IncludeCacheStorageProxy proxy = new ModifiableSourceIncludeCacheStorageProxy(this.resolver, source.getURI(), this.getLogger());
+                IncludeCacheStorageProxy proxy = new ModifiableSourceIncludeCacheStorageProxy(this.resolver, source.getURI());
                 session = new IncludeCacheManagerSession(pars, proxy);
             } catch (Exception local) {
                 session = new IncludeCacheManagerSession(pars, this.defaultCacheStorage);
@@ -133,9 +130,7 @@ public final class DefaultIncludeCacheManager
     /**
      * @see IncludeCacheManager#load(java.lang.String, IncludeCacheManagerSession)
      */
-    public String load(String uri,
-                        IncludeCacheManagerSession session) 
-    throws IOException, SourceException {
+    public String load(String uri, IncludeCacheManagerSession session) throws IOException {
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("Load " + uri + " for session " + session);
         }
@@ -205,19 +200,18 @@ public final class DefaultIncludeCacheManager
     public void stream(String uri,
                         IncludeCacheManagerSession session,
                         XMLConsumer handler) 
-    throws IOException, SourceException, SAXException {
+    throws IOException, SAXException {
 
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Stream " + uri + " for session " + session);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Stream " + uri + " for session " + session);
         }
 
         // if we are processing in parallel (and not preemptive) then....
-        if ( session.isParallel() && !session.isPreemptive()) {
-            
+        if (session.isParallel() && !session.isPreemptive()) {
+
             // get either the cached content or the pooled thread
             Object object = session.get(uri);
-            
-            if ( null == object ) {
+            if (object == null) {
                 // this should never happen!
                 throw new SAXException("No pooled thread found for " + uri);
             }
@@ -321,7 +315,7 @@ public final class DefaultIncludeCacheManager
         }
 
         // we are not processing in parallel and have no (valid) cached response
-        XMLByteStreamCompiler serializer = null;
+        XMLByteStreamCompiler serializer;
         try {
             final Source source = session.resolveURI(uri, this.resolver);
             
@@ -398,7 +392,7 @@ public final class DefaultIncludeCacheManager
         } catch (ServiceException e) {
             throw new ParameterException("Unable to lookup store with role " + storeRole, e);
         }
-        this.defaultCacheStorage = new StoreIncludeCacheStorageProxy(this.store, this.getLogger());
+        this.defaultCacheStorage = new StoreIncludeCacheStorageProxy(this.store);
     }
     
     final private static class LoaderThread implements Runnable {
@@ -439,12 +433,11 @@ public final class DefaultIncludeCacheManager
     final private static class PreemptiveBooter implements Runnable {
     
         private final String uri;
-    
-        public PreemptiveBooter( final String uri )
-        {
+
+        public PreemptiveBooter(final String uri) {
             this.uri = uri;
         }
-        
+
         public void run() {
             try {
                 URL url = new URL(this.uri);

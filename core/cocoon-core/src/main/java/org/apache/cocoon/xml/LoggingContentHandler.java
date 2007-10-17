@@ -16,18 +16,20 @@
  */
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.ContentHandler;
 
 /**
  * Logging content handler logs all events going through to the logger.
  *
  * @version $Id$
  */
-public class LoggingContentHandler extends AbstractLogEnabled implements ContentHandler {
+public class LoggingContentHandler extends AbstractLogEnabled
+                                   implements ContentHandler {
 
     /**
      * All debug messages from this handler are prefixed with this id.
@@ -57,69 +59,60 @@ public class LoggingContentHandler extends AbstractLogEnabled implements Content
     }
 
     public void endDocument() throws SAXException {
-        log ("endDocument", "");
+        log("endDocument", "");
         this.contentHandler.endDocument();
     }
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        log ("startPrefixMapping", "prefix="+prefix+",uri="+uri);
-        this.contentHandler.startPrefixMapping(prefix,uri);
+        log("startPrefixMapping", "prefix=" + prefix + ",uri=" + uri);
+        this.contentHandler.startPrefixMapping(prefix, uri);
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        log ("endPrefixMapping", "prefix="+prefix);
+        log("endPrefixMapping", "prefix=" + prefix);
         this.contentHandler.endPrefixMapping(prefix);
     }
 
     public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
-        log ("startElement", "uri="+uri+",local="+loc+",raw="+raw);
+        log("startElement", "uri=" + uri + ",local=" + loc + ",raw=" + raw);
         for (int i = 0; i < a.getLength(); i++) {
-            log ("            ", Integer.toString(i + 1)
-                 + ". uri=" + a.getURI(i)
-                 + ",local=" + a.getLocalName(i)
-                 + ",qname=" + a.getQName(i)
-                 + ",type=" + a.getType(i)
-                 + ",value=" + a.getValue(i));
+            log("            ", Integer.toString(i + 1)
+                                + ". uri=" + a.getURI(i)
+                                + ",local=" + a.getLocalName(i)
+                                + ",qname=" + a.getQName(i)
+                                + ",type=" + a.getType(i)
+                                + ",value=" + a.getValue(i));
         }
-        this.contentHandler.startElement(uri,loc,raw,a);
+        this.contentHandler.startElement(uri, loc, raw, a);
     }
 
-
     public void endElement(String uri, String loc, String qname) throws SAXException {
-        log ("endElement", "uri="+uri+",local="+loc+",qname="+qname);
-        this.contentHandler.endElement(uri,loc,qname);
+        log("endElement", "uri=" + uri + ",local=" + loc + ",qname=" + qname);
+        this.contentHandler.endElement(uri, loc, qname);
     }
 
     public void characters(char ch[], int start, int len) throws SAXException {
-        log ("characters", new String(ch,start,len));
-        this.contentHandler.characters(ch,start,len);
+        log("characters", new String(ch, start, len));
+        this.contentHandler.characters(ch, start, len);
     }
 
     public void ignorableWhitespace(char ch[], int start, int len) throws SAXException {
-        log ("ignorableWhitespace", new String(ch,start,len));
-        this.contentHandler.ignorableWhitespace(ch,start,len);
+        log("ignorableWhitespace", new String(ch, start, len));
+        this.contentHandler.ignorableWhitespace(ch, start, len);
     }
 
     public void processingInstruction(String target, String data) throws SAXException {
-        log ("processingInstruction", "target="+target+",data="+data);
-        this.contentHandler.processingInstruction(target,data);
+        log("processingInstruction", "target=" + target + ",data=" + data);
+        this.contentHandler.processingInstruction(target, data);
     }
 
     public void skippedEntity(String name) throws SAXException {
-        log ("skippedEntity", "name="+name);
+        log("skippedEntity", "name=" + name);
         this.contentHandler.skippedEntity(name);
     }
 
     private void log(String location, String description) {
-        StringBuffer logEntry = new StringBuffer();
-        logEntry.append(id);
-        logEntry.append("[");
-        logEntry.append(location);
-        logEntry.append("] ");
-        logEntry.append(description);
-        logEntry.append("\n");
-        getLogger().debug(logEntry.toString());
-        // System.out.print(logEntry.toString());
+        getLogger().debug(id + "[" + location + "] " + description + "\n");
     }
 }

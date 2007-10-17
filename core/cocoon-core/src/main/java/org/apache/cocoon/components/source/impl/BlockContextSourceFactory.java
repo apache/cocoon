@@ -20,12 +20,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.spring.configurator.BlockResourcesHolder;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -37,32 +37,31 @@ import org.apache.excalibur.source.SourceResolver;
  * 
  * @version $Id$
  */
-public class BlockContextSourceFactory extends AbstractLogEnabled implements
-        SourceFactory, Serviceable, ThreadSafe {
+public class BlockContextSourceFactory extends AbstractLogEnabled
+                                       implements SourceFactory, Serviceable, ThreadSafe {
     
     private ServiceManager serviceManager;
 
     private BlockResourcesHolder blockResourcesHolder;
 
     /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     * @see Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aServiceManager) throws ServiceException {
         this.serviceManager = aServiceManager;
         this.blockResourcesHolder = (BlockResourcesHolder) this.serviceManager.lookup(BlockResourcesHolder.class.getName());
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
+    /**
+     * @see SourceFactory#getSource(java.lang.String, java.util.Map)
      */
-    public Source getSource(String location, Map parameters) throws IOException,
-            MalformedURLException {
-
+    public Source getSource(String location, Map parameters) throws IOException {
         Map blockContexts = this.blockResourcesHolder.getBlockContexts();
 
         // the root "directory" of the blocks
-        if (location.endsWith(":/"))
+        if (location.endsWith(":/")) {
             return new BlockContextSource(location, blockContexts, this.serviceManager);
+        }
         
         // Remove the protocol and the first '/'
         int pos = location.indexOf(":/");
@@ -74,15 +73,16 @@ public class BlockContextSourceFactory extends AbstractLogEnabled implements
             String blockName = path.substring(0, pos);
             path = path.substring(pos);
             String blockContext = (String) blockContexts.get(blockName);
-            if (blockContext == null)
+            if (blockContext == null) {
                 throw new MalformedURLException("Unknown block name " + blockName +
-                        " in block context uri " + location);
+                                                " in block context uri " + location);
+            }
 
             // construct the path relative the block context
             String resolvedPath = blockContext + path;
-            if (this.getLogger().isDebugEnabled())
-                this.getLogger().debug("block context source " + location +
-                        " is resolved to " + resolvedPath);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("block context source " + location + " is resolved to " + resolvedPath);
+            }
 
             SourceResolver resolver = null;
             try {
@@ -94,15 +94,14 @@ public class BlockContextSourceFactory extends AbstractLogEnabled implements
                 this.serviceManager.release(resolver);
             }
         } else {
-            throw new MalformedURLException("The block name part of a block context uri must end with a '/':" + location);
+            throw new MalformedURLException("The block name part of a block context uri must end with a '/' in " + location);
         }
     }
 
     /**
-     * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
+     * @see SourceFactory#release(org.apache.excalibur.source.Source)
      */
     public void release(Source source) {
         // nothing to do
     }
-
 }

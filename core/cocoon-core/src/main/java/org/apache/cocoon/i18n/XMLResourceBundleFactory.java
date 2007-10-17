@@ -16,11 +16,16 @@
  */
 package org.apache.cocoon.i18n;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -31,13 +36,8 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.store.Store;
 
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.NetUtils;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * This is the XMLResourceBundleFactory, the method for getting and creating
@@ -281,7 +281,6 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
         }
 
         XMLResourceBundle bundle = new XMLResourceBundle(sourceURI, locale, parent);
-        bundle.enableLogging(getLogger());
         bundle.reload(this.resolver, this.interval);
         return bundle;
     }

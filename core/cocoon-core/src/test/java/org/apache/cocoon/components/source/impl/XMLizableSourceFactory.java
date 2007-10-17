@@ -17,10 +17,8 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -30,43 +28,48 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceResolver;
 
+import org.apache.cocoon.util.AbstractLogEnabled;
 
-public class XMLizableSourceFactory extends AbstractLogEnabled 
-implements SourceFactory, Serviceable, ThreadSafe {
+/**
+ * @version $Id$
+ */
+public class XMLizableSourceFactory extends AbstractLogEnabled
+                                    implements SourceFactory, Serviceable, ThreadSafe {
     
     private ServiceManager m_manager;
     private SourceResolver m_resolver;
     
-    private boolean m_initialized;
+    private volatile boolean m_initialized;
+
     
     public void service(ServiceManager manager) throws ServiceException {
         m_manager = manager;
     }
     
     private synchronized void lazyInitialize() throws SourceException {
-        if (m_initialized) {
-            return;
+        if (!m_initialized) {
+            try {
+                m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
+            } catch (ServiceException e) {
+                throw new SourceException("Missing service dependency: SourceResolver",e);
+            }
+            m_initialized = true;
         }
-        try {
-            m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
-        }
-        catch (ServiceException e) {
-            throw new SourceException("Missing service dependency: SourceResolver",e);
-        }
-        m_initialized = true;
     }
     
     public Source getSource(String location, Map parameters)
-        throws IOException, MalformedURLException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Creating source object for " + location);
+    throws IOException {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Creating source object for " + location);
         }
         if (!m_initialized) {
             lazyInitialize();
         }
-        final String uri = location.substring(XMLizableSource.SCHEME.length()+1);
-        final Source delegate = m_resolver.resolveURI(uri,null,parameters);
-        return new XMLizableSource(delegate,m_manager);
+
+        final String uri = location.substring(XMLizableSource.SCHEME.length() + 1);
+        final Source delegate = m_resolver.resolveURI(uri, null, parameters);
+
+        return new XMLizableSource(delegate, m_manager);
     }
 
     public void release(Source source) {
@@ -74,5 +77,4 @@ implements SourceFactory, Serviceable, ThreadSafe {
             m_resolver.release(((XMLizableSource) source).getSource());
         }
     }
-
 }
