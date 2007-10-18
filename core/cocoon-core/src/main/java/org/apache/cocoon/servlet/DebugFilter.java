@@ -35,11 +35,11 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * Servlet filter for handling multi part MIME uploads
+ * Servlet filter for printing request debug information into log file.
  * 
  * @version $Id$
  */
-public class DebugFilter implements Filter{
+public class DebugFilter implements Filter {
 
     final static protected String lineSeparator = SystemUtils.LINE_SEPARATOR;
 
