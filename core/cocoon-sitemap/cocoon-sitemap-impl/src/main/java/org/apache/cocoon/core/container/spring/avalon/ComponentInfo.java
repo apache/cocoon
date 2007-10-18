@@ -289,11 +289,8 @@ public final class ComponentInfo {
      * Is this a selector?
      */
     public boolean isSelector() {
-        if ( this.componentClassName.equals("org.apache.cocoon.core.container.DefaultServiceSelector")
-             || this.componentClassName.equals("org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector") ) {
-            return true;
-        }
-        return false;
+        return this.componentClassName.equals("org.apache.cocoon.core.container.DefaultServiceSelector") ||
+               this.componentClassName.equals("org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector");
     }
 
     public String getDefaultValue() {

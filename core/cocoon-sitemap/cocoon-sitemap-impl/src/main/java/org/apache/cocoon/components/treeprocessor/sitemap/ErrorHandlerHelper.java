@@ -16,7 +16,9 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import java.io.IOException;
+import java.util.Map;
+
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -29,11 +31,10 @@ import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.io.IOException;
-import java.util.Map;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Helps to call error handlers from PipelineNode and PipelinesNode.
@@ -61,16 +62,13 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
      */
     private HandleErrorsNode error500;
 
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        this.handledErrorsLogger = logger.getChildLogger("handled-errors");
-    }
 
     /**
      * The component manager is used to create notifying builders.
      */
-    public void service(ServiceManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
+        this.handledErrorsLogger = ((Logger) this.manager.lookup(AvalonUtils.LOGGER_ROLE)).getChildLogger("handled");
     }
 
     void set404Handler(ProcessingNode node) {
@@ -104,11 +102,12 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
                                       InvokeContext context)
     throws Exception {
         final Processor.InternalPipelineDescription desc = prepareErrorHandler(ex, env, context);
-        if ( desc != null ) {
+        if (desc != null) {
             desc.release();
             return true;
         }
-        return  false;
+
+        return false;
     }
 
     /**
@@ -151,11 +150,12 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
                                       InvokeContext context)
     throws Exception {
         final Processor.InternalPipelineDescription desc = prepareErrorHandler(node, ex, env, context);
-        if ( desc != null ) {
+        if (desc != null) {
             desc.release();
             return true;
         }
-        return  false;
+
+        return false;
     }
 
     /**

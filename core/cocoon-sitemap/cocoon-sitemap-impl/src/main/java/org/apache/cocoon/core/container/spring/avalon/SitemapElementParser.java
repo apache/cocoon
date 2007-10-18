@@ -27,13 +27,14 @@ import org.springframework.web.context.WebApplicationContext;
 import org.w3c.dom.Element;
 
 /**
- * @version $Id$
+ *
  * @since 2.2
+ * @version $Id$
  */
 public class SitemapElementParser extends BridgeElementParser {
 
     /**
-     * @see org.apache.cocoon.core.container.spring.avalon.BridgeElementParser#addContext(org.w3c.dom.Element, org.springframework.beans.factory.support.BeanDefinitionRegistry)
+     * @see BridgeElementParser#addContext(Element, BeanDefinitionRegistry)
      */
     protected void addContext(Element element, BeanDefinitionRegistry registry) {
         // we get the uriPrefix from the configuration
@@ -53,7 +54,7 @@ public class SitemapElementParser extends BridgeElementParser {
     protected void addLogger(BeanDefinitionRegistry registry,
                              String                 loggerCategory) {
         final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonChildLoggerFactoryBean.class, "init", false);
-        if ( loggerCategory != null ) {
+        if (loggerCategory != null) {
             beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
         }
         this.register(beanDef, AvalonUtils.LOGGER_ROLE, registry);

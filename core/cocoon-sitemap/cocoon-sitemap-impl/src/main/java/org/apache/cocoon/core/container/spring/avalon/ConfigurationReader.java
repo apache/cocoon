@@ -195,7 +195,7 @@ public class ConfigurationReader {
 
     protected void convert(String relativePath)
     throws Exception {
-        if ( this.logger.isDebugEnabled() ) {
+        if (this.logger.isDebugEnabled()) {
             this.logger.debug("Reading Avalon configuration from " + relativePath);
         }
         Resource root = this.resolver.getResource(this.getUrl(relativePath, null));
@@ -204,9 +204,10 @@ public class ConfigurationReader {
         final Configuration config = b.build(this.getInputSource(root));
         // validate cocoon.xconf
         if (!"cocoon".equals(config.getName())) {
-            throw new ConfigurationException("Invalid configuration file\n"
-                    + config.toString());
+            throw new ConfigurationException("Invalid configuration file\n" +
+                                             config.toString());
         }
+
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Configuration version: " + config.getAttribute("version"));
         }
@@ -215,6 +216,7 @@ public class ConfigurationReader {
                     "Invalid configuration schema version. Must be '"
                             + Constants.CONF_VERSION + "'.");
         }
+
         this.convert(config, null, this.getUrl(root));
     }
 
@@ -243,9 +245,10 @@ public class ConfigurationReader {
 
     protected void convert(Configuration config, Configuration additionalConfig, String rootUri)
     throws Exception {
-        if ( this.logger.isDebugEnabled() ) {
+        if (this.logger.isDebugEnabled() ) {
             this.logger.debug("Converting Avalon configuration from configuration object: " + config);
         }
+
         // It's possible to define a logger on a per sitemap/service manager base.
         // This is the default logger for all components defined with this sitemap/manager.
         this.configInfo.setRootLogger(config.getAttribute("logger", null));

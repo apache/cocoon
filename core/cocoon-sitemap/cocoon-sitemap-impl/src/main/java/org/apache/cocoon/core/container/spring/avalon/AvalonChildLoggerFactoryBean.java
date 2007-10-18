@@ -31,8 +31,7 @@ import org.springframework.beans.factory.HierarchicalBeanFactory;
  * @since 2.2
  * @version $Id$
  */
-public class AvalonChildLoggerFactoryBean
-    implements FactoryBean, BeanFactoryAware {
+public class AvalonChildLoggerFactoryBean implements FactoryBean, BeanFactoryAware {
 
     /** Logger (we use the same logging mechanism as Spring!) */
     protected final Log log = LogFactory.getLog(getClass());
@@ -45,19 +44,23 @@ public class AvalonChildLoggerFactoryBean
     /** The logging category. */
     protected String category;
 
+    
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     /**
-     * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     * @see BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
     public void setBeanFactory(BeanFactory factory) throws BeansException {
         this.beanFactory = factory;
     }
 
-    protected void init()
-    throws Exception {
+    protected void init() throws Exception {
         // get parent factory
-        final BeanFactory parentFactory = ((HierarchicalBeanFactory)this.beanFactory).getParentBeanFactory();
-        final Logger parentLogger = (Logger)parentFactory.getBean(AvalonUtils.LOGGER_ROLE);
-        if ( this.category == null ) {
+        final BeanFactory parentFactory = ((HierarchicalBeanFactory) this.beanFactory).getParentBeanFactory();
+        final Logger parentLogger = (Logger) parentFactory.getBean(AvalonUtils.LOGGER_ROLE);
+        if (this.category == null) {
             this.logger = parentLogger;
         } else {
             this.logger = parentLogger.getChildLogger(this.category);
@@ -83,9 +86,5 @@ public class AvalonChildLoggerFactoryBean
      */
     public boolean isSingleton() {
         return true;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 }
