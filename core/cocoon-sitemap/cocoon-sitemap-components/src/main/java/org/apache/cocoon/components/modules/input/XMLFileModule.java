@@ -16,24 +16,26 @@
  */
 package org.apache.cocoon.components.modules.input;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.commons.collections.map.AbstractReferenceMap;
 import org.apache.commons.collections.map.ReferenceMap;
+import org.apache.commons.logging.Log;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
-import org.w3c.dom.Document;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.cocoon.components.source.util.SourceUtil;
+
+import org.w3c.dom.Document;
 
 /**
 
@@ -162,7 +164,7 @@ public class XMLFileModule extends AbstractJXPathModule
          * @return a <code>Document</code> value
          * @exception Exception if an error occurs
          */
-        public synchronized Document getDocument(ServiceManager manager, SourceResolver resolver, Logger logger)
+        public synchronized Document getDocument(ServiceManager manager, SourceResolver resolver, Log logger)
         throws Exception {
             Source src = null;
             Document dom = null;

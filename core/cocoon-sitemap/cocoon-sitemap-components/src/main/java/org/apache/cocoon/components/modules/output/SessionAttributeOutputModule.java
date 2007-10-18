@@ -19,12 +19,11 @@ package org.apache.cocoon.components.modules.output;
 
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
@@ -40,11 +39,12 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  *
  * @version $Id$
  */
-public class SessionAttributeOutputModule extends AbstractOutputModule implements ThreadSafe {
+public class SessionAttributeOutputModule extends AbstractOutputModule
+                                          implements ThreadSafe {
     
-    public final String PREFIX = "org.apache.cocoon.components.modules.output.OutputModule";
-    public final String TRANS_PREFIX = "org.apache.cocoon.components.modules.output.OutputModule.SessionAttributeOutputModule.transient";
-    public final String ROLLBACK_LIST = "org.apache.cocoon.components.modules.output.OutputModule.SessionAttributeOutputModule.rollback";
+    public static final String PREFIX = "org.apache.cocoon.components.modules.output.OutputModule";
+    public static final String TRANS_PREFIX = "org.apache.cocoon.components.modules.output.OutputModule.SessionAttributeOutputModule.transient";
+    public static final String ROLLBACK_LIST = "org.apache.cocoon.components.modules.output.OutputModule.SessionAttributeOutputModule.rollback";
     
     /**
      * communicate an attribute value to further processing logic.
@@ -141,9 +141,9 @@ public class SessionAttributeOutputModule extends AbstractOutputModule implement
     public void commit( Configuration modeConf, Map objectModel ) {
         if (this.settings.get("isolation-level","0").equals("1")) {
 
-            Logger logger = getLogger();
-            if (logger.isDebugEnabled())
-                logger.debug("prepare commit");
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("prepare commit");
+            }
 
             Map aMap = this.prepareCommit(objectModel, TRANS_PREFIX);
             if (aMap == null) {
@@ -156,8 +156,8 @@ public class SessionAttributeOutputModule extends AbstractOutputModule implement
             }
             
             String prefix = (String) this.settings.get("key-prefix", PREFIX );
-            if (prefix != "") {
-                prefix = prefix+":";
+            if (prefix.length() > 0) {
+                prefix = prefix + ":";
             } else {
                 prefix = null;
             }
@@ -166,25 +166,28 @@ public class SessionAttributeOutputModule extends AbstractOutputModule implement
                 String key = (String) iter.next();
                 Object value = aMap.get(key);
                 if (prefix != null) { key = prefix + key; }
-                if (logger.isDebugEnabled())
-                    logger.debug("committing ['"+key+"'] to ['"+value+"']");
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("committing ['"+key+"'] to ['"+value+"']");
+                }
                 session.setAttribute(key, value);
             }
 
-            if (logger.isDebugEnabled())
-                logger.debug("done commit");
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("done commit");
+            }
 
         } else {
-            if (getLogger().isDebugEnabled())
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("commit");
-            this.prepareCommit(objectModel, ROLLBACK_LIST);
+            }
+
+            prepareCommit(objectModel, ROLLBACK_LIST);
         }
-        
     }
     
     protected String getName( String name ) {
-        String prefix = (String) this.settings.get("key-prefix", PREFIX );
-        return (prefix == "" ? name : prefix+":"+name);
+        String prefix = (String) this.settings.get("key-prefix", PREFIX);
+        return prefix.length() == 0 ? name : prefix + ":" + name;
     }
 
 }
