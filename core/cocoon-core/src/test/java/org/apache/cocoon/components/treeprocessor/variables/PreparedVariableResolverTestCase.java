@@ -42,7 +42,6 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         resolver.setManager(getManager());
         context = new InvokeContext(true);
         context.service(getManager());
-        context.enableLogging(getLogger());
         //objectModel = getObjectModel();
     }
 
