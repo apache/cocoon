@@ -130,7 +130,7 @@ public final class SitemapSource
         }
 
         // create environment...
-        final EnvironmentWrapper wrapper = new EnvironmentWrapper(env, info, logger);
+        final EnvironmentWrapper wrapper = new EnvironmentWrapper(env, info);
 
         // The environment is a facade whose delegate can be changed in case of internal redirects
         this.environment = new MutableEnvironmentFacade(wrapper);
@@ -178,8 +178,7 @@ public final class SitemapSource
     /**
      * Return an <code>InputStream</code> object to read from the source.
      */
-    public InputStream getInputStream()
-    throws IOException, SourceException {
+    public InputStream getInputStream() throws IOException {
 
         if (this.needsRefresh) {
             this.refresh();

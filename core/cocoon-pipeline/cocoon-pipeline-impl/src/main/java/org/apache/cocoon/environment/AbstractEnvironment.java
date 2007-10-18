@@ -22,19 +22,19 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.util.BufferedOutputStream;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
+
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.BufferedOutputStream;
 
 /**
  * Base class for any environment
  *
  * @version $Id$
  */
-public abstract class AbstractEnvironment 
-    extends AbstractLogEnabled 
-    implements Environment {
+public abstract class AbstractEnvironment extends AbstractLogEnabled 
+                                          implements Environment {
 
     /** The current uri in progress */
     protected String uri;

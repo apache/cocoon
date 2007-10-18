@@ -297,12 +297,13 @@ public class RequestProcessor {
                                          HttpServletRequest req,
                                          HttpServletResponse res)
     throws Exception {
-        HttpEnvironment env;
 
         String formEncoding = req.getParameter("cocoon-form-encoding");
         if (formEncoding == null) {
             formEncoding = this.settings.getFormEncoding();
         }
+
+        HttpEnvironment env;
         env = new HttpEnvironment(uri,
                                   req,
                                   res,
@@ -310,7 +311,6 @@ public class RequestProcessor {
                                   this.environmentContext,
                                   this.containerEncoding,
                                   formEncoding);
-        env.enableLogging(getLogger());
         return env;
     }
 

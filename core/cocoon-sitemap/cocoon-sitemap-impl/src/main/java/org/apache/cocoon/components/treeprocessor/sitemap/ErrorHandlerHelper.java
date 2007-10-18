@@ -182,7 +182,6 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
 
             // Create error context
             InvokeContext errorContext = new InvokeContext(context.isBuildingPipelineOnly());
-            errorContext.enableLogging(getLogger());
             errorContext.setRedirector(context.getRedirector());
             errorContext.service(this.manager);
             errorContext.inform(context.getPipelineType(), context.getPipelineParameters(), env.getObjectModel());

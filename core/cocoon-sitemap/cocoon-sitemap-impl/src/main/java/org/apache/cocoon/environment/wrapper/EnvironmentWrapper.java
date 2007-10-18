@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Environment;
@@ -31,7 +30,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.util.BufferedOutputStream;
 
-
 /**
  * This is a wrapper class for the <code>Environment</code> object.
  * It has the same properties except that the object model
@@ -39,33 +37,31 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @version $Id$
  */
-public class EnvironmentWrapper 
-    extends AbstractEnvironment {
+public class EnvironmentWrapper extends AbstractEnvironment {
 
     /** The wrapped environment */
     protected final Environment environment;
-
-    /** The redirect url */
-    protected String redirectURL;
 
     /** The request object */
     protected final Request request;
 
     protected String contentType;
 
-    protected boolean internalRedirect = false;
-    
+    /** The redirect url */
+    protected String redirectURL;
+
+    protected boolean internalRedirect;
+
+
     /**
      * Construct a new environment.
      * 
      * @param env    The origial Environment
      * @param info   A description of the uri for the new environment
-     * @param logger The logger to be used by this environment
      */
     public EnvironmentWrapper(Environment       env,
-                              SitemapSourceInfo info,
-                              Logger            logger) {
-        this(env, info, logger, true);
+                              SitemapSourceInfo info) {
+        this(env, info, true);
     }
 
     /**
@@ -73,16 +69,12 @@ public class EnvironmentWrapper
      * 
      * @param env    The origial Environment
      * @param info   A description of the uri for the new environment
-     * @param logger The logger to be used by this environment
      * @param wrapResponse  Whether or not to wrap the Response object
      */
     public EnvironmentWrapper(Environment       env,
                               SitemapSourceInfo info,
-                              Logger            logger,
                               boolean           wrapResponse) {
         super(env.getURI(), info.view, env.getAction());
-        
-        this.enableLogging(logger);
         this.environment = env;
 
         // create new object model and replace the request object

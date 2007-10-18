@@ -166,7 +166,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
      */
     public boolean process(Environment environment) throws Exception {
         InvokeContext context = new InvokeContext();
-        context.enableLogging(getLogger());
         try {
             return process(environment, context);
         } finally {
@@ -182,11 +181,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
         InvokeContext context = new InvokeContext(true);
-        context.enableLogging(getLogger());
         try {
             if (process(environment, context)) {
                 return context.getInternalPipelineDescription(environment);
             }
+
             return null;
         } finally {
             context.dispose();
@@ -231,7 +230,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
             // Build a redirector
             TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
-            setupLogger(redirector);
             context.setRedirector(redirector);
             context.service(this.manager);
             context.setLastProcessor(this);
@@ -289,7 +287,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         // test if this is a call from flow
         boolean isRedirect = (environment.getObjectModel().remove("cocoon:forward") == null);
         final SitemapSourceInfo info = SitemapSourceInfo.parseURI(environment, uri);
-        Environment newEnv = new ForwardEnvironmentWrapper(environment, info, getLogger());
+        Environment newEnv = new ForwardEnvironmentWrapper(environment, info);
         if (isRedirect) {
             ((ForwardEnvironmentWrapper) newEnv).setInternalRedirect(true);
         }

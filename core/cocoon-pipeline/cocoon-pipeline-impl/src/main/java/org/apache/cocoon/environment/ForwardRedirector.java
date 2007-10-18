@@ -17,11 +17,10 @@
 package org.apache.cocoon.environment;
 
 import java.io.IOException;
-
 import javax.servlet.http.HttpSession;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A base class for <code>Redirector</code>s that handle forward redirects, i.e. internal
@@ -31,9 +30,8 @@ import org.apache.cocoon.ProcessingException;
  *
  * @version $Id$
  */
-public abstract class ForwardRedirector 
-extends AbstractLogEnabled 
-implements Redirector, PermanentRedirector {
+public abstract class ForwardRedirector extends AbstractLogEnabled
+                                        implements Redirector, PermanentRedirector {
 
     /**
      * Was there a call to <code>redirect()</code> ?
@@ -123,16 +121,15 @@ implements Redirector, PermanentRedirector {
      * Redirect the client to new URL with session mode
      */
     protected void doRedirect(boolean sessionmode, 
-                                String newURL, 
-                                boolean permanent,
-                                boolean global) 
+                              String newURL,
+                              boolean permanent,
+                              boolean global)
     throws IOException {
         final Request request = ObjectModelHelper.getRequest(this.env.getObjectModel());
+        
         // check if session mode shall be activated
         if (sessionmode) {
-
             // The session
-            HttpSession session = null;
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("redirect: entering session mode");
             }
@@ -140,25 +137,26 @@ implements Redirector, PermanentRedirector {
             if (s != null) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Old session ID found in request, id = " + s);
-                    if ( request.isRequestedSessionIdValid() ) {
+                    if (request.isRequestedSessionIdValid()) {
                         getLogger().debug("And this old session ID is valid");
                     }
                 }
             }
+
             // get session from request, or create new session
-            session = request.getSession(true);
+            HttpSession session = request.getSession(true);
             if (session == null) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("redirect session mode: unable to get session object!");
                 }
             } else {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug ("redirect: session mode completed, id = " + session.getId() );
+                    getLogger().debug("redirect: session mode completed, id = " + session.getId());
                 }
             }
         }
+
         // redirect
         this.env.redirect(newURL, global, permanent);
     }
-
 }

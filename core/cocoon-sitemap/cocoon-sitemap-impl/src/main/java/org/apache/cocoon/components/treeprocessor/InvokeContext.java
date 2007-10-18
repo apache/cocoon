@@ -23,18 +23,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
+
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.sitemap.SitemapErrorHandler;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * The invocation context of <code>ProcessingNode</code>s.
@@ -53,8 +54,8 @@ public class InvokeContext extends AbstractLogEnabled
                            implements Serviceable, Disposable {
 
     private List mapStack = new ArrayList();
-    private HashMap nameToMap = new HashMap();
-    private HashMap mapToName = new HashMap();
+    private Map nameToMap = new HashMap();
+    private Map mapToName = new HashMap();
 
     /** True if building pipeline only, not processing it. */
     private boolean isBuildingPipelineOnly;
@@ -108,7 +109,7 @@ public class InvokeContext extends AbstractLogEnabled
      * Determines if the Pipeline been set for this context
      */
     public boolean pipelineIsSet() {
-	    return (this.processingPipeline != null);
+	    return this.processingPipeline != null;
     }
 
     /**
