@@ -17,20 +17,21 @@
 package org.apache.cocoon.components.source.impl;
 
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
-
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.impl.AbstractSource;
@@ -44,11 +45,8 @@ import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 
-import org.apache.commons.jxpath.JXPathContext;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -68,18 +66,20 @@ import org.xml.sax.SAXException;
  * </ul>
  * </p>
  *
+ * @version $Id$
  */
-public class XModuleSource
-    extends AbstractSource
-    implements ModifiableSource, XMLizable, DOMBuilder.Listener {
+public class XModuleSource extends AbstractSource
+                           implements ModifiableSource, XMLizable, DOMBuilder.Listener {
 
-    private final static String SCHEME = "xmodule";
+    private static final String SCHEME = "xmodule";
+
+    private final Log logger = LogFactory.getLog(getClass());
+
     private String attributeType;
     private String attributeName;
     private String xPath;
     protected ServiceManager manager;
     private Map objectModel;
-    private Logger logger;
     // TODO: make this actually configurable
     private String configuredSerializerName = "xml";
     
@@ -87,13 +87,11 @@ public class XModuleSource
      * Create a xmodule source from a 'xmodule:' uri and a the object model.
      * <p>The uri is of the form "xmodule:/attribute-type/attribute-name/xpath</p>
      */
-    public XModuleSource( Map objectModel, String uri,
-                          ServiceManager manager, Logger logger )
-        throws MalformedURLException {
+    public XModuleSource(Map objectModel, String uri, ServiceManager manager)
+    throws MalformedURLException {
 
         this.objectModel = objectModel;
         this.manager = manager;
-        this.logger = logger;
 
         setSystemId( uri );
 
@@ -180,9 +178,9 @@ public class XModuleSource
      *
      * @throws IOException if I/O error occured.
      */
-    public InputStream getInputStream() throws IOException, SourceException {
-        if ( this.logger.isDebugEnabled() ) {
-            this.logger.debug( "Getting InputStream for " + getURI() );
+    public InputStream getInputStream() throws IOException {
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Getting InputStream for " + getURI());
         }
 
         // Serialize the SAX events to the XMLSerializer
@@ -218,10 +216,10 @@ public class XModuleSource
      *
      */
     public boolean exists() {
-        boolean exists = false;
+        boolean exists;
         try {
-            exists = getInputAttribute( this.attributeType, this.attributeName ) != null;
-        } catch ( SAXException e ) {
+            exists = getInputAttribute(this.attributeType, this.attributeName) != null;
+        } catch (SAXException e) {
             exists = false;
         }
         return exists;
@@ -242,24 +240,24 @@ public class XModuleSource
      * Delete the source 
      */
     public void delete() throws SourceException {
-        if ( !(this.xPath.length() == 0 || this.xPath.equals( "/" )) ) {
+        if (!(this.xPath.length() == 0 || this.xPath.equals("/"))) {
             Object value;
             try {
-                value = getInputAttribute( this.attributeType, this.attributeName );
-            } catch ( SAXException e ) {
-                throw new SourceException( "delete: ", e );
+                value = getInputAttribute(this.attributeType, this.attributeName);
+            } catch (SAXException e) {
+                throw new SourceException("delete: ", e);
             }
-            if ( value == null )
-                throw new SourceException( " The attribute: " + this.attributeName +
-                                           " is empty" );
+            if (value == null)
+                throw new SourceException(" The attribute: " + this.attributeName +
+                                          " is empty");
 
-            JXPathContext context = JXPathContext.newContext( value );
-            context.removeAll( this.xPath );
+            JXPathContext context = JXPathContext.newContext(value);
+            context.removeAll(this.xPath);
         } else {
             try {
-                setOutputAttribute( this.attributeType, this.attributeName, null );
-            } catch ( SAXException e ) {
-                throw new SourceException( "delete: ", e );
+                setOutputAttribute(this.attributeType, this.attributeName, null);
+            } catch (SAXException e) {
+                throw new SourceException("delete: ", e);
             }
         }
     }

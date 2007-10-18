@@ -16,12 +16,14 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.sitemap.ExecutionContext;
 import org.apache.cocoon.sitemap.SitemapExecutor;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.location.Location;
 
 /**
+ * Base class for ProcessingNode implementations.
+ *
  * @version $Id$
  */
 public abstract class AbstractProcessingNode extends AbstractLogEnabled
@@ -36,12 +38,11 @@ public abstract class AbstractProcessingNode extends AbstractLogEnabled
     protected SitemapExecutor executor;
 
 
-    public AbstractProcessingNode(String type) {
-        this.componentName = type;
+    public AbstractProcessingNode() {
     }
 
-    public AbstractProcessingNode() {
-        this(null);
+    public AbstractProcessingNode(String type) {
+        this.componentName = type;
     }
 
     /**

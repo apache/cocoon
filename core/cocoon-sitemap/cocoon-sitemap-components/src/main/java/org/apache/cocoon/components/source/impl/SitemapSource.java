@@ -24,10 +24,15 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceNotFoundException;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.source.util.SourceUtil;
@@ -37,14 +42,10 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceNotFoundException;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.xml.sax.XMLizable;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
@@ -55,9 +56,8 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @version $Id$
  */
-public final class SitemapSource
-        extends AbstractLogEnabled
-        implements Source, XMLizable {
+public final class SitemapSource extends AbstractLogEnabled
+                                 implements Source, XMLizable {
 
     /** The internal event pipeline validities */
     private SitemapSourceValidity validity;
@@ -108,8 +108,7 @@ public final class SitemapSource
      */
     public SitemapSource(ServiceManager manager,
                          String         uri,
-                         Map            parameters,
-                         Logger         logger)
+                         Map            parameters)
     throws MalformedURLException {
 
         Environment env = EnvironmentHelper.getCurrentEnvironment();
@@ -117,7 +116,6 @@ public final class SitemapSource
             throw new MalformedURLException("The cocoon protocol can not be used outside an environment.");
         }
         this.manager = manager;
-        this.enableLogging(logger);
 
         SitemapSourceInfo info = SitemapSourceInfo.parseURI(env, uri);
         this.protocol = info.protocol;

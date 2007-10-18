@@ -22,24 +22,25 @@ import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.collections.IteratorUtils;
+
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
-import org.apache.commons.collections.IteratorUtils;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * This module allows access to properties defined in the settings.
  *
  * @version $Id$
  */
-public final class SettingsInputModule
-    extends AbstractLogEnabled
-    implements InputModule, ThreadSafe, Serviceable, Disposable {
+public final class SettingsInputModule extends AbstractLogEnabled
+                                       implements InputModule, ThreadSafe, Serviceable,
+                                                  Disposable {
 
     protected ServiceManager manager;
     protected ProcessInfoProvider infoProvider; 
@@ -56,7 +57,7 @@ public final class SettingsInputModule
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
+        if (this.manager != null) {
             this.manager.release(this.infoProvider);
             this.infoProvider = null;
             this.manager = null;
@@ -85,10 +86,11 @@ public final class SettingsInputModule
      */
     public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        Object o = this.getAttribute(name, modeConf, objectModel);
+        Object o = getAttribute(name, modeConf, objectModel);
         if (o != null) {
-            return new Object[] {o};
+            return new Object[]{o};
         }
+        
         return null;
     }
 }

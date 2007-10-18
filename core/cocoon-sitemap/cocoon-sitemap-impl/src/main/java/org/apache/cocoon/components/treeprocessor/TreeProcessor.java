@@ -18,7 +18,6 @@ package org.apache.cocoon.components.treeprocessor;
 
 import java.io.IOException;
 import java.net.URL;
-
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -32,27 +31,27 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.NamespacedSAXConfigurationHandler;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.regexp.RE;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.flow.Interpreter;
-import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.components.treeprocessor.sitemap.FlowNode;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.impl.DefaultExecutor;
-//TODO rcl
-//import org.apache.commons.jci.listeners.NotificationListener;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.regexp.RE;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -63,7 +62,8 @@ import org.xml.sax.SAXException;
 public class TreeProcessor extends AbstractLogEnabled
                            implements ThreadSafe, Processor, Serviceable,
                                       Configurable,
-                                      Disposable, Initializable { // TODO rcl ,NotificationListener {
+                                      Disposable, Initializable {
+    // TODO: RCL: implement NotificationListener
 
     /** The parent TreeProcessor, if any */
     protected TreeProcessor parent;
@@ -135,7 +135,6 @@ public class TreeProcessor extends AbstractLogEnabled
                             String prefix)
     throws Exception {
         this.parent = parent;
-        enableLogging(parent.getLogger());
 
         // Copy all that can be copied from the parent
         this.source = sitemapSource;
@@ -406,7 +405,7 @@ public class TreeProcessor extends AbstractLogEnabled
             Configuration sitemapProgram = createSitemapProgram(this.source);
             newLastModified = this.source.getLastModified();
 
-            newProcessor = createConcreteTreeProcessor();
+            newProcessor = new ConcreteTreeProcessor(this, this.sitemapExecutor);
 
             // Get the treebuilder that can handle this version of the sitemap.
             TreeBuilder treeBuilder = getTreeBuilder(sitemapProgram);
@@ -446,12 +445,6 @@ public class TreeProcessor extends AbstractLogEnabled
         // Switch to the new processor (ensure it's never temporarily null)
         this.concreteProcessor = newProcessor;
         this.lastModified = newLastModified;
-    }
-
-    private ConcreteTreeProcessor createConcreteTreeProcessor() {
-        ConcreteTreeProcessor newProcessor = new ConcreteTreeProcessor(this, this.sitemapExecutor);
-        setupLogger(newProcessor);
-        return newProcessor;
     }
 
     /**

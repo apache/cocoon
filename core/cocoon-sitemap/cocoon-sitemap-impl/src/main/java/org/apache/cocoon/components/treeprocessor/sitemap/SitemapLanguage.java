@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -39,10 +38,16 @@ import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.lang.StringUtils;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.regexp.RE;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.web.context.WebApplicationContext;
+
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.classloader.reloading.Monitor;
 import org.apache.cocoon.components.LifecycleHelper;
@@ -69,24 +74,19 @@ import org.apache.cocoon.sitemap.EnterSitemapEventListener;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
 import org.apache.cocoon.util.location.LocationUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.regexp.RE;
-import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  * The tree builder for the sitemap language.
  *
  * @version $Id$
  */
-public class SitemapLanguage
-    extends AbstractLogEnabled
-    implements TreeBuilder, Contextualizable, Serviceable, Recyclable {
+public class SitemapLanguage extends AbstractLogEnabled
+                             implements TreeBuilder, Contextualizable, Serviceable,
+                                        Recyclable {
 
     // Regexp's for splitting expressions
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";
@@ -361,7 +361,7 @@ public class SitemapLanguage
 
         this.itsComponentInfo = (PipelineComponentInfo) this.itsManager.lookup(PipelineComponentInfo.ROLE);
         // Create a helper object to setup components
-        this.itsLifecycle = new LifecycleHelper(getLogger(), itsContext, this.itsManager, null /* configuration */);
+        this.itsLifecycle = new LifecycleHelper(null /* logger */, itsContext, this.itsManager, null /* configuration */);
 
         // Create & initialize the NodeBuilder selector.
         {
@@ -381,13 +381,20 @@ public class SitemapLanguage
                     resolver.release(src);
                 }
             } catch (Exception e) {
-                throw new ConfigurationException("Could not load TreeBuilder configuration from "
-                        + url, e);
+                throw new ConfigurationException("Could not load TreeBuilder configuration from " +
+                                                 url, e);
             } finally {
                 this.manager.release(resolver);
             }
-            LifecycleHelper.setupComponent(selector, getLogger(), itsContext, this.itsManager,
-                    config.getChild("nodes", false), true);
+
+            // ContainerUtil.contextualize(selector, itsContext);
+            // ContainerUtil.service(selector, this.itsManager);
+            // ContainerUtil.configure(selector, config.getChild("nodes", false));
+            // ContainerUtil.initialize(selector);
+            LifecycleHelper.setupComponent(selector,
+                                           null /* logger */, itsContext, this.itsManager,
+                                           config.getChild("nodes", false), true);
+            
             this.itsBuilders = selector;
         }
 
@@ -606,21 +613,19 @@ public class SitemapLanguage
      * Register all registered sitemap listeners
      */
     protected void registerListeners() {
-        if ( this.itsContainer instanceof ListableBeanFactory ) {
-            final ListableBeanFactory listableFactory = (ListableBeanFactory)this.itsContainer;
-            Map beans = listableFactory.getBeansOfType(EnterSitemapEventListener.class);
-            if ( beans != null ) {
-                final Iterator i = beans.values().iterator();
-                while ( i.hasNext() ) {
-                    this.enterSitemapEventListeners.add(i.next());
-                }
+        final ListableBeanFactory listableFactory = this.itsContainer;
+        Map beans = listableFactory.getBeansOfType(EnterSitemapEventListener.class);
+        if ( beans != null ) {
+            final Iterator i = beans.values().iterator();
+            while ( i.hasNext() ) {
+                this.enterSitemapEventListeners.add(i.next());
             }
-            beans = listableFactory.getBeansOfType(LeaveSitemapEventListener.class);
-            if ( beans != null ) {
-                final Iterator i = beans.values().iterator();
-                while ( i.hasNext() ) {
-                    this.leaveSitemapEventListeners.add(i.next());
-                }
+        }
+        beans = listableFactory.getBeansOfType(LeaveSitemapEventListener.class);
+        if ( beans != null ) {
+            final Iterator i = beans.values().iterator();
+            while ( i.hasNext() ) {
+                this.leaveSitemapEventListeners.add(i.next());
             }
         }
     }

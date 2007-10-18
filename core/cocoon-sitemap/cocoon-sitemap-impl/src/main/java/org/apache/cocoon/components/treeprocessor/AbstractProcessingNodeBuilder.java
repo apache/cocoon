@@ -18,9 +18,10 @@ package org.apache.cocoon.components.treeprocessor;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
+
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  *
@@ -34,11 +35,11 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
     protected ServiceManager manager;
 
     /**
-     * @see org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder#setBuilder(org.apache.cocoon.components.treeprocessor.TreeBuilder)
+     * @see ProcessingNodeBuilder#setBuilder(TreeBuilder)
      */
     public void setBuilder(TreeBuilder treeBuilder) {
         this.treeBuilder = treeBuilder;
-        this.manager = (ServiceManager)treeBuilder.getWebApplicationContext().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
+        this.manager = (ServiceManager) treeBuilder.getWebApplicationContext().getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
     }
 
     /**

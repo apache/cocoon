@@ -17,26 +17,24 @@
 package org.apache.cocoon.components.source.impl;
 
 
-import java.io.InputStream;
-import java.io.IOException;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
-
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.impl.AbstractSource;
 
 import org.apache.cocoon.components.modules.input.InputModule;
-
-import org.apache.commons.jxpath.JXPathContext;
-
 
 /**
  * A <code>Source</code> that takes its content from a
@@ -52,29 +50,29 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ul>
  * </p>
  *
+ * @version $Id$
  */
-public class ModuleSource
-    extends AbstractSource {
+public class ModuleSource extends AbstractSource {
 
-    private final static String SCHEME = "module";
+    private static final String SCHEME = "module";
+
+    private final Log logger = LogFactory.getLog(getClass());
+
     private String attributeType;
     private String attributeName;
     private String xPath;
     private ServiceManager manager;
     private Map objectModel;
-    private Logger logger;
-    
+
     /**
      * Create a module source from a 'module:' uri and a the object model.
      * <p>The uri is of the form "module:attribute-type:attribute-name#xpath</p>
      */
-    public ModuleSource( Map objectModel, String uri,
-                         ServiceManager manager, Logger logger )
-        throws MalformedURLException {
+    public ModuleSource(Map objectModel, String uri, ServiceManager manager)
+    throws MalformedURLException {
 
         this.objectModel = objectModel;
         this.manager = manager;
-        this.logger = logger;
 
         setSystemId( uri );
 
@@ -120,9 +118,9 @@ public class ModuleSource
      *
      * @throws IOException if I/O error occured.
      */
-    public InputStream getInputStream() throws IOException, SourceException {
-        if ( this.logger.isDebugEnabled() ) {
-            this.logger.debug( "Getting InputStream for " + getURI() );
+    public InputStream getInputStream() throws IOException {
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Getting InputStream for " + getURI());
         }
 
         Object obj = getInputAttribute( this.attributeType, this.attributeName );
@@ -162,18 +160,19 @@ public class ModuleSource
      *
      */
     public boolean exists() {
-        boolean exists = false;
+        boolean exists;
         try {
-            exists = getInputAttribute( this.attributeType, this.attributeName ) != null;
-        } catch ( SourceException e ) {
+            exists = getInputAttribute(this.attributeType, this.attributeName) != null;
+        } catch (SourceException e) {
             exists = false;
         }
         return exists;
     }
 
     private Object getInputAttribute( String inputModuleName, String attributeName )
-        throws  SourceException {
+    throws  SourceException {
         Object obj;
+
         ServiceSelector selector = null;
         InputModule inputModule = null;
         try {
@@ -181,15 +180,17 @@ public class ModuleSource
             inputModule = (InputModule) selector.select( inputModuleName );
             obj = inputModule.getAttribute( attributeName, null, this.objectModel );
 
-        } catch ( ServiceException e ) {
-            throw new SourceException( "Could not find an InputModule of the type " + 
-                                       inputModuleName , e );
-        } catch ( ConfigurationException e ) {
-            throw new SourceException( "Could not find an attribute: " + attributeName +
-                                       " from the InputModule " + inputModuleName, e );
+        } catch (ServiceException e) {
+            throw new SourceException("Could not find an InputModule of the type " +
+                                      inputModuleName, e);
+        } catch (ConfigurationException e) {
+            throw new SourceException("Could not find an attribute: " + attributeName +
+                                      " from the InputModule " + inputModuleName, e);
         } finally {
-            if ( inputModule != null ) selector.release( inputModule );
-            this.manager.release( selector );
+            if (inputModule != null) {
+                selector.release(inputModule);
+            }
+            this.manager.release(selector);
         }
 
         return obj;
