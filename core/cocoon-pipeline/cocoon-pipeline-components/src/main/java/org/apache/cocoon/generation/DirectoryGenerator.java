@@ -233,7 +233,7 @@ public class DirectoryGenerator
         StringBuffer buffer = new StringBuffer();
         int len = this.cacheKeyParList.size();
         for (int i = 0; i < len; i++) {
-            buffer.append((String)this.cacheKeyParList.get(i) + ":");
+            buffer.append(this.cacheKeyParList.get(i)).append(":");
         }
         return buffer.toString();
     }
@@ -470,7 +470,7 @@ public class DirectoryGenerator
      *         false otherwise.
      */
     protected boolean isRoot(File path) {
-        return (this.rootRE == null) ? true : this.rootRE.match(path.getName());
+        return this.rootRE == null || this.rootRE.match(path.getName());
     }
 
     /**
@@ -481,7 +481,7 @@ public class DirectoryGenerator
      *         false otherwise.
      */
     protected boolean isIncluded(File path) {
-        return (this.includeRE == null) ? true : this.includeRE.match(path.getName());
+        return this.includeRE == null || this.includeRE.match(path.getName());
     }
 
     /**
@@ -492,14 +492,14 @@ public class DirectoryGenerator
      *         true otherwise.
      */
     protected boolean isExcluded(File path) {
-        return (this.excludeRE == null) ? false : this.excludeRE.match(path.getName());
+        return this.excludeRE != null && this.excludeRE.match(path.getName());
     }
 
     /**
      * Recycle resources
      */
     public void recycle() {
-        if ( this.resolver != null ) {
+        if (this.resolver != null) {
             this.resolver.release(this.directorySource);
             this.directorySource = null;
         }
