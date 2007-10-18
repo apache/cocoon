@@ -30,6 +30,7 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -83,24 +84,26 @@ public final class SourceDescriptorManager extends AbstractLogEnabled
         m_inspectors = new HashSet();
         final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         final Configuration[] children = m_configuration.getChildren();
-        
+
+        // Avalon logger for legacy components
+        Logger logger = new CLLoggerWrapper(getLogger());
+
         for (int i = 0; i < children.length; i++) {
-            String className = children[i].getAttribute("class","");
+            String className = children[i].getAttribute("class", "");
+
             SourceInspector inspector;
             try {
                 final Class inspectorClass = classloader.loadClass(className);
                 inspector = (SourceInspector) inspectorClass.newInstance();
             } catch (InstantiationException ie) {
-                throw new ConfigurationException(
-                    "Could not instantiate class "+className, ie);
+                throw new ConfigurationException("Could not instantiate class " + className, ie);
             } catch (ClassNotFoundException cnfe) {
-                throw new ConfigurationException(
-                    "Could not load class "+className, cnfe);
+                throw new ConfigurationException("Could not load class " + className, cnfe);
             } catch (IllegalAccessException iae) {
-                 throw new ConfigurationException(
-                    "Could not load class "+className, iae);
+                throw new ConfigurationException("Could not load class " + className, iae);
             }
-            ContainerUtil.enableLogging(inspector, new CLLoggerWrapper(getLogger()));
+            
+            ContainerUtil.enableLogging(inspector, logger);
             ContainerUtil.contextualize(inspector, m_context);
             ContainerUtil.service(inspector, m_manager);
             ContainerUtil.configure(inspector, children[i]);

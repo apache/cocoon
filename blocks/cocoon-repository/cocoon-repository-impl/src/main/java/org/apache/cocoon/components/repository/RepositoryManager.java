@@ -37,6 +37,8 @@ import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 /**
  * A factory component to create instances of repositories.
+ *
+ * @version $Id$
  */
 public class RepositoryManager extends AbstractLogEnabled
                                implements Serviceable, Disposable, Configurable, ThreadSafe {
@@ -97,14 +99,13 @@ public class RepositoryManager extends AbstractLogEnabled
         }
 
         String className = null;
-
         try {
-            Configuration repoConfiguration = (Configuration)this.repos.get(hint);
+            Configuration repoConfiguration = (Configuration) this.repos.get(hint);
             className = repoConfiguration.getAttribute("class");
             Class repoClass = Class.forName(className);
-    
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("loading class" + className);
+
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Loading class" + className);
             }
 
             Repository repo = (Repository) repoClass.newInstance();
@@ -130,5 +131,4 @@ public class RepositoryManager extends AbstractLogEnabled
             throw new ProcessingException("Could not setup component " + className, e);
         }
     }
-    
 }
