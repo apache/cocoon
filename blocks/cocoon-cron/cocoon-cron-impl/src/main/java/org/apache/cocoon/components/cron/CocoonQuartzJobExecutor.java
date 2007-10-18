@@ -62,7 +62,7 @@ public class CocoonQuartzJobExecutor extends QuartzJobExecutor {
         	throw new JobExecutionException(e);
         }
         
-        m_env = new BackgroundEnvironment(m_logger, envContext);
+        m_env = new BackgroundEnvironment(envContext);
         
         Request req = ObjectModelHelper.getRequest(m_env.getObjectModel());
         Map objects = (Map)data.get(QuartzJobScheduler.DATA_MAP_OBJECTMAP);

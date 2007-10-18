@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.environment.internal;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
@@ -31,9 +30,8 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 public final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
 
     public ForwardEnvironmentWrapper(Environment env,
-                                     SitemapSourceInfo info, 
-                                     Logger logger) {
-        super(env, info, logger, false);
+                                     SitemapSourceInfo info) {
+        super(env, info, false);
     }
 
     /**
@@ -85,5 +83,4 @@ public final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
         this.environment.redirect(newURL, global, permanent);
     }
      */
-
 }

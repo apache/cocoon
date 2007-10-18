@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -37,9 +36,8 @@ import org.apache.cocoon.util.NullOutputStream;
  */
 public class BackgroundEnvironment extends AbstractEnvironment {
 
-    public BackgroundEnvironment(Logger logger, Context ctx) {
+    public BackgroundEnvironment(Context ctx) {
         super("", null, null);
-        enableLogging(logger);
         this.outputStream = new NullOutputStream();
 
         // TODO Would special Background*-objects have advantages?

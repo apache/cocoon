@@ -17,16 +17,16 @@
 package org.apache.cocoon.environment.internal;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.excalibur.source.Source;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.util.SourceUtil;
@@ -34,8 +34,8 @@ import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.excalibur.source.Source;
 
 /**
  * Helper class for maintaining the environment stack.
@@ -46,12 +46,11 @@ import org.apache.excalibur.source.Source;
  *
  * INTERNAL CLASS. Do not use this, can be removed without warning or deprecation cycle.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
-public class EnvironmentHelper
-extends AbstractLogEnabled
-implements SourceResolver, Serviceable, Disposable {
+public class EnvironmentHelper extends AbstractLogEnabled
+                               implements SourceResolver, Serviceable, Disposable {
 
     /** The environment information */
     static protected final ThreadLocal environmentStack = new ThreadLocal();
@@ -76,7 +75,7 @@ implements SourceResolver, Serviceable, Disposable {
      *
      */
     public EnvironmentHelper(URL context) {
-        if ( context != null ) {
+        if (context != null) {
             this.context = context.toExternalForm();
         }
     }
@@ -129,12 +128,12 @@ implements SourceResolver, Serviceable, Disposable {
     }
 
     /**
-     * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String, java.lang.String, java.util.Map)
+     * @see SourceResolver#resolveURI(java.lang.String, java.lang.String, java.util.Map)
      */
     public Source resolveURI(final String location,
                              String baseURI,
                              final Map    parameters)
-    throws MalformedURLException, IOException {
+    throws IOException {
         return this.resolver.resolveURI(location,
                                         (baseURI == null ? this.context : baseURI),
                                         parameters);
@@ -143,8 +142,7 @@ implements SourceResolver, Serviceable, Disposable {
     /**
      * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String)
      */
-    public Source resolveURI(final String location)
-    throws MalformedURLException, IOException {
+    public Source resolveURI(final String location) throws IOException {
         return this.resolveURI(location, null, null);
     }
 
@@ -427,7 +425,7 @@ implements SourceResolver, Serviceable, Disposable {
      * created in.
      * <p>
      * It's defined as an abstract class here to use some internals of EnvironmentHelper, and
-     * should only be used through its public counterpart, {@link org.apache.cocoon.environment.CocoonRunnable}
+     * should only be used through its public counterpart, <code>org.apache.cocoon.environment.CocoonRunnable</code>.
      */
     public static abstract class AbstractCocoonRunnable implements Runnable {
         private Object parentStack = null;

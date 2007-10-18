@@ -148,7 +148,6 @@ public class TreeProcessor extends AbstractLogEnabled
         this.settings = (Settings) this.manager.lookup(Settings.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
         // Setup environment helper
-        ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
         ContainerUtil.service(this.environmentHelper, this.manager);
         this.environmentHelper.changeContext(sitemapSource, prefix);
         this.sitemapExecutor = parent.sitemapExecutor;
@@ -184,12 +183,11 @@ public class TreeProcessor extends AbstractLogEnabled
     public void initialize() throws Exception {
         // setup the environment helper
         if (this.environmentHelper == null) {
-            // We already have resolved our sitemap, so our context is the directory
-            // of this sitemap.
+            // We already have resolved our sitemap, so our context is the
+            // directory of this sitemap.
             int pos = this.source.getURI().lastIndexOf('/');
-            this.environmentHelper = new EnvironmentHelper(new URL(this.source.getURI().substring(0, pos+1)));
+            this.environmentHelper = new EnvironmentHelper(new URL(this.source.getURI().substring(0, pos + 1)));
         }
-        ContainerUtil.enableLogging(this.environmentHelper, getLogger());
         ContainerUtil.service(this.environmentHelper, this.manager);
 
         // Create sitemap executor

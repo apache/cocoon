@@ -38,6 +38,10 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceResolver;
+
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
@@ -48,10 +52,6 @@ import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.thread.RunnableManager;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceResolver;
 
 /**
  * Default implementation of the refresher.
@@ -317,7 +317,7 @@ public class DelaySourceRefresher extends AbstractLogEnabled
                 try {
                     org.apache.cocoon.environment.Context ctx =
                             (org.apache.cocoon.environment.Context) context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-                    env = new BackgroundEnvironment(new CLLoggerWrapper(getLogger()), ctx);
+                    env = new BackgroundEnvironment(ctx);
                 } catch (ContextException e) {
                     throw new CascadingRuntimeException("No context found", e);
                 }
