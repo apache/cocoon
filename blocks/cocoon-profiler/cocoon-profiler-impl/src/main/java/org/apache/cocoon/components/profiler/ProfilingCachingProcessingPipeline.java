@@ -307,7 +307,7 @@ public class ProfilingCachingProcessingPipeline
     protected void connect(Environment environment, XMLProducer producer,
                            XMLConsumer consumer)
     throws ProcessingException {
-    	XMLPipe pipe = null;
+    	XMLPipe pipe;
     	if (saxstream) {
 	        ProfilingSAXPipe connector = new ProfilingSAXPipe();
 	        connector.setup(this.index, this.data);
