@@ -23,10 +23,10 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
-import org.apache.cocoon.util.HashMap;
 import org.apache.commons.collections.iterators.EmptyIterator;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.HashMap;
 
 /**
  * AbstractInputModule gives you the infrastructure for easily
@@ -35,9 +35,8 @@ import org.apache.commons.collections.iterators.EmptyIterator;
  *
  * @version $Id$
  */
-public abstract class AbstractInputModule
-    extends AbstractLogEnabled
-    implements InputModule, Configurable, Disposable {
+public abstract class AbstractInputModule extends AbstractLogEnabled
+                                          implements InputModule, Configurable, Disposable {
 
     /**
      * Stores (global) configuration parameters as <code>key</code> /

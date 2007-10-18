@@ -18,29 +18,28 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
 
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A factory for 'module:' sources (see {@link ModuleSource}). 
  *
+ * @version $Id$
  */
 public class ModuleSourceFactory extends AbstractLogEnabled
-  implements SourceFactory, Serviceable, Contextualizable, ThreadSafe {
+                                 implements SourceFactory, Serviceable, Contextualizable, ThreadSafe {
     
     private ServiceManager manager;
     private Context context;
@@ -66,18 +65,16 @@ public class ModuleSourceFactory extends AbstractLogEnabled
      * @param location   The URI to resolve - this URI includes the scheme.
      * @param parameters this is optional and not used here
      */
-    public Source getSource( String location, Map parameters )
-        throws IOException, MalformedURLException {
+    public Source getSource(String location, Map parameters) throws IOException {
 
-        Map objectModel = ContextHelper.getObjectModel( this.context );
-        return new ModuleSource( objectModel, location, this.manager, getLogger() );
+        Map objectModel = ContextHelper.getObjectModel(this.context);
+        return new ModuleSource(objectModel, location, this.manager);
     }
-    
+
     /**
      * Release a {@link Source} object.
      */
     public void release( Source source ) {
         // Do nothing here
     }
-
 }

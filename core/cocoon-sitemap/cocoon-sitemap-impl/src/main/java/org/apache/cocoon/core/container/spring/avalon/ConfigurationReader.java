@@ -460,13 +460,12 @@ public class ConfigurationReader {
         }
 
         if ( includeURI != null ) {
-            Resource src = null;
             try {
-                src = this.resolver.getResource(this.getUrl(includeURI, contextURI));
-
-                this.loadURI(src, loadedURIs, includeStatement);
+                Resource src = this.resolver.getResource(getUrl(includeURI, contextURI));
+                loadURI(src, loadedURIs, includeStatement);
             } catch (Exception e) {
-                throw new ConfigurationException("Cannot load '" + includeURI + "' at " + includeStatement.getLocation(), e);
+                throw new ConfigurationException("Cannot load '" + includeURI + "' at " +
+                                                 includeStatement.getLocation(), e);
             }
 
         } else {
@@ -509,7 +508,7 @@ public class ConfigurationReader {
                 this.logger.debug("Loading configuration: " + uri);
             }
             // load it and store it in the read set
-            Configuration includeConfig = null;
+            Configuration includeConfig;
             try {
                 DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder(true);
                 includeConfig = builder.build(src.getInputStream(), uri);
@@ -528,7 +527,7 @@ public class ConfigurationReader {
                 this.configureRoles(includeConfig);
             } else {
                 throw new ConfigurationException("Unknow document '" + includeKind + "' included at " +
-                        includeStatement.getLocation());
+                                                 includeStatement.getLocation());
             }
         }
     }
@@ -555,14 +554,12 @@ public class ConfigurationReader {
         }
 
         if (includeURI != null) {
-            Resource src = null;
             try {
-                src = this.resolver.getResource(this.getUrl(includeURI, contextURI));
-
-                this.configInfo.addImport(this.getUrl(src));
+                Resource src = this.resolver.getResource(getUrl(includeURI, contextURI));
+                this.configInfo.addImport(getUrl(src));
             } catch (Exception e) {
-                throw new ConfigurationException("Cannot load '" + includeURI + "' at "
-                        + includeStatement.getLocation(), e);
+                throw new ConfigurationException("Cannot load '" + includeURI + "' at " +
+                                                 includeStatement.getLocation(), e);
             }
 
         } else {
@@ -583,8 +580,9 @@ public class ConfigurationReader {
                             + directoryURI);
                 }
             } else {
-                if ( !includeStatement.getAttributeAsBoolean("optional", false) ) {
-                    throw new ConfigurationException("Directory '" + directoryURI + "' does not exist (" + includeStatement.getLocation() + ").");
+                if (!includeStatement.getAttributeAsBoolean("optional", false)) {
+                    throw new ConfigurationException("Directory '" + directoryURI + "' does not exist (" +
+                                                     includeStatement.getLocation() + ").");
                 }
             }
         }

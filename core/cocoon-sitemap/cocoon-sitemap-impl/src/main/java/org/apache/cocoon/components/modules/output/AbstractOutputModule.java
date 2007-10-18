@@ -16,17 +16,17 @@
  */
 package org.apache.cocoon.components.modules.output;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.HashMap;
-
-import java.util.Map;
 
 /**
  * AbstractOutputModule gives you the infrastructure for easily
@@ -37,7 +37,7 @@ import java.util.Map;
  * @version $Id$
  */
 public abstract class AbstractOutputModule extends AbstractLogEnabled
-    implements OutputModule, Configurable, Disposable {
+                                           implements OutputModule, Configurable, Disposable {
 
     /**
      * Stores (global) configuration parameters as <code>key</code> /
@@ -118,11 +118,8 @@ public abstract class AbstractOutputModule extends AbstractLogEnabled
         final Request request = ObjectModelHelper.getRequest(objectModel);
 
         Map map = (Map) request.getAttribute(trans_place);
-        if (map == null) {
-            return false;
-        }
+        return map != null && map.containsKey(name);
 
-        return map.containsKey(name);
     }
 
     /**

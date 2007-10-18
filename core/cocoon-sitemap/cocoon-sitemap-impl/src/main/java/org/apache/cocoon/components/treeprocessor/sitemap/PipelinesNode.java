@@ -17,6 +17,7 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 
@@ -51,7 +52,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      * Keep the component manager used everywhere in the tree so that we can
      * cleanly dispose it.
      */
-    public void service(ServiceManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.errorHandlerHelper.service(manager);
     }

@@ -24,23 +24,24 @@ import java.util.Map;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
 
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A factory for 'xmodule:' sources (see {@link XModuleSource}). 
  *
+ * @version $Id$
  */
 public class XModuleSourceFactory extends AbstractLogEnabled
-  implements SourceFactory, Serviceable, Contextualizable, ThreadSafe {
+                                  implements SourceFactory, Serviceable, Contextualizable,
+                                             ThreadSafe {
     
     private ServiceManager manager;
     private Context context;
@@ -59,24 +60,22 @@ public class XModuleSourceFactory extends AbstractLogEnabled
         this.context = context;
     }
     
-
     /**
      * Get a {@link XModuleSource} object.
      * 
      * @param location   The URI to resolve - this URI includes the scheme.
      * @param parameters this is optional and not used here
      */
-    public Source getSource( String location, Map parameters )
-        throws IOException, MalformedURLException {
+    public Source getSource(String location, Map parameters) throws IOException {
 
-        Map objectModel = ContextHelper.getObjectModel( this.context );
-        return new XModuleSource( objectModel, location, this.manager, getLogger() );
+        Map objectModel = ContextHelper.getObjectModel(this.context);
+        return new XModuleSource(objectModel, location, this.manager);
     }
-    
+
     /**
      * Release a {@link Source} object.
      */
-    public void release( Source source ) {
+    public void release(Source source) {
         // Do nothing here
     }
 }

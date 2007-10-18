@@ -29,20 +29,24 @@
   <!ELEMENT forbidden-children (#PCDATA)>
 ]>
 
-<!--+
-    | The sitemap language.
-    | $Id$
-    +-->
+<!--
+  - The sitemap language.
+  - This file defines all possible sitemap elements and theirs implementations.
+  -
+  - $Id$
+  -->
 <sitemap-language>
 
     <!-- node definitions for the sitemap language -->
     <nodes>
-      <!-- A node has the following attributes :
-           - name : the node name, given as a local name in the language namespace (no prefix)
-           - builder : the class name of the ProcessingNodeBuilder for this node
-           
-           The contents of a node definition is the configuration of Configurable
-           ProcessingNodeBuilders.
+
+      <!--
+        - A node has the following attributes :
+        -  * name : the node name, given as a local name in the language namespace (no prefix)
+        -  * builder : the class name of the ProcessingNodeBuilder for this node
+        -
+        -  The contents of a node definition is the configuration of Configurable
+        -  ProcessingNodeBuilders.
         -->
       
       <!-- Sitemap root node -->
@@ -98,28 +102,22 @@
       </node>
 
       <node name="redirect-to" builder="org.apache.cocoon.components.treeprocessor.sitemap.RedirectToNodeBuilder"/>
-
       <node name="call" builder="org.apache.cocoon.components.treeprocessor.sitemap.CallNodeBuilder"/>
-
       <node name="mount" builder="org.apache.cocoon.components.treeprocessor.sitemap.MountNodeBuilder"/>
 
       <node name="read" builder="org.apache.cocoon.components.treeprocessor.sitemap.ReadNodeBuilder"/>
-
       <node name="aggregate" builder="org.apache.cocoon.components.treeprocessor.sitemap.AggregateNodeBuilder"/>
 
       <node name="generate" builder="org.apache.cocoon.components.treeprocessor.sitemap.GenerateNodeBuilder"/>
-
       <node name="transform" builder="org.apache.cocoon.components.treeprocessor.sitemap.TransformNodeBuilder"/>
-
       <node name="serialize" builder="org.apache.cocoon.components.treeprocessor.sitemap.SerializeNodeBuilder"/>
 
       <node name="handle-errors" builder="org.apache.cocoon.components.treeprocessor.sitemap.HandleErrorsNodeBuilder"/>
-
     </nodes>
 
-    <!--+
-        | You can add specific nodes for a specific sitemap version, using
-        | &lt;nodes-{version}&gt;
-        +-->
+    <!--
+      - You can add specific nodes for a specific sitemap version, using
+      - &lt;nodes-{version}&gt;
+      -->
 
 </sitemap-language>

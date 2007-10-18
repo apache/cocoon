@@ -19,6 +19,7 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 
@@ -72,7 +73,7 @@ public class PipelineNode extends AbstractParentProcessingNode
     /**
      * The component manager is used to create error pipelines
      */
-    public void service(ServiceManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         this.errorHandlerHelper.service(manager);
     }
 

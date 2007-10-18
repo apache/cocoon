@@ -24,8 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
@@ -44,11 +47,9 @@ import org.apache.cocoon.sitemap.LeaveSitemapEvent;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated

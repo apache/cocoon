@@ -19,6 +19,11 @@ package org.apache.cocoon.util.avalon;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.commons.logging.Log;
 
+/**
+ * Commons Logging to Avalon Logger adapter.
+ *
+ * @version $Id$
+ */
 public class CLLoggerWrapper implements Logger {
 
     protected final Log log;
