@@ -16,27 +16,26 @@
  */
 package org.apache.cocoon.matching;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.i18n.I18nUtils;
-import org.apache.cocoon.sitemap.PatternException;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import org.apache.cocoon.i18n.I18nUtils;
+import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -149,7 +148,8 @@ import java.util.Map;
  * @version $Id$
  */
 public class LocaleMatcher extends AbstractLogEnabled
-                           implements Matcher, ThreadSafe, Serviceable, Configurable, Disposable {
+                           implements Matcher, ThreadSafe, Serviceable, Configurable,
+                                      Disposable {
 
     private static final String DEFAULT_LOCALE_ATTRIBUTE = "locale";
     private static final String DEFAULT_DEFAULT_LANG = "en";
@@ -308,11 +308,8 @@ public class LocaleMatcher extends AbstractLogEnabled
 
         // Test "language" locale (or empty - if language is "")
         testLocale = new Locale(locale.getLanguage(), "");
-        if (isValidResource(pattern, locale, testLocale, map)) {
-            return true;
-        }
+        return isValidResource(pattern, locale, testLocale, map);
 
-        return false;
     }
 
     private boolean isValidResource(String pattern, Locale locale, Locale testLocale, Map map) {

@@ -25,9 +25,6 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.caching.Cache;
-import org.apache.cocoon.components.source.helpers.SourceRefresher;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
@@ -39,6 +36,9 @@ import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.URIAbsolutizer;
 import org.springframework.beans.factory.BeanNameAware;
+
+import org.apache.cocoon.caching.Cache;
+import org.apache.cocoon.components.source.helpers.SourceRefresher;
 
 /**
  * This class implements a proxy like source caches the contents of the source
@@ -143,7 +143,7 @@ public class CachingSourceFactory implements URIAbsolutizer, SourceFactory, Bean
      * @param parameters This is optional.
      */
     public Source getSource(final String location, final Map parameters)
-    throws MalformedURLException, IOException {
+    throws IOException {
 
         if (logger.isDebugEnabled() ) {
             logger.debug("Creating source " + location);
@@ -202,18 +202,15 @@ public class CachingSourceFactory implements URIAbsolutizer, SourceFactory, Bean
                                                 boolean fail)
     throws SourceException {
 
-        CachingSource source = instantiateSource(
-                        uri,
-                        wrappedUri,
-                        wrappedSource,
-                        expires,
-                        cacheName,
-                        fail);
+        CachingSource source = instantiateSource(uri,
+                                                 wrappedUri,
+                                                 wrappedSource,
+                                                 expires,
+                                                 cacheName,
+                                                 fail);
 
         // set the required components directly for speed
         source.cache = this.cache;
-
-        ContainerUtil.enableLogging(source, new CLLoggerWrapper(logger));
         try {
             // call selected avalon lifecycle interfaces. Mmmh.
             ContainerUtil.service(source, this.serviceManager);
