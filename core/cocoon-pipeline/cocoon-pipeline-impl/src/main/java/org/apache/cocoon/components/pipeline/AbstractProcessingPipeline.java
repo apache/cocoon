@@ -25,13 +25,14 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.excalibur.source.SourceValidity;
+
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -45,12 +46,13 @@ import org.apache.cocoon.sitemap.DisposableSitemapComponent;
 import org.apache.cocoon.sitemap.SitemapErrorHandler;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.location.Locatable;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-import org.apache.excalibur.source.SourceValidity;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -61,9 +63,9 @@ import org.xml.sax.SAXException;
  * @since 2.1
  * @version $Id$
  */
-public abstract class AbstractProcessingPipeline
-        extends AbstractLogEnabled
-        implements ProcessingPipeline, Parameterizable, Recyclable, Serviceable {
+public abstract class AbstractProcessingPipeline extends AbstractLogEnabled
+                                                 implements ProcessingPipeline, Parameterizable,
+                                                            Recyclable, Serviceable {
 
     // Generator stuff
     protected Generator generator;
@@ -817,8 +819,8 @@ public abstract class AbstractProcessingPipeline
             return -1;
         }
 
-        long number = 0;
-        long modifier = 0;
+        long number;
+        long modifier;
         long expires = 0;
 
         while (tokens.hasMoreTokens()) {
