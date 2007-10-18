@@ -51,9 +51,8 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
  * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle
  * interfaces.
  * 
- * @version $Id: AvalonBeanPostProcessor.java 470890 2006-11-03 16:41:24Z
- *          lgawron $
  * @since 2.2
+ * @version $Id$
  */
 public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcessor, BeanFactoryAware {
 
@@ -63,10 +62,12 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
     protected Context context;
     protected BeanFactory beanFactory;
     protected ConfigurationInfo configurationInfo;
+
     protected Settings settings = new MutableSettings("test");
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     protected String location = "classpath*:META-INF/cocoon/avalon";
+
 
     public void setSettings(Settings settings) {
         this.settings = settings;
@@ -110,7 +111,7 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
         }
         final Properties mergedProps = new Properties();
         final ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
-        final Resource dirResource = resourceLoader.getResource(this.location);
+        // final Resource dirResource = resourceLoader.getResource(this.location);
 
         try {
             Resource[] resources = resolver.getResources(this.location + "/*.properties");
@@ -204,8 +205,7 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
     }
 
     /**
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object,
-     *      java.lang.String)
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(Object, String)
      */
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         final ComponentInfo info = (ComponentInfo) this.configurationInfo.getComponents().get(beanName);
@@ -215,6 +215,7 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
                 // lifecycle interfaces
                 return bean;
             }
+
             if (info.getLoggerCategory() != null) {
                 ContainerUtil.enableLogging(bean, this.logger.getChildLogger(info.getLoggerCategory()));
             } else {
@@ -245,6 +246,7 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
         } catch (Exception e) {
             throw new BeanCreationException("Unable to initialize Avalon component with role " + beanName, e);
         }
+
         return bean;
     }
 

@@ -27,11 +27,15 @@ import org.springframework.beans.factory.FactoryBean;
  * @since 2.2
  * @version $Id$
  */
-public class AvalonLoggerFactoryBean
-    implements FactoryBean {
+public class AvalonLoggerFactoryBean implements FactoryBean {
 
     /** The logging category. */
     protected String category = "cocoon";
+
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()
@@ -52,9 +56,5 @@ public class AvalonLoggerFactoryBean
      */
     public boolean isSingleton() {
         return true;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 }

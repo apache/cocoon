@@ -18,10 +18,10 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
@@ -74,11 +74,6 @@ public class PipelineNode extends AbstractParentProcessingNode
      */
     public void service(ServiceManager manager) {
         this.errorHandlerHelper.service(manager);
-    }
-
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        this.errorHandlerHelper.enableLogging(logger);
     }
 
     public void setChildren(ProcessingNode[] nodes) {

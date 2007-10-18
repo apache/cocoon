@@ -17,7 +17,6 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 
@@ -55,11 +54,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     public void service(ServiceManager manager) {
         this.manager = manager;
         this.errorHandlerHelper.service(manager);
-    }
-
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        this.errorHandlerHelper.enableLogging(logger);
     }
 
     public void setErrorHandler(ProcessingNode node) {

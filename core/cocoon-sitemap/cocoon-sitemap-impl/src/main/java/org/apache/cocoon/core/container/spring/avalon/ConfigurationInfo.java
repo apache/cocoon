@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * This bean stores information about a complete Avalon style configuration.
  * It can be passed to an {@link XmlConfigCreator} to create a Spring like
@@ -132,8 +131,8 @@ public class ConfigurationInfo {
     }
 
     public String getRoleForName(String alias) {
-        final String value = (String)this.shorthands.get(alias);
-        if ( value != null ) {
+        final String value = (String) this.shorthands.get(alias);
+        if (value != null) {
             return value;
         }
         return alias;

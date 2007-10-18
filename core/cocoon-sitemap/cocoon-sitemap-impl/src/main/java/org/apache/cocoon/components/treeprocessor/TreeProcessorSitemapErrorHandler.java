@@ -18,7 +18,6 @@ package org.apache.cocoon.components.treeprocessor;
 
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.sitemap.ErrorHandlerHelper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.SitemapErrorHandler;
@@ -54,8 +53,8 @@ public class TreeProcessorSitemapErrorHandler implements SitemapErrorHandler {
      * Construct error handler with everything needed to handle an error.
      */
     public TreeProcessorSitemapErrorHandler(ErrorHandlerHelper handler,
-                               Environment environment,
-                               InvokeContext context) {
+                                            Environment environment,
+                                            InvokeContext context) {
         this.handler = handler;
         this.environment = environment;
         this.context = context;

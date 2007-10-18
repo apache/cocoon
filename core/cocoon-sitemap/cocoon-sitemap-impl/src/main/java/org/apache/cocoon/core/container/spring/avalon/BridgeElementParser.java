@@ -56,31 +56,35 @@ import org.w3c.dom.Element;
  * bean, reads the Avalon style configurations and registers the components
  * as beans in the Spring bean definition registry.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
 public class BridgeElementParser extends AbstractElementParser {
+
     public static final String DEFAULT_COCOON_XCONF_LOCATION = "resource://org/apache/cocoon/cocoon.xconf";
-    
+
+
     /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(Element, ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
+
         // read avalon style configuration - it's optional for this element.
         // the schema for the sitemap element ensures that location is never null.
-        final String location = this.getAttributeValue(element, "location", DEFAULT_COCOON_XCONF_LOCATION);
+        final String location = getAttributeValue(element, "location", DEFAULT_COCOON_XCONF_LOCATION);
         try {
-            final ConfigurationInfo info = this.readConfiguration(location, resourceLoader);
+            final ConfigurationInfo info = readConfiguration(location, resourceLoader);
 
-            this.createComponents(element,
-                                  info,
-                                  parserContext.getRegistry(),
-                                  parserContext.getDelegate().getReaderContext().getReader(),
-                                  resourceLoader);
+            createComponents(element,
+                             info,
+                             parserContext.getRegistry(),
+                             parserContext.getDelegate().getReaderContext().getReader(),
+                             resourceLoader);
         } catch (Exception e) {
             throw new BeanDefinitionStoreException("Unable to read Avalon configuration from '" + location + "'.",e);
         }
+
         return null;
     }
 
@@ -98,17 +102,17 @@ public class BridgeElementParser extends AbstractElementParser {
                                  ResourceLoader         resourceLoader)
     throws Exception {
         // add context
-        this.addContext(element, registry);
+        addContext(element, registry);
 
         // add service manager
-        this.addComponent(AvalonServiceManager.class,
-                AvalonUtils.SERVICE_MANAGER_ROLE,
-                null,
-                false,
-                registry);
+        addComponent(AvalonServiceManager.class,
+                     AvalonUtils.SERVICE_MANAGER_ROLE,
+                     null,
+                     false,
+                     registry);
 
         // add logger
-        this.addLogger(registry, info.getRootLogger());
+        addLogger(registry, info.getRootLogger());
 
         // handle includes of spring configurations
         final Iterator includeIter = info.getImports().iterator();
@@ -152,16 +156,18 @@ public class BridgeElementParser extends AbstractElementParser {
 
     /**
      * Add the logger bean.
+     *
      * @param registry       The bean registry.
      * @param loggerCategory The optional category for the logger.
      */
     protected void addLogger(BeanDefinitionRegistry registry,
                              String                 loggerCategory) {
-        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonLoggerFactoryBean.class, null, false);
-        if ( loggerCategory != null ) {
+        final RootBeanDefinition beanDef = createBeanDefinition(AvalonLoggerFactoryBean.class, null, false);
+        if (loggerCategory != null) {
             beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
         }
-        this.register(beanDef, AvalonUtils.LOGGER_ROLE, registry);
+
+        register(beanDef, AvalonUtils.LOGGER_ROLE, registry);
     }
 
     public void createConfig(ConfigurationInfo      info,

@@ -25,8 +25,8 @@ import org.apache.cocoon.configuration.Settings;
 /**
  * Some utility methods for handling Avalon stuff.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
 public class AvalonUtils {
 
@@ -44,9 +44,10 @@ public class AvalonUtils {
      */
     public static Configuration replaceProperties(Configuration tree, Settings settings)
     throws ConfigurationException {
-        if ( tree == null || settings == null ) {
+        if (tree == null || settings == null) {
             return tree;
         }
+
         // first clone the tree
         final DefaultConfiguration root = new DefaultConfiguration(tree, true);
         // now replace properties
@@ -63,17 +64,19 @@ public class AvalonUtils {
     protected static void _replaceProperties(DefaultConfiguration config, Settings settings)
     throws ConfigurationException {
         final String[] names = config.getAttributeNames();
-        for(int i=0; i<names.length; i++) {
+        for (int i = 0; i < names.length; i++) {
             final String value = config.getAttribute(names[i]);
             config.setAttribute(names[i], PropertyHelper.replace(value, settings));
         }
+
         final String value = config.getValue(null);
-        if ( value != null ) {
+        if (value != null) {
             config.setValue(PropertyHelper.replace(value, settings));
         }
+
         final Configuration[] children = config.getChildren();
-        for(int m=0; m<children.length; m++) {
-            _replaceProperties((DefaultConfiguration)children[m], settings);
+        for (int m = 0; m < children.length; m++) {
+            _replaceProperties((DefaultConfiguration) children[m], settings);
         }
     }
 
