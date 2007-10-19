@@ -16,8 +16,8 @@
  */
 package org.apache.cocoon.transformation;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Field;
@@ -29,29 +29,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.List;
-import java.util.ArrayList;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.excalibur.xml.sax.SAXParser;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -343,7 +344,6 @@ public class SQLTransformer extends AbstractSAXTransformer {
             case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 // Create root query (if query == null), or child query
                 this.query = new Query(this.query);
-                this.query.enableLogging(getLogger().getChildLogger("query"));
                 state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 break;
 
@@ -1035,14 +1035,13 @@ public class SQLTransformer extends AbstractSAXTransformer {
                 String type = (String) outParameters.get(counter);
 
                 int index = type.lastIndexOf(".");
-                String className, fieldName;
                 if (index == -1) {
                     getLogger().error("Invalid SQLType: " + type, null);
                     throw new SQLException("Invalid SQLType: " + type);
                 }
-                className = type.substring(0, index);
-                fieldName = type.substring(index + 1, type.length());
 
+                String className = type.substring(0, index);
+                String fieldName = type.substring(index + 1, type.length());
                 try {
                     Class clss = Class.forName(className);
                     Field fld = clss.getField(fieldName);
