@@ -27,20 +27,22 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.slide.SlideRepository;
-import org.apache.cocoon.environment.Context;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.slide.common.Domain;
 import org.apache.slide.common.EmbeddedDomain;
 import org.apache.slide.common.NamespaceAccessToken;
+
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.slide.SlideRepository;
+import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.xml.sax.InputSource;
 
 /**
@@ -49,8 +51,8 @@ import org.xml.sax.InputSource;
  * @version $Id$
  */
 public class SlideRepositoryImpl extends AbstractLogEnabled
-implements SlideRepository, Contextualizable, Serviceable, Configurable, 
-Initializable, Disposable, ThreadSafe  {
+                                 implements SlideRepository, Contextualizable, Serviceable,
+                                            Configurable, Initializable, Disposable, ThreadSafe  {
 
     private ServiceManager manager;
 
@@ -58,7 +60,7 @@ Initializable, Disposable, ThreadSafe  {
      * The SlideRepository will handle the domain lifecycle only,
      * if it is not already initialzed.
      */
-    private EmbeddedDomain domain = null;
+    private EmbeddedDomain domain;
 
     private String file;
     private String contextpath;
@@ -146,7 +148,7 @@ Initializable, Disposable, ThreadSafe  {
             getLogger().info("Initializing namespace: " + name);
             
             domain.addNamespace(name,
-                                new SlideLoggerAdapter(getLogger().getChildLogger(name)),
+                                new SlideLoggerAdapter(getLogger()),
                                 new SlideConfigurationAdapter(definition),
                                 new SlideConfigurationAdapter(config),
                                 new SlideConfigurationAdapter(data));

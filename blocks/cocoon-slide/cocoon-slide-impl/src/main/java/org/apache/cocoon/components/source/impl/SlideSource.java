@@ -33,18 +33,9 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.source.InspectableSource;
-import org.apache.cocoon.components.source.LockableSource;
-import org.apache.cocoon.components.source.VersionableSource;
-import org.apache.cocoon.components.source.helpers.SourceLock;
-import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.commons.logging.Log;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.MoveableSource;
 import org.apache.excalibur.source.Source;
@@ -73,6 +64,16 @@ import org.apache.slide.structure.ObjectNode;
 import org.apache.slide.structure.ObjectNotFoundException;
 import org.apache.slide.structure.Structure;
 import org.apache.slide.structure.SubjectNode;
+
+import org.apache.cocoon.CascadingIOException;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.source.InspectableSource;
+import org.apache.cocoon.components.source.LockableSource;
+import org.apache.cocoon.components.source.VersionableSource;
+import org.apache.cocoon.components.source.helpers.SourceLock;
+import org.apache.cocoon.components.source.helpers.SourceProperty;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -82,9 +83,9 @@ import org.xml.sax.InputSource;
  * @version $Id$
  */
 public class SlideSource extends AbstractLogEnabled
-implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
-           MoveableSource, LockableSource, InspectableSource, 
-           VersionableSource {
+                         implements Contextualizable, Serviceable, Initializable,
+                                    Source, ModifiableTraversableSource, MoveableSource,
+                                    LockableSource, InspectableSource, VersionableSource {
 
     /* framework objects */
     private Context m_context;
@@ -227,7 +228,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * @throws IOException If an IO excepetion occurs.
      * @throws SourceException If an exception occurs.
      */
-    public InputStream getInputStream() throws IOException, SourceException {
+    public InputStream getInputStream() throws IOException {
         try {
             return m_content.retrieve(m_slideToken,m_descriptors,m_descriptor).streamContent();
         } catch (SlideException se) {
@@ -340,11 +341,10 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * @throws IOException
      * @throws SourceException
      */
-    public OutputStream getOutputStream()
-      throws IOException, SourceException {
+    public OutputStream getOutputStream() throws IOException {
         if (m_outputStream == null) {
             m_outputStream = new SlideSourceOutputStream();
-            m_outputStream.enableLogging(getLogger());
+            m_outputStream.setLogger(getLogger());
         }
         return m_outputStream;
     }
@@ -429,12 +429,11 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     }
     
     private Source getChildByPath(String path) throws SourceException {
-        SlideSource child = new SlideSource(m_nat,m_scheme,m_scope,path,m_principal,null);
-        child.enableLogging(getLogger());
+        SlideSource child = new SlideSource(m_nat, m_scheme, m_scope, path, m_principal, null);
         child.contextualize(m_context);
         child.service(m_manager);
         child.initialize();
-        return child;        
+        return child;
     }
 
     public Collection getChildren() throws SourceException {
@@ -479,13 +478,11 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         else {
             parentPath = m_path.substring(0,index);
         }
-        SlideSource parent = new SlideSource(m_nat,m_scheme,m_scope,parentPath,m_principal,null);
-        parent.enableLogging(getLogger());
+        SlideSource parent = new SlideSource(m_nat, m_scheme, m_scope, parentPath, m_principal, null);
         parent.contextualize(m_context);
         parent.service(m_manager);
         parent.initialize();
         return parent;
-
     }
     
     public boolean isCollection() {
@@ -500,27 +497,22 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
         if (property != null && ((String) property.getValue()).startsWith("<collection/>")) {
             return true;
         }
+
         return false;
     }
     
     /**
      * A helper for the getOutputStream() method
      */
-    class SlideSourceOutputStream extends ByteArrayOutputStream implements LogEnabled {
-        private boolean isClosed = false;
-        private Logger logger = null;
+    class SlideSourceOutputStream extends ByteArrayOutputStream {
+        private Log logger;
+        private boolean isClosed;
 
-        /**
-         * Provide component with a logger.
-         *
-         * @param logger the logger
-         */
-        public void enableLogging(Logger logger) {
+        void setLogger(Log logger) {
             this.logger = logger;
         }
 
         /**
-         *
          *
          * @throws IOException
          */
@@ -892,10 +884,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * @throws SourceException If an exception occurs.
      */
     public boolean isVersioned() throws SourceException {
-        if (m_descriptors != null) {
-            return m_descriptors.hasRevisions();
-        }
-        return false;
+        return m_descriptors != null && m_descriptors.hasRevisions();
     }
 
     /**
