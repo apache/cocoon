@@ -19,22 +19,24 @@ package org.apache.cocoon.webapps.authentication.components;
 import java.io.IOException;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.source.SourceResolver;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.MediaManager;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMUtil;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.source.SourceResolver;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,9 +50,8 @@ import org.xml.sax.SAXException;
  * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
-public class PipelineAuthenticator
-        extends AbstractLogEnabled
-        implements Serviceable, ThreadSafe, Disposable, Authenticator {
+public class PipelineAuthenticator extends AbstractLogEnabled
+                                   implements Serviceable, ThreadSafe, Disposable, Authenticator {
 
     /** The service manager */
     protected ServiceManager manager;
@@ -72,24 +73,24 @@ public class PipelineAuthenticator
 
         // authenticationFragment must only have exactly one child with
         // the name authentication
-        if (authenticationFragment.hasChildNodes() == true
+        if (authenticationFragment.hasChildNodes()
             && authenticationFragment.getChildNodes().getLength() == 1) {
             Node child = authenticationFragment.getFirstChild();
 
             if (child.getNodeType() == Node.ELEMENT_NODE
-                && child.getNodeName().equals("authentication") == true) {
+                && child.getNodeName().equals("authentication")) {
 
                 // now authentication must have one child ID
-                if (child.hasChildNodes() == true) {
+                if (child.hasChildNodes()) {
                     NodeList children = child.getChildNodes();
                     boolean  found = false;
                     int      i = 0;
                     int      l = children.getLength();
 
-                    while (found == false && i < l) {
+                    while (!found && i < l) {
                         child = children.item(i);
                         if (child.getNodeType() == Node.ELEMENT_NODE
-                            && child.getNodeName().equals("ID") == true) {
+                            && child.getNodeName().equals("ID")) {
                             found = true;
                         } else {
                             i++;
@@ -97,9 +98,9 @@ public class PipelineAuthenticator
                     }
 
                     // now the last check: ID must have a TEXT child
-                    if (found == true) {
+                    if (found) {
                         child.normalize(); // join text nodes
-                        if (child.hasChildNodes() == true &&
+                        if (child.hasChildNodes() &&
                             child.getChildNodes().getLength() == 1 &&
                             child.getChildNodes().item(0).getNodeType() == Node.TEXT_NODE) {
                             String value = child.getChildNodes().item(0).getNodeValue().trim();

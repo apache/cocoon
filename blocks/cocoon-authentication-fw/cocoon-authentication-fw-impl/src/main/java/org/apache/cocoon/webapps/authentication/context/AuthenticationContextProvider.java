@@ -16,12 +16,13 @@
  */
 package org.apache.cocoon.webapps.authentication.context;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
@@ -36,9 +37,8 @@ import org.apache.cocoon.webapps.session.context.SessionContextProvider;
  * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
-public final class AuthenticationContextProvider
-extends AbstractLogEnabled
-implements SessionContextProvider, ThreadSafe, Serviceable {
+public final class AuthenticationContextProvider extends AbstractLogEnabled
+                                                 implements SessionContextProvider, ThreadSafe, Serviceable {
 
     protected ServiceManager manager;
     
