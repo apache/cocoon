@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="JH" type="add" fixes-bug="COCOON-1354" due-to="Jochen Seifarth" due-to-email="jochen.seifarth@web.de">
+      &lt;map:serialize status-code=&quot;{}&quot;/&gt; supports variable resolution.
+    </action>
     <action dev="VG" type="fix">
       XMLDB Block: Fix collection URLs in XMLDBSource. Fixes URL resolution and 'Mount DB' sample.
     </action>

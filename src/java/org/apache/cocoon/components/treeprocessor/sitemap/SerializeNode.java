@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,14 +27,16 @@ import org.apache.cocoon.components.treeprocessor.PipelineEventComponentProcessi
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.PatternException;
+
 /**
- *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @version CVS $Id$
  */
-public class SerializeNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
+public class SerializeNode extends PipelineEventComponentProcessingNode
+                           implements ParameterizableProcessingNode {
+
+    private static final int DEFAULT_STATUS_CODE = 200;
 
     private String serializerName;
 
@@ -42,7 +44,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
 
     private VariableResolver mimeType;
 
-    private int statusCode;
+    private VariableResolver statusCode;
 
     private Map parameters;
 
@@ -54,7 +56,10 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
      * @param mimeType the mime-type, or <code>null</code> not specified.
      * @param statusCode the HTTP response status code, or <code>-1</code> if not specified.
      */
-    public SerializeNode(String name, VariableResolver source, VariableResolver mimeType, int statusCode) throws PatternException {
+    public SerializeNode(String name,
+                         VariableResolver source,
+                         VariableResolver mimeType,
+                         VariableResolver statusCode) {
         this.serializerName = name;
         this.source = source;
         this.mimeType = mimeType;
@@ -65,12 +70,15 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
         this.parameters = parameterMap;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 
         // Check view
         if (this.views != null) {
-	   
+
             //inform the pipeline that we have a branch point
             context.getProcessingPipeline().informBranchPoint();
 
@@ -88,41 +96,54 @@ public class SerializeNode extends PipelineEventComponentProcessingNode implemen
                 }
             }
         }
-        
-        Map objectModel = env.getObjectModel();
-        ProcessingPipeline pipeline = context.getProcessingPipeline();
+
+        final Map objectModel = env.getObjectModel();
+        final ProcessingPipeline pipeline = context.getProcessingPipeline();
 
         // Perform link translation if requested
         if (objectModel.containsKey(Constants.LINK_OBJECT)) {
             pipeline.addTransformer("<translator>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
         }
-        
+
         if (objectModel.containsKey(Constants.LINK_COLLECTION_OBJECT) && env.isExternal()) {
             pipeline.addTransformer("<gatherer>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
         }
 
-        pipeline.setSerializer(
-            this.serializerName,
-            source.resolve(context, objectModel),
-            VariableResolver.buildParameters(this.parameters, context, objectModel),
-            this.pipelineHints == null
+        String type = this.serializerName;
+        String source = this.source.resolve(context, objectModel);
+        Parameters parameters = VariableResolver.buildParameters(this.parameters, context, objectModel);
+        Parameters hintParameters = this.pipelineHints == null
                 ? Parameters.EMPTY_PARAMETERS
-                : VariableResolver.buildParameters(this.pipelineHints, context, objectModel),
-            this.mimeType.resolve(context, env.getObjectModel())
-        );
+                : VariableResolver.buildParameters(this.pipelineHints, context, objectModel);
+        String mimeType = this.mimeType.resolve(context, objectModel);
 
-        // Set status code if there is one
-        if (this.statusCode >= 0) {
-            env.setStatus(this.statusCode);
+        pipeline.setSerializer(type,
+                               source,
+                               parameters,
+                               hintParameters,
+                               mimeType);
+
+        // Set status code *only* if there is one - do not override status
+        // code if it was set elsewhere.
+        String statusCodeString = this.statusCode.resolve(context, objectModel);
+        if (statusCodeString != null) {
+            int statusCodeInt = DEFAULT_STATUS_CODE;
+            try {
+                statusCodeInt = Integer.parseInt(statusCodeString);
+            } catch (NumberFormatException e) {
+                getLogger().warn("Status code value '" + statusCodeString + "' is not an integer. " +
+                                 "Using " + DEFAULT_STATUS_CODE + " instead.", e);
+            }
+            if (statusCodeInt >= 0) {
+                env.setStatus(statusCodeInt);
+            }
         }
 
-        if (! context.isBuildingPipelineOnly()) {
+        if (!context.isBuildingPipelineOnly()) {
             // Process pipeline
             return pipeline.process(env);
-
-        } else {
-            // Return true : pipeline is finished.
-            return true;
         }
+        // Return true : pipeline is finished.
+        return true;
     }
 }
