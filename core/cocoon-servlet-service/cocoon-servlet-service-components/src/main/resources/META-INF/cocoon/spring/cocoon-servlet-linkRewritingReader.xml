@@ -20,11 +20,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <bean name="org.apache.cocoon.reading.Reader/servletLinkRewriter"
-          class="org.apache.cocoon.servletservice.components.LinkRewriterReader" init-method="init">
+          class="org.apache.cocoon.servletservice.components.LinkRewriterReader">
         <property name="inputModule" ref="org.apache.cocoon.components.modules.input.InputModule/servlet"/>
         <!-- Set character encoding of processed files. Defaults to "UTF-8" -->
         <!-- <property name="encoding" value="UTF-8"/> -->
-        <!-- Set HTTP expires. Defaults t -1 -->
+        <!-- Set HTTP expires. Defaults to -1 -->
         <!-- <property name="expires" value="-1" -->
     </bean>
 

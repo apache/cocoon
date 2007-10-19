@@ -15,17 +15,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <!-- SVN $Id: cocoon-servlet-service-servlet-source-factory.xml 503416 2007-02-04 14:43:01Z danielf $ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-  <!--+
-      | Source Factories
-      |
-      | Each source factory adds a special uri schemes to the system.
-      +-->
-  <bean name="org.apache.excalibur.source.SourceFactory/service-consumer" class="org.apache.cocoon.servletservice.postable.components.ServletServiceConsumerSourceFactory">
+  <!--
+    - Source Factories
+    -
+    - Each source factory adds a special uri schemes to the system.
+    -->
+  <bean name="org.apache.excalibur.source.SourceFactory/service-consumer"
+        class="org.apache.cocoon.servletservice.postable.components.ServletServiceConsumerSourceFactory">
     <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>
   </bean>
 
