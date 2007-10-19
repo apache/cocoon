@@ -19,29 +19,30 @@ package org.apache.cocoon.webapps.session.components;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.webapps.session.context.SessionContextProvider;
 import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -50,8 +51,7 @@ import org.xml.sax.SAXException;
  * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
-public final class DefaultContextManager
-extends AbstractLogEnabled
+public final class DefaultContextManager extends AbstractLogEnabled
 implements Serviceable, ContextManager, ThreadSafe, Contextualizable, Disposable {
 
     /** The <code>ServiceManager</code> */
