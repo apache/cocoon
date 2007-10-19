@@ -16,24 +16,25 @@
  */
 package org.apache.cocoon.util;
 
-import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.commons.lang.enums.ValuedEnum;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.SimpleLog;
 
 /**
  * This class provides a special static "deprecation" logger.
  * All deprecated code should use this logger to log messages into the 
  * deprecation logger. This makes it easier for users to find out if they're 
  * using deprecated stuff.
- * <p>
- * Additionally, it is possible to set the forbidden level of deprecation messages (default
+ *
+ * <p>Additionally, it is possible to set the forbidden level of deprecation messages (default
  * is to forbid ERROR, i.e. allow up to WARN). Messages equal to or above the forbidden level
  * will lead to throwing a {@link DeprecationException}. Setting the forbidden level to
  * FATAL_ERROR allows running legacy applications using deprecated features (tolerant mode), and
  * setting the forbidden level to DEBUG will run in strict mode, forbidding all deprecations.
- * <p>
- * Note that according to the above, issuing a fatalError log always raises an exception, and
- * can therefore be used when detecting old features that have been totally removed.
+ *
+ * <p>Note that according to the above, issuing a <code>fatal</code> log message always raises
+ * an exception, and can therefore be used when detecting old features that have been completely
+ * removed.
  *
  * @version $Id$
  */
@@ -42,15 +43,20 @@ public class Deprecation {
     /**
      * The deprecation logger.
      */
-    public static final Logger logger = new LoggerWrapper(new ConsoleLogger());
-    
+    public static final Log logger = new LoggerWrapper(getLog());
+
+    private static Log getLog() {
+        SimpleLog log = new SimpleLog("cocoon.deprecation");
+        log.setLevel(SimpleLog.LOG_LEVEL_ALL);
+        return log;
+    }
+
     private static final int DEBUG_VALUE = 0;
     private static final int INFO_VALUE = 1;
     private static final int WARN_VALUE = 2;
     private static final int ERROR_VALUE = 3;
-    private static final int FATAL_VALUE = 3;
-    private static final int FATAL_ERROR_VALUE = 4;
-    
+    private static final int FATAL_VALUE = 4;
+
     /**
      * Debug deprecation messages indicate features that are no more considered "current"
      * or "best practice", but for which no removal is currently foreseen.
@@ -78,10 +84,11 @@ public class Deprecation {
     public static final LogLevel ERROR = new LogLevel("ERROR", ERROR_VALUE);
 
     /**
-     * Fatal error deprecation messages indicate features that used to exist but have been removed
+     * Fatal deprecation messages indicate features that used to exist but have been removed
      * in the current version. Logging such a message always throws a {@link DeprecationException}.
      */
-    public static final LogLevel FATAL_ERROR = new LogLevel("FATAL_ERROR", FATAL_ERROR_VALUE);
+    public static final LogLevel FATAL = new LogLevel("FATAL", FATAL_VALUE);
+
     
     public static final class LogLevel extends ValuedEnum {
         private LogLevel(String text, int value) {
@@ -93,10 +100,11 @@ public class Deprecation {
         }
     }
 
-    public static void setLogger(Logger newLogger) {
+
+    public static void setLogger(Log newLogger) {
         // Note: the "logger" attribute is not of type LoggerWrapper so that it appears
         // as a standard Logger in the javadocs.
-        ((LoggerWrapper)logger).setLogger(newLogger);
+        ((LoggerWrapper) logger).setLogger(newLogger);
     }
     
     public static void setForbiddenLevel(LogLevel level) {
@@ -104,104 +112,132 @@ public class Deprecation {
         if (level == null) {
             level = ERROR;
         }
-        ((LoggerWrapper)logger).setForbiddenLevel(level);
+        ((LoggerWrapper) logger).setForbiddenLevel(level);
     }
-    
+
+
     /**
      * Wraps a logger, and throws an DeprecatedException if the message level is
      * higher than the allowed one.
      */
-    private static class LoggerWrapper implements Logger {
+    private static class LoggerWrapper implements Log {
         
-        private Logger realLogger;
+        private Log delegate;
         // up to warn is allowed
         private int forbiddenLevel = ERROR_VALUE;
+
         
-        public LoggerWrapper(Logger logger) {
-            this.realLogger = logger;
+        private LoggerWrapper(Log logger) {
+            this.delegate = logger;
         }
         
-        public void setLogger(Logger logger) {
+        private void setLogger(Log logger) {
             // Unwrap a wrapped logger
-            while(logger instanceof LoggerWrapper) {
-                logger = ((LoggerWrapper)logger).realLogger;
+            while (logger instanceof LoggerWrapper) {
+                logger = ((LoggerWrapper) logger).delegate;
             }
-            this.realLogger = logger;
+            this.delegate = logger;
         }
         
-        public void setForbiddenLevel(LogLevel level) {
+        private void setForbiddenLevel(LogLevel level) {
             this.forbiddenLevel = level.getValue();
         }
         
-        private void throwException(int level, String message) {
+        private void throwException(int level, Object message) {
             if (level >= this.forbiddenLevel) {
-                throw new DeprecationException(message);
+                throw new DeprecationException(String.valueOf(message));
             }
         }
         
         private boolean isThrowingException(int level) {
             return level >= this.forbiddenLevel;
         }
-        
-        public void debug(String message) {
-            realLogger.debug(message);
+
+
+        public void trace(Object message) {
+            delegate.trace(message);
             throwException(DEBUG_VALUE, message);
         }
-        public void debug(String message, Throwable thr) {
-            realLogger.debug(message, thr);
+
+        public void trace(Object message, Throwable thr) {
+            delegate.trace(message, thr);
             throwException(DEBUG_VALUE, message);
         }
-        public void info(String message) {
-            realLogger.info(message);
+
+        public void debug(Object message) {
+            delegate.debug(message);
+            throwException(DEBUG_VALUE, message);
+        }
+
+        public void debug(Object message, Throwable thr) {
+            delegate.debug(message, thr);
+            throwException(DEBUG_VALUE, message);
+        }
+
+        public void info(Object message) {
+            delegate.info(message);
             throwException(INFO_VALUE, message);
         }
-        public void info(String message, Throwable thr) {
-            realLogger.info(message, thr);
+
+        public void info(Object message, Throwable thr) {
+            delegate.info(message, thr);
             throwException(INFO_VALUE, message);
         }
-        public void warn(String message) {
-            realLogger.warn(message);
+
+        public void warn(Object message) {
+            delegate.warn(message);
             throwException(WARN_VALUE, message);
         }
-        public void warn(String message, Throwable thr) {
-            realLogger.warn(message, thr);
+
+        public void warn(Object message, Throwable thr) {
+            delegate.warn(message, thr);
             throwException(WARN_VALUE, message);
         }
-        public void error(String message) {
-            realLogger.error(message);
+
+        public void error(Object message) {
+            delegate.error(message);
             throwException(ERROR_VALUE, message);
         }
-        public void error(String message, Throwable thr) {
-            realLogger.error(message, thr);
+
+        public void error(Object message, Throwable thr) {
+            delegate.error(message, thr);
             throwException(ERROR_VALUE, message);
         }
-        public void fatalError(String message) {
-            realLogger.fatalError(message);
+
+        public void fatal(Object message) {
+            delegate.fatal(message);
             throwException(FATAL_VALUE, message);
         }
-        public void fatalError(String message, Throwable thr) {
-            realLogger.fatalError(message, thr);
+
+        public void fatal(Object message, Throwable thr) {
+            delegate.fatal(message, thr);
             throwException(FATAL_VALUE, message);
         }
+
+        public boolean isTraceEnabled() {
+            return isThrowingException(DEBUG_VALUE) || delegate.isTraceEnabled();
+        }
+
         public boolean isDebugEnabled() {
             // Enable level also if it is set to throw an exception, so that
             // logging the message occurs, and then throws it.
-            return isThrowingException(DEBUG_VALUE) || realLogger.isDebugEnabled();
+            return isThrowingException(DEBUG_VALUE) || delegate.isDebugEnabled();
         }
+
         public boolean isInfoEnabled() {
-            return isThrowingException(INFO_VALUE) || realLogger.isInfoEnabled();
+            return isThrowingException(INFO_VALUE) || delegate.isInfoEnabled();
         }
+
         public boolean isWarnEnabled() {
-            return isThrowingException(WARN_VALUE) || realLogger.isWarnEnabled();
+            return isThrowingException(WARN_VALUE) || delegate.isWarnEnabled();
         }
+
         public boolean isErrorEnabled() {
-            return isThrowingException(ERROR_VALUE) || realLogger.isErrorEnabled();
+            return isThrowingException(ERROR_VALUE) || delegate.isErrorEnabled();
         }
-        public boolean isFatalErrorEnabled() {
+
+        public boolean isFatalEnabled() {
             return true;
-        }
-        public Logger getChildLogger(String message) {
-            return realLogger.getChildLogger(message);
         }
     }
 }
