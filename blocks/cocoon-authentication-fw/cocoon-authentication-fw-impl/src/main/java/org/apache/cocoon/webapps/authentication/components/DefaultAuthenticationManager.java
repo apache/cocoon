@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -32,17 +31,24 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceUtil;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.Deprecation;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
@@ -55,10 +61,7 @@ import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.SessionConstants;
 import org.apache.cocoon.webapps.session.SessionManager;
 import org.apache.cocoon.webapps.session.context.SessionContext;
-import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceUtil;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
+
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -69,8 +72,7 @@ import org.xml.sax.SAXException;
  * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
-public class DefaultAuthenticationManager
-        extends AbstractLogEnabled
+public class DefaultAuthenticationManager extends AbstractLogEnabled
         implements AuthenticationManager,
                    Serviceable,
                    Disposable,
@@ -293,7 +295,9 @@ public class DefaultAuthenticationManager
                 if ( authenticator == null ) {
                     try {
                         authenticator = (Authenticator) ClassUtils.newInstance(name);
-                        ContainerUtil.enableLogging( authenticator, this.getLogger() );
+                        if (authenticator instanceof LogEnabled) {
+                            ContainerUtil.enableLogging(authenticator, new CLLoggerWrapper(getLogger()));
+                        }
                         ContainerUtil.contextualize( authenticator, this.context);
                         ContainerUtil.service( authenticator, this.manager );
                         ContainerUtil.initialize( authenticator );
