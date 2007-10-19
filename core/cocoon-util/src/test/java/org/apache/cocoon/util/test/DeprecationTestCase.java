@@ -16,12 +16,13 @@
  */
 package org.apache.cocoon.util.test;
 
-import junit.framework.TestCase;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.SimpleLog;
 
-import org.apache.avalon.framework.logger.ConsoleLogger;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.util.Deprecation;
 import org.apache.cocoon.util.DeprecationException;
+
+import junit.framework.TestCase;
 
 /**
  * Test Cases for the Deprecation class.
@@ -30,19 +31,22 @@ import org.apache.cocoon.util.DeprecationException;
  * @version $Id$
  */
 public class DeprecationTestCase extends TestCase {
+
+    private Log originalLogger;
+    private SimpleLog consoleLogger;
+
+
     public DeprecationTestCase(String name) {
         super(name);
     }
-    
-    private Logger originalLogger;
-    private Logger consoleLogger;
-    
+
     public void setUp() throws Exception {
         super.setUp();
         originalLogger = Deprecation.logger;
         // Setup a disabled logger: avoids polluting the test output, and also test
         // that isXXXEnabled also matches the forbidden deprecation level
-        consoleLogger = new ConsoleLogger(ConsoleLogger.LEVEL_DISABLED);
+        consoleLogger = new SimpleLog("test");
+        consoleLogger.setLevel(SimpleLog.LOG_LEVEL_OFF);
         Deprecation.setLogger(consoleLogger);
         Deprecation.setForbiddenLevel(Deprecation.ERROR);
     }
