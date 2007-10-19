@@ -35,7 +35,7 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
 public class SerializeNode extends PipelineEventComponentProcessingNode
                            implements ParameterizableProcessingNode {
 
-	private static final int DEFAULT_STATUS_CODE = 200;
+    private static final int DEFAULT_STATUS_CODE = 200;
 
     private String serializerName;
 
@@ -137,9 +137,9 @@ public class SerializeNode extends PipelineEventComponentProcessingNode
                 getLogger().warn("Status code value '" + statusCodeString + "' is not an integer. " +
                                  "Using " + DEFAULT_STATUS_CODE + " instead.", e);
             }
-			if (statusCodeInt >= 0) {
-				env.setStatus(statusCodeInt);
-			}
+            if (statusCodeInt >= 0) {
+                env.setStatus(statusCodeInt);
+            }
         }
 
         if (!context.isBuildingPipelineOnly()) {
