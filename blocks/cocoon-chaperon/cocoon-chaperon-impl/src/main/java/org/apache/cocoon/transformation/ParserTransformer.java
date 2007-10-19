@@ -17,22 +17,24 @@
 
 package org.apache.cocoon.transformation;
 
-import net.sourceforge.chaperon.build.ParserAutomatonBuilder;
-import net.sourceforge.chaperon.model.grammar.Grammar;
-import net.sourceforge.chaperon.model.grammar.GrammarFactory;
-import net.sourceforge.chaperon.process.ParserAutomaton;
-import net.sourceforge.chaperon.process.ParserProcessor;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.store.Store;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -40,17 +42,12 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
 
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.store.Store;
-
+import net.sourceforge.chaperon.build.ParserAutomatonBuilder;
+import net.sourceforge.chaperon.model.grammar.Grammar;
+import net.sourceforge.chaperon.model.grammar.GrammarFactory;
+import net.sourceforge.chaperon.process.ParserAutomaton;
+import net.sourceforge.chaperon.process.ParserProcessor;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.io.Serializable;
-
-import java.util.Map;
 
 /**
  * This transfomer transforms lexical tokens in a XML file into a XML hirachy by using a grammar
@@ -81,28 +78,15 @@ import java.util.Map;
  * @version $Id$
  */
 public class ParserTransformer extends ParserProcessor
-        implements Transformer, LogEnabled, Serviceable, Parameterizable,
-                   Recyclable, Disposable, CacheableProcessingComponent
-{
+                               implements Transformer, Serviceable, Parameterizable,
+                                          Recyclable, Disposable, CacheableProcessingComponent {
+
+    private final Log logger = LogFactory.getLog(getClass());
+
   private String grammar = null;
   private Source grammarSource = null;
-  private Logger logger = null;
   private ServiceManager manager = null;
   private SourceResolver resolver = null;
-
-  /**
-   * Provide component with a logger.
-   *
-   * @param logger the logger
-   */
-  public void enableLogging(Logger logger)
-  {
-    this.logger = logger;
-
-    // TODO: check if the loglevel is correct LogKitLogger -> Logger
-    // setLog(new AvalonLogger(logger));
-    //setLog(new ConsoleLog());
-  }
 
   /**
    * Pass the ServiceManager to the object. The Serviceable implementation should use the
