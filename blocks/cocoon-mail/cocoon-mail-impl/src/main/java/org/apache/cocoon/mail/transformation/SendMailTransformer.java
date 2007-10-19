@@ -205,6 +205,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     /*
      * constants, related to elements in configuration-file
      */
+
     public static final String NAMESPACE                  = "http://apache.org/cocoon/transformation/sendmail";
     public static final String ELEMENT_SENDMAIL           = "sendmail";
     public static final String ELEMENT_SMTPHOST           = "smtphost";
@@ -227,6 +228,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     /*
      * mode-constants
      */
+
     protected static final int MODE_NONE               = 0;
     protected static final int MODE_SMTPHOST           = 1;
     protected static final int MODE_FROM               = 2;
@@ -612,8 +614,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                     this.usedSources.add(inputSource);
     
                     DataSource dataSource = new SourceDataSource(inputSource, aD.strAttrMimeType, aD.strAttrName);
-                    ((SourceDataSource) dataSource).enableLogging(getLogger());
-    
+
                     messageBodyPart.setDataHandler(new DataHandler(dataSource));
                 } else {
                     messageBodyPart.setContent(aD.strContent, aD.strAttrMimeType);

@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import javax.activation.DataSource;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * The AbstractDataSource class is a base class for other {@link DataSource}
