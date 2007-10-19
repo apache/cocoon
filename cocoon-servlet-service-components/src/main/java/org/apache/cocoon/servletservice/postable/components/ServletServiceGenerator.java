@@ -21,18 +21,17 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.commons.io.IOUtils;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.servletservice.postable.PostableSource;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.cocoon.core.xml.SAXParser;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -48,14 +47,10 @@ import org.xml.sax.SAXException;
  */
 public class ServletServiceGenerator extends AbstractGenerator {
 	
-	private Log logger = LogFactory.getLog(getClass());
 	private SAXParser saxParser;
 	
 	private PostableSource servletSource;
 	
-    public void init() {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
-    }
 
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.generation.Generator#generate()
@@ -93,9 +88,9 @@ public class ServletServiceGenerator extends AbstractGenerator {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
         
-        if (logger.isDebugEnabled()) {
-        	logger.debug("Source " + service + " resolved to " + servletSource.getURI());
-            logger.debug("Source " + super.source + " resolved to " + inputSource.getURI());
+        if (getLogger().isDebugEnabled()) {
+        	getLogger().debug("Source " + service + " resolved to " + servletSource.getURI());
+            getLogger().debug("Source " + super.source + " resolved to " + inputSource.getURI());
         }
         
         IOUtils.copy(inputSource.getInputStream(), servletSource.getOutputStream());
@@ -108,5 +103,4 @@ public class ServletServiceGenerator extends AbstractGenerator {
 	public void setSaxParser(SAXParser saxParser) {
 		this.saxParser = saxParser;
 	}
-
 }
