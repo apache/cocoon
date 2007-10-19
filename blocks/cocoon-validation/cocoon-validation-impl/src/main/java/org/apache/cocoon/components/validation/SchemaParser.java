@@ -29,7 +29,8 @@ import org.xml.sax.SAXException;
  * <p>A {@link SchemaParser} might be able to understand more than one grammar
  * language at the same time. The list of all supported grammar languages must be
  * returned by the {@link #getSupportedGrammars()} method.</p>
- * 
+ *
+ * @version $Id$
  */
 public interface SchemaParser {
 
@@ -40,7 +41,7 @@ public interface SchemaParser {
      * <p>Parse the specified {@link Source} and return a new {@link Schema}.</p>
      * 
      * <p>The returned {@link Schema} must be able to validate multiple documents
-     * via multiple invocations of {@link Schema#createValidator(ErrorHandler)}.</p> 
+     * via multiple invocations of {@link Schema#createValidator(org.xml.sax.ErrorHandler)}.</p>
      *
      * @param source the {@link Source} associated with the {@link Schema} to return.
      * @return a <b>non-null</b> {@link Schema} instance.

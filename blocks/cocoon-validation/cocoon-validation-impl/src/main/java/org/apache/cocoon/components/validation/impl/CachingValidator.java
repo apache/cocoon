@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 public class CachingValidator extends DefaultValidator {
 
     /** <p>The {@link Store} used for caching {@link Schema}s (if enabled).</p> */
-    private Store store = null;
+    private Store store;
 
     /**
      * <p>Create a new {@link CachingValidator} instance.</p>
@@ -62,7 +62,9 @@ public class CachingValidator extends DefaultValidator {
         try {
             super.dispose();
         } finally {
-            if (this.store != null) this.manager.release(this.store);
+            if (this.store != null) {
+                this.manager.release(this.store);
+            }
         }
     }
 
@@ -94,8 +96,8 @@ public class CachingValidator extends DefaultValidator {
         String uri = source.getURI();
         String key = this.getClass().getName() + "[" + parser.getClass().getName()
                      + ":" + grammar + "]@" + source.getURI();
-        Schema schema = null;
-        SourceValidity validity = null;
+        Schema schema;
+        SourceValidity validity;
         schema = (Schema) this.store.get(key);
 
         /* If the schema was found verify its validity and optionally clear */
@@ -103,20 +105,20 @@ public class CachingValidator extends DefaultValidator {
             validity = schema.getValidity();
             if (validity == null) {
                 /* Why did we cache it in the first place? */
-                this.logger.warn("Cached schema " + uri + " has null validity");
+                getLogger().warn("Cached schema " + uri + " has null validity");
                 this.store.remove(key);
                 schema = null;
             } else if (validity.isValid() != SourceValidity.VALID) {
-                if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Cached schema " + uri + " no longer valid");
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Cached schema " + uri + " no longer valid");
                 }
                 this.store.remove(key);
                 schema = null;
-            } else if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Valid cached schema found for " + uri);
+            } else if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Valid cached schema found for " + uri);
             }
-        } else if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Schema " + uri + " not found in cache");
+        } else if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Schema " + uri + " not found in cache");
         }
 
         /* If the schema was not cached or was cleared, parse and cache it */
@@ -152,24 +154,24 @@ public class CachingValidator extends DefaultValidator {
         String uri = source.getURI();
         String key = this.getClass().getName() + "@" + source.getURI();
 
-        CachedGrammar grammar = null;
+        CachedGrammar grammar;
         grammar = (CachedGrammar) this.store.get(key);
 
         /* If the schema was found verify its validity and optionally clear */
         if (grammar != null) {
             if (grammar.validity == null) {
                 /* Why did we cache it in the first place? */
-                this.logger.warn("Grammar for " + uri + " has null validity");
+                getLogger().warn("Grammar for " + uri + " has null validity");
                 this.store.remove(key);
                 grammar = null;
             } else if (grammar.validity.isValid() != SourceValidity.VALID) {
-                if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Grammar for " + uri + " no longer valid");
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Grammar for " + uri + " no longer valid");
                 }
                 this.store.remove(key);
                 grammar = null;
-            } else if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Valid cached grammar " + grammar + " for " + uri);
+            } else if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Valid cached grammar " + grammar + " for " + uri);
             }
         }
 
@@ -195,6 +197,7 @@ public class CachingValidator extends DefaultValidator {
     private static final class CachedGrammar {
         private final SourceValidity validity;
         private final String grammar;
+
         private CachedGrammar(SourceValidity validity, String grammar) {
             this.validity = validity;
             this.grammar = grammar;

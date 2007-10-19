@@ -18,45 +18,42 @@ package org.apache.cocoon.components.validation.impl;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.validation.SchemaParser;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.EntityResolver;
 
+import org.apache.cocoon.components.validation.SchemaParser;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 /**
- * <p>A {@link SchemaParser} caching {@link Schema} instance for multiple use.</p>
+ * <p>A {@link SchemaParser} caching {@link org.apache.cocoon.components.validation.Schema}
+ * instances for multiple use.</p>
  *
- * <p>A {@link Schema} will be cached until its {@link SourceValidity} expires.</p>
+ * <p>A {@link org.apache.cocoon.components.validation.Schema} will be cached until its
+ * {@link org.apache.excalibur.source.SourceValidity} expires.</p>
  *
+ * @version $Id$
  */
-public abstract class AbstractSchemaParser
-implements LogEnabled, Serviceable, Initializable, Disposable, SchemaParser {
+public abstract class AbstractSchemaParser extends AbstractLogEnabled
+                implements Serviceable, Initializable, Disposable, SchemaParser {
 
     /** <p>The {@link ServiceManager} configured for this instance.</p> */
-    protected ServiceManager serviceManager = null;
-    /** <p>The {@link SourceResolver} to resolve URIs into {@link Source}s.</p> */
-    protected SourceResolver sourceResolver = null;
+    protected ServiceManager serviceManager;
+
+    /** <p>The {@link SourceResolver} to resolve URIs into {@link org.apache.excalibur.source.Source}s.</p> */
+    protected SourceResolver sourceResolver;
+
     /** <p>The {@link EntityResolver} resolving against catalogs of public IDs.</p> */
-    protected EntityResolver entityResolver = null;
-    /** <p>The {@link Logger} configured for this instance.</p> */
-    protected Logger logger = null;
+    protected EntityResolver entityResolver;
+
 
     /**
      * <p>Create a new {@link AbstractSchemaParser} instance.</p>
      */
     public AbstractSchemaParser() {
         super();
-    }
-
-    /**
-     * <p>Enable logging.</p>
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
     }
 
     /**
