@@ -19,8 +19,8 @@ package org.apache.cocoon.portal.wsrp.consumer;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.wsrp4j.consumer.PortletKey;
 import org.apache.wsrp4j.consumer.WSRPPortlet;
 import org.apache.wsrp4j.consumer.driver.ConsumerPortletContext;
@@ -36,22 +36,15 @@ import org.apache.wsrp4j.util.StateChangedService;
  *  
  * @version $Id$
  */
-public class PortletRegistryImpl
-    extends GenericPortletRegistryImpl
-    implements StateChangedListener, LogEnabled {
+public class PortletRegistryImpl extends GenericPortletRegistryImpl
+                                 implements StateChangedListener {
 
     /** The logger. */
-    protected Logger logger;
+    protected final Log logger = LogFactory.getLog(getClass());
 
     /** maps portlet keys to portlet context. */
     private Hashtable contextMap = new Hashtable();
 
-    /**
-     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-    }
 
     /**
      * Add a portlet to the registry<br/>
