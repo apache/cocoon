@@ -20,8 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+
 import org.apache.cocoon.mail.command.AbstractMailCommand;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Build an AbstractMailCommand from MailContext.
@@ -60,13 +61,12 @@ public class MailCommandBuilder extends AbstractLogEnabled {
             // request parameter say "what"
             String cmd = mailContext.getParameter("cmd");
             if (cmd == null) {
-                cmd = (String)mailContext.get( MailContext.MAIL_CURRENT_WORKING_COMMAND_ENTRY );
+                cmd = (String) mailContext.get(MailContext.MAIL_CURRENT_WORKING_COMMAND_ENTRY);
             }
+
             Class clazz = getClassForCommand(cmd);
             if (clazz != null) {
                 ama = (AbstractMailCommand) clazz.newInstance();
-                // enable logging of the mail command
-                ama.enableLogging(getLogger());
                 // contextualize the mail command
                 if (ama instanceof Contextualizable) {
                     ((Contextualizable) ama).contextualize(mailContext);
@@ -79,6 +79,7 @@ public class MailCommandBuilder extends AbstractLogEnabled {
             String message = "Cannto build AbstractMailCommand";
             getLogger().error(message, e);
         }
+
         return ama;
     }
 

@@ -17,7 +17,6 @@
 package org.apache.cocoon.mail;
 
 import java.io.IOException;
-//import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -35,8 +34,11 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.ParameterList;
 import javax.mail.internet.ParseException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+
 import org.apache.excalibur.xml.sax.XMLizable;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -833,7 +835,6 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
          */
         public void toSAX(ContentHandler handler) throws SAXException {
             MailContentHandlerDelegate mailContentHandlerDelegate = new MailContentHandlerDelegate(handler);
-            mailContentHandlerDelegate.enableLogging(getLogger());
             mailContentHandlerDelegate.startDocumentXMLizer();
             for (int i = 0; i < folders.length; i++) {
                 mailContentHandlerDelegate.marshalFolderToSAX(folders[i]);
@@ -902,7 +903,6 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
          */
         public void toSAX(ContentHandler handler) throws SAXException {
             MailContentHandlerDelegate mailContentHandlerDelegate = new MailContentHandlerDelegate(handler);
-            mailContentHandlerDelegate.enableLogging(getLogger());
             mailContentHandlerDelegate.setSimpleDateFormat(sdf);
             mailContentHandlerDelegate.startDocumentXMLizer();
 
@@ -963,7 +963,6 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
          */
         public void toSAX(ContentHandler handler) throws SAXException {
             MailContentHandlerDelegate mailContentHandlerDelegate = new MailContentHandlerDelegate(handler);
-            mailContentHandlerDelegate.enableLogging(getLogger());
             mailContentHandlerDelegate.setSimpleDateFormat(sdf);
             mailContentHandlerDelegate.startDocumentXMLizer();
             mailContentHandlerDelegate.marshalMessageToSAX(message);

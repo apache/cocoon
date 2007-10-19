@@ -30,12 +30,14 @@ import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
 import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
+
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+
 import org.apache.cocoon.mail.command.AbstractMailCommand;
 import org.apache.cocoon.mail.command.MailCommands;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Manage invocation of mail commands.

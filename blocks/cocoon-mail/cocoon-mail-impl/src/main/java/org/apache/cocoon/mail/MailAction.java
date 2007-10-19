@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Provider;
@@ -31,9 +30,9 @@ import javax.mail.URLName;
 import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -108,7 +107,6 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
             // no mailContext is yet available
             // create it and put it into http-session
             mailContext = new MailContextHttpSession(null);
-            mailContext.enableLogging(getLogger());
             session.setAttribute(MailContext.SESSION_MAIL_CONTEXT, mailContext);
         }
 
@@ -316,39 +314,32 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
      */
     protected void putXMLizerToRequestAttribute(Request request, Iterator resultIterator) {
         if (resultIterator != null) {
-            // marshal java mail objects
-            Logger logger = getLogger();
-
             // make it an optional parameter?
             String datePattern = "dd.MM.yyyy HH:mm";
             SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
 
+            // marshal java mail objects
             while (resultIterator.hasNext()) {
                 Object objRef = resultIterator.next();
-
                 getLogger().debug("Creating XMLizer for " + String.valueOf(objRef));
 
                 if (objRef instanceof Folder) {
                     MailContentHandlerDelegate.FolderXMLizer fx = new MailContentHandlerDelegate.FolderXMLizer((Folder) objRef);
-                    fx.enableLogging(logger);
                     request.setAttribute(REQUEST_ATTRIBUTE_FOLDER, fx);
                 } else if (objRef instanceof Folder[]) {
                     Folder[] folders = (Folder[]) objRef;
                     MailContentHandlerDelegate.FolderXMLizer[] fxs = new MailContentHandlerDelegate.FolderXMLizer[folders.length];
                     for (int i = 0; i < folders.length; i++) {
                         fxs[i] = new MailContentHandlerDelegate.FolderXMLizer(folders[i]);
-                        fxs[i].enableLogging(logger);
                     }
                     // trust that array of XMLizable is handled
                     request.setAttribute(REQUEST_ATTRIBUTE_FOLDERS, fxs);
                 } else if (objRef instanceof Message) {
                     MailContentHandlerDelegate.MessageXMLizer mx = new MailContentHandlerDelegate.MessageXMLizer((Message) objRef);
-                    mx.enableLogging(logger);
                     mx.setSimpleDateFormat(sdf);
                     request.setAttribute(REQUEST_ATTRIBUTE_MESSAGE, mx);
                 } else if (objRef instanceof Message[]) {
                     MailContentHandlerDelegate.MessageEnvelopeXMLizer mex = new MailContentHandlerDelegate.MessageEnvelopeXMLizer((Message[]) objRef);
-                    mex.enableLogging(logger);
                     mex.setSimpleDateFormat(sdf);
                     request.setAttribute(REQUEST_ATTRIBUTE_MESSAGES, mex);
                 }
@@ -370,11 +361,9 @@ public class MailAction extends ServiceableAction implements ThreadSafe {
         try {
             // do we have a MailCommandManager ?
             MailCommandManager mam = new MailCommandManager();
-            mam.enableLogging(getLogger());
 
             // build the MailCommand(s)
             MailCommandBuilder mab = new MailCommandBuilder();
-            mab.enableLogging(getLogger());
             AbstractMailCommand ama = mab.buildAbstractMailCommand(mailContext);
 
             getLogger().debug("Executing " + String.valueOf(ama));

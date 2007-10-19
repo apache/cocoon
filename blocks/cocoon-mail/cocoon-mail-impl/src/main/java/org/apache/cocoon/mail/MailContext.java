@@ -22,12 +22,13 @@ import java.util.Set;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Store;
-//import javax.mail.Session;
+
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.apache.cocoon.environment.Request;
 
 /**
@@ -36,7 +37,7 @@ import org.apache.cocoon.environment.Request;
  * @since 29 December 2002
  * @version $Id$
  */
-public class MailContext extends DefaultContext implements LogEnabled {
+public class MailContext extends DefaultContext {
 
     /**
      * attribute name of MailContext object in an application session, eg http-session
@@ -62,8 +63,9 @@ public class MailContext extends DefaultContext implements LogEnabled {
      */
     public final static String MAIL_CURRENT_WORKING_COMMAND_ENTRY = "mail-current-working-command";
 
+    private final Log logger = LogFactory.getLog(getClass());
+
     private Request request;
-    private Logger logger;
 
 
     /**
@@ -320,17 +322,6 @@ public class MailContext extends DefaultContext implements LogEnabled {
 
 
     /**
-     *  Description of the Method
-     *
-     * @param  logger  Description of the Parameter
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-    }
-
-
-
-    /**
      *  Gets the parameter attribute of the MailContext object
      *
      * @param  key  Description of the Parameter
@@ -358,7 +349,7 @@ public class MailContext extends DefaultContext implements LogEnabled {
      *
      * @return    The logger value
      */
-    protected Logger getLogger() {
+    protected Log getLogger() {
         return this.logger;
     }
 
@@ -373,5 +364,4 @@ public class MailContext extends DefaultContext implements LogEnabled {
         //
         return fn;
     }
-
 }

@@ -61,6 +61,6 @@ public class MailContextHttpSession extends MailContext implements HttpSessionBi
         getLogger().info("value unbound " + String.valueOf(event));
 
         // This should not happen, removeStore of this
-        this.removeStore();
+        removeStore();
     }
 }

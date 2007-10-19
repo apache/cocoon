@@ -45,8 +45,6 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -58,6 +56,7 @@ import org.apache.cocoon.mail.datasource.FilePartDataSource;
 import org.apache.cocoon.mail.datasource.InputStreamDataSource;
 import org.apache.cocoon.mail.datasource.SourceDataSource;
 import org.apache.cocoon.servlet.multipart.Part;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A helper class used by the {@link org.apache.cocoon.acting.Sendmail}
@@ -100,11 +99,6 @@ public class MailMessageSender extends AbstractLogEnabled
 
     private Exception exception;
 
-
-    /** Java 1.3 Accessor */
-    private Logger getMyLogger() {
-        return getLogger();
-    }
 
     /**
      * Check string for null, empty, and "null".
@@ -230,9 +224,6 @@ public class MailMessageSender extends AbstractLogEnabled
                 throw new MessagingException("Not yet supported: " + getObject());
             }
 
-            if (ds != null) {
-                ds.enableLogging(getMyLogger());
-            }
             return ds;
         }
 
