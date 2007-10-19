@@ -18,18 +18,15 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.slide.SlideRepository;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -37,17 +34,22 @@ import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceUtil;
 import org.apache.slide.common.NamespaceAccessToken;
 
+import org.apache.cocoon.components.slide.SlideRepository;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 /**
  * A factory for sources from a Jakarta Slide repository.
  *
  * @version $Id$ 
  */
-public class SlideSourceFactory extends AbstractLogEnabled 
-implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
+public class SlideSourceFactory extends AbstractLogEnabled
+                                implements SourceFactory, Contextualizable, Serviceable,
+                                           ThreadSafe {
 
     private ServiceManager m_manager;
     private SlideRepository m_repository;
     private Context m_context;
+
 
     public SlideSourceFactory() {
     }
@@ -79,17 +81,16 @@ implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
      *
      * @return A new source object.
      */
-    public Source getSource(String location, Map parameters)
-    throws MalformedURLException, IOException, SourceException {
+    public Source getSource(String location, Map parameters) throws IOException {
 
-        if ( m_repository == null ) {
+        if (m_repository == null) {
             try {
                 m_repository = (SlideRepository) m_manager.lookup(SlideRepository.ROLE);
             } catch (ServiceException se) {
                 throw new SourceException("Unable to lookup repository.", se);
             }
         }
-        
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Creating source object for " + location);
         }
@@ -123,8 +124,7 @@ implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
             throw new SourceException("No such namespace: " + namespace);
         }
 
-        SourceParameters queryParameters = null;
-
+        SourceParameters queryParameters;
         if (query == null || query.length() == 0) {
             queryParameters = new SourceParameters();
         } else {
@@ -144,9 +144,7 @@ implements SourceFactory, Contextualizable, Serviceable, ThreadSafe {
             getLogger().debug("scope: " + scope);
         }
 
-        SlideSource source = new SlideSource(nat,scheme,scope,path,principal,version);
-
-        source.enableLogging(getLogger());
+        SlideSource source = new SlideSource(nat, scheme, scope, path, principal, version);
         source.contextualize(m_context);
         source.service(m_manager);
         source.initialize();

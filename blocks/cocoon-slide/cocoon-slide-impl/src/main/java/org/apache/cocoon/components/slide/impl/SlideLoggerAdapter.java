@@ -16,34 +16,38 @@
  */
 package org.apache.cocoon.components.slide.impl;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.slide.util.logger.Logger;
 
 /**
  * The class represent an adapter for the logger for jakarta slide
  *
  * @version $Id$
  */
-public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
-    private Logger logger;
-    private int currentLogLevel = ERROR;
+public class SlideLoggerAdapter implements Logger {
 
-    public SlideLoggerAdapter(Logger logger) {
+    private Log logger;
+    private int level;
+
+    
+    public SlideLoggerAdapter(Log logger) {
         this.logger = logger;
+        this.level = ERROR;
     }
 
     public void log(Object data, Throwable t, String channel, int level) {
-        if (level==CRITICAL) {
-            this.logger.fatalError(data.toString(),t);
-        } else if (level==ERROR) {
-            this.logger.error(data.toString(),t);
-        } else if (level==WARNING) {
-            this.logger.warn(data.toString(),t);
-        } else if (level==INFO) {
-            this.logger.info(data.toString(),t);
-        } else if (level==DEBUG) {
-            this.logger.debug(data.toString(),t);
+        if (level == CRITICAL) {
+            this.logger.fatal(data.toString(), t);
+        } else if (level == ERROR) {
+            this.logger.error(data.toString(), t);
+        } else if (level == WARNING) {
+            this.logger.warn(data.toString(), t);
+        } else if (level == INFO) {
+            this.logger.info(data.toString(), t);
+        } else if (level == DEBUG) {
+            this.logger.debug(data.toString(), t);
         } else {
-            this.logger.error(data.toString(),t);
+            this.logger.error(data.toString(), t);
         }
     }
 
@@ -55,15 +59,15 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
      * @param level The level used for logging.
      */
     public void log(Object data, String channel, int level) {
-        if (level==CRITICAL) {
-            this.logger.fatalError(data.toString());
-        } else if (level==ERROR) {
+        if (level == CRITICAL) {
+            this.logger.fatal(data.toString());
+        } else if (level == ERROR) {
             this.logger.error(data.toString());
-        } else if (level==WARNING) {
+        } else if (level == WARNING) {
             this.logger.warn(data.toString());
-        } else if (level==INFO) {
+        } else if (level == INFO) {
             this.logger.info(data.toString());
-        } else if (level==DEBUG) {
+        } else if (level == DEBUG) {
             this.logger.debug(data.toString());
         } else {
             this.logger.error(data.toString());
@@ -77,15 +81,15 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
      * @param level The level used for logging.
      */
     public void log(Object data, int level) {
-        if (level==CRITICAL) {
-            this.logger.fatalError(data.toString());
-        } else if (level==ERROR) {
+        if (level == CRITICAL) {
+            this.logger.fatal(data.toString());
+        } else if (level == ERROR) {
             this.logger.error(data.toString());
-        } else if (level==WARNING) {
+        } else if (level == WARNING) {
             this.logger.warn(data.toString());
-        } else if (level==INFO) {
+        } else if (level == INFO) {
             this.logger.info(data.toString());
-        } else if (level==DEBUG) {
+        } else if (level == DEBUG) {
             this.logger.debug(data.toString());
         } else {
             this.logger.error(data.toString());
@@ -98,19 +102,19 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
      * @param data The object to log.
      */
     public void log(Object data) {
-       if (currentLogLevel==CRITICAL) {
-           this.logger.fatalError(data.toString());
-       } else if (currentLogLevel==ERROR) {
-           this.logger.error(data.toString());
-       } else if (currentLogLevel==WARNING) {
-           this.logger.warn(data.toString());
-       } else if (currentLogLevel==INFO) {
-           this.logger.info(data.toString());
-       } else if (currentLogLevel==DEBUG) {
-           this.logger.debug(data.toString());
-       } else {
-           this.logger.error(data.toString());
-       }
+        if (level == CRITICAL) {
+            this.logger.fatal(data.toString());
+        } else if (level == ERROR) {
+            this.logger.error(data.toString());
+        } else if (level == WARNING) {
+            this.logger.warn(data.toString());
+        } else if (level == INFO) {
+            this.logger.info(data.toString());
+        } else if (level == DEBUG) {
+            this.logger.debug(data.toString());
+        } else {
+            this.logger.error(data.toString());
+        }
     }
 
     /**
@@ -119,7 +123,7 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
      * @param level the logger level
      */
     public void setLoggerLevel(int level) {
-        currentLogLevel = level;
+        this.level = level;
     }
 
     /**
@@ -129,7 +133,7 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
      * @param level the logger level
      */
     public void setLoggerLevel(String channel, int level) {
-        currentLogLevel = level;
+        this.level = level;
     }
 
     /**
@@ -137,7 +141,7 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
      * @return logger level
      */
     public int getLoggerLevel() {
-        return currentLogLevel;
+        return level;
     }
 
     /**
@@ -155,7 +159,7 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
             return WARNING;
         } else if (this.logger.isErrorEnabled()) {
             return ERROR;
-        } else if (this.logger.isFatalErrorEnabled() ) {
+        } else if (this.logger.isFatalEnabled()) {
             return CRITICAL;
         } else {
             return ERROR;
@@ -170,17 +174,17 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
      */
     public boolean isEnabled(String channel, int level) {
         if (this.logger.isDebugEnabled()) {
-            return DEBUG<=level;
+            return DEBUG <= level;
         } else if (this.logger.isInfoEnabled()) {
-            return INFO<=level;
+            return INFO <= level;
         } else if (this.logger.isWarnEnabled()) {
-            return WARNING<=level;
+            return WARNING <= level;
         } else if (this.logger.isErrorEnabled()) {
-            return ERROR<=level;
-        } else if (this.logger.isFatalErrorEnabled() ) {
-            return CRITICAL<=level;
+            return ERROR <= level;
+        } else if (this.logger.isFatalEnabled()) {
+            return CRITICAL <= level;
         } else {
-            return ERROR<=level;
+            return ERROR <= level;
         }
     }
 
@@ -191,19 +195,17 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
      */
     public boolean isEnabled(int level) {
         if (this.logger.isDebugEnabled()) {
-            return DEBUG<=level;
+            return DEBUG <= level;
         } else if (this.logger.isInfoEnabled()) {
-            return INFO<=level;
+            return INFO <= level;
         } else if (this.logger.isWarnEnabled()) {
-            return WARNING<=level;
+            return WARNING <= level;
         } else if (this.logger.isErrorEnabled()) {
-            return ERROR<=level;
-        } else if (this.logger.isFatalErrorEnabled() ) {
-            return CRITICAL<=level;
+            return ERROR <= level;
+        } else if (this.logger.isFatalEnabled()) {
+            return CRITICAL <= level;
         } else {
-            return ERROR<=level;
+            return ERROR <= level;
         }
     }
-
 }
-
