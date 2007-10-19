@@ -19,21 +19,22 @@ package org.apache.cocoon.components.validation.impl;
 import java.io.IOException;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.validation.Schema;
-import org.apache.cocoon.components.validation.SchemaParser;
-import org.apache.cocoon.components.validation.ValidationHandler;
-import org.apache.cocoon.components.validation.Validator;
-import org.apache.cocoon.components.validation.ValidatorException;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.NOPContentHandler;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
+
+import org.apache.cocoon.components.validation.Schema;
+import org.apache.cocoon.components.validation.SchemaParser;
+import org.apache.cocoon.components.validation.ValidationHandler;
+import org.apache.cocoon.components.validation.Validator;
+import org.apache.cocoon.components.validation.ValidatorException;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -55,29 +56,23 @@ import org.xml.sax.SAXException;
  * can be overridden by reimplementing the {@link #detectGrammar(Source)} method
  * provided by this class.</p>
  *
+ * @version $Id$
  */
-public abstract class AbstractValidator
-implements Validator, Serviceable, Disposable, LogEnabled {
+public abstract class AbstractValidator extends AbstractLogEnabled
+                                        implements Validator, Serviceable, Disposable {
 
     /** <p>The configured {@link ServiceManager} instance.</p> */
-    protected ServiceManager manager = null;
+    protected ServiceManager manager;
+
     /** <p>The configured {@link SourceResolver} instance.</p> */
-    protected SourceResolver resolver = null;
-    /** <p>The configured {@link Logger} instance.</p> */
-    protected Logger logger = null;
+    protected SourceResolver resolver;
+
 
     /**
      * <p>Create a new {@link AbstractValidator} instance.</p>
      */
     public AbstractValidator() {
         super();
-    }
-
-    /**
-     * <p>Enable logging.</p>
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
     }
 
     /**
@@ -400,8 +395,8 @@ implements Validator, Serviceable, Disposable, LogEnabled {
      */
     protected Schema getSchema(SchemaParser parser, Source source, String grammar)
     throws IOException, SAXException {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Parsing schema \"" + source.getURI() + "\" using " +
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Parsing schema \"" + source.getURI() + "\" using " +
                               "grammar \"" + grammar + "\" and SourceParser " +
                               parser.getClass().getName());
         }
@@ -426,8 +421,8 @@ implements Validator, Serviceable, Disposable, LogEnabled {
      */
     protected String detectGrammar(Source source)
     throws IOException, SAXException, ValidatorException {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Detecting grammar for \"" + source.getURI() + "\"");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Detecting grammar for \"" + source.getURI() + "\"");
         }
 
         SAXParser xmlParser = null;
@@ -457,8 +452,8 @@ implements Validator, Serviceable, Disposable, LogEnabled {
             String message = "Unable to detect grammar for schema at ";
             throw new ValidatorException(message + source.getURI());
         } else {
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Grammar \"" + grammar + "\" detected for " +
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Grammar \"" + grammar + "\" detected for " +
                                   "schema \"" + source.getURI());
             }
             return grammar;

@@ -31,18 +31,19 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.components.validation.SchemaParser;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 /**
- * <p>The default implementation of the {@link Validator} interface provides
- * core management for a number of {@link SchemaParser} instances.</p>
+ * <p>The default implementation of the {@link org.apache.cocoon.components.validation.Validator}
+ * interface provides core management for a number of {@link SchemaParser} instances.</p>
  * 
  * <p>Given the simplicity of this implementation, only {@link SchemaParser}s
  * implementing the {@link ThreadSafe} interface can be managed, and they can be
@@ -52,9 +53,11 @@ import org.apache.cocoon.components.validation.SchemaParser;
  * <p>That said, normally selection would occur using the methods declared by the
  * {@link AbstractValidator} class and implemented here.</p>
  *
+ * @version $Id$
  */
-public class DefaultValidator extends AbstractValidator implements ServiceSelector,
-ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
+public class DefaultValidator extends AbstractValidator
+                              implements ServiceSelector, ThreadSafe, Contextualizable,
+                                         Initializable, Disposable, Configurable {
 
     /** <p>A {@link Map} associating {@link SchemaParser}s with their names.</p> */
     private final Map components = Collections.synchronizedMap(new HashMap());
@@ -62,9 +65,11 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
     private final Map grammars = Collections.synchronizedMap(new HashMap());
 
     /** <p>The configured {@link Context} instance.</p> */
-    private Context context = null;
+    private Context context;
+
     /** <p>The configured {@link Configuration} instance.</p> */
-    private Configuration conf = null;
+    private Configuration conf;
+
 
     /**
      * <p>Create a new {@link DefaultValidator} instance.</p>
@@ -94,15 +99,14 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
      */
     public void initialize()
     throws Exception {
-        this.logger.debug("Initializing " + this.getClass().getName());
+        getLogger().debug("Initializing " + this.getClass().getName());
 
-        if (this.logger == null) throw new IllegalStateException("Null logger");
         if (this.context == null) throw new IllegalStateException("Null context");
         if (this.manager == null) throw new IllegalStateException("Null manager");
         if (this.conf == null) throw new IllegalStateException("Null configuration");
 
         Configuration configurations[] = this.conf.getChildren("schema-parser");
-        this.logger.debug("Configuring " + configurations.length + " schema parsers"
+        getLogger().debug("Configuring " + configurations.length + " schema parsers"
                           + " from " + this.conf.getLocation());
 
         /* Iterate through all the sub-confiuration instances */
@@ -118,7 +122,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
             }
 
             /* Dump some debugging information, just in case */
-            this.logger.debug("Configuring schema parser " + selectionKey + " as "
+            getLogger().debug("Configuring schema parser " + selectionKey + " as "
                               + className + " from " + configuration.getLocation());
 
             /* Try to load and instantiate the SchemaParser */
@@ -143,7 +147,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
 
                 /* Instantiate and set up the new SchemaParser */
                 schemaParser = (SchemaParser) clazz.newInstance();
-                this.setupComponent(selectionKey, schemaParser, configuration);
+                setupComponent(selectionKey, schemaParser, configuration);
 
             } catch (ConfigurationException exception) {
                 throw exception;
@@ -154,7 +158,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
 
             /* Store this instance (and report about it) */
             this.components.put(selectionKey, schemaParser);
-            this.logger.debug("SchemaParser \"" + selectionKey + "\" instantiated" +
+            getLogger().debug("SchemaParser \"" + selectionKey + "\" instantiated" +
                               " from class " + className);
 
             /* Analyze the grammars provided by the current SchemaParser */
@@ -164,8 +168,8 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
             /* Iterate through the grammars and store them (default lookup) */
             for (int k = 0; k < grammars.length; k++) {
                 if (this.grammars.containsKey(grammars[k])) {
-                    if (this.logger.isDebugEnabled()) {
-                        this.logger.debug("SchemaParser \"" + selectionKey + "\" " +
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("SchemaParser \"" + selectionKey + "\" " +
                                           "supports grammar \"" + grammars[k] +
                                           "\" but is not the default provider");
                     }
@@ -174,8 +178,8 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
 
                 /* Noone yet supports this grammar, make this the default */
                 this.grammars.put(grammars[k], selectionKey);
-                if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("SchemaParser \"" + selectionKey + "\" is the "
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("SchemaParser \"" + selectionKey + "\" is the "
                                       + "default grammar provider for "+grammars[k]);
                 }
             }
@@ -183,14 +187,14 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
         } catch (Exception exception) {
             /* Darn, we had an exception instantiating one of the components */
             exception.printStackTrace();
-            this.logger.fatalError("Exception creating schema parsers", exception);
+            getLogger().fatal("Exception creating schema parsers", exception);
 
             /* Dispose all previously stored component instances */
             Iterator iterator = this.components.values().iterator();
             while (iterator.hasNext()) try {
                 this.decommissionComponent(iterator.next());
             } catch (Exception nested) {
-                this.logger.fatalError("Error decommissioning component", nested);
+                getLogger().fatal("Error decommissioning component", nested);
             }
 
             /* Depending on the exception type, re-throw it or wrap it */
@@ -216,7 +220,7 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
         while (iterator.hasNext()) try {
             this.decommissionComponent(iterator.next());
         } catch (Exception exception) {
-            this.logger.fatalError("Error decommissioning component", exception);
+            getLogger().fatal("Error decommissioning component", exception);
         }
     }
 
@@ -261,7 +265,8 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
      * original component manager.</p>
      * 
      * <p>This method is supplied in case solid implementations of this class relied
-     * on the {@link ServiceManager} to manage {@link SchemaParser}s instances.</p>
+     * on the {@link org.apache.avalon.framework.service.ServiceManager} to manage
+     * {@link SchemaParser}s instances.</p>
      * 
      * @param parser the {@link SchemaParser} whose instance is to be released.
      */
@@ -319,9 +324,9 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
         boolean started = false;
 
         try {
+            // All SchemaParsers are now using commons logging. This is legacy support code.
             if (component instanceof LogEnabled) {
-                Logger logger = this.logger.getChildLogger(name);
-                ((LogEnabled) component).enableLogging(logger);
+                ((LogEnabled) component).enableLogging(new CLLoggerWrapper(getLogger()));
             }
     
             if (component instanceof Contextualizable) {
@@ -357,12 +362,12 @@ ThreadSafe, Contextualizable, Initializable, Disposable, Configurable {
             if ((started) && (component instanceof Startable)) try {
                 ((Startable) component).stop();
             } catch (Exception nested) {
-                this.logger.fatalError("Error stopping component", nested);
+                getLogger().fatal("Error stopping component", nested);
             }
             if ((initialized) && (component instanceof Disposable)) try {
                 ((Disposable) component).dispose();
             } catch (Exception nested) {
-                this.logger.fatalError("Error disposing component", nested);
+                getLogger().fatal("Error disposing component", nested);
             }
             throw exception;
         }
