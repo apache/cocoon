@@ -22,17 +22,18 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.webapps.session.SessionConstants;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
 
 /**
  *  Context provider for the temporarily context, the request and the
@@ -41,9 +42,9 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
  * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
-public final class StandardSessionContextProvider
-extends AbstractLogEnabled
-implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Disposable {
+public final class StandardSessionContextProvider extends AbstractLogEnabled
+                                                  implements SessionContextProvider, ThreadSafe, Contextualizable,
+                                                             Serviceable, Disposable {
 
     protected Context context;
     
@@ -72,7 +73,7 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Di
                 context = new SimpleSessionContext(this.xpathProcessor, this.resolver);
                 context.setup(name, null, null);
             } else if ( name.equals(SessionConstants.REQUEST_CONTEXT) ) {
-                context = new RequestSessionContext(this.getLogger());
+                context = new RequestSessionContext(getLogger());
                 context.setup(name, null, null);
                 ((RequestSessionContext)context).setup( objectModel, this.manager, this.xpathProcessor );
             }

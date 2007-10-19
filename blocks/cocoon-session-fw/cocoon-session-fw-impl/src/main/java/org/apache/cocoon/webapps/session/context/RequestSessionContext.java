@@ -20,22 +20,23 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Enumeration;
 import java.util.Map;
-
 import javax.servlet.http.Cookie;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.logging.Log;
+import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.transformation.CIncludeTransformer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMUtil;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
@@ -118,8 +119,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @deprecated This block is deprecated and will be removed in future versions.
  * @version $Id$
  */
-public final class RequestSessionContext
-implements SessionContext {
+public final class RequestSessionContext implements SessionContext {
 
     private static final String PARAMETERS_ELEMENT = "cinclude:" + CIncludeTransformer.CINCLUDE_PARAMETERS_ELEMENT;
     private static final String PARAMETER_ELEMENT  = "cinclude:" + CIncludeTransformer.CINCLUDE_PARAMETER_ELEMENT;
@@ -127,7 +127,7 @@ implements SessionContext {
     private static final String VALUE_ELEMENT      = "cinclude:" + CIncludeTransformer.CINCLUDE_VALUE_ELEMENT;
 
     /** The logger. */
-    protected Logger logger;
+    protected Log logger;
 
     /** Name of this context */
     private String    name;
@@ -141,7 +141,7 @@ implements SessionContext {
     /** The XPath Processor */
     private XPathProcessor xpathProcessor;
 
-    public RequestSessionContext(Logger logger) {
+    public RequestSessionContext(Log logger) {
         this.logger = logger;
     }
 
@@ -199,9 +199,13 @@ implements SessionContext {
      */
     private String createPath(String path) {
         if (path == null) path = "/";
-        if (path.startsWith("/") == false) path = "/" + path;
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
         path = "/context" + path;
-        if (path.endsWith("/") == true) path = path.substring(0, path.length() - 1);
+        if (path.endsWith("/")) {
+            path = path.substring(0, path.length() - 1);
+        }
         return path;
     }
 
@@ -291,7 +295,7 @@ implements SessionContext {
 
         root.appendChild(attrElement);
         Enumeration all = this.request.getAttributeNames();
-        while (all.hasMoreElements() == true) {
+        while (all.hasMoreElements()) {
             attrName = (String) all.nextElement();
             try {
                 attr = doc.createElementNS(null, attrName);
@@ -363,7 +367,7 @@ implements SessionContext {
 
         root.appendChild(headersElement);
         Enumeration all = this.request.getHeaderNames();
-        while (all.hasMoreElements() == true) {
+        while (all.hasMoreElements()) {
             headerName = (String) all.nextElement();
             try {
                 header = doc.createElementNS(null, headerName);
@@ -386,7 +390,7 @@ implements SessionContext {
         Element     parameterValuesElement = doc.createElementNS(null, "parametervalues");
         root.appendChild(parameterElement);
         root.appendChild(parameterValuesElement);
-        String      parameterName = null;
+        String      parameterName;
         Enumeration pars = this.request.getParameterNames();
         Element     parameter;
         Element     element;
@@ -399,7 +403,7 @@ implements SessionContext {
         parameterValuesElement.appendChild(element);
         parameterValuesElement = element;
 
-        while (pars.hasMoreElements() == true) {
+        while (pars.hasMoreElements()) {
             parameterName = (String)pars.nextElement();
             values = this.request.getParameterValues(parameterName);
 
@@ -561,7 +565,7 @@ implements SessionContext {
     public Node getSingleNode(String path)
     throws ProcessingException {
         path = this.createPath(path);
-        Node node = null;
+        Node node;
 
         try {
             node = DOMUtil.getSingleNode(this.contextData, path, this.xpathProcessor);
@@ -577,7 +581,7 @@ implements SessionContext {
     public NodeList getNodeList(String path)
     throws ProcessingException {
         path = this.createPath(path);
-        NodeList list = null;
+        NodeList list;
 
         try {
             list = DOMUtil.selectNodeList(this.contextData, path, this.xpathProcessor);
