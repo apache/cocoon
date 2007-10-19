@@ -28,12 +28,11 @@ import org.apache.cocoon.environment.SourceResolver;
  * @cocoon.sitemap.component.documentation
  * This action starts the preemptive loader and runs forever.
  * 
- *  @version $Id$
- *  @since   2.1
+ * @since   2.1
+ * @version $Id$
  */
-public class PreemptiveLoaderAction 
-    extends ServiceableAction
-    implements ThreadSafe {
+public class PreemptiveLoaderAction extends ServiceableAction
+                                    implements ThreadSafe {
 
     /**
      * This action starts the preemptive loading
@@ -48,9 +47,10 @@ public class PreemptiveLoaderAction
     throws Exception {
         PreemptiveLoader loader = PreemptiveLoader.getInstance();
         if (!loader.alive) {
-            loader.process(resolver, this.getLogger());
+            loader.process(resolver);
             return EMPTY_MAP;
         }
+
         return null;
     }
 }

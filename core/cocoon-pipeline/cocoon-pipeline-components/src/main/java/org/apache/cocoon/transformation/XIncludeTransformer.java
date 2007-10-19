@@ -97,7 +97,6 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         this.resolver = resolver;
         this.validity = new MultiSourceValidity(resolver, MultiSourceValidity.CHECK_ALWAYS); 
         this.xIncludePipe = new XIncludePipe(); 
-        this.xIncludePipe.enableLogging(getLogger());
         this.xIncludePipe.init(null, null);
         super.setContentHandler(xIncludePipe);
         super.setLexicalHandler(xIncludePipe);
@@ -462,7 +461,6 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                     }
 
                     XIncludePipe subPipe = new XIncludePipe();
-                    subPipe.enableLogging(getLogger());
                     subPipe.init(url.getURI(), xpointer);
                     subPipe.setConsumer(xmlConsumer);
                     subPipe.setParent(this);
@@ -471,7 +469,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                         if (xpointer != null && xpointer.length() > 0) {
                             XPointer xptr;
                             xptr = XPointerFrameworkParser.parse(NetUtils.decodePath(xpointer));
-                            XPointerContext context = new XPointerContext(xpointer, url, subPipe, getLogger(), manager);
+                            XPointerContext context = new XPointerContext(xpointer, url, subPipe, manager);
                             for (Iterator iter = namespaces.keySet().iterator(); iter.hasNext();) {
                                 String prefix = (String) iter.next();
                                 context.addPrefix(prefix, (String) namespaces.get(prefix));

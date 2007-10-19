@@ -21,10 +21,11 @@ import java.net.URL;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 
 import org.apache.cocoon.ProcessingException;
@@ -51,6 +52,8 @@ import org.apache.cocoon.xml.XMLConsumer;
  */
 public class EnvironmentHelper extends AbstractLogEnabled
                                implements SourceResolver, Serviceable, Disposable {
+
+    private static final Log logger = LogFactory.getLog(EnvironmentHelper.class);
 
     /** The environment information */
     static protected final ThreadLocal environmentStack = new ThreadLocal();
@@ -339,8 +342,8 @@ public class EnvironmentHelper extends AbstractLogEnabled
     /**
      * INTERNAL METHOD. Do not use this, can be removed without warning or deprecation cycle.
      */
-    public static void checkEnvironment(int depth, Logger logger)
-            throws Exception {
+    public static void checkEnvironment(int depth)
+    throws Exception {
         // TODO (CZ): This is only for testing - remove it later on. See also Cocoon.java.
         final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
         int currentDepth = stack != null ? stack.size() : 0;

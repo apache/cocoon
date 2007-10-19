@@ -16,15 +16,16 @@
  */
 package org.apache.cocoon.xml;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Stack;
+
+import org.apache.commons.logging.Log;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.Source;
-import org.apache.avalon.framework.logger.Logger;
-
-import java.util.Stack;
-import java.util.Collections;
-import java.io.IOException;
 
 /**
  * Helper class for handling xml:base attributes.
@@ -51,9 +52,10 @@ public class XMLBaseSupport {
      */
     private Stack bases = new Stack();
     private SourceResolver resolver;
-    private Logger logger;
+    private Log logger;
 
-    public XMLBaseSupport(SourceResolver resolver, Logger logger) {
+
+    public XMLBaseSupport(SourceResolver resolver, Log logger) {
         this.resolver = resolver;
         this.logger = logger;
     }

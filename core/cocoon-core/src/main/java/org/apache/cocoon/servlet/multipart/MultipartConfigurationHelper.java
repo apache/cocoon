@@ -18,9 +18,10 @@ package org.apache.cocoon.servlet.multipart;
 
 import java.io.File;
 
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.configuration.Settings;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.logging.Log;
+
+import org.apache.cocoon.configuration.Settings;
 
 /**
  * Configuration object for the multipart filter.
@@ -110,29 +111,31 @@ public class MultipartConfigurationHelper {
      * Configure this from the settings object.
      * @param settings
      */
-    public void configure(Settings settings, Logger logger) {
+    public void configure(Settings settings, Log logger) {
         String value;
+
         value = settings.getProperty(KEY_UPLOADS_ENABLE);
-        if ( value != null ) {
-            this.setEnableUploads(BooleanUtils.toBoolean(value));            
+        if (value != null) {
+            setEnableUploads(BooleanUtils.toBoolean(value));
         }
         value = settings.getProperty(KEY_UPLOADS_DIRECTORY);
-        if ( value != null ) {
-            this.setUploadDirectory(value);            
+        if (value != null) {
+            setUploadDirectory(value);
         }
         value = settings.getProperty(KEY_UPLOADS_AUTOSAVE);
-        if ( value != null ) {
-            this.setAutosaveUploads(BooleanUtils.toBoolean(value));            
+        if (value != null) {
+            setAutosaveUploads(BooleanUtils.toBoolean(value));
         }
         value = settings.getProperty(KEY_UPLOADS_OVERWRITE);
-        if ( value != null ) {
-            this.setOverwriteUploads(value);            
+        if (value != null) {
+            setOverwriteUploads(value);
         }
         value = settings.getProperty(KEY_UPLOADS_MAXSIZE);
-        if ( value != null ) {
-            this.setMaxUploadSize(Integer.valueOf(value).intValue());            
+        if (value != null) {
+            setMaxUploadSize(Integer.valueOf(value).intValue());
         }
-        final String uploadDirParam = this.getUploadDirectory();
+
+        final String uploadDirParam = getUploadDirectory();
         File uploadDir;
         if (uploadDirParam != null) {
             uploadDir = new File(uploadDirParam);
@@ -145,8 +148,9 @@ public class MultipartConfigurationHelper {
                 logger.debug("Using default upload-directory " + uploadDir);
             }
         }
+
         uploadDir.mkdirs();
-        this.setUploadDirectory(uploadDir.getAbsolutePath());
+        setUploadDirectory(uploadDir.getAbsolutePath());
     }
 
     /**
@@ -189,9 +193,6 @@ public class MultipartConfigurationHelper {
         return this.uploadDirectory;
     }
 
-    /**
-     * @see org.apache.cocoon.core.DynamicSettings#isAllowOverwrite()
-     */
     public boolean isAllowOverwrite() {
         final String value = this.getOverwriteUploads();
         if ("deny".equalsIgnoreCase(value)) {
@@ -204,11 +205,8 @@ public class MultipartConfigurationHelper {
         }
     }
 
-    /**
-     * @see org.apache.cocoon.core.DynamicSettings#isSilentlyRename()
-     */
     public boolean isSilentlyRename() {
-        final String value = this.getOverwriteUploads();
+        final String value = getOverwriteUploads();
         if ("deny".equalsIgnoreCase(value)) {
             return false;
         } else if ("allow".equalsIgnoreCase(value)) {
@@ -220,7 +218,7 @@ public class MultipartConfigurationHelper {
     }
 
     /**
-     * @param autosaveUploads The autosaveUploads to set.
+     * @param autosaveUploadsValue The autosaveUploads to set.
      */
     public void setAutosaveUploads(boolean autosaveUploadsValue) {
         this.autosaveUploads = autosaveUploadsValue;

@@ -16,37 +16,36 @@
  */
 package org.apache.cocoon.matching;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.WildcardMatcherHelper;
-
-import java.util.Map;
 
 /**
  * Base class for wildcard matchers
  *
  * @version $Id$
  */
-
-public abstract class AbstractWildcardMatcher
-    extends AbstractLogEnabled
-    implements Matcher, ThreadSafe {
+public abstract class AbstractWildcardMatcher extends AbstractLogEnabled
+                                              implements Matcher, ThreadSafe {
 
     /**
      * Match the prepared pattern against the result of {@link #getMatchString(Map, Parameters)}.
-     * @see org.apache.cocoon.matching.AbstractPreparableMatcher#match(java.lang.String, java.util.Map, org.apache.avalon.framework.parameters.Parameters)
+     *
+     * @see AbstractPreparableMatcher#match(String, Map, Parameters)
      */
     public Map match(String pattern, Map objectModel, Parameters parameters) throws PatternException {
         if (pattern == null) {
             throw new PatternException("A pattern is needed at " +
-                    SitemapParameters.getLocation(parameters));
+                                       SitemapParameters.getLocation(parameters));
         }
 
-        final String match = this.getMatchString(objectModel, parameters);
-
+        final String match = getMatchString(objectModel, parameters);
         if (match == null) {
             return null;
         }

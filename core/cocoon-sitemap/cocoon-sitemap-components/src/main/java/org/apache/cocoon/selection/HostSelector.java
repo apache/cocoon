@@ -48,7 +48,6 @@ import java.util.Map;
  *
  * @version $Id$
  */
-
 public class HostSelector extends NamedPatternsSelector {
 
     public void configure(Configuration conf) throws ConfigurationException {

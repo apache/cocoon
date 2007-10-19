@@ -16,26 +16,30 @@
  */
 package org.apache.cocoon.components.xpointer;
 
-import org.w3c.dom.Document;
+import java.util.HashMap;
+
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.xpath.PrefixResolver;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.source.util.SourceUtil;
-import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.xml.sax.SAXException;
 
-import java.util.HashMap;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.xml.XMLConsumer;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * A context object used during the evaluating of XPointers.
+ *
+ * @version $Id$
  */
-public class XPointerContext implements PrefixResolver {
+public class XPointerContext extends AbstractLogEnabled
+                             implements PrefixResolver {
     private Source source;
     private Document document;
     private XMLConsumer xmlConsumer;
-    private Logger logger;
     private String xpointer;
     private HashMap prefixes = new HashMap();
     private ServiceManager manager;
@@ -47,10 +51,9 @@ public class XPointerContext implements PrefixResolver {
      * @param source the source into which the xpointer points
      * @param xmlConsumer the consumer to which the result of the xpointer evaluation should be send
      */
-    public XPointerContext(String xpointer, Source source, XMLConsumer xmlConsumer, Logger logger, ServiceManager manager) {
+    public XPointerContext(String xpointer, Source source, XMLConsumer xmlConsumer, ServiceManager manager) {
         this.source = source;
         this.xmlConsumer = xmlConsumer;
-        this.logger = logger;
         this.manager = manager;
         this.xpointer = xpointer;
 
@@ -76,10 +79,6 @@ public class XPointerContext implements PrefixResolver {
 
     public XMLConsumer getXmlConsumer() {
         return xmlConsumer;
-    }
-
-    public Logger getLogger() {
-        return logger;
     }
 
     public String getXPointer() {

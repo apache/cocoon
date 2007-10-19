@@ -16,7 +16,8 @@
  */
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.framework.logger.Logger;
+import java.util.Vector;
+
 import org.apache.cocoon.xml.util.NamespacesTable;
 
 import org.xml.sax.Attributes;
@@ -24,8 +25,6 @@ import org.xml.sax.DocumentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributeListImpl;
-
-import java.util.Vector;
 
 /**
  * This class is an utility class &quot;wrapping&quot; around a SAX version 1.0
@@ -41,15 +40,15 @@ import java.util.Vector;
  */
 public class DocumentHandlerWrapper extends AbstractXMLConsumer {
 
-    protected Logger log;
-
     /** The current namespaces table. */
-    private NamespacesTable namespaces=new NamespacesTable();
+    private NamespacesTable namespaces = new NamespacesTable();
+
     /** The vector of namespaces declarations to include in the next element. */
-    private Vector undecl=new Vector();
+    private Vector undecl = new Vector();
 
     /** The current <code>DocumentHandler</code>. */
-    protected DocumentHandler documentHandler=null;
+    protected DocumentHandler documentHandler;
+
 
     /**
      * Create a new <code>DocumentHandlerWrapper</code> instance.
@@ -63,18 +62,7 @@ public class DocumentHandlerWrapper extends AbstractXMLConsumer {
      */
     public DocumentHandlerWrapper(DocumentHandler document) {
         this();
-        this.setDocumentHandler(document);
-    }
-
-    /**
-     * Provide component with a logger.
-     * 
-     * @param logger the logger
-     */
-    public void enableLogging(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
+        setDocumentHandler(document);
     }
 
     /**

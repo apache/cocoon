@@ -16,29 +16,30 @@
  */
 package org.apache.cocoon.selection;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.thread.ThreadSafe;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 /**
  * Abstract class for selectors that select a value when it matches
  * some patterns associated to the select expression.
  *
- * @see BrowserSelector
- * @see HostSelector
+ * <p>Known implementations of this abstract class include <code>BrowserSelector</code>,
+ * <code>HostSelector</code> from <code>cocoon-sitemap-components</code> maven module.
+ *
  * @version $Id$
  */
-
 public abstract class NamedPatternsSelector extends AbstractLogEnabled
-  implements Configurable, ThreadSafe, Selector {
+                                            implements Configurable, ThreadSafe, Selector {
 
     /**
      * Association of names to String[] of values.

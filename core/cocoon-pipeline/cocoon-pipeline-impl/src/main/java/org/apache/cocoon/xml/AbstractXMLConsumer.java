@@ -16,7 +16,8 @@
  */
 package org.apache.cocoon.xml;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -27,7 +28,8 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public abstract class AbstractXMLConsumer extends AbstractLogEnabled implements XMLConsumer {
+public abstract class AbstractXMLConsumer extends AbstractLogEnabled
+                                          implements XMLConsumer {
 
     /**
      * Receive an object for locating the origin of SAX document events.
@@ -199,7 +201,6 @@ public abstract class AbstractXMLConsumer extends AbstractLogEnabled implements 
     public void endCDATA()
     throws SAXException {
     }
-
 
     /**
      * Report an XML comment anywhere in the document.

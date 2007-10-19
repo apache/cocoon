@@ -16,17 +16,19 @@
  */
 package org.apache.cocoon.reading;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.SourceResolver;
-import org.xml.sax.SAXException;
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
+
+import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.parameters.Parameters;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
+import org.xml.sax.SAXException;
 
 /**
  * A reader can be used to generate binary output for a request. This
@@ -34,18 +36,21 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public abstract class AbstractReader
-  extends AbstractLogEnabled
-  implements Reader, Recyclable {
+public abstract class AbstractReader extends AbstractLogEnabled
+                                     implements Reader, Recyclable {
 
     /** The current <code>SourceResolver</code>. */
     protected SourceResolver resolver;
+
     /** The current <code>Map</code> of the object model. */
     protected Map objectModel;
+
     /** The current <code>Parameters</code>. */
     protected Parameters parameters;
+
     /** The source URI associated with the request or <b>null</b>. */
     protected String source;
+
     /** The <code>OutputStream</code> to write on. */
     protected OutputStream out;
 
@@ -55,18 +60,19 @@ public abstract class AbstractReader
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
-        this.resolver=resolver;
-        this.objectModel=objectModel;
-        this.source=src;
-        this.parameters=par;
+        this.resolver = resolver;
+        this.objectModel = objectModel;
+        this.source = src;
+        this.parameters = par;
     }
 
     /**
      * Set the <code>OutputStream</code>
      */
     public void setOutputStream(OutputStream out) {
-        if ( out instanceof BufferedOutputStream
-             || out instanceof org.apache.cocoon.util.BufferedOutputStream ) {
+        if (out instanceof BufferedOutputStream ||
+            out instanceof org.apache.cocoon.util.BufferedOutputStream) {
+
             this.out = out;
         } else {
             this.out = new BufferedOutputStream(out, 1536);
@@ -105,5 +111,4 @@ public abstract class AbstractReader
     public boolean shouldSetContentLength() {
         return false;
     }
-
 }

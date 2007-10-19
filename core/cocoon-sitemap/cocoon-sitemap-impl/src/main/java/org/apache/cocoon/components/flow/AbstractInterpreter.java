@@ -25,16 +25,17 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.SingleThreaded;
+import org.apache.excalibur.source.SourceUtil;
+
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.processing.ProcessInfoProvider;
-import org.apache.excalibur.source.SourceUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Abstract superclass for various scripting languages used by Cocoon
@@ -52,10 +53,9 @@ import org.apache.excalibur.source.SourceUtil;
  * @since March 15, 2002
  * @version $Id$
  */
-public abstract class AbstractInterpreter
-        extends AbstractLogEnabled
-        implements Serviceable, Contextualizable, Interpreter,
-                   SingleThreaded, Configurable, Disposable {
+public abstract class AbstractInterpreter extends AbstractLogEnabled
+                                          implements Serviceable, Contextualizable, Interpreter,
+                                                     SingleThreaded, Configurable, Disposable {
 
     // The instance ID of this interpreter, used to identify user scopes
     private String instanceID;

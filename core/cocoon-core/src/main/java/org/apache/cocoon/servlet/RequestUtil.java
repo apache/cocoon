@@ -32,8 +32,8 @@ import org.apache.cocoon.environment.Environment;
 /**
  * Some utility methods for request handling etc.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
 public class RequestUtil {
 
@@ -91,12 +91,14 @@ public class RequestUtil {
         String servletPath = request.getServletPath();
         String pathInfo = request.getPathInfo();
         String newPathInfo = pathInfo.substring(prefix.length()+1);
+
         String newServletPath;
-        if ( servletPath == null ) {
-            newServletPath = pathInfo.substring(0, prefix.length()+1);
+        if (servletPath == null) {
+            newServletPath = pathInfo.substring(0, prefix.length() + 1);
         } else {
-            newServletPath = servletPath + pathInfo.substring(0, prefix.length()+1);
+            newServletPath = servletPath + pathInfo.substring(0, prefix.length() + 1);
         }
+
         return new UriHttpServletRequestWrapper(request, newServletPath, newPathInfo);
     }
 
@@ -111,6 +113,22 @@ public class RequestUtil {
                                        Exception           e,
                                        ServletSettings     settings,
                                        Logger              logger,
+                                       Object              sender)
+    throws IOException {
+        manageException(req, res, env, uri, errorStatus, title, message, description, e, settings, logger.isInfoEnabled(), sender);
+    }
+
+    public static void manageException(HttpServletRequest  req,
+                                       HttpServletResponse res,
+                                       Environment         env,
+                                       String              uri,
+                                       int                 errorStatus,
+                                       String              title,
+                                       String              message,
+                                       String              description,
+                                       Exception           e,
+                                       ServletSettings     settings,
+                                       boolean             verbose,
                                        Object              sender)
     throws IOException {
         if (settings.isManageExceptions()) {
@@ -135,21 +153,24 @@ public class RequestUtil {
                 }
 
                 // Do not show exception stack trace when log level is WARN or above. Show only message.
-                if ( logger.isInfoEnabled()) {
+                if (verbose) {
                     Throwable t = DefaultNotifyingBuilder.getRootCause(e);
-                    if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
+                    if (t != null) {
+                        extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
+                    }
+
                     e = null;
                 }
             }
 
             Notifying n = new DefaultNotifyingBuilder().build(sender,
-                                                   e,
-                                                   type,
-                                                   title,
-                                                   "Cocoon Servlet",
-                                                   message,
-                                                   description,
-                                                   extraDescriptions);
+                                                              e,
+                                                              type,
+                                                              title,
+                                                              "Cocoon Servlet",
+                                                              message,
+                                                              description,
+                                                              extraDescriptions);
             
             res.setContentType("text/html");
             res.setStatus(errorStatus);
@@ -159,5 +180,4 @@ public class RequestUtil {
             res.flushBuffer();
         }
     }
-
 }

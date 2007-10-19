@@ -16,10 +16,10 @@
  */
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
 import java.util.Collections;
 import java.util.Map;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * AbstractAction gives you the infrastructure for easily deploying more
@@ -28,7 +28,7 @@ import java.util.Map;
  * @version $Id$
  */
 public abstract class AbstractAction extends AbstractLogEnabled
-    implements Action {
+                                     implements Action {
 
     /**
      * Empty unmodifiable map.

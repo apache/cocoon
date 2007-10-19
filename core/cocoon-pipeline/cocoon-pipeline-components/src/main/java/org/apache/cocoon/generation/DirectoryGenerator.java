@@ -16,35 +16,34 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.source.util.SourceUtil;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.regexp.RE;
-import org.apache.regexp.RESyntaxException;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import java.util.Arrays;
-import java.util.Comparator;
+
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.environment.SourceResolver;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -61,13 +60,9 @@ import java.util.Comparator;
  *
  * @version $Id$
  */
-public class DirectoryGenerator 
-    extends ServiceableGenerator 
-    implements CacheableProcessingComponent {
+public class DirectoryGenerator extends ServiceableGenerator
+                                implements CacheableProcessingComponent {
 
-    /** The default logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
- 
     /** Constant for the file protocol. */
     private static final String FILE = "file:";
 
@@ -88,6 +83,7 @@ public class DirectoryGenerator
 
     /** The validity that is being built */
     protected DirValidity validity;
+
     /** Convenience object, so we don't need to create an AttributesImpl for every element. */
     protected AttributesImpl attributes;
 
@@ -102,14 +98,17 @@ public class DirectoryGenerator
 
     /** The depth parameter determines how deep the DirectoryGenerator should delve. */
     protected int depth;
+
     /**
      * The dateFormatter determines into which date format the lastModified
      * time should be converted.
      * FIXME: SimpleDateFormat is not supported by all locales!
      */
     protected SimpleDateFormat dateFormatter;
+
     /** The delay between checks on updates to the filesystem. */
     protected long refreshDelay;
+
     /**
      * The sort parameter determines by which attribute the content of one
      * directory should be sorted. Possible values are "name", "size", "lastmodified"
@@ -117,14 +116,19 @@ public class DirectoryGenerator
      * directory entries are listed first.
      */
     protected String sort;
+
     /** The reverse parameter reverses the sort order. <code>false</code> is default. */
     protected boolean reverse;
+
     /** The regular expression for the root pattern. */
     protected RE rootRE;
+
     /** The regular expression for the include pattern. */
     protected RE includeRE;
+
     /** The regular expression for the exclude pattern. */
     protected RE excludeRE;
+
     /**
      * This is only set to true for the requested directory specified by the
      * <code>src</code> attribute on the generator's configuration.
@@ -134,14 +138,6 @@ public class DirectoryGenerator
     /** The source object for the directory. */
     protected Source directorySource;
 
-    /**
-     * Initialize logger
-     *
-     * @throws Exception 
-     */
-    public void init() throws Exception {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
-    }
 
     /**
      * Set the request parameters. Must be called before the generate method.
@@ -152,7 +148,7 @@ public class DirectoryGenerator
      * @param par          configuration parameters
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-            throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         if (src == null) {
             throw new ProcessingException("No src attribute pointing to a directory to be XMLized specified.");
         }

@@ -16,56 +16,51 @@
  */
 package org.apache.cocoon.serialization;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.TraxErrorHandler;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
-
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.NOPValidity;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.AttributesImpl;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.NOPValidity;
+
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.TraxErrorHandler;
+import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @version $Id$
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
-        implements Configurable, Serviceable, CacheableProcessingComponent {
+                                             implements Configurable, Serviceable, CacheableProcessingComponent {
     
-    /** The default logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
-
     /**
      * Cache for avoiding unnecessary checks of namespaces abilities.
      * It associates a Boolean to the transformer class name.
@@ -123,12 +118,12 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
      * @throws Exception 
      */
     public void init() throws Exception {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
-        if (!this.format.containsKey(OutputKeys.ENCODING) && this.defaultEncoding != null)
+        if (!this.format.containsKey(OutputKeys.ENCODING) && this.defaultEncoding != null) {
             this.format.put(OutputKeys.ENCODING, this.defaultEncoding);
+        }
         this.cachingKey = createCachingKey(format);
-        this.initTransformerFactory();
-        this.initNamespacePipe();
+        initTransformerFactory();
+        initNamespacePipe();
     }
 
     /**
@@ -293,7 +288,6 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
      */
     public void recycle() {
         super.recycle();
-    
         if (this.namespacePipe != null) {
             this.namespacePipe.recycle();
         }
@@ -322,7 +316,6 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
             if (needsNamespacesAsAttributes()) {
                 // Setup a correction pipe
                 this.namespacePipe = new NamespaceAsAttributes();
-                this.namespacePipe.enableLogging(getLogger());
             }
         } catch (Exception e) {
             getLogger().warn("Cannot know if transformer needs namespaces attributes - assuming NO.", e);

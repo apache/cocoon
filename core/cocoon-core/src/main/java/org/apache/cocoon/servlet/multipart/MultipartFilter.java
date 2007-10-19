@@ -18,7 +18,6 @@ package org.apache.cocoon.servlet.multipart;
 
 import java.io.File;
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -29,29 +28,27 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
-import org.apache.cocoon.servlet.RequestUtil;
-import org.apache.cocoon.servlet.ServletSettings;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.servlet.RequestUtil;
+import org.apache.cocoon.servlet.ServletSettings;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Servlet filter for handling multi part MIME uploads
  * 
  * @version $Id$
  */
-public class MultipartFilter implements Filter{
+public class MultipartFilter extends AbstractLogEnabled
+                             implements Filter{
 
     /**
      * The RequestFactory is responsible for wrapping multipart-encoded
      * forms and for handing the file payload of incoming requests
      */
     protected RequestFactory requestFactory;
-
-    /** The logger. */
-    protected Logger log;
 
     /** Root Cocoon Bean Factory. */
     protected BeanFactory cocoonBeanFactory;
@@ -80,20 +77,21 @@ public class MultipartFilter implements Filter{
     }
 
     protected synchronized void configure() {
-        if ( this.cocoonBeanFactory == null ) {
+        if (this.cocoonBeanFactory == null) {
             this.cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(this.servletContext);
-            this.log = (Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE);
             this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
             this.servletSettings = new ServletSettings(this.settings);
             String containerEncoding;
             final String encoding = this.settings.getContainerEncoding();
-            if ( encoding == null ) {
+            if (encoding == null) {
                 containerEncoding = "ISO-8859-1";
             } else {
                 containerEncoding = encoding;
             }
+
             final MultipartConfigurationHelper config = new MultipartConfigurationHelper();
-            config.configure(this.settings, this.log);
+            config.configure(this.settings, getLogger());
+
             this.requestFactory = new RequestFactory(config.isAutosaveUploads(),
                                                      new File(config.getUploadDirectory()),
                                                      config.isAllowOverwrite(),
@@ -108,9 +106,10 @@ public class MultipartFilter implements Filter{
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
     throws IOException, ServletException {
-        if ( this.cocoonBeanFactory == null ) {
+        if (this.cocoonBeanFactory == null) {
             this.configure();
         }
+
         // get the request (wrapped if contains multipart-form data)
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
@@ -125,7 +124,7 @@ public class MultipartFilter implements Filter{
             RequestUtil.manageException(request, response, null, null,
                                         HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                                         "Problem in creating the Request",
-                                        null, null, e, this.servletSettings, getLogger(), this);
+                                        null, null, e, this.servletSettings, getLogger().isInfoEnabled(), this);
         } finally {
             try {
                 if (request instanceof MultipartHttpServletRequest) {
@@ -140,8 +139,4 @@ public class MultipartFilter implements Filter{
         }
     }
 
-    protected Logger getLogger() {
-        return this.log;
-    }
-    
 }

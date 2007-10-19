@@ -21,6 +21,8 @@ import org.xml.sax.SAXException;
 /**
  * Implements support for the XPointer xmlns() Scheme.
  * See also <a href="http://www.w3.org/TR/xptr-xmlns/">http://www.w3.org/TR/xptr-xmlns/</a>.
+ *
+ * @version $Id$
  */
 public class XmlnsPart implements PointerPart {
     private String prefix;

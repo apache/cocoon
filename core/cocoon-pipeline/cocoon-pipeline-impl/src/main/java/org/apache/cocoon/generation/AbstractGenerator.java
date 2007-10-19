@@ -32,16 +32,18 @@ import java.util.Map;
  * 
  * @version $Id$
  */
-public abstract class AbstractGenerator 
-    extends AbstractXMLProducer 
-    implements Generator {
+public abstract class AbstractGenerator extends AbstractXMLProducer
+                                        implements Generator {
 
     /** The current <code>SourceResolver</code>. */
     protected SourceResolver resolver;
+
     /** The current <code>Map</code> objectModel. */
     protected Map objectModel;
+
     /** The current <code>Parameters</code>. */
     protected Parameters parameters;
+
     /** The source URI associated with the request or <b>null</b>. */
     protected String source;
 
@@ -50,11 +52,11 @@ public abstract class AbstractGenerator
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-        throws ProcessingException, SAXException, IOException {
-        this.resolver=resolver;
-        this.objectModel=objectModel;
-        this.source=src;
-        this.parameters=par;
+    throws ProcessingException, SAXException, IOException {
+        this.resolver = resolver;
+        this.objectModel = objectModel;
+        this.source = src;
+        this.parameters = par;
     }
 
     /**
@@ -67,5 +69,4 @@ public abstract class AbstractGenerator
         this.source = null;
         this.parameters = null;
     }
-
 }

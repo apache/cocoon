@@ -104,6 +104,7 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
         if (true) {
             return;
         }
+
         // replace properties in configuration objects
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Processing component configurations.");
