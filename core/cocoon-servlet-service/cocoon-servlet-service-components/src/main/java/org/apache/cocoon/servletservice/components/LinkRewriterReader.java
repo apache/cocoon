@@ -30,6 +30,10 @@ import java.util.regex.Pattern;
 
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.modules.input.InputModule;
@@ -40,29 +44,23 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.reading.AbstractReader;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 import org.apache.cocoon.util.location.LocationImpl;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
+
 import org.xml.sax.SAXException;
 
 /**
  * @cocoon.sitemap.component.documentation
- * <code>LinkRewriterReader<code> realizes servlet: link rewriting in text resources. It should be used especially for serving js files that have
- * paths refering to other blocks (servlet: links).
+ * <code>LinkRewriterReader<code> implements <code>servlet:</code> link rewriting in
+ * text resources. It should be used especially for serving JavaScript files that have
+ * paths refering to other blocks (<code>servlet:</code> links).
  * 
  * <p><b>Configuration</b><br>
  * <code>encoding</code> - see {@link #setEncoding}<br>
  * <code>expires</code> - see {@link #setExpires}.
  */
-public class LinkRewriterReader extends AbstractReader implements CacheableProcessingComponent {
+public class LinkRewriterReader extends AbstractReader
+                                implements CacheableProcessingComponent {
 
-    /** The default logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
-        
     protected long configuredExpires = -1;
     protected String configuredEncoding = "UTF-8";
     
@@ -98,10 +96,6 @@ public class LinkRewriterReader extends AbstractReader implements CacheableProce
     
     public void setInputModule(InputModule inputModule) {
         this.inputModule = inputModule;
-    }
-    
-    public void init() {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
     }
     
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
