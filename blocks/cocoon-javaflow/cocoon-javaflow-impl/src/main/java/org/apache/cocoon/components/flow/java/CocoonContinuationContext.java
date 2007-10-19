@@ -48,6 +48,7 @@ public class CocoonContinuationContext {
         this.logger = logger;
     }
 
+    /** @deprecated Use commons logging */
     public Logger getLogger() {
         return logger;
     }

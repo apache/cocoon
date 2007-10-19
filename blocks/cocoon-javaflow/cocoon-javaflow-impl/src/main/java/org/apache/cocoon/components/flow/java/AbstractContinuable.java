@@ -20,22 +20,23 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.commons.javaflow.Continuation;
+import org.apache.excalibur.source.SourceUtil;
+
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.util.PipelineUtil;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
-import org.apache.commons.javaflow.Continuation;
-import org.apache.excalibur.source.SourceUtil;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Abstract class to add basic methods for flow handling.
  * 
  * @version $Id$
  */
-public abstract class AbstractContinuable {
+public abstract class AbstractContinuable extends AbstractLogEnabled {
 
     protected CocoonContinuationContext getContext() {
         Object context = Continuation.getContext();
@@ -47,11 +48,6 @@ public abstract class AbstractContinuable {
     }
 
 
-    public Logger getLogger() {
-        return getContext().getLogger();
-    }
-
-
     public void sendPageAndWait( String uri ) {
         sendPageAndWait(uri, new VarMap());
     }
@@ -59,8 +55,10 @@ public abstract class AbstractContinuable {
 
     public void sendPageAndWait( String uri, Object bizdata ) {
         CocoonContinuationContext context = getContext();
-        if (context.getLogger() != null)
-            context.getLogger().debug("send page and wait '" + uri + "'");
+        if (getLogger() != null) {
+            getLogger().debug("send page and wait '" + uri + "'");
+        }
+
         ObjectModel newObjectModel = (ObjectModel)getComponent(ObjectModel.ROLE);
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()),
                 newObjectModel, bizdata);
@@ -92,8 +90,8 @@ public abstract class AbstractContinuable {
     public void sendPage( String uri, Object bizdata ) {
         CocoonContinuationContext context = getContext();
         
-        if (context.getLogger() != null) {
-            context.getLogger().debug("send page '" + uri + "'");
+        if (getLogger() != null) {
+            getLogger().debug("send page '" + uri + "'");
         }
         
         ObjectModel newObjectModel = (ObjectModel)getComponent(ObjectModel.ROLE);
