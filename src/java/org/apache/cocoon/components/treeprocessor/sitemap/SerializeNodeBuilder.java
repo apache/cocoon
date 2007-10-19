@@ -16,23 +16,21 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-
 import org.apache.cocoon.serialization.Serializer;
-
-import java.util.Collection;
-import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version CVS $Id$
  */
-
 public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
   implements LinkedProcessingNodeBuilder {
 
@@ -50,14 +48,16 @@ public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder
 
         String type = this.treeBuilder.getTypeForStatement(config, Serializer.ROLE + "Selector");
 
-        this.views = ((SitemapLanguage)this.treeBuilder).getViewsForStatement(Serializer.ROLE, type, config);
-        this.pipelineHints = ((SitemapLanguage)this.treeBuilder).getHintsForStatement(Serializer.ROLE, type, config);
+        SitemapLanguage sitemapBuilder = (SitemapLanguage)this.treeBuilder;
+
+        this.views = sitemapBuilder.getViewsForStatement(Serializer.ROLE, type, config);
+        this.pipelineHints = sitemapBuilder.getHintsForStatement(Serializer.ROLE, type, config);
 
         this.node = new SerializeNode(
             type,
             VariableResolverFactory.getResolver(config.getAttribute("src", null), this.manager),
             VariableResolverFactory.getResolver(config.getAttribute("mime-type", null), this.manager),
-            config.getAttributeAsInteger("status-code", -1)
+            VariableResolverFactory.getResolver(config.getAttribute("status-code", null), this.manager)
         );
         this.node.setPipelineHints(this.pipelineHints);
         return this.treeBuilder.setupNode(node, config);
