@@ -83,7 +83,7 @@ import org.xml.sax.SAXException;
  * to the reader at the time when it is used.
  */
 public class ResourceReader extends AbstractReader
-        implements CacheableProcessingComponent, Configurable {
+                            implements CacheableProcessingComponent, Configurable {
 
     private static final boolean CONFIGURED_BYTE_RANGES_DEFAULT = true;
     private static final int CONFIGURED_BUFFER_SIZE_DEFAULT = 8192;
@@ -178,7 +178,7 @@ public class ResourceReader extends AbstractReader
      * the length and the last modification date
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-            throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
         this.request = ObjectModelHelper.getRequest(objectModel);
