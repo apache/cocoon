@@ -23,7 +23,6 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -32,7 +31,9 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.web3.Web3DataSource;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 import EDU.oswego.cs.dl.util.concurrent.Mutex;
 
@@ -42,9 +43,9 @@ import EDU.oswego.cs.dl.util.concurrent.Mutex;
  * @since 2.1
  * @version $Id$
  */
-public class Web3DataSourceSelectorImpl
-    extends AbstractLogEnabled
-    implements ServiceSelector, Disposable, Serviceable, Configurable, ThreadSafe {
+public class Web3DataSourceSelectorImpl extends AbstractLogEnabled
+                                        implements ServiceSelector, Disposable, Serviceable, Configurable,
+                                                   ThreadSafe {
 
     /** The service manager instance */
     protected ServiceManager manager;
@@ -111,7 +112,7 @@ public class Web3DataSourceSelectorImpl
                             true,
                             ClassUtils.getClassLoader());
                     pool = (Web3DataSource) theClass.newInstance();
-                    LifecycleHelper.setupComponent(pool, getLogger(), null, this.manager, c);
+                    LifecycleHelper.setupComponent(pool, new CLLoggerWrapper(getLogger()), null, this.manager, c);
                     Web3DataSourceSelectorImpl.pools.put(obj, pool);
                 }
             }
@@ -133,7 +134,7 @@ public class Web3DataSourceSelectorImpl
         this.manager = null;
         try {
             Web3DataSourceSelectorImpl.lock.acquire();
-            String sid = null;
+            String sid;
             Web3DataSource pool;
             for (Enumeration enumeration = Web3DataSourceSelectorImpl.pools.keys();
                 enumeration.hasMoreElements();
