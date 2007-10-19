@@ -20,17 +20,16 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.commons.io.IOUtils;
+import org.apache.excalibur.source.SourceException;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.servletservice.postable.PostableSource;
 import org.apache.cocoon.sitemap.DisposableSitemapComponent;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.excalibur.source.SourceException;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -44,17 +43,14 @@ import org.xml.sax.SAXException;
  * by the service down the pipeline.
  * @cocoon.sitemap.component.name servletService 
  */
-public class ServletServiceTransformer extends AbstractSAXTransformer implements DisposableSitemapComponent {
-	private Log logger = LogFactory.getLog(getClass());
-	
+public class ServletServiceTransformer extends AbstractSAXTransformer
+                                       implements DisposableSitemapComponent {
+
 	private SAXParser saxParser;
 	
 	private PostableSource servletSource;
 	
-    public void init() {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
-    }
-	
+
 	public void setupTransforming() throws IOException, ProcessingException, SAXException {
 		super.setupTransforming();
 		
@@ -73,8 +69,8 @@ public class ServletServiceTransformer extends AbstractSAXTransformer implements
             throw SourceUtil.handle("Error during resolving of '" + service + "'.", se);
         }
         
-        if (logger.isDebugEnabled()) {
-        	logger.debug("Source " + service + " resolved to " + servletSource.getURI());
+        if (getLogger().isDebugEnabled()) {
+        	getLogger().debug("Source " + service + " resolved to " + servletSource.getURI());
         }
 		
 		startSerializedXMLRecording(null);

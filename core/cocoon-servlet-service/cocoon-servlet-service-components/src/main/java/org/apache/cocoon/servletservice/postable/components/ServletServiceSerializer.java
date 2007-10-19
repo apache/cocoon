@@ -22,6 +22,9 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.commons.io.IOUtils;
+import org.apache.excalibur.source.SourceException;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -30,13 +33,9 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.serialization.AbstractSerializer;
 import org.apache.cocoon.servletservice.postable.PostableSource;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.excalibur.source.SourceException;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -53,20 +52,16 @@ import org.xml.sax.SAXException;
  * service.
  * @cocoon.sitemap.component.name servletService  
  */
-public class ServletServiceSerializer extends AbstractSerializer implements SitemapModelComponent {
-
-	private Log logger = LogFactory.getLog(getClass());
+public class ServletServiceSerializer extends AbstractSerializer
+                                      implements SitemapModelComponent {
 
 	private PostableSource servletSource;
 	private Response response;
 
 	private SaxBuffer saxBuffer;
-	
-	public void init() {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
-    }
 
-	public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
 		String service;
 		try {
@@ -83,8 +78,8 @@ public class ServletServiceSerializer extends AbstractSerializer implements Site
 			throw SourceUtil.handle("Error during resolving of '" + service + "'.", se);
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Source " + service + " resolved to " + servletSource.getURI());
+		if (getLogger().isDebugEnabled()) {
+			getLogger().debug("Source " + service + " resolved to " + servletSource.getURI());
 		}
 
 		saxBuffer = new SaxBuffer();
