@@ -16,22 +16,21 @@
  */
 package org.apache.cocoon.components.language.programming.python;
 
-import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.cocoon.components.language.programming.AbstractProgrammingLanguage;
-import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
-import org.apache.cocoon.components.language.programming.Program;
-import org.apache.cocoon.components.language.LanguageException;
-import org.apache.cocoon.components.language.markup.xsp.XSLTExtension;
-import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.util.ClassUtils;
-
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.FileInputStream;
 import java.util.ArrayList;
+
+import org.apache.cocoon.components.language.LanguageException;
+import org.apache.cocoon.components.language.markup.xsp.XSLTExtension;
+import org.apache.cocoon.components.language.programming.AbstractProgrammingLanguage;
+import org.apache.cocoon.components.language.programming.Program;
+import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.IOUtils;
 
 /**
  * The interpreted Python programming language.
@@ -43,7 +42,8 @@ import java.util.ArrayList;
  *
  * @version $Id$
  */
-public class PythonLanguage extends AbstractProgrammingLanguage implements ProgrammingLanguage {
+public class PythonLanguage extends AbstractProgrammingLanguage
+                            implements ProgrammingLanguage {
 
     public Program preload(String filename, File baseDirectory, String encoding) throws LanguageException {
         return load(filename, baseDirectory, encoding);
@@ -101,9 +101,7 @@ public class PythonLanguage extends AbstractProgrammingLanguage implements Progr
             }
         }
 
-        final Program p = new PythonProgram(sourceFile, clazz, dependecies);
-        ContainerUtil.enableLogging(p, this.getLogger());
-        return p;
+        return new PythonProgram(sourceFile, clazz, dependecies);
     }
 
     private String getMeta(String line, String meta) {

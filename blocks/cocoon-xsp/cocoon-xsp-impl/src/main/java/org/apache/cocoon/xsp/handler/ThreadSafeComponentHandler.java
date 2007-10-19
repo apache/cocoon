@@ -18,34 +18,31 @@
  */
 package org.apache.cocoon.xsp.handler;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 
 /**
  * The ThreadSafeComponentHandler to make sure components are initialized
  * and destroyed correctly.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
-public class ThreadSafeComponentHandler
-extends AbstractFactoryHandler {
+public class ThreadSafeComponentHandler extends AbstractFactoryHandler {
     
     private Object instance;
 
     /**
      * Create a ThreadSafeComponentHandler which manages a single instance
      * of an object return by the component factory.
-     * @param logger The logger to use
+     *
      * @param factory The factory object which is responsible for creating the components
      *                managed by the handler.
      */
-    public ThreadSafeComponentHandler( final ComponentInfo info,
-                                       final Logger logger,
-                                       final ComponentFactory factory ) {
-        super(info, logger, factory);
+    public ThreadSafeComponentHandler(final ComponentInfo info,
+                                      final ComponentFactory factory) {
+        super(info, factory);
     }
-    
+
     public boolean isSingleton() {
         return true;
     }

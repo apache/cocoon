@@ -20,30 +20,25 @@ package org.apache.cocoon.xsp.handler;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Factory for Avalon based components.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
-public class ComponentFactory {
+public class ComponentFactory extends AbstractLogEnabled {
     
     protected final ComponentInfo serviceInfo;
     
     protected final ComponentEnvironment environment;
     
-    /**
-     * The component's logger, which may be different from the environment's logger
-     */
-    protected final Logger componentLogger;
-    
-    /** The parameters for this component
-     */
+    /** The parameters for this component */
     protected final Parameters parameters;
     
     protected final Class serviceClass;
@@ -55,24 +50,20 @@ public class ComponentFactory {
      * @param info Describes the configuration/settings for the component.
      *
      */
-    public ComponentFactory( final ComponentEnvironment environment,
-                             final ComponentInfo info) 
+    public ComponentFactory(final ComponentEnvironment environment,
+                            final ComponentInfo info)
     throws Exception {
         this.environment = environment;
         this.serviceInfo = info;
-        
-        // this is our default logger:
-        Logger actualLogger = this.environment.logger;
-        this.componentLogger = actualLogger;
-        
+
         this.serviceClass = this.environment.loadClass(this.serviceInfo.getComponentClassName());
-        if ( Parameterizable.class.isAssignableFrom(this.serviceClass) ) {
-            this.parameters = Parameters.fromConfiguration( this.serviceInfo.getConfiguration() );            
+        if (Parameterizable.class.isAssignableFrom(this.serviceClass)) {
+            this.parameters = Parameters.fromConfiguration(this.serviceInfo.getConfiguration());
         } else {
             this.parameters = null;
         }
     }
-    
+
     /**
      * Create a new instance
      */
@@ -90,23 +81,21 @@ public class ComponentFactory {
      * @throws Exception
      */
     protected void setupInstance(Object component) throws Exception {
-        if( this.environment.logger.isDebugEnabled() ) {
-            this.environment.logger.debug( "ComponentFactory creating new instance of " +
-                    this.serviceClass.getName() + "." );
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("ComponentFactory creating new instance of " +
+                              this.serviceClass.getName() + ".");
         }
 
-        ContainerUtil.enableLogging(component, this.componentLogger);
-        ContainerUtil.contextualize( component, this.environment.context );
-        ContainerUtil.service( component, this.environment.serviceManager );
-        ContainerUtil.configure( component, this.serviceInfo.getConfiguration() );
-
-        if( component instanceof Parameterizable ) {
-            ContainerUtil.parameterize( component, this.parameters );
+        ContainerUtil.contextualize(component, this.environment.context);
+        ContainerUtil.service(component, this.environment.serviceManager);
+        ContainerUtil.configure(component, this.serviceInfo.getConfiguration());
+        if (component instanceof Parameterizable) {
+            ContainerUtil.parameterize(component, this.parameters);
         }
 
-        ContainerUtil.initialize( component );
+        ContainerUtil.initialize(component);
 
-        ContainerUtil.start( component );
+        ContainerUtil.start(component);
     }
 
     public Class getCreatedClass() {
@@ -116,25 +105,25 @@ public class ComponentFactory {
     /**
      * Destroy an instance
      */
-    public void decommission( final Object component )
+    public void decommission(final Object component)
     throws Exception {
-        if( this.environment.logger.isDebugEnabled() ) {
-            this.environment.logger.debug( "ComponentFactory decommissioning instance of " +
-                    this.serviceClass.getName() + "." );
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("ComponentFactory decommissioning instance of " +
+                              this.serviceClass.getName() + ".");
         }
 
-        ContainerUtil.stop( component );
-        ContainerUtil.dispose( component );
+        ContainerUtil.stop(component);
+        ContainerUtil.dispose(component);
     }
 
     /**
      * Handle service specific methods for putting it into the pool
      */
-    public void enteringPool( final Object component )
+    public void enteringPool(final Object component)
     throws Exception {
         // Handle Recyclable objects
-        if( component instanceof Recyclable ) {
-            ( (Recyclable)component ).recycle();
+        if (component instanceof Recyclable) {
+            ((Recyclable) component).recycle();
         }
     }
 }

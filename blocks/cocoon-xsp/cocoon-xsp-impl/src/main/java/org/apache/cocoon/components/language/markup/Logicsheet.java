@@ -16,24 +16,25 @@
  */
 package org.apache.cocoon.components.language.markup;
 
-import org.apache.excalibur.xml.xslt.XSLTProcessor;
-import org.apache.excalibur.xml.xslt.XSLTProcessorException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceResolver;
-import org.xml.sax.SAXException;
-
-import javax.xml.transform.sax.TransformerHandler;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.transform.sax.TransformerHandler;
+
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.xslt.XSLTProcessor;
+import org.apache.excalibur.xml.xslt.XSLTProcessorException;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
+import org.xml.sax.SAXException;
 
 /**
  * A code-generation logicsheet. This class is actually a wrapper for
@@ -45,8 +46,8 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class Logicsheet extends AbstractLogEnabled
-{
+public class Logicsheet extends AbstractLogEnabled {
+
     /**
      * The Source Resolver object for this logicsheet.
      */
@@ -74,7 +75,7 @@ public class Logicsheet extends AbstractLogEnabled
 
     public Logicsheet(String systemId, ServiceManager manager,
                       SourceResolver resolver, LogicsheetFilter filter)
-        throws SAXException, IOException, SourceException, ProcessingException
+    throws SAXException, IOException, ProcessingException
     {
         this.systemId = systemId;
         this.manager = manager;
@@ -85,15 +86,15 @@ public class Logicsheet extends AbstractLogEnabled
     /**
      * Return true if other logicsheet has the same system id.
      */
-    public boolean equals(Object other)
-    {
+    public boolean equals(Object other) {
         if (other == this)
             return true;
         if (other == null)
             return false;
         if (!(other instanceof Logicsheet))
             return false;
-        Logicsheet that = (Logicsheet)other;
+
+        Logicsheet that = (Logicsheet) other;
         return this.systemId.equals(that.systemId);
     }
 

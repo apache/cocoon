@@ -16,26 +16,26 @@
  */
 package org.apache.cocoon.components.language.programming;
 
-import org.apache.avalon.framework.container.ContainerUtil;
+import java.io.File;
+
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.programming.java.JavaProgram;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 
-import java.io.File;
-
 /**
  * A compiled programming language. This class extends <code>AbstractProgrammingLanguage</code> adding support for compilation
  * and object program files
  * @version $Id$
  */
-public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Contextualizable {
+public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage
+                                                  implements Contextualizable {
 
     /** The compiler */
     protected Class compilerClass;
@@ -44,7 +44,7 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
     protected String classpath;
 
     /** The source deletion option */
-    protected boolean deleteSources = false;
+    protected boolean deleteSources;
 
     /**
      * Set the configuration parameters. This method instantiates the sitemap-specified language compiler
@@ -143,9 +143,7 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
             // Create and discard test instance.
             program.newInstance();
 
-            final Program p = new JavaProgram(program);
-            ContainerUtil.enableLogging(p, this.getLogger());
-            return p;
+            return new JavaProgram(program);
         } catch (Throwable t) {
             throw new LanguageException("Unable to preload program " + filename, t);
         }
@@ -174,11 +172,13 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
         if (!sourceFile.canRead()) {
             throw new LanguageException("Can't load program - File cannot be read: " + IOUtils.getFullFilename(sourceFile));
         }
-        this.compile(filename, baseDirectory, encoding);
+
+        compile(filename, baseDirectory, encoding);
         if (this.deleteSources) {
             sourceFile.delete();
         }
-        Class program = this.loadProgram(filename, baseDirectory);
+        
+        Class program = loadProgram(filename, baseDirectory);
 
         // Try to instantiate once to ensure there are no exceptions thrown in the constructor
         try {
@@ -189,7 +189,7 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
         } catch(Exception e) {
             // Unload class and delete the object file, or it won't be recompiled
             // (leave the source file to allow examination).
-            this.doUnload(program);
+            doUnload(program);
             new File(baseDirectory, filename + "." + this.getObjectExtension()).delete();
 
             String message = "Error while instantiating " + filename;
@@ -201,8 +201,6 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
             throw new LanguageException("Can't load program : " + baseDirectory.toString() + File.separator + filename);
         }
 
-        final Program p = new JavaProgram(program);
-        ContainerUtil.enableLogging(p, this.getLogger());
-        return p;
+        return new JavaProgram(program);
     }
 }

@@ -16,22 +16,24 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.Properties;
+
 import org.apache.commons.lang.BooleanUtils;
 
-import java.sql.Connection;
-import java.util.Properties;
-import java.sql.SQLException;
-import java.sql.DatabaseMetaData;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * @version $Id$
  */
 public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
 
-    private String url = null;
-    private Properties properties = null;
-    private boolean multipleResults = false;
+    private String url;
+    private Properties properties;
+    private boolean multipleResults;
+
 
     protected AbstractEsqlConnection() {
     }
@@ -191,8 +193,7 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
             getLogger().error("Unknown database type: " + String.valueOf(type));
             throw new SQLException("Unknown database type: " + String.valueOf(type));
         }
-        setupLogger(query);
-        return(query);
+        return query;
     }
 }
 

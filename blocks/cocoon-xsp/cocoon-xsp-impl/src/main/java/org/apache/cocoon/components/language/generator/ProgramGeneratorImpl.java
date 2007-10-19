@@ -16,11 +16,16 @@
  */
 package org.apache.cocoon.components.language.generator;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.net.MalformedURLException;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -29,6 +34,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
+
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.language.LanguageException;
@@ -38,14 +45,8 @@ import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.IOUtils;
-import org.apache.excalibur.source.Source;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.net.MalformedURLException;
 
 /**
  * The default implementation of <code>ProgramGenerator</code>
@@ -53,8 +54,8 @@ import java.net.MalformedURLException;
  * @version $Id$
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
-    implements ProgramGenerator, Contextualizable, Serviceable, Parameterizable,
-               Disposable, ThreadSafe {
+                                  implements ProgramGenerator, Contextualizable, Serviceable,
+                                             Parameterizable, Disposable, ThreadSafe {
 
     /** The auto-reloading option */
     protected boolean autoReload = true;
@@ -379,13 +380,13 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                                           String normalizedName,
                                           MarkupLanguage markupLanguage,
                                           ProgrammingLanguage programmingLanguage)
-            throws Exception {
+    throws Exception {
 
-        CompiledComponent programInstance = null;
-
+        CompiledComponent programInstance;
         try {
             return (CompiledComponent) this.cache.select(normalizedName);
         } catch (Exception e) {
+            // Continue if not in cache
         }
 
         try {
@@ -472,7 +473,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
             fw.write(string);
             fw.flush();
         } finally {
-            if (fw != null) fw.close();
+            fw.close();
         }
     }
 

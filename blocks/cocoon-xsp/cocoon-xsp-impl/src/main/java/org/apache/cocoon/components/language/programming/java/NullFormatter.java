@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.components.language.programming.java;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.language.programming.CodeFormatter;
 
 /**
@@ -26,7 +25,7 @@ import org.apache.cocoon.components.language.programming.CodeFormatter;
  *
  * @version $Id$
  */
-public class NullFormatter extends AbstractLogEnabled implements CodeFormatter {
+public class NullFormatter implements CodeFormatter {
 
     /**
      * This is a dummy <code>CodeFormatter</code>
@@ -37,7 +36,6 @@ public class NullFormatter extends AbstractLogEnabled implements CodeFormatter {
      * @return The formatted source code
      */
     public String format(String code, String encoding) {
-        getLogger().debug("NullFormatter called");
         return code;
     }
 }

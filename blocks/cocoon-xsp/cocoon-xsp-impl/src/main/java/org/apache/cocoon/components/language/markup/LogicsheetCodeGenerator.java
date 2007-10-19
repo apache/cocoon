@@ -16,17 +16,8 @@
  */
 package org.apache.cocoon.components.language.markup;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.cocoon.util.TraxErrorHandler;
-import org.apache.excalibur.source.Source;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
+import java.io.StringWriter;
+import java.util.Properties;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -34,15 +25,25 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
-import java.util.Properties;
+
+import org.apache.excalibur.source.Source;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.TraxErrorHandler;
+import org.apache.cocoon.xml.AbstractXMLPipe;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  * A logicsheet-based implementation of <code>MarkupCodeGenerator</code>
  *
  * @version $Id$
  */
-public class LogicsheetCodeGenerator extends AbstractLogEnabled implements MarkupCodeGenerator {
+public class LogicsheetCodeGenerator extends AbstractLogEnabled
+                                     implements MarkupCodeGenerator {
 
     private ContentHandler serializerContentHandler;
 
@@ -53,7 +54,7 @@ public class LogicsheetCodeGenerator extends AbstractLogEnabled implements Marku
     private StringWriter writer;
 
     /** The trax TransformerFactory */
-    private SAXTransformerFactory tfactory = null;
+    private SAXTransformerFactory tfactory;
 
     /**
      * Initialize the LogicsheetCodeGenerator.

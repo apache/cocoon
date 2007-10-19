@@ -16,13 +16,21 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.commons.collections.ArrayStack;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.collections.ArrayStack;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -30,15 +38,9 @@ import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
 
 /**
  * This class acts as a proxy to a dynamically loaded<code>Generator</code>
@@ -57,7 +59,7 @@ import java.util.Map;
  * @version $Id$
  */
 public class ServerPagesGenerator extends ServletGenerator
-        implements CacheableProcessingComponent, Configurable {
+                                  implements CacheableProcessingComponent, Configurable {
     
     /**
      * The sitemap-defined server pages program generator
@@ -87,10 +89,8 @@ public class ServerPagesGenerator extends ServletGenerator
      */
     public void configure(Configuration config) throws ConfigurationException {
         boolean autoComplete = config.getChild("autocomplete-documents").getValueAsBoolean(false);
-
         if (autoComplete) {
             this.completionPipe = new CompletionPipe();
-            this.completionPipe.enableLogging(getLogger());
         }
 
         this.markupLanguage = config.getChild("markup-language").getValue(DEFAULT_MARKUP_LANGUAGE);
@@ -182,9 +182,6 @@ public class ServerPagesGenerator extends ServletGenerator
             getLogger().warn("Failed to load class: " + e);
             throw new ResourceNotFoundException(e.getMessage());
         }
-
-        // Give our own logger to the generator so that logs go in the correct category
-        generator.enableLogging(getLogger());
 
         generator.setup(super.resolver, super.objectModel, super.source, super.parameters);
     }

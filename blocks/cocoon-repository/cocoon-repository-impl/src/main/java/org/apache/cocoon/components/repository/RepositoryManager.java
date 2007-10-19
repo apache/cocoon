@@ -32,7 +32,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.repository.helpers.CredentialsToken;
 import org.apache.cocoon.util.AbstractLogEnabled;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 
 /**
@@ -110,11 +109,10 @@ public class RepositoryManager extends AbstractLogEnabled
 
             Repository repo = (Repository) repoClass.newInstance();
             LifecycleHelper.setupComponent(repo,
-                                           new CLLoggerWrapper(getLogger()),
+                                           getLogger(),
                                            null,
                                            this.manager,
-                                           repoConfiguration,
-                                           true);
+                                           repoConfiguration);
         
             repo.setCredentials(credentials);
             return repo;

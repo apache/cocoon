@@ -18,34 +18,32 @@
  */
 package org.apache.cocoon.xsp.handler;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 
 /**
  * The DefaultComponentHandler to make sure components are initialized
  * and destroyed correctly.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
 public class SingleThreadedComponentHandler
 extends AbstractFactoryHandler {
 
-    private long maxCreated = 0;
-    private long maxDecommissioned = 0;
-    
+    private long maxCreated;
+    private long maxDecommissioned;
+
+
     /**
      * Create a SingleThreadedComponentHandler which manages a pool of Components
-     *  created by the specified factory object.
+     * created by the specified factory object.
      *
-     * @param logger The logger to use
      * @param factory The factory object which is responsible for creating the components
      *                managed by the handler.
      */
-    public SingleThreadedComponentHandler( final ComponentInfo info,
-                                    final Logger logger,
-                                    final ComponentFactory factory ) {
-        super(info, logger, factory);
+    public SingleThreadedComponentHandler(final ComponentInfo info,
+                                          final ComponentFactory factory) {
+        super(info, factory);
     }
 
     /**
@@ -57,7 +55,7 @@ extends AbstractFactoryHandler {
      *                   component instance.
      */
     protected Object doGet()
-    throws Exception {
+            throws Exception {
         maxCreated++;
         return this.factory.newInstance();
     }
@@ -67,11 +65,11 @@ extends AbstractFactoryHandler {
      *
      * @param component Component to be be put/released back to the handler.
      */
-    protected void doPut( final Object component ) {
-        this.decommission( component );
+    protected void doPut(final Object component) {
+        this.decommission(component);
         maxDecommissioned++;
     }
-    
+
     protected void doInitialize() {
         // nothing to do here
     }
@@ -79,17 +77,14 @@ extends AbstractFactoryHandler {
     /**
      * @return Returns the maxCreated.
      */
-    public long getMaxCreated()
-    {
+    public long getMaxCreated() {
         return maxCreated;
     }
 
     /**
      * @return Returns the maxDecommisioned.
      */
-    public long getMaxDecommissioned()
-    {
+    public long getMaxDecommissioned() {
         return maxDecommissioned;
     }
-
 }

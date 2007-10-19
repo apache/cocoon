@@ -18,15 +18,14 @@
  */
 package org.apache.cocoon.xsp.handler;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 
 /**
  * This class acts like a Factory to instantiate the correct version
  * of the component handler that you need.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
 public abstract class AbstractFactoryHandler extends AbstractComponentHandler {
     
@@ -36,22 +35,23 @@ public abstract class AbstractFactoryHandler extends AbstractComponentHandler {
     /**
      * Creates a new ComponentHandler.
      */
-    public AbstractFactoryHandler(ComponentInfo info, Logger logger, ComponentFactory factory) {
-        super(info, logger);
+    public AbstractFactoryHandler(ComponentInfo info, ComponentFactory factory) {
+        super(info);
         this.factory = factory;
     }
 
     /**
-     * Decommission a component
+     * Decommission a component.
+     *
      * @param component Object to be decommissioned
      */
-    protected void decommission( final Object component ) {
+    protected void decommission(final Object component) {
         try {
-            this.factory.decommission( component );
+            this.factory.decommission(component);
         } catch( final Exception e ) {
-            if( this.logger.isWarnEnabled() ) {
-                this.logger.warn( "Error decommissioning component: "
-                    + this.factory.getCreatedClass().getName(), e );
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Error decommissioning component: "
+                                 + this.factory.getCreatedClass().getName(), e);
             }
         }
     }

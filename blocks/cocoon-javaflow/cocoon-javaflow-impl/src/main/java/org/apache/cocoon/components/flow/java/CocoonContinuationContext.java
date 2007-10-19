@@ -20,7 +20,10 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.logging.Log;
+
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 /**
  * Helper class to associate cocoon flow informations to the continuation.
@@ -44,8 +47,8 @@ public class CocoonContinuationContext {
         return avalonContext;
     }
 
-    public void setLogger(Logger logger) {
-        this.logger = logger;
+    public void setLogger(Log logger) {
+        this.logger = new CLLoggerWrapper(logger);
     }
 
     /** @deprecated Use commons logging */

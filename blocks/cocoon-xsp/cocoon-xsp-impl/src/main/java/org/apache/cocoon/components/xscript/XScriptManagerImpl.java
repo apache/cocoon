@@ -17,13 +17,11 @@
 package org.apache.cocoon.components.xscript;
 
 import java.util.Map;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -31,21 +29,23 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * The actual implementation of the <code>XScriptManager</code> interface.
  *
- * @version $Id$
  * @since August  4, 2001
+ * @version $Id$
  */
-public class XScriptManagerImpl
-        extends AbstractLogEnabled
-        implements XScriptManager, Serviceable, Parameterizable, Contextualizable, ThreadSafe, Disposable
-{
+public class XScriptManagerImpl extends AbstractLogEnabled
+                                implements XScriptManager, Serviceable, Parameterizable,
+                                           Contextualizable, ThreadSafe, Disposable {
+
     public static final String CONTEXT = "org.apache.cocoon.components.xscript.scope";
 
     /**
@@ -117,6 +117,7 @@ public class XScriptManagerImpl
         else
             message.append("unknown scope (").append(scope).append(")");
 
+        //noinspection ThrowableInstanceNeverThrown
         return new IllegalArgumentException(message.toString());
     }
 

@@ -38,8 +38,9 @@ import java.util.Date;
  * @version $Id$
  */
 public class InitForm1Action extends AbstractFormsAction {
+
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
-            throws Exception {
+    throws Exception {
         String formSource = parameters.getParameter("form-definition");
         String formAttribute = parameters.getParameter("attribute-name");
 

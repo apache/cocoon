@@ -103,17 +103,15 @@ import org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements.EP_V
  *
  * @version $Id$
  */
-public class HSSFElementProcessorFactory
-    extends AbstractElementProcessorFactory
-{
+public class HSSFElementProcessorFactory extends AbstractElementProcessorFactory {
+
     //holds the locale configuration
     String locale;
+
     /**
      * default constructor
      */
-
-    public HSSFElementProcessorFactory(String locale)
-    {
+    public HSSFElementProcessorFactory(String locale) {
         super();
         this.locale=locale;
         addElementProcessorProgenitor("Attribute", EPAttribute.class);
@@ -208,12 +206,10 @@ public class HSSFElementProcessorFactory
      *
      * @exception CannotCreateElementProcessorException
      */
+    protected ElementProcessor doCreateElementProcessor(final Object progenitor)
+    throws CannotCreateElementProcessorException {
 
-    protected ElementProcessor doCreateElementProcessor(
-            final Object progenitor)
-            throws CannotCreateElementProcessorException {
-        ElementProcessor rval = null;
-
+        ElementProcessor rval;
         try {
             rval = createNewElementProcessorInstance((Class)progenitor);
 
@@ -228,4 +224,4 @@ public class HSSFElementProcessorFactory
         }
         return rval;
     }
-}   // end public class HSSFElementProcessorFactory
+}

@@ -35,9 +35,8 @@ import java.io.Serializable;
  *
  * @version $Id$
  */
-public abstract class AbstractServerPage
-  extends ServletGenerator 
-  implements CompiledComponent, CacheableProcessingComponent {
+public abstract class AbstractServerPage extends ServletGenerator
+                                         implements CompiledComponent, CacheableProcessingComponent {
     
     /**
      * Code generators should produce a constructor
@@ -56,8 +55,9 @@ public abstract class AbstractServerPage
 
     /** The creation date */
     protected long dateCreated = -1L;
+
     /** The dependency file list */
-    protected File[] dependencies = null;
+    protected File[] dependencies;
 
     /**
      * Determines whether this generator's source files have changed
@@ -89,7 +89,7 @@ public abstract class AbstractServerPage
      * @return Whether content has changes for this request's data
      */
     public boolean hasContentChanged(Request request) {
-      return true;
+        return true;
     }
 
     /**

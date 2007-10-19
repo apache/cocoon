@@ -16,32 +16,34 @@
  */
 package org.apache.cocoon.components.language.programming.python;
 
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceManager;
-
-import org.apache.cocoon.components.language.programming.Program;
-import org.apache.cocoon.components.language.generator.CompiledComponent;
-import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
-import org.apache.cocoon.xsp.handler.AbstractComponentHandler;
-import org.apache.cocoon.xsp.handler.ComponentHandler;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
+
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.service.ServiceManager;
+
+import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.components.language.programming.Program;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.xsp.handler.AbstractComponentHandler;
+import org.apache.cocoon.xsp.handler.ComponentHandler;
 
 /**
  * This class represents program in the Python language.
  *
  * @version $Id$
  */
-public class PythonProgram extends AbstractLogEnabled implements Program {
+public class PythonProgram extends AbstractLogEnabled
+                           implements Program {
 
     protected File file;
     protected Class clazz;
     protected DefaultConfiguration config;
+
 
     public PythonProgram(File file, Class clazz, Collection dependecies) {
         this.file = file;
@@ -65,18 +67,20 @@ public class PythonProgram extends AbstractLogEnabled implements Program {
         return file.toString();
     }
 
-    public ComponentHandler getHandler(ServiceManager manager,
-                                       Context context)
+    public ComponentHandler getHandler(ServiceManager manager, Context context)
     throws Exception {
-
-        return AbstractComponentHandler.getComponentHandler(
-                clazz, getLogger(), context, manager, config);
+        return AbstractComponentHandler.getComponentHandler(clazz,
+                                                            context,
+                                                            manager,
+                                                            config);
     }
 
     public CompiledComponent newInstance() throws Exception {
         CompiledComponent instance = (CompiledComponent) clazz.newInstance();
-        if (instance instanceof Configurable)
+        if (instance instanceof Configurable) {
             ((Configurable) instance).configure(config);
+        }
+
         return instance;
     }
 }

@@ -18,12 +18,12 @@ package org.apache.cocoon.components.language.programming.java;
 
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xsp.handler.AbstractComponentHandler;
 import org.apache.cocoon.xsp.handler.ComponentHandler;
 
@@ -33,11 +33,13 @@ import org.apache.cocoon.xsp.handler.ComponentHandler;
  *
  * @version $Id$
  */
-public class JavaProgram extends AbstractLogEnabled implements Program {
+public class JavaProgram extends AbstractLogEnabled
+                         implements Program {
 
     protected Class program;
     
     protected DefaultConfiguration config;
+
 
     public JavaProgram(Class program) {
         this.program = program;
@@ -53,15 +55,13 @@ public class JavaProgram extends AbstractLogEnabled implements Program {
     public ComponentHandler getHandler(ServiceManager manager,
                                        Context context)
     throws Exception {
-        return AbstractComponentHandler.getComponentHandler(
-                program,
-                getLogger(),
-                context,
-                manager,
-                this.config);
+        return AbstractComponentHandler.getComponentHandler(program,
+                                                            context,
+                                                            manager,
+                                                            this.config);
     }
 
     public CompiledComponent newInstance() throws Exception {
-        return (CompiledComponent)this.program.newInstance();
+        return (CompiledComponent) this.program.newInstance();
     }
 }

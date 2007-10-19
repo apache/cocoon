@@ -16,34 +16,38 @@
  */
 package org.apache.cocoon.forms.acting;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.forms.FormManager;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceException;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Abstract base class for Cocoon Forms actions.
  * 
  * @version $Id$
  */
-public abstract class AbstractFormsAction 
-  implements Action, ThreadSafe, Serviceable, Disposable {
+public abstract class AbstractFormsAction extends AbstractLogEnabled
+                                          implements Action, ThreadSafe, Serviceable,
+                                                     Disposable {
       
     protected ServiceManager manager;
     
     protected FormManager formManager;
 
+
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
-        this.formManager = (FormManager)serviceManager.lookup(FormManager.ROLE);
+        this.formManager = (FormManager) serviceManager.lookup(FormManager.ROLE);
     }
 
     public void dispose() {
         if (this.manager != null) {
-            this.manager.release( this.formManager );
+            this.manager.release(this.formManager);
             this.manager = null;
             this.formManager = null;
         }

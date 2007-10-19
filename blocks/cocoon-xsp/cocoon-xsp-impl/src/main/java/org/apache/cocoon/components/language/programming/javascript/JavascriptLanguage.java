@@ -16,19 +16,18 @@
  */
 package org.apache.cocoon.components.language.programming.javascript;
 
-import org.apache.avalon.framework.container.ContainerUtil;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.markup.xsp.XSLTExtension;
 import org.apache.cocoon.components.language.programming.AbstractProgrammingLanguage;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * The interpreted Javascript programming language.
@@ -95,9 +94,7 @@ public class JavascriptLanguage extends AbstractProgrammingLanguage {
             }
         }
 
-        final Program p = new JavascriptProgram(sourceFile, clazz, dependecies);
-        ContainerUtil.enableLogging(p, this.getLogger());
-        return p;
+        return new JavascriptProgram(sourceFile, clazz, dependecies);
     }
 
     private String getMeta(String line, String meta) {

@@ -20,15 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.rmi.Remote;
-
 import javax.wsdl.WSDLException;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -36,18 +33,19 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.axis.utils.JavaUtils;
 import org.apache.axis.wsdl.toJava.Namespaces;
 import org.apache.axis.wsdl.toJava.Utils;
-import org.apache.cocoon.Constants;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.store.Store;
+
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Given a WSDL URL generates and compiles client bindings for the requested
  * service endpoint.
  */
-public class WebServiceLoader
-implements Contextualizable, ThreadSafe, Serviceable, Disposable, LogEnabled {
+public class WebServiceLoader extends AbstractLogEnabled
+                              implements Contextualizable, ThreadSafe, Serviceable, Disposable {
 
-    protected Logger logger;
     protected ServiceManager serviceManager;
     // protected CompilingClassLoader classLoader;
     // protected MyClassRepository javaClassRepository = new MyClassRepository();
@@ -55,13 +53,6 @@ implements Contextualizable, ThreadSafe, Serviceable, Disposable, LogEnabled {
     protected SourceResolver resolver;
     private Store endpointCache;
 
-
-    /**
-     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-    }
 
     /**
      * Loads a SOAP endpoint using the first service definition with a SOAP binding found in the referenced WSDL
@@ -127,7 +118,7 @@ implements Contextualizable, ThreadSafe, Serviceable, Disposable, LogEnabled {
                 this.endpointCache.store(key, endpoint);
             } catch (IOException e) {
                 String msg = "Error storing proxy in endpoint cache";
-                this.logger.error(msg);
+                getLogger().error(msg);
             }
         }
         return endpoint;
@@ -173,7 +164,7 @@ implements Contextualizable, ThreadSafe, Serviceable, Disposable, LogEnabled {
             return endpoint;
         } catch (Exception e) {
             String msg = "Error loading web service: " + serviceName;
-            this.logger.error(msg, e);
+            getLogger().error(msg, e);
             throw new LoadException(msg, e);
         }
     }
@@ -229,8 +220,7 @@ implements Contextualizable, ThreadSafe, Serviceable, Disposable, LogEnabled {
             String fileName = Utils.capitalizeFirstChar(serviceName) + ".java";
             return Utils.fileExists(fileName, namespace, namespaces);
         } catch (IOException e) {
-            logger.error("Error checking for binding class for service: "
-                    + serviceName);
+            getLogger().error("Error checking for binding class for service: " + serviceName);
         }
         return false;
     }
@@ -253,8 +243,7 @@ implements Contextualizable, ThreadSafe, Serviceable, Disposable, LogEnabled {
             this.endpointCache = (Store) this.serviceManager
                     .lookup(Store.TRANSIENT_STORE);
         } catch (ServiceException e) {
-            this.logger.error("Could not find component for role "
-                    + Store.TRANSIENT_STORE, e);
+            getLogger().error("Could not find component for role " + Store.TRANSIENT_STORE, e);
         }
     }
 

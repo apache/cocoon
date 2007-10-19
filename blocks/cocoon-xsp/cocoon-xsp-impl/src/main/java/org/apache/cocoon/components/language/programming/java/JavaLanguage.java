@@ -31,6 +31,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.lang.SystemUtils;
 
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.components.language.LanguageException;
@@ -39,7 +40,7 @@ import org.apache.cocoon.components.language.programming.CompiledProgrammingLang
 import org.apache.cocoon.components.language.programming.CompilerError;
 import org.apache.cocoon.components.language.programming.LanguageCompiler;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.commons.lang.SystemUtils;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 /**
  * The Java programming language processor
@@ -187,12 +188,12 @@ public class JavaLanguage extends CompiledProgrammingLanguage
 
         try {
             LanguageCompiler compiler = (LanguageCompiler)this.compilerClass.newInstance();
-            // AbstractJavaCompiler is LogEnabled
+            // All LanguageCompilers are now using commons logging. This is legacy support code.
             if (compiler instanceof LogEnabled) {
-                ((LogEnabled)compiler).enableLogging(getLogger());
+                ((LogEnabled) compiler).enableLogging(new CLLoggerWrapper(getLogger()));
             }
             if (compiler instanceof Serviceable) {
-                ((Serviceable)compiler).service(this.manager);
+                ((Serviceable) compiler).service(this.manager);
             }
 
             int pos = name.lastIndexOf(File.separatorChar);

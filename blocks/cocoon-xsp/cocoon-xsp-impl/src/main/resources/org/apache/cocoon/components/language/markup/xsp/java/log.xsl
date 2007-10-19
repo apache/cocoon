@@ -30,7 +30,7 @@
     <xsp:page>
       <xsl:apply-templates select="@*"/>
       <xsp:logic>
-        org.apache.avalon.framework.logger.Logger _log_defaultLogger;
+        org.apache.commons.logging.Log _log_defaultLogger;
       </xsp:logic>
       <xsl:apply-templates/>
     </xsp:page>
@@ -65,6 +65,7 @@
       if (_log_defaultLogger == null) {
         _log_defaultLogger = getLogger();
       }
+      /* FIXME
       try {
         String category = <xsl:value-of select="$name"/>;
         if (category != null) {
@@ -76,6 +77,7 @@
         getLogger().error("Could not create logger for \"" +
                            <xsl:value-of select="$name"/> + "\".", e);
       }
+      */
     </xsp:logic>
   </xsl:template>
 

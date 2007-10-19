@@ -90,8 +90,7 @@ public class ServerPagesAction
         try {
             this.generatorHandler = AbstractComponentHandler.getComponentHandler(
                 ServerPagesGenerator.class,
-                this.getLogger(),
-                null,  // Context
+                null, /* context */
                 this.manager,
                 conf
             );

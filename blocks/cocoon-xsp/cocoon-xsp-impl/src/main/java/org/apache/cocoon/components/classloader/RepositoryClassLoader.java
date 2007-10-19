@@ -16,12 +16,6 @@
  */
 package org.apache.cocoon.components.classloader;
 
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-
-import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.util.ClassUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -31,6 +25,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.apache.cocoon.CascadingIOException;
+import org.apache.cocoon.util.ClassUtils;
+
 /**
  * A class loader with a growable list of path search directories.
  * BL: Changed to extend URLClassLoader for both maintenance and
@@ -39,13 +39,12 @@ import java.util.Vector;
  *
  * @version $Id$
  */
-public class RepositoryClassLoader extends URLClassLoader
-                                   implements LogEnabled {
+public class RepositoryClassLoader extends URLClassLoader {
 
     /**
      * The logger
      */
-    protected Logger log;
+    protected final Log log = LogFactory.getLog(getClass());
 
     /**
      * Create an empty new class loader.
@@ -91,17 +90,6 @@ public class RepositoryClassLoader extends URLClassLoader
             } catch (IOException ioe) {
                 log.error("Repository could not be added", ioe);
             }
-        }
-    }
-
-    /**
-     * Provide component with a logger.
-     *
-     * @param logger the logger
-     */
-    public void enableLogging(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
         }
     }
 

@@ -59,9 +59,7 @@ public class XSPMarkupLanguage extends CocoonMarkupLanguage {
     protected AbstractXMLPipe getPreprocessFilter(String filename,
                                                   AbstractXMLPipe filter,
                                                   ProgrammingLanguage language) {
-        PreProcessFilter prefilter = new PreProcessFilter(filter, filename, language, this);
-        prefilter.enableLogging(getLogger());
-        return prefilter;
+        return new PreProcessFilter(filter, filename, language, this);
     }
 
 //
