@@ -16,10 +16,20 @@
  */
 package org.apache.cocoon.reading;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -31,72 +41,54 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpResponse;
 import org.apache.cocoon.util.ByteRange;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * @cocoon.sitemap.component.documentation
- * The <code>ResourceReader</code> component is used to serve binary data
+ * @version $Id$
+ * @cocoon.sitemap.component.documentation The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
  * the requested resource should be written to the <code>OutputStream</code>
  * or if it can signal that it hasn't changed.
- *
+ * <p/>
  * <p>Configuration:
  * <dl>
- *   <dt>&lt;expires&gt;</dt>
- *   <dd>This parameter is optional. When specified it determines how long
- *       in miliseconds the resources can be cached by any proxy or browser
- *       between Cocoon and the requesting visitor. Defaults to -1.
- *   </dd>
- *   <dt>&lt;quick-modified-test&gt;</dt>
- *   <dd>This parameter is optional. This boolean parameter controls the
- *       last modified test. If set to true (default is false), only the
- *       last modified of the current source is tested, but not if the
- *       same source is used as last time
- *       (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915 )
- *   </dd>
- *   <dt>&lt;byte-ranges&gt;</dt>
- *   <dd>This parameter is optional. This boolean parameter controls whether
- *       Cocoon should support byterange requests (to allow clients to resume
- *       broken/interrupted downloads).
- *       Defaults to true.
+ * <dt>&lt;expires&gt;</dt>
+ * <dd>This parameter is optional. When specified it determines how long
+ * in miliseconds the resources can be cached by any proxy or browser
+ * between Cocoon and the requesting visitor. Defaults to -1.
+ * </dd>
+ * <dt>&lt;quick-modified-test&gt;</dt>
+ * <dd>This parameter is optional. This boolean parameter controls the
+ * last modified test. If set to true (default is false), only the
+ * last modified of the current source is tested, but not if the
+ * same source is used as last time
+ * (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915 )
+ * </dd>
+ * <dt>&lt;byte-ranges&gt;</dt>
+ * <dd>This parameter is optional. This boolean parameter controls whether
+ * Cocoon should support byterange requests (to allow clients to resume
+ * broken/interrupted downloads).
+ * Defaults to true.
  * </dl>
- *
+ * <p/>
  * <p>Default configuration:
  * <pre>
  *   &lt;expires&gt;-1&lt;/expires&gt;
  *   &lt;quick-modified-test&gt;false&lt;/quick-modified-test&gt;
  *   &lt;byte-ranges&gt;true&lt;/byte-ranges&gt;
  * </pre>
- *
+ * <p/>
  * <p>In addition to reader configuration, above parameters can be passed
  * to the reader at the time when it is used.
- *
- * @version $Id$
  */
 public class ResourceReader extends AbstractReader
-                            implements CacheableProcessingComponent, Configurable {
+        implements CacheableProcessingComponent, Configurable {
 
     private static final boolean CONFIGURED_BYTE_RANGES_DEFAULT = true;
     private static final int CONFIGURED_BUFFER_SIZE_DEFAULT = 8192;
     private static final boolean CONFIGURED_QUICK_TEST_DEFAULT = false;
     private static final int CONFIGURED_EXPIRES_DEFAULT = -1;
-
-    /** The default logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
 
     /**
      * The list of generated documents
@@ -129,7 +121,7 @@ public class ResourceReader extends AbstractReader
      * Cocoon should support byterange requests (to allow clients to resume
      * broken/interrupted downloads).
      * Defaults to true.
-     *       
+     *
      * @param byteRanges
      */
     public void setByteRanges(boolean byteRanges) {
@@ -153,27 +145,16 @@ public class ResourceReader extends AbstractReader
      * last modified of the current source is tested, but not if the
      * same source is used as last time
      * (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915 )
-     * 
+     *
      * @param quickTest
      */
     public void setQuickTest(boolean quickTest) {
         this.configuredQuickTest = quickTest;
     }
-    
-    /**
-     * Initialize the logger
-     *
-     * FIXME: This is a hack to enable logging in non Avalon containers while keeping
-     * back compabillity. It would have been neater to just override the get getLogger
-     * method, but it is final.
-     */
-    public void init() {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
-    }
 
     /**
      * Read reader configuration
-     * 
+     *
      * @deprecated use property injection instead
      */
     public void configure(Configuration configuration) throws ConfigurationException {
@@ -185,10 +166,10 @@ public class ResourceReader extends AbstractReader
         this.setByteRanges(parameters.getParameterAsBoolean("byte-ranges", CONFIGURED_BYTE_RANGES_DEFAULT));
 
         // Configuration has precedence over parameters.
-        this.setExpires(configuration.getChild("expires").getValueAsLong(configuredExpires));
-        this.setQuickTest(configuration.getChild("quick-modified-test").getValueAsBoolean(configuredQuickTest));
-        this.setBufferSize(configuration.getChild("buffer-size").getValueAsInteger(configuredBufferSize));
-        this.setByteRanges(configuration.getChild("byte-ranges").getValueAsBoolean(configuredByteRanges));
+        setExpires(configuration.getChild("expires").getValueAsLong(configuredExpires));
+        setQuickTest(configuration.getChild("quick-modified-test").getValueAsBoolean(configuredQuickTest));
+        setBufferSize(configuration.getChild("buffer-size").getValueAsInteger(configuredBufferSize));
+        setByteRanges(configuration.getChild("byte-ranges").getValueAsBoolean(configuredByteRanges));
     }
 
     /**
@@ -197,7 +178,7 @@ public class ResourceReader extends AbstractReader
      * the length and the last modification date
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-    throws ProcessingException, SAXException, IOException {
+            throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
         this.request = ObjectModelHelper.getRequest(objectModel);
@@ -234,9 +215,9 @@ public class ResourceReader extends AbstractReader
             response.setDateHeader("Expires", 0);
         }
 
-        long lastModified = getLastModified(); 
-        if (lastModified > 0) { 
-            response.setDateHeader("Last-Modified", lastModified); 
+        long lastModified = getLastModified();
+        if (lastModified > 0) {
+            response.setDateHeader("Last-Modified", lastModified);
         }
     }
 
@@ -311,9 +292,9 @@ public class ResourceReader extends AbstractReader
     }
 
     protected void processStream(InputStream inputStream)
-    throws IOException, ProcessingException {
+            throws IOException, ProcessingException {
         byte[] buffer = new byte[bufferSize];
-        int length = -1;
+        int length;
 
         String ranges = request.getHeader("Range");
 
@@ -328,7 +309,7 @@ public class ResourceReader extends AbstractReader
                 // TC: Hm.. why don't we have setStatus in the Response interface ?
                 if (response instanceof HttpResponse) {
                     // Respond with status 416 (Request range not satisfiable)
-                    ((HttpResponse)response).setStatus(416);
+                    response.setStatus(416);
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("malformed byte range header [" + String.valueOf(ranges) + "]");
                     }
@@ -354,7 +335,7 @@ public class ResourceReader extends AbstractReader
             response.setHeader("Content-Range", entityRange + "/" + entityLength);
             if (response instanceof HttpResponse) {
                 // Response with status 206 (Partial content)
-                ((HttpResponse)response).setStatus(206);
+                response.setStatus(206);
             }
 
             int pos = 0;

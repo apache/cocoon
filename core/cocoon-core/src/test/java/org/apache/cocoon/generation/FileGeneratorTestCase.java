@@ -23,16 +23,17 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.MockLogger;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.impl.ResourceSource;
+import org.apache.excalibur.xml.sax.SAXParser;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.core.xml.impl.JaxpSAXParser;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.impl.ResourceSource;
-import org.apache.excalibur.xml.sax.SAXParser;
+
 import org.custommonkey.xmlunit.Diff;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
@@ -85,7 +86,6 @@ public class FileGeneratorTestCase extends MockObjectTestCase {
         Parameters parameters = new Parameters();
         String result = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";
         FileGenerator generator = new FileGenerator();
-        generator.enableLogging(new MockLogger(generator.getClass()));
         Mock resolver = new Mock(SourceResolver.class);
         Source source = new ResourceSource(src);
         resolver.expects(once()).method("resolveURI").with(same(src)).

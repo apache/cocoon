@@ -518,7 +518,7 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
      */
     public void ignorableWhitespace(char[] p0, int p1, int p2)
     throws SAXException {
-        if (ignoreWhitespaces == false && ignoreEventsCount == 0) {
+        if (!ignoreWhitespaces && ignoreEventsCount == 0) {
             super.ignorableWhitespace(p0, p1, p2);
         }
     }
@@ -647,7 +647,7 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
      */
     protected Object removeRecorder() {
         Object recorder = this.recorderStack.pop();
-        if (this.recorderStack.empty() == true) {
+        if (this.recorderStack.empty()) {
             // undo redirect if no recorder any more
             setContentHandler(originalContentHandler);
             setLexicalHandler(originalLexicalHandler);
@@ -855,7 +855,7 @@ public abstract class AbstractSAXTransformer extends AbstractTransformer
         }
 
         if (getLogger().isDebugEnabled()) {
-            Object serializedXML = null;
+            Object serializedXML;
             try {
                 serializedXML = fragment == null? "null": XMLUtils.serializeNode(fragment);
             } catch (ProcessingException ignore) {

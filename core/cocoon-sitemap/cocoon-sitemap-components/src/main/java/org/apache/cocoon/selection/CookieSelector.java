@@ -17,16 +17,16 @@
 package org.apache.cocoon.selection;
 
 import java.util.Map;
-
 import javax.servlet.http.Cookie;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -43,9 +43,10 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * @version $Id$
  */
 public class CookieSelector extends AbstractLogEnabled
-        implements Configurable, Selector, ThreadSafe {
+                            implements Configurable, Selector, ThreadSafe {
 
     protected String defaultName;
+
 
     public void configure(Configuration config) throws ConfigurationException {
         this.defaultName = config.getChild("cookie-name").getValue(null);

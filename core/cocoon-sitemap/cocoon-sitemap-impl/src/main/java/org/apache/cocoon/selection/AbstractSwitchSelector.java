@@ -16,10 +16,11 @@
  */
 package org.apache.cocoon.selection;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 
-import java.util.Map;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * Abstract SwitchSelector class.
@@ -27,12 +28,13 @@ import java.util.Map;
  * @version $Id$
  */
 public abstract class AbstractSwitchSelector extends AbstractLogEnabled
-    implements SwitchSelector {
+                                             implements SwitchSelector {
 
     /**
      * Selectors test pattern against some objects in a <code>Map</code>
-     * model and signals success with the returned boolean value
-     * @param expr        The expression to test.
+     * model and signals success with the returned boolean value.
+     *
+     * @param expr The expression to test.
      * @return Signals successful test.
      */
     public boolean select(String expr, Map objectModel, Parameters params) {

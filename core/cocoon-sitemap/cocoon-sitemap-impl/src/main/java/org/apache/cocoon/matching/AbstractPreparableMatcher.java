@@ -16,11 +16,12 @@
  */
 package org.apache.cocoon.matching;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.sitemap.PatternException;
-
 import java.util.Map;
+
+import org.apache.avalon.framework.parameters.Parameters;
+
+import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * A matcher that can prepare patterns during sitemap setup for faster match at request time.
@@ -29,13 +30,14 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public abstract class AbstractPreparableMatcher extends AbstractLogEnabled implements PreparableMatcher {
+public abstract class AbstractPreparableMatcher extends AbstractLogEnabled
+                                                implements PreparableMatcher {
 
     /**
      * Match the pattern by preparing it and matching the prepared pattern.
      */
     public Map match (String pattern, Map objectModel, Parameters parameters)
-      throws PatternException {
+    throws PatternException {
         return preparedMatch(preparePattern(pattern), objectModel, parameters);
     }
 }

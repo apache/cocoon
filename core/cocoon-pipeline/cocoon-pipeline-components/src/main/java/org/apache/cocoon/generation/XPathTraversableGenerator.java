@@ -20,10 +20,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.logging.Log;
+import org.apache.excalibur.source.TraversableSource;
+import org.apache.excalibur.xml.xpath.PrefixResolver;
+import org.apache.excalibur.xml.xpath.XPathProcessor;
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.core.xml.DOMParser;
@@ -31,11 +37,7 @@ import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.excalibur.source.TraversableSource;
-import org.apache.excalibur.xml.xpath.PrefixResolver;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
-import org.apache.regexp.RE;
-import org.apache.regexp.RESyntaxException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -174,7 +176,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         }
 
         String[] params = par.getNames();
-        this.prefixResolver = new XPathPrefixResolver(this.getLogger());
+        this.prefixResolver = new XPathPrefixResolver(getLogger());
         for (int i = 0; i < params.length; i++) {
             if (params[i].startsWith("xmlns:")) {
                 String paramValue = par.getParameter(params[i], "");
@@ -272,9 +274,9 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 
         private Map params;
 
-        private Logger logger;
+        private Log logger;
 
-        public XPathPrefixResolver(Logger logger) {
+        public XPathPrefixResolver(Log logger) {
             this.params = new HashMap();
             this.logger = logger;
         }

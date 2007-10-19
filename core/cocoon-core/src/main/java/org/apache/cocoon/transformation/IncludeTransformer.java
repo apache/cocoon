@@ -16,15 +16,23 @@
  */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceValidity;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
@@ -43,20 +51,11 @@ import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.util.NamespacesTable;
 
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
 
 /**
  * <p>A simple transformer including resolvable sources (accessed through
@@ -253,19 +252,12 @@ public class IncludeTransformer extends AbstractTransformer
     /** The {@link IncludeXMLPipe} which is doing all the work */
     private final IncludeXMLPipe pipe;
 
+
     /**
      * <p>Create a new {@link IncludeTransformer} instance.</p>
      */
     public IncludeTransformer() {
         pipe = new IncludeXMLPipe();
-    }
-
-    /**
-     * <p>Initialize own and {@link #pipe} loggers</p>
-     */
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        pipe.enableLogging(logger);
     }
 
     /**
@@ -520,7 +512,7 @@ public class IncludeTransformer extends AbstractTransformer
                     getLogger().info("Failed to load <" + this.source + ">, using fallback.", e);
                 }
                 // Stream fallback through IncludeXMLPipe
-                this.fallback.toSAX(new IncludeXMLPipe(getLogger(), buffer, buffer,
+                this.fallback.toSAX(new IncludeXMLPipe(buffer, buffer,
                                                        recursive, recursiveParallel? parallel: false, recursiveParallel));
             }
         }
@@ -567,7 +559,7 @@ public class IncludeTransformer extends AbstractTransformer
                 // Include source
                 if (this.parse && recursive) {
                     SourceUtil.toSAX(manager, source, this.mimeType,
-                                     new IncludeXMLPipe(getLogger(), contentHandler, lexicalHandler,
+                                     new IncludeXMLPipe(contentHandler, lexicalHandler,
                                                         recursive, recursiveParallel? parallel: false, recursiveParallel));
                 } else if (this.parse) {
                     SourceUtil.toSAX(manager, source, this.mimeType,
@@ -669,10 +661,9 @@ public class IncludeTransformer extends AbstractTransformer
         /**
          * <p>Create a new {@link IncludeXMLPipe} instance.</p>
          */
-        public IncludeXMLPipe(Logger logger, ContentHandler contentHandler, LexicalHandler lexicalHandler,
+        public IncludeXMLPipe(ContentHandler contentHandler, LexicalHandler lexicalHandler,
                               boolean recursive, boolean parallel, boolean recursiveParallel) {
             root = false;
-            enableLogging(logger);
             setContentHandler(contentHandler);
             setLexicalHandler(lexicalHandler);
             this.recursive = recursive;

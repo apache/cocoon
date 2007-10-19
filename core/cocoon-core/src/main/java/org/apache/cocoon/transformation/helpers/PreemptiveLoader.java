@@ -21,39 +21,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.caching.CachedResponse;
-import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.commons.logging.Log;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
 
+import org.apache.cocoon.caching.CachedResponse;
+import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 /**
  * The preemptive loader is a singleton that runs in the background
  * and loads content into the cache.
  * 
- *  @version $Id$
- *  @since   2.1
+ * @since   2.1
+ * @version $Id$
  */
-public final class PreemptiveLoader {
+public final class PreemptiveLoader extends AbstractLogEnabled {
 
-    private static final PreemptiveLoader instance = new PreemptiveLoader();
+    private static final PreemptiveLoader INSTANCE = new PreemptiveLoader();
     
     /** The list of proxies currently used for caching */
     private Map   cacheStorageProxyMap = new HashMap(20);
+
     /** The list of URIs to load */
     private List  loadList = new ArrayList(50);
+
     /** Is this thread still alive? */
-    boolean alive = false;
+    boolean alive;
     
     /**
      * Return singleton.
+     *
      * @return PreemptiveLoader
      */
     static PreemptiveLoader getInstance() {
-        return instance;
+        return INSTANCE;
     }
     
     /**
@@ -89,10 +94,18 @@ public final class PreemptiveLoader {
     /**
      * Start the preemptive loading
      * @param resolver  A source resolver
+     */
+    public void process(SourceResolver resolver) {
+        process(resolver, getLogger());
+    }
+
+    /**
+     * Start the preemptive loading
+     * @param resolver  A source resolver
      * @param logger    A logger
      */
-    public void process(SourceResolver  resolver,
-                        Logger          logger) {
+    public void process(SourceResolver resolver,
+                        Log logger) {
         this.alive = true;
         if (logger.isDebugEnabled()) {
             logger.debug("PreemptiveLoader: Starting preemptive loading");
@@ -108,7 +121,7 @@ public final class PreemptiveLoader {
                 }
                 
                 Source source = null;
-                XMLByteStreamCompiler serializer = null;
+                XMLByteStreamCompiler serializer;
 
                 try {
                     if (logger.isDebugEnabled()) {

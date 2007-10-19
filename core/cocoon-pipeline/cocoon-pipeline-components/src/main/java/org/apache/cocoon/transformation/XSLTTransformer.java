@@ -23,9 +23,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-
+import java.util.Set;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import javax.xml.transform.sax.SAXResult;
@@ -40,6 +39,12 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.util.SourceUtil;
@@ -49,12 +54,9 @@ import org.apache.cocoon.components.xslt.XSLTProcessorException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -381,9 +383,9 @@ implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
 
         super.setContentHandler(this.transformerHandler);
         super.setLexicalHandler(this.transformerHandler);
-
+        // Is there even single implementation of LogEnabled TransformerHandler?
         if (this.transformerHandler instanceof LogEnabled) {
-        	((LogEnabled)this.transformerHandler).enableLogging(getLogger());
+            ((LogEnabled) this.transformerHandler).enableLogging(new CLLoggerWrapper(getLogger()));
         }
         // According to TrAX specs, all TransformerHandlers are LexicalHandlers
         final SAXResult result = new SAXResult(consumer);

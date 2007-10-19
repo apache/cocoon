@@ -18,15 +18,15 @@ package org.apache.cocoon.matching;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.Cookie;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -34,10 +34,11 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @version $Id$
  */
-public class CookieMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe {
+public class CookieMatcher extends AbstractLogEnabled
+                           implements Matcher, ThreadSafe {
 
     public Map match(String pattern, Map objectModel, Parameters parameters)
-            throws PatternException {
+    throws PatternException {
 
         if (pattern == null) {
             throw new PatternException("No cookie name given.");

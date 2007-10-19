@@ -16,9 +16,13 @@
  */
 package org.apache.cocoon.transformation.helpers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.apache.commons.logging.Log;
 import org.apache.excalibur.source.Source;
 
 import org.apache.cocoon.acting.AbstractValidatorAction;
@@ -29,13 +33,9 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
-import org.apache.avalon.framework.logger.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * The <code>ValidatorActionResult</code> object helper
+ * The <code>ValidatorActionResult</code> object helper.
+ * Used by XSP.
  *
  * @version $Id$
  */
@@ -47,15 +47,16 @@ public class FormValidatorHelper {
      * these make it easier for the xsl
      */
 
-    String current_descriptor = null;
+    String current_descriptor;
     boolean current_reloadable = true;
-    Logger current_logger = null;
-    String current_constraint_set = null;
-    String current_parameter = null;
-    SourceResolver current_resolver = null;
+    Log current_logger;
+    String current_constraint_set;
+    String current_parameter;
+    SourceResolver current_resolver;
+
 
     public FormValidatorHelper(String descriptor, boolean reloadable,
-                                  Logger logger, SourceResolver resolver) {
+                               Log logger, SourceResolver resolver) {
         current_descriptor = descriptor;
         current_reloadable = reloadable;
         current_logger = logger;
@@ -63,8 +64,8 @@ public class FormValidatorHelper {
     }
 
     public FormValidatorHelper(String descriptor, boolean reloadable,
-                                  Logger logger, SourceResolver resolver,
-                                  String constraintset) {
+                               Log logger, SourceResolver resolver,
+                               String constraintset) {
         current_descriptor = descriptor;
         current_reloadable = reloadable;
         current_logger = logger;
@@ -353,7 +354,7 @@ public class FormValidatorHelper {
      */
 
     protected static Configuration getConfiguration(String descriptor, SourceResolver resolver,
-                                                    boolean reloadable, Logger logger)
+                                                    boolean reloadable, Log logger)
             throws ConfigurationException {
 
         if (descriptor == null) {
@@ -414,8 +415,7 @@ public class FormValidatorHelper {
      */
     protected static Configuration getConfigurationByName(Configuration[] conf,
                                                           String name,
-                                                          Logger logger
-                                                          ) {
+                                                          Log logger) {
         int j = 0;
         boolean found = false;
         String setname = null;
@@ -453,8 +453,7 @@ public class FormValidatorHelper {
                                                 String constraintset,
                                                 String parameter,
                                                 String attribute,
-                                                Logger logger
-                                                ) {
+                                                Log logger) {
         try {
             Configuration conf = getConfiguration(descriptor, resolver, reloadable, logger);
             Configuration[] desc = conf.getChildren("parameter");

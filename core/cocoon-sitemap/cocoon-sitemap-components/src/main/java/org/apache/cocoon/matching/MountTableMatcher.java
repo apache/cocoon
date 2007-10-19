@@ -16,9 +16,13 @@
  */
 package org.apache.cocoon.matching;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -26,20 +30,15 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
 
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.sitemap.PatternException;
-
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceValidity;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -85,6 +84,7 @@ public class MountTableMatcher extends AbstractLogEnabled
     private SourceResolver resolver;
     private Map mountTables = Collections.synchronizedMap(new HashMap());
     private boolean ignoreMissingTables;
+
 
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;

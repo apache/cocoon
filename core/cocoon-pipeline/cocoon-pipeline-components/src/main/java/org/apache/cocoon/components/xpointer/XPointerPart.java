@@ -27,7 +27,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.LocatorImpl;
 
 /**
- * Partly implementation of the xpointer() scheme. Only the XPath subset of xpointer is supported.
+ * Partial implementation of the xpointer() scheme.
+ * Only the XPath subset of xpointer is supported.
+ *
+ * @version $Id$
  */
 public class XPointerPart implements PointerPart {
     private String expression;
@@ -36,9 +39,10 @@ public class XPointerPart implements PointerPart {
         this.expression = expression;
     }
 
-    public boolean process(XPointerContext xpointerContext) throws SAXException, ResourceNotFoundException {
-        Document document = xpointerContext.getDocument();
-        ServiceManager manager = xpointerContext.getServiceManager();
+    public boolean process(XPointerContext ctx) throws SAXException, ResourceNotFoundException {
+        Document document = ctx.getDocument();
+        ServiceManager manager = ctx.getServiceManager();
+
         XPathProcessor xpathProcessor = null;
         try {
             try {
@@ -46,11 +50,11 @@ public class XPointerPart implements PointerPart {
             } catch (Exception e) {
                 throw new SAXException("XPointerPart: error looking up XPathProcessor.", e);
             }
-            NodeList nodeList = xpathProcessor.selectNodeList(document, expression, xpointerContext);
+            NodeList nodeList = xpathProcessor.selectNodeList(document, expression, ctx);
             if (nodeList.getLength() > 0) {
-                XMLConsumer consumer = xpointerContext.getXmlConsumer();
+                XMLConsumer consumer = ctx.getXmlConsumer();
                 LocatorImpl locator = new LocatorImpl();
-                locator.setSystemId(xpointerContext.getSource().getURI());
+                locator.setSystemId(ctx.getSource().getURI());
                 consumer.setDocumentLocator(locator);
                 for (int i = 0; i < nodeList.getLength(); i++) {
                     DOMStreamer streamer = new DOMStreamer();
@@ -60,8 +64,8 @@ public class XPointerPart implements PointerPart {
                 }
                 return true;
             } else {
-                if (xpointerContext.getLogger().isDebugEnabled())
-                    xpointerContext.getLogger().debug("XPointer: expression \"" + expression + "\" gave no results.");
+                if (ctx.getLogger().isDebugEnabled())
+                    ctx.getLogger().debug("XPointer: expression \"" + expression + "\" gave no results.");
                 return false;
             }
         } finally {

@@ -161,9 +161,9 @@ public class RequestProcessor {
             }
 
             RequestUtil.manageException(request, res, null, uri,
-                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            "Problem in creating the Environment", null, null, e,
-                            this.servletSettings, this.getLogger(), this);
+                                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                                        "Problem in creating the Environment", null, null, e,
+                                        this.servletSettings, getLogger(), this);
             return;
         }
 
@@ -383,7 +383,7 @@ public class RequestProcessor {
         } finally {
             EnvironmentHelper.leaveProcessor();
             environment.finishingProcessing();
-            EnvironmentHelper.checkEnvironment(environmentDepth, getLogger());
+            EnvironmentHelper.checkEnvironment(environmentDepth);
         }
     }
 }

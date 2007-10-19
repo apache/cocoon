@@ -19,7 +19,6 @@ package org.apache.cocoon.selection;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -28,6 +27,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -82,7 +83,8 @@ public class ResourceExistsSelector extends AbstractLogEnabled
 
     private ServiceManager manager;
     private SourceResolver resolver;
-    
+
+
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);

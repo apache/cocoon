@@ -16,16 +16,16 @@
  */
 package org.apache.cocoon.selection;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.Map;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -41,9 +41,10 @@ import java.util.Map;
  * @version $Id$
  */
 public class HeaderSelector extends AbstractLogEnabled
-  implements Configurable, ThreadSafe, Selector {
+                            implements Configurable, ThreadSafe, Selector {
 
     protected String defaultName;
+
 
     public void configure(Configuration config) throws ConfigurationException {
         // Check old name

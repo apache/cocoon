@@ -23,21 +23,23 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.util.SourceUtil;
-import org.apache.cocoon.core.xml.DOMParser;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.commons.logging.Log;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.xml.xpath.PrefixResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.core.xml.DOMParser;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.dom.DOMStreamer;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -222,7 +224,7 @@ extends DirectoryGenerator {
             if ((null == mappingInfo) || (mappingInfo.reload == false) ||
                 (mappingInfo.mappingSource.getLastModified() < mappingSource.getLastModified())) {
                 this.prefixResolver =
-                    new MappingInfo(getLogger().getChildLogger("prefix-resolver"), mappingSource, mapping_reload);
+                    new MappingInfo(getLogger(), mappingSource, mapping_reload);
                 XPathDirectoryGenerator.mappingFiles.put(mappingKey, this.prefixResolver);
             } else {
                 this.prefixResolver = mappingInfo;
@@ -331,7 +333,7 @@ extends DirectoryGenerator {
         public final boolean reload;
 
         /** Our Logger */
-        private final Logger logger;
+        private final Log logger;
 
         /** Map of prefixes to namespaces */
         private final Map prefixMap;
@@ -346,7 +348,7 @@ extends DirectoryGenerator {
          * @throws SourceNotFoundException In case the mentioned source is not there
          * @throws IOException in case the source could not be read
          */
-        public MappingInfo(final Logger logger, final Source mappingSource, final boolean reload)
+        public MappingInfo(final Log logger, final Source mappingSource, final boolean reload)
         throws SourceNotFoundException, IOException {
             this.logger = logger;
             this.mappingSource = mappingSource;

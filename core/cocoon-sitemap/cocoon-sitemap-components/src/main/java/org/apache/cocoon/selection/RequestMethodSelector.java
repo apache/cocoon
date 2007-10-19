@@ -16,12 +16,13 @@
  */
 package org.apache.cocoon.selection;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.environment.ObjectModelHelper;
 
-import java.util.Map;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -30,11 +31,9 @@ import java.util.Map;
  * @version $Id$
  */
 public class RequestMethodSelector extends AbstractLogEnabled
-  implements ThreadSafe, Selector {
+                                   implements ThreadSafe, Selector {
 
-    public boolean select(
-         String expression, Map objectModel, Parameters parameters) 
-    {
+    public boolean select(String expression, Map objectModel, Parameters parameters) {
         String method = ObjectModelHelper.getRequest(objectModel).getMethod();
         return method.equals(expression);
     }

@@ -17,7 +17,9 @@
 package org.apache.cocoon.xml;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
@@ -30,7 +32,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public abstract class AbstractXMLProducer extends AbstractLogEnabled
                                           implements XMLProducer, Recyclable {
-    
+
+    /** Empty, do-nothing content handler */
     protected static final ContentHandler EMPTY_CONTENT_HANDLER = new DefaultHandler();
 
     /** The <code>XMLConsumer</code> receiving SAX events. */
@@ -44,9 +47,12 @@ public abstract class AbstractXMLProducer extends AbstractLogEnabled
 
     /**
      * Set the <code>XMLConsumer</code> that will receive XML data.
-     * <br>
-     * This method will simply call <code>setContentHandler(consumer)</code>
-     * and <code>setLexicalHandler(consumer)</code>.
+     *
+     * <p>This method will call <code>setContentHandler(consumer)</code>
+     * and <code>setLexicalHandler(consumer)</code> since {@link XMLConsumer}
+     * interface implements both {@link ContentHandler} and {@link LexicalHandler}.
+     *
+     * @param consumer xml consumer, should never be null.
      */
     public void setConsumer(XMLConsumer consumer) {
         this.xmlConsumer = consumer;
@@ -56,9 +62,11 @@ public abstract class AbstractXMLProducer extends AbstractLogEnabled
 
     /**
      * Set the <code>ContentHandler</code> that will receive XML data.
-     * <br>
-     * Subclasses may retrieve this <code>ContentHandler</code> instance
+     *
+     * <p>Subclasses may retrieve this <code>ContentHandler</code> instance
      * accessing the protected <code>super.contentHandler</code> field.
+     *
+     * @param handler content handler, should never be null.
      */
     public void setContentHandler(ContentHandler handler) {
         this.contentHandler = handler;
@@ -66,9 +74,11 @@ public abstract class AbstractXMLProducer extends AbstractLogEnabled
 
     /**
      * Set the <code>LexicalHandler</code> that will receive XML data.
-     * <br>
-     * Subclasses may retrieve this <code>LexicalHandler</code> instance
+     *
+     * <p>Subclasses may retrieve this <code>LexicalHandler</code> instance
      * accessing the protected <code>super.lexicalHandler</code> field.
+     *
+     * @param handler lexical handler, should never be null.
      */
     public void setLexicalHandler(LexicalHandler handler) {
         this.lexicalHandler = handler;

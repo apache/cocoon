@@ -22,17 +22,16 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceValidity;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -52,9 +51,6 @@ import org.xml.sax.SAXException;
 public class FileGenerator extends ServiceableGenerator
                            implements CacheableProcessingComponent {
 
-    /** The default logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
- 
     /** The input source */
     protected Source inputSource;
 
@@ -63,15 +59,6 @@ public class FileGenerator extends ServiceableGenerator
 
 	public void setParser(SAXParser parser) {
         this.parser = parser;
-    }
-
-    /**
-     * Initialize logger
-     *
-     * @throws Exception 
-     */
-    public void init() throws Exception {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
     }
 
 	/**
@@ -84,8 +71,8 @@ public class FileGenerator extends ServiceableGenerator
             this.inputSource = null;
         }
         if (null != this.parser) {
-        	this.manager.release(this.parser);
-        	this.parser = null;
+            this.manager.release(this.parser);
+            this.parser = null;
         }
         super.recycle();
     }

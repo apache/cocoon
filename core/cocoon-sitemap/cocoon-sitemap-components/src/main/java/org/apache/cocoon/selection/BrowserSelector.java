@@ -29,7 +29,6 @@ import java.util.Map;
  *
  * @version $Id$
  */
-
 public class BrowserSelector extends NamedPatternsSelector {
 
     public void configure(Configuration conf) throws ConfigurationException {

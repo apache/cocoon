@@ -21,15 +21,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.MockLogger;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
+
+import org.apache.cocoon.environment.SourceResolver;
+
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
 /**
- *
  *
  * @version $Id$
  */
@@ -44,7 +44,6 @@ public class ResourceExistsActionTestCase extends MockObjectTestCase {
         String src = "don't care";
         Parameters parameters = new Parameters();
         ResourceExistsAction action = new ResourceExistsAction();
-        action.enableLogging(new MockLogger(action.getClass()));
         Mock resolver = new Mock(SourceResolver.class);
         Mock source = new Mock(Source.class);
         resolver.expects(once()).method("resolveURI").with(same(src)).
@@ -62,10 +61,9 @@ public class ResourceExistsActionTestCase extends MockObjectTestCase {
         String src = "don't care";
         Parameters parameters = new Parameters();
         ResourceExistsAction action = new ResourceExistsAction();
-        action.enableLogging(new MockLogger(action.getClass()));
         Mock resolver = new Mock(SourceResolver.class);
         resolver.expects(once()).method("resolveURI").with(same(src)).
-                will(this.throwException(new SourceNotFoundException("don't care")));
+                will(throwException(new SourceNotFoundException("don't care")));
         Map result = action.act(null, (SourceResolver) resolver.proxy(), 
                 objectModel, src, parameters);
         assertNull("Test if resource not exists", result);

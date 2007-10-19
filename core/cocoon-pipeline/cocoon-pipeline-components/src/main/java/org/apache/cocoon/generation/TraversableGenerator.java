@@ -16,40 +16,39 @@
  */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Stack;
+import java.util.TimeZone;
+
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.source.util.SourceUtil;
-import org.apache.cocoon.components.source.impl.MultiSourceValidity;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.components.source.impl.MultiSourceValidity;
+import org.apache.cocoon.components.source.util.SourceUtil;
+import org.apache.cocoon.environment.SourceResolver;
+
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.TimeZone;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -106,9 +105,6 @@ import java.util.TimeZone;
 public class TraversableGenerator extends ServiceableGenerator
                                   implements CacheableProcessingComponent {
 
-    /** The default logger for this class. */
-    private Log logger = LogFactory.getLog(getClass());
- 
     /** The URI of the namespace of this generator. */
     protected static final String URI = "http://apache.org/cocoon/collection/1.0";
 
@@ -183,14 +179,6 @@ public class TraversableGenerator extends ServiceableGenerator
      */
     protected boolean isRequestedSource;
 
-    /**
-     * Initialize logger
-     *
-     * @throws Exception 
-     */
-    public void init() throws Exception {
-        this.enableLogging(new CLLoggerWrapper(this.logger));
-    }
 
     /**
      * Set the request parameters. Must be called before the generate method.
@@ -577,7 +565,7 @@ public class TraversableGenerator extends ServiceableGenerator
      *         false otherwise.
      */
     protected boolean isRoot(TraversableSource source) {
-        return this.rootRE == null ? true : this.rootRE.match(source.getName());
+        return this.rootRE == null || this.rootRE.match(source.getName());
     }
 
     /**
@@ -589,7 +577,7 @@ public class TraversableGenerator extends ServiceableGenerator
      *         false otherwise.
      */
     protected boolean isIncluded(TraversableSource source) {
-        return this.includeRE == null ? true : this.includeRE.match(source.getName());
+        return this.includeRE == null || this.includeRE.match(source.getName());
     }
 
     /**
@@ -601,7 +589,7 @@ public class TraversableGenerator extends ServiceableGenerator
      *         true otherwise.
      */
     protected boolean isExcluded(TraversableSource source) {
-        return this.excludeRE == null ? false : this.excludeRE.match(source.getName());
+        return this.excludeRE != null && this.excludeRE.match(source.getName());
     }
 
     /**
