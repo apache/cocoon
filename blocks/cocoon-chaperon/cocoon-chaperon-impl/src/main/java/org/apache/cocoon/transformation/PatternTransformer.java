@@ -16,45 +16,40 @@
  */
 package org.apache.cocoon.transformation;
 
-import net.sourceforge.chaperon.build.LexicalAutomatonBuilder;
-import net.sourceforge.chaperon.common.Decoder;
-import net.sourceforge.chaperon.model.lexicon.Lexicon;
-import net.sourceforge.chaperon.model.lexicon.LexiconFactory;
-import net.sourceforge.chaperon.process.LexicalAutomaton;
-import net.sourceforge.chaperon.process.PatternProcessor;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.XMLUtils;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.environment.SourceResolver;
-
-//import org.apache.commons.logging.impl.AvalonLogger;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.store.Store;
 
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.XMLUtils;
+
+import net.sourceforge.chaperon.build.LexicalAutomatonBuilder;
+import net.sourceforge.chaperon.common.Decoder;
+import net.sourceforge.chaperon.model.lexicon.Lexicon;
+import net.sourceforge.chaperon.model.lexicon.LexiconFactory;
+import net.sourceforge.chaperon.process.LexicalAutomaton;
+import net.sourceforge.chaperon.process.PatternProcessor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.IOException;
-import java.io.Serializable;
-
-import java.util.Map;
 
 /**
  * This transfomer transforms text pattern of a XML file into lexemes by using a lexicon file.
@@ -82,14 +77,16 @@ import java.util.Map;
  * @version $Id$
  */
 public class PatternTransformer extends AbstractTransformer
-                                implements LogEnabled, Serviceable, Recyclable,
-                                           Disposable, Parameterizable, CacheableProcessingComponent {
+                                implements Serviceable, Recyclable, Disposable,
+                                           Parameterizable, CacheableProcessingComponent {
+
+    private final Log logger = LogFactory.getLog(getClass());
 
   /** Namespace for the SAX events. */
   public static final String NS = "http://chaperon.sourceforge.net/schema/lexemes/2.0";
+
   private String lexicon = null;
   private Source lexiconSource = null;
-  private Logger logger = null;
   private ServiceManager manager = null;
   private SourceResolver resolver = null;
   private LexicalAutomaton automaton = null;
@@ -98,15 +95,6 @@ public class PatternTransformer extends AbstractTransformer
   private StringBuffer buffer = new StringBuffer();
   private StringBuffer output = new StringBuffer();
 
-  /**
-   * Provide component with a logger.
-   *
-   * @param logger the logger
-   */
-  public void enableLogging(Logger logger)
-  {
-    this.logger = logger;
-  }
 
   /**
    * Pass the ServiceManager to the Serviceable. The Serviceable implementation should use the
@@ -377,7 +365,7 @@ public class PatternTransformer extends AbstractTransformer
     String lexemesymbol;
     String lexemetext;
     String[] groups = null;
-    int lexemeindex = 0;
+    int lexemeindex;
     int position = 0;
 
     output.setLength(0);
@@ -425,7 +413,7 @@ public class PatternTransformer extends AbstractTransformer
           contentHandler.startElement(NS, "lexeme", "lexeme", atts);
 
             if (this.groups) {
-                for (int group = 0; group<groups.length; group++) {
+                for (int group = 0; group < groups.length; group++) {
                     contentHandler.startElement(NS, "group", "group", XMLUtils.EMPTY_ATTRIBUTES);
                     contentHandler.characters(groups[group].toCharArray(), 0, groups[group].length());
                     contentHandler.endElement(NS, "group", "group");
