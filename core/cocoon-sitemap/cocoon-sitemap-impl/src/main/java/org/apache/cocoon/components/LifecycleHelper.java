@@ -29,6 +29,9 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.logging.Log;
+
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 /**
  * Utility class for setting up Avalon components. Similar to Excalibur's
@@ -103,36 +106,47 @@ public class LifecycleHelper {
      */
     public Object setupComponent(Object component, boolean initializeAndStart)
     throws Exception {
-        return setupComponent(
-            component,
-            this.logger,
-            this.context,
-            this.serviceManager,
-            this.configuration,
-            initializeAndStart);
+        return setupComponent(component,
+                              this.logger,
+                              this.context,
+                              this.serviceManager,
+                              this.configuration,
+                              initializeAndStart);
     }
 
-    /**
-     * Alternative setupComponent method that takes a ServiceManager instead of a ComponentManger.
-     */
+    // --------------------------------------------------------- static
+
     public static Object setupComponent(final Object component,
                                         final Logger logger,
                                         final Context context,
                                         final ServiceManager serviceManager,
                                         final Configuration configuration)
     throws Exception {
-        return setupComponent(
-            component,
-            logger,
-            context,
-            serviceManager,
-            configuration,
-            true);
+        return setupComponent(component,
+                              logger,
+                              context,
+                              serviceManager,
+                              configuration,
+                              true);
     }
 
     /**
-     * Alternative setupComponent method that takes a ServiceManager instead of a ComponentManger.
+     * Alternative setupComponent method that uses Commons Logging logger.
      */
+    public static Object setupComponent(final Object component,
+                                        final Log logger,
+                                        final Context context,
+                                        final ServiceManager serviceManager,
+                                        final Configuration configuration)
+    throws Exception {
+        return setupComponent(component,
+                              logger,
+                              context,
+                              serviceManager,
+                              configuration,
+                              true);
+    }
+
     public static Object setupComponent(final Object component,
                                         final Logger logger,
                                         final Context context,
@@ -144,19 +158,61 @@ public class LifecycleHelper {
             ((LogEnabled) component).enableLogging(logger);
         }
 
-        if (null != context && component instanceof Contextualizable) {
+        if (context != null && component instanceof Contextualizable) {
             ((Contextualizable) component).contextualize(context);
         }
 
-        if (null != serviceManager && component instanceof Serviceable) {
+        if (serviceManager != null && component instanceof Serviceable) {
             ((Serviceable) component).service(serviceManager);
         } 
         
-        if (null != configuration && component instanceof Configurable) {
+        if (configuration != null && component instanceof Configurable) {
             ((Configurable) component).configure(configuration);
         }
 
-        if (null != configuration && component instanceof Parameterizable) {
+        if (configuration != null && component instanceof Parameterizable) {
+            ((Parameterizable) component).parameterize(
+                Parameters.fromConfiguration(configuration));
+        }
+
+        if (initializeAndStart && component instanceof Initializable) {
+            ((Initializable) component).initialize();
+        }
+
+        if (initializeAndStart && component instanceof Startable) {
+            ((Startable) component).start();
+        }
+
+        return component;
+    }
+
+    /**
+     * Alternative setupComponent method that uses Commons Logging logger.
+     */
+    public static Object setupComponent(final Object component,
+                                        final Log logger,
+                                        final Context context,
+                                        final ServiceManager manager,
+                                        final Configuration configuration,
+                                        final boolean initializeAndStart)
+    throws Exception {
+        if (component instanceof LogEnabled) {
+            ((LogEnabled) component).enableLogging(new CLLoggerWrapper(logger));
+        }
+
+        if (context != null && component instanceof Contextualizable) {
+            ((Contextualizable) component).contextualize(context);
+        }
+
+        if (manager != null && component instanceof Serviceable) {
+            ((Serviceable) component).service(manager);
+        }
+
+        if (configuration != null && component instanceof Configurable) {
+            ((Configurable) component).configure(configuration);
+        }
+
+        if (configuration != null && component instanceof Parameterizable) {
             ((Parameterizable) component).parameterize(
                 Parameters.fromConfiguration(configuration));
         }
@@ -176,7 +232,7 @@ public class LifecycleHelper {
      * Decomission a component, by stopping (if it's <code>Startable</code>) and
      * disposing (if it's <code>Disposable</code>) a component.
      */
-    public static final void decommission(final Object component)
+    public static void decommission(final Object component)
     throws Exception {
         if (component instanceof Startable) {
             ((Startable) component).stop();
@@ -188,7 +244,7 @@ public class LifecycleHelper {
     /**
      * Dispose a component if it's <code>Disposable</code>. Otherwhise, do nothing.
      */
-    public static final void dispose(final Object component) {
+    public static void dispose(final Object component) {
         if (component instanceof Disposable) {
             ((Disposable) component).dispose();
         }

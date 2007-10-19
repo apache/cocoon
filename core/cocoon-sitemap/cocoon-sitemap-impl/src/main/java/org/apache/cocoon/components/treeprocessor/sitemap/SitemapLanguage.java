@@ -392,8 +392,8 @@ public class SitemapLanguage extends AbstractLogEnabled
             // ContainerUtil.configure(selector, config.getChild("nodes", false));
             // ContainerUtil.initialize(selector);
             LifecycleHelper.setupComponent(selector,
-                                           null /* logger */, itsContext, this.itsManager,
-                                           config.getChild("nodes", false), true);
+                                           getLogger(), itsContext, this.itsManager,
+                                           config.getChild("nodes", false));
             
             this.itsBuilders = selector;
         }
