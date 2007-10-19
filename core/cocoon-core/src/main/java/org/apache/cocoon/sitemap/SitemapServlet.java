@@ -51,8 +51,7 @@ public class SitemapServlet extends HttpServlet {
      */
     public void init() throws ServletException {
         super.init();
-
-        this.processor = new RequestProcessor(this.getServletContext());
+        this.processor = new RequestProcessor(getServletContext());
     }
 
     /**
@@ -104,18 +103,19 @@ public class SitemapServlet extends HttpServlet {
                 TreeProcessor treeProcessor = new TreeProcessor();
                 // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all.
                 processor = (Processor) LifecycleHelper.setupComponent(treeProcessor,
-                                                                       null,
+                                                                       getLogger(),
                                                                        null,
                                                                        serviceManager,
                                                                        this.treeProcessorConfiguration);
             } catch (Exception e) {
                 throw new BeanCreationException("Could not create TreeProcessor", e);
             }
+
             return processor;
         }
 
         protected void destroy() {
-            if ( this.processor != null ) {
+            if (this.processor != null) {
                 ContainerUtil.dispose(this.processor);
                 this.processor = null;
             }
