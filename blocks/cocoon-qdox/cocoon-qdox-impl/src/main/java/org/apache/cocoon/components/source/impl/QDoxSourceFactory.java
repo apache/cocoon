@@ -28,7 +28,6 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -39,6 +38,8 @@ import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 
 /**
@@ -76,9 +77,9 @@ import org.apache.regexp.RESyntaxException;
  * 
  * @version $Id$
  */
-public final class QDoxSourceFactory
-    extends AbstractLogEnabled
-    implements SourceFactory, Serviceable, Configurable, ThreadSafe {
+public final class QDoxSourceFactory extends AbstractLogEnabled
+                                     implements SourceFactory, Serviceable, Configurable,
+                                                ThreadSafe {
     
     protected final static String INCLUDE_INHERITANCE_ELEMENT = "include-inheritance";
     protected final static String VALUE_ATTRIBUTE = "value";
@@ -136,9 +137,9 @@ public final class QDoxSourceFactory
     /**
      * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
      */
-    public Source getSource(String location, Map parameters) throws MalformedURLException, IOException, SourceException {
+    public Source getSource(String location, Map parameters) throws IOException {
         String className = location.substring(location.indexOf(':') + 1);
-        Source javaSource = null;
+        Source javaSource;
         if (className.length() > 0) {
             try {
                 if(getLogger().isDebugEnabled()) {
@@ -154,10 +155,10 @@ public final class QDoxSourceFactory
 
         QDoxSource result = null;
         if (javaSource != null) {
-            return new QDoxSource(location, javaSource, getLogger(), manager);
+            return new QDoxSource(location, javaSource, manager);
         }
 
-        if(getLogger().isDebugEnabled()) {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("returning source=" + result + " for className=" + className);
         }
 

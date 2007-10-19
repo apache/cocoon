@@ -28,6 +28,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.AbstractSource;
+import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
+
+import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.xml.XMLUtils;
+
 import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.AbstractJavaEntity;
 import com.thoughtworks.qdox.model.DocletTag;
@@ -37,24 +56,6 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.model.Type;
-
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.xml.XMLUtils;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.AbstractSource;
-import org.apache.excalibur.xml.sax.XMLizable;
-import org.apache.regexp.RE;
-import org.apache.regexp.RESyntaxException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -118,8 +119,9 @@ public final class QDoxSource extends AbstractSource
     protected final static int CONSTRUCTOR_INHERITANCE = 5;
     protected final static int METHOD_INHERITANCE = 6;
 
+    private final Log logger = LogFactory.getLog(getClass());
+
     protected ServiceManager manager;
-    protected Logger logger;
 
     protected Source javaSource;
     protected String javadocUri;
@@ -161,13 +163,11 @@ public final class QDoxSource extends AbstractSource
      *
      * @param location
      * @param javaSource
-     * @param logger
      * @param manager
      */
-    public QDoxSource(String location, Source javaSource, Logger logger, ServiceManager manager) {
+    public QDoxSource(String location, Source javaSource, ServiceManager manager) {
         this.javadocUri = location;
         this.javaSource = javaSource;
-        this.logger = logger;
         this.manager = manager;
         this.javadocClassName = javadocUri.substring(javadocUri.indexOf(':') + 1);
         try {
@@ -295,7 +295,7 @@ public final class QDoxSource extends AbstractSource
      * @see Recyclable#recycle()
      */
     public void recycle() {
-        if (logger != null && logger.isDebugEnabled()) {
+        if (logger.isDebugEnabled()) {
             logger.debug("Recycling QDoxSource '" + javadocClassName + "'...");
         }
 
@@ -306,7 +306,6 @@ public final class QDoxSource extends AbstractSource
         javadocClass = null;
         containingJavadocClass = null;
         classMap = null;
-        logger = null;
     }
 
     /**
@@ -348,7 +347,7 @@ public final class QDoxSource extends AbstractSource
     /**
      * @see org.apache.excalibur.source.Source#getInputStream()
      */
-    public InputStream getInputStream() throws IOException, SourceException {
+    public InputStream getInputStream() throws IOException {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Getting InputStream for class " + this.javadocClass.getFullyQualifiedName());
         }
@@ -379,7 +378,7 @@ public final class QDoxSource extends AbstractSource
         return inputStream;
     }
 
-    protected void createJavadocXml() throws SourceException, IOException {
+    protected void createJavadocXml() throws IOException {
         if (logger.isDebugEnabled()) {
             logger.debug("Reading Java source " + javaSource.getURI());
         }
@@ -404,7 +403,7 @@ public final class QDoxSource extends AbstractSource
      * @return String
      */
     private String resolveClassNameFromLink(String ref) {
-        String classPart = null;
+        String classPart;
         int hashIndex = ref.indexOf('#');
         if (hashIndex < 0) {
             classPart = ref;
@@ -781,8 +780,8 @@ public final class QDoxSource extends AbstractSource
         if (comment != null && comment.length() > 0) {
             saxStartElement(handler, COMMENT_ELEMENT);
             while (reLink.match(comment)) {
-                String ref = null;
-                String display = null;
+                String ref;
+                String display;
                 if (reLink.getParen(6) == null) {
                     // {@link xxx yyy}
                     ref = reLink.getParen(2);
