@@ -20,9 +20,14 @@ import java.util.Map;
 
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.logging.LogFactory;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
+
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -31,13 +36,12 @@ import org.quartz.JobExecutionException;
 /**
  * This component is resposible to launch a {@link CronJob}s in a Quart Scheduler.
  *
- * @version $Id$
- *
  * @since 2.1.1
+ * @version $Id$
  */
-public class QuartzJobExecutor implements Job {
+public class QuartzJobExecutor extends AbstractLogEnabled
+                               implements Job {
 
-    protected Logger m_logger;
     protected Context m_context;
     protected ServiceManager m_manager;
 
@@ -47,41 +51,42 @@ public class QuartzJobExecutor implements Job {
     public void execute(final JobExecutionContext context) throws JobExecutionException {
 
         final JobDataMap data = context.getJobDetail().getJobDataMap();
-
         final String name = (String) data.get(QuartzJobScheduler.DATA_MAP_NAME);
 
-        m_logger = (Logger) data.get(QuartzJobScheduler.DATA_MAP_LOGGER);
         m_context = (Context) data.get(QuartzJobScheduler.DATA_MAP_CONTEXT);
         m_manager = (ServiceManager) data.get(QuartzJobScheduler.DATA_MAP_MANAGER);
         
         final Boolean canRunConcurrentlyB = ((Boolean) data.get(QuartzJobScheduler.DATA_MAP_RUN_CONCURRENT));
-        final boolean canRunConcurrently = ((canRunConcurrentlyB == null) ? true : canRunConcurrentlyB.booleanValue());
+        final boolean canRunConcurrently = (canRunConcurrentlyB == null) ? true : canRunConcurrentlyB.booleanValue();
 
         if (!canRunConcurrently) {
             Boolean isRunning = (Boolean) data.get(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING);
             if (Boolean.TRUE.equals(isRunning)) {
-                m_logger.warn("Cron job name '" + name +
-                            " already running but configured to not allow concurrent runs. Will discard this scheduled run");
+                getLogger().warn("Cron job name '" + name +
+                                 " already running but configured to not allow concurrent runs. Will discard this scheduled run");
                 return;
             }
         }
 
-        if (m_logger.isInfoEnabled()) {
-            m_logger.info("Executing cron job named '" + name + "'");
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Executing cron job named '" + name + "'");
         }
 
         setup(data);
 
         Object job = null;
-        String jobrole = null;
+        String jobrole;
         boolean release = false;
         boolean dispose = false;
         try {
             jobrole = (String) data.get(QuartzJobScheduler.DATA_MAP_ROLE);
 
-            if (null == jobrole) {
+            if (jobrole == null) {
                 job = data.get(QuartzJobScheduler.DATA_MAP_OBJECT);
-                ContainerUtil.enableLogging(job, m_logger);
+                // Legacy support code
+                if (job instanceof LogEnabled) {
+                    ContainerUtil.enableLogging(job, new CLLoggerWrapper(LogFactory.getLog(job.getClass())));
+                }
                 ContainerUtil.contextualize(job, m_context);
                 ContainerUtil.service(job, m_manager);
                 dispose = true;
@@ -103,16 +108,15 @@ public class QuartzJobExecutor implements Job {
             } else if (job instanceof Runnable) {
                 ((Runnable) job).run();
             } else {
-                m_logger.error("job named '" + name + "' is of invalid class: " + job.getClass().getName());
+                getLogger().error("job named '" + name + "' is of invalid class: " + job.getClass().getName());
             }
         } catch (final Throwable t) {
-            m_logger.error("Cron job name '" + name + "' died.", t);
+            getLogger().error("Cron job name '" + name + "' died.", t);
 
             if (t instanceof JobExecutionException) {
                 throw (JobExecutionException) t;
             }
         } finally {
-
             release(data);
 
             if (m_manager != null && release) {
@@ -131,5 +135,4 @@ public class QuartzJobExecutor implements Job {
     protected void release(JobDataMap data) {
         data.put(QuartzJobScheduler.DATA_MAP_KEY_ISRUNNING, Boolean.FALSE);
     }
-
 }
