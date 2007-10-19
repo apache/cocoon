@@ -20,8 +20,8 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -31,11 +31,6 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.renderer.ExtendableRendererFactory;
-import org.apache.cocoon.components.renderer.RendererFactory;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
@@ -46,13 +41,18 @@ import org.apache.fop.configuration.ConfigurationParser;
 import org.apache.fop.messaging.MessageHandler;
 import org.apache.fop.render.Renderer;
 
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.components.renderer.ExtendableRendererFactory;
+import org.apache.cocoon.components.renderer.RendererFactory;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
+import org.apache.cocoon.util.ClassUtils;
+
 /**
  * @version $Id$
  */
-public class FOPSerializer extends AbstractSerializer implements
-  Configurable, CacheableProcessingComponent, Serviceable/*, Disposable */{
-
-    //protected SourceResolver resolver;
+public class FOPSerializer extends AbstractSerializer
+                           implements Configurable, CacheableProcessingComponent, Serviceable {
 
     /**
      * The Renderer Factory to use
@@ -85,14 +85,14 @@ public class FOPSerializer extends AbstractSerializer implements
     protected boolean setContentLength = true;
 
     /**
-     * This logger is used for FOP
+     * This Avalon logger is created for FOP
      */
     protected Logger logger;
 
     /**
      * It is used to make sure that default Options loaded only once.
      */
-    private static boolean configured = false;
+    private static boolean configured;
 
     /**
      * Manager to get URLFactory from.
@@ -104,19 +104,14 @@ public class FOPSerializer extends AbstractSerializer implements
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        //this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        this.logger = ((Logger) manager.lookup(AvalonUtils.LOGGER_ROLE)).getChildLogger("fop");
     }
-/*
-    public void dispose() {
-        this.manager.release(this.resolver);
-    }
-*/
+
     /**
      * Set the configurations for this serializer.
      */
     public void configure(Configuration conf) throws ConfigurationException {
 
-        this.logger = getLogger().getChildLogger("fop");
         MessageHandler.setScreenLogger(this.logger);
 
         // FIXME: VG: Initialize static FOP configuration with defaults, only once.
