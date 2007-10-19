@@ -61,8 +61,7 @@ import org.xml.sax.SAXException;
  */
 public class TreeProcessor extends AbstractLogEnabled
                            implements ThreadSafe, Processor, Serviceable,
-                                      Configurable,
-                                      Disposable, Initializable {
+                                      Configurable, Disposable, Initializable {
     // TODO: RCL: implement NotificationListener
 
     /** The parent TreeProcessor, if any */
