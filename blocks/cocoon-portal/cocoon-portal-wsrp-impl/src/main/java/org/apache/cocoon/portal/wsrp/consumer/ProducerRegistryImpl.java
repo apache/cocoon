@@ -23,14 +23,15 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.wsrp4j.consumer.ConsumerEnvironment;
 import org.apache.wsrp4j.consumer.Producer;
 import org.apache.wsrp4j.consumer.driver.GenericProducerRegistryImpl;
 import org.apache.wsrp4j.consumer.driver.ProducerImpl;
 import org.apache.wsrp4j.exception.WSRPException;
+
+import org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter;
 
 /**
  * A producer registry storing all producers in a {@link java.util.Hashtable}
@@ -39,12 +40,11 @@ import org.apache.wsrp4j.exception.WSRPException;
  *
  * @version $Id$
  */
-public class ProducerRegistryImpl
-    extends GenericProducerRegistryImpl
-    implements LogEnabled, Configurable, RequiresConsumerEnvironment, RequiresWSRPAdapter {
+public class ProducerRegistryImpl extends GenericProducerRegistryImpl
+                                  implements Configurable, RequiresConsumerEnvironment, RequiresWSRPAdapter {
 
     /** The logger. */
-    protected Logger logger;
+    protected final Log logger = LogFactory.getLog(getClass());
 
     /** The environment. */
     protected ConsumerEnvironment environment;
@@ -53,7 +53,7 @@ public class ProducerRegistryImpl
     protected Map descriptions = new Hashtable();
 
     /** Initialized? */
-    protected boolean initialized = false;
+    protected boolean initialized;
 
     /** The wsrp adapter. */
     protected WSRPAdapter adapter;
@@ -86,13 +86,6 @@ public class ProducerRegistryImpl
                 this.descriptions.put(desc.getId(), desc);
             }
         }
-    }
-
-    /**
-     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
-     */
-    public void enableLogging(Logger newLogger) {
-        this.logger = newLogger;
     }
 
     /**
@@ -154,10 +147,11 @@ public class ProducerRegistryImpl
      * @see org.apache.wsrp4j.consumer.ProducerRegistry#existsProducer(java.lang.String)
      */
     public boolean existsProducer(String id) {
-        this.checkInitialized();
-        if ( this.descriptions.containsKey(id) ) {
+        checkInitialized();
+        if (this.descriptions.containsKey(id)) {
             return true;
         }
+
         return super.existsProducer(id);
     }
 
