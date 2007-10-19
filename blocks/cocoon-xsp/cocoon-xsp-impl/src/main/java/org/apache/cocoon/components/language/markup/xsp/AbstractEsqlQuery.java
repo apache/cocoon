@@ -16,15 +16,15 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * This is base class for all EsqlQueries
@@ -32,6 +32,7 @@ import java.util.ArrayList;
  * @version $Id$
  */
 public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
+
     private int maxRows = -1;
     private int skipRows = 0;
     private int rowCount = -1;

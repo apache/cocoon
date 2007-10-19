@@ -26,14 +26,15 @@ import java.util.Map;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xsp.handler.AbstractComponentHandler;
 import org.apache.cocoon.xsp.handler.ComponentHandler;
 
@@ -43,7 +44,8 @@ import org.apache.cocoon.xsp.handler.ComponentHandler;
  *
  * @version $Id$
  */
-public class GeneratorSelector extends AbstractLogEnabled implements ThreadSafe, Contextualizable, Serviceable {
+public class GeneratorSelector extends AbstractLogEnabled
+                               implements ThreadSafe, Contextualizable, Serviceable {
 
     public static final String ROLE = "org.apache.cocoon.components.language.generator.ServerPages";
 
@@ -58,7 +60,8 @@ public class GeneratorSelector extends AbstractLogEnabled implements ThreadSafe,
     protected final Map componentHandlers = Collections.synchronizedMap(new HashMap());
     
     protected ClassLoaderManager classManager;
-    
+
+
     public void contextualize(Context context) {
         this.context = context;
     }
@@ -68,7 +71,7 @@ public class GeneratorSelector extends AbstractLogEnabled implements ThreadSafe,
 
         this.classManager = (ClassLoaderManager) manager.lookup(ClassLoaderManager.ROLE);
 
-        final Settings settings = (Settings)manager.lookup(Settings.ROLE);
+        final Settings settings = (Settings) manager.lookup(Settings.ROLE);
         try {
             this.classManager.addDirectory(new File(settings.getWorkDirectory()));
         } catch (Exception e) {
@@ -111,7 +114,7 @@ public class GeneratorSelector extends AbstractLogEnabled implements ThreadSafe,
     throws Exception {
         try {
             final ComponentHandler handler =
-                    generator.getHandler(newManager, this.context );
+                    generator.getHandler(newManager, this.context);
             handler.initialize();
             this.componentHandlers.put(hint, handler);
             if (getLogger().isDebugEnabled()) {
@@ -144,10 +147,10 @@ public class GeneratorSelector extends AbstractLogEnabled implements ThreadSafe,
             Iterator keys = this.componentHandlers.keySet().iterator();
             List keyList = new ArrayList();
 
-            while(keys.hasNext()) {
+            while (keys.hasNext()) {
                 Object key = keys.next();
                 AbstractComponentHandler handler =
-                    (AbstractComponentHandler)this.componentHandlers.get(key);
+                        (AbstractComponentHandler) this.componentHandlers.get(key);
 
                 handler.dispose();
 
@@ -155,8 +158,7 @@ public class GeneratorSelector extends AbstractLogEnabled implements ThreadSafe,
             }
 
             keys = keyList.iterator();
-
-            while(keys.hasNext()) {
+            while (keys.hasNext()) {
                 this.componentHandlers.remove(keys.next());
             }
 

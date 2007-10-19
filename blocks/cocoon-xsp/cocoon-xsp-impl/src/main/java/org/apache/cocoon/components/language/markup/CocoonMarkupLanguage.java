@@ -16,7 +16,15 @@
  */
 package org.apache.cocoon.components.language.markup;
 
-import org.apache.avalon.framework.logger.Logger;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
@@ -29,14 +37,6 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Base implementation of <code>MarkupLanguage</code>. This class uses
@@ -84,7 +84,7 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
                                                   AbstractXMLPipe filter,
                                                   ProgrammingLanguage language) {
         PreProcessFilter prefilter = new PreProcessFilter(filter, filename, language);
-        prefilter.enableLogging(getLogger());
+        prefilter.setLogger(getLogger());
         return prefilter;
     }
 
@@ -98,13 +98,11 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      * @param logicsheetMarkupGenerator the logicsheet markup generator
      * @return XMLFilter the filter that build on the fly the transformer chain
      */
-    protected TransformerChainBuilderFilter getTransformerChainBuilder(
-        LogicsheetCodeGenerator logicsheetMarkupGenerator)
+    protected TransformerChainBuilderFilter getTransformerChainBuilder(LogicsheetCodeGenerator logicsheetMarkupGenerator)
     {
         CocoonTransformerChainBuilderFilter filter =
-            new CocoonTransformerChainBuilderFilter(
-                logicsheetMarkupGenerator);
-        filter.enableLogging(getLogger());
+            new CocoonTransformerChainBuilderFilter(logicsheetMarkupGenerator);
+        filter.setLogger(getLogger());
         return filter;
     }
 
@@ -112,7 +110,7 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
     // CocoonTransformerChainBuilderFilter invokes the method.
     protected void addLogicsheetToList(LanguageDescriptor language,
                                        String logicsheetLocation)
-        throws IOException, SAXException, ProcessingException
+    throws IOException, SAXException, ProcessingException
     {
         super.addLogicsheetToList(language, logicsheetLocation);
     }
@@ -154,7 +152,7 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      * @see org.xml.sax.ContentHandler
      */
     public class PreProcessFilter extends AbstractXMLPipe {
-        protected Logger log;
+        protected Log log;
 
         protected AbstractXMLPipe filter;
 
@@ -193,10 +191,8 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
             this.filter.setLexicalHandler(handler);
         }
 
-        public void enableLogging(Logger logger) {
-            if (this.log == null) {
-                this.log = logger;
-            }
+        public void setLogger(Log logger) {
+            this.log = logger;
         }
 
         public void startDocument() throws SAXException {
@@ -268,10 +264,9 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      *
      * @see org.xml.sax.ContentHandler
      */
-    public class CocoonTransformerChainBuilderFilter
-            extends TransformerChainBuilderFilter {
+    public class CocoonTransformerChainBuilderFilter extends TransformerChainBuilderFilter {
 
-        protected Logger log;
+        protected Log log;
 
         private List startPrefix;
 
@@ -301,10 +296,8 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
          *
          * @param logger the logger
          */
-        public void enableLogging(Logger logger) {
-            if (this.log == null) {
-                this.log = logger;
-            }
+        public void setLogger(Log logger) {
+            this.log = logger;
         }
 
         public void processingInstruction(String target, String data) throws SAXException {

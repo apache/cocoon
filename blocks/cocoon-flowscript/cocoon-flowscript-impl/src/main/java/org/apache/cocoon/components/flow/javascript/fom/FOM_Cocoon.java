@@ -31,13 +31,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.context.WebApplicationContext;
+
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
-import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
+import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -47,6 +50,7 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.util.ClassUtils;
+
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaObject;
@@ -56,7 +60,6 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Implementation of FOM (Flow Object Model).
@@ -72,7 +75,6 @@ public class FOM_Cocoon extends ScriptableObject {
         WebApplicationContext webAppContext;
         FOM_JavaScriptInterpreter interpreter;
         Redirector redirector;
-        Logger logger;
         Scriptable request;
         Scriptable response;
         Scriptable session;
@@ -88,14 +90,12 @@ public class FOM_Cocoon extends ScriptableObject {
                            Redirector redirector,
                            WebApplicationContext waContext,
                            Context avalonContext,
-                           Logger logger,
                            WebContinuation lastContinuation) {
             this.caller = caller;
             this.interpreter = interp;
             this.redirector = redirector;
             this.webAppContext = waContext;
             this.avalonContext = avalonContext;
-            this.logger = logger;
             this.lastContinuation = lastContinuation;
             if (lastContinuation != null) {
                 fwk = new FOM_WebContinuation(lastContinuation);
@@ -171,7 +171,7 @@ public class FOM_Cocoon extends ScriptableObject {
             if (log != null) {
                 return log;
             }
-            log = org.mozilla.javascript.Context.toObject(logger, getParentScope());
+            log = org.mozilla.javascript.Context.toObject(getLogger(), getParentScope());
             return log;
         }
 
@@ -188,8 +188,12 @@ public class FOM_Cocoon extends ScriptableObject {
         }
     }
 
+
+    private final Log logger = LogFactory.getLog(getClass());
+
     private CallContext currentCall;
     protected PageLocalScopeHolder pageLocal;
+
 
     public String getClassName() {
         return "FOM_Cocoon";
@@ -211,11 +215,9 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     public void pushCallContext(FOM_JavaScriptInterpreter interp,
-                         Redirector redirector,
-                         ServiceManager manager,
-                         Context avalonContext,
-                         Logger logger,
-                         WebContinuation lastContinuation) {
+                                Redirector redirector,
+                                Context avalonContext,
+                                WebContinuation lastContinuation) {
         if (pageLocal == null) {
             pageLocal = new PageLocalScopeHolder(getTopLevelScope(this));
         }
@@ -224,8 +226,7 @@ public class FOM_Cocoon extends ScriptableObject {
         final WebApplicationContext appContext = WebAppContextUtils.getCurrentWebApplicationContext();
 
         this.currentCall = new CallContext(currentCall, interp, redirector, appContext,
-                                           avalonContext,
-                                           logger, lastContinuation);
+                                           avalonContext, lastContinuation);
     }
 
     public void popCallContext() {
@@ -329,7 +330,7 @@ public class FOM_Cocoon extends ScriptableObject {
      *
      * @param component a component
      */
-    public void jsFunction_releaseComponent( Object component ) throws Exception {
+    public void jsFunction_releaseComponent(Object component) throws Exception {
         // this will be done by Spring
     }
 
@@ -366,14 +367,12 @@ public class FOM_Cocoon extends ScriptableObject {
      * @throws Exception if something goes wrong during setup.
      */
     public Object jsFunction_setupObject(Object obj) throws Exception {
-        LifecycleHelper.setupComponent(
-             unwrap(obj),
-             this.getLogger(),
-             this.getAvalonContext(),
-             (ServiceManager)currentCall.webAppContext.getBean(AvalonUtils.SERVICE_MANAGER_ROLE),
-             null,// configuration
-             true);
-         return org.mozilla.javascript.Context.javaToJS(obj, getParentScope());
+        LifecycleHelper.setupComponent(unwrap(obj),
+                                       getLogger(),
+                                       getAvalonContext(),
+                                       (ServiceManager) currentCall.webAppContext.getBean(AvalonUtils.SERVICE_MANAGER_ROLE),
+                                       null /* configuration */);
+        return org.mozilla.javascript.Context.javaToJS(obj, getParentScope());
     }
 
     /**
@@ -688,8 +687,8 @@ public class FOM_Cocoon extends ScriptableObject {
         return currentCall.avalonContext;
     }
 
-    private Logger getLogger() {
-        return currentCall.logger;
+    private Log getLogger() {
+        return logger;
     }
 
     private FOM_JavaScriptInterpreter getInterpreter() {
@@ -734,7 +733,7 @@ public class FOM_Cocoon extends ScriptableObject {
      */
     public void handleContinuation(String kontId, Scriptable parameters)
         throws Exception {
-        List list = null;
+        List list;
         if (parameters == null || parameters == Undefined.instance) {
             parameters = getParameters();
         }

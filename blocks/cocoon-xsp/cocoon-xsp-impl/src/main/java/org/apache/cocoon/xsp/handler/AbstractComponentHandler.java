@@ -22,32 +22,31 @@ import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * This class acts like a Factory to instantiate the correct version
  * of the component handler that you need.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
-public abstract class AbstractComponentHandler 
-implements ComponentHandler {
+public abstract class AbstractComponentHandler extends AbstractLogEnabled
+                                               implements ComponentHandler {
     
     private final Object referenceSemaphore = new Object();
-    private int references = 0;
+    private int references;
 
-    protected final Logger logger;
-    
     /** State management boolean stating whether the Handler is disposed or not */
-    protected boolean disposed = false;
+    protected boolean disposed;
 
     /** State management boolean stating whether the Handler is initialized or not */
-    private boolean initialized = false;
+    private boolean initialized;
     
     /** Information about the component */
     private ComponentInfo info;
@@ -84,17 +83,17 @@ implements ComponentHandler {
                                 + componentClass.getName() + " to use Serviceable instead.");
         }
 
-        if( SingleThreaded.class.isAssignableFrom( componentClass ) ) {
+        if (SingleThreaded.class.isAssignableFrom(componentClass)) {
             numInterfaces++;
             info.setModel(ComponentInfo.MODEL_PRIMITIVE);
         }
 
-        if( ThreadSafe.class.isAssignableFrom( componentClass ) ) {
+        if (ThreadSafe.class.isAssignableFrom(componentClass)) {
             numInterfaces++;
             info.setModel(ComponentInfo.MODEL_SINGLETON);
         }
 
-        if( Poolable.class.isAssignableFrom( componentClass ) ) {
+        if (Poolable.class.isAssignableFrom(componentClass)) {
             numInterfaces++;
         }
 
@@ -116,13 +115,13 @@ implements ComponentHandler {
                 
         factory = new ComponentFactory(componentEnv, info);
 
-        if( info.getModel() == ComponentInfo.MODEL_POOLED)  {
-            handler = new NonThreadSafePoolableComponentHandler( info, componentEnv.logger, factory, info.getConfiguration() );
-        } else if( info.getModel() == ComponentInfo.MODEL_SINGLETON ) {
-            handler = new ThreadSafeComponentHandler( info, componentEnv.logger, factory );
+        if (info.getModel() == ComponentInfo.MODEL_POOLED) {
+            handler = new NonThreadSafePoolableComponentHandler(info, factory, info.getConfiguration());
+        } else if (info.getModel() == ComponentInfo.MODEL_SINGLETON) {
+            handler = new ThreadSafeComponentHandler(info, factory);
         } else {
             // This is a SingleThreaded component
-            handler = new SingleThreadedComponentHandler( info, componentEnv.logger, factory );
+            handler = new SingleThreadedComponentHandler(info, factory);
         }
 
         return handler;
@@ -131,8 +130,7 @@ implements ComponentHandler {
     /**
      * Creates a new ComponentHandler.
      */
-    public AbstractComponentHandler(ComponentInfo info, Logger logger) {
-        this.logger = logger;
+    public AbstractComponentHandler(ComponentInfo info) {
         this.info = info;
     }
     
@@ -177,10 +175,11 @@ implements ComponentHandler {
      */
     public final void put( Object component ) 
     throws Exception {
-        if( !this.initialized ) {
+        if (!this.initialized) {
             throw new IllegalStateException(
-                "You cannot put a component to an uninitialized handler." );
+                    "You cannot put a component to an uninitialized handler.");
         }
+
         //  The reference count must be decremented before any calls to doPut.
         //  If there is another thread blocking, then this thread could stay deep inside
         //  doPut for an undetermined amount of time until the thread scheduler gives it
@@ -188,14 +187,14 @@ implements ComponentHandler {
         //  reflect the thread having left this method before the call to doPut to avoid
         //  warning messages from the dispose() cycle if that takes place before this
         //  thread has a chance to continue.
-        synchronized( this.referenceSemaphore ) {
+        synchronized (this.referenceSemaphore) {
             this.references--;
         }
 
         try {
-            this.doPut( component );
-        } catch( Throwable t ) {
-            this.logger.error("Exception during putting back a component.", t);
+            this.doPut(component);
+        } catch (Throwable t) {
+            getLogger().error("Exception during putting back a component.", t);
         }
     }
 
@@ -231,7 +230,7 @@ implements ComponentHandler {
      *         disposed; <code>false</code> otherwise
      */
     public final boolean canBeDisposed() {
-        return ( this.references == 0 );
+        return this.references == 0;
     }
     
     /* (non-Javadoc)
@@ -245,22 +244,22 @@ implements ComponentHandler {
      * @see org.apache.cocoon.core.container.ComponentHandler#initialize()
      */
     public final void initialize() throws Exception {
-        if( this.initialized ) {
+        if (this.initialized) {
             return;
         }
 
         doInitialize();
         this.initialized = true;
     }
-    
+
     protected abstract void doInitialize() throws Exception;
 
     /**
      * Create a component handler (version used by XSP)
      * TODO - perhaps we can remove this later?
      */
-    public static ComponentHandler getComponentHandler(Class clazz, Logger logger, Context context, ServiceManager manager, Configuration config) throws Exception {
-        ComponentEnvironment env = new ComponentEnvironment(logger, context, manager, clazz.getClassLoader());
+    public static ComponentHandler getComponentHandler(Class clazz, Context context, ServiceManager manager, Configuration config) throws Exception {
+        ComponentEnvironment env = new ComponentEnvironment(context, manager, clazz.getClassLoader());
         ComponentInfo info = new ComponentInfo();
         info.setComponentClassName(clazz.getName());
         info.setConfiguration(config);

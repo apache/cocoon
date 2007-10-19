@@ -49,7 +49,7 @@ import java.util.Locale;
 public class HandleFormSubmitAction extends AbstractFormsAction {
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters parameters)
-            throws Exception {
+    throws Exception {
         String formSource = parameters.getParameter("form-definition");
         String formAttribute = parameters.getParameter("attribute-name");
         String formHandlerClassName = parameters.getParameter("formhandler", null);
@@ -61,13 +61,13 @@ public class HandleFormSubmitAction extends AbstractFormsAction {
             Form form = formManager.createForm(source);
 
             Request request = ObjectModelHelper.getRequest(objectModel);
-            FormHandler formHandler = null;
 
+            FormHandler formHandler;
             if (formHandlerClassName != null) {
                 // TODO cache these classes
                 Class clazz = Thread.currentThread().getContextClassLoader().loadClass(formHandlerClassName);
-                formHandler = (FormHandler)clazz.newInstance();
-                LifecycleHelper.setupComponent(formHandler, null, null, manager, null);
+                formHandler = (FormHandler) clazz.newInstance();
+                LifecycleHelper.setupComponent(formHandler, getLogger(), null, manager, null);
                 form.setFormHandler(formHandler);
             }
 
@@ -79,6 +79,7 @@ public class HandleFormSubmitAction extends AbstractFormsAction {
             if (finished) {
                 return Collections.EMPTY_MAP;
             }
+
             return null;
         } finally {
             resolver.release(source);

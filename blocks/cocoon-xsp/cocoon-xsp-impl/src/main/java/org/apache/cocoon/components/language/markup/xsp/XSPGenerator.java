@@ -27,9 +27,11 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public abstract class XSPGenerator extends AbstractServerPage implements Contextualizable {
+public abstract class XSPGenerator extends AbstractServerPage
+                                   implements Contextualizable {
     
     protected Context avalonContext;
+
 
     /** Contextualize this class */
     public void contextualize(Context context) throws ContextException  {

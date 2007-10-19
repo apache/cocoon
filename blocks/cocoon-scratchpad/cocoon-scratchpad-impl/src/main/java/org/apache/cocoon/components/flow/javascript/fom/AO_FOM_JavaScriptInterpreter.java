@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -36,6 +35,11 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.jxpath.JXPathIntrospector;
+import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.ContextHelper;
@@ -50,10 +54,7 @@ import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
-import org.apache.commons.jxpath.JXPathIntrospector;
-import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.EvaluatorException;
@@ -87,8 +88,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @version $Id$
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
-    implements Serviceable, Configurable, Initializable
-{
+                                          implements Serviceable, Configurable, Initializable {
 
     private SourceResolver sourceResolver;
 
@@ -396,10 +396,10 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
             context.newObject(thrScope, "AO_FOM_Cocoon", args);
         cocoon.setParentScope(thrScope);
         thrScope.put("cocoon", thrScope, cocoon);
-        ((ScriptableObject)thrScope).defineProperty(LAST_EXEC_TIME,
-                                                    new Long(0),
-                                                    ScriptableObject.DONTENUM |
-                                                    ScriptableObject.PERMANENT);
+        thrScope.defineProperty(LAST_EXEC_TIME,
+                                new Long(0),
+                                ScriptableObject.DONTENUM |
+                                ScriptableObject.PERMANENT);
         
         thrScope.reset();
         return thrScope;
@@ -438,8 +438,8 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                                                 thrScope)).longValue();
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
-        cocoon.setup( this, redirector, avalonContext, manager, getLogger());
-        
+        cocoon.setup(this, redirector, avalonContext, manager);
+
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
             List execList = new ArrayList();
@@ -479,11 +479,10 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                 // add interception support
                 if( isInterceptionEnabled ) {
                     JavaScriptAspectWeaver aspectWeaver = new JavaScriptAspectWeaver();
-                    aspectWeaver.enableLogging( this.getLogger() );
                     aspectWeaver.service(this.manager);
-                    aspectWeaver.setSerializeResultScriptParam( this.serializeResultScript );
-                    aspectWeaver.setStopExecutionFunctionsConf( this.stopExecutionFunctionsConf );
-                    entry.setAspectWeaver( aspectWeaver );
+                    aspectWeaver.setSerializeResultScriptParam(this.serializeResultScript);
+                    aspectWeaver.setStopExecutionFunctionsConf(this.stopExecutionFunctionsConf);
+                    entry.setAspectWeaver(aspectWeaver);
                 }        
                 // --end           
                 // Compile the script if necessary
@@ -522,7 +521,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         synchronized (compiledScripts) {
             ScriptSourceEntry entry =
                 (ScriptSourceEntry)compiledScripts.get(src.getURI());
-            Script compiledScript = null;
+            Script compiledScript;
             if (entry == null) {
                 compiledScripts.put(src.getURI(),
                                     entry = new ScriptSourceEntry(src));
@@ -534,8 +533,8 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     // (RPO) added/changed by interception layer   
     protected Script compileScript( Context cx, Scriptable scope, 
                                   Source src, JavaScriptAspectWeaver aspectWeaver)
-        throws Exception {
-        Script compiledScript = null;
+    throws Exception {
+        Script compiledScript;
 
         boolean areScriptsApplied = false;
 
@@ -584,7 +583,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
-        context.setErrorReporter(new JSErrorReporter(getLogger()));
+        context.setErrorReporter(new JSErrorReporter());
         AO_FOM_Cocoon cocoon = null;
         Scriptable thrScope = getSessionScope();
         synchronized (thrScope) {
@@ -613,8 +612,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                 if (fun == Scriptable.NOT_FOUND) {
                     throw new ResourceNotFoundException("Function \"javascript:"+funName+ "()\" not found");
                 }
-                ScriptRuntime.call(context, fun, thrScope, 
-                                   funArgs, thrScope);
+                ScriptRuntime.call(context, fun, thrScope, funArgs, thrScope);
             } catch (JavaScriptException ex) {
                 EvaluatorException ee =
                     Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
@@ -672,7 +670,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         Scriptable kScope = k.getParentScope();
         synchronized (kScope) {
             AO_FOM_Cocoon cocoon = (AO_FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.setup(this, redirector, avalonContext, manager, getLogger());
+            cocoon.setup(this, redirector, avalonContext, manager);
             if (enableDebugger) {
                 getDebugger().setVisible(true);
             }

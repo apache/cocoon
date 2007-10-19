@@ -22,41 +22,40 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
 
 /**
  * The PoolableComponentHandler to make sure that poolable components are initialized
  * destroyed and pooled correctly.
- * <p>
- * Components which implement Poolable may be configured to be pooled using the following
- *  example configuration.  This example assumes that the user component class MyComp
- *  implements Poolable.
- * <p>
- * Configuration Example:
+ *
+ * <p>Components which implement Poolable may be configured to be pooled using the
+ * following example configuration.  This example assumes that the user component
+ * class MyComp implements Poolable.
+ *
+ * <p>Configuration Example:
  * <pre>
  *   &lt;my-comp pool-max="8"/&gt;
  * </pre>
- * <p>
- * Roles Example:
+ *
+ * <p>Roles Example:
  * <pre>
  *   &lt;role name="com.mypkg.MyComponent"
  *         shorthand="my-comp"
  *         default-class="com.mypkg.DefaultMyComponent"/&gt;
  * </pre>
- * <p>
- * Configuration Attributes:
+ *
+ * <p>Configuration Attributes:
  * <ul>
  * <li>The <code>pool-max</code> attribute is used to set the maximum number of components which
- *  will be pooled. (Defaults to "8") If additional instances are required, they're created,
- *  but not pooled.</li>
+ * will be pooled. (Defaults to "8") If additional instances are required, they're created,
+ * but not pooled.</li>
  * </ul>
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
-public class NonThreadSafePoolableComponentHandler
-extends AbstractFactoryHandler {
+public class NonThreadSafePoolableComponentHandler extends AbstractFactoryHandler {
     
     /** The default max size of the pool */
     public static final int DEFAULT_MAX_POOL_SIZE = 8;
@@ -99,12 +98,11 @@ extends AbstractFactoryHandler {
      *                managed by the ComponentHandler.
      * @param config The configuration to use to configure the pool.
      */
-    public NonThreadSafePoolableComponentHandler( final ComponentInfo info,
-                                     final Logger logger,
-                                     final ComponentFactory factory,
-                                     final Configuration config )
+    public NonThreadSafePoolableComponentHandler(final ComponentInfo info,
+                                                 final ComponentFactory factory,
+                                                 final Configuration config )
     throws Exception {
-        super(info, logger, factory);
+        super(info, factory);
 
         final int poolMax = config.getAttributeAsInteger( "pool-max", DEFAULT_MAX_POOL_SIZE );
         this.max = ( poolMax <= 0 ? Integer.MAX_VALUE : poolMax );
@@ -120,18 +118,18 @@ extends AbstractFactoryHandler {
         super.dispose();
 
         // Any Poolables in the m_ready list need to be disposed of
-        synchronized( this.semaphore ) {
+        synchronized (this.semaphore) {
             // Remove objects in the ready list.
-            for( Iterator iter = this.ready.iterator(); iter.hasNext(); ) {
+            for (Iterator iter = this.ready.iterator(); iter.hasNext();) {
                 Object poolable = iter.next();
                 iter.remove();
                 this.readySize--;
-                this.permanentlyRemovePoolable( poolable );
+                this.permanentlyRemovePoolable(poolable);
             }
 
-            if( this.size > 0 && this.logger.isDebugEnabled() ) {
-                this.logger.debug( "There were " + this.size
-                                   + " outstanding objects when the pool was disposed." );
+            if (this.size > 0 && getLogger().isDebugEnabled()) {
+                getLogger().debug("There were " + this.size +
+                                  " outstanding objects when the pool was disposed.");
             }
         }
     }
@@ -159,9 +157,9 @@ extends AbstractFactoryHandler {
      */
     protected Object getFromPool() throws Exception {
         Object poolable;
-        synchronized( this.semaphore ) {
+        synchronized (this.semaphore) {
             // Look for a Poolable at the end of the m_ready list
-            if ( this.readySize > 0 ){
+            if (this.readySize > 0) {
                 // A poolable is ready and waiting in the pool
                 poolable = this.ready.removeLast();
                 this.readySize--;
@@ -172,15 +170,15 @@ extends AbstractFactoryHandler {
                 this.size++;
                 this.highWaterMark = (this.highWaterMark < this.size ? this.size : this.highWaterMark);
 
-                if ( this.logger.isDebugEnabled() ) {
-                    this.logger.debug( "Created a new " + poolable.getClass().getName()
-                                       + " from the object factory." );
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Created a new " + poolable.getClass().getName() +
+                                      " from the object factory.");
                 }
             }
         }
 
-        if( this.logger.isDebugEnabled() ) {
-            this.logger.debug( "Got a " + poolable.getClass().getName() + " from the pool." );
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Got a " + poolable.getClass().getName() + " from the pool.");
         }
 
         return poolable;
@@ -191,42 +189,42 @@ extends AbstractFactoryHandler {
      *
      * @param poolable Poolable to return to the pool.
      */
-    protected void putIntoPool( final Object poolable ) {
+    protected void putIntoPool(final Object poolable) {
         try {
             this.factory.enteringPool(poolable);
         } catch (Exception ignore) {
-            this.logger.warn("Exception during putting component back into the pool.", ignore);
+            getLogger().warn("Exception during putting component back into the pool.", ignore);
         }
 
-        synchronized( this.semaphore ) {
-            if( this.size <= this.max ) {
-                if( this.disposed ) {
+        synchronized (this.semaphore) {
+            if (this.size <= this.max) {
+                if (this.disposed) {
                     // The pool has already been disposed.
-                    if( this.logger.isDebugEnabled() ) {
-                        this.logger.debug( "Put called for a " + poolable.getClass().getName()
-                                           + " after the pool was disposed." );
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Put called for a " + poolable.getClass().getName() +
+                                          " after the pool was disposed.");
                     }
 
-                    this.permanentlyRemovePoolable( poolable );
+                    this.permanentlyRemovePoolable(poolable);
                 } else {
                     // There is room in the pool to keep this poolable.
-                    if( this.logger.isDebugEnabled() ) {
-                        this.logger.debug( "Put a " + poolable.getClass().getName()
-                                           + " back into the pool." );
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Put a " + poolable.getClass().getName() +
+                                          " back into the pool.");
                     }
 
-                    this.ready.addLast( poolable );
+                    this.ready.addLast(poolable);
                     this.readySize++;
 
                 }
             } else {
                 // More Poolables were created than can be held in the pool, so remove.
-                if( this.logger.isDebugEnabled() ) {
-                    this.logger.debug( "No room to put a " + poolable.getClass().getName()
-                                       + " back into the pool, so remove it." );
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("No room to put a " + poolable.getClass().getName() +
+                                      " back into the pool, so remove it.");
                 }
 
-                this.permanentlyRemovePoolable( poolable );
+                permanentlyRemovePoolable(poolable);
             }
         }
     }
@@ -236,16 +234,10 @@ extends AbstractFactoryHandler {
     }
     
     
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.core.container.handler.AbstractComponentHandler#doGet()
-     */
     protected Object doGet() throws Exception {
-        return this.getFromPool();
+        return getFromPool();
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.core.container.handler.AbstractComponentHandler#doPut(java.lang.Object)
-     */
     protected void doPut(Object component) throws Exception {
         this.putIntoPool(component);
     }

@@ -28,16 +28,20 @@ import java.util.Map;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
-import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
+import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
+
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
@@ -54,11 +58,12 @@ import org.mozilla.javascript.continuations.Continuation;
  */
 public class AO_FOM_Cocoon extends ScriptableObject {
 
+    private final Log logger = LogFactory.getLog(getClass());
+
     private AO_FOM_JavaScriptInterpreter interpreter;
 
     private Redirector redirector;
     private ServiceManager componentManager;
-    private Logger logger;
     private Context avalonContext;
 
     private FOM_Request request;
@@ -89,13 +94,11 @@ public class AO_FOM_Cocoon extends ScriptableObject {
     void setup(AO_FOM_JavaScriptInterpreter interp,
                       Redirector redirector, 
                       Context avalonContext,
-                      ServiceManager manager,
-                      Logger logger) {
+                      ServiceManager manager) {
         this.interpreter = interp;
         this.redirector = redirector;
         this.avalonContext = avalonContext;
         this.componentManager = manager;
-        this.logger = logger;
     }
 
     void invalidate() {
@@ -104,7 +107,6 @@ public class AO_FOM_Cocoon extends ScriptableObject {
         this.session = null;
         this.context = null;
         this.log = null;
-        this.logger = null;
         this.componentManager = null;
         this.redirector = null;
         this.interpreter = null;
@@ -890,7 +892,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
      */
     public void handleContinuation(String kontId, Scriptable parameters) 
         throws Exception {
-        List list = null;
+        List list;
         if (parameters == null || parameters == Undefined.instance) {
             parameters = this.parameters;
         }

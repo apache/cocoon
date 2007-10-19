@@ -122,7 +122,7 @@ public class SuggestionListGenerator extends ServiceableGenerator implements Con
             // Register the current scope for scripts indirectly called from this function
             FOM_JavaScriptFlowHelper.setFOM_FlowScope(objectModel, kScope);
             cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.pushCallContext(null, null, this.manager, this.context, getLogger(), wk);
+            cocoon.pushCallContext(null, null, this.context, wk);
         }
 
         try {

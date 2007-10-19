@@ -16,31 +16,6 @@
  */
 package org.apache.cocoon.components.language.markup;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceResolver;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.excalibur.store.Store;
-import org.apache.cocoon.util.HashMap;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -48,6 +23,30 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.store.Store;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.HashMap;
+import org.apache.cocoon.xml.AbstractXMLPipe;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 /**
  * Base implementation of <code>MarkupLanguage</code>. This class uses
@@ -198,8 +197,6 @@ public abstract class AbstractMarkupLanguage
             logicsheet = new Logicsheet(location, manager,
                                         resolver, getLogicsheetFilter());
         }
-
-        logicsheet.enableLogging(getLogger());
 
         String logicsheetName = logicsheet.getSystemId();
         logicsheetCache.store(CACHE_PREFIX + logicsheetName, logicsheet);
@@ -378,7 +375,6 @@ public abstract class AbstractMarkupLanguage
 
         // Create code generator
         LogicsheetCodeGenerator codeGenerator = new LogicsheetCodeGenerator();
-        codeGenerator.enableLogging(getLogger());
         codeGenerator.initialize();
         // Set the transformer chain builder filter
         TransformerChainBuilderFilter tranBuilder =
@@ -395,7 +391,7 @@ public abstract class AbstractMarkupLanguage
      * @param codeGenerator The code generator
      */
     protected void addLogicsheetsToGenerator(LogicsheetCodeGenerator codeGenerator)
-        throws MalformedURLException, IOException, SAXException, ProcessingException {
+    throws MalformedURLException, IOException, SAXException, ProcessingException {
 
         if (codeGenerator == null) {
             getLogger().debug("This should never happen: codeGenerator is null");

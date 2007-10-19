@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
-
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -37,15 +36,17 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.XMLConsumer;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -907,9 +908,6 @@ public class LDAPTransformer extends AbstractTransformer {
         return ObjectUtils.toString(object);
     }
 
-    public final Logger getTheLogger() {
-        return getLogger();
-    }
 
     static class LDAPQuery {
 
@@ -999,7 +997,7 @@ public class LDAPTransformer extends AbstractTransformer {
             constraints.setCountLimit(count_limit);
         }
 
-        protected void execute() throws Exception, NamingException {
+        protected void execute() throws Exception {
             String[] attrList = new String[attrListe.size()];
 
             AttributesImpl attr = new AttributesImpl();
@@ -1140,7 +1138,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                 transformer.start(error_element, attr);
                                 transformer.data("[LDAPTransformer] Error in LDAP-Query: " + e);
                                 transformer.end(error_element);
-                                transformer.getTheLogger().error("[LDAPTransformer] Exception: " + e.toString());
+                                transformer.getLogger().error("[LDAPTransformer] Exception: " + e.toString());
                             }
                         }
                         break;
@@ -1193,7 +1191,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                 transformer.start(error_element, attr);
                                 transformer.data("[LDAPTransformer] Error incrementing an attribute: " + e.toString());
                                 transformer.end(error_element);
-                                transformer.getTheLogger().error("[LDAPTransformer] Error incrementing an attribute: " + e.toString());
+                                transformer.getLogger().error("[LDAPTransformer] Error incrementing an attribute: " + e.toString());
                             }
                         }
                         break;
@@ -1202,7 +1200,7 @@ public class LDAPTransformer extends AbstractTransformer {
                         try {
                             String[] attrVal = new String[attrVale.size()];
                             String[] attrMode = new String[attrModeVal.size()];
-                            String replaceMode = REPLACE_MODE_DEFAULT;
+                            String replaceMode;
                             attrVale.toArray(attrVal);
                             attrVale.clear();
                             attrModeVal.toArray(attrMode);
@@ -1231,7 +1229,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                 if (!filter.equals("")) {
                                     constraints.setReturningAttributes(attrList);
                                     NamingEnumeration ldapresults = ctx.search(searchbase, filter, constraints);
-                                    SearchResult si = null;
+                                    SearchResult si;
                                     /* start indicate element of executing query */
                                     if (!exec_element.equals("")) {
                                         transformer.start(exec_element, attr);
@@ -1258,7 +1256,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                                 if (replaceMode.equals(REPLACE_MODE_DEFAULT)) {
                                                     newAttrValue = (String)attrMap.get(attrID);
                                                 } else if (replaceMode.equals(REPLACE_MODE_APPEND)) {
-                                                    newAttrValue = attrValue + (String) attrMap.get(attrID);
+                                                    newAttrValue = attrValue + attrMap.get(attrID);
                                                 }
                                                 newAttrValue = recodeToLDAPEncoding(newAttrValue);
 
@@ -1311,7 +1309,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                             if (replaceMode.equals(REPLACE_MODE_DEFAULT)) {
                                                 newAttrValue = (String) attrMap.get(attrID);
                                             } else if (replaceMode.equals(REPLACE_MODE_APPEND)) {
-                                                newAttrValue = attrValue + (String) attrMap.get(attrID);
+                                                newAttrValue = attrValue + attrMap.get(attrID);
                                             }
                                             newAttrValue = recodeToLDAPEncoding(newAttrValue);
 
@@ -1346,7 +1344,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                 transformer.start(error_element, attr);
                                 transformer.data("[LDAPTransformer] Error replacing an attribute: " + e.toString());
                                 transformer.end(error_element);
-                                transformer.getTheLogger().error("[LDAPTransformer] Error replacing an attribute: " + e.toString());
+                                transformer.getLogger().error("[LDAPTransformer] Error replacing an attribute: " + e.toString());
                                 if (!row_element.equals("")) {
                                     transformer.end(row_element);
                                 }
@@ -1381,7 +1379,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                 if (!filter.equals("")) {
                                     constraints.setReturningAttributes(attrList);
                                     NamingEnumeration ldapresults = ctx.search(searchbase, filter, constraints);
-                                    SearchResult si = null;
+                                    SearchResult si;
                                     /* start indicate element of executing query */
                                     if (!exec_element.equals("")) {
                                         transformer.start(exec_element, attr);
@@ -1517,7 +1515,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                 transformer.start(error_element, attr);
                                 transformer.data("[LDAPTransformer] Error replacing an attribute: " + e.toString());
                                 transformer.end(error_element);
-                                transformer.getTheLogger().error("[LDAPTransformer] Error replacing an attribute: " + e.toString());
+                                transformer.getLogger().error("[LDAPTransformer] Error replacing an attribute: " + e.toString());
                                 if (!row_element.equals("")) {
                                     transformer.end(row_element);
                                 }
@@ -1536,7 +1534,7 @@ public class LDAPTransformer extends AbstractTransformer {
                     transformer.start(error_element, attr);
                     transformer.data("[LDAPTransformer] Failed ldap-connection to directory service.");
                     transformer.end(error_element);
-                    transformer.getTheLogger().error("[LDAPTransformer] Failed to connect to " + serverurl + e.toString());
+                    transformer.getLogger().error("[LDAPTransformer] Failed to connect to " + serverurl + e.toString());
                 }
             }
             try {
@@ -1548,7 +1546,7 @@ public class LDAPTransformer extends AbstractTransformer {
                     transformer.start(error_element, attr);
                     transformer.data("[LDAPTransformer] Failed ldap-disconnection to directory service.");
                     transformer.end(error_element);
-                    transformer.getTheLogger().error("[LDAPTransformer] Failed to disconnect from " + serverurl + e.toString());
+                    transformer.getLogger().error("[LDAPTransformer] Failed to disconnect from " + serverurl + e.toString());
                 }
             }
         }
@@ -1606,30 +1604,30 @@ public class LDAPTransformer extends AbstractTransformer {
         }
 
         protected void debugPrint() {
-            Logger logger = transformer.getTheLogger();
+            Log logger = transformer.getLogger();
             if (logger.isDebugEnabled()) {
-                logger.debug("[LDAPTransformer] query_index: " + query_index);
-                logger.debug("[LDAPTransformer] current_state: " + current_state);
-                logger.debug("[LDAPTransformer] serverurl: " + serverurl);
-                logger.debug("[LDAPTransformer] port: " + port);
-                logger.debug("[LDAPTransformer] root_dn: " + root_dn);
-                logger.debug("[LDAPTransformer] password: " + password);
-                logger.debug("[LDAPTransformer] version: " + version);
-                logger.debug("[LDAPTransformer] scope: " + scope);
-                logger.debug("[LDAPTransformer] authentication: " + authentication);
-                logger.debug("[LDAPTransformer] toDo: " + toDo);
-                logger.debug("[LDAPTransformer] searchbase: " + searchbase);
-                logger.debug("[LDAPTransformer] showAttribute: " + showAttribute);
-                logger.debug("[LDAPTransformer] attribute: " + attrListe.toString());
-                logger.debug("[LDAPTransformer] initial-context: " + initialContextValues);
-                logger.debug("[LDAPTransformer] filter: " + filter);
-                logger.debug("[LDAPTransformer] doc_element: " + doc_element);
-                logger.debug("[LDAPTransformer] row_element: " + row_element);
-                logger.debug("[LDAPTransformer] error_element: " + error_element);
-                logger.debug("[LDAPTransformer] sax-error: " + sax_error);
-                logger.debug("[LDAPTransformer] deref_link: " + deref_link);
-                logger.debug("[LDAPTransformer] count_limit: " + count_limit);
-                logger.debug("[LDAPTransformer] time_limit: " + time_limit);
+                logger.debug("query_index: " + query_index);
+                logger.debug("current_state: " + current_state);
+                logger.debug("serverurl: " + serverurl);
+                logger.debug("port: " + port);
+                logger.debug("root_dn: " + root_dn);
+                logger.debug("password: " + password);
+                logger.debug("version: " + version);
+                logger.debug("scope: " + scope);
+                logger.debug("authentication: " + authentication);
+                logger.debug("toDo: " + toDo);
+                logger.debug("searchbase: " + searchbase);
+                logger.debug("showAttribute: " + showAttribute);
+                logger.debug("attribute: " + attrListe.toString());
+                logger.debug("initial-context: " + initialContextValues);
+                logger.debug("filter: " + filter);
+                logger.debug("doc_element: " + doc_element);
+                logger.debug("row_element: " + row_element);
+                logger.debug("error_element: " + error_element);
+                logger.debug("sax-error: " + sax_error);
+                logger.debug("deref_link: " + deref_link);
+                logger.debug("count_limit: " + count_limit);
+                logger.debug("time_limit: " + time_limit);
             }
         }
 

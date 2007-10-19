@@ -32,8 +32,8 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  *
  * @version $Id$
  */
-public abstract class AbstractElementProcessorFactory
-     extends AbstractLogEnabled implements ElementProcessorFactory {
+public abstract class AbstractElementProcessorFactory extends AbstractLogEnabled
+                                                      implements ElementProcessorFactory {
 
     // uses XML element names as keys and ElementProcessor progenitors
     // as values. An ElementProcessor progenitor is an Object that can
@@ -76,14 +76,15 @@ public abstract class AbstractElementProcessorFactory
             exception.setElementName(name);
             throw exception;
         }
-        ElementProcessor processor = null;
 
+        ElementProcessor processor;
         try {
             processor = doCreateElementProcessor(progenitor);
         } catch (CannotCreateElementProcessorException e) {
             e.setElementName(name);
             throw e;
         }
+
         return processor;
     }
 
@@ -150,7 +151,6 @@ public abstract class AbstractElementProcessorFactory
      * @exception CannotCreateElementProcessorException if the
      *            specified ElementProcessor cannot be created.
      */
-
     protected abstract ElementProcessor doCreateElementProcessor(
         final Object progenitor) throws CannotCreateElementProcessorException;
 
@@ -166,12 +166,10 @@ public abstract class AbstractElementProcessorFactory
      * @exception CannotCreateElementProcessorException if the
      *            ElementProcessor cannot be created.
      */
+    protected ElementProcessor createNewElementProcessorInstance(final Class progenitor)
+    throws CannotCreateElementProcessorException {
 
-    protected ElementProcessor createNewElementProcessorInstance(
-            final Class progenitor)
-            throws CannotCreateElementProcessorException {
-        ElementProcessor rval = null;
-
+        ElementProcessor rval;
         try {
             rval = (ElementProcessor)progenitor.newInstance();
             if (rval instanceof AbstractLogEnabled) {
@@ -217,12 +215,10 @@ public abstract class AbstractElementProcessorFactory
      * @exception CannotCreateElementProcessorException if the
      *            ElementProcessor cannot be created.
      */
+    protected ElementProcessor constructElementProcessor(final Constructor progenitor)
+    throws CannotCreateElementProcessorException {
 
-    protected ElementProcessor constructElementProcessor(
-            final Constructor progenitor)
-            throws CannotCreateElementProcessorException {
-        ElementProcessor rval = null;
-
+        ElementProcessor rval;
         try {
             rval = (ElementProcessor) progenitor.newInstance(new Object[0]);
             if (rval instanceof AbstractLogEnabled) {
@@ -255,5 +251,4 @@ public abstract class AbstractElementProcessorFactory
         }
         return rval;
     }
-
-}       // end public abstract class AbstractElementProcessorFactory
+}

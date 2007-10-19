@@ -33,13 +33,14 @@ import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.util.WildcardMatcherHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.WildcardMatcherHelper;
 
 
 /**
@@ -85,28 +86,30 @@ import org.apache.excalibur.source.SourceResolver;
  * @since Sept, 2003
  * @version $Id$
  */
-public class JavaScriptAspectWeaver extends AbstractLogEnabled implements Serviceable {
+public class JavaScriptAspectWeaver extends AbstractLogEnabled
+                                    implements Serviceable {
     
     /** All Interceptors in the right order */
     ArrayList interceptorGroups = new ArrayList();
     
     /** The service manager */
-    ServiceManager manager = null;
+    ServiceManager manager;
     
     /** If debugging is true, the intercepted script is writen to filesystem */
-    boolean serializeResultScript = false;
+    boolean serializeResultScript;
 
     /** Base script <code>org.apache.excalibur.source.Source</code>*/
-    Source source = null; 
+    Source source;
     
     /** The javascript repsented in <code>JSToken</code>*/
-    JSTokenList baseScriptTokenList = null; 
+    JSTokenList baseScriptTokenList;
     
     /** Does this base script contain applied scripts? */
-    boolean areScriptsApplied = false;
+    boolean areScriptsApplied;
     
     /** Provided configuration (part of the Interpreter configuration) **/
-    ArrayList stopExecutionFunctions = null;
+    ArrayList stopExecutionFunctions;
+
 
     /**
      * Set the base script (the script which is scanned for applied
@@ -514,6 +517,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled implements Servic
                          
                 }  
             }
+
             return tokenList;
         }  
 
@@ -541,11 +545,10 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled implements Servic
          * character.
          *  
          * TODO implement it according the ECMA spec
-         */    
-        private static boolean isJSIdentifierStartCharacter( char c ) {
-            if( Character.isJavaIdentifierStart( c ) ) return true;
-            return false;
-        }        
+         */
+        private static boolean isJSIdentifierStartCharacter(char c) {
+            return Character.isJavaIdentifierStart(c);
+        }
 
     }
 
@@ -755,8 +758,8 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled implements Servic
                        
             ListIterator li = this.stopExecutionFunctions.listIterator();
             while( li.hasNext() ) {
-                String object = "";
-                String function = "";
+                String object;
+                String function;
                 StringTokenizer st = new StringTokenizer( (String) li.next(), ".");
                 int countTokens = st.countTokens();
 

@@ -61,9 +61,9 @@ import java.util.Map;
  *
  * @version $Id$
  */
-public class TagTransformer
-        extends AbstractXMLProducer
-        implements Transformer, Serviceable, Configurable, Disposable, Recyclable {
+public class TagTransformer extends AbstractXMLProducer
+                            implements Transformer, Serviceable, Configurable,
+                                       Disposable, Recyclable {
 
     private int recordingLevel;
     private int skipLevel;
@@ -182,7 +182,7 @@ public class TagTransformer
         }
 
         if (!tagSelectorStack.isEmpty()) {
-            getLogger().fatalError("recycle: internal Error, tagSelectorStack not empty");
+            getLogger().fatal("recycle: internal Error, tagSelectorStack not empty");
             tagSelectorStack.clear();
         }
 
@@ -314,7 +314,7 @@ public class TagTransformer
         Tag tag = null;
         if (namespaceURI != null && namespaceURI.length() > 0) {
             // Try to find Tag corresponding to this element
-            ServiceSelector tagSelector = null;
+            ServiceSelector tagSelector;
             try {
                 tagSelector = (ServiceSelector) tagNamespaceSelector.select(namespaceURI);
                 tagSelectorStack.push(tagSelector);
@@ -501,7 +501,7 @@ public class TagTransformer
         if (tag instanceof XMLProducer) {
             XMLConsumer tagConsumer;
             if (transformerSelector != null) {
-                Transformer tagTransformer = null;
+                Transformer tagTransformer;
                 try {
                     // Add additional (Tag)Transformer to the output of the Tag
                     tagTransformer = (Transformer) transformerSelector.select(transformerHint);

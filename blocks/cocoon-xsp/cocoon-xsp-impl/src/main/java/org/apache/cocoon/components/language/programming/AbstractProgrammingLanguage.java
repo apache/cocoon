@@ -16,17 +16,18 @@
  */
 package org.apache.cocoon.components.language.programming;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import java.io.File;
+
 import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.parameters.ParameterException;
 
 import org.apache.cocoon.components.language.LanguageException;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.ClassUtils;
-
-import java.io.File;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 /**
  * Base implementation of <code>ProgrammingLanguage</code>. This class sets the
@@ -73,9 +74,11 @@ public abstract class AbstractProgrammingLanguage extends AbstractLogEnabled
         if (this.codeFormatter != null) {
             try {
                 CodeFormatter formatter = (CodeFormatter) this.codeFormatter.newInstance();
+                // All CodeFormatters are now using commons logging. This is legacy support code.
                 if (formatter instanceof LogEnabled) {
-                    ((LogEnabled) formatter).enableLogging(this.getLogger());
+                    ((LogEnabled) formatter).enableLogging(new CLLoggerWrapper(getLogger()));
                 }
+
                 return formatter;
             } catch (Exception e) {
                 getLogger().error("Error instantiating CodeFormatter", e);
@@ -96,8 +99,7 @@ public abstract class AbstractProgrammingLanguage extends AbstractLogEnabled
             throws LanguageException;
 
     public final void unload(Object program, String filename, File baseDirectory)
-            throws LanguageException {
-
+    throws LanguageException {
         File file = new File(baseDirectory,
                              filename + "." + getSourceExtension());
         file.delete();

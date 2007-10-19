@@ -33,7 +33,8 @@ import org.xml.sax.SAXException;
  * 
  * @version $Id$
  */
-public class HSSFSerializer extends POIFSSerializer implements SitemapModelComponent {
+public class HSSFSerializer extends POIFSSerializer
+                            implements SitemapModelComponent {
 
     private ElementProcessorFactory _element_processor_factory;
     private String locale;
@@ -46,8 +47,8 @@ public class HSSFSerializer extends POIFSSerializer implements SitemapModelCompo
      * @exception ProcessingException
      *                if an error occurs
      */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException,
-            SAXException, IOException {
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {
         try {
             if (par.isParameter("locale")) {
                 setLocale(par.getParameter("locale"));
@@ -56,7 +57,6 @@ public class HSSFSerializer extends POIFSSerializer implements SitemapModelCompo
             throw new ProcessingException(e);
         }
         _element_processor_factory = new HSSFElementProcessorFactory(locale);
-        setupLogger(_element_processor_factory);
     }
 
     /**

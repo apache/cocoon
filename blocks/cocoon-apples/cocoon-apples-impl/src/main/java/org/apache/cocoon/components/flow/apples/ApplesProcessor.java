@@ -22,6 +22,8 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.springframework.web.context.WebApplicationContext;
+
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.ContinuationsDisposer;
@@ -33,7 +35,6 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  * ApplesProcessor is the core Cocoon component that provides the 'Apples' flow
@@ -41,10 +42,11 @@ import org.springframework.web.context.WebApplicationContext;
  *
  * @version $Id$
  */
-public class ApplesProcessor extends AbstractInterpreter implements ContinuationsDisposer {
+public class ApplesProcessor extends AbstractInterpreter
+                             implements ContinuationsDisposer {
 
     /**
-     * @see org.apache.cocoon.components.flow.Interpreter#callFunction(java.lang.String, java.util.List, org.apache.cocoon.environment.Redirector)
+     * @see org.apache.cocoon.components.flow.Interpreter#callFunction(String, List, Redirector)
      */
     public void callFunction(String className, List params, Redirector redirector) throws Exception {
         // Get the current web application context
@@ -58,8 +60,9 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
         WebContinuation wk = null;
         if (!(app instanceof StatelessAppleController)) {
             wk = this.continuationsMgr.createWebContinuation(app, null, 0, getInterpreterID(), this);
-            if (getLogger().isDebugEnabled())
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Instantiated a stateful apple, continuationid = " + wk.getId());
+            }
         }
 
         DefaultContext appleContext = new DefaultContext(avalonContext);
@@ -67,7 +70,8 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
             appleContext.put("continuation-id", wk.getId());
         }
 
-        LifecycleHelper.setupComponent(app, getLogger(), appleContext, sitemapManager, null, true);
+        LifecycleHelper.setupComponent(app, getLogger(), appleContext, sitemapManager, null);
+
         processApple(params, redirector, app, wk);
     }
 
@@ -88,7 +92,8 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
         processApple(params, redirector, app, wk);
     }
 
-    protected AppleController instantiateController(String appleName, ServiceManager sitemapManager) throws AppleNotFoundException {
+    protected AppleController instantiateController(String appleName, ServiceManager sitemapManager)
+    throws AppleNotFoundException {
     	if(appleName.startsWith("#")) {
     		String beanName = appleName.substring(1);
     		try {
@@ -99,11 +104,10 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
     			throw new AppleNotFoundException("Can't find any bean of name '" + beanName + "'.", e);
 			}
     	}
-        AppleController appleController = null;
+        AppleController appleController;
 		try {
 			Class clazz = Thread.currentThread().getContextClassLoader().loadClass(appleName);
-	        Object o = clazz.newInstance();
-	        appleController = (AppleController) o;
+	        appleController = (AppleController) clazz.newInstance();
 		} catch (ClassNotFoundException e) {
 			throw new AppleNotFoundException("Can't find a class of name '" + appleName + "'.", e);
 		} catch (InstantiationException e) {
@@ -115,7 +119,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Continuation
     }
 
     private void processApple(List params, Redirector redirector, AppleController app, WebContinuation wk)
-            throws Exception {
+    throws Exception {
         Request cocoonRequest = ObjectModelHelper.getRequest(this.processInfoProvider.getObjectModel());
         AppleRequest req = new DefaultAppleRequest(params, cocoonRequest);
         Response cocoonResponse = ObjectModelHelper.getResponse(this.processInfoProvider.getObjectModel());

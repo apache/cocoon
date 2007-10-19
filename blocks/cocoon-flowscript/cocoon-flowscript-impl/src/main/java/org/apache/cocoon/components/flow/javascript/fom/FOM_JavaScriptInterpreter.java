@@ -411,8 +411,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         // request. Everything else remains the same.
         ClassLoader contextClassloader = Thread.currentThread().getContextClassLoader();
         thrScope.setupPackages(contextClassloader);
-        cocoon.pushCallContext(this, redirector, manager,
-                               avalonContext, getLogger(), null);
+        cocoon.pushCallContext(this, redirector, avalonContext, null);
 
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
@@ -548,7 +547,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
-        context.setErrorReporter(new JSErrorReporter(getLogger()));
+        context.setErrorReporter(new JSErrorReporter());
 
         LocationTrackingDebugger locationTracker = new LocationTrackingDebugger();
         if (!enableDebugger) {
@@ -654,9 +653,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 Thread.currentThread().setContextClassLoader(kScope.getClassLoader());
                 cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
                 kScope.setLock(true);
-                cocoon.pushCallContext(this, redirector, manager,
-                                       avalonContext,
-                                       getLogger(), wk);
+                cocoon.pushCallContext(this, redirector, avalonContext, wk);
 
                 // Register the current scope for scripts indirectly called from this function
                 FOM_JavaScriptFlowHelper.setFOM_FlowScope(cocoon.getObjectModel(), kScope);

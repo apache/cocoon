@@ -16,9 +16,10 @@
 */
 package org.apache.cocoon.components.flow.javascript;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
+
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.tools.ToolErrorReporter;
@@ -30,14 +31,14 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  *
  * @version $Id$
  */
-public class JSErrorReporter implements ErrorReporter
-{
-  private Logger logger;
+public class JSErrorReporter extends AbstractLogEnabled
+                             implements ErrorReporter {
+
   private Location location;
   private StringBuffer message;
 
-  public JSErrorReporter(Logger logger) {
-      this.logger = logger;
+
+  public JSErrorReporter() {
   }
   
   private void appendMessage(String text, String sourceName, int line, int column) {
@@ -60,7 +61,7 @@ public class JSErrorReporter implements ErrorReporter
                                       sourceName, line, lineSrc, column);
       appendMessage(errMsg, sourceName, line, column);
       System.err.println(errMsg);
-      logger.error(errMsg);
+      getLogger().error(errMsg);
   }
 
   public void warning(String message, String sourceName, int line,
@@ -70,7 +71,7 @@ public class JSErrorReporter implements ErrorReporter
                                     sourceName, line, lineSrc, column);
       appendMessage(errMsg, sourceName, line, column);
       System.err.println(errMsg);
-      logger.warn(errMsg);
+      getLogger().warn(errMsg);
   }
     
   public EvaluatorException runtimeError(String message, String sourceName,

@@ -19,29 +19,24 @@
 package org.apache.cocoon.xsp.handler;
 
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 
 /**
  * The component enviromnent contains all objects necessary to create
  * a new component; it's just a "container" of objects.
  *
- * @version $Id$
  * @since 2.2
+ * @version $Id$
  */
 public class ComponentEnvironment {
     public final ServiceManager serviceManager;
     public final Context context;
-    public final Logger logger;
-    
+
     public final ClassLoader classLoader;
 
-    public ComponentEnvironment(Logger logger,
-                                Context context,
+    public ComponentEnvironment(Context context,
                                 ServiceManager serviceManager,
                                 ClassLoader classLoader ) {
-
-        this.logger = logger;
         this.context = context;
         this.serviceManager = serviceManager;
         this.classLoader = classLoader;

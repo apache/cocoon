@@ -16,22 +16,25 @@
  */
 package org.apache.cocoon.components.language.programming.java;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.cocoon.components.language.programming.LanguageCompiler;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
+
+import org.apache.cocoon.components.language.programming.LanguageCompiler;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
 /**
  * This class implements the functionality common to all Java compilers.
- * @version $Id$
+ *
  * @since 2.0
+ * @version $Id$
  */
-public abstract class AbstractJavaCompiler extends AbstractLogEnabled implements LanguageCompiler, Recyclable {
+public abstract class AbstractJavaCompiler extends AbstractLogEnabled
+                                           implements LanguageCompiler, Recyclable {
 
     /**
      * The source program filename
@@ -57,7 +60,7 @@ public abstract class AbstractJavaCompiler extends AbstractLogEnabled implements
      * The encoding of the source program or <code>null</code> to use the
      * platform's default encoding
      */
-    protected String encoding = null;
+    protected String encoding;
 
     /**
      * The version of the JVM for wich the code was written.

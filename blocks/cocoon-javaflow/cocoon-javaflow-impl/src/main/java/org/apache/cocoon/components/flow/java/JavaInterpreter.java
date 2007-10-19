@@ -21,7 +21,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.commons.javaflow.Continuation;
+import org.apache.commons.javaflow.utils.ReflectionUtils;
+import org.apache.commons.jxpath.JXPathIntrospector;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
@@ -29,9 +34,6 @@ import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Redirector;
-import org.apache.commons.javaflow.Continuation;
-import org.apache.commons.javaflow.utils.ReflectionUtils;
-import org.apache.commons.jxpath.JXPathIntrospector;
 
 /**
  * Implementation of the java flow interpreter.
@@ -68,8 +70,8 @@ public final class JavaInterpreter extends AbstractInterpreter {
         context.setRedirector(redirector);
 
         final Parameters parameters = new Parameters();
-        for(final Iterator i = params.iterator(); i.hasNext();) {
-            final Argument argument = (Argument)i.next();
+        for (final Iterator i = params.iterator(); i.hasNext();) {
+            final Argument argument = (Argument) i.next();
             parameters.setParameter(argument.name, argument.value);
         }
         context.setParameters(parameters);

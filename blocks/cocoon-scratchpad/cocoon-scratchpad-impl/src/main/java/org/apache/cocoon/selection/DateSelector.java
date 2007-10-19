@@ -28,9 +28,9 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.logging.Log;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
 
@@ -106,9 +106,9 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * @version $Id$
  */
 public class DateSelector extends AbstractSwitchSelector
-implements Configurable, ThreadSafe {
-    /** the configuration
-     */
+                          implements Configurable, ThreadSafe {
+
+    /** the configuration */
     private Configuration config;
     
     final public static String AFTER_ELEMENT = "after";
@@ -140,9 +140,9 @@ implements Configurable, ThreadSafe {
                 dateformat = confs[i].getAttribute( DATEFORMAT_ATTR, null );
                 language = confs[i].getAttribute( LANGUAGE_ATTR, null );
                 country = confs[i].getAttribute( COUNTRY_ATTR, null);
-                Date parsed_date = null;
+                Date parsed_date;
                 
-                SimpleDateFormat sdf = null;
+                SimpleDateFormat sdf;
                 if (dateformat != null && language != null && country != null) {
                     Locale locale = new Locale( language, country );
                     sdf = new SimpleDateFormat( dateformat, locale );
@@ -230,7 +230,7 @@ implements Configurable, ThreadSafe {
         configure( config, AFTER_ELEMENT, map );
         
         // 2 create SelectorContext
-        DateSelectorContext csc = new DateSelectorContext(this.getLogger());
+        DateSelectorContext csc = new DateSelectorContext(getLogger());
         // 3 precalculate result of comparing current date, and configuration map        
         csc.setup( map );
         
@@ -336,9 +336,9 @@ implements Configurable, ThreadSafe {
     private static class DateSelectorContext {
         Date now;
         HashSet set;
-        Logger logger;
+        Log logger;
         
-        public DateSelectorContext(Logger logger) {
+        public DateSelectorContext(Log logger) {
             now = new Date();
             set = new HashSet();
             this.logger = logger;

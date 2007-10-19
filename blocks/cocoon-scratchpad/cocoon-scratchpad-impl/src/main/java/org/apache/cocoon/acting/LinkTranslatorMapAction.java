@@ -19,9 +19,9 @@ package org.apache.cocoon.acting;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.commons.logging.Log;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -36,11 +36,10 @@ import org.apache.cocoon.util.NetUtils;
  * @since 16 December 2002
  * @version $Id$
  */
-public class LinkTranslatorMapAction
-    extends AbstractAction
-    implements ThreadSafe {
+public class LinkTranslatorMapAction extends AbstractAction
+                                     implements ThreadSafe {
 
-    final static protected String LINK_MAP_PREFIX = "linkMap:";
+    protected static final String LINK_MAP_PREFIX = "linkMap:";
 
     /**
      * Execute the LinkTranslatorMapAction.
@@ -99,7 +98,7 @@ public class LinkTranslatorMapAction
                 "ext " + extension);
 
         if (extension != null) {
-            LinkPatternHashMap lphm = new LinkPatternHashMap(path, extension, linkObjectMap, this.getLogger());
+            LinkPatternHashMap lphm = new LinkPatternHashMap(path, extension, linkObjectMap, getLogger());
 
             objectModel.put(Constants.LINK_OBJECT, lphm);
         }
@@ -113,7 +112,7 @@ public class LinkTranslatorMapAction
      */
     public static class LinkPatternHashMap extends HashMap {
 
-        protected final Logger logger;
+        protected final Log logger;
         protected final String pageExtension;
         protected final String path;
         protected final Map parent;
@@ -128,7 +127,7 @@ public class LinkTranslatorMapAction
         public LinkPatternHashMap(String path,
                                   String pageExtension,
                                   Map    parentMap,
-                                  Logger logger) {
+                                  Log    logger) {
             this.pageExtension = pageExtension;
             this.path = path;
             this.parent = parentMap;
@@ -193,7 +192,7 @@ public class LinkTranslatorMapAction
             }
 
             // now nearly finished
-            Object result = null;
+            Object result;
 
             if (newHref != null) {
                 // if href is non null, take it as result
@@ -209,6 +208,7 @@ public class LinkTranslatorMapAction
             if (logger.isDebugEnabled()) {
                 logger.debug("For key " + key + " result is " + result);
             }
+
             return result;
         }
     }
