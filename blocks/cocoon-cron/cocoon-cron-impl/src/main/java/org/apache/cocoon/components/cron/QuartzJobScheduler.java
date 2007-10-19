@@ -41,6 +41,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.thread.RunnableManager;
 import org.apache.cocoon.thread.ThreadPool;
 import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 import org.quartz.CronTrigger;
 import org.quartz.Job;
@@ -89,7 +90,10 @@ public class QuartzJobScheduler extends AbstractLogEnabled
     /** Map key for the service manager */
     static final String DATA_MAP_MANAGER = "QuartzJobScheduler.ServiceManager";
 
-    /** Map key for the logger */
+    /**
+     * Map key for the logger
+     * @deprecated Use commons logging.
+     */
     static final String DATA_MAP_LOGGER = "QuartzJobScheduler.Logger";
 
     /** Map key for the concurrent run property */
@@ -555,7 +559,7 @@ public class QuartzJobScheduler extends AbstractLogEnabled
     protected JobDataMap initDataMap(JobDataMap jobDataMap, String jobName, boolean concurent,
                                      Parameters params, Map objects) {
         jobDataMap.put(DATA_MAP_NAME, jobName);
-        jobDataMap.put(DATA_MAP_LOGGER, getLogger());
+        jobDataMap.put(DATA_MAP_LOGGER, new CLLoggerWrapper(getLogger()));
         jobDataMap.put(DATA_MAP_CONTEXT, this.context);
         jobDataMap.put(DATA_MAP_MANAGER, this.manager);
         jobDataMap.put(DATA_MAP_RUN_CONCURRENT, (concurent? Boolean.TRUE: Boolean.FALSE));

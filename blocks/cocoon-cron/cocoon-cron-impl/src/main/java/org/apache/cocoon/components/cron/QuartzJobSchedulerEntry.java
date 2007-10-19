@@ -74,8 +74,7 @@ public class QuartzJobSchedulerEntry implements JobSchedulerEntry {
      */
     public String getJobName() {
         String name = (String)m_data.get(QuartzJobScheduler.DATA_MAP_ROLE);
-
-        if (null == name) {
+        if (name == null) {
             name = m_data.get(QuartzJobScheduler.DATA_MAP_OBJECT).getClass().getName();
         }
 
