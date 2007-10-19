@@ -16,22 +16,21 @@
  */
 package org.apache.cocoon.xml.dom;
 
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.excalibur.pool.Recyclable;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.svg.SVGOMDocument;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.cocoon.xml.XMLConsumer;
 
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 import org.xml.sax.Locator;
-
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.xml.sax.SAXException;
 
 /**
  * The <code>SVGBuilder</code> is a utility class that will generate a
@@ -39,8 +38,10 @@ import java.net.URL;
  *
  * @version $Id$
  */
-public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, LogEnabled, Recyclable {
-    protected Logger log;
+public class SVGBuilder extends SAXSVGDocumentFactory
+                        implements XMLConsumer, Recyclable {
+
+    protected final Log log = LogFactory.getLog(getClass());
 
     protected Locator locator;
 
@@ -54,18 +55,7 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
         super(SAX_PARSER);
     }
 
-    /**
-     * Provide component with a logger.
-     *
-     * @param logger the logger
-     */
-    public void enableLogging(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
-    protected Logger getLogger() {
+    protected Log getLogger() {
         return this.log;
     }
 
