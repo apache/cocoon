@@ -23,9 +23,9 @@ import java.util.Properties;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 import org.apache.cocoon.components.web3.Web3Client;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 import com.sap.mw.jco.IRepository;
 import com.sap.mw.jco.JCO;
@@ -36,11 +36,12 @@ import com.sap.mw.jco.JCO;
  * @since 2.1
  * @version $Id$
  */
-public class Web3ClientImpl extends AbstractLogEnabled 
-implements Web3Client, Disposable, Recyclable, Poolable {
+public class Web3ClientImpl extends AbstractLogEnabled
+                            implements Web3Client, Disposable, Recyclable, Poolable {
 
     protected JCO.Client client;
     protected String repository;
+
 
     public void initClient(JCO.Client client) {
         this.client = client;

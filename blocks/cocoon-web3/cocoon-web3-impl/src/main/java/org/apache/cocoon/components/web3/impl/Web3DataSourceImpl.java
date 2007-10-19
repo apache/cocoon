@@ -16,19 +16,18 @@
  */
 package org.apache.cocoon.components.web3.impl;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
-import EDU.oswego.cs.dl.util.concurrent.Mutex;
-
-import com.sap.mw.jco.JCO;
-
 import org.apache.cocoon.components.web3.Web3Client;
 import org.apache.cocoon.components.web3.Web3DataSource;
+import org.apache.cocoon.util.AbstractLogEnabled;
+
+import EDU.oswego.cs.dl.util.concurrent.Mutex;
+import com.sap.mw.jco.JCO;
 
 /**
  * The Default implementation for R3DataSources in Web3.  This uses the
@@ -38,7 +37,7 @@ import org.apache.cocoon.components.web3.Web3DataSource;
  * @version $Id$
  */
 public class Web3DataSourceImpl extends AbstractLogEnabled
-implements Web3DataSource, ThreadSafe {
+                                implements Web3DataSource, ThreadSafe {
 
     protected Web3Properties properties;
     protected int            poolsize = 0;
@@ -50,6 +49,7 @@ implements Web3DataSource, ThreadSafe {
 
     private static Mutex     lock = new Mutex();
     protected ServiceManager manager;
+
 
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
