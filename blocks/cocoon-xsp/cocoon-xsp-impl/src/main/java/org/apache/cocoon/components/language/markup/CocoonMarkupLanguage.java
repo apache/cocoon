@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.xml.AbstractXMLPipe;
@@ -45,8 +43,8 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @version $Id$
  */
-public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
-{
+public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage {
+
     /**
      * Store the dependencies of the currently loaded program.
      */
@@ -60,8 +58,8 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      * Recycle this component: clear logic sheet list and dependencies.
      */
     public void recycle() {
-        super.recycle();
         this.dependencies.clear();
+        super.recycle();
     }
 
     /**
@@ -83,9 +81,7 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
     protected AbstractXMLPipe getPreprocessFilter(String filename,
                                                   AbstractXMLPipe filter,
                                                   ProgrammingLanguage language) {
-        PreProcessFilter prefilter = new PreProcessFilter(filter, filename, language);
-        prefilter.setLogger(getLogger());
-        return prefilter;
+        return new PreProcessFilter(filter, filename, language);
     }
 
     /**
@@ -100,10 +96,7 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      */
     protected TransformerChainBuilderFilter getTransformerChainBuilder(LogicsheetCodeGenerator logicsheetMarkupGenerator)
     {
-        CocoonTransformerChainBuilderFilter filter =
-            new CocoonTransformerChainBuilderFilter(logicsheetMarkupGenerator);
-        filter.setLogger(getLogger());
-        return filter;
+        return new CocoonTransformerChainBuilderFilter(logicsheetMarkupGenerator);
     }
 
     // This is required here to avoid IllegalAccessError when
@@ -136,9 +129,10 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      */
     public abstract String getRootElement();
 
-//
-//  Inner classes
-//
+
+    //
+    //  Inner classes
+    //
 
     /**
      * Preprocess filter for Cocoon Markup languages.
@@ -152,7 +146,6 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      * @see org.xml.sax.ContentHandler
      */
     public class PreProcessFilter extends AbstractXMLPipe {
-        protected Log log;
 
         protected AbstractXMLPipe filter;
 
@@ -169,10 +162,12 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
          * @param language the programming language
          */
         public PreProcessFilter (AbstractXMLPipe filter, String filename, ProgrammingLanguage language) {
-            super ();
+            super();
+
             this.filename = filename;
             this.language = language;
             this.filter = filter;
+
             // Put meself in front of filter
             super.setLexicalHandler(this.filter);
             super.setContentHandler(this.filter);
@@ -189,10 +184,6 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
 
         public void setLexicalHandler(LexicalHandler handler) {
             this.filter.setLexicalHandler(handler);
-        }
-
-        public void setLogger(Log logger) {
-            this.log = logger;
         }
 
         public void startDocument() throws SAXException {
@@ -266,8 +257,6 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      */
     public class CocoonTransformerChainBuilderFilter extends TransformerChainBuilderFilter {
 
-        protected Log log;
-
         private List startPrefix;
 
         private Object[] rootElement;
@@ -291,15 +280,6 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
             super(logicsheetMarkupGenerator);
         }
 
-        /**
-         * Provide component with a logger.
-         *
-         * @param logger the logger
-         */
-        public void setLogger(Log logger) {
-            this.log = logger;
-        }
-
         public void processingInstruction(String target, String data) throws SAXException {
             // Retrieve logicsheets declared by processing-instruction
             if ("xml-logicsheet".equals(target)) {
@@ -315,10 +295,10 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
                     try {
                         CocoonMarkupLanguage.this.addLogicsheetToList(language, href);
                     } catch (ProcessingException pe) {
-                        log.warn("ProcessingException in SitemapMarkupLanguage", pe);
+                        getLogger().warn("ProcessingException in SitemapMarkupLanguage", pe);
                         throw new SAXException (pe);
                     } catch (IOException ioe) {
-                        log.warn("CocoonMarkupLanguage.processingInstruction", ioe);
+                        getLogger().warn("CocoonMarkupLanguage.processingInstruction", ioe);
                         throw new SAXException (ioe);
                     }
                 }
@@ -330,16 +310,16 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
             super.processingInstruction(target,data);
         }
 
-        public void startDocument () throws SAXException {
-            isRootElem=true;
-            insideRootElement=false;
-            finished=false;
+        public void startDocument() throws SAXException {
+            isRootElem = true;
+            insideRootElement = false;
+            finished = false;
             startPrefix = new ArrayList();
             rootChars = new StringBuffer();
         }
 
-        public void startElement (String namespaceURI, String localName,
-                String qName, Attributes atts) throws SAXException {
+        public void startElement(String namespaceURI, String localName,
+                                 String qName, Attributes atts) throws SAXException {
             if (finished) {
                 // Call super method
                 super.startElement(namespaceURI, localName, qName, atts);
@@ -368,10 +348,10 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
                         try {
                             CocoonMarkupLanguage.this.addLogicsheetToList(language, href);
                         } catch (ProcessingException pe) {
-                            log.warn("CocoonMarkupLanguage.startElement", pe);
+                            getLogger().warn("CocoonMarkupLanguage.startElement", pe);
                             throw new SAXException (pe);
                         } catch (IOException ioe) {
-                            log.warn("CocoonMarkupLanguage.startElement", ioe);
+                            getLogger().warn("CocoonMarkupLanguage.startElement", ioe);
                             throw new SAXException (ioe);
                         }
                     } else {
@@ -427,8 +407,8 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
             }
         }
 
-        public void endElement (String namespaceURI, String localName,
-                String qName) throws SAXException {
+        public void endElement(String namespaceURI, String localName,
+                               String qName) throws SAXException {
             if (finished) {
                 // Forward the events
                 super.endElement(namespaceURI, localName, qName);
