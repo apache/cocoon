@@ -17,31 +17,31 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
-    |
-    | @version $Id$
-    +-->
-    <document>
-      <body>
-      	<release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
-      	  <action dev="gkossakowski" type="update" issue="COCOON-2059" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
-      	  	Ajax block made use of deprecated dojo.animation.Timer.
-      	  </action>
-          <action dev="gkossakowski" type="fix" issue="COCOON-2062" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
-          	Added missing dojo.require("dojo.ns") statement.
-          </action>
-      	</release>
-        <release version="1.0.0-M4" date="2007-??-??" description="unreleased">
-          <action dev="gkossakowski" type="update" issue="COCOON-2073" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
-            Dojo toolkit upgraded to 0.4.3 version. It contains fix for security bug. See http://dojotoolkit.org/releaseNotes/0.4.3.
-          </action>
-        </release>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>      
-        </release>
-      </body>
-    </document>
+
+<!--
+  - @see http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  - @version $Id$
+  -->
+<document>
+  <body>
+    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
+      <action dev="gkossakowski" type="update" issue="COCOON-2059" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+        Ajax block made use of deprecated dojo.animation.Timer.
+      </action>
+      <action dev="gkossakowski" type="fix" issue="COCOON-2062" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+        Added missing dojo.require("dojo.ns") statement.
+      </action>
+    </release>
+    <release version="1.0.0-M4" date="2007-??-??" description="unreleased">
+      <action dev="gkossakowski" type="update" issue="COCOON-2073" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+        Dojo toolkit upgraded to 0.4.3 version. It contains fix for security bug. See http://dojotoolkit.org/releaseNotes/0.4.3.
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>
+    </release>
+  </body>
+</document>
     
