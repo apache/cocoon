@@ -19,6 +19,7 @@
 -->
 
 <!--
+  - @see http://maven.apache.org/plugins/maven-changes-plugin/usage.html
   - @version $Id$
   -->
 <document>
@@ -27,6 +28,12 @@
   </properties>
 
   <body>
+    <release version="2.2.0" date="2007-??-??" description="unreleased">
+      <action dev="vgritsenko" type="update">
+        Cocoon Core has been switched from Avalon Logger to Jakarta Commons Logging.
+        See <a href="http://cocoon.apache.org/2.2/">migration guide</a> for more details.
+      </action>
+    </release>
     <release version="2.2.0-M3-SNAPSHOT" date="2007-03-02" description="released">
       <action dev="dfagerstrom" type="update">
         Refactoring to make the pipelines usable outside the tree processor:
