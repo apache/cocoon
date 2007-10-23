@@ -16,9 +16,11 @@
   limitations under the License.
 -->
 
-<!--+
-    | This is the Cocoon web-app configurations file
-    +-->
+<!--
+  - This is the Cocoon web-app configurations file
+  -
+  - $Id$
+  -->
 <web-app version="2.4"
          xmlns="http://java.sun.com/xml/ns/j2ee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -26,9 +28,9 @@
 
   <!-- Servlet Filters ================================================ -->
 
-  <!--+
-      | Declare a filter for multipart MIME handling
-      +-->
+  <!--
+    - Declare a filter for multipart MIME handling
+    -->
   <filter>
     <description>Multipart MIME handling filter for Cocoon</description>
     <display-name>Cocoon multipart filter</display-name>
@@ -36,9 +38,9 @@
     <filter-class>org.apache.cocoon.servlet.multipart.MultipartFilter</filter-class>
   </filter>
 
-  <!--+
-      | Declare a filter for debugging incoming request
-      +-->
+  <!--
+    - Declare a filter for debugging incoming request
+    -->
   <filter>
     <description>Log debug information about each request</description>
     <display-name>Cocoon debug filter</display-name>
@@ -48,9 +50,9 @@
 
   <!-- Filter mappings ================================================ -->
 
-  <!--+
-      | Use the Cocoon multipart filter together with the Cocoon demo webapp
-      +-->
+  <!--
+    - Use the Cocoon multipart filter together with the Cocoon demo webapp
+    -->
   <filter-mapping>
     <filter-name>CocoonMultipartFilter</filter-name>
     <servlet-name>Cocoon</servlet-name>
@@ -60,34 +62,38 @@
     <servlet-name>DispatcherServlet</servlet-name>
   </filter-mapping>
 
-  <!--+
-      | Use the Cocoon debug filter together with the Cocoon demo webapp
-
+  <!--
+    - Use the Cocoon debug filter together with the Cocoon demo webapp
   <filter-mapping>
     <filter-name>CocoonDebugFilter</filter-name>
     <servlet-name>Cocoon</servlet-name>
   </filter-mapping>
-      +-->
+    -->
 
   <!-- Servlet Context Listener ======================================= -->
 
-  <!--+
-      | Declare Spring context listener which sets up the Spring Application Context
-      | containing all Cocoon components (and user defined beans as well).
-      +-->
+  <!--
+    - Declare Spring context listener which sets up the Spring Application Context
+    - containing all Cocoon components (and user defined beans as well).
+    -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
-  <!--+
-      | Declare Spring request listener which sets up the required RequestAttributes
-      | to support Springs and Cocoon custom bean scopes like the request scope or the
-      | session scope.
-      +-->
+  <!--
+    - Declare Spring request listener which sets up the required RequestAttributes
+    - to support Springs and Cocoon custom bean scopes like the request scope or the
+    - session scope.
+    -->
   <listener>
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
 
+  <!-- Servlet Configuration ========================================== -->
+
+  <!--
+    - Servlet that dispatches requests to the Spring managed block servlets
+    -->
   <servlet>
     <description>Cocoon blocks dispatcher</description>
     <display-name>DispatcherServlet</display-name>
@@ -96,9 +102,18 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
+  <!-- URL space mappings ============================================= -->
+
+  <!--
+    - Cocoon handles all the URL space assigned to the webapp using its sitemap.
+    - It is recommended to leave it unchanged. Under some circumstances though
+    - (like integration with proprietary webapps or servlets) you might have
+    - to change this parameter.
+    -->
   <servlet-mapping>
     <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
 </web-app>
+        
