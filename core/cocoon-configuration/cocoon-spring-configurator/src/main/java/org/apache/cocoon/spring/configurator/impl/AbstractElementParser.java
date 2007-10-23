@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.cocoon.configuration.Settings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -32,6 +31,9 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
 import org.springframework.util.StringUtils;
+
+import org.apache.cocoon.configuration.Settings;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -40,8 +42,8 @@ import org.w3c.dom.NodeList;
  * This is a base class for all bean definition parsers used in Cocoon. It
  * provides some utility methods.
  *
- * @version $Id$
  * @since 1.0
+ * @version $Id$
  */
 public abstract class AbstractElementParser implements BeanDefinitionParser {
 
@@ -58,6 +60,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         if (value == null || value.trim().length() == 0) {
             value = defaultValue;
         }
+        
         return value;
     }
 
@@ -73,7 +76,8 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
                 elements.add(node);
             }
         }
-        return (Element[])elements.toArray(new Element[elements.size()]);
+        
+        return (Element[]) elements.toArray(new Element[elements.size()]);
     }
 
     /**
@@ -84,7 +88,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      * @param registry The registry.
      */
     protected void register(BeanDefinition beanDef, String beanName, BeanDefinitionRegistry registry) {
-        this.register(beanDef, beanName, null, registry);
+        register(beanDef, beanName, null, registry);
     }
 
     /**
@@ -97,8 +101,8 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      */
     protected void register(BeanDefinition beanDef, String beanName, String alias, BeanDefinitionRegistry registry) {
         if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Registering bean with name " + beanName
-                    + (alias != null ? " (alias=" + alias + ") " : " ") + beanDef);
+            this.logger.debug("Registering bean with name " + beanName +
+                              (alias != null ? " (alias=" + alias + ") " : " ") + beanDef);
         }
         final BeanDefinitionHolder holder;
         if (alias != null) {
@@ -106,6 +110,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         } else {
             holder = new BeanDefinitionHolder(beanDef, beanName);
         }
+
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
     }
 
@@ -134,9 +139,10 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
             beanName = (String) aliases.remove(0);
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("No XML 'id' specified - using '" + beanName +
-                            "' as bean name and " + aliases + " as aliases");
+                                  "' as bean name and " + aliases + " as aliases");
             }
         }
+
         final BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, beanName, StringUtils.toStringArray(aliases));
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
     }
@@ -153,14 +159,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
     protected RootBeanDefinition createBeanDefinition(Class componentClass, String initMethod, boolean requiresSettings) {
         final RootBeanDefinition beanDef = new RootBeanDefinition();
         beanDef.setBeanClass(componentClass);
-        beanDef.setSingleton(true);
-        beanDef.setLazyInit(false);
-        if (initMethod != null) {
-            beanDef.setInitMethodName(initMethod);
-        }
-        if (requiresSettings) {
-            beanDef.getPropertyValues().addPropertyValue("settings", new RuntimeBeanReference(Settings.ROLE));
-        }
+        fillBeanDefinition(beanDef, initMethod, requiresSettings);
         return beanDef;
     }
 
@@ -176,6 +175,11 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
     protected RootBeanDefinition createBeanDefinition(String componentClass, String initMethod, boolean requiresSettings) {
         final RootBeanDefinition beanDef = new RootBeanDefinition();
         beanDef.setBeanClassName(componentClass);
+        fillBeanDefinition(beanDef, initMethod, requiresSettings);
+        return beanDef;
+    }
+
+    private void fillBeanDefinition(RootBeanDefinition beanDef, String initMethod, boolean requiresSettings) {
         beanDef.setSingleton(true);
         beanDef.setLazyInit(false);
         if (initMethod != null) {
@@ -184,7 +188,6 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         if (requiresSettings) {
             beanDef.getPropertyValues().addPropertyValue("settings", new RuntimeBeanReference(Settings.ROLE));
         }
-        return beanDef;
     }
 
     /**
@@ -197,11 +200,11 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      *            settings object.
      * @param registry The bean registry.
      */
-    protected void addComponent(Class componentClass, String beanName, String initMethod, boolean requiresSettings,
-            BeanDefinitionRegistry registry) {
-        final RootBeanDefinition beanDef = this.createBeanDefinition(componentClass, initMethod, requiresSettings);
-
-        this.register(beanDef, beanName, registry);
+    protected void addComponent(Class componentClass, String beanName,
+                                String initMethod, boolean requiresSettings,
+                                BeanDefinitionRegistry registry) {
+        final RootBeanDefinition beanDef = createBeanDefinition(componentClass, initMethod, requiresSettings);
+        register(beanDef, beanName, registry);
     }
 
     /**
@@ -214,10 +217,10 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
      *            settings object.
      * @param registry The bean registry.
      */
-    protected void addComponent(String componentClass, String beanName, String initMethod, boolean requiresSettings,
-            BeanDefinitionRegistry registry) {
-        final RootBeanDefinition beanDef = this.createBeanDefinition(componentClass, initMethod, requiresSettings);
-
-        this.register(beanDef, beanName, registry);
+    protected void addComponent(String componentClass, String beanName,
+                                String initMethod, boolean requiresSettings,
+                                BeanDefinitionRegistry registry) {
+        final RootBeanDefinition beanDef = createBeanDefinition(componentClass, initMethod, requiresSettings);
+        register(beanDef, beanName, registry);
     }
 }
