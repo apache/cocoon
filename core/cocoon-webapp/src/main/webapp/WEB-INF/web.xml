@@ -15,9 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    | This is the Cocoon web-app configurations file
-    +-->
+
+<!--
+  - This is the Cocoon web-app configurations file
+  -
+  - $Id$
+  -->
 <web-app version="2.4"
          xmlns="http://java.sun.com/xml/ns/j2ee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -25,24 +28,23 @@
 
   <!-- Context Configuration ========================================== -->
 
-  <!--+
-      | Set a context property useful to allow you to ProxyPass your
-      | web application mounted to a different URI without losing the
-      | ability to do cookie-based sessions.
-      | WARNING: this is Jetty specific!
-      +-->
-  <!--context-param>
+  <!--
+    - Set a context property useful to allow you to ProxyPass your
+    - web application mounted to a different URI without losing the
+    - ability to do cookie-based sessions.
+    - WARNING: this is Jetty specific!
+  <context-param>
     <param-name>org.mortbay.jetty.servlet.SessionPath</param-name>
     <param-value>/some/path/to/your/webapp</param-value>
     <description>An override of the session cookie path</description>
-   </context-param-->
+  </context-param>
+    -->
 
   <!-- Servlet Filters ================================================ -->
 
-  <!--+
-      | Declare a filter for multipart MIME handling
-      +-->
-
+  <!--
+    - Declare a filter for multipart MIME handling
+    -->
   <filter>
     <description>Multipart MIME handling filter for Cocoon</description>
     <display-name>Cocoon multipart filter</display-name>
@@ -50,10 +52,9 @@
     <filter-class>org.apache.cocoon.servlet.multipart.MultipartFilter</filter-class>
   </filter>
 
-  <!--+
-      | Declare a filter for debugging incoming request
-      +-->
-
+  <!--
+    - Declare a filter for debugging incoming request
+    -->
   <filter>
     <description>Log debug information about each request</description>
     <display-name>Cocoon debug filter</display-name>
@@ -63,10 +64,9 @@
 
   <!-- Filter mappings ================================================ -->
 
-  <!--+
-      | Use the Cocoon multipart filter together with the Cocoon demo webapp
-      +-->
-
+  <!--
+    - Use the Cocoon multipart filter together with the Cocoon demo webapp
+    -->
   <filter-mapping>
     <filter-name>CocoonMultipartFilter</filter-name>
     <servlet-name>Cocoon</servlet-name>
@@ -76,76 +76,76 @@
     <servlet-name>DispatcherServlet</servlet-name>
   </filter-mapping>
 
-  <!--+
-      | Use the Cocoon debug filter together with the Cocoon demo webapp
-
+  <!--
+    - Use the Cocoon debug filter together with the Cocoon demo webapp
   <filter-mapping>
     <filter-name>CocoonDebugFilter</filter-name>
     <servlet-name>Cocoon</servlet-name>
   </filter-mapping>
-      +-->
+    -->
 
   <!-- Servlet Context Listener ======================================= -->
 
-  <!--+
-      | Declare Spring context listener which sets up the Spring Application Context
-      | containing all Cocoon components (and user defined beans as well).
-      +-->
+  <!--
+    - Declare Spring context listener which sets up the Spring Application Context
+    - containing all Cocoon components (and user defined beans as well).
+    -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
-  <!--+
-      | Declare Spring request listener which sets up the required RequestAttributes
-      | to support Springs and Cocoon custom bean scopes like the request scope or the
-      | session scope.
-      +-->
+  <!--
+    - Declare Spring request listener which sets up the required RequestAttributes
+    - to support Springs and Cocoon custom bean scopes like the request scope or the
+    - session scope.
+    -->
   <listener>
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
 
   <!-- Servlet Configuration ========================================== -->
 
-  <!-- Servlet that dispatch to Spring managed block servlets -->
+  <!--
+    - Servlet that dispatches requests to the Spring managed block servlets
+    -->
   <servlet>
     <description>Cocoon blocks dispatcher</description>
     <display-name>DispatcherServlet</display-name>
     <servlet-name>DispatcherServlet</servlet-name>
-
     <servlet-class>org.apache.cocoon.servletservice.DispatcherServlet</servlet-class>
-
     <!--
-      This parameter allows you to startup immediately after startup
-      of your servlet engine.
-    -->
+      - This parameter allows you to startup immediately after startup
+      - of your servlet engine.
+      -->
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <!-- URL space mappings ============================================= -->
 
   <!--
-    Cocoon handles all the URL space assigned to the webapp using its sitemap.
-    It is recommended to leave it unchanged. Under some circumstances though
-    (like integration with proprietary webapps or servlets) you might have
-    to change this parameter.
-  -->
+    - Cocoon handles all the URL space assigned to the webapp using its sitemap.
+    - It is recommended to leave it unchanged. Under some circumstances though
+    - (like integration with proprietary webapps or servlets) you might have
+    - to change this parameter.
+    -->
   <servlet-mapping>
     <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
   <!--
-    Some servlet engines (Tomcat) have defaults which are not overriden
-    by '/' mapping, but must be overriden explicitly.
-  -->
+    - Some servlet engines (Tomcat) have defaults which are not overriden
+    - by '/' mapping, but must be overriden explicitly.
+    -->
   <servlet-mapping>
     <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>*.jsp</url-pattern>
   </servlet-mapping>
+
   <!--
-    Some servlet engines (WebLogic) have defaults which are not overriden
-    by '/' mapping, but must be overriden explicitly.
-  -->
+    - Some servlet engines (WebLogic) have defaults which are not overriden
+    - by '/' mapping, but must be overriden explicitly.
+    -->
   <servlet-mapping>
     <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>*.html</url-pattern>
@@ -188,8 +188,9 @@
     <mime-type>text/plain</mime-type>
   </mime-mapping>
 
-
-  <!-- Sample environment entry for the NamingInputModule -->
+  <!--
+    - Sample environment entry for the NamingInputModule
+    -->
   <env-entry>
     <env-entry-name>greeting</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
