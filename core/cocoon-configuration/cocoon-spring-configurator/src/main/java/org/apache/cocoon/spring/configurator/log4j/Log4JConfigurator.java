@@ -27,12 +27,11 @@ import org.springframework.core.io.Resource;
  * This is a configurator for log4j that supports variable substitution
  * from the settings object.
  *
- * @version $Id$
  * @since 1.0
+ * @version $Id$
  */
-public class Log4JConfigurator
-    extends DOMConfigurator
-    implements InitializingBean {
+public class Log4JConfigurator extends DOMConfigurator
+                               implements InitializingBean {
 
     /** The settings object that is used to substitute variable values. */
     protected Settings settings;
@@ -62,11 +61,12 @@ public class Log4JConfigurator
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     public void afterPropertiesSet() throws Exception {
-        this.doConfigure(this.resource.getInputStream(), LogManager.getLoggerRepository());
+        doConfigure(this.resource.getInputStream(), LogManager.getLoggerRepository());
     }
 
     /**
      * Substitute variables in the string value.
+     *
      * @param value The value which might contain variable references.
      * @return The new value without variables (if defined).
      * @see org.apache.log4j.xml.DOMConfigurator#subst(java.lang.String)
