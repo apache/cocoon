@@ -32,10 +32,13 @@ public class AvalonUtils {
 
     /** Bean name for the Avalon context. */
     public static final String CONTEXT_ROLE = "org.apache.avalon.framework.context.Context";
+
     /** Bean name for the logger. */
     public static final String LOGGER_ROLE = "org.apache.avalon.framework.logger.Logger";
+
     /** Bean name for the service manager. */
     public static final String SERVICE_MANAGER_ROLE = "org.apache.avalon.framework.service.ServiceManager";
+
 
     /**
      * Replace all properties in the configuration object.

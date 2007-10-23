@@ -56,7 +56,12 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
  */
 public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcessor, BeanFactoryAware {
 
-    protected static final Configuration EMPTY_CONFIG = new DefaultConfiguration("empty");
+    protected static final Configuration EMPTY_CONFIG;
+    static {
+        DefaultConfiguration config = new DefaultConfiguration("empty");
+        config.makeReadOnly();
+        EMPTY_CONFIG = config;
+    }
 
     protected Logger logger;
     protected Context context;
@@ -193,8 +198,7 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
     }
 
     /**
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
-     *      java.lang.String)
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(Object, String)
      */
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         try {
@@ -224,15 +228,18 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
             }
             ContainerUtil.contextualize(bean, this.context);
             ContainerUtil.service(bean, (ServiceManager) this.beanFactory.getBean(ServiceManager.class.getName()));
+
             Configuration config = info.getProcessedConfiguration();
             if (config == null) {
                 config = info.getConfiguration();
                 if (config == null) {
                     config = EMPTY_CONFIG;
+                } else {
+                    config = AvalonUtils.replaceProperties(config, this.settings);
                 }
-                config = AvalonUtils.replaceProperties(config, this.settings);
                 info.setProcessedConfiguration(config);
             }
+
             if (bean instanceof Configurable) {
                 ContainerUtil.configure(bean, config);
             } else if (bean instanceof Parameterizable) {
@@ -243,6 +250,7 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
                 }
                 ContainerUtil.parameterize(bean, p);
             }
+
             ContainerUtil.initialize(bean);
         } catch (Exception e) {
             throw new BeanCreationException("Unable to initialize Avalon component with role " + beanName, e);
@@ -252,8 +260,7 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
     }
 
     /**
-     * @see org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor#postProcessBeforeDestruction(java.lang.Object,
-     *      java.lang.String)
+     * @see DestructionAwareBeanPostProcessor#postProcessBeforeDestruction(Object, String)
      */
     public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
         try {
