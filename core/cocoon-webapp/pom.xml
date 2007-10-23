@@ -17,12 +17,13 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | This is the bare bones Cocoon web application,
-    | basis for creation of custom distributions.
-    |
-    | @version $Id$
-    +-->
+
+<!--
+  - This is the bare bones Cocoon web application,
+  - basis for creation of custom distributions.
+  -
+  - @version $Id$
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -75,6 +76,10 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-main-sample</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core-additional-sample</artifactId>
     </dependency>
 
     <!-- Cocoon Sample Blocks -->
