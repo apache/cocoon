@@ -46,10 +46,13 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 
 /**
+ * FOP 0.93 (and newer) based serializer.
+ *  
  * @version $Id$
  */
-public class FOPNGSerializer extends AbstractSerializer implements
-  Configurable, CacheableProcessingComponent, Serviceable, URIResolver, Disposable {
+public class FOPNGSerializer extends AbstractSerializer
+                             implements Configurable, CacheableProcessingComponent,
+                                        Serviceable, URIResolver, Disposable {
 
     protected SourceResolver resolver;
 
@@ -57,6 +60,7 @@ public class FOPNGSerializer extends AbstractSerializer implements
      * Factory to create fop objects
      */
     protected FopFactory fopfactory = FopFactory.newInstance();
+
     /**
      * The FOP instance.
      */
@@ -73,28 +77,20 @@ public class FOPNGSerializer extends AbstractSerializer implements
     protected boolean setContentLength = true;
 
     /**
-     * It is used to make sure that default Options loaded only once.
-     */
-    private static boolean configured = false;
-
-    /**
      * Manager to get URLFactory from.
      */
     protected ServiceManager manager;
     private Map rendererOptions;
+
 
     /**
      * Set the component manager for this serializer.
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
     }
-/*
-    public void dispose() {
-        this.manager.release(this.resolver);
-    }
-*/
+
     /**
      * Set the configurations for this serializer.
      */
@@ -151,6 +147,24 @@ public class FOPNGSerializer extends AbstractSerializer implements
     }
 
     /**
+     * Recycle serializer by removing references
+     */
+    public void recycle() {
+        super.recycle();
+        this.fop = null;
+    }
+
+    public void dispose() {
+        if (this.resolver != null) {
+            this.manager.release(this.resolver);
+            this.resolver = null;
+        }
+        this.manager = null;
+    }
+
+    // -----------------------------------------------------------------
+
+    /**
      * Return the MIME type.
      */
     public String getMimeType() {
@@ -202,14 +216,6 @@ public class FOPNGSerializer extends AbstractSerializer implements
      */
     public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
-    }
-
-    /**
-     * Recycle serializer by removing references
-     */
-    public void recycle() {
-        super.recycle();
-        this.fop = null;
     }
 
     /**
@@ -286,14 +292,6 @@ public class FOPNGSerializer extends AbstractSerializer implements
         return streamSource;
     }
 
-    public void dispose() {
-        if (null != manager) {
-            this.manager.release(this.resolver);
-            this.manager = null;
-        }
-        this.resolver = null;
-    }
-
     /**
      * An InputStream which releases the Cocoon/Avalon source from which the InputStream
      * has been retrieved when the stream is closed.
@@ -346,5 +344,4 @@ public class FOPNGSerializer extends AbstractSerializer implements
             return delegate.markSupported();
         }
     }
-
 }
