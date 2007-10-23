@@ -49,6 +49,8 @@ import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
+ * FOP 0.20.5 (and older) based serializer.
+ * 
  * @version $Id$
  */
 public class FOPSerializer extends AbstractSerializer
