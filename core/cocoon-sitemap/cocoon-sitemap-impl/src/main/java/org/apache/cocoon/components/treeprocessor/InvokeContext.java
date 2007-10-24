@@ -127,7 +127,7 @@ public class InvokeContext extends AbstractLogEnabled
         if (this.processingPipeline != null) {
             this.processingPipeline.setProcessorManager(manager);
         }
-        this.newObjectModel = (ObjectModel)manager.lookup(ObjectModel.ROLE);
+        this.newObjectModel = (ObjectModel) manager.lookup(ObjectModel.ROLE);
     }
 
     /**
@@ -187,13 +187,14 @@ public class InvokeContext extends AbstractLogEnabled
      * Get the pipeline description
      */
     public Processor.InternalPipelineDescription getInternalPipelineDescription(Environment env) {
-        if ( this.internalPipelineDescription == null ) {
+        if (this.internalPipelineDescription == null) {
             this.internalPipelineDescription = new Processor.InternalPipelineDescription(
                     this.processingPipeline, this.pipelineSelector, this.pipelinesManager);
             this.internalPipelineDescription.lastProcessor = this.lastProcessor;
             this.internalPipelineDescription.prefix = env.getURIPrefix();
             this.internalPipelineDescription.uri = env.getURI();
         }
+
         return this.internalPipelineDescription;
     }
 
@@ -329,9 +330,11 @@ public class InvokeContext extends AbstractLogEnabled
      */
     public void dispose() {
         if (this.internalPipelineDescription == null && this.pipelinesManager != null) {
-            if (this.pipelineSelector != null) {
+            if (this.processingPipeline != null) {
                 this.pipelineSelector.release(this.processingPipeline);
                 this.processingPipeline = null;
+            }
+            if (this.pipelineSelector != null) {
                 this.pipelinesManager.release(this.pipelineSelector);
                 this.pipelineSelector = null;
             }
@@ -341,7 +344,13 @@ public class InvokeContext extends AbstractLogEnabled
             this.processingPipelineParameters = null;
             this.processingPipelineObjectModel = null;
         }
-        this.currentManager.release(this.newObjectModel);
+
+        if (this.newObjectModel != null) {
+            this.currentManager.release(this.newObjectModel);
+            this.newObjectModel = null;
+        }
+
+        this.currentManager = null;
     }
 
     /**
