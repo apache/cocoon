@@ -29,7 +29,7 @@ import java.io.OutputStream;
  * If you want to reuse this instance, make sure to call {@link #recycle(OutputStream)} to set a new OutputStream
  * and reset the class inbetween two compilation tasks.
  *
- * @version $Id: XMLOutputStreamCompiler.java 366211 2006-01-05 16:02:33Z cziegeler $
+ * @version $Id$
  */
 public final class XMLOutputStreamCompiler
     extends AbstractXMLByteStreamCompiler {
