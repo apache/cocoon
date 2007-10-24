@@ -16,58 +16,57 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | SVN $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
   <component-instance role="org.apache.cocoon.taglib.TagSelector" class="org.apache.cocoon.core.container.DefaultServiceSelector">
-    <taglib name="http://java.sun.com/jsf/core" logger="sitemap.taglib.jsf" class="org.apache.cocoon.core.container.StandaloneServiceSelector">
-      <tag name="actionListener" class="org.apache.cocoon.faces.taglib.ActionListenerTag" logger="sitemap.taglib.jsf"/>
-      <tag name="attribute" class="org.apache.cocoon.faces.taglib.AttributeTag" logger="sitemap.taglib.jsf"/>
-      <tag name="convertDateTime" class="org.apache.cocoon.faces.taglib.ConvertDateTimeTag" logger="sitemap.taglib.jsf"/>
-      <tag name="converter" class="org.apache.cocoon.faces.taglib.ConverterTag" logger="sitemap.taglib.jsf"/>
-      <tag name="convertNumber" class="org.apache.cocoon.faces.taglib.ConvertNumberTag" logger="sitemap.taglib.jsf"/>
-      <tag name="facet" class="org.apache.cocoon.faces.taglib.FacetTag" logger="sitemap.taglib.jsf"/>
-      <tag name="loadBundle" class="org.apache.cocoon.faces.taglib.LoadBundleTag" logger="sitemap.taglib.jsf"/>
-      <tag name="param" class="org.apache.cocoon.faces.taglib.ParameterTag" logger="sitemap.taglib.jsf"/>
-      <tag name="selectItem" class="org.apache.cocoon.faces.taglib.SelectItemTag" logger="sitemap.taglib.jsf"/>
-      <tag name="selectItems" class="org.apache.cocoon.faces.taglib.SelectItemsTag" logger="sitemap.taglib.jsf"/>
-      <tag name="subview" class="org.apache.cocoon.faces.taglib.SubviewTag" logger="sitemap.taglib.jsf"/>
-      <tag name="validateDoubleRange" class="org.apache.cocoon.faces.taglib.ValidateDoubleRangeTag" logger="sitemap.taglib.jsf"/>
-      <tag name="validateLength" class="org.apache.cocoon.faces.taglib.ValidateLengthTag" logger="sitemap.taglib.jsf"/>
-      <tag name="validateLongRange" class="org.apache.cocoon.faces.taglib.ValidateLongRangeTag" logger="sitemap.taglib.jsf"/>
-      <tag name="validator" class="org.apache.cocoon.faces.taglib.ValidatorTag" logger="sitemap.taglib.jsf"/>
-      <tag name="valueChangeListener" class="org.apache.cocoon.faces.taglib.ValueChangeListenerTag" logger="sitemap.taglib.jsf"/>
-      <tag name="verbatim" class="org.apache.cocoon.faces.taglib.VerbatimTag" logger="sitemap.taglib.jsf"/>
-      <tag name="view" class="org.apache.cocoon.faces.taglib.ViewTag" logger="sitemap.taglib.jsf"/>
+    <taglib name="http://java.sun.com/jsf/core" class="org.apache.cocoon.core.container.StandaloneServiceSelector">
+      <tag name="actionListener" class="org.apache.cocoon.faces.taglib.ActionListenerTag"/>
+      <tag name="attribute" class="org.apache.cocoon.faces.taglib.AttributeTag"/>
+      <tag name="convertDateTime" class="org.apache.cocoon.faces.taglib.ConvertDateTimeTag"/>
+      <tag name="converter" class="org.apache.cocoon.faces.taglib.ConverterTag"/>
+      <tag name="convertNumber" class="org.apache.cocoon.faces.taglib.ConvertNumberTag"/>
+      <tag name="facet" class="org.apache.cocoon.faces.taglib.FacetTag"/>
+      <tag name="loadBundle" class="org.apache.cocoon.faces.taglib.LoadBundleTag"/>
+      <tag name="param" class="org.apache.cocoon.faces.taglib.ParameterTag"/>
+      <tag name="selectItem" class="org.apache.cocoon.faces.taglib.SelectItemTag"/>
+      <tag name="selectItems" class="org.apache.cocoon.faces.taglib.SelectItemsTag"/>
+      <tag name="subview" class="org.apache.cocoon.faces.taglib.SubviewTag"/>
+      <tag name="validateDoubleRange" class="org.apache.cocoon.faces.taglib.ValidateDoubleRangeTag"/>
+      <tag name="validateLength" class="org.apache.cocoon.faces.taglib.ValidateLengthTag"/>
+      <tag name="validateLongRange" class="org.apache.cocoon.faces.taglib.ValidateLongRangeTag"/>
+      <tag name="validator" class="org.apache.cocoon.faces.taglib.ValidatorTag"/>
+      <tag name="valueChangeListener" class="org.apache.cocoon.faces.taglib.ValueChangeListenerTag"/>
+      <tag name="verbatim" class="org.apache.cocoon.faces.taglib.VerbatimTag"/>
+      <tag name="view" class="org.apache.cocoon.faces.taglib.ViewTag"/>
     </taglib>
-    <taglib name="http://java.sun.com/jsf/html" logger="sitemap.taglib.jsf.html" class="org.apache.cocoon.core.container.StandaloneServiceSelector">
-      <tag name="column" class="org.apache.cocoon.faces.taglib.html.ColumnTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="commandButton" class="org.apache.cocoon.faces.taglib.html.CommandButtonTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="commandLink" class="org.apache.cocoon.faces.taglib.html.CommandLinkTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="dataTable" class="org.apache.cocoon.faces.taglib.html.DataTableTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="form" class="org.apache.cocoon.faces.taglib.html.FormTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="graphicImage" class="org.apache.cocoon.faces.taglib.html.GraphicImageTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="inputHidden" class="org.apache.cocoon.faces.taglib.html.InputHiddenTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="inputSecret" class="org.apache.cocoon.faces.taglib.html.InputSecretTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="inputText" class="org.apache.cocoon.faces.taglib.html.InputTextTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="inputTextarea" class="org.apache.cocoon.faces.taglib.html.InputTextareaTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="message" class="org.apache.cocoon.faces.taglib.html.MessageTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="messages" class="org.apache.cocoon.faces.taglib.html.MessagesTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="outputFormat" class="org.apache.cocoon.faces.taglib.html.OutputFormatTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="outputLabel" class="org.apache.cocoon.faces.taglib.html.OutputLabelTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="outputLink" class="org.apache.cocoon.faces.taglib.html.OutputLinkTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="outputText" class="org.apache.cocoon.faces.taglib.html.OutputTextTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="panelGrid" class="org.apache.cocoon.faces.taglib.html.PanelGridTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="panelGroup" class="org.apache.cocoon.faces.taglib.html.PanelGroupTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="selectBooleanCheckbox" class="org.apache.cocoon.faces.taglib.html.SelectBooleanCheckboxTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="selectManyCheckbox" class="org.apache.cocoon.faces.taglib.html.SelectManyCheckboxTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="selectManyListbox" class="org.apache.cocoon.faces.taglib.html.SelectManyListboxTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="selectManyMenu" class="org.apache.cocoon.faces.taglib.html.SelectManyMenuTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="selectOneListbox" class="org.apache.cocoon.faces.taglib.html.SelectOneListboxTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="selectOneMenu" class="org.apache.cocoon.faces.taglib.html.SelectOneMenuTag" logger="sitemap.taglib.jsf.html"/>
-      <tag name="selectOneRadio" class="org.apache.cocoon.faces.taglib.html.SelectOneRadioTag" logger="sitemap.taglib.jsf.html"/>
+    <taglib name="http://java.sun.com/jsf/html" class="org.apache.cocoon.core.container.StandaloneServiceSelector">
+      <tag name="column" class="org.apache.cocoon.faces.taglib.html.ColumnTag"/>
+      <tag name="commandButton" class="org.apache.cocoon.faces.taglib.html.CommandButtonTag"/>
+      <tag name="commandLink" class="org.apache.cocoon.faces.taglib.html.CommandLinkTag"/>
+      <tag name="dataTable" class="org.apache.cocoon.faces.taglib.html.DataTableTag"/>
+      <tag name="form" class="org.apache.cocoon.faces.taglib.html.FormTag"/>
+      <tag name="graphicImage" class="org.apache.cocoon.faces.taglib.html.GraphicImageTag"/>
+      <tag name="inputHidden" class="org.apache.cocoon.faces.taglib.html.InputHiddenTag"/>
+      <tag name="inputSecret" class="org.apache.cocoon.faces.taglib.html.InputSecretTag"/>
+      <tag name="inputText" class="org.apache.cocoon.faces.taglib.html.InputTextTag"/>
+      <tag name="inputTextarea" class="org.apache.cocoon.faces.taglib.html.InputTextareaTag"/>
+      <tag name="message" class="org.apache.cocoon.faces.taglib.html.MessageTag"/>
+      <tag name="messages" class="org.apache.cocoon.faces.taglib.html.MessagesTag"/>
+      <tag name="outputFormat" class="org.apache.cocoon.faces.taglib.html.OutputFormatTag"/>
+      <tag name="outputLabel" class="org.apache.cocoon.faces.taglib.html.OutputLabelTag"/>
+      <tag name="outputLink" class="org.apache.cocoon.faces.taglib.html.OutputLinkTag"/>
+      <tag name="outputText" class="org.apache.cocoon.faces.taglib.html.OutputTextTag"/>
+      <tag name="panelGrid" class="org.apache.cocoon.faces.taglib.html.PanelGridTag"/>
+      <tag name="panelGroup" class="org.apache.cocoon.faces.taglib.html.PanelGroupTag"/>
+      <tag name="selectBooleanCheckbox" class="org.apache.cocoon.faces.taglib.html.SelectBooleanCheckboxTag"/>
+      <tag name="selectManyCheckbox" class="org.apache.cocoon.faces.taglib.html.SelectManyCheckboxTag"/>
+      <tag name="selectManyListbox" class="org.apache.cocoon.faces.taglib.html.SelectManyListboxTag"/>
+      <tag name="selectManyMenu" class="org.apache.cocoon.faces.taglib.html.SelectManyMenuTag"/>
+      <tag name="selectOneListbox" class="org.apache.cocoon.faces.taglib.html.SelectOneListboxTag"/>
+      <tag name="selectOneMenu" class="org.apache.cocoon.faces.taglib.html.SelectOneMenuTag"/>
+      <tag name="selectOneRadio" class="org.apache.cocoon.faces.taglib.html.SelectOneRadioTag"/>
     </taglib>
   </component-instance>
 </components>

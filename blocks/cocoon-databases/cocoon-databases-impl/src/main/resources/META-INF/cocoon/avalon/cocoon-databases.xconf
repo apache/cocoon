@@ -16,37 +16,39 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | @version $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/components/database/database.roles"/>
 
   <source-factories>
     <!-- blob pseudo protocol -->
-    <component-instance name="blob" class="org.apache.cocoon.components.source.impl.BlobSourceFactory"/>
+    <component-instance name="blob"
+                        class="org.apache.cocoon.components.source.impl.BlobSourceFactory"/>
   </source-factories>
 
   <input-modules>
-    <component-instance logger="core.modules.input" name="collection" 	class="org.apache.cocoon.components.modules.input.CollectionMetaModule"/>
+    <component-instance name="collection"
+                        class="org.apache.cocoon.components.modules.input.CollectionMetaModule"/>
   </input-modules>
 
   <autoincrement-modules>
-    <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.HsqlIdentityAutoIncrementModule" />
+    <component-instance name="auto"
+                        class="org.apache.cocoon.components.modules.database.HsqlIdentityAutoIncrementModule"/>
     <!--
       Choose the one suitable for your DBMS. You *can* have more than
       one at a time, but they need to have different names. You then
       need to specify explicitly, which one to use in your descriptor
       file.
       
-      <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.ManualAutoIncrementModule"/>
-      <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.IfxSerialAutoIncrementModule"/>
-      <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.McKoiSequenceModule"/>
-      <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.MysqlAutoIncrementModule"/>
-      <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.PgsqlAutoIncrementModule"/>
-      <component-instance logger="core.modules.auto" name="auto" class="org.apache.cocoon.components.modules.database.SQLServerIdentityAutoIncrementModule"/>
+      <component-instance name="auto" class="org.apache.cocoon.components.modules.database.ManualAutoIncrementModule"/>
+      <component-instance name="auto" class="org.apache.cocoon.components.modules.database.IfxSerialAutoIncrementModule"/>
+      <component-instance name="auto" class="org.apache.cocoon.components.modules.database.McKoiSequenceModule"/>
+      <component-instance name="auto" class="org.apache.cocoon.components.modules.database.MysqlAutoIncrementModule"/>
+      <component-instance name="auto" class="org.apache.cocoon.components.modules.database.PgsqlAutoIncrementModule"/>
+      <component-instance name="auto" class="org.apache.cocoon.components.modules.database.SQLServerIdentityAutoIncrementModule"/>
     -->
   </autoincrement-modules>
 

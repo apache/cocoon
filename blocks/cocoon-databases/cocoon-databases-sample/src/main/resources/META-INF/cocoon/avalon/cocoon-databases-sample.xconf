@@ -16,40 +16,43 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | @version $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
-  <!-- Datasource for the database samples. -->
+  <!--
+    - Datasource for the database samples.
+    -->
   <datasources>
     <!--
       - See Excalibur documentation for details
       - http://excalibur.apache.org/apidocs/org/apache/avalon/excalibur/datasource/ResourceLimitingJdbcDataSource.html
       -->
-    <jdbc logger="core.datasources.personnel" name="personnel">
+    <jdbc name="personnel">
       <!--
-          If you have an Oracle database, and are using the the
-      pool-controller below, you should add the attribute
-      "oradb" and set it to true.
-
+        - If you have an Oracle database, and are using the the
+        - pool-controller below, you should add the attribute
+        - "oradb" and set it to true.
+        -
+        - That way the test to see if the server has disconnected
+        - the JdbcConnection will function properly.
+        -
       <pool-controller min="5" max="10" oradb="true"/>
-
-      That way the test to see if the server has disconnected
-      the JdbcConnection will function properly.
-      -->
+        -->
       <pool-controller max="10" min="5"/>
+
       <!--
-          If you need to ensure an autocommit is set to true or
-      false, then create the "auto-commit" element below.
-
+        - If you need to ensure an autocommit is set to true or
+        - false, then create the "auto-commit" element below.
+        -
+        - The default is true.
+        -
       <auto-commit>false</auto-commit>
+        -->
 
-      The default is true.
-      -->
       <dburl>jdbc:hsqldb:hsql://localhost:${org.apache.cocoon.hsqldb.server.port}/cocoondb</dburl>
       <user>sa</user>
-      <password></password>
+      <password/>
     </jdbc>
   </datasources>
 </components>
