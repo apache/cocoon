@@ -16,25 +16,23 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | SVN $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/ojb/ojb.roles"/>
 
   <!-- OJB Connection Factory -->
   <component role="org.apache.cocoon.ojb.components.ConnectionFactory"
-             class="org.apache.cocoon.ojb.components.ConnectionFactoryImpl"
-             logger="core.ojb"/>
+             class="org.apache.cocoon.ojb.components.ConnectionFactoryImpl"/>
 
   <!-- OJB Persistent Manager Factory for JDO.
        Requires javax.jdo package.
-  <ojb-jdo logger="core.ojb.jdo"/>
+  <ojb-jdo/>
   -->
 
   <!-- OJB ODMG Implementation Interface -->
-  <ojb-odmg logger="core.ojb.odmg"/>
+  <ojb-odmg/>
 
 </components>

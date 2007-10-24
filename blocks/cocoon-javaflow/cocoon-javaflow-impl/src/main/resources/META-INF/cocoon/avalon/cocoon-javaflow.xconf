@@ -16,12 +16,11 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | SVN $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
   <flow-interpreters>
-    <component-instance name="java" class="org.apache.cocoon.components.flow.java.JavaInterpreter" logger="flow"/>
+    <component-instance name="java" class="org.apache.cocoon.components.flow.java.JavaInterpreter"/>
   </flow-interpreters>
 </components>

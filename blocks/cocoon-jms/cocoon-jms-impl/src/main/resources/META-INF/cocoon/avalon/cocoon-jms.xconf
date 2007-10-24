@@ -16,10 +16,9 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | SVN $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/components/jms/jms.roles"/>
@@ -46,7 +45,7 @@
     | - auto-reconnect-delay: the amount of time in ms between reconnection attempts. 
     |   Only applies when auto-reconnect is on. Defaults to 1000ms.
     + -->
-  <jms-connection-manager logger="core.jms">
+  <jms-connection-manager>
     <topic-connection name="local-topics">
       <parameter name="java.naming.factory.initial" value="org.exolab.jms.jndi.InitialContextFactory"/>
       <parameter name="java.naming.provider.url" value="rmi://localhost:1099/"/>
