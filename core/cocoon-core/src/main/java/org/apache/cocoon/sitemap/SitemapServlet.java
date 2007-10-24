@@ -77,8 +77,6 @@ public class SitemapServlet extends HttpServlet {
         private static final String DEFAULT_SITEMAP_PATH = "/sitemap.xmap";
         private static final String SITEMAP_PATH_PROPERTY = "sitemapPath";
 
-        private Configuration treeProcessorConfiguration;
-
         public RequestProcessor(ServletContext servletContext) {
             super(servletContext);
         }
@@ -88,17 +86,18 @@ public class SitemapServlet extends HttpServlet {
         }
 
         protected Processor getProcessor() {
+            // read tree processor configuration
+            Configuration processorConfig;
             ServiceManager serviceManager =
                 (ServiceManager) this.cocoonBeanFactory.getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
             try {
-                this.treeProcessorConfiguration =
-                    this.createTreeProcessorConfiguration(this.servletContext);
+                processorConfig = createTreeProcessorConfiguration(this.servletContext);
             } catch (IOException e) {
                 throw new BeanCreationException("Could not create configuration for TreeProcesoor", e);
             }
 
-            Processor processor;
             // create the tree processor
+            Processor processor;
             try {
                 TreeProcessor treeProcessor = new TreeProcessor();
                 // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all.
@@ -106,7 +105,7 @@ public class SitemapServlet extends HttpServlet {
                                                                        getLogger(),
                                                                        null,
                                                                        serviceManager,
-                                                                       this.treeProcessorConfiguration);
+                                                                       processorConfig);
             } catch (Exception e) {
                 throw new BeanCreationException("Could not create TreeProcessor", e);
             }
@@ -128,12 +127,15 @@ public class SitemapServlet extends HttpServlet {
         // in the tree processor if there actually is a servlet context path
         protected String getURI(HttpServletRequest request, HttpServletResponse res) throws IOException {
             String uri = request.getPathInfo();
-            if (uri == null)
+            if (uri == null) {
                 return "";
-            else if (uri.length() > 0 && uri.charAt(0) == '/')
+            }
+
+            if (uri.length() > 0 && uri.charAt(0) == '/') {
                 return uri.substring(1);
-            else
-                return uri;
+            }
+
+            return uri;
         }
 
         /**
@@ -147,13 +149,15 @@ public class SitemapServlet extends HttpServlet {
             // just providing a relative uri relative to the current context is not enough
             // and doesn't work
             String sitemapPath = servletContext.getInitParameter(SITEMAP_PATH_PROPERTY);
-            if (sitemapPath== null)
-                sitemapPath= DEFAULT_SITEMAP_PATH;
+            if (sitemapPath == null) {
+                sitemapPath = DEFAULT_SITEMAP_PATH;
+            }
 
             String sitemapURI;
             URL uri = servletContext.getResource(sitemapPath);
-            if (uri == null)
+            if (uri == null) {
                 throw new IOException("Couldn't find the sitemap " + sitemapPath);
+            }
             sitemapURI = uri.toExternalForm();
 
             DefaultConfiguration treeProcessorConf = new DefaultConfiguration("treeProcessorConfiguration");

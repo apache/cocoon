@@ -36,6 +36,7 @@ public class SitemapServlet extends HttpServlet {
     /** The Cocoon request processor. */
     protected RequestProcessor processor;
 
+
     public void service(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException {
         this.processor.service(req, res);
@@ -46,6 +47,6 @@ public class SitemapServlet extends HttpServlet {
      */
     public void init() throws ServletException {
         super.init();
-        this.processor = new RequestProcessor(this.getServletContext());
+        this.processor = new RequestProcessor(getServletContext());
     }
 }

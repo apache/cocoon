@@ -21,8 +21,9 @@ import org.apache.commons.lang.BooleanUtils;
 
 /**
  * Helper class for managing Cocoon servlet specific settings.
- * @version $Id$
+ * 
  * @since 2.2
+ * @version $Id$
  */
 public class ServletSettings {
 
@@ -47,16 +48,19 @@ public class ServletSettings {
      */
     public static String KEY_MANAGE_EXCEPTIONS = "org.apache.cocoon.manageexceptions";
 
-    /** Default value for {@link Settings#isManageExceptions()}. */
-    public static final boolean MANAGE_EXCEPTIONS = true;
 
+    /** Default value for {@link #KEY_SHOWTIME} parameter (false). */
     public static final boolean SHOW_TIME = false;
+
+    /** Default value for {@link #KEY_HIDE_SHOWTIME} parameter (false). */
     public static final boolean HIDE_SHOW_TIME = false;
 
-    /**
-     * Default value for {@link Settings#isShowVersion()} parameter (true).
-     */
+    /** Default value for {@link #KEY_SHOW_VERSION} parameter (true). */
     public static final boolean SHOW_COCOON_VERSION = true;
+
+    /** Default value for {@link #KEY_MANAGE_EXCEPTIONS} parameter (true). */
+    public static final boolean MANAGE_EXCEPTIONS = true;
+
 
     /**
      * Allow adding processing time to the response
@@ -79,28 +83,30 @@ public class ServletSettings {
      */
     protected boolean manageExceptions;
 
+    
     public ServletSettings(Settings s) {
         // set defaults
         this.showTime = SHOW_TIME;
         this.hideShowTime = HIDE_SHOW_TIME;
         this.showCocoonVersion = SHOW_COCOON_VERSION;
         this.manageExceptions = MANAGE_EXCEPTIONS;
-        if ( s != null ) {
+
+        if (s != null) {
             String value;
             value = s.getProperty(KEY_SHOWTIME);
-            if ( value != null ) {
+            if (value != null) {
                 this.setShowTime(BooleanUtils.toBoolean(value));
             }
             value = s.getProperty(KEY_HIDE_SHOWTIME);
-            if ( value != null ) {
+            if (value != null) {
                 this.setHideShowTime(BooleanUtils.toBoolean(value));
             }
             value = s.getProperty(KEY_SHOW_VERSION);
-            if ( value != null ) {
+            if (value != null) {
                 this.setShowCocoonVersion(BooleanUtils.toBoolean(value));
             }
             value = s.getProperty(KEY_MANAGE_EXCEPTIONS);
-            if ( value != null ) {
+            if (value != null) {
                 this.setManageExceptions(BooleanUtils.toBoolean(value));
             }
         }
