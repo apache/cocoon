@@ -16,22 +16,21 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | SVN $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
-  <!--+
-    |  Component for simplified mail sending.
-    +-->
+  <!--
+    -  Component for simplified mail sending.
+    -->
   <component role="org.apache.cocoon.mail.MailSender"
-             class="org.apache.cocoon.mail.MailMessageSender"
-             logger="core.mail.MailSender">
-    <!--+
-      | SMTP host name, user name, and password.
-      <smtp-host>127.0.0.1</smtp-host>
-      <smtp-user>john</smtp-user>
-      <smtp-password>john</smtp-password>
-      +-->
+             class="org.apache.cocoon.mail.MailMessageSender">
+    <!--
+      - SMTP host name, user name, and password.
+      -
+    <smtp-host>127.0.0.1</smtp-host>
+    <smtp-user>john</smtp-user>
+    <smtp-password>john</smtp-password>
+      -->
   </component>
 </components>
