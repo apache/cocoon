@@ -20,8 +20,8 @@ importClass(Packages.java.util.HashMap);
 importClass(Packages.java.util.Map);
 importClass(Packages.org.apache.cocoon.xml.ParamSaxBuffer);
 
-
 /*
+
     Extensible System Library of static JSON Helper Functions
 
     @version $Id$
@@ -125,4 +125,3 @@ System.JSON._serializeValue = function(obj) {
         print("System.JSON._serializeValue - could not serialize: " + obj);
     }
 }
-

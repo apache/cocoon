@@ -97,12 +97,3 @@ System.Upload.clear = function(){
     }
     cocoon.sendPage("send-json", {json: json});
 };
-
-
-
-
-
-
-
-
-

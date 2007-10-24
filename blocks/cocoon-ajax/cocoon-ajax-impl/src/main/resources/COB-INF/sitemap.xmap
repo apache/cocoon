@@ -16,14 +16,12 @@
   limitations under the License.
 -->
 
-<!-- SVN $Id:$ -->
-
+<!--
+  - $Id$
+  -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-
   <map:pipelines>
-        
     <map:pipeline id="external-resource">
-      
       <map:match pattern="resource/external/ajax/**.js">
         <map:read src="resource://org/apache/cocoon/ajax/resources/{1}.js" type="servletLinkRewriter"/>
       </map:match>
@@ -31,8 +29,6 @@
       <map:match pattern="resource/external/dojo/**">
         <map:read src="resource://org/apache/cocoon/dojo/resources/{1}"/>
       </map:match>
-      
     </map:pipeline>
-    
   </map:pipelines>
 </map:sitemap>
