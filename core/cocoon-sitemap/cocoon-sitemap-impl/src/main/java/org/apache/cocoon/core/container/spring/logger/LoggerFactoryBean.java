@@ -14,45 +14,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring.avalon;
+package org.apache.cocoon.core.container.spring.logger;
 
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.util.avalon.CLLoggerWrapper;
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
- * Spring factory bean to setup the Avalon logger.
+ * Spring factory bean to setup the Commons Logging logger with specified
+ * category.
+ *
+ * <p>If category was not set, default category 'cocoon' is used.
  *
  * @since 2.2
  * @version $Id$
  */
-public class AvalonLoggerFactoryBean implements FactoryBean {
+public class LoggerFactoryBean implements FactoryBean {
 
     /** The logging category. */
-    protected String category = "cocoon";
+    private String category = "cocoon";
+
+    /** The log instance */
+    private Log logger;
 
 
+    public String getCategory() {
+        return this.category;
+    }
+    
     public void setCategory(String category) {
         this.category = category;
     }
 
+    protected void setLogger(Log logger) {
+        this.logger = logger;
+    }
+
+    public void init() {
+        setLogger(LogFactory.getLog(this.category));
+    }
+
     /**
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
+     * @see FactoryBean#getObject()
      */
     public Object getObject() throws Exception {
-        return new CLLoggerWrapper(LogFactory.getLog(this.category));
+        return this.logger;
     }
 
     /**
-     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
+     * @see FactoryBean#getObjectType()
      */
     public Class getObjectType() {
-        return Logger.class;
+        return Log.class;
     }
 
     /**
-     * @see org.springframework.beans.factory.FactoryBean#isSingleton()
+     * @see FactoryBean#isSingleton()
      */
     public boolean isSingleton() {
         return true;

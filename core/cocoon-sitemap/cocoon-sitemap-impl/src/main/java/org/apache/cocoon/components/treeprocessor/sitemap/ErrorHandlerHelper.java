@@ -19,10 +19,10 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.commons.logging.Log;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
@@ -31,7 +31,7 @@ import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
-import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
+import org.apache.cocoon.core.container.spring.logger.LoggerUtils;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.AbstractLogEnabled;
@@ -49,7 +49,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
     /**
      * Logger for handled errors
      */
-    protected Logger handledErrorsLogger;
+    protected Log handledErrorsLogger;
 
     /**
      * Error handling node for the ResourceNotFoundException
@@ -68,7 +68,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.handledErrorsLogger = ((Logger) this.manager.lookup(AvalonUtils.LOGGER_ROLE)).getChildLogger("handled");
+        this.handledErrorsLogger = LoggerUtils.getChildLogger(this.manager, "handled");
     }
 
     void set404Handler(ProcessingNode node) {
