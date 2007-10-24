@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.core.container.spring.avalon;
+package org.apache.cocoon.core.container.spring.logger;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -26,59 +25,54 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.HierarchicalBeanFactory;
 
 /**
- * Spring factory bean to setup a child Avalon logger.
+ * Spring factory bean to setup a child Commons Logging logger.
  *
  * @since 2.2
  * @version $Id$
  */
-public class AvalonChildLoggerFactoryBean implements FactoryBean, BeanFactoryAware {
-
-    /** Logger (we use the same logging mechanism as Spring!) */
-    protected final Log log = LogFactory.getLog(getClass());
+public class ChildLoggerFactoryBean extends LoggerFactoryBean
+                                    implements FactoryBean, BeanFactoryAware {
 
     /** The bean factory. */
-    protected BeanFactory beanFactory;
+    private BeanFactory factory;
 
-    protected Logger logger;
 
-    /** The logging category. */
-    protected String category;
-
-    
-    public void setCategory(String category) {
-        this.category = category;
+    public ChildLoggerFactoryBean() {
+        // Child logger has no default category: uses parent's category.
+        setCategory(null);
     }
 
     /**
-     * @see BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
+     * @see BeanFactoryAware#setBeanFactory(BeanFactory)
      */
     public void setBeanFactory(BeanFactory factory) throws BeansException {
-        this.beanFactory = factory;
+        this.factory = factory;
     }
 
-    protected void init() throws Exception {
-        // get parent factory
-        final BeanFactory parentFactory = ((HierarchicalBeanFactory) this.beanFactory).getParentBeanFactory();
-        final Logger parentLogger = (Logger) parentFactory.getBean(AvalonUtils.LOGGER_ROLE);
-        if (this.category == null) {
-            this.logger = parentLogger;
-        } else {
-            this.logger = parentLogger.getChildLogger(this.category);
-        }
+    public void init() {
+        final BeanFactory parent = ((HierarchicalBeanFactory) this.factory).getParentBeanFactory();
+
+        // Construct full category
+        final LoggerFactoryBean bean = (LoggerFactoryBean) parent.getBean("&" + LoggerUtils.LOGGER_ROLE);
+        setCategory(LoggerUtils.getChildCategory(bean, getCategory()));
+
+        // Initialize logger
+        setLogger(LogFactory.getLog(getCategory()));
     }
 
     /**
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
+     * @see FactoryBean#getObject()
      */
     public Object getObject() throws Exception {
-        return this.logger;
+        final BeanFactory parent = ((HierarchicalBeanFactory) this.factory).getParentBeanFactory();
+        return LoggerUtils.getChildLogger(parent, getCategory());
     }
 
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObjectType()
      */
     public Class getObjectType() {
-        return Logger.class;
+        return Log.class;
     }
 
     /**

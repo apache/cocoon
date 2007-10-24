@@ -28,13 +28,10 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.configuration.MutableSettings;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
@@ -47,6 +44,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 
+import org.apache.cocoon.configuration.MutableSettings;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.container.spring.logger.LoggerUtils;
+import org.apache.cocoon.spring.configurator.ResourceUtils;
+import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
+
 /**
  * This is a Spring BeanPostProcessor adding support for the Avalon lifecycle
  * interfaces.
@@ -54,7 +58,8 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
  * @since 2.2
  * @version $Id$
  */
-public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcessor, BeanFactoryAware {
+public class AvalonBeanPostProcessor extends AbstractLogEnabled
+                                     implements DestructionAwareBeanPostProcessor, BeanFactoryAware {
 
     protected static final Configuration EMPTY_CONFIG;
     static {
@@ -63,7 +68,6 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
         EMPTY_CONFIG = config;
     }
 
-    protected Logger logger;
     protected Context context;
     protected BeanFactory beanFactory;
     protected ConfigurationInfo configurationInfo;
@@ -101,19 +105,15 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
         this.context = context;
     }
 
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
-
     public void init() {
         if (true) {
             return;
         }
 
         // replace properties in configuration objects
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Processing component configurations.");
-            this.logger.debug("Trying to read properties from directory: " + this.location);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Processing component configurations.");
+            getLogger().debug("Trying to read properties from directory: " + this.location);
         }
         final Properties mergedProps = new Properties();
         final ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(resourceLoader);
@@ -124,8 +124,8 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
             if (resources != null) {
                 Arrays.sort(resources, ResourceUtils.getResourceComparator());
                 for (int i = 0; i < resources.length; i++) {
-                    if (this.logger.isDebugEnabled()) {
-                        this.logger.debug("Reading property file: " + resources[i]);
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Reading property file: " + resources[i]);
                     }
                     final Properties p = new Properties();
                     p.load(resources[i].getInputStream());
@@ -221,11 +221,13 @@ public class AvalonBeanPostProcessor implements DestructionAwareBeanPostProcesso
                 return bean;
             }
 
-            if (info.getLoggerCategory() != null) {
-                ContainerUtil.enableLogging(bean, this.logger.getChildLogger(info.getLoggerCategory()));
-            } else {
-                ContainerUtil.enableLogging(bean, this.logger);
+            if (bean instanceof LogEnabled) {
+                ContainerUtil.enableLogging(bean,
+                                            new CLLoggerWrapper(LoggerUtils.getChildLogger(beanFactory, info.getLoggerCategory())));
+            } else if (bean instanceof AbstractLogEnabled && info.getLoggerCategory() != null) {
+                ((AbstractLogEnabled) bean).setLogger(LoggerUtils.getChildLogger(beanFactory, info.getLoggerCategory()));
             }
+
             ContainerUtil.contextualize(bean, this.context);
             ContainerUtil.service(bean, (ServiceManager) this.beanFactory.getBean(ServiceManager.class.getName()));
 

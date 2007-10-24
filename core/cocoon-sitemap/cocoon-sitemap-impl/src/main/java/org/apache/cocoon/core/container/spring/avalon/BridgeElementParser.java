@@ -26,19 +26,6 @@ import java.util.Map;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.acting.Action;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.pipeline.impl.PipelineComponentInfo;
-import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.pipeline.PipelineComponentInfoFactoryBean;
-import org.apache.cocoon.core.container.spring.pipeline.PipelineComponentInfoInitializer;
-import org.apache.cocoon.generation.Generator;
-import org.apache.cocoon.matching.Matcher;
-import org.apache.cocoon.reading.Reader;
-import org.apache.cocoon.selection.Selector;
-import org.apache.cocoon.serialization.Serializer;
-import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
-import org.apache.cocoon.transformation.Transformer;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
@@ -48,6 +35,23 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.ResourceLoader;
+
+import org.apache.cocoon.acting.Action;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.pipeline.impl.PipelineComponentInfo;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.container.spring.logger.LoggerFactoryBean;
+import org.apache.cocoon.core.container.spring.logger.LoggerUtils;
+import org.apache.cocoon.core.container.spring.pipeline.PipelineComponentInfoFactoryBean;
+import org.apache.cocoon.core.container.spring.pipeline.PipelineComponentInfoInitializer;
+import org.apache.cocoon.generation.Generator;
+import org.apache.cocoon.matching.Matcher;
+import org.apache.cocoon.reading.Reader;
+import org.apache.cocoon.selection.Selector;
+import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
+import org.apache.cocoon.transformation.Transformer;
+
 import org.w3c.dom.Element;
 
 /**
@@ -131,8 +135,7 @@ public class BridgeElementParser extends AbstractElementParser {
         this.registerComponentInfo(info, registry);
 
         // and finally add avalon bean post processor
-        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonBeanPostProcessor.class, "init", true);
-        beanDef.getPropertyValues().addPropertyValue("logger", new RuntimeBeanReference(AvalonUtils.LOGGER_ROLE));
+        final RootBeanDefinition beanDef = createBeanDefinition(AvalonBeanPostProcessor.class, "init", true);
         beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(AvalonUtils.CONTEXT_ROLE));
         beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
         beanDef.getPropertyValues().addPropertyValue("resourceLoader", resourceLoader);
@@ -162,12 +165,12 @@ public class BridgeElementParser extends AbstractElementParser {
      */
     protected void addLogger(BeanDefinitionRegistry registry,
                              String                 loggerCategory) {
-        final RootBeanDefinition beanDef = createBeanDefinition(AvalonLoggerFactoryBean.class, null, false);
+        final RootBeanDefinition beanDef = createBeanDefinition(LoggerFactoryBean.class, "init", false);
         if (loggerCategory != null) {
             beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
         }
 
-        register(beanDef, AvalonUtils.LOGGER_ROLE, registry);
+        register(beanDef, LoggerUtils.LOGGER_ROLE, registry);
     }
 
     public void createConfig(ConfigurationInfo      info,

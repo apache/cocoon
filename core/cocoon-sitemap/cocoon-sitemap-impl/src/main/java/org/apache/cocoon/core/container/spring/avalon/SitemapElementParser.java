@@ -18,12 +18,16 @@
  */
 package org.apache.cocoon.core.container.spring.avalon;
 
-import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.context.WebApplicationContext;
+
+import org.apache.cocoon.core.container.spring.logger.ChildLoggerFactoryBean;
+import org.apache.cocoon.core.container.spring.logger.LoggerUtils;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
+
 import org.w3c.dom.Element;
 
 /**
@@ -39,36 +43,37 @@ public class SitemapElementParser extends BridgeElementParser {
     protected void addContext(Element element, BeanDefinitionRegistry registry) {
         // we get the uriPrefix from the configuration
         final String uriPrefix = element.getAttribute("uriPrefix");
-        RootBeanDefinition beanDefinition = this.createBeanDefinition(AvalonSitemapContextFactoryBean.class,
-                                                                      "init",
-                                                                      false);
+        RootBeanDefinition beanDefinition = createBeanDefinition(AvalonSitemapContextFactoryBean.class,
+                                                                 "init",
+                                                                 false);
         beanDefinition.getPropertyValues().addPropertyValue("uriPrefix", uriPrefix);
-        this.register(beanDefinition, AvalonUtils.CONTEXT_ROLE, registry);
+        register(beanDefinition, AvalonUtils.CONTEXT_ROLE, registry);
     }
 
     /**
      * Add the logger bean.
+     *
      * @param registry       The bean registry.
      * @param loggerCategory The optional category for the logger.
      */
     protected void addLogger(BeanDefinitionRegistry registry,
                              String                 loggerCategory) {
-        final RootBeanDefinition beanDef = this.createBeanDefinition(AvalonChildLoggerFactoryBean.class, "init", false);
+        final RootBeanDefinition beanDef = createBeanDefinition(ChildLoggerFactoryBean.class, "init", false);
         if (loggerCategory != null) {
             beanDef.getPropertyValues().addPropertyValue("category", loggerCategory);
         }
-        this.register(beanDef, AvalonUtils.LOGGER_ROLE, registry);
+        register(beanDef, LoggerUtils.LOGGER_ROLE, registry);
     }
 
     /**
-     * @see org.apache.cocoon.core.container.spring.avalon.BridgeElementParser#readConfiguration(java.lang.String, org.springframework.core.io.ResourceLoader)
+     * @see BridgeElementParser#readConfiguration(String, ResourceLoader)
      */
     protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)
     throws Exception {
         WebApplicationContext parentContext = WebAppContextUtils.getCurrentWebApplicationContext();
-        return ConfigurationReader.readSitemap((ConfigurationInfo)parentContext.getBean(ConfigurationInfo.class.getName()),
+        return ConfigurationReader.readSitemap((ConfigurationInfo) parentContext.getBean(ConfigurationInfo.class.getName()),
                                                location,
-                                               new SourceResourceLoader(resourceLoader, (SourceResolver)parentContext.getBean(SourceResolver.ROLE)));
+                                               new SourceResourceLoader(resourceLoader, (SourceResolver) parentContext.getBean(SourceResolver.ROLE)));
     }
 
     protected String getConfigurationLocation() {
