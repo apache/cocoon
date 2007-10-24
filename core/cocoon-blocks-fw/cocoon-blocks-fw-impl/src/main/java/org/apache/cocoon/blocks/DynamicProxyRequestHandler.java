@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * getServletPath and getPathInfo methods to relect the mount
  * path of the block servlet.
  * 
- * @version $Id:$
+ * @version $Id$
  */
 public class DynamicProxyRequestHandler implements InvocationHandler {
 	private final HttpServletRequest wrapped;
