@@ -15,21 +15,34 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    |
-    | $Id$
-    +-->
+
+<!--
+  - $Id$
+  -->
 <map:components xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:generators>
-    <map:generator label="content" logger="sitemap.generator.extractor" name="extractor" src="org.apache.cocoon.generation.FragmentExtractorGenerator"/>
+    <map:generator name="extractor"
+                   label="content"
+                   logger="sitemap.generator.extractor"
+                   src="org.apache.cocoon.generation.FragmentExtractorGenerator"/>
   </map:generators>
+
   <map:transformers>
-    <map:transformer logger="sitemap.transformer.extractor" name="extractor" src="org.apache.cocoon.transformation.FragmentExtractorTransformer"/>
+    <map:transformer name="extractor"
+                     logger="sitemap.transformer.extractor"
+                     src="org.apache.cocoon.transformation.FragmentExtractorTransformer"/>
   </map:transformers>
+
   <map:serializers>
-    <map:serializer logger="sitemap.serializer.svg2jpeg" name="svg2jpeg" src="org.apache.cocoon.serialization.SVGSerializer" mime-type="image/jpeg">
+    <map:serializer name="svg2jpeg"
+                    logger="sitemap.serializer.svg2jpeg"
+                    src="org.apache.cocoon.serialization.SVGSerializer"
+                    mime-type="image/jpeg">
       <parameter name="quality" type="float" value="0.9"/>
     </map:serializer>
-    <map:serializer logger="sitemap.serializer.svg2png" name="svg2png" src="org.apache.cocoon.serialization.SVGSerializer" mime-type="image/png"/>
+    <map:serializer name="svg2png"
+                    logger="sitemap.serializer.svg2png"
+                    src="org.apache.cocoon.serialization.SVGSerializer"
+                    mime-type="image/png"/>
   </map:serializers>
 </map:components>
