@@ -734,7 +734,7 @@ public class MailMessageSender extends AbstractLogEnabled
      * @see org.apache.excalibur.source.Source
      */
     public void setBodyURL(String url, String type) {
-        if (body != null) {
+        if (url != null) {
             this.body = new Body(url, type, true);
         }
     }

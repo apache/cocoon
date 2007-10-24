@@ -17,16 +17,18 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
-    |
-    | @version $Id$
-    +-->
+
+<!--
+  - @see http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  - @version $Id$
+  -->
 <document>
   <body>
-    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
-      
-    </release>    
+    <release version="1.0.0" date="2007-??-??" description="unreleased">
+      <action dev="vgritsenko" type="fix" issue="COCOON-2129" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
+        Fix setting of URL message body.
+      </action>
+    </release>
     <release version="1.0.0-M1" date="2007-03-02" description="released">  
       <action dev="reinhard" type="add">
         Initial creation.
