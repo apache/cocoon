@@ -16,17 +16,19 @@
   limitations under the License.
 -->
 
-<!-- @version $Id$ -->
+<!--
+  - $Id$
+  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:servlet="http://cocoon.apache.org/schema/servlet"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
-  <bean id="org.apache.cocoon.ajax.impl.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
-    <servlet:context mount-path="/cocoon-ajax-impl" context-path="blockcontext:/cocoon-ajax-impl/" />
+  <bean name="org.apache.cocoon.ajax.impl.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+    <servlet:context mount-path="/cocoon-ajax-impl" context-path="blockcontext:/cocoon-ajax-impl/"/>
   </bean>
-  <bean id="org.apache.cocoon.ajax.impl.system.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
-    <servlet:context mount-path="/cocoon-ajax-impl/system" context-path="blockcontext:/cocoon-ajax-impl/system/" />
+  <bean name="org.apache.cocoon.ajax.impl.system.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+    <servlet:context mount-path="/cocoon-ajax-impl/system" context-path="blockcontext:/cocoon-ajax-impl/system/"/>
   </bean>
 </beans>
