@@ -16,14 +16,16 @@
   limitations under the License.
 -->
 
-<!-- @version $Id$ -->
+<!--
+  - $Id$
+  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:servlet="http://cocoon.apache.org/schema/servlet"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
-  <bean id="org.apache.cocoon.javaflow.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+  <bean name="org.apache.cocoon.javaflow.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
     <servlet:context mount-path="/cocoon-javaflow-sample" context-path="blockcontext:/cocoon-javaflow-sample/">
       <servlet:connections>
         <entry key="ajax" value-ref="org.apache.cocoon.ajax.impl.servlet" />

@@ -16,19 +16,21 @@
   limitations under the License.
 -->
 
-<!-- @version $Id$ -->
+<!--
+  - $Id$
+  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:servlet="http://cocoon.apache.org/schema/servlet"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
-  <bean id="org.apache.cocoon.apples.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+  <bean name="org.apache.cocoon.apples.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
     <servlet:context mount-path="/cocoon-apples-sample" context-path="blockcontext:/cocoon-apples-sample/">
       <servlet:connections>
-        <entry key="forms" value-ref="org.apache.cocoon.forms.impl.servlet" />
-        <entry key="main-sample" value-ref="org.apache.cocoon.core.main.sample.servlet" />
-        <entry key="style-default" value-ref="org.apache.cocoon.samples.style.default.servlet" />
+        <entry key="forms" value-ref="org.apache.cocoon.forms.impl.servlet"/>
+        <entry key="main-sample" value-ref="org.apache.cocoon.core.main.sample.servlet"/>
+        <entry key="style-default" value-ref="org.apache.cocoon.samples.style.default.servlet"/>
       </servlet:connections>
     </servlet:context>
   </bean>
