@@ -34,9 +34,9 @@
     - ability to do cookie-based sessions.
     - WARNING: this is Jetty specific!
   <context-param>
+    <description>An override of the session cookie path</description>
     <param-name>org.mortbay.jetty.servlet.SessionPath</param-name>
     <param-value>/some/path/to/your/webapp</param-value>
-    <description>An override of the session cookie path</description>
   </context-param>
     -->
 
