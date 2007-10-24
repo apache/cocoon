@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  * If you want to reuse this instance, make sure to call {@link #recycle()}
  * inbetween two compilation tasks.
  *
- * @version $Id: XMLByteStreamCompiler.java 439255 2006-09-01 10:00:00Z giacomo $
+ * @version $Id$
  */
 public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLByteStreamConstants {
 

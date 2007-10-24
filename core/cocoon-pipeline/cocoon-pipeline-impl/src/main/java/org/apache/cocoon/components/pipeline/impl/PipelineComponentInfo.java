@@ -36,7 +36,7 @@ import org.apache.cocoon.transformation.Transformer;
  * container implementation. This is now a regular component that also "listens" to modifications
  * of the service manager when it is built.
  * 
- * @version $Id: ProcessorComponentInfo.java 490762 2006-12-28 17:03:53Z danielf $
+ * @version $Id$
  */
 public class PipelineComponentInfo {
 

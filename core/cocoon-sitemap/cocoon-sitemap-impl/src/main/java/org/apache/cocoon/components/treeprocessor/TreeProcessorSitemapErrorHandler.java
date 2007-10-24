@@ -27,7 +27,7 @@ import org.apache.cocoon.sitemap.SitemapErrorHandler;
  * as configured in the sitemap.
  *
  * @since 2.2
- * @version $Id: SitemapErrorHandler.java 486818 2006-12-13 19:50:39Z danielf $
+ * @version $Id$
  */
 public class TreeProcessorSitemapErrorHandler implements SitemapErrorHandler {
     /**
