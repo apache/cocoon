@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * using the servlet authentication mechanisms.
  *
  * @deprecated This block is deprecated and will be removed in future versions.
- * @version $Id: PipelineAuthenticator.java 30932 2004-07-29 17:35:38Z vgritsenko $
+ * @version $Id$
  */
 public class ServletAuthenticator
     extends AbstractLogEnabled
