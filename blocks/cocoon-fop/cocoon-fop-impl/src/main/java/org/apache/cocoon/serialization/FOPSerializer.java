@@ -45,8 +45,9 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.renderer.ExtendableRendererFactory;
 import org.apache.cocoon.components.renderer.RendererFactory;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
+import org.apache.cocoon.core.container.spring.logger.LoggerUtils;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.avalon.CLLoggerWrapper;
 
 /**
  * FOP 0.20.5 (and older) based serializer.
@@ -106,7 +107,7 @@ public class FOPSerializer extends AbstractSerializer
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.logger = ((Logger) manager.lookup(AvalonUtils.LOGGER_ROLE)).getChildLogger("fop");
+        this.logger = new CLLoggerWrapper(LoggerUtils.getChildLogger(manager, "fop"));
     }
 
     /**
