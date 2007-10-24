@@ -49,8 +49,7 @@
             </p>
             <source>
 &lt;component role="org.apache.cocoon.components.cron.JobScheduler"
-           class="org.apache.cocoon.components.cron.QuartzJobScheduler"
-           logger="cron"&gt;
+           class="org.apache.cocoon.components.cron.QuartzJobScheduler"&gt;
     &lt;thread-pool&gt;
         ...
     &lt;/thread-pool&gt;
