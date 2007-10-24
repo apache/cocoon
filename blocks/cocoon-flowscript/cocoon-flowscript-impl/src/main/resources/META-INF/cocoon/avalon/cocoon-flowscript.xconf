@@ -63,7 +63,7 @@
       |       whether support for the JavaScript debugger should be enabled in
       |       the control flow.
       +-->
-  <flow-interpreters default="javascript" logger="flow">
+  <flow-interpreters default="javascript">
     <component-instance name="javascript"
                         logger="flow"
                         exported="false"

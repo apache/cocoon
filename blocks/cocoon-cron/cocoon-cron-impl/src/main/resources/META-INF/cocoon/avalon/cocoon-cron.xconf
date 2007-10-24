@@ -16,14 +16,12 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | SVN $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
     <component role="org.apache.cocoon.components.cron.JobScheduler"
-               class="org.apache.cocoon.components.cron.CocoonQuartzJobScheduler"
-               logger="cron">
+               class="org.apache.cocoon.components.cron.CocoonQuartzJobScheduler">
       <!--+
           | Definitions for a thread pool used to schedule jobs
           +-->
@@ -153,8 +151,7 @@
       | trigger configuration above, as well as by sample page.
       +-->
   <component role="org.apache.cocoon.components.cron.CronJob/test"
-             class="org.apache.cocoon.components.cron.TestCronJob"
-             logger="cron.test">
+             class="org.apache.cocoon.components.cron.TestCronJob">
     <msg>I'm here</msg>
     <sleep>23000</sleep>
     <pipeline>samples/hello-world/hello.xhtml</pipeline>
@@ -164,8 +161,7 @@
       | Sample definition of the CocoonPipelineCronJob cron job, used by
       | trigger configuration above.
   <component role="org.apache.cocoon.components.cron.CronJob/pipeline-test"
-             class="org.apache.cocoon.components.cron.CocoonPipelineCronJob"
-             logger="cron.pipeline">
+             class="org.apache.cocoon.components.cron.CocoonPipelineCronJob">
       <pipeline>samples/hello-world/hello.xhtml</pipeline>
   </component>
       +-->

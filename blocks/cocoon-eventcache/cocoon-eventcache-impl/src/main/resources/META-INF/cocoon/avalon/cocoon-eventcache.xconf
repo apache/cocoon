@@ -16,24 +16,27 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | SVN $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
   <component class="org.apache.cocoon.caching.impl.JMSEventMessageListener"
-             role="org.apache.cocoon.caching.impl.JMSEventMessageListener"
-             logger="core.jms">
+             role="org.apache.cocoon.caching.impl.JMSEventMessageListener">
     <parameter name="connection" value="local-topics" />
     <parameter name="topic" value="topic1" />
+
     <!--
-      <parameter name="eventcache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
-    -->
+      -
+    <parameter name="eventcache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
+      -->
   </component>
 
-  <!-- The event registry which maps Cache events to Pipeline keys -->
-  <!--component role="org.apache.cocoon.caching.EventRegistry"
-    class="org.apache.cocoon.caching.impl.DefaultEventRegistryImpl"/-->
+  <!--
+    - The event registry which maps Cache events to Pipeline keys
   <component role="org.apache.cocoon.caching.EventRegistry"
-             class="org.apache.cocoon.caching.impl.StoreEventRegistryImpl" />
+             class="org.apache.cocoon.caching.impl.DefaultEventRegistryImpl"/>
+    -->
+
+  <component role="org.apache.cocoon.caching.EventRegistry"
+             class="org.apache.cocoon.caching.impl.StoreEventRegistryImpl"/>
 </components>
