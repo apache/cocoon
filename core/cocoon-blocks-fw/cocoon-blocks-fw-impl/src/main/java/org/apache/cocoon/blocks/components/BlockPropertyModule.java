@@ -29,7 +29,7 @@ import org.apache.cocoon.components.modules.input.InputModule;
 /**
  * BlockPropertyModule provides access to the properties of the current block.
  *
- * @version $Id: BlockPropertyModule.java 448464 2006-09-21 05:29:11Z crossley $
+ * @version $Id$
  */
 public class BlockPropertyModule implements InputModule, ThreadSafe {
 
