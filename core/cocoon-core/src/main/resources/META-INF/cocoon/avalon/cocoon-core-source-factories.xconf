@@ -16,32 +16,29 @@
   limitations under the License.
 -->
 
-<!-- SVN $Id: cocoon-core.xconf 396505 2006-04-24 10:33:03Z antonio $ -->
+<!--
+  - $Id: cocoon-apples.xconf 588012 2007-10-24 20:51:07Z vgritsenko $
+  -->
 <components>
 
-  <source-resolver logger="core.source"/>
+  <source-resolver/>
 
   <!--+
       | Source Factories
       |
       | Each source factory adds a special uri scheme to the system.
       +-->
-  <source-factories logger="core.source">
+  <source-factories>
     <component-instance name="resource"
-                        logger="core.source"
                         class="org.apache.excalibur.source.impl.ResourceSourceFactory"/>
     <component-instance name="context"
-                        logger="core.source"
                         class="org.apache.cocoon.components.source.impl.ContextSourceFactory"/>
     <component-instance name="cocoon"
-                        logger="core.source"
                         class="org.apache.cocoon.components.source.impl.SitemapSourceFactory"/>
     <component-instance name="blockcontext"
-                        logger="core.source"
                         class="org.apache.cocoon.components.source.impl.BlockContextSourceFactory"/>
     <!--
     <component-instance name="block"
-                        logger="core.source"
                         class="org.apache.cocoon.components.source.impl.BlockSourceFactory"/>
     -->
 
@@ -50,23 +47,17 @@
         | traversable (directory structures can be crawled).
         +-->
     <component-instance name="file"
-                        logger="core.source"
                         class="org.apache.excalibur.source.impl.FileSourceFactory"/>
 
     <component-instance name="upload"
-                        logger="core.source"
                         class="org.apache.cocoon.components.source.impl.PartSourceFactory"/>
     <component-instance name="module"
-                        logger="core.source"
                         class="org.apache.cocoon.components.source.impl.ModuleSourceFactory"/>
     <component-instance name="xmodule"
-                        logger="core.source"
                         class="org.apache.cocoon.components.source.impl.XModuleSourceFactory"/>
     <component-instance name="zip"
-                        logger="core.source"
                         class="org.apache.cocoon.components.source.impl.ZipSourceFactory"/>
     <component-instance name="empty"
-                        logger="core.source"
                         class="org.apache.cocoon.components.source.impl.EmptySourceFactory"/>
 
     <!--+
@@ -74,7 +65,6 @@
         | specified. This includes all JDK standard protocols.
         +-->
     <component-instance name="*"
-                        logger="core.source"
                         class="org.apache.excalibur.source.impl.URLSourceFactory"/>
   </source-factories>
 

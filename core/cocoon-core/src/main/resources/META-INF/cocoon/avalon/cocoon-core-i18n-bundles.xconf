@@ -15,7 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id: cocoon-core.xconf 396505 2006-04-24 10:33:03Z antonio $ -->
+
+<!--
+  - $Id: cocoon-apples.xconf 588012 2007-10-24 20:51:07Z vgritsenko $
+  -->
 <components>
 
   <!--+
@@ -24,7 +27,7 @@
       | BundleFactory loads Bundles with i18n resources for the given locale.
       | Default location for bundles specified with the 'catalogue-location'.
       +-->
-  <i18n-bundles logger="core.i18n">
+  <i18n-bundles>
     <!--+
         | Role of the store component to be used for caching loaded bundles.
         +-->
