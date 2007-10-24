@@ -16,15 +16,14 @@
   limitations under the License.
 -->
 
-<!--+
-    |
-    | SVN $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <components>
   <!-- Include roles -->
   <include src="resource://org/apache/cocoon/components/axis/axis.roles"/>
 
- <soap-server logger="core.source.soapserver">
+ <soap-server>
    <managed-services>
      <descriptor src="resource://org/apache/cocoon/webservices/memory/DeploymentDescriptor.wsdd"/>
      <descriptor src="resource://org/apache/cocoon/webservices/system/DeploymentDescriptor.wsdd"/>

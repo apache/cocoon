@@ -15,20 +15,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    |
-    | $Id$
-    +-->
+
+<!--
+  - $Id$
+  -->
 <map:components xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:generators>
-    <map:generator name="script" src="org.apache.cocoon.generation.ScriptGenerator" logger="sitemap.generation.scriptgenerator">
-        <!-- Groovy support -->
-        <add-languages>
-            <language name="groovy" src="org.codehaus.groovy.bsf.GroovyEngine">
-              <extension>groovy</extension>
-              <extension>gy</extension>
-            </language>
-        </add-languages>
+    <map:generator name="script"
+                   logger="sitemap.generation.scriptgenerator"
+                   src="org.apache.cocoon.generation.ScriptGenerator">
+      <!-- Groovy support -->
+      <add-languages>
+        <language name="groovy" src="org.codehaus.groovy.bsf.GroovyEngine">
+          <extension>groovy</extension>
+          <extension>gy</extension>
+        </language>
+      </add-languages>
     </map:generator>
   </map:generators>
 </map:components>

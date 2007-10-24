@@ -15,23 +15,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    | SVN $Id$
-    +-->
+
+<!--
+  - $Id$
+  -->
 <components>
   <flow-interpreters>
-    <component-instance 
-      class="org.apache.cocoon.components.flow.apples.ApplesProcessor" 
-      name="apples" logger="apples">
+    <component-instance class="org.apache.cocoon.components.flow.apples.ApplesProcessor"
+                        name="apples">
     </component-instance>
-  	<component-instance 
-  		class="org.apache.cocoon.components.flow.apples.SpringApplesProcessor" 
-  		name="spring-apples" logger="spring-apples">
-  	</component-instance>  	    
+    <component-instance class="org.apache.cocoon.components.flow.apples.SpringApplesProcessor"
+                        name="spring-apples">
+    </component-instance>
     <!-- The name 'service-apples' has been deprecated -->
-  	<component-instance 
-  		class="org.apache.cocoon.components.flow.apples.SpringApplesProcessor" 
-  		name="service-apples" logger="service-apples">
-  	</component-instance>
+    <component-instance class="org.apache.cocoon.components.flow.apples.SpringApplesProcessor"
+                        name="service-apples">
+    </component-instance>
   </flow-interpreters>
 </components>
+        
