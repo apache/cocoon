@@ -38,6 +38,11 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.core.io.DefaultResourceLoader;
+
 import org.apache.cocoon.AbstractTestCase;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.core.container.spring.avalon.AvalonBeanPostProcessor;
@@ -45,11 +50,10 @@ import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.core.container.spring.avalon.BridgeElementParser;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.core.container.spring.avalon.ConfigurationReader;
+import org.apache.cocoon.core.container.spring.logger.LoggerFactoryBean;
+import org.apache.cocoon.core.container.spring.logger.LoggerUtils;
 import org.apache.cocoon.environment.mock.MockContext;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.core.io.DefaultResourceLoader;
+
 import org.w3c.dom.Element;
 
 /**
@@ -242,7 +246,7 @@ public abstract class ContainerTestCase extends AbstractTestCase {
     /**
      * Disposes the <code>ComponentLocator</code>
      */
-    final private void done() {
+    private void done() {
         this.manager = null;
         this.context = null;
         this.logger = null;
@@ -255,7 +259,7 @@ public abstract class ContainerTestCase extends AbstractTestCase {
      * A method addContext(DefaultContext context) is called here to enable subclasses
      * to put additional objects into the context programmatically.
      */
-    final private Map setupContext( final Configuration conf )
+    private Map setupContext( final Configuration conf )
     throws Exception {
         final Map defaultContext = new HashMap();
         final Configuration[] confs = conf.getChildren( "entry" );
@@ -309,8 +313,8 @@ public abstract class ContainerTestCase extends AbstractTestCase {
         // subclasses can add components here
     }
 
-    final private void setupBeanFactory( final Configuration confCM,
-                                         final Configuration confRM)
+    private void setupBeanFactory( final Configuration confCM,
+                                   final Configuration confRM)
     throws Exception {
         // read roles and components
         ConfigurationInfo rolesInfo = ConfigurationReader.readConfiguration(confRM, confCM);
@@ -320,7 +324,6 @@ public abstract class ContainerTestCase extends AbstractTestCase {
         aep.createComponents(null, rolesInfo, (BeanDefinitionRegistry) this.getBeanFactory(),  null, new DefaultResourceLoader());
 
         AvalonBeanPostProcessor postProcessor = new AvalonBeanPostProcessor();
-        postProcessor.setLogger(new ConsoleLogger());
         postProcessor.setContext(this.context);
         postProcessor.setConfigurationInfo(rolesInfo);
         postProcessor.setBeanFactory(this.getBeanFactory());
@@ -407,7 +410,7 @@ public abstract class ContainerTestCase extends AbstractTestCase {
          * @see org.apache.cocoon.core.container.spring.avalon.BridgeElementParser#addLogger(org.springframework.beans.factory.support.BeanDefinitionRegistry, java.lang.String)
          */
         protected void addLogger(BeanDefinitionRegistry registry, String loggerCategory) {
-            this.addComponent(ConsoleLogger.class, AvalonUtils.LOGGER_ROLE, null, false, registry);
+            addComponent(LoggerFactoryBean.class, LoggerUtils.LOGGER_ROLE, null, false, registry);
         }
     }
 

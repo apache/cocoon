@@ -124,7 +124,7 @@ public class MultipartFilter extends AbstractLogEnabled
             RequestUtil.manageException(request, response, null, null,
                                         HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                                         "Problem in creating the Request",
-                                        null, null, e, this.servletSettings, getLogger().isInfoEnabled(), this);
+                                        null, null, e, this.servletSettings, getLogger(), this);
         } finally {
             try {
                 if (request instanceof MultipartHttpServletRequest) {
@@ -138,5 +138,4 @@ public class MultipartFilter extends AbstractLogEnabled
             }
         }
     }
-
 }

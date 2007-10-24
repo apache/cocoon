@@ -17,36 +17,36 @@
 package org.apache.cocoon.servlet;
 
 import java.io.IOException;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.lang.time.StopWatch;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.RequestListener;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
+import org.apache.cocoon.core.container.spring.logger.LoggerUtils;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.commons.lang.time.StopWatch;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
  *
  * @version $Id$
  */
-public class RequestProcessor {
+public class RequestProcessor extends AbstractLogEnabled {
 
     // Processing time message
     protected static final String PROCESSED_BY = "Processed by Apache Cocoon in ";
@@ -64,9 +64,6 @@ public class RequestProcessor {
 
     /** Configured servlet container encoding. Defaults to ISO-8859-1. */
     protected final String containerEncoding;
-
-    /** The access logger. */
-    protected final Logger log;
 
     /** Root Cocoon Bean Factory. */
     protected final BeanFactory cocoonBeanFactory;
@@ -90,6 +87,7 @@ public class RequestProcessor {
     public RequestProcessor(ServletContext servletContext) {
         this.servletContext = servletContext;
         this.cocoonBeanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+
         this.settings = (Settings) this.cocoonBeanFactory.getBean(Settings.ROLE);
         this.servletSettings = new ServletSettings(this.settings);
 
@@ -101,8 +99,11 @@ public class RequestProcessor {
         }
 
         // Obtain access logger
-        // FIXME This used to be configurable via "servlet-logger" parameter in web.xml
-        this.log = ((Logger) this.cocoonBeanFactory.getBean(AvalonUtils.LOGGER_ROLE)).getChildLogger("access");
+        String category = servletContext.getInitParameter("org.apache.cocoon.servlet.logger.access");
+        if (category == null || category.length() == 0) {
+            category = "access";
+        }
+        setLogger(LoggerUtils.getChildLogger(this.cocoonBeanFactory, category));
 
         this.processor = getProcessor();
         this.environmentContext = new HttpContext(this.servletContext);
@@ -173,19 +174,19 @@ public class RequestProcessor {
             } else {
                 // We reach this when there is nothing in the processing change that matches
                 // the request. For example, no matcher matches.
-                getLogger().fatalError("The Cocoon engine failed to process the request.");
+                getLogger().fatal("The Cocoon engine failed to process the request.");
 
                 if (rethrowExceptions()) {
                     throw new ServletException("The Cocoon engine failed to process the request.");
                 }
 
                 RequestUtil.manageException(request, res, env, uri,
-                                HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                "Request Processing Failed",
-                                "Cocoon engine failed in processing the request",
-                                "The processing engine failed to process the request. This could be due to lack of matching or bugs in the pipeline engine.",
-                                null,
-                                this.servletSettings, this.getLogger(), this);
+                                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                                            "Request Processing Failed",
+                                            "Cocoon engine failed in processing the request",
+                                            "The processing engine failed to process the request. This could be due to lack of matching or bugs in the pipeline engine.",
+                                            null,
+                                            this.servletSettings, getLogger(), this);
                 return;
             }
         } catch (ResourceNotFoundException e) {
@@ -200,12 +201,12 @@ public class RequestProcessor {
             }
 
             RequestUtil.manageException(request, res, env, uri,
-                            HttpServletResponse.SC_NOT_FOUND,
-                            "Resource Not Found",
-                            "Resource Not Found",
-                            "The requested resource \"" + request.getRequestURI() + "\" could not be found",
-                            e,
-                            this.servletSettings, this.getLogger(), this);
+                                        HttpServletResponse.SC_NOT_FOUND,
+                                        "Resource Not Found",
+                                        "Resource Not Found",
+                                        "The requested resource \"" + request.getRequestURI() + "\" could not be found",
+                                        e,
+                                        this.servletSettings, getLogger(), this);
             return;
 
         } catch (ConnectionResetException e) {
@@ -233,9 +234,9 @@ public class RequestProcessor {
             }
 
             RequestUtil.manageException(request, res, env, uri,
-                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                            "Internal Server Error", null, null, e,
-                            this.servletSettings, this.getLogger(), this);
+                                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                                        "Internal Server Error", null, null, e,
+                                        this.servletSettings, getLogger(), this);
             return;
         }
 
@@ -330,10 +331,6 @@ public class RequestProcessor {
             out.append(" hours.");
         }
         return out.toString();
-    }
-
-    protected Logger getLogger() {
-        return this.log;
     }
 
     /**

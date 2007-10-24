@@ -19,11 +19,11 @@ package org.apache.cocoon.servlet;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.logging.Log;
+
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
@@ -112,24 +112,24 @@ public class RequestUtil {
                                        String              description,
                                        Exception           e,
                                        ServletSettings     settings,
-                                       Logger              logger,
+                                       Log                 logger,
                                        Object              sender)
     throws IOException {
         manageException(req, res, env, uri, errorStatus, title, message, description, e, settings, logger.isInfoEnabled(), sender);
     }
 
-    public static void manageException(HttpServletRequest  req,
-                                       HttpServletResponse res,
-                                       Environment         env,
-                                       String              uri,
-                                       int                 errorStatus,
-                                       String              title,
-                                       String              message,
-                                       String              description,
-                                       Exception           e,
-                                       ServletSettings     settings,
-                                       boolean             verbose,
-                                       Object              sender)
+    private static void manageException(HttpServletRequest  req,
+                                        HttpServletResponse res,
+                                        Environment         env,
+                                        String              uri,
+                                        int                 errorStatus,
+                                        String              title,
+                                        String              message,
+                                        String              description,
+                                        Exception           e,
+                                        ServletSettings     settings,
+                                        boolean             verbose,
+                                        Object              sender)
     throws IOException {
         if (settings.isManageExceptions()) {
             if (env != null) {
