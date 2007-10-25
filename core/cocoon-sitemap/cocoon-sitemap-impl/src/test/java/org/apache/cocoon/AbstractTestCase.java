@@ -16,12 +16,20 @@
  */
 package org.apache.cocoon;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestContextHolder;
 
-import org.apache.cocoon.configuration.MutableSettings;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
@@ -32,15 +40,8 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.processing.impl.MockProcessInfoProvider;
 import org.apache.cocoon.spring.configurator.impl.ServletContextFactoryBean;
 import org.apache.cocoon.spring.configurator.impl.SettingsBeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.request.RequestContextHolder;
+
+import junit.framework.TestCase;
 
 /**
  * This class sets up all necessary environment information to implement own test cases.
@@ -59,7 +60,7 @@ public abstract class AbstractTestCase extends TestCase {
 
     /** The bean factory. */
     private DefaultListableBeanFactory beanFactory;
-    private MockWebApplicationContext staticWebApplicationContext;
+
 
     public final MockRequest getRequest() {
         return this.request;
@@ -87,15 +88,15 @@ public abstract class AbstractTestCase extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        // setup object model
-        this.setUpObjectModel();
 
+        // setup object model
+        setUpObjectModel();
 
         // create bean factory
-        this.createBeanFactory();
+        createBeanFactory();
 
         // initialize bean factory
-        this.initBeanFactory();
+        initBeanFactory();
 
         // setup request attributes
         this.requestAttributes = new MockRequestAttributes(this.getRequest());
@@ -104,7 +105,7 @@ public abstract class AbstractTestCase extends TestCase {
         // setting up an webapplicationcontext is neccesarry to make spring believe
         // it runs in a servlet container. we initialize it with our current
         // bean factory to get consistent bean resolution behaviour
-        this.setUpRootApplicationContext();
+        setUpRootApplicationContext();
     }
 
     /**
@@ -115,12 +116,14 @@ public abstract class AbstractTestCase extends TestCase {
             this.requestAttributes.requestCompleted();
             this.requestAttributes = null;
         }
+
         RequestContextHolder.resetRequestAttributes();
 
         if (this.beanFactory != null) {
             this.beanFactory.destroySingletons();
             this.beanFactory = null;
         }
+
         super.tearDown();
     }
 
@@ -133,19 +136,18 @@ public abstract class AbstractTestCase extends TestCase {
         this.context = this.createContext();
         this.objectmodel = this.createObjectModel();
 
-        this.objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, this.getRequest());
-        this.objectmodel.put(ObjectModelHelper.RESPONSE_OBJECT, this.getResponse());
-        this.objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, this.getContext());
+        this.objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, getRequest());
+        this.objectmodel.put(ObjectModelHelper.RESPONSE_OBJECT, getResponse());
+        this.objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, getContext());
     }
 
     protected void setUpRootApplicationContext() {
         // set up servlet context access first
         final ServletContextFactoryBean scfb = new ServletContextFactoryBean();
-        scfb.setServletContext(this.getContext());
+        scfb.setServletContext(getContext());
 
-        this.staticWebApplicationContext = new MockWebApplicationContext(this.beanFactory, this.getContext());
-        this.getContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-                staticWebApplicationContext);
+        MockWebApplicationContext ctx = new MockWebApplicationContext(this.beanFactory, getContext());
+        getContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx);
     }
 
     protected void createBeanFactory() throws Exception {
@@ -155,9 +157,18 @@ public abstract class AbstractTestCase extends TestCase {
         } else {
             this.beanFactory = new DefaultListableBeanFactory();
         }
-        this.addSettings();
-        this.addProcessingInfoProvider();
-        this.configureBeans();
+
+        File base = new File("target");
+        if (!base.exists()) {
+            base = new File(System.getProperty("java.io.tmpdir"));
+        }
+        File workDir = new File(base, "cocoon-files");
+        System.setProperty("org.apache.cocoon.work.directory", workDir.getAbsolutePath());
+        System.setProperty("org.apache.cocoon.cache.directory", new File(workDir, "cache-dir").getAbsolutePath());
+
+        addSettings();
+        addProcessingInfoProvider();
+        configureBeans();
     }
 
     protected void initBeanFactory() {
@@ -166,12 +177,10 @@ public abstract class AbstractTestCase extends TestCase {
 
     protected void addSettings() {
         RootBeanDefinition def = new RootBeanDefinition();
-        def.setBeanClass(MutableSettings.class);
+        def.setBeanClass(SettingsBeanFactoryPostProcessor.class);
         def.setSingleton(true);
         def.setLazyInit(false);
-        def.getConstructorArgumentValues().addIndexedArgumentValue(0, "test");
-        def.getPropertyValues().addPropertyValue("workDirectory", System.getProperty("java.io.tmpdir"));
-        def.getPropertyValues().addPropertyValue("cacheDirectory", System.getProperty("java.io.tmpdir"));
+        def.setInitMethodName("init");
         BeanDefinitionHolder holder = new BeanDefinitionHolder(def, Settings.ROLE);
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, this.beanFactory);
     }
@@ -190,13 +199,8 @@ public abstract class AbstractTestCase extends TestCase {
     }
 
     protected void configureBeans() {
-        SettingsBeanFactoryPostProcessor processor = new SettingsBeanFactoryPostProcessor();
-        processor.setBeanFactory(this.beanFactory);
-        try {
-            processor.init();
-        } catch (Exception e) {
-            throw new RuntimeException("unable to create SettingsBeanFactoryPostProcessor", e);
-        }
+        SettingsBeanFactoryPostProcessor processor =
+                (SettingsBeanFactoryPostProcessor) this.beanFactory.getBean("&" + Settings.ROLE);
         processor.postProcessBeanFactory(beanFactory);
     }
 
