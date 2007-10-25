@@ -94,7 +94,7 @@ public class SitemapHelper {
             while ( kI.hasNext() ) {
                 final String key = (String)kI.next();
                 buffer.append("    <configurator:property");
-                addAttribute(buffer, "name", key.toString());
+                addAttribute(buffer, "name", key);
                 addAttribute(buffer, "value", props.getProperty(key));
                 buffer.append("/>\n");
             }
@@ -224,7 +224,7 @@ public class SitemapHelper {
     public static Configuration createSitemapConfiguration(Configuration config)
     throws ConfigurationException {
         Configuration componentConfig = config.getChild("components", false);
-        Configuration classPathConfig = null;
+        Configuration classPathConfig;
 
         // by default we include configuration files and properties from
         // predefined locations
