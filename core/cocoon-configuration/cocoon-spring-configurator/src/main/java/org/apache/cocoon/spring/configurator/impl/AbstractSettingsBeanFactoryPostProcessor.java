@@ -51,9 +51,9 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
  * for Cocoon. It reads in all properties files and replaces references to
  * them in the spring configuration files.
  * In addition this bean acts as a factory bean providing the settings object.
+ *
  * @see SettingsBeanFactoryPostProcessor
  * @see ChildSettingsBeanFactoryPostProcessor
- *
  * @since 1.0
  * @version $Id$
  */
@@ -115,13 +115,13 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
     /**
      * Initialize this processor.
      * Setup the settings object.
+     * 
      * @throws Exception
      */
     public void init()
     throws Exception {
-        this.settings = this.createSettings();
-
-        this.dumpSettings();
+        settings = createSettings();
+        dumpSettings();
     }
 
     /**
@@ -134,10 +134,11 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
      * Return a parent settings object if available.
      */
     protected Settings getParentSettings() {
-        final BeanFactory parentBeanFactory = ((HierarchicalBeanFactory)this.beanFactory).getParentBeanFactory();
-        if ( parentBeanFactory != null ) {
-            return (Settings)parentBeanFactory.getBean(Settings.ROLE);
+        final BeanFactory parentBeanFactory = ((HierarchicalBeanFactory) this.beanFactory).getParentBeanFactory();
+        if (parentBeanFactory != null) {
+            return (Settings) parentBeanFactory.getBean(Settings.ROLE);
         }
+
         return null;
     }
 
@@ -147,10 +148,11 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
      * Otherwise a new root settings object with the running mode is instantiated.
      */
     protected MutableSettings createMutableSettingsInstance() {
-        final Settings parentSettings = this.getParentSettings();
-        if ( parentSettings == null ) {
-            return new MutableSettings(this.getRunningMode());
+        final Settings parentSettings = getParentSettings();
+        if (parentSettings == null) {
+            return new MutableSettings(getRunningMode());
         }
+
         return new MutableSettings(parentSettings);
     }
 
@@ -177,34 +179,37 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
     /**
      * Create a settings object.
      * This method creates the settings by executing the following task:
-     * 1) Create a new mutable settings object invoking {@link #createMutableSettingsInstance()}.
-     * 2) Configure the properties and settings object by calling {@link #preInit(MutableSettings, Properties)}.
-     * 3) Invoke a {@link PropertyProvider} if configured in the same application context (or its parent)
-     * 4) Add properties from configured directories {@link #directories}.
-     * 5) Add additional properties configured at {@link #additionalProperties}
-     * 6) Apply system properties
-     * 7) Configure the properties and settings object by calling {@link #postInit(MutableSettings, Properties)}.
-     * 8) Replace references in properties
-     * 9) Configure the settings object with the properties
-     * 10) Make the settings object read-only.
+     * <ol>
+     * <li>Create a new mutable settings object invoking {@link #createMutableSettingsInstance()}.
+     * <li>Configure the properties and settings object by calling {@link #preInit(MutableSettings, Properties)}.
+     * <li>Invoke a {@link PropertyProvider} if configured in the same application context (or its parent)
+     * <li>Add properties from configured directories {@link #directories}.
+     * <li>Add additional properties configured at {@link #additionalProperties}
+     * <li>Apply system properties
+     * <li>Configure the properties and settings object by calling {@link #postInit(MutableSettings, Properties)}.
+     * <li>Replace references in properties
+     * <li>Configure the settings object with the properties
+     * <li>Make the settings object read-only.
+     * </ol>
      *
      * @return A new Settings object
      */
     protected MutableSettings createSettings() {
-        final String mode = this.getRunningMode();
+        final String mode = getRunningMode();
         // create an empty settings objects
-        final MutableSettings s = this.createMutableSettingsInstance();
+        final MutableSettings s = createMutableSettingsInstance();
         // create the initial properties
         final Properties properties = new Properties();
+
         // invoke pre initialization hook
-        this.preInit(s, properties);
+        preInit(s, properties);
 
         // check for property providers
         if (this.beanFactory != null && this.beanFactory.containsBean(PropertyProvider.ROLE) ) {
             try {
-                final PropertyProvider provider = (PropertyProvider)this.beanFactory.getBean(PropertyProvider.ROLE);
+                final PropertyProvider provider = (PropertyProvider) this.beanFactory.getBean(PropertyProvider.ROLE);
                 final Properties providedProperties = provider.getProperties(s, mode, this.getNameForPropertyProvider());
-                if ( providedProperties != null ) {
+                if (providedProperties != null) {
                     properties.putAll(providedProperties);
                 }
             } catch (Exception ignore) {
@@ -214,19 +219,19 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         }
 
         // add aditional directories
-        if ( this.directories != null ) {
+        if (this.directories != null) {
             final Iterator i = directories.iterator();
-            while ( i.hasNext() ) {
-                final String directory = (String)i.next();
+            while (i.hasNext()) {
+                final String directory = (String) i.next();
                 // now read all properties from the properties directory
-                ResourceUtils.readProperties(directory, properties, this.getResourceLoader(), this.logger);
+                ResourceUtils.readProperties(directory, properties, getResourceLoader(), this.logger);
                 // read all properties from the mode dependent directory
-                ResourceUtils.readProperties(directory + '/' + mode, properties, this.getResourceLoader(), this.logger);
+                ResourceUtils.readProperties(directory + '/' + mode, properties, getResourceLoader(), this.logger);
             }
         }
 
         // add additional properties
-        if ( this.additionalProperties != null ) {
+        if (this.additionalProperties != null) {
             PropertyHelper.replaceAll(this.additionalProperties, s);
             properties.putAll(this.additionalProperties);
         }
@@ -237,10 +242,11 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
         } catch (SecurityException se) {
             // we ignore this
         }
-        // invoke pre initialization hook
-        this.postInit(s, properties);
 
-        PropertyHelper.replaceAll(properties, this.getParentSettings());
+        // invoke post initialization hook
+        postInit(s, properties);
+
+        PropertyHelper.replaceAll(properties, getParentSettings());
         // configure settings
         s.configure(properties);
         s.makeReadOnly();
@@ -249,10 +255,10 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
     }
 
     protected ResourceLoader getResourceLoader() {
-        if ( this.resourceLoader != null ) {
+        if (this.resourceLoader != null) {
             return this.resourceLoader;
         }
-        if ( this.servletContext != null ) {
+        if (this.servletContext != null) {
             return new ServletContextResourceLoader(this.servletContext);
         } else {
             return new FileSystemResourceLoader();
@@ -260,7 +266,7 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
     }
 
     protected String getSystemProperty(String key) {
-        return this.getSystemProperty(key, null);
+        return getSystemProperty(key, null);
     }
 
     protected String getSystemProperty(String key, String defaultValue) {
@@ -317,13 +323,13 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
      * Dump the settings object
      */
     protected void dumpSettings() {
-        if ( this.logger.isDebugEnabled() ) {
+        if (this.logger.isDebugEnabled()) {
             this.logger.debug("===== Settings Start =====");
             this.logger.debug(this.settings.toString());
             final List names = this.settings.getPropertyNames();
             final Iterator i = names.iterator();
-            while ( i.hasNext() ) {
-                final String name = (String)i.next();
+            while (i.hasNext()) {
+                final String name = (String) i.next();
                 this.logger.debug("Property: " + name + "=" + this.settings.getProperty(name));
             }
             this.logger.debug("===== Settings End =====");
