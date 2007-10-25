@@ -17,22 +17,33 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
-    |
-    | @version $Id$
-    +-->
+
+<!--
+  - @see http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  - @version $Id$
+  -->
 <document>
   <body>
-    <release version="1.0.1" date="2007-00-00" description="unreleased">
+    <release version="1.0.2" date="2007-??-??" description="unreleased">
+      <action dev="vgritsenko" type="fix">
+        SettingsBeanFactoryPostProcessor creates work and cache directories only
+        after properties are loaded and settings object is populated, and
+        not before that.
+      </action>
+    </release>
+
+    <release version="1.0.1" date="2007-09-20" description="released">
       <action dev="giacomo" type="add">
         Added ability to the bean-map handler to specify what properties a bean must have 
         to be considered as a candidate for the constructed Map as well as keying the Map
         with a property value from the bean itself instead of its bean-id.
       </action>  
       <action dev="cziegeler" type="fix">
-        SettingsBeanFactoryPostProcessor can be used outside a servlet context.
+        SettingsBeanFactoryPostProcessor can be used outside of a servlet context.
       </action>
+    </release>
+
+    <release version="1.0.0" date="2007-02-22" description="released">
       <action dev="reinhard" type="fix">
         WebAppContextUtils stored a Spring parent application context in a static field. This
         made it impossible to reload the context. The static field was removed and a request
@@ -60,4 +71,3 @@
     </release>
   </body>
 </document>
-    
