@@ -26,6 +26,7 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
@@ -42,6 +43,7 @@ import org.apache.cocoon.forms.formmodel.Field;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.sitemap.SitemapParameters;
+
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.continuations.Continuation;
 import org.xml.sax.ContentHandler;
@@ -53,7 +55,8 @@ import org.xml.sax.SAXException;
  * @since 2.1.8
  * @version $Id$
  */
-public class SuggestionListGenerator extends ServiceableGenerator implements Contextualizable {
+public class SuggestionListGenerator extends ServiceableGenerator
+                                     implements Contextualizable {
 
     private ContinuationsManager contManager;
     private WebContinuation wk;
@@ -61,6 +64,7 @@ public class SuggestionListGenerator extends ServiceableGenerator implements Con
     private String filter;
     private Locale locale;
     private Context context;
+
 
     public void contextualize(Context ctx) throws ContextException {
         this.context = ctx;
@@ -71,7 +75,8 @@ public class SuggestionListGenerator extends ServiceableGenerator implements Con
         this.contManager = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
     }
 
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         
         Request req = ObjectModelHelper.getRequest(objectModel);
@@ -116,13 +121,13 @@ public class SuggestionListGenerator extends ServiceableGenerator implements Con
         FOM_Cocoon cocoon = null;
         if (wk.getContinuation() instanceof Continuation) {
             oldScope = FOM_JavaScriptFlowHelper.getFOM_FlowScope(objectModel);
-            
-            Continuation k = (Continuation)wk.getContinuation();
+
+            Continuation k = (Continuation) wk.getContinuation();
             Scriptable kScope = k.getParentScope();
             // Register the current scope for scripts indirectly called from this function
             FOM_JavaScriptFlowHelper.setFOM_FlowScope(objectModel, kScope);
-            cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.pushCallContext(null, null, this.manager, this.context, getLogger(), wk);
+            cocoon = (FOM_Cocoon) kScope.get("cocoon", kScope);
+            cocoon.pushCallContext(null, null, this.context, wk);
         }
 
         try {
@@ -142,5 +147,4 @@ public class SuggestionListGenerator extends ServiceableGenerator implements Con
         super.contentHandler.endPrefixMapping(FormsConstants.INSTANCE_PREFIX);
         super.contentHandler.endDocument();
     }
-
 }

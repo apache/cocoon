@@ -16,21 +16,23 @@
  */
 package org.apache.cocoon.forms.acting;
 
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Map;
+
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.Request;
+import org.apache.excalibur.source.Source;
+
+import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.FormHandler;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.i18n.I18nUtils;
-import org.apache.cocoon.components.LifecycleHelper;
-import org.apache.excalibur.source.Source;
-
-import java.util.Map;
-import java.util.Collections;
-import java.util.Locale;
 
 /**
  * An action that will create a form instance, let it handle the current request (and
@@ -61,13 +63,13 @@ public class HandleFormSubmitAction extends AbstractFormsAction {
             Form form = formManager.createForm(source);
 
             Request request = ObjectModelHelper.getRequest(objectModel);
-            FormHandler formHandler = null;
+            FormHandler formHandler;
 
             if (formHandlerClassName != null) {
                 // TODO cache these classes
                 Class clazz = Thread.currentThread().getContextClassLoader().loadClass(formHandlerClassName);
                 formHandler = (FormHandler)clazz.newInstance();
-                LifecycleHelper.setupComponent(formHandler, null, null, manager, null);
+                LifecycleHelper.setupComponent(formHandler, (Logger) null, null, manager, null);
                 form.setFormHandler(formHandler);
             }
 
