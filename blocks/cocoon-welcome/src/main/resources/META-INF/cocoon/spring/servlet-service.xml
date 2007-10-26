@@ -27,7 +27,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
-  <bean name="org.apache.org.cocoon-welcome.block" class="org.apache.cocoon.sitemap.SitemapServlet">
+  <bean name="org.apache.cocoon-welcome.block" class="org.apache.cocoon.sitemap.SitemapServlet">
     <servlet:context mount-path="/" context-path="blockcontext:/cocoon-welcome/"/>
   </bean>
 </beans>
