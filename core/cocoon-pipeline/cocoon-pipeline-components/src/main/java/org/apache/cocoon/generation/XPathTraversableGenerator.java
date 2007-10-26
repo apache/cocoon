@@ -56,12 +56,11 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * The XPath can be specified in two ways:
  * <ol>
- *    <li>By using an XPointerish syntax in the URL: everything following the
- *         pound                 sign                 (possiby preceding  query
- * string arguments)  will be treated as the XPath;
- *     </li>
- *     <li>Specifying it as a sitemap parameter named "xpath"
- *  </ol>
+ * <li>By using an XPointerish syntax in the URL: everything following the
+ *     pound sign (possiby preceding query string arguments) will be treated
+ *     as the XPath;
+ * <li>Specifying it as a sitemap parameter named "xpath"
+ * </ol>
  *
  * Sample usage:
  *
@@ -102,8 +101,10 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 
     /** Local name for the element that contains the included XML snippet. */
     protected static final String XPATH_NODE_NAME = "xpath";
+
     /** Attribute for the XPath query. */
     protected static final String QUERY_ATTR_NAME = "query";
+
     /** The document containing a successful XPath query */
     protected static final String RESULT_DOCID_ATTR = "docid";
 
@@ -129,6 +130,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
     /** The cocoon context used for mime-type mappings */
     protected Context context;
 
+
     public void setParser(DOMParser parser) {
 		this.parser = parser;
 	}
@@ -136,6 +138,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
 	public void setXPathProcessor(XPathProcessor processor) {
 		this.processor = processor;
 	}
+
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
@@ -157,6 +160,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         } else {
             this.xpath = par.getParameter("xpath", null);
         }
+
         this.cacheKeyParList.add(this.xpath);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Applying XPath: " + xpath + " to collection " + source);
@@ -167,12 +171,12 @@ public class XPathTraversableGenerator extends TraversableGenerator {
             xmlFilesPattern = par.getParameter("xmlFiles", "\\.xml$");
             this.cacheKeyParList.add(xmlFilesPattern);
             this.xmlRE = new RE(xmlFilesPattern);
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("pattern for XML files: " + xmlFilesPattern);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("pattern for XML files: " + xmlFilesPattern);
             }
         } catch (RESyntaxException rese) {
-            throw new ProcessingException("Syntax error in regexp pattern '"
-                    + xmlFilesPattern + "'", rese);
+            throw new ProcessingException("Syntax error in regexp pattern '" +
+                                          xmlFilesPattern + "'", rese);
         }
 
         String[] params = par.getNames();
@@ -197,13 +201,27 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         this.parser = (DOMParser)manager.lookup(DOMParser.class.getName());
     }
 
+    /**
+     * Recycle resources
+     */
+    public void recycle() {
+        this.xpath = null;
+        this.doc = null;
+        this.xmlRE = null;
+        this.prefixResolver = null;
+        this.context = null;
+        super.recycle();
+    }
+
     public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release( processor );
+        if (this.manager != null) {
+            this.manager.release(processor);
             this.processor = null;
         }
         super.dispose();
     }
+
+    // ----------------------------------------------------------------------
 
     protected void addContent(TraversableSource source)
     throws SAXException, ProcessingException {
@@ -255,26 +273,13 @@ public class XPathTraversableGenerator extends TraversableGenerator {
     }
 
     /**
-     * Recycle resources
-     *
-     */
-    public void recycle() {
-        this.xpath = null;
-        this.doc = null;
-        this.xmlRE = null;
-        this.prefixResolver = null;
-        this.context = null;
-        super.recycle();
-    }
-
-    /**
      * A brain-dead PrefixResolver implementation
      */
     class XPathPrefixResolver implements PrefixResolver {
 
+        private final Log logger;
         private Map params;
 
-        private Log logger;
 
         public XPathPrefixResolver(Log logger) {
             this.params = new HashMap();
@@ -290,12 +295,14 @@ public class XPathTraversableGenerator extends TraversableGenerator {
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("prefix: " + prefix);
             }
+
             if (this.params.containsKey(prefix)) {
                 if(this.logger.isDebugEnabled()) {
                     this.logger.debug("prefix; " + prefix + " - namespace: " + this.params.get(prefix));
                 }
                 return (String) this.params.get(prefix);
             }
+
             return null;
         }
 
