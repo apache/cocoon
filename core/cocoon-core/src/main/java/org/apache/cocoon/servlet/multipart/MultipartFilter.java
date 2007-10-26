@@ -114,17 +114,22 @@ public class MultipartFilter extends AbstractLogEnabled
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         try{
-            request = this.requestFactory.getServletRequest(request);
-            filterChain.doFilter(request, response);
-        } catch (Exception e) {
-            if (getLogger().isErrorEnabled()) {
-                getLogger().error("Problem in multipart filter. Unable to create request.", e);
+
+            try {
+                request = this.requestFactory.getServletRequest(request);
+            } catch (Exception e) {
+                if (getLogger().isErrorEnabled()) {
+                    getLogger().error("Problem in multipart filter. Unable to create request.", e);
+                }
+
+                RequestUtil.manageException(request, response, null, null,
+                                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                                            "Problem in creating the Request",
+                                            null, null, e, this.servletSettings, getLogger(), this);
             }
 
-            RequestUtil.manageException(request, response, null, null,
-                                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                                        "Problem in creating the Request",
-                                        null, null, e, this.servletSettings, getLogger(), this);
+            filterChain.doFilter(request, response);
+
         } finally {
             try {
                 if (request instanceof MultipartHttpServletRequest) {
