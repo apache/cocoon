@@ -16,15 +16,14 @@
   limitations under the License.
 -->
 
-<!--+
-    | Convert the output of the directory generator into a samples file.
-    |
-    | $Id$
-    +-->
-
-<xsl:stylesheet version="1.0" 
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-  xmlns:dir="http://apache.org/cocoon/directory/2.0">
+<!--
+  - Convert the output of the directory generator into a samples file.
+  -
+  - $Id$
+  -->
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:dir="http://apache.org/cocoon/directory/2.0">
 
   <xsl:template match="/">
     <samples name="Cocoon Blocks">
