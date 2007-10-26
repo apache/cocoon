@@ -16,10 +16,15 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='BSF']">
+<!--
+  - $Id$
+  -->
+<xsamples>
+
   <group name="BSF">
     <sample name="BSF Block" href="/cocoon-bsf-sample/">
       Examples using scriptable generators and actions.
     </sample>
   </group>
+
 </xsamples>

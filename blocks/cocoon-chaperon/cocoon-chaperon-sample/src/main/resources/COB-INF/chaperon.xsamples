@@ -16,12 +16,16 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Chaperon']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Chaperon">
-    <sample name="Chaperon Block" href="chaperon/">
+  <group name="Input Data Formats" priority="50">
+    <sample name="Chaperon Block" href="/cocoon-chaperon-sample/">
       Examples showing how to use the Chaperon text parser to parse common text files
       (like Wiki or Java files) into the XML.
     </sample>
   </group>
+
 </xsamples>

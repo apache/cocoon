@@ -16,11 +16,15 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='FOP']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="FOP">
+  <group name="Output Data Formats" priority="50">
     <sample name="FOP Block" href="/cocoon-fop-sample/">
-      Examples of PDF document generation using FOP.
+      Examples of PDF document generation using previous generation FOP library (version 0.20.5).
+      Use FOP NG block for latest FOP release.
     </sample>
   </group>
 

@@ -16,11 +16,14 @@
   limitations under the License.
 -->
 
+<!--
+  - $Id$
+  -->
 <xsamples xpath="/samples" unless="group[@name='jfor']">
 
-  <group name="jfor">
+  <group name="Output Data Formats" priority="50">
     <sample name="jfor Block" href="/cocoon-jfor-sample/">
-      Examples of RTF document generation.
+      Examples of RTF document generation using jfor (Java FO to RTF converter).
     </sample>
   </group>
 </xsamples>

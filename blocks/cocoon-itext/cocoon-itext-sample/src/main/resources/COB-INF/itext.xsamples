@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='iText']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="iText">
+  <group name="Output Data Formats" priority="50">
     <sample name="iText Block" href="/cocoon-itext-sample/">
       Examples of PDF document generation using iText.
     </sample>

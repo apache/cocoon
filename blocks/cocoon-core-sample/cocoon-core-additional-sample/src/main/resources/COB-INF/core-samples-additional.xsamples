@@ -21,7 +21,7 @@
   -->
 <xsamples>
 
-  <group priority="100" name="Core samples">
+  <group name="Core samples" priority="100">
     <sample name="Additional Core Samples" href="/cocoon-core-additional-sample/">
       Samples of additional core functionality and components 
       (the main samples are in the core-samples-main block).
