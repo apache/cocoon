@@ -17,17 +17,17 @@
   specific language governing permissions and limitations
   und
 -->
-<!--+
-    | @version $Id: servlet-service.xml 523714 2007-03-29 13:54:20Z gkossakowski $
-    +-->
+
+<!--
+  - @version $Id: servlet-service.xml 523714 2007-03-29 13:54:20Z gkossakowski $
+  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:servlet="http://cocoon.apache.org/schema/servlet"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-  http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
-  
-  <bean id="org.apache.org.cocoon-welcome.block" class="org.apache.cocoon.sitemap.SitemapServlet">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
+
+  <bean name="org.apache.org.cocoon-welcome.block" class="org.apache.cocoon.sitemap.SitemapServlet">
     <servlet:context mount-path="/" context-path="blockcontext:/cocoon-welcome/"/>
   </bean>
-  
 </beans>
