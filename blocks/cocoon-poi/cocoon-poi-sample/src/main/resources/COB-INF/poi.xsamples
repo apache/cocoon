@@ -16,11 +16,21 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='POI']">
-  <group name="POI">
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Input Data Formats" priority="50">
     <sample name="POI Block" href="/cocoon-poi-sample/">
-      You want to have excel sheets? Here they go ...
+      You want to process excel sheets? Here we go ...
    </sample>
   </group>
+  <group name="Output Data Formats" priority="50">
+    <sample name="POI Block" href="/cocoon-poi-sample/">
+      You want to produce excel sheets? Here we go ...
+   </sample>
+  </group>
+
 </xsamples>
 

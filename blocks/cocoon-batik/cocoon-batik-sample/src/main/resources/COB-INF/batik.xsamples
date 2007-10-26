@@ -16,11 +16,15 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Batik']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Batik">
+  <group name="Output Data Formats" priority="50">
     <sample name="Batik Block" href="/cocoon-batik-sample/">
-      Examples of rasterized SVG images.
+      XML files in the Scalable Vector Graphics (SVG) format are converted
+      to images in different formats, such as JPG, PNG.
     </sample>
   </group>
 

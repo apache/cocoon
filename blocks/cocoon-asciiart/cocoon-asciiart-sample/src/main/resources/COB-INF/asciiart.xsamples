@@ -16,12 +16,16 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='ASCII Art']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="ASCII Art">
+  <group name="Input Data Formats" priority="50">
     <sample name="ASCII Art Block" href="/cocoon-asciiart-sample/">
-      Plain text files with character-based artwork and diagrams are presented
-      in various formats, e.g. plain text, JPEG, PNG
+      Plain text files with character-based artwork or diagrams are converted
+      to SVG XML. Resulting SVG then presented in various formats, such as plain
+      ext, JPEG, PNG images with the help of Batik block.
     </sample>
   </group>
 

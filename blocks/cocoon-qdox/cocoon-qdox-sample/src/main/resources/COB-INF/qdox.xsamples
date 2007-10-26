@@ -16,11 +16,14 @@
   limitations under the License.
 -->
 
+<!--
+  - $Id$
+  -->
 <xsamples xpath="/samples" unless="group[@name='QDox']">
 
-  <group name="QDox">
+  <group name="Input Data Formats" priority="50">
     <sample name="QDox Block" href="/cocoon-qdox-samples/">
-      Javadoc-like parsing of Java code using QDox.
+      Javadoc-like parsing of Java source code files using QDox.
     </sample>
   </group>
 

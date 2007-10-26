@@ -19,10 +19,10 @@
 <!--
   - $Id$
   -->
-<xsamples xpath="/samples" unless="group[@name='Main core samples']">
+<xsamples>
 
-  <group priority="100" name="Core samples">
-    <sample priority="100" name="Core Samples" href="/cocoon-core-samples-main/">
+  <group name="Core samples" priority="100" >
+    <sample name="Core Samples" priority="100" href="/cocoon-core-samples-main/">
       Samples of the most important core concepts and components.
     </sample>
   </group>
