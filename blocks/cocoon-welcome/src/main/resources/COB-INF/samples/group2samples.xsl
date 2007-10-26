@@ -27,7 +27,9 @@
 
   <xsl:template match="/">
     <samples name="Cocoon Blocks">
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="//group">
+        <xsl:sort select="@name"/>
+      </xsl:apply-templates>
     </samples>    
   </xsl:template>
   
