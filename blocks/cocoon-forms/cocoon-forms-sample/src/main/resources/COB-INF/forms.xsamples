@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
+<!--
+  - $Id: authentication-fw.xsamples 588722 2007-10-26 17:50:42Z vgritsenko $
+  -->
+<xsamples>
 
-  <group name="Cocoon Forms">
+  <group name="Application Frameworks">
     <sample name="Forms Block" href="forms/">
       Cocoon Forms examples.
     </sample>

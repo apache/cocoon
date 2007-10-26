@@ -15,12 +15,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id$ -->
-<xsamples xpath="/samples" unless="group[@name='Lucene']">
 
-  <group name="Lucene">
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Backend Components">
     <sample name="Lucene Block" href="/cocoon-lucene-sample/">
       Examples showing use of Apache Lucene to search.
     </sample>
   </group>
+
 </xsamples>

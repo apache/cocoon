@@ -21,7 +21,7 @@
   -->
 <xsamples>
 
-  <group name="BSF">
+  <group name="Templates And Server Pages" priority="25">
     <sample name="BSF Block" href="/cocoon-bsf-sample/">
       Examples using scriptable generators and actions.
     </sample>

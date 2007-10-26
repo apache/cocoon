@@ -16,10 +16,13 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Slop']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Slop">
-    <sample name="SLOP Block" href="slop/">
+  <group name="Input Data Formats" priority="50">
+    <sample name="SLOP Block" href="/cocoon-slop-sample/">
       Examples showing how to use SLOP
       (the Simple Line Oriented Parser) to parse text files
     </sample>
@@ -29,4 +32,5 @@
       XML-based presentations
     </sample>
   </group>
+
 </xsamples>

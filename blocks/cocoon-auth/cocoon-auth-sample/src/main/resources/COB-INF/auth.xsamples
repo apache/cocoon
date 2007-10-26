@@ -15,10 +15,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsamples xpath="/samples" unless="group[@name='Auth Block']">
-  <group name="Auth Block">
+
+<!--
+  - $Id: authentication-fw.xsamples 588722 2007-10-26 17:50:42Z vgritsenko $
+  -->
+<xsamples>
+
+  <group name="Application Frameworks">
     <sample name="Auth Block" href="/cocoon-auth-sample/">
       This is a demo of the authentication framework integrated into Cocoon. 
     </sample>
   </group>
+
 </xsamples>

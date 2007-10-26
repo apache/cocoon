@@ -18,7 +18,7 @@
 
 <xsamples xpath="/samples" unless="group[@name='Ajax Block']">
 
-  <group name="Ajax">
+  <group name="Templates And Server Pages">
     <sample name="Ajax Block" href="ajax/">
       Ajax block examples. This block is also used by <a href="forms/">Cocoon Forms</a>.
     </sample>

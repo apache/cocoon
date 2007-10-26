@@ -16,11 +16,14 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Faces']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Faces">
+  <group name="Templates And Server Pages">
     <sample name="Faces Block" href="/cocoon-faces-sample/">
-      JavaServer Faces integration into Cocoon
+      JavaServer Faces (JSF) integration into Cocoon
     </sample>
   </group>
 

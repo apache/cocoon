@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Web3']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Web3">
+  <group name="Backend Components">
     <sample name="Web3 Block" href="/cocoon-web3-samples/">
       Continue to Web3 block samples.
     </sample>

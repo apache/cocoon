@@ -16,12 +16,17 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Event Based Cache']">
-  <group name="Event Based Cache">
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Backend Components">
     <sample name="Event Cache Block" href="/cocoon-eventcache-sample/demo?pageKey=one">
       A sample demonstrating a new system of cache invalidation based on 
       events usually external to Cocoon.  Example uses include cache content 
       until a back-end database is updated, or EJB signals an update.
     </sample>
   </group>
+
 </xsamples>

@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Mail']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Mail">
+  <group name="Backend Components">
     <sample name="Mail Block" href="/cocoon-mail-samples/">
       Continue to mail block samples.
     </sample>

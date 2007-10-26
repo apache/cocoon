@@ -15,12 +15,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsamples xpath="/samples" unless="group[@name='Proxy']">
-  <group name="Proxy">
-    <sample name="Proxy Block" href="proxy/">
+
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Web And Services">
+    <sample name="Proxy Block" href="/cocoon-proxy-sample/">
       Web Site Syndication using proxies: Integrate remote webapp functionality
       into your website.
    </sample>
   </group>
-</xsamples>
 
+</xsamples>

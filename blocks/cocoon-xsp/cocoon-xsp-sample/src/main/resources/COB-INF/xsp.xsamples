@@ -16,10 +16,16 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='XSP']">
-  <group name="XSP">
-    <sample href="/cocoon-xsp-sample/" name="XSP Block">
-      Extensible Server Pages, or XSP.
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Templates And Server Pages" priority="25">
+    <sample name="XSP Block" href="/cocoon-xsp-sample/">
+      Extensible Server Pages, or XSP, is an XML based compiled server
+      pages technology, comparable to JSP.
     </sample>
   </group>
+
 </xsamples>

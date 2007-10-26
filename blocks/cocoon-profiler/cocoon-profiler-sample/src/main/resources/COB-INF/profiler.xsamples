@@ -16,12 +16,16 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Profiler']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Profiler">
+  <group name="Unsorted And Miscellaneous">
     <sample name="Profiler Block" href="/cocoon-profiler-sample/">
       This example shows the usage of the Profiler component for
       profiling and debugging of pipelines.
     </sample>
   </group>
+
 </xsamples>

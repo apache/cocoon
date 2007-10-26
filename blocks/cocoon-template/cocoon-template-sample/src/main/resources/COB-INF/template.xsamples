@@ -16,10 +16,16 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Cocoon Template']">
-  <group name="Cocoon Template">
-    <sample name="Template Block" href="template/">
-      Cocoon Template examples.
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Templates And Server Pages" priority="25">
+    <sample name="Template Block" href="/cooon-template-sample/">
+      Cocoon Template is the best of page template technologies offered in Cocoon
+      and it is recommended for all new projects.
     </sample>
   </group>
+
 </xsamples>

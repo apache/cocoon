@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Velocity']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Velocity">
+  <group name="Templates And Server Pages" priority="25">
     <sample name="Velocity Block" href="/cocoon-velocity-sample/">
       Examples of generation using Velocity.
     </sample>

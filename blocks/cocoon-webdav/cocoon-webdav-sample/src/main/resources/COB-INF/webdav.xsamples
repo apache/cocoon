@@ -16,10 +16,13 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='WebDAV']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="WebDAV">
-    <sample href="/cocoon-webdav-sample/" name="WebDAV Block">
+  <group name="Web And Services">
+    <sample name="WebDAV Block" href="/cocoon-webdav-sample/">
       Using WebDAV with Cocoon
     </sample>
   </group>
