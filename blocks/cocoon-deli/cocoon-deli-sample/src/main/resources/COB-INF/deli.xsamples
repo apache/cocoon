@@ -15,13 +15,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsamples xpath="/samples" unless="group[@name='DELI']">
-  <group name="DELI">
 
-   <sample name="DELI Block" href="/cocoon-deli-sample/">
-	DELI allows Cocoon to determine the delivery context of a client device, for example a mobile terminal, using CC/PP or UAProf.
-   </sample>
-      
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Unsorted And Miscellaneous">
+    <sample name="DELI Block" href="/cocoon-deli-sample/">
+      DELI allows Cocoon to determine the delivery context of a client device,
+      for example a mobile terminal, using CC/PP or UAProf.
+    </sample>
   </group>
+
 </xsamples>
 

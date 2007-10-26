@@ -16,7 +16,10 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Databases']">
+<!--
+  - $Id: axis.xsamples 588722 2007-10-26 17:50:42Z vgritsenko $
+  -->
+<xsamples>
 
   <group name="Databases">
     <sample name="Databases Block" href="/cocoon-databases-sample/">

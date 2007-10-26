@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Link Rewriter']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Link Rewriter">
+  <group name="Data Transformation And Validation">
     <sample name="LinkRewriter Block" href="/cocoon-linkrewriter-sample/">
       A demo of the LinkRewriterTransformer, which rewrites XML links (by
       default, href attributes) with values looked up from any Input Module.

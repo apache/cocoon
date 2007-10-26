@@ -16,11 +16,15 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Taglib']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Taglib">
+  <group name="Templates And Server Pages">
     <sample name="Taglib Block" href="/cocoon-taglib-sample/">
       Examples of taglib transformer usage.
     </sample>
   </group>
+
 </xsamples>

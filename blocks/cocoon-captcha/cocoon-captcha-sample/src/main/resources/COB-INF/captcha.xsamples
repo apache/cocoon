@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
+<!--
+  - $Id: authentication-fw.xsamples 588722 2007-10-26 17:50:42Z vgritsenko $
+  -->
 <xsamples xpath="/samples" unless="group[@name='CAPTCHA']">
 
-  <group name="CAPTCHA">
+  <group name="Unsorted And Miscellaneous">
     <sample name="CAPTCHA Block" href="/cocoon-captcha-sample/">
       Example usages of CAPTCHAs.
     </sample>

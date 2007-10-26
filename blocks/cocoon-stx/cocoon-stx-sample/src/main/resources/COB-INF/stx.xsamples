@@ -15,11 +15,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsamples xpath="/samples" unless="group[@name='STX']">
 
-  <group name="STX">
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Data Transformation And Validation">
     <sample name="STX Block" href="/cocoon-stx-sample/">
       Examples of using Streaming Transformations for XML (STX)
     </sample>
   </group>
+
 </xsamples>

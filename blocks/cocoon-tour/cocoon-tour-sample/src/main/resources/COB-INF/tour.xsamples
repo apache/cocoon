@@ -16,12 +16,15 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Supersonic Tour']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Supersonic Tour">
+  <group name="Tutorials And Sample Applications">
     <sample name="Supersonic Tour of Cocoon" href="/cocoon-tour-sample/">
-      Introduction and quick overview of the Cocoon Power Trio
-        (Pipelines, Flow, Forms)
+      Introduction and quick overview of the Cocoon Power Trio (Pipelines,
+      Flow, Forms)
     </sample>
   </group>
 

@@ -15,12 +15,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id: cron.xsamples,v 1.4 2004/07/11 19:47:56 antonio Exp $ -->
-<xsamples xpath="/samples" unless="group[@name='Cron']">
 
-  <group name="Cron">
+<!--
+  - $Id: axis.xsamples 588722 2007-10-26 17:50:42Z vgritsenko $
+  -->
+<xsamples>
+
+  <group name="Backend Components">
     <sample name="Cron Block" href="/cocoon-cron-sample/">
-      Cron block samples.
+      Execute background tasks once or schedule for periodic execution
+      with the help of Quartz based scheduler.
     </sample>
   </group>
   

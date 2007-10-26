@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Session Framework']">
+<!--
+  - $Id: authentication-fw.xsamples 588722 2007-10-26 17:50:42Z vgritsenko $
+  -->
+<xsamples>
 
-  <group name="Session Framework">
+  <group name="Application Frameworks">
     <sample name="Session Framework Block" href="/cocoon-session-fw-sample/">
       This is a demo of the session framework integrated into Cocoon.
     </sample>

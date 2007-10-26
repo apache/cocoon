@@ -16,11 +16,15 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='JSP']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="JSP">
+  <group name="Templates And Server Pages" priority="25">
     <sample name="JSP Block" href="/cocoon-jsp-sample/">
       Java Server Pages (JSP) usage with Cocoon
     </sample>
   </group>
+
 </xsamples>

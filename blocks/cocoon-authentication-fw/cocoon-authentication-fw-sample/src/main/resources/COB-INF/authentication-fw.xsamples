@@ -21,8 +21,8 @@
   -->
 <xsamples>
 
-  <group name="Authentication Framework">
-    <sample name="Authentication Framework Block">
+  <group name="Application Frameworks">
+    <sample name="Authentication Framework Block" deprecated="yes">
       Cocoon Authentication Framework examples (deprecated, use <a href="cocoon-auth-sample/">Cocoon Auth Block</a> instead).
     </sample>
   </group>

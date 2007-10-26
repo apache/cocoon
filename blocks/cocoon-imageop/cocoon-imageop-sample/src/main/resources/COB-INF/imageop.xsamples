@@ -16,10 +16,13 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Image Effects']">
+<!--
+  - $Id: chaperon.xsamples 588722 2007-10-26 17:50:42Z vgritsenko $
+  -->
+<xsamples>
 
-  <group name="Image Effects">
-    <sample href="/cocoon-imageop-sample/" name="Image Effects">
+  <group name="Data Transformation And Validation">
+    <sample name="Image Effects" href="/cocoon-imageop-sample/">
       Image Effects to be applied to images.
     </sample>
   </group>

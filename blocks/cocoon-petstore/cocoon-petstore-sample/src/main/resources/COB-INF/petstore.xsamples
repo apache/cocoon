@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Petstore']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Petstore">
+  <group name="Tutorials And Sample Applications">
     <sample name="Petstore Block" href="/cocoon-petstore-sample/">
       The Cocoon Flow version of the J2EE PetStore, using various presentation
       mechanisms: CocoonForms (Woody), Velocity, XSP, Jexl.

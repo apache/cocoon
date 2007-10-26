@@ -15,12 +15,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id$ -->
-<xsamples xpath="/samples" unless="group[@name='QueryBean']">
 
-  <group name="QueryBean">
-    <sample name="Query Bean" href="/cocoon-querybean-sample/">
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Unsorted And Miscellaneous">
+    <sample name="Query Bean Block" href="/cocoon-querybean-sample/">
       Examples showing the use of Apache Lucene with CForms to search.
     </sample>
   </group>
+
 </xsamples>

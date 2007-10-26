@@ -16,11 +16,14 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Apples']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Apples">
+  <group name="Application Flow Controllers" priority="10">
     <sample name="Apples Block" href="/cocoon-apples-sample/">
-      Apples (an alternative flow implementation) examples.
+      Apples is an alternative control flow implementation.
     </sample>
   </group>
 

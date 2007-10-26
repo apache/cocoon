@@ -16,9 +16,17 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='HTML']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="HTML">
+  <group name="Input Data Formats" priority="50">
+    <sample name="HTML Block" href="/cocoon-html-sample/">
+      Example usages of HTML Block components.
+    </sample>
+  </group>
+  <group name="Data Transformation And Validation">
     <sample name="HTML Block" href="/cocoon-html-sample/">
       Example usages of HTML Block components.
     </sample>

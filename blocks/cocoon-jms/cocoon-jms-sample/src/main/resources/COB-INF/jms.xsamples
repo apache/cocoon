@@ -16,8 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='JMS']">
-  <group name="JMS">
+<!--
+  - $Id$
+  -->
+<xsamples>
+
+  <group name="Backend Components">
     <sample name="JMS Block" href="/cocoon-jms-sample/database/">
       JMS invalidated Event Based Cache.
       A sample showing external cache invalidation using database triggers
@@ -27,4 +31,5 @@
       JMS connection parameters are set in a way to work with the OpenJMS demo.
     </sample>
   </group>
+
 </xsamples>

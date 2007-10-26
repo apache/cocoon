@@ -16,9 +16,12 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Java Flow']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Java Flow">
+  <group name="Application Flow Controllers" priority="10">
     <sample name="Java Flow Block" href="/cocoon-javaflow-sample/">
       Cocoon Java Flow examples.
     </sample>
