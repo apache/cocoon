@@ -179,8 +179,8 @@ public abstract class ResourceUtils {
                 String name1 = ((Resource) o1).getURL().toExternalForm();
                 String name2 = ((Resource) o2).getURL().toExternalForm();
                 // replace '\' with '/'
-                name1.replace('\\', '/');
-                name2.replace('\\', '/');
+                name1 = name1.replace('\\', '/');
+                name2 = name2.replace('\\', '/');
 
                 boolean webInfClasses1 = name1.indexOf(ResourceComparator.WEB_INF_CLASSES_META_INF_COCOON) != -1;
                 boolean webInfClasses2 = name2.indexOf(ResourceComparator.WEB_INF_CLASSES_META_INF_COCOON) != -1;
