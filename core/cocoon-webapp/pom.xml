@@ -72,7 +72,14 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-components</artifactId>
     </dependency>
-    
+
+    <!-- Cocoon Welcome Page -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-welcome</artifactId>
+    </dependency>
+
+    <!-- Cocoon Core Samples -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-main-sample</artifactId>
@@ -80,6 +87,10 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-additional-sample</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-sample</artifactId>
     </dependency>
 
     <!-- Cocoon Sample Blocks -->
@@ -94,16 +105,6 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-sample</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-welcome</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-servlet-service-sample</artifactId>
     </dependency>
   </dependencies>
 
