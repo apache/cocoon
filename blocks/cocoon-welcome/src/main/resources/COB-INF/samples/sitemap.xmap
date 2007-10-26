@@ -51,7 +51,8 @@
           <map:parameter name="depth" value="2"/>
           <map:parameter name="xmlFiles" value="\.xsamples$"/>
         </map:generate>
-        <map:transform src="group2samples.xsl" label="content"/>
+        <map:transform src="prepare-samples.xsl"/>
+        <map:transform src="merge-samples.xsl" label="content"/>
         <map:transform src="../stylesheets/simple-samples2html.xsl">
           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>

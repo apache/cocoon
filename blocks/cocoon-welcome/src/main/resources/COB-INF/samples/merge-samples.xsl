@@ -17,14 +17,30 @@
 -->
 
 <!--
+  - Merge groups with same name.
+  -
   - $Id$
   -->
-<xsamples xpath="/samples" unless="group[@name='Main core samples']">
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <group priority="100" name="Core samples">
-    <sample priority="100" name="Core Samples" href="/cocoon-core-samples-main/">
-      Samples of the most important core concepts and components.
-    </sample>
-  </group>
+  <xsl:template match="group">
+    <xsl:if test="not(preceding-sibling::group[@name = current()/@name])">
+      <xsl:copy>
+        <xsl:copy-of select="@name"/>
+        <xsl:apply-templates select="*|following-sibling::group[@name = current()/@name]/*"/>
+      </xsl:copy>
+    </xsl:if>
+  </xsl:template>
 
-</xsamples>
+  <xsl:template match="*">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|*|text()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="@*|text()">
+    <xsl:copy/>
+  </xsl:template>
+
+</xsl:stylesheet>

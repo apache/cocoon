@@ -16,18 +16,20 @@
   limitations under the License.
 -->
 
-<!--+
-    | Covert samples file to the HTML page. Uses styles/main.css stylesheet.
-    |
-    | $Id: simple-samples2html.xsl 448464 2006-09-21 05:29:11Z crossley $
-    +-->
-
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!--
+  - Convert samples file to the HTML page. Uses styles/main.css stylesheet.
+  -
+  - $Id$
+  -->
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:param name="contextPath"/>
+
   <xsl:variable name="stdLinks" select="samples/links/link[not(@role)]"/>
   <xsl:variable name="seeAlsoLinks" select="samples/links/link[@role='see-also']"/>
 
+  
   <xsl:template match="/">
     <html>
       <head>
@@ -57,12 +59,12 @@
            <td nowrap="nowrap" align="right">
 	           <xsl:apply-templates select="$stdLinks"/>
 	           <xsl:if test="not(samples/@add-view-links='false')">
-		             Orthogonal views:
-		             <a href="?cocoon-view=content">Content</a>
-		             &#160;
-		             <a href="?cocoon-view=pretty-content">Pretty content</a>
-		             &#160;
-		             <a href="?cocoon-view=links">Links</a>
+               Orthogonal views:
+               <a href="?cocoon-view=content">Content</a>
+               &#160;
+               <a href="?cocoon-view=pretty-content">Pretty content</a>
+               &#160;
+               <a href="?cocoon-view=links">Links</a>
 	           </xsl:if>
            </td>
          </tr>
@@ -142,25 +144,19 @@
         <td width="50%" valign="top">
           <xsl:for-each select="group">
             <xsl:variable name="group-position" select="position()"/>
-            <xsl:choose>
-              <xsl:when test="$group-position &lt;= $half">
-                <h4 class="samplesGroup"><xsl:value-of select="@name"/></h4>
-                <p class="samplesText"><xsl:apply-templates/></p>
-              </xsl:when>
-              <xsl:otherwise></xsl:otherwise>
-            </xsl:choose>
+            <xsl:if test="$group-position &lt;= $half">
+              <h4 class="samplesGroup"><xsl:value-of select="@name"/></h4>
+              <xsl:apply-templates/>
+            </xsl:if>
           </xsl:for-each>
         </td>
         <td valign="top">
           <xsl:for-each select="group">  <!-- [position()<=$half] -->
             <xsl:variable name="group-position" select="position()"/>
-            <xsl:choose>
-              <xsl:when test="$group-position &gt; $half">
-                <h4 class="samplesGroup"><xsl:value-of select="@name"/></h4>
-                <p class="samplesText"><xsl:apply-templates/></p>
-              </xsl:when>
-              <xsl:otherwise></xsl:otherwise>
-            </xsl:choose>
+            <xsl:if test="$group-position &gt; $half">
+              <h4 class="samplesGroup"><xsl:value-of select="@name"/></h4>
+              <xsl:apply-templates/>
+            </xsl:if>
           </xsl:for-each>
         </td>
       </tr>
@@ -180,17 +176,19 @@
       </xsl:choose>
     </xsl:variable>
 
-    <xsl:choose>
-      <xsl:when test="string-length($link) &gt; 0">
-        <a href="{$link}"><xsl:value-of select="@name"/></a>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="@name"/>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text> - </xsl:text>
-    <xsl:copy-of select="*|text()"/>
-    <br/>
+    <p class="samplesText">
+      <xsl:choose>
+        <xsl:when test="string-length($link) &gt; 0">
+          <a href="{$link}"><xsl:value-of select="@name"/></a>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@name"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text> - </xsl:text>
+      <xsl:copy-of select="*|text()"/>
+      <br/>
+    </p>
   </xsl:template>
 
 

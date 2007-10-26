@@ -16,11 +16,14 @@
   limitations under the License.
 -->
 
-<xsamples xpath="/samples" unless="group[@name='Additional core samples']">
+<!--
+  - $Id$
+  -->
+<xsamples>
 
-  <group name="Additional core samples">
+  <group priority="100" name="Core samples">
     <sample name="Additional Core Samples" href="/cocoon-core-additional-sample/">
-      Additional samples of core components 
+      Samples of additional core functionality and components 
       (the main samples are in the core-samples-main block).
     </sample>
   </group>
