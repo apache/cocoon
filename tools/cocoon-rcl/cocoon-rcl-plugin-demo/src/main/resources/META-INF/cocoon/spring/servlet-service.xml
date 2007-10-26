@@ -17,17 +17,17 @@
   specific language governing permissions and limitations
   und
 -->
-<!--+
-    | @version $Id$
-    +-->  
+
+<!--
+  - @version $Id$
+  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:servlet="http://cocoon.apache.org/schema/servlet"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-  http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
   
-  <bean id="org.apache.cocoon.cocoon-rcl-plugin-demo.block" class="org.apache.cocoon.sitemap.SitemapServlet">
+  <bean name="org.apache.cocoon.cocoon-rcl-plugin-demo.block" class="org.apache.cocoon.sitemap.SitemapServlet">
     <servlet:context mount-path="" context-path="blockcontext:/cocoon-rcl-plugin-demo/"/>
   </bean>
-  
 </beans>
