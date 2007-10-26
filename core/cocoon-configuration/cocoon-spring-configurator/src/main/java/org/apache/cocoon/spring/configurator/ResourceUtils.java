@@ -19,11 +19,8 @@ package org.apache.cocoon.spring.configurator;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -35,8 +32,8 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 /**
  * Utility class for Spring resource handling.
  *
- * @version $Id$
  * @since 1.0
+ * @version $Id$
  */
 public abstract class ResourceUtils {
 
@@ -64,15 +61,13 @@ public abstract class ResourceUtils {
             final File f = new File(uri.substring(5));
             return "file://" + f.getAbsolutePath();
         }
+
         return uri;
     }
 
     public static boolean isClasspathUri(String uri) {
-        if ( uri.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)
-             || uri.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX) ) {
-            return true;
-        }
-        return false;
+        return uri.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX) ||
+               uri.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX);
     }
 
     /**
@@ -92,31 +87,32 @@ public abstract class ResourceUtils {
         }
 
         ResourcePatternResolver resolver;
-		if (resourceLoader instanceof ResourcePatternResolver)
+		if (resourceLoader instanceof ResourcePatternResolver) {
 			resolver = (ResourcePatternResolver) resourceLoader;
-		else
+        } else {
 			resolver = new PathMatchingResourcePatternResolver(resourceLoader);
+        }
 
         Resource[] resources = null;
 
         // check if directory exists
         boolean load = true;
-        if ( !ResourceUtils.isClasspathUri(propertiesPath) ) {
+        if (!ResourceUtils.isClasspathUri(propertiesPath)) {
             final Resource resource = resolver.getResource(propertiesPath);
-            if (!resource.exists() ) {
+            if (!resource.exists()) {
                 load = false;
             }
         }
-        if ( load ) {
+        if (load) {
             try {
                 resources = resolver.getResources(propertiesPath + "/*.properties");
                 if (logger != null && logger.isDebugEnabled())
-                    logger.debug("Found " + resources.length + " matching resources in " + propertiesPath
-                                    + "/*.properties");
+                    logger.debug("Found " + resources.length + " matching resources in " +
+                                 propertiesPath + "/*.properties");
             } catch (IOException ignore) {
                 if (logger != null && logger.isDebugEnabled()) {
-                    logger.debug("Unable to read properties from directory '" + propertiesPath
-                            + "' - Continuing initialization.", ignore);
+                    logger.debug("Unable to read properties from directory '" +
+                                 propertiesPath + "' - Continuing initialization.", ignore);
                 }
             }
         }
@@ -124,16 +120,11 @@ public abstract class ResourceUtils {
         if (resources != null) {
             // we process the resources in alphabetical order, so we put
             // them first into a list, sort them and then read the properties.
-            final List propertyUris = new ArrayList();
-            for (int i = 0; i < resources.length; i++) {
-                propertyUris.add(resources[i]);
-            }
-            // sort
-            Collections.sort(propertyUris, getResourceComparator());
+            Arrays.sort(resources, getResourceComparator());
+
             // now process
-            final Iterator i = propertyUris.iterator();
-            while (i.hasNext()) {
-                final Resource src = (Resource) i.next();
+            for (int i = 0; i < resources.length; i++) {
+                final Resource src = resources[i];
                 try {
                     if (logger != null && logger.isDebugEnabled()) {
                         logger.debug("Reading settings from '" + src.getURL() + "'.");
@@ -143,8 +134,8 @@ public abstract class ResourceUtils {
                     propsIS.close();
                 } catch (IOException ignore) {
                     if (logger != null && logger.isDebugEnabled()) {
-                        logger.info("Unable to read properties from file '" + src.getDescription()
-                                + "' - Continuing initialization.", ignore);
+                        logger.info("Unable to read properties from file '" + src.getDescription() +
+                                    "' - Continuing initialization.", ignore);
                     }
                 }
             }
@@ -161,6 +152,7 @@ public abstract class ResourceUtils {
      * In addition all resources contained in a directory named
      * WEB-INF/classes/cocoon are sorted (in alphabetical) order
      * after all other files.
+     *
      * @return A new comparator for resources.
      */
     public static Comparator getResourceComparator() {
@@ -182,23 +174,26 @@ public abstract class ResourceUtils {
             if (!(o1 instanceof Resource) || !(o2 instanceof Resource)) {
                 return 0;
             }
+
             try {
-                String name1 = ((Resource)o1).getURL().toExternalForm();
-                String name2 = ((Resource)o2).getURL().toExternalForm();
+                String name1 = ((Resource) o1).getURL().toExternalForm();
+                String name2 = ((Resource) o2).getURL().toExternalForm();
                 // replace '\' with '/'
                 name1.replace('\\', '/');
                 name2.replace('\\', '/');
+
                 boolean webInfClasses1 = name1.indexOf(ResourceComparator.WEB_INF_CLASSES_META_INF_COCOON) != -1;
                 boolean webInfClasses2 = name2.indexOf(ResourceComparator.WEB_INF_CLASSES_META_INF_COCOON) != -1;
-                if ( !webInfClasses1 && webInfClasses2 ) {
+                if (!webInfClasses1 && webInfClasses2) {
                     return -1;
                 }
-                if ( webInfClasses1 && !webInfClasses2 ) {
+                if (webInfClasses1 && !webInfClasses2) {
                     return +1;
                 }
             } catch (IOException io) {
                 // ignore
             }
+
             // default behaviour:
             return ((Resource) o1).getFilename().compareTo(((Resource) o2).getFilename());
         }
@@ -206,6 +201,7 @@ public abstract class ResourceUtils {
 
     /**
      * Return the properties added by Maven.
+     *
      * @param groupId The group identifier of the artifact.
      * @param artifactId The artifact identifier.
      * @return Returns a properties object or null if the properties can't be found/read.
