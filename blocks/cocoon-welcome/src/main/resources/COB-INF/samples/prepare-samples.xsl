@@ -22,32 +22,40 @@
   - $Id$
   -->
 <xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:dir="http://apache.org/cocoon/directory/2.0">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="/">
     <samples name="Cocoon Blocks">
       <xsl:apply-templates select="//group">
+        <xsl:sort select="@priority" data-type="number" order="descending"/>
         <xsl:sort select="@name"/>
       </xsl:apply-templates>
-    </samples>    
+    </samples>
   </xsl:template>
-  
+
   <xsl:template match="group">
     <xsl:copy>
-      <xsl:attribute name="name"><xsl:value-of select="@name"/></xsl:attribute>
-      <xsl:apply-templates/>
+      <xsl:copy-of select="@name"/>
+      <xsl:apply-templates>
+        <xsl:sort select="@priority" data-type="number" order="descending"/>
+      </xsl:apply-templates>
     </xsl:copy>
   </xsl:template>
-  
+
   <xsl:template match="sample">
+    <!--
+      - Document structure is:
+      - /collection[@name]/collection/resource/group[@name]/sample[@name]
+      -->
     <sample href="../{../../../../@name}/" name="{@name}">
       <xsl:copy-of select="*|text()"/>
     </sample>
   </xsl:template>
-  
-  <xsl:template match="*|@*|node()" priority="-2">
-     <xsl:apply-templates select="@*|node()"/>
+
+  <xsl:template match="note">
+    <xsl:copy>
+      <xsl:copy-of select="*|text()"/>
+    </xsl:copy>
   </xsl:template>
-  
+
 </xsl:stylesheet>
