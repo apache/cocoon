@@ -225,17 +225,17 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             }
 
             this.sitemapExecutor.enterSitemap(this, environment.getObjectModel(), this.wrappingProcessor.source.getURI());
+
             // and now process
             EnvironmentHelper.enterProcessor(this, environment);
             final Redirector oldRedirector = context.getRedirector();
-
-            // Build a redirector
-            TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
-            context.setRedirector(redirector);
-            context.service(this.manager);
-            context.setLastProcessor(this);
-
             try {
+                // Build a redirector
+                TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
+                context.setRedirector(redirector);
+                context.service(this.manager);
+                context.setLastProcessor(this);
+
                 return this.rootNode.invoke(environment, context);
             } finally {
                 EnvironmentHelper.leaveProcessor();
