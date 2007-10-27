@@ -215,11 +215,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             handle = WebAppContextUtils.enteringContext(this.webAppContext);
             // invoke listeners
             // only invoke if pipeline is not internally
-            if ( !context.isBuildingPipelineOnly() ) {
+            if (!context.isBuildingPipelineOnly()) {
                 final EnterSitemapEvent enterEvent = new EnterSitemapEvent(this, environment);
-                final Iterator enterSEI = this.enterSitemapEventListeners.iterator();
-                while ( enterSEI.hasNext() ) {
-                    final EnterSitemapEventListener current = (EnterSitemapEventListener)enterSEI.next();
+                final Iterator i = this.enterSitemapEventListeners.iterator();
+                while (i.hasNext()) {
+                    final EnterSitemapEventListener current = (EnterSitemapEventListener) i.next();
                     current.enteredSitemap(enterEvent);
                 }
             }
@@ -244,17 +244,19 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
             }
 
         } finally {
-            this.sitemapExecutor.leaveSitemap(this, environment.getObjectModel());
-            WebAppContextUtils.leavingContext(this.webAppContext, handle);
-            // invoke listeners
-            // only invoke if pipeline is not internally
-            if ( !context.isBuildingPipelineOnly() ) {
-                final LeaveSitemapEvent leaveEvent = new LeaveSitemapEvent(this, environment);
-                final Iterator leaveSEI = this.leaveSitemapEventListeners.iterator();
-                while ( leaveSEI.hasNext() ) {
-                    final LeaveSitemapEventListener current = (LeaveSitemapEventListener)leaveSEI.next();
-                    current.leftSitemap(leaveEvent);
+            if (handle != null) {
+                this.sitemapExecutor.leaveSitemap(this, environment.getObjectModel());
+                // invoke listeners
+                // only invoke if pipeline is not internally
+                if (!context.isBuildingPipelineOnly()) {
+                    final LeaveSitemapEvent leaveEvent = new LeaveSitemapEvent(this, environment);
+                    final Iterator i = this.leaveSitemapEventListeners.iterator();
+                    while (i.hasNext()) {
+                        final LeaveSitemapEventListener current = (LeaveSitemapEventListener) i.next();
+                        current.leftSitemap(leaveEvent);
+                    }
                 }
+                WebAppContextUtils.leavingContext(this.webAppContext, handle);
             }
 
             // Decrement the concurrent request count
