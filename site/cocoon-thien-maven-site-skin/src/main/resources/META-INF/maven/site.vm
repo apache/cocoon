@@ -185,21 +185,21 @@
 #end
 
 #macro ( title )
-  #if ( $decoration.name )
-    $decoration.name
+  #if ( $title )
+    $title
   #else
     #if ( $project.getProperties().get("docs.name") )
       $project.getProperties().get("docs.name")
     #else
       #if ( $project.name )
         $project.name
-    #end
+      #end
     #end
   #end
 #end
 
 #macro ( nameAndVersion )
-  #title()
+  $project.getProperties().get("docs.name")
   #if ( $project.getProperties().get("docs.version") )
     $project.getProperties().get("docs.version")
   #end
@@ -243,11 +243,11 @@
          </div>
          </div>
          <div id="projectBar">
-           <p class="cocoonHome"><a href="$project.getProperties().get("docs.urlRelativizer")"><img
+           <p class="cocoonHome"><a href="./index.html"><img
            src="$PathTool.calculateLink( "images/pmc-home.gif", $relativePath )"
-           alt="Back to Apache Cocoon homepage"
-           border="0" title="Back to Apache Cocoon homepage" /></a></p>
-           <h1 class="projectTitle"><a href="$project.getProperties().get("docs.urlRelativizer")">#nameAndVersion()</a></h1>
+           alt="#nameAndVersion() homepage"
+           border="0" title="#nameAndVersion() homepage" /></a></p>
+           <h1 class="projectTitle"><a href="./index.html">#nameAndVersion()</a></h1>
            #if( $project.getProperties().get("docs.mode") == "online")
               <ul class="projectList">
                 <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></em></strong></li>
