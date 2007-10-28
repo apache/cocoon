@@ -139,6 +139,15 @@
               <xsl:value-of select="d:fields/d:field[@name='JavaClassName']/d:string/@valueFormatted"/>
             </td>
           </tr>
+          <xsl:variable name="scm" select="d:fields/d:field[@name='SitemapComponentName']/d:string/@valueFormatted"></xsl:variable>
+          <xsl:if test="not($scm = '')">
+            <tr>
+              <th>Name in Sitemap</th>
+              <td>
+                <xsl:value-of select="$scm"/>
+              </td>
+            </tr>
+          </xsl:if>
           <tr>
             <th>Cacheable</th>
             <td>
@@ -146,7 +155,7 @@
             </td>
           </tr>
         </table>
-        
+
         <h1>Documentation</h1>
         <xsl:if test="not(d:parts/d:part[@typeId='18']/html/body/*)">
           <p>No documentation available yet.</p>
@@ -374,20 +383,20 @@
     <h1><xsl:value-of select="$type"/>s</h1>
     <table>
       <tr>
+        <th>Component Name</th>
+        <th>Name in Sitemap</th>
         <th>Block</th>
-        <th>Name</th>
-        <th/>
       </tr>
       <xsl:for-each select="d:rows/d:row[d:value[1]=$type]">
         <tr>
           <td>
+            <a href="daisy:{@documentId}"><xsl:value-of select="./d:value[3]"/></a>
+          </td>
+          <td>
+            <xsl:value-of select="./d:value[4]"/>
+          </td>
+          <td>
             <xsl:value-of select="./d:value[2]"/>
-          </td>
-          <td>
-            <xsl:value-of select="./d:value[3]"/>
-          </td>
-          <td>
-            <a href="daisy:{@documentId}">[details]</a>
           </td>
         </tr>
       </xsl:for-each>
