@@ -35,18 +35,18 @@
   <xsl:param name="editUrl"/>
 
   <xsl:template match="/">
+    <xsl:variable name="doc"
+      select="/p:publisherResponse/p:document/p:preparedDocuments/p:preparedDocument[1]/p:publisherResponse/d:document"/>
     <document>
       <properties>
         <title>
-          <xsl:value-of select="@name"/>
+          <xsl:value-of select="$doc/@name"/>
         </title>
         <author>
           <xsl:value-of select="$author"/>
         </author>
       </properties>
       <body>
-        <xsl:variable name="doc"
-          select="/p:publisherResponse/p:document/p:preparedDocuments/p:preparedDocument[1]/p:publisherResponse/d:document"/>
         <xsl:apply-templates select="$doc"/>
       </body>
     </document>
