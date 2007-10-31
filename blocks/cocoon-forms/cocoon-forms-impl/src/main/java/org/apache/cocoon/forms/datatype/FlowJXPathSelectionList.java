@@ -24,6 +24,7 @@ import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathContext;
@@ -41,7 +42,7 @@ import org.xml.sax.SAXException;
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
-    private Map objectModel;
+    private ProcessInfoProvider processInfoProvider;
     private String listPath;
     private String valuePath;
     private String labelPath;
@@ -53,7 +54,7 @@ public class FlowJXPathSelectionList implements SelectionList {
     private String i18nCatalog;
     private boolean labelIsI18nKey = false;
 
-    public FlowJXPathSelectionList(Map objectModel, 
+    public FlowJXPathSelectionList(ProcessInfoProvider processInfoProvider, 
                                    String listPath, 
                                    String valuePath, 
                                    String labelPath, 
@@ -62,7 +63,7 @@ public class FlowJXPathSelectionList implements SelectionList {
                                    boolean nullTextIsI18nKey, 
                                    String i18nCatalog, 
                                    boolean labelIsI18nKey) {
-        this.objectModel = objectModel;
+        this.processInfoProvider = processInfoProvider;
         this.listPath = listPath;
         this.valuePath = valuePath;
         this.labelPath = labelPath;
@@ -99,7 +100,7 @@ public class FlowJXPathSelectionList implements SelectionList {
         JXPathContext ctx = null;
         Iterator iter = null;
         if (model == null) {
-            Object flowData = FlowHelper.getContextObject(objectModel);
+            Object flowData = FlowHelper.getContextObject(processInfoProvider.getObjectModel());
             if (flowData == null) {
                 throw new SAXException("No flow data to produce selection list");
             }
