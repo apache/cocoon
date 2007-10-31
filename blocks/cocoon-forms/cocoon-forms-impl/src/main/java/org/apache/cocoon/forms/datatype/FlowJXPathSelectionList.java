@@ -23,7 +23,6 @@ import java.util.Map;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.I18nMessage;
-import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
