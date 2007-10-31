@@ -82,7 +82,7 @@ public class FlowJXPathSelectionListBuilder implements SelectionListBuilder {
 
         String i18nCatalog = DomHelper.getAttribute(selectionListElement, "catalogue", null);
 
-        return new FlowJXPathSelectionList(processInfoProvider.getObjectModel(),
+        return new FlowJXPathSelectionList(processInfoProvider,
                                            listPath,
                                            valuePath,
                                            labelPath,
