@@ -28,7 +28,6 @@ import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.datatype.convertor.ConversionResult;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.datatype.convertor.DefaultFormatCache;
-import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
