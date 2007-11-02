@@ -69,6 +69,10 @@
       Fixed getInputStream() in XModuleSource:
       Set up XMLSerializer in a component way, i.e. retrieve it from ServiceManager.
     </action>
+    <action dev="TS" type="fix" fixes-bug="COCOON-2144">
+      Fixed getAttributeNames(...) in SettingsInputModule:
+      The getAttributeNames(...) method returns an iterator of all properties instead an empty one.
+    </action>
   </release>
  </changes>
 

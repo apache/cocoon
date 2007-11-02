@@ -26,7 +26,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.commons.collections.IteratorUtils;
 
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.processing.ProcessInfoProvider;
@@ -78,7 +77,8 @@ public final class SettingsInputModule extends AbstractLogEnabled
      */
     public Iterator getAttributeNames(Configuration modeConf, Map objectModel)
     throws ConfigurationException {
-        return IteratorUtils.EMPTY_ITERATOR;
+        final Settings settings = (Settings)WebAppContextUtils.getCurrentWebApplicationContext().getBean(Settings.ROLE);
+        return settings.getPropertyNames().iterator();
     }
 
     /**
