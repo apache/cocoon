@@ -18,7 +18,6 @@ package org.apache.cocoon.el.impl.javascript;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.io.StringReader;
 
 import org.apache.cocoon.el.ExpressionException;
 import org.apache.cocoon.el.impl.AbstractExpression;
@@ -46,16 +45,7 @@ public class JavaScriptExpression extends AbstractExpression {
     private void compile() {
         Context ctx = Context.enter();
         try {
-            // Note: used compileReader instead of compileString to work with the older Rhino in C2.1
-            this.script = ctx.compileReader(getScope(rootScope), new StringReader(getExpression()), "", 1, null);
-        } catch (Exception e) {
-            // Note: this catch block is only needed for the Rhino in C2.1 where the older
-            //       Rhino does not throw RuntimeExceptions
-            if (e instanceof RuntimeException) {
-                throw (RuntimeException)e;
-            } else{
-                throw new RuntimeException("Runtime exception.", e);
-            }
+            this.script = ctx.compileString(getExpression(), "", 1, null);
         } finally {
             Context.exit();
         }
