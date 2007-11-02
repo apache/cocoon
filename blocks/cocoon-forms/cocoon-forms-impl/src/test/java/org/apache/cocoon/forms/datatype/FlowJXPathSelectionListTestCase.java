@@ -23,16 +23,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.mock.MockRequest;
-import org.apache.cocoon.forms.FormsConstants;
-import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.impl.objectmodel.ObjectModelImpl;
+import org.apache.cocoon.el.objectmodel.ObjectModel;
+import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.ResourceSource;
@@ -44,6 +39,13 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCase {
+	
+	private ProcessInfoProvider processInfoProvider;
+	
+	protected void setUp() throws Exception {
+		super.setUp();
+		processInfoProvider = (ProcessInfoProvider)this.getBeanFactory().getBean(ProcessInfoProvider.class.getName());
+	}
 
     /**
      * Test the generateSaxFragment method.
@@ -54,20 +56,13 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         beans.add(new TestBean("2", "Two"));
         Map flowContextObject = new HashMap();
         flowContextObject.put("beans", beans);
-        Request request = new MockRequest();
-        Map objectModel = new HashMap();
         ObjectModel newObjectModel = new ObjectModelImpl();
-        FlowHelper.setContextObject(objectModel, newObjectModel, flowContextObject);
-        objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
-        Map contextObjectModel = new HashMap();
-        contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
-        Context context = new DefaultContext(contextObjectModel);
+        FlowHelper.setContextObject(getObjectModel(), newObjectModel, flowContextObject);
         Source sampleSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.source.xml");
         Document sample = this.parser.parse(sampleSource.getInputStream());
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "datatype").item(0);
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
-        FlowJXPathSelectionList list = new FlowJXPathSelectionList
-            (objectModel, "beans", "key", "value", datatype,null,false,null,false);
+        FlowJXPathSelectionList list = new FlowJXPathSelectionList(processInfoProvider, "beans", "key", "value", datatype,null,false,null,false);
         DOMBuilder dest = new DOMBuilder();
         list.generateSaxFragment(dest, Locale.ENGLISH);
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.dest.xml");
@@ -87,20 +82,13 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         beans.add(new TestBean("2", "Two"));
         Map flowContextObject = new HashMap();
         flowContextObject.put("beans", beans);
-        Request request = new MockRequest();
-        Map objectModel = new HashMap();
         ObjectModel newObjectModel = new ObjectModelImpl();
-        FlowHelper.setContextObject(objectModel, newObjectModel, flowContextObject);
-        objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);
-        Map contextObjectModel = new HashMap();
-        contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
-        Context context = new DefaultContext(contextObjectModel);
+        FlowHelper.setContextObject(getObjectModel(), newObjectModel, flowContextObject);
         Source sampleSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.source.xml");
         Document sample = this.parser.parse(sampleSource.getInputStream());
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "datatype").item(0);
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
-        FlowJXPathSelectionList list = new FlowJXPathSelectionList
-            (objectModel, "beans", "key", "value", datatype,null,false,null,false);
+        FlowJXPathSelectionList list = new FlowJXPathSelectionList(processInfoProvider, "beans", "key", "value", datatype,null,false,null,false);
         DOMBuilder dest = new DOMBuilder();
         list.generateSaxFragment(dest, Locale.ENGLISH);
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");
