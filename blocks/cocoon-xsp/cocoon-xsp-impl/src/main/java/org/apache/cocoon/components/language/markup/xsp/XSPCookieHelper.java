@@ -93,7 +93,7 @@ public class XSPCookieHelper extends XSPObjectHelper {
         if ((path.trim()).length() > 0)
             cookieToSet.setPath("/");
 
-        if (secure == "true")
+        if (secure.equals("true"))
             cookieToSet.setSecure(true);
         else
             cookieToSet.setSecure(false);
