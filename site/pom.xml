@@ -64,7 +64,14 @@
       <id>docs-sites</id>
       <modules>
         <!-- Category sites -->
+        <module>cocoon-main-site</module>
         <module>cocoon-22-site</module>
+        <module>cocoon-blocks-site</module>
+        <module>cocoon-core-site</module>
+        <module>cocoon-subprojects-site</module>
+        <module>cocoon-maven-plugins-site</module>
+        <module>cocoon-servlet-service-site</module>
+        <module>cocoon-configuration-site</module>
       </modules>      
     </profile>
     <profile>
