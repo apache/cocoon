@@ -150,7 +150,7 @@ public class MultipartParser {
             this.uploadStatus.put("finished", Boolean.valueOf(false));
             this.uploadStatus.put("sent", new Integer(0));
             this.uploadStatus.put("total", new Integer(request.getContentLength()));
-            this.uploadStatus.put("filename",  new String());
+            this.uploadStatus.put("filename", "");
             this.uploadStatus.put("error", Boolean.valueOf(false));
             this.uploadStatus.put("uploadsdone", new Integer(0));
             this.session.setAttribute(UPLOAD_STATUS_SESSION_ATTR, this.uploadStatus);
