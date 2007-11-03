@@ -68,8 +68,7 @@ extends ServiceableGenerator {
                                   ProfileLS.PROFILETYPE_LAYOUT,
                                   layout,
                                   null);
-        	String xml = new String();
-        	xml = os.toString();
+        	final String xml = os.toString();
             final InputSource inputSource = new InputSource(new StringReader(xml));
             parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
             parser.parse(inputSource, super.xmlConsumer);
