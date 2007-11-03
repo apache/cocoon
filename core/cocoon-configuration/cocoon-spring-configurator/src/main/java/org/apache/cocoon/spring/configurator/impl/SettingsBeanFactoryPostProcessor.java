@@ -214,7 +214,15 @@ public class SettingsBeanFactoryPostProcessor
                 }
                 try {
                     final FileInputStream fis = new FileInputStream(fileName);
-                    properties.load(fis);
+                    try {
+                        properties.load(fis);
+                    } finally {
+                        try {
+                            fis.close();
+                        } catch (IOException ioe) {
+                            this.logger.warn("Failed to close FileInputStream:", ioe);
+                        }
+                    }
                 } catch (IOException ignore) {
                     this.logger.info("Unable to read '" + fileName + "' - continuing with initialization.", ignore);
                 }

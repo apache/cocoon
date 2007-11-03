@@ -181,16 +181,20 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                 FileReader fr = null;
                 try {
                     fr = new FileReader(sourceFile);
-                    Reader reader = new BufferedReader(fr);
-                    if (reader != null) {
-                        char[] chars = new char[8192];
-                        StringBuffer buf = new StringBuffer();
-                        int count;
-                        while ((count = reader.read(chars, 0, chars.length)) > 0) {
-                            buf.append(chars, 0, count);
+                    final Reader reader = new BufferedReader(fr);
+                    try {
+                        if (reader != null) {
+                            char[] chars = new char[8192];
+                            StringBuffer buf = new StringBuffer();
+                            int count;
+                            while ((count = reader.read(chars, 0, chars.length)) > 0) {
+                                buf.append(chars, 0, count);
+                            }
+                            result = new char[buf.length()];
+                            buf.getChars(0, result.length, result, 0);
                         }
-                        result = new char[buf.length()];
-                        buf.getChars(0, result.length, result, 0);
+                    } finally {
+                        reader.close();
                     }
                 } catch (IOException e) {
                     handleError(className, -1, -1, e.getMessage());

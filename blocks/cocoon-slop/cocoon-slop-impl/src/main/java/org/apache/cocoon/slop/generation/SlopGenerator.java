@@ -159,28 +159,32 @@ public class SlopGenerator extends ServiceableGenerator
         parser.startDocument(contentHandler);
 
         LineNumberReader reader = new LineNumberReader(in);
-        String line, newline = null;
-
-        while (true) {
-            if (newline == null) {
-                line = reader.readLine();
-            } else {
-                line = newline;
+        try {
+            String line, newline = null;
+    
+            while (true) {
+                if (newline == null) {
+                    line = reader.readLine();
+                } else {
+                    line = newline;
+                }
+    
+                if (line == null) {
+                    break;
+                }
+    
+                newline = reader.readLine();
+    
+                locator.setLineNumber(reader.getLineNumber());
+                locator.setColumnNumber(1);
+                parser.processLine(line);
+    
+                if (newline == null) {
+                    break;
+                }
             }
-
-            if (line == null) {
-                break;
-            }
-
-            newline = reader.readLine();
-
-            locator.setLineNumber(reader.getLineNumber());
-            locator.setColumnNumber(1);
-            parser.processLine(line);
-
-            if (newline == null) {
-                break;
-            }
+        } finally {
+            reader.close();
         }
 
         // done parsing

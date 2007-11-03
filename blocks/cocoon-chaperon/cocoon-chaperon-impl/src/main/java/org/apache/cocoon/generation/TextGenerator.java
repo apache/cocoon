@@ -198,28 +198,32 @@ public class TextGenerator extends ServiceableGenerator implements Parameterizab
     contentHandler.startElement(URI, "text", "text", atts);
 
     LineNumberReader reader = new LineNumberReader(in);
-    String line;
-    String newline = null;
-
-    while (true) {
-      if (newline==null) {
-        line = convertNonXmlChars(reader.readLine());
-      } else {
-        line = newline;
-      }
-      if (line==null) {
-        break;
-      }
-      newline = convertNonXmlChars(reader.readLine());
-      if (newline != null) {
-          line += SystemUtils.LINE_SEPARATOR;
-      }
-      locator.setLineNumber(reader.getLineNumber());
-      locator.setColumnNumber(1);
-      contentHandler.characters(line.toCharArray(), 0, line.length());
-      if (newline==null) {
-        break;
-      }
+    try {
+        String line;
+        String newline = null;
+    
+        while (true) {
+          if (newline==null) {
+            line = convertNonXmlChars(reader.readLine());
+          } else {
+            line = newline;
+          }
+          if (line==null) {
+            break;
+          }
+          newline = convertNonXmlChars(reader.readLine());
+          if (newline != null) {
+              line += SystemUtils.LINE_SEPARATOR;
+          }
+          locator.setLineNumber(reader.getLineNumber());
+          locator.setColumnNumber(1);
+          contentHandler.characters(line.toCharArray(), 0, line.length());
+          if (newline==null) {
+            break;
+          }
+        }
+    } finally {
+        reader.close();
     }
     contentHandler.endElement(URI, "text", "text");
     contentHandler.endPrefixMapping("");
