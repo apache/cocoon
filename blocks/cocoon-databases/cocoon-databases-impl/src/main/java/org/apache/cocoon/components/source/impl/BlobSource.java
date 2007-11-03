@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -306,7 +307,7 @@ public class BlobSource extends AbstractLogEnabled
 
     static class EmptyIterator implements Iterator {
         public boolean hasNext() { return false; }
-        public Object next() { return null; }
+        public Object next() { throw new NoSuchElementException(); }
         public void remove() {}
     }
 
