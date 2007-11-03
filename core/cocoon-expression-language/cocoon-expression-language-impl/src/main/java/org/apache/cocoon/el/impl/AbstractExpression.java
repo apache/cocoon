@@ -17,6 +17,7 @@
 package org.apache.cocoon.el.impl;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.apache.cocoon.el.Expression;
 
@@ -51,7 +52,7 @@ public abstract class AbstractExpression implements Expression {
         }
 
         public Object next() {
-            return null;
+            throw new NoSuchElementException();
         }
 
         public void remove() {

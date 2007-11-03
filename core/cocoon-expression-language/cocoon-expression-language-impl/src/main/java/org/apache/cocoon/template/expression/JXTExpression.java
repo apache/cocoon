@@ -17,6 +17,7 @@
 package org.apache.cocoon.template.expression;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.apache.cocoon.el.Expression;
 import org.apache.cocoon.el.impl.jxpath.JXPathExpression;
@@ -33,11 +34,11 @@ public class JXTExpression implements Subst {
 
     protected static final Iterator NULL_ITER = new Iterator() {
         public boolean hasNext() {
-            return true;
+            return false;
         }
 
         public Object next() {
-            return null;
+            throw new NoSuchElementException();
         }
 
         public void remove() {
@@ -91,8 +92,11 @@ public class JXTExpression implements Subst {
 
                         public Object next() {
                             Object res = val;
-                            val = null;
-                            return res;
+                            if (res != null ) {
+                                val = null;
+                                return res;
+                            }
+                            throw new NoSuchElementException();
                         }
 
                         public void remove() {
