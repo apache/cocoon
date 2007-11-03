@@ -146,12 +146,12 @@ public class MultipartParser {
         this.hasSession = this.session != null;
         if (this.hasSession) {
             this.uploadStatus = new Hashtable();
-            this.uploadStatus.put("started", Boolean.valueOf(false));
-            this.uploadStatus.put("finished", Boolean.valueOf(false));
+            this.uploadStatus.put("started", Boolean.FALSE);
+            this.uploadStatus.put("finished", Boolean.FALSE);
             this.uploadStatus.put("sent", new Integer(0));
             this.uploadStatus.put("total", new Integer(request.getContentLength()));
             this.uploadStatus.put("filename", "");
-            this.uploadStatus.put("error", Boolean.valueOf(false));
+            this.uploadStatus.put("error", Boolean.FALSE);
             this.uploadStatus.put("uploadsdone", new Integer(0));
             this.session.setAttribute(UPLOAD_STATUS_SESSION_ATTR, this.uploadStatus);
         }
@@ -159,7 +159,7 @@ public class MultipartParser {
         parseParts(request.getContentLength(), request.getContentType(), request.getInputStream());    
 
         if (this.hasSession) {
-            this.uploadStatus.put("finished", Boolean.valueOf(true));
+            this.uploadStatus.put("finished", Boolean.TRUE);
         }
 
         return this.parts;    
@@ -285,8 +285,8 @@ public class MultipartParser {
         }
         
         if (hasSession) { // upload widget support
-            this.uploadStatus.put("finished", Boolean.valueOf(false));
-            this.uploadStatus.put("started", Boolean.valueOf(true));
+            this.uploadStatus.put("finished", Boolean.FALSE);
+            this.uploadStatus.put("started", Boolean.TRUE);
             this.uploadStatus.put("widget", (String)headers.get("name"));
             this.uploadStatus.put("filename", (String)headers.get("filename"));
         }
@@ -310,7 +310,7 @@ public class MultipartParser {
                 this.uploadStatus.put("uploadsdone", 
                     new Integer(((Integer)this.uploadStatus.get("uploadsdone")).intValue() + 1)
                 );
-                this.uploadStatus.put("error", Boolean.valueOf(false));
+                this.uploadStatus.put("error", Boolean.FALSE);
             }
         } catch (IOException ioe) {
             // don't let incomplete file uploads pile up in the upload dir.
@@ -319,7 +319,7 @@ public class MultipartParser {
             out = null;
             if ( file!=null ) file.delete();
             if (this.hasSession) { // upload widget support
-                this.uploadStatus.put("error", Boolean.valueOf(true));
+                this.uploadStatus.put("error", Boolean.TRUE);
             }
             throw ioe;
         } finally {
