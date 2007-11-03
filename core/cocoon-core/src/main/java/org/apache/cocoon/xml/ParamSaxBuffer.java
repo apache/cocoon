@@ -218,7 +218,7 @@ public class ParamSaxBuffer extends SaxBuffer {
         public void toString(StringBuffer result, Map parameters) throws SAXException {
             String value = (String)parameters.get(name);
             if (value != null) {
-                result.append(value.toString());
+                result.append(value);
             }
         }
 

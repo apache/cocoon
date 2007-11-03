@@ -469,7 +469,7 @@ public class LuceneCocoonCrawler extends AbstractLogEnabled implements CocoonCra
             return false;
         }
 
-        final String s = url.toString();
+        final String s = url;
         Iterator i = excludeCrawlingURL.iterator();
         while (i.hasNext()) {
             RE pattern = (RE) i.next();
@@ -499,7 +499,7 @@ public class LuceneCocoonCrawler extends AbstractLogEnabled implements CocoonCra
             return true;
         }
 
-        final String s = url.toString();
+        final String s = url;
         Iterator i = includeCrawlingURL.iterator();
         while (i.hasNext()) {
             RE pattern = (RE) i.next();

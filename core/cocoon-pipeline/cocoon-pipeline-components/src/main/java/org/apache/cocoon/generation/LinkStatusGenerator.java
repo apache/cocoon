@@ -600,7 +600,7 @@ public class LinkStatusGenerator extends ServiceableGenerator
             return false;
         }
 
-        final String s = url.toString();
+        final String s = url;
         Iterator i = excludeCrawlingURL.iterator();
         while (i.hasNext()) {
             RE pattern = (RE) i.next();
@@ -634,7 +634,7 @@ public class LinkStatusGenerator extends ServiceableGenerator
             return true;
         }
 
-        final String s = url.toString();
+        final String s = url;
         Iterator i = includeCrawlingURL.iterator();
         while (i.hasNext()) {
             RE pattern = (RE) i.next();
