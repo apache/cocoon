@@ -27,7 +27,6 @@ dojo.require("dojo.string.*");
  */
 dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.HtmlWidget,
     function() {
-
     },
 
     {
@@ -48,6 +47,8 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
         containerToggle: "plain", /* plain, explode, wipe, fade */
 
         containerToggleDuration: 150,
+
+        onchange: "",
 
         postMixInProperties: function(args, frag, parent) {
             cocoon.forms.DropdownDateTimePicker.superclass.postMixInProperties(this, args, frag, parent);
@@ -70,7 +71,11 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             this._splitPattern();
             this._initDateFormatOptions();
 
-            this.templateString = "<span style='white-space: nowrap'><input dojoAttachPoint='inputNode' autocomplete='off' style='vertical-align: middle'/>";
+            this.templateString = "<span style='white-space: nowrap'><input dojoAttachPoint='inputNode' autocomplete='off' style='vertical-align: middle'";
+            if (this.onchange != "") {
+            	this.templateString += " onchange=" + dojo.string.escapeString(this.onchange);
+            }
+            this.templateString +="/>";
 
             if (this._datePickerNeeded()) {
                 this.templateString += "<img src='${this.dateIconURL}' dojoAttachEvent='onclick:_onDateIconClick' dojoAttachPoint='dateButtonNode' style='vertical-align: middle; cursor: pointer; cursor: hand'/>";
@@ -88,7 +93,7 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             this.templateString += "</span>";
         },
 
-        attachTemplateNodes: function(){
+        attachTemplateNodes: function() {
             // summary: use attachTemplateNodes to specify containerNode, as fillInTemplate is too late for this
             cocoon.forms.DropdownDateTimePicker.superclass.attachTemplateNodes.apply(this, arguments);
 
@@ -162,7 +167,7 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             if (this.inputNode.disabled)
                 return;
 
-            if(!this.timePopup.isShowingNow) {
+            if (!this.timePopup.isShowingNow) {
                 var currentValue = this._parseCurrentInput();
                 if (currentValue != null)
                     this.timePicker.setTime(currentValue);
@@ -184,9 +189,10 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             }
             this.inputNode.value = dojo.date.format(value, this.dateFormatOptions);
 
-            if(this.datePopup.isShowingNow) {
+            if (this.datePopup.isShowingNow) {
                 this.datePopup.close();
             }
+            eval(this.onchange);
         },
 
         _updateTime: function(value) {
@@ -198,6 +204,7 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
                 }
             }
             this.inputNode.value = dojo.date.format(value, this.dateFormatOptions);
+            eval(this.onchange);
         },
 
         _parseCurrentInput: function() {
