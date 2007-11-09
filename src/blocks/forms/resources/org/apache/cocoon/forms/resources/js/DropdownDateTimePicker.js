@@ -72,7 +72,8 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             this._initDateFormatOptions();
 
             this.templateString = "<span style='white-space: nowrap'><input dojoAttachPoint='inputNode' autocomplete='off' style='vertical-align: middle'";
-            if (this.onchange != "") {
+            if (!dojo.string.isBlank(this.onchange)) {
+            	this.onchange = dojo.string.trim(this.onchange);
             	this.templateString += " onchange=" + dojo.string.escapeString(this.onchange);
             }
             this.templateString +="/>";
