@@ -132,7 +132,7 @@ public class LibraryManagerImpl implements LibraryManager {
 
                     this.cacheManager.set(lib,source,PREFIX);
                 } catch (RuntimeException re) {
-                    throw new RuntimeException(re);
+                    throw re;
                 } catch (Exception e) {
                     throw new LibraryException("Unable to load library.",
                                                e, new LocationImpl("[LibraryManager]", source.getURI()));
