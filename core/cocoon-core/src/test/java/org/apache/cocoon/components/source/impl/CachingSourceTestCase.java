@@ -30,7 +30,9 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
 /**
- * TODO describe class
+ * CachingSource (cached: protocol) tests
+ *
+ * @version $Id$
  */
 public class CachingSourceTestCase extends SitemapComponentTestCase {
 
@@ -70,7 +72,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
     }
 
     public void testCachingURI() throws Exception {
-        String uri = "cached:http://slashdot.org/?cocoon:cache-expires=2";
+        String uri = "cached:http://slashdot.org/?cocoon:cache-expires=5";
 
         CachingSource source;
 
@@ -93,7 +95,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
         // Source is still cached -- still same meta data
         assertSame(meta1, meta3);
 
-        Thread.sleep(2100);
+        Thread.sleep(5100);
 
         source = (CachingSource) resolver.resolveURI(uri);
         source.refresh();

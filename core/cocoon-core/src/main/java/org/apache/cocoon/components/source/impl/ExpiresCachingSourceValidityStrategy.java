@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,13 +25,13 @@ import org.apache.excalibur.source.impl.validity.ExpiresValidity;
 /**
  * We need to store both the cache expiration and the original source validity
  * the former is to determine whether to recheck the latter (see checkValidity)
- * 
+ *
  * @version $Id$
  */
 public class ExpiresCachingSourceValidityStrategy implements CachingSourceValidityStrategy {
 
-    private Log logger = LogFactory.getLog(getClass());        
-    
+    private Log logger = LogFactory.getLog(getClass());
+
     public SourceValidity[] getCacheValidities(CachingSource cachingSource, Source source) {
         return new SourceValidity[] { 
               new ExpiresValidity(cachingSource.getExpiration()), source.getValidity() };
