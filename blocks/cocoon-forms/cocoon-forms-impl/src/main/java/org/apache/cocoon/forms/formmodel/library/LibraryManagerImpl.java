@@ -125,6 +125,8 @@ public class LibraryManagerImpl implements LibraryManager {
                     lib.buildLibrary(doc.getDocumentElement());
 
                     this.cacheManager.set(lib, source, PREFIX);
+                } catch (RuntimeException re) {
+                    throw new RuntimeException(re);
                 } catch (Exception e) {
                     throw new LibraryException("Unable to load library.",
                                                e, new LocationImpl("[LibraryManager]", source.getURI()));
