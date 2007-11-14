@@ -16,31 +16,25 @@
   limitations under the License.
 -->
 
-<!--+
-    | Main samples page
-    |
-    | @version $Id$
-    +-->
-
-<samples name="Additional Cocoon Core Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!--
+  - Main samples page
+  -
+  - @version $Id$
+  -->
+<samples name="Additional Cocoon Core Samples">
 
   <group name="The Power of XML">
     <sample name="XML-ized web sites" href="sites/">
       A couple of existing web sites have been xml-ized to show you
       how easier it is to handle pure-content markup.
-    </sample>   
+    </sample>
     <sample name="Presentation Slides" href="slides/slides">
       An example of more complex use of XSLT for navigation and content filtering.
-    </sample>   
-    <sample name="Content Syndication &amp; Aggregation" href="aggregation/">
-      Separation of content and style allows not only to serve your content
-      in different ways, but also to syndicate, aggregate or otherwise include
-      and transform content provided by other web sites.
     </sample>
     <sample name="Catalog Entity Resolver" href="catalog/">
-      XML is handy but also very complex. Cocoon integrates a number of 
+      XML is handy but also very complex. Cocoon integrates a number of
       facilities to help you during your journey through XML-land. One of these
-      is the centralized handling of resolving network resources 
+      is the centralized handling of resolving network resources
       (e.g. DTDs, symbols, character entity sets, images) to local copies
       through the use of catalogs. Also explains how to use DocBook DTDs.
     </sample>
@@ -49,13 +43,6 @@
   <group name="More Core Samples">
     <sample href="modules/" name="The Power of Sitemap: Input Modules">
       This example shows the usage of Input Modules in sitemap attribute expressions.
-    </sample>
-    <sample href="sources/" name="The Power of Sitemap: Sources">
-      This example shows the usage of sources in the sitemap.
-    </sample>    
-    <sample href="errorhandling/" name="Error Handling">
-      An example page producing exceptions and handling them. Demonstrates the 
-      handler hierarchy and the exception selectors.
     </sample>
     <sample href="components" name="Core Components">
       Some samples of various components that are included with the core,

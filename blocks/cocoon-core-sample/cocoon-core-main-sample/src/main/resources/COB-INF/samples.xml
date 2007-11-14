@@ -30,6 +30,21 @@
     </sample>
   </group>
 
+  <group name="Cocoon Sitemap">
+    <sample href="sources/" name="Sources">
+      This example shows the usage of sources in the sitemap.
+    </sample>
+    <sample name="Content Syndication &amp; Aggregation" href="aggregation/">
+      Separation of content and style allows not only to serve your content
+      in different ways, but also to syndicate, aggregate or otherwise include
+      and transform content provided by other web sites.
+    </sample>
+    <sample href="errorhandling/" name="Error Handling">
+      An example page producing exceptions and handling them. Demonstrates the 
+      error handlers hierarchy and the exception selectors.
+    </sample>
+  </group>
+
   <group name="Cocoon Flow">
     <note>
       These are basic examples of Flow usage, but it is also used in the samples
@@ -49,30 +64,24 @@
     </sample>
   </group>
 
-  <group name="Spring Sample">
-    <sample name="Spring Sample" href="spring/">
-      A simple example of using a per sitemap Spring application context.
-    </sample>
-  </group>
-
   <group name="Internationalization">
     <sample name="Internationalization (i18n) &amp; Localization (l10n)" href="i18n/">
       Samples of the powerful Cocoon i18n and l10n Cocoon tools.
     </sample>
   </group>
 
-  <group name="System Tools And Pages">
-    <sample name="System Tools" href="system/">
-      Display Cocoon status, clear the Cocoon cache, etc.
+  <group name="Development Samples">
+    <sample name="Spring Sample" href="spring/">
+      A simple example of using a per sitemap Spring application context.
+    </sample>
+    <sample name="Class Reloading" href="reloading/">
+      Trivial sample of class reloading.
     </sample>
   </group>
 
-  <group name="Reloading classes">
-    <note>
-      Trivial sample of class reloading
-    </note>
-    <sample name="Reloading" href="reloading/">
-      Class Reloading sample.
+  <group name="System Tools And Pages">
+    <sample name="System Tools" href="system/">
+      Display Cocoon status, clear the Cocoon cache, etc.
     </sample>
   </group>
 
