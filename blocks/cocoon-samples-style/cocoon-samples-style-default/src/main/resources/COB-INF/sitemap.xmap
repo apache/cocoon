@@ -15,55 +15,53 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <map:pipelines>
-    <map:pipeline id="service-resource">
-      <!-- 
-        All matcher in this pipeline are intended to be called
-        when making use of servlet services from other blocks 
+    <map:pipeline id="services">
+      <!--
+        These matchers are intended to be called
+        when making use of servlet services from other blocks
       -->
       <map:match pattern="service/blocks/*">
-        <map:generate src="service-consumer:" />
-        <map:transform src="blocks/{1}.xsl" />
-        <map:transform type="servletLinkRewriter" />
-        <map:serialize type="html" />
+        <map:generate src="service-consumer:"/>
+        <map:transform src="blocks/{1}.xsl"/>
+        <map:transform type="servletLinkRewriter"/>
+        <map:serialize type="html"/>
       </map:match>
       <map:match pattern="service/common/*">
-        <map:generate src="service-consumer:" />
-        <map:transform src="common/style/xsl/html/{1}.xsl" />
-        <map:transform type="servletLinkRewriter" />
-        <map:serialize type="html" />
+        <map:generate src="service-consumer:"/>
+        <map:transform src="common/style/xsl/html/{1}.xsl"/>
+        <map:transform type="servletLinkRewriter"/>
+        <map:serialize type="html"/>
       </map:match>
       <map:match pattern="service/system/*">
-        <map:generate src="service-consumer:" />
-        <map:transform src="stylesheets/system/{1}.xslt" />
-        <map:transform type="servletLinkRewriter" />
-        <map:serialize type="html" />
+        <map:generate src="service-consumer:"/>
+        <map:transform src="stylesheets/system/{1}.xslt"/>
+        <map:transform type="servletLinkRewriter"/>
+        <map:serialize type="html"/>
       </map:match>
     </map:pipeline>
 
-    <map:pipeline id="internal-resource">
-      <map:match pattern="**.css">
-        <map:read src="resources/{1}.css" />
-      </map:match>
+    <map:pipeline id="resources">
       <map:match pattern="**.gif">
-        <map:read src="resources/{1}.gif" />
+        <map:read src="resources/{1}.gif"/>
       </map:match>
       <map:match pattern="**.ico">
-        <map:read src="resources/{1}.ico" />
+        <map:read src="resources/{1}.ico"/>
       </map:match>
-    </map:pipeline>
 
-    <map:pipeline id="external-resource">
+      <map:match pattern="**.css">
+        <map:read type="servletLinkRewriter" src="resources/{1}.css"/>
+      </map:match>
       <map:match pattern="**.js">
-        <map:read type="servletLinkRewriter" src="resources/{1}.js" />
+        <map:read type="servletLinkRewriter" src="resources/{1}.js"/>
       </map:match>
       <map:match pattern="**">
-        <map:read type="servletLinkRewriter" src="{1}" />
+        <map:read type="servletLinkRewriter" src="{1}"/>
       </map:match>
     </map:pipeline>
   </map:pipelines>
 
 </map:sitemap>
-
