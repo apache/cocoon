@@ -16,13 +16,12 @@
   limitations under the License.
 -->
 
-<!--+
-    | Main samples page
-    |
-    | CVS $Id$
-    +-->
-
-<samples name="Cocoon Core Samples (main group)" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!--
+  - Main samples page
+  -
+  - $Id$
+  -->
+<samples name="Cocoon Core Samples">
 
   <group name="Cocoon Pipelines">
     <sample name="Hello World!" href="hello-world/">
@@ -35,11 +34,20 @@
     <note>
       These are basic examples of Flow usage, but it is also used in the samples
       of several other blocks, see the forms and tour blocks for more advanced examples.
-    </note>      
-    <sample name="Flow" href="flow/">
-      Cocoon Flow examples.
+    </note>
+    <sample name="Calculator" href="flow/jxcalc/">
+      A simple web-based calculator that uses javascript on the server side
+      to describe the web application flow between screens in a coherent
+      unique location and continuations to maintain state between requests.
     </sample>
-  </group>  
+    <sample name="User Preferences" href="flow/prefs/">
+      A common portion of an application which requires users to be
+      registered. This example shows how to use java objects from the
+      javascript flow as it is best practice to put business logic into
+      strongly-typed java objects and use javascript to describe only the
+      page flow.
+    </sample>
+  </group>
 
   <group name="Spring Sample">
     <sample name="Spring Sample" href="spring/">
@@ -49,10 +57,10 @@
 
   <group name="Internationalization">
     <sample name="Internationalization (i18n) &amp; Localization (l10n)" href="i18n/">
-      Samples of the powerful Cocoon i18n and l10n Cocoon tools. 
+      Samples of the powerful Cocoon i18n and l10n Cocoon tools.
     </sample>
-  </group>  
-  
+  </group>
+
   <group name="System Tools And Pages">
     <sample name="System Tools" href="system/">
       Display Cocoon status, clear the Cocoon cache, etc.
@@ -62,10 +70,10 @@
   <group name="Reloading classes">
     <note>
       Trivial sample of class reloading
-    </note>      
+    </note>
     <sample name="Reloading" href="reloading/">
       Class Reloading sample.
     </sample>
-  </group>  
+  </group>
 
 </samples>

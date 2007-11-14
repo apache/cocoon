@@ -34,7 +34,6 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <!-- Make use of servlet services -->
       <map:serialize type="servletService">
         <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
       </map:serialize>
@@ -51,7 +50,6 @@
     <map:pipeline>
       <map:match pattern="">
         <map:generate src="samples.xml"/>
-        <!-- Make use of servlet services -->
         <map:serialize type="servletService">
           <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html"/>
         </map:serialize>
@@ -60,7 +58,37 @@
       <map:match pattern="*/**">
         <map:mount uri-prefix="{1}" src="{1}/"/>
       </map:match>
-    </map:pipeline>
 
+      <map:handle-errors>
+        <map:select type="exception">
+          <map:when test="not-found">
+            <map:generate type="exception"/>
+            <map:transform src="servlet:style-default:/stylesheets/system/exception2html.xslt">
+              <map:parameter name="realPath" value="{realpath:}"/>
+              <map:parameter name="pageTitle" value="Resource not found"/>
+            </map:transform>
+            <map:serialize status-code="404"/>
+          </map:when>
+
+          <map:when test="invalid-continuation">
+            <map:generate type="exception"/>
+            <map:transform src="servlet:style-default:/stylesheets/system/exception2html.xslt">
+              <map:parameter name="realPath" value="{realpath:}"/>
+              <map:parameter name="pageTitle" value="Invalid Continuation"/>
+            </map:transform>
+            <map:serialize status-code="404"/>
+          </map:when>
+
+          <map:otherwise>
+            <map:generate type="exception"/>
+            <map:transform src="servlet:style-default:/stylesheets/system/exception2html.xslt">
+              <map:parameter name="realPath" value="{realpath:}"/>
+            </map:transform>
+            <map:serialize status-code="500"/>
+          </map:otherwise>
+        </map:select>
+      </map:handle-errors>
+
+    </map:pipeline>
   </map:pipelines>
 </map:sitemap>
