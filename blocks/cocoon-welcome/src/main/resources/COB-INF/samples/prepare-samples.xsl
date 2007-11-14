@@ -47,7 +47,7 @@
       - Document structure is:
       - /collection[@name]/collection/resource/group[@name]/sample[@name]
       -->
-    <sample href="../{../../../../@name}/" name="{@name}">
+    <sample href="{@href}" name="{@name}">
       <xsl:copy-of select="*|text()"/>
     </sample>
   </xsl:template>
