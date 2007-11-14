@@ -16,11 +16,11 @@
   limitations under the License.
 -->
 
-<!--+
-    | Demonstrates internal pipeline error handling.
-    |
-    | $Id$
-    +-->
+<!--
+  - Demonstrates internal pipeline error handling.
+  -
+  - $Id$
+  -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:pipelines>
 
@@ -40,6 +40,7 @@
       </map:match>
     </map:pipeline>
 
+
     <map:pipeline>
       <map:match pattern="custom-sitemap">
         <map:act type="exception" src="validation"/>
@@ -54,12 +55,14 @@
         <map:generate type="exception" src="validation"/>
         <map:serialize type="xml"/>
       </map:match>
+
       <map:handle-errors when="always">
         <map:generate type="notifying"/>
         <map:transform src="error2xml.xslt"/>
         <map:serialize type="html"/>
       </map:handle-errors>
     </map:pipeline>
+
 
     <map:pipeline>
       <map:match pattern="">
@@ -68,10 +71,9 @@
 
       <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
-        <map:serialize/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html"/>
+        </map:serialize>
       </map:match>
 
       <map:match pattern="aggregate/*">
