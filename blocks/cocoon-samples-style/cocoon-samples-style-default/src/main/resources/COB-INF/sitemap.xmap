@@ -16,6 +16,11 @@
   limitations under the License.
 -->
 
+<!--
+  - Samples Style block sitemap
+  -
+  - $Id$
+  -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <map:pipelines>
