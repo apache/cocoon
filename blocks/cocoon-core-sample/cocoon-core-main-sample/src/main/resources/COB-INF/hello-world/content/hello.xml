@@ -16,11 +16,12 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <page>
- <title>Hello</title>
- <content>
-  <para>This is my first Cocoon page!</para>
- </content>
+  <title>Hello</title>
+  <content>
+    <para>This is my first Cocoon page!</para>
+  </content>
 </page>
