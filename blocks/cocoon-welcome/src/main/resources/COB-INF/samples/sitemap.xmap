@@ -17,8 +17,7 @@
 -->
 
 <!--
-  - This sitemap maps empty URL to the page listing all installed samples,
-  - and forwards all other requests to corresponding sample block.
+  - This sitemap maps empty URL to the page listing all installed samples.
   -
   - $Id$
   -->
@@ -57,15 +56,6 @@
           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>
         <map:serialize type="html"/>
-      </map:match>
-
-      <!--
-        - FIXME VG: I don't think this should be here?
-        - http://localhost:8888/samples/cocoon-chaperon-sample/welcome
-        - avax.servlet.ServletException: No dispatcher for servlet:style-default:/service/common/simple-samples2html
-        -->
-      <map:match pattern="*/**">
-        <map:mount uri-prefix="{1}" src="blockcontext:/{1}/"/>
       </map:match>
     </map:pipeline>
   </map:pipelines>
