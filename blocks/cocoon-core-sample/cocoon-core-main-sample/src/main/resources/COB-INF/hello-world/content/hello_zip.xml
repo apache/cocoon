@@ -15,9 +15,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <zip-archive:archive xmlns:zip-archive="http://apache.org/cocoon/zip-archive/1.0">
   <zip-archive:entry name="hello.xml" src="cocoon:/hello.xml"/>
   <zip-archive:entry name="hello.html" src="cocoon:/hello.html"/>
   <zip-archive:entry name="hello.svg" src="cocoon:/hello.svg"/>
 </zip-archive:archive>
-
