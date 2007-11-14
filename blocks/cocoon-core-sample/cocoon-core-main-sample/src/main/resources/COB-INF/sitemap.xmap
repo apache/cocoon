@@ -16,33 +16,32 @@
   limitations under the License.
 -->
 
-<!-- 
-	Core-samples-main sitemap: these are "important" the samples that we 
-	want to see on the samples front page.
-	
-	Less important samples to go the core-samples-misc block.
-	
-	CVS $Id$ 
--->
-
+<!--
+  - Core-samples-main sitemap: these are "important" the samples that we
+  - want to see on the samples front page.
+  -
+  - Less important samples to go the core-samples-misc block.
+  -
+  - $Id$
+  -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- =========================== Views =================================== -->
 
   <map:views>
     <map:view name="content" from-label="content">
-      <map:serialize type="xml" />
+      <map:serialize type="xml"/>
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
       <!-- Make use of servlet services -->
       <map:serialize type="servletService">
-        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
       </map:serialize>
     </map:view>
 
     <map:view name="links" from-position="last">
-      <map:serialize type="links" />
+      <map:serialize type="links"/>
     </map:view>
   </map:views>
 
@@ -51,16 +50,15 @@
   <map:pipelines>
     <map:pipeline>
       <map:match pattern="">
-        <map:generate src="samples.xml" />
+        <map:generate src="samples.xml"/>
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html"/>
         </map:serialize>
       </map:match>
 
-      <!-- ========================= Mount sub-sitemaps ============================= -->
       <map:match pattern="*/**">
-        <map:mount uri-prefix="{1}" src="{1}/" />
+        <map:mount uri-prefix="{1}" src="{1}/"/>
       </map:match>
     </map:pipeline>
 
