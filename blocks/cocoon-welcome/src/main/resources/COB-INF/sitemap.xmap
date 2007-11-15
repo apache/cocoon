@@ -178,26 +178,26 @@
 
       <!-- Images -->
       <map:match pattern="images/*.gif">
-        <map:read src="resource/external/images/{1}.gif" mime-type="image/gif"/>
+        <map:read src="resource/images/{1}.gif" mime-type="image/gif"/>
       </map:match>
 
       <map:match pattern="images/*.jpg">
-        <map:read src="resource/external/images/{1}.jpg" mime-type="image/jpeg"/>
+        <map:read src="resource/images/{1}.jpg" mime-type="image/jpeg"/>
       </map:match>
 
       <!-- CSS stylesheets -->
       <map:match pattern="styles/*.css">
-        <map:read src="resource/external/styles/{1}.css" mime-type="text/css"/>
+        <map:read src="resource/styles/{1}.css" mime-type="text/css"/>
       </map:match>
 
       <!-- JavaScript scripts -->
       <map:match pattern="scripts/*.js">
-        <map:read src="resource/external/scripts/{1}.js" mime-type="text/javascript"/>
+        <map:read src="resource/scripts/{1}.js" mime-type="text/javascript"/>
       </map:match>
 
       <!-- Favicon -->
       <map:match pattern="**favicon.ico">
-        <map:read mime-type="image/x-icon" src="resource/external/icons/cocoon.ico"/>
+        <map:read mime-type="image/x-icon" src="resource/icons/cocoon.ico"/>
       </map:match>
 
       <!--+
