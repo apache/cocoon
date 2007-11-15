@@ -78,13 +78,13 @@
           <div class="samplesBarClear"/>
         </div>
 
-       <xsl:apply-templates select="samples"/>
-       <xsl:apply-templates select="samples/additional-info"/>
+        <xsl:apply-templates select="samples"/>
+        <xsl:apply-templates select="samples/additional-info"/>
 
-       <p class="copyright">
-         Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
-         All rights reserved.
-       </p>
+        <p class="copyright">
+          Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+          All rights reserved.
+        </p>
       </body>
     </html>
   </xsl:template>
