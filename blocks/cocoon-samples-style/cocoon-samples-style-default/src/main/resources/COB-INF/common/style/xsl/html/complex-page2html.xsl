@@ -16,13 +16,13 @@
   limitations under the License.
 -->
 
-<!--+
-    | Covert samples file to the HTML page. Uses styles/main.css stylesheet.
-    |
-    | $Id$
-    +-->
-
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!--
+  - Covert samples file to the HTML page. Uses styles/main.css stylesheet.
+  -
+  - $Id$
+  -->
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="/">
     <html>

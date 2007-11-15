@@ -17,18 +17,20 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
-    |
-    | @version $Id$
-    +-->
-    <document>
-      <body>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>      
-        </release>
-      </body>
-    </document>
-    
+
+<!--
+  - See http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  - $Id$
+  -->
+<document>
+  <body>
+    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">
+      <action dev="vgritsenko" type="update">
+        Update samples style to match new Cocoon web site style.
+      </action>
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>
+    </release>
+  </body>
+</document>
