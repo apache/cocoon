@@ -23,23 +23,6 @@
   -->
 <samples name="Additional Cocoon Core Samples">
 
-  <group name="The Power of XML">
-    <sample name="XML-ized web sites" href="sites/">
-      A couple of existing web sites have been xml-ized to show you
-      how easier it is to handle pure-content markup.
-    </sample>
-    <sample name="Presentation Slides" href="slides/slides">
-      An example of more complex use of XSLT for navigation and content filtering.
-    </sample>
-    <sample name="Catalog Entity Resolver" href="catalog/">
-      XML is handy but also very complex. Cocoon integrates a number of
-      facilities to help you during your journey through XML-land. One of these
-      is the centralized handling of resolving network resources
-      (e.g. DTDs, symbols, character entity sets, images) to local copies
-      through the use of catalogs. Also explains how to use DocBook DTDs.
-    </sample>
-  </group>
-
   <group name="More Core Samples">
     <sample href="modules/" name="The Power of Sitemap: Input Modules">
       This example shows the usage of Input Modules in sitemap attribute expressions.
