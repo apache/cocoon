@@ -40,7 +40,7 @@
       and transform content provided by other web sites.
     </sample>
     <sample href="errorhandling/" name="Error Handling">
-      An example page producing exceptions and handling them. Demonstrates the 
+      An example page producing exceptions and handling them. Demonstrates the
       error handlers hierarchy and the exception selectors.
     </sample>
   </group>
@@ -67,6 +67,23 @@
   <group name="Internationalization">
     <sample name="Internationalization (i18n) &amp; Localization (l10n)" href="i18n/">
       Samples of the powerful Cocoon i18n and l10n Cocoon tools.
+    </sample>
+  </group>
+
+  <group name="XML and XSLT">
+    <sample name="XML Based Sites" href="sites/">
+      A couple of existing web sites have been converted to XML to show you
+      how much easier it is to handle pure-content markup.
+    </sample>
+    <sample name="Presentation Slides" href="slides/">
+      An example of more complex use of XSLT for navigation and content filtering.
+    </sample>
+    <sample name="Catalog Entity Resolver" href="catalog/">
+      XML is handy but also very complex. Cocoon integrates a number of
+      facilities to help you during your journey through XML-land. One of these
+      is the centralized handling of resolving network resources
+      (e.g. DTDs, symbols, character entity sets, images) to local copies
+      through the use of catalogs. Also explains how to use DocBook DTDs.
     </sample>
   </group>
 
