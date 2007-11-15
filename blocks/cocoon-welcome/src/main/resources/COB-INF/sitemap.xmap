@@ -38,7 +38,8 @@
 
    <!--+
        | All needed components are inherited from the parent container
-       | configured in WEB-INF/cocoon.xconf
+       | configured in META-INF/cocoon/avalon/*.xconf and
+       | META-INF/cocoon/spring/*.xml files (if using default configuration).
        +-->
 
   </map:components>
@@ -280,8 +281,8 @@
           </map:otherwise>
         </map:select>
       </map:match>
-    
-    
+
+
       <!-- FIXME: It's a simple work-around -->
       <map:match pattern="blocks/**">
         <map:redirect-to uri="{1}/" global="true"/>
