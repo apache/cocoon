@@ -15,7 +15,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<!--
+  - $Id: simple-samples2html.xsl 595367 2007-11-15 17:16:37Z vgritsenko $
+  -->
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
   <xsl:template match="body">
     <div style="text-align:right;width:100%;">
       <a href="?cocoon-view=content">Content View</a> |
@@ -24,11 +30,13 @@
     </div>
     <xsl:apply-templates/>
   </xsl:template>
+
   <xsl:template match="@*|node()" priority="-2">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
+
   <xsl:template match="text()" priority="-1">
     <xsl:value-of select="."/>
   </xsl:template>

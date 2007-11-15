@@ -53,6 +53,9 @@
       <map:match pattern="**.gif">
         <map:read src="resources/{1}.gif"/>
       </map:match>
+      <map:match pattern="**.jpg">
+        <map:read src="resources/{1}.jpg"/>
+      </map:match>
       <map:match pattern="**.ico">
         <map:read src="resources/{1}.ico"/>
       </map:match>
