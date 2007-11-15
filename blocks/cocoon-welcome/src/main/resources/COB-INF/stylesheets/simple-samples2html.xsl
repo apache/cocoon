@@ -29,50 +29,58 @@
   <xsl:variable name="stdLinks" select="samples/links/link[not(@role)]"/>
   <xsl:variable name="seeAlsoLinks" select="samples/links/link[@role='see-also']"/>
 
-  
+
   <xsl:template match="/">
     <html>
       <head>
-        <title>Apache Cocoon @version@</title>
+        <title>
+          <xsl:text>Apache Cocoon @version@</xsl:text>
+          <xsl:if test="samples/@name">
+            <xsl:text> | </xsl:text>
+            <xsl:value-of select="samples/@name"/>
+          </xsl:if>
+        </title>
         <link rel="SHORTCUT ICON" href="favicon.ico"/>
         <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet"/>
       </head>
       <body>
-       <table border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
-         <tr>
-           <td width="*">The Apache Software Foundation is proud to present...</td>
-           <td width="40%" align="center"><img border="0" src="{$contextPath}/images/cocoon.gif"/></td>
-           <td width="30%" align="center">Version: <b>@version@</b></td>
-         </tr>
-       </table>
-
-       <table border="0" cellspacing="2" cellpadding="2" align="center" width="100%">
-         <tr>
-           <td width="75%">
-             <h2><xsl:value-of select="samples/@name"/></h2>
-             <xsl:if test="$seeAlsoLinks">
-               <div class="seeAlsoLinks">
-                 <b>See also:</b>&#160;<xsl:apply-templates select="$seeAlsoLinks"/>
-               </div>
-             </xsl:if>
-           </td>
-           <td nowrap="nowrap" align="right">
-	           <xsl:apply-templates select="$stdLinks"/>
-	           <xsl:if test="not(samples/@add-view-links='false')">
-               Orthogonal views:
-               <a href="?cocoon-view=content">Content</a>
-               &#160;
-               <a href="?cocoon-view=pretty-content">Pretty content</a>
-               &#160;
-               <a href="?cocoon-view=links">Links</a>
-	           </xsl:if>
-           </td>
-         </tr>
-       </table>
+        <div id="top">
+          <div id="header">
+            <div class="projectlogo">
+              <a href="http://cocoon.apache.org/"><img class="logoImage" src="{$contextPath}/images/cocoon-logo.jpg" alt="Apache Cocoon" border="0"/></a>
+            </div>
+            <div class="grouplogo">
+              <p class="grouptitle">
+                <a href="http://cocoon.apache.org/">The Apache Cocoon Project</a>
+                <img src="{$contextPath}/images/apache-logo.jpg" alt="Cocoon Project Logo"/>
+              </p>
+            </div>
+          </div>
+          <div id="samplesBar">
+            <h1 class="samplesTitle"><xsl:value-of select="samples/@name"/></h1>
+            <ul id="links">
+              <xsl:if test="$seeAlsoLinks">
+                <li class="sep">See also:</li>
+                <xsl:apply-templates select="$seeAlsoLinks"/>
+              </xsl:if>
+              <xsl:if test="$stdLinks">
+                <li class="sep"/>
+                <xsl:apply-templates select="$stdLinks"/>
+              </xsl:if>
+              <xsl:if test="not(samples/@add-view-links='false')">
+                <li class="sep">Orthogonal views:</li>
+                <li><a href="?cocoon-view=content">Content</a></li>
+                <li><a href="?cocoon-view=pretty-content">Pretty content</a></li>
+                <li><a href="?cocoon-view=links">Links</a></li>
+              </xsl:if>
+            </ul>
+          </div>
+          <div class="samplesBarClear"/>
+        </div>
 
        <xsl:apply-templates select="samples"/>
        <xsl:apply-templates select="samples/additional-info"/>
-       
+
        <p class="copyright">
          Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
          All rights reserved.
@@ -199,6 +207,16 @@
   </xsl:template>
 
 
+  <xsl:template match="links/link">
+    <li><a href="{@href}"><xsl:value-of select="."/></a></li>
+  </xsl:template>
+
+  <xsl:template match="additional-info">
+    <h4><xsl:value-of select="@title"/></h4>
+    <xsl:copy-of select="node()"/>
+  </xsl:template>
+
+
   <xsl:template match="@*|node()" priority="-2">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
@@ -208,16 +226,5 @@
   <xsl:template match="text()" priority="-1">
     <xsl:value-of select="."/>
   </xsl:template>
-  
-  <xsl:template match="links/link">
-    <a href="{@href}">
-      <xsl:value-of select="."/>
-    </a>
-  </xsl:template>
-  
-  <xsl:template match="additional-info">
-    <h4><xsl:value-of select="@title"/></h4>
-    <xsl:copy-of select="node()"/>
-  </xsl:template>
-  
+
 </xsl:stylesheet>

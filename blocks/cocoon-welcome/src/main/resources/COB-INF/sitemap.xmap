@@ -181,6 +181,10 @@
         <map:read src="resource/external/images/{1}.gif" mime-type="image/gif"/>
       </map:match>
 
+      <map:match pattern="images/*.jpg">
+        <map:read src="resource/external/images/{1}.jpg" mime-type="image/jpeg"/>
+      </map:match>
+
       <!-- CSS stylesheets -->
       <map:match pattern="styles/*.css">
         <map:read src="resource/external/styles/{1}.css" mime-type="text/css"/>
