@@ -57,6 +57,7 @@ span.switch { cursor: pointer; margin-left: 5px; text-decoration: underline; }
 #samplesBar #links a:hover { text-decoration: underline; }
 .samplesBarClear { height: 1%; clear: both; }
 
+.samplesTitle { margin: 0; padding: 6px 0 0 5px; background: none; border: none; float: left; font-size: 100%; color: #0086b3; }
 .samplesTitle a { text-decoration: none; }
 .samplesTitle a:hover { text-decoration: underline; }
 
