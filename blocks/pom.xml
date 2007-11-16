@@ -143,6 +143,7 @@
         <module>cocoon-cron/cocoon-cron-sample</module>
         <module>cocoon-databases/cocoon-databases-impl</module>
         <module>cocoon-databases/cocoon-databases-mocks</module>
+        <module>cocoon-databases/cocoon-databases-bridge</module>
         <module>cocoon-databases/cocoon-databases-sample</module>
         <module>cocoon-databases/cocoon-databases-hsqldb-client</module>
         <module>cocoon-databases/cocoon-databases-hsqldb-server</module>
