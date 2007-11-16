@@ -1201,26 +1201,6 @@
   </file>
 
   <file>
-    <title>WSRP4J Shared</title>
-    <description>
-      WSRP implementation from the WSRP4J project.
-    </description>
-    <used-by>Portal block</used-by>
-    <lib>optional/wsrp4j-shared-0.3-dev.jar</lib>
-    <homepage>http://ws.apache.org/wsrp4j/</homepage>
-  </file>
-
-  <file>
-    <title>WSRP4J Consumer</title>
-    <description>
-      WSRP implementation from the WSRP4J project.
-    </description>
-    <used-by>Portal block</used-by>
-    <lib>optional/wsrp4j-consumer-0.3-dev.jar</lib>
-    <homepage>http://ws.apache.org/wsrp4j/</homepage>
-  </file>
-
-  <file>
     <title>JDBI</title>
     <description>
       Convenient access to JDBC using Maps and List.

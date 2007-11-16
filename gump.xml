@@ -1068,10 +1068,6 @@
     <depend project="commons-collections"/>
     <depend project="portals-pluto" inherit="runtime"/>
     <depend project="portals-bridges-common"/>
-    <depend project="ws-axis"/>
-    <depend project="wsdl4j"/>
-    <depend project="wsrp4j"/>
-    <depend project="commons-discovery"/>
 
     <library name="jtidy"/>
     <library name="nekohtml"/>
@@ -1080,14 +1076,6 @@
     <library name="pluto"/>
     <library name="portlet-api"/>
     <library name="portals-bridges-common"/>
-    <library name="axis"/>
-    <library name="axis-saaj"/>
-    <library name="axis-jaxrpc"/>
-    <library name="wsdl4j"/>
-    <library name="commons-discovery"/>
-    <library name="wsrp4j-shared"/>
-    <library name="wsrp4j-consumer"/>
-
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
