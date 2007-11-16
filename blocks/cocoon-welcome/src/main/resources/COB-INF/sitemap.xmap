@@ -187,7 +187,8 @@
 
       <!-- CSS stylesheets -->
       <map:match pattern="styles/*.css">
-        <map:read src="resource/styles/{1}.css" mime-type="text/css"/>
+        <!-- Rewrite links to images to put correct servlet context of this application -->
+        <map:read type="servletLinkRewriter" src="resource/styles/{1}.css" mime-type="text/css"/>
       </map:match>
 
       <!-- JavaScript scripts -->
