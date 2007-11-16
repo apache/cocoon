@@ -104,15 +104,6 @@
 
       <map:match pattern="components">
         <map:generate src="components-samples.xml" />
-        <!-- Make use of servlet services -->
-        <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
-        </map:serialize>
-      </map:match>
-
-      <map:match pattern="misc">
-        <map:generate src="misc-samples.xml" />
-        <!-- Make use of servlet services -->
         <map:serialize type="servletService">
           <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
         </map:serialize>
@@ -120,7 +111,6 @@
 
       <map:match pattern="request.html">
         <map:generate type="request" />
-        <!-- Make use of servlet services -->
         <map:serialize type="servletService">
           <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
         </map:serialize>
@@ -151,7 +141,7 @@
           <map:transform type="i18n">
           <map:parameter name="default-catalogue-id" value="messages"/>
           <map:parameter name="locale" value="{request-param:lang}"/>
-          </map:transform> 
+          </map:transform>
         -->
         <map:serialize />
       </map:match>

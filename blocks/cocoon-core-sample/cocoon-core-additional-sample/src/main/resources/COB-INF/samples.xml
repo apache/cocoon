@@ -31,8 +31,8 @@
       Some samples of various components that are included with the core,
       e.g. Stream Generators, Paginator Transformers, Image Readers.
     </sample>
-    <sample href="misc" name="Miscellaneous samples">
-      Some stuff that does not fit into the other groups of samples.
+    <sample href="text-wrap/" name="Text wrap">
+      Addresses the problem of wrapping long lines of text in source elements.
     </sample>
   </group>
 
