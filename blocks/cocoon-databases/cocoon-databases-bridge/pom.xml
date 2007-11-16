@@ -62,6 +62,12 @@
       <artifactId>spring-jdbc</artifactId>
       <version>2.0.6</version>
     </dependency>
+    <!-- Specify transitive dependencies to avoid MNG-2782 with JDK1.4.2. -->
+    <dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-dao</artifactId>
+	    <version>2.0.6</version>
+    </dependency>
   </dependencies>
   
   <profiles>
