@@ -28,6 +28,7 @@ import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.portal.services.PortalManager;
 import org.apache.cocoon.portal.services.UserService;
+import org.apache.cocoon.portal.services.VariableResolver;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
@@ -141,4 +142,10 @@ public interface PortalService {
      * Get the user service.
      */
     UserService getUserService();
+
+    /**
+     * Get the variable resolver
+     * @since 2.2
+     */
+    VariableResolver getVariableResolver();
 }

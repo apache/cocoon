@@ -17,10 +17,8 @@
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -28,16 +26,13 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
-import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.portal.services.VariableResolver;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -78,15 +73,13 @@ import org.xml.sax.ext.LexicalHandler;
  * <table><tbody>
  * <tr><th>style</th><td></td><td>req</td><td>String</td><td><code>null</code></td></tr>
  * <tr><th>xslt-processor-role</th><td></td><td>req</td><td>String</td><td><code>null</code></td></tr>
- * </tbody></table>  
+ * </tbody></table>
  *
  * TODO - Remove all dependencies to Avalon.
  * @version $Id$
  */
-public class XSLTAspect 
+public class XSLTAspect
     extends AbstractAspect {
-
-    protected List variables = new ArrayList();
 
     /** Additional parameters passed to the stylesheet. */
     protected Map parameters;
@@ -101,7 +94,7 @@ public class XSLTAspect
     }
 
     public void setSourceResolver(SourceResolver resolver) {
-        this.resolver = resolver;   
+        this.resolver = resolver;
     }
 
     public void setXsltParameters(Map p) {
@@ -124,7 +117,7 @@ public class XSLTAspect
             processor = (XSLTProcessor) this.serviceManager.lookup(config.xsltRole);
             TransformerHandler transformer = processor.getTransformerHandler(stylesheet);
             // Pass configured parameters to the stylesheet.
-            if (config.parameters.size() > 0) {                
+            if (config.parameters.size() > 0) {
                 Transformer theTransformer = transformer.getTransformer();
                 Iterator iter = config.parameters.entrySet().iterator();
                 while (iter.hasNext()) {
@@ -163,41 +156,23 @@ public class XSLTAspect
         }
 	}
 
-    protected String getStylesheetURI(PreparedConfiguration config, Layout layout) 
+    protected String getStylesheetURI(PreparedConfiguration config, Layout layout)
     throws SAXException {
-        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
         String stylesheet = layout.getParameter("stylesheet");
         if ( stylesheet != null ) {
-            VariableResolver variableResolver = null;
-            try {
-                variableResolver = VariableResolverFactory.getResolver(stylesheet, this.serviceManager);
-                stylesheet = variableResolver.resolve(objectModel);
-            } catch (PatternException pe) {
-                throw new SAXException("Unknown pattern for stylesheet " + stylesheet, pe);
-            } finally {
-                ContainerUtil.dispose(variableResolver);
-            }            
+            stylesheet = this.portalService.getVariableResolver().resolve(stylesheet);
         } else {
-            try {
-                stylesheet = config.stylesheet.resolve(objectModel);
-            } catch (PatternException pe) {
-                throw new SAXException("Pattern exception during variable resolving.", pe);            
-            }
+            stylesheet = config.stylesheet.resolve();
         }
         return stylesheet;
     }
 
     protected String getParameterValue(Map.Entry entry) throws SAXException {
-        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
-        try {
-            return ((VariableResolver)entry.getValue()).resolve(objectModel);
-        } catch (PatternException pe) {
-            throw new SAXException("Unable to get value for parameter " + entry.getKey(), pe);
-        }
+        return ((VariableResolver.CompiledExpression)entry.getValue()).resolve();
     }
 
     protected static class PreparedConfiguration {
-        public VariableResolver stylesheet;
+        public VariableResolver.CompiledExpression stylesheet;
         public String xsltRole;
         public Map parameters = new HashMap();
 
@@ -216,39 +191,16 @@ public class XSLTAspect
         PreparedConfiguration pc = new PreparedConfiguration();
         pc.xsltRole = configuration.getProperty("xslt-processor-role", XSLTProcessor.ROLE);
         String stylesheet = configuration.getProperty("style", null);
-        try {
-            pc.stylesheet = VariableResolverFactory.getResolver(stylesheet, this.serviceManager);
-        } catch (PatternException pe) {
-            throw new PortalException("Unknown pattern for stylesheet " + stylesheet, pe);
-        }
-        this.variables.add(pc.stylesheet);
+        pc.stylesheet = this.portalService.getVariableResolver().compile(stylesheet);
         if (this.parameters != null) {
             final Iterator i = this.parameters.entrySet().iterator();
             while ( i.hasNext() ) {
                 final Map.Entry current = (Map.Entry)i.next();
-                try {
-                    VariableResolver variableResolver =
-                        VariableResolverFactory.getResolver(current.getValue().toString(), this.serviceManager);
-                    this.variables.add(variableResolver);
-                    pc.parameters.put(current.getKey(), variableResolver);
-                } catch (PatternException e) {
-                    throw new PortalException("Invalid value for parameter " + current.getKey() + " : " + current.getValue(), e);
-                }
+                VariableResolver.CompiledExpression compiledExpression =
+                    this.portalService.getVariableResolver().compile(current.getValue().toString());
+                pc.parameters.put(current.getKey(), compiledExpression);
             }
         }
         return pc;
-    }
-
-    /**
-     * Destroy this component.
-     */
-    public void destroy() {
-        if ( this.serviceManager != null ) {
-            Iterator vars = this.variables.iterator();
-            while ( vars.hasNext() ) {
-                ContainerUtil.dispose(vars.next());
-            }
-            this.variables.clear();
-        }
     }
 }
