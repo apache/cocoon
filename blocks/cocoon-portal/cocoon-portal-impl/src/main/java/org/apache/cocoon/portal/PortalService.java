@@ -29,7 +29,6 @@ import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.portal.services.PortalManager;
 import org.apache.cocoon.portal.services.UserService;
 import org.apache.cocoon.portal.services.VariableResolver;
-import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
  * This is the central component of the portal. It holds the global configuration,
@@ -124,13 +123,6 @@ public interface PortalService {
      * @since 2.1.8
      */
     PortalManager getPortalManager();
-
-    /**
-     * Get the process info provider for accessing request
-     * information.
-     * @since 2.2
-     */
-    ProcessInfoProvider getProcessInfoProvider();
 
     /**
      * Get the current request context.

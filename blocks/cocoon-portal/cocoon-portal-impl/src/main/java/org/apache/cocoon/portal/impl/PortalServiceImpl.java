@@ -380,13 +380,6 @@ public class PortalServiceImpl
     }
 
     /**
-     * @see org.apache.cocoon.portal.PortalService#getProcessInfoProvider()
-     */
-    public ProcessInfoProvider getProcessInfoProvider() {
-        return this.processInfoProvider;
-    }
-
-    /**
      * @see org.apache.cocoon.portal.PortalService#getUserService()
      */
     public UserService getUserService() {
