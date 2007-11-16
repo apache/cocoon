@@ -89,6 +89,7 @@
         <module>../blocks/cocoon-batik/cocoon-batik-impl</module>
         <module>../blocks/cocoon-html/cocoon-html-impl</module>
         <module>../blocks/cocoon-linkrewriter/cocoon-linkrewriter-impl</module>
+        <module>../blocks/cocoon-databases/cocoon-databases-bridge</module>
         <module>../blocks/cocoon-databases/cocoon-databases-impl</module>
         <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-server</module>
         <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-client</module>
