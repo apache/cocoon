@@ -73,8 +73,8 @@
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
             <configuration>
-              <navDocId>1357</navDocId>
-              <collection>cdocs-databases</collection>   
+              <navDocId>1423</navDocId>
+              <collection>cdocs-databases-bridge</collection>   
               <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
             </configuration>
           </plugin>
