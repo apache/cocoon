@@ -138,6 +138,18 @@ public class ObjectModelImplTestCase extends TestCase {
         
         assertTrue(objectModel.isEmpty());
     }
+    
+    public void testTrivialPath() {
+        objectModel.markLocalContext();
+        objectModel.putAt("foo", "bar");
+        
+        assertTrue(objectModel.containsKey("foo"));
+        assertEquals("bar", objectModel.get("foo"));
+        
+        objectModel.cleanupLocalContext();
+        
+        assertTrue(objectModel.isEmpty());
+    }
 
     public void testIfMapIsCreated() {
         objectModel.putAt("foo/bar/xyz", "abc");
