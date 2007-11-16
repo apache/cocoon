@@ -42,12 +42,12 @@ span.switch { cursor: pointer; margin-left: 5px; text-decoration: underline; }
 
 /* Samples */
 
-#top { background: url(/images/top-background.jpg) repeat-x; }
-#header { height: 129px; background: url(/images/logo-background.jpg) no-repeat; }
+#top { background: url(servlet:/images/top-background.jpg) repeat-x; }
+#header { height: 129px; background: url(servlet:/images/logo-background.jpg) no-repeat; }
 .projectlogo { float: left; }
 .logoImage { margin: 30px 0 0 34px; }
 .grouplogo { margin: 10px 10px 0 0; float: right; }
-.grouptitle { margin: 0; padding-bottom: 5px; background: url(/images/group-title-line.gif) repeat-x bottom; }
+.grouptitle { margin: 0; padding-bottom: 5px; background: url(servlet:/images/group-title-line.gif) repeat-x bottom; }
 .grouptitle a:link, .grouptitle a:visited { color: #545454; text-decoration: none; }
 #samplesBar { margin-bottom: 10px; height: 25px; border-top: 1px solid #f2f2f2; border-bottom: 1px solid #f2f2f2; }
 #samplesBar #links { margin: 5px 15px 0 0; padding: 0; list-style: none; float: right; }
