@@ -18,8 +18,8 @@ package org.apache.cocoon.portal.services.aspects.impl;
 
 import java.util.StringTokenizer;
 
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
@@ -72,7 +72,7 @@ public abstract class AbstractContentRequestProcessorAspect
      * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
     public void process(RequestProcessorAspectContext context) {
-        final Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
+        final HttpServletRequest request = this.portalService.getRequestContext().getRequest();
         String[] values = request.getParameterValues(this.getRequestParameterName(context));
         if (values != null) {
             final EventManager publisher = context.getPortalService().getEventManager();

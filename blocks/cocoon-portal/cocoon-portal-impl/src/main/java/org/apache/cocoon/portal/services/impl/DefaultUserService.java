@@ -21,10 +21,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.user.UserEvent;
 import org.apache.cocoon.portal.om.PortalUser;
@@ -67,8 +66,8 @@ public class DefaultUserService
     }
 
     protected Map getSessionMap() {
-        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
-        final HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession(false);
+        final HttpServletRequest request = this.portalService.getRequestContext().getRequest();
+        final HttpSession session = request.getSession(false);
         if ( session == null ) {
             return null;
         }
@@ -77,21 +76,19 @@ public class DefaultUserService
     }
 
     protected Map getRequestMap() {
-        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
-        final Request request = ObjectModelHelper.getRequest(objectModel);
+        final HttpServletRequest request = this.portalService.getRequestContext().getRequest();
         final Map map = (Map) request.getAttribute(this.attributeName);
         return map;
     }
 
     protected void setSessionMap(Map map) {
-        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
-        final HttpSession session = ObjectModelHelper.getRequest(objectModel).getSession(true);
+        final HttpServletRequest request = this.portalService.getRequestContext().getRequest();
+        final HttpSession session = request.getSession(false);
         session.setAttribute(this.attributeName, map);
     }
 
     protected void setRequestMap(Map map) {
-        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
-        final Request request = ObjectModelHelper.getRequest(objectModel);
+        final HttpServletRequest request = this.portalService.getRequestContext().getRequest();
         request.setAttribute(this.attributeName, map);
     }
 
