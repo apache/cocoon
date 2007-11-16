@@ -50,6 +50,8 @@ import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.portal.services.PortalManager;
 import org.apache.cocoon.portal.services.UserService;
+import org.apache.cocoon.portal.services.VariableResolver;
+import org.apache.cocoon.portal.services.VariableResolver.CompiledExpression;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.excalibur.source.Source;
@@ -417,6 +419,38 @@ public class PortalServiceImpl
         return new RequestContextImpl(this.processInfoProvider);
     }
 
+    /**
+     * TODO Make this a real service
+     * @see org.apache.cocoon.portal.PortalService#getVariableResolver()
+     */
+    public VariableResolver getVariableResolver() {
+        return new VariableResolverImpl();
+    }
+
+    public static final class VariableResolverImpl implements VariableResolver {
+
+        public CompiledExpression compile(String expression) {
+            return new CompiledExpressionImpl(expression);
+        }
+
+        public String resolve(String expression) {
+            return expression;
+        }
+    }
+
+    public static final class CompiledExpressionImpl implements CompiledExpression {
+
+        protected final String expression;
+
+        public CompiledExpressionImpl(String e) {
+            this.expression = e;
+        }
+
+        public String resolve() {
+            return this.expression;
+        }
+
+    }
     public static final class RequestContextImpl implements RequestContext {
 
         protected final ProcessInfoProvider provider;

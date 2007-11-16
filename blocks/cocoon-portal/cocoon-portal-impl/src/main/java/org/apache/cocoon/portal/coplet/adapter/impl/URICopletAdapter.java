@@ -17,13 +17,15 @@
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
+import javax.xml.transform.sax.SAXResult;
+
+import org.apache.cocoon.core.xml.SAXParser;
 import org.apache.cocoon.portal.om.CopletInstance;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,11 +36,10 @@ import org.xml.sax.SAXException;
 public class URICopletAdapter
     extends AbstractCopletAdapter {
 
-    /** The source resolver */
-    protected SourceResolver resolver;
+    protected SAXParser parser;
 
-    public void setSourceResolver(SourceResolver resolver) {
-        this.resolver = resolver;
+    public void setSAXParser(final SAXParser p) {
+        this.parser = p;
     }
 
     /**
@@ -48,7 +49,7 @@ public class URICopletAdapter
     throws SAXException {
         final String uri = (String)coplet.getCopletDefinition().getAttribute("uri");
         if ( uri == null ) {
-            throw new SAXException("No URI for coplet definition "+coplet.getCopletDefinition().getId()+" found.");
+            throw new SAXException("No URI for coplet definition " + coplet.getCopletDefinition().getId()+" found.");
         }
         this.streamContent( coplet, uri, contentHandler);
     }
@@ -60,16 +61,18 @@ public class URICopletAdapter
         if ( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("Streaming coplet instance + " + coplet + " using uri: " + uri);
         }
-		Source copletSource = null;
 		try {
-			copletSource = this.resolver.resolveURI(uri);
-			SourceUtil.toSAX(copletSource, contentHandler);
+	        final URL url = new URL(uri);
+	        final Object content = url.getContent(new Class[] {SAXResult.class});
+	        if ( content instanceof SAXResult ) {
+	            ((SAXResult)content).setHandler(contentHandler);
+	        } else {
+	            final InputSource source = new InputSource((InputStream)content);
+	            source.setSystemId(url.toExternalForm());
+	            this.parser.parse(source, contentHandler);
+	        }
 		} catch (IOException ioe) {
-			throw new SAXException("IOException", ioe);
-		} catch (ProcessingException pe) {
-			throw new SAXException("ProcessingException", pe);
-		} finally {
-			this.resolver.release(copletSource);
+			throw new SAXException("Unable to stream coplet instance " + coplet + " from uri " + uri, ioe);
 		}
     }
 
