@@ -530,35 +530,4 @@
       </attribute>
    </coplet-data>
 
-   <!-- Example for the wsrp portlet -->
-   <coplet-data id="wsrp-calc-portlet" name="standard">
-      <title>WSRP-Calc-Portlet</title>
-      <coplet-base-data>WSRP</coplet-base-data>
-      <attribute>
-         <name>producer-id</name>
-         <value xsi:type="java:java.lang.String">prod_localhost_8081</value>
-      </attribute>
-      <attribute>
-         <name>portlet-handle</name>
-         <value xsi:type="java:java.lang.String">calc_1.1</value>
-      </attribute>
-   </coplet-data>
-
-   <coplet-data id="wsrp-test-portlet" name="standard">
-      <title>WSRP-Test-Portlet</title>
-      <coplet-base-data>WSRP</coplet-base-data>
-      <attribute>
-         <name>producer-id</name>
-         <value xsi:type="java:java.lang.String">prod_localhost_8081</value>
-      </attribute>
-      <attribute>
-         <name>portlet-handle</name>
-         <value xsi:type="java:java.lang.String">0.1</value>
-      </attribute>
-      <attribute>
-         <name>use-pipeline</name>
-         <value xsi:type="java:java.lang.Boolean">true</value>
-      </attribute>
-   </coplet-data>
-
 </coplets>

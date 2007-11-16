@@ -29,12 +29,5 @@
    <coplet-base-data id="Application">
       <coplet-adapter>application</coplet-adapter>
    </coplet-base-data>
-   <coplet-base-data id="WSRP">
-      <coplet-adapter>wsrp</coplet-adapter>
-      <configuration>
-      	<name>buffer</name>
-      	<value xsi:type="java:java.lang.Boolean">true</value>
-      </configuration>
-   </coplet-base-data>
 </coplets>
 

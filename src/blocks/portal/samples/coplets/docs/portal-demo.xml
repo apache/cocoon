@@ -34,7 +34,6 @@
           <li>The TabDemo2 shows the same content as TabDemo2 but with just a different stylesheet for the tab.</li>
           <li>The Gallery tab shows some more coplets.</li>
           <li>The JSR-168 tab demonstrates the integration of Portlets (read more below).</li>
-          <li>The WSRP tab demonstrates the integration of WSRP portlets (read more below).</li>
         </ul>
         <p><strong>THIS IS A SAMPLE PORTAL!</strong></p>
         <p>It demonstrates several features of 
@@ -60,15 +59,6 @@
         <p>The current implementation searches for portlets in all directories that are next to
          the Cocoon webapp directory. So, if you put Cocoon into the webapps directory of Tomcat,
          you should put your portlets there as well.</p>
-     </section>
-     <section title="WSRP">
-        <p>The Cocoon portal supports portlets conforming to the WSRP. The WSRP tab contains 
-           a sample using the testsuite from the <fork href="http://ws.apache.org/wsrp4j">WSRP4J project</fork>.</p>
-        <p>These samples only work if you follow these installation instructions:</p>
-        <ul>
-         <li>Get the WSRP4J project and install it into Tomcat (Test WSRP using the SwingConsumer now).</li>
-         <li>Start up Tomcat (with the WSRP producer) and Cocoon (using Jetty) and run the Cocoon portal demo. You should see the WSRP portlets now.</li>
-        </ul>
      </section>
   </body>
 </document>

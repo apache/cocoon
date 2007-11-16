@@ -195,12 +195,4 @@
       <coplet-data>Google</coplet-data>
    </coplet-instance-data>
 
-   <!-- wsrp example -->
-   <coplet-instance-data id="WSRP-Calc-1" name="standard">
-      <coplet-data>wsrp-calc-portlet</coplet-data>
-   </coplet-instance-data>
-   <coplet-instance-data id="WSRP-Test-1" name="standard">
-      <coplet-data>wsrp-test-portlet</coplet-data>
-   </coplet-instance-data>
-
 </coplets>

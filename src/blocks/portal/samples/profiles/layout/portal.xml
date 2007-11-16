@@ -254,21 +254,6 @@
     </composite-layout>
   </named-item>
 
-  <named-item name="WSRP">
-    <composite-layout name="column">
-      <item>
-        <coplet-layout name="coplet" layout-renderer-name="wsrp-window">
-          <coplet-instance-data>WSRP-Calc-1</coplet-instance-data>
-      </coplet-layout>
-      </item>
-      <item>
-        <coplet-layout name="coplet" layout-renderer-name="wsrp-window">
-          <coplet-instance-data>WSRP-Test-1</coplet-instance-data>
-      </coplet-layout>
-      </item>
-    </composite-layout>
-  </named-item>
-
   <named-item name="Basket">
     <!-- This is the basket demo. Usually you would only have the user
     tab for users and the admin tab for the admin and not both at

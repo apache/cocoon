@@ -30,8 +30,6 @@
 
     <!-- This aspect sets headers on the response that tell the client to not cache the response: -->
     <aspect logger="portal" name="no-client-caching" class="org.apache.cocoon.portal.event.aspect.impl.NoClientCachingEventAspect"/>
-    <!-- This aspect is required for wsrp: -->
-    <aspect logger="portal" name="wsrp" class="org.apache.cocoon.portal.wsrp.adapter.WSRPEventAspect"/>
   </component>
 
   <!-- Portal Manager Aspect Configuration -->
@@ -69,13 +67,6 @@
     <coplet-adapter name="application"
                     class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter"
                     logger="portal"/>
-    <!-- This is the wsrp adapter -->
-    <coplet-adapter name="wsrp"
-                    class="org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter"
-                    logger="portal">
-      <!-- This is the wsrp configuration containing the producers etc. -->
-      <parameter name="wsrp-config" value="profiles/wsrp-config.xml"/>
-    </coplet-adapter>
  </component>
 
 
@@ -86,8 +77,6 @@
     <aspect logger="portal" name="window" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
     <aspect logger="portal" name="portlet-window"
             class="org.apache.cocoon.portal.layout.renderer.aspect.impl.PortletWindowAspect"/>
-    <aspect logger="portal" name="wsrp-window"
-            class="org.apache.cocoon.portal.wsrp.adapter.WSRPPortletWindowAspect"/>
 
     <!-- This aspect can be used to render the minimize/maximize buttons -->
     <aspect logger="portal" name="coplet-sizing" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.SizingAspect"/>
@@ -129,11 +118,6 @@
  <component class="org.apache.cocoon.portal.profile.impl.MapProfileLS" role="org.apache.cocoon.portal.profile.ProfileLS" logger="portal"/>
 
  <component class="org.apache.cocoon.components.variables.DefaultVariableResolverFactory" role="org.apache.cocoon.components.variables.VariableResolverFactory" logger="portal"/>
-
- <!--  User Context Provider for WSRP -->
- <component role="org.apache.cocoon.portal.wsrp.consumer.UserContextProvider"
-            class="org.apache.cocoon.portal.wsrp.consumer.UserContextProviderImpl"
-            logger="portal"/>
 
  <!-- This is the basket manager -->
  <component class="org.apache.cocoon.portal.coplets.basket.BasketManagerImpl" 

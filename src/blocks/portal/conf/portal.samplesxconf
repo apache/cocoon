@@ -42,8 +42,6 @@
       <!-- Uncomment the following when using PageLabels
       <aspect type="page-label"/>
       -->
-      <!-- Comment the following out if you don't need WSRP: -->
-      <aspect type="wsrp"/>
       <aspect type="request-parameter">
         <!-- Uncomment the following when marshalling JSR168 portlet events
         <parameter name="parameter-name" value="cocoon-portal-event,url"/>
@@ -77,15 +75,12 @@
        The portal manager can be extended with different aspects.
        Currently the JSR-168 aspect is configured/activated.
        If you don't need the JSR-168 support uncomment the aspect.
-       In a similar manner the wsrp support works.
   -->
   <component class="org.apache.cocoon.portal.impl.PortalManagerImpl"
              logger="portal" role="org.apache.cocoon.portal.PortalManager">
     <aspects>
       <!-- JSR-168 support: -->
       <aspect adapter="portlet"/>
-      <!-- wsrp support: -->
-      <aspect adapter="wsrp"/>
     </aspects>
     <fullScreenNav>true</fullScreenNav>
   </component>
@@ -306,25 +301,6 @@
                  <parameter name="tag-name" value="window"/>
              </aspect>
              <aspect type="portlet-window">
-                 <parameter name="root-tag" value="false"/>
-             </aspect>
-             <aspect type="coplet-removing"/>
-             <aspect type="history"/>
-             <aspect type="basket"/>
-             <aspect type="coplet-cinclude"/>
-         </aspects>
-    </renderer>
-    <renderer name="wsrp-window"
-              class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer"
-              logger="portal">
-         <aspects>
-             <aspect type="xslt">
-                 <parameter name="style" value="{portal-skin:skin.basepath}/styles/window.xsl"/>
-             </aspect>
-             <aspect type="parameter">
-                 <parameter name="tag-name" value="window"/>
-             </aspect>
-             <aspect type="wsrp-window">
                  <parameter name="root-tag" value="false"/>
              </aspect>
              <aspect type="coplet-removing"/>

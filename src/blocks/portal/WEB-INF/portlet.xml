@@ -197,7 +197,7 @@
     <portlet-info>
       <title>JSR-168 Cocoon Portlet</title>
       <short-title>Cocoon Portlet</short-title>
-      <keywords>Apache, Cocoon, XML, Jakarta, Pluto, Portlet, WSRP, WSRP4J, JSR-168</keywords>
+      <keywords>Apache, Cocoon, XML, Jakarta, Pluto, Portlet, JSR-168</keywords>
     </portlet-info>
   </portlet>
 
