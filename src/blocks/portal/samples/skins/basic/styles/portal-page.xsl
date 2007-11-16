@@ -28,7 +28,6 @@
 	<head>
 		<title><xsl:value-of select="$title"/></title>
 		<link type="text/css" rel="stylesheet" href="{$base}css/page.css"/>
-		<link type="text/css" rel="stylesheet" href="{$base}css/wsrp.css"/>
 	</head>
 	<body>
 	<table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="100%">

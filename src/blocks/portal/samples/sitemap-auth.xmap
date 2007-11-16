@@ -185,10 +185,6 @@
       <map:match pattern="proxy-**">
         <map:read type="portal-proxy"/>
       </map:match>
-      <!--  WSRP Resources -->
-      <map:match pattern="wsrprsc">
-        <map:read src="{request-param:wsrp-url}"/>
-      </map:match>
       <map:match pattern="images/*.gif">
         <map:read mime-type="image/gif" src="{portal-skin:skin.basepath}/images/{1}.gif"/>
       </map:match>
