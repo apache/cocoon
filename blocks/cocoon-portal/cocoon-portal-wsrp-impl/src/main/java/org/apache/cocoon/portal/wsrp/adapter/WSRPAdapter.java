@@ -43,7 +43,6 @@ import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.serializers.util.EncodingSerializer;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
 import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
@@ -280,7 +279,7 @@ public class WSRPAdapter
             }
         }
         coplet.setTemporaryAttribute(ATTRIBUTE_NAME_PORTLET_KEY, portletKey);
-        final HttpSession session = this.portalService.getProcessInfoProvider().getRequest().getSession();
+        final HttpSession session = this.portalService.getRequestContext().getRequest().getSession();
         final String portletInstanceKey = this.getPortletInstanceKey(portletKey, coplet, session.getId());
         coplet.setTemporaryAttribute(ATTRIBUTE_NAME_PORTLET_INSTANCE_KEY, portletInstanceKey);
 
@@ -586,7 +585,7 @@ public class WSRPAdapter
             WSRPPortlet wsrpPortlet = consumerEnvironment.getPortletRegistry().getPortlet(portletKey);
             User user = (User) coplet.getTemporaryAttribute(ATTRIBUTE_NAME_USER);
 
-            final HttpServletRequest requestObject = this.portalService.getProcessInfoProvider().getRequest();
+            final HttpServletRequest requestObject = this.portalService.getRequestContext().getRequest();
 
             Request request = new RequestImpl();
             String portletMode = requestObject.getParameter(Constants.PORTLET_MODE);
@@ -937,7 +936,7 @@ public class WSRPAdapter
      * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
      */
     public void process(RequestProcessorAspectContext context) {
-        final org.apache.cocoon.environment.Request request = ObjectModelHelper.getRequest(context.getPortalService().getProcessInfoProvider().getObjectModel());
+        final HttpServletRequest request = context.getPortalService().getRequestContext().getRequest();
         final String[] values = request.getParameterValues("cocoon-wsrpevent");
         if ( values != null && values.length == 1 ) {
             // create a wsrp event, first build map of parameters
