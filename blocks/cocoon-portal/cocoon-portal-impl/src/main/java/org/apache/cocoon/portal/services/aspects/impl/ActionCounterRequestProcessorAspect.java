@@ -16,9 +16,9 @@
  */
 package org.apache.cocoon.portal.services.aspects.impl;
 
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.AbstractBean;
@@ -61,7 +61,7 @@ public class ActionCounterRequestProcessorAspect
             context.getPortalService().getUserService().setAttribute(ATTRIBUTE_NAME, new Integer(actionCount));
         }
 
-        final Request request = ObjectModelHelper.getRequest( context.getPortalService().getProcessInfoProvider().getObjectModel() );
+        final HttpServletRequest request = this.portalService.getRequestContext().getRequest();
         String value = request.getParameter( requestParameterName );
         if ( value != null && actionCount > 0) {
             // get number
@@ -79,7 +79,7 @@ public class ActionCounterRequestProcessorAspect
         }
         context.getPortalService().getLinkService().addUniqueParameterToLink( requestParameterName, String.valueOf(actionCount));
 
-        final Response response = ObjectModelHelper.getResponse( context.getPortalService().getProcessInfoProvider().getObjectModel() );
+        final HttpServletResponse response = this.portalService.getRequestContext().getResponse();
         response.setHeader("Cache-Control", "no-cache");
         response.addHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");

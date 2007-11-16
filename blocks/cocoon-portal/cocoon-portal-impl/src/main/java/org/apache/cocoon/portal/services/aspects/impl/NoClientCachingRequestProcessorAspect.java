@@ -16,8 +16,8 @@
  */
 package org.apache.cocoon.portal.services.aspects.impl;
 
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Response;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
 import org.apache.cocoon.portal.util.AbstractBean;
@@ -37,7 +37,7 @@ public class NoClientCachingRequestProcessorAspect
 	 * @see org.apache.cocoon.portal.services.aspects.RequestProcessorAspect#process(org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext)
 	 */
 	public void process(RequestProcessorAspectContext context) {
-        final Response response = ObjectModelHelper.getResponse( context.getPortalService().getProcessInfoProvider().getObjectModel() );
+        final HttpServletResponse response = this.portalService.getRequestContext().getResponse();
         response.setHeader("Cache-Control", "no-cache");
         response.addHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
