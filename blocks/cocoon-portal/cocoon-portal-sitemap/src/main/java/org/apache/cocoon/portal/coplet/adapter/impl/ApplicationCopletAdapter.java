@@ -18,10 +18,7 @@ package org.apache.cocoon.portal.coplet.adapter.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
-import java.util.Map;
 
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.apache.cocoon.portal.om.CopletInstance;
@@ -82,8 +79,7 @@ public class ApplicationCopletAdapter extends CocoonCopletAdapter {
 
                 // append parameters - if any
                 LinkService linkService = this.portalService.getLinkService();
-                final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
-                final Request r = ObjectModelHelper.getRequest(objectModel);
+                final javax.servlet.http.HttpServletRequest r = this.portalService.getRequestContext().getRequest();
                 final Enumeration params = r.getParameterNames();
                 while (params.hasMoreElements()) {
                     final String name = (String)params.nextElement();

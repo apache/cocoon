@@ -29,6 +29,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
 import org.apache.cocoon.portal.sitemap.Constants;
+import org.apache.cocoon.processing.ProcessInfoProvider;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
@@ -46,6 +47,12 @@ public class CocoonCopletAdapter
     protected SourceResolver resolver;
 
     protected NotifyingBuilder notifyingBuilder;
+
+    protected ProcessInfoProvider processInfoProvider;
+
+    public void setProcessInfoProvider(ProcessInfoProvider provider) {
+        this.processInfoProvider = provider;
+    }
 
     public void setSourceResolver(SourceResolver resolver) {
         this.resolver = resolver;
@@ -134,7 +141,7 @@ public class CocoonCopletAdapter
                 currentNotifying = notifyingBuilder.build(this, error);
             }
 
-            final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
+            final Map objectModel = this.processInfoProvider.getObjectModel();
             // Add it to the object model
             if ( currentNotifying != null ) {
                 objectModel.put(org.apache.cocoon.Constants.NOTIFYING_OBJECT, currentNotifying);
