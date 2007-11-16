@@ -34,7 +34,7 @@
   <artifactId>cocoon-databases-bridge</artifactId>
   <version>1.0.0-M1-SNAPSHOT</version>
   <name>Cocoon Database Block Bridge for Avalon components</name>
-  <url>http://cocoon.apache.org/${docs.m.databases.relPath}</url>  
+  <url>http://cocoon.apache.org/${docs.m.databases-bridge.relPath}</url>  
 
   <properties>
     <docs.name>Cocoon Databases Block</docs.name>
@@ -44,7 +44,7 @@
   <distributionManagement>
     <site>
       <id>website</id>
-      <url>${docs.deploymentBaseUrl}/${docs.m.databases.relPath}</url>
+      <url>${docs.deploymentBaseUrl}/${docs.m.databases-bridge.relPath}</url>
     </site>
   </distributionManagement>
   
