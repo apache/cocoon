@@ -22,7 +22,7 @@
 <xsamples>
 
   <group name="Application Frameworks">
-    <sample name="Forms Block" href="forms/">
+    <sample name="Forms Block" href="/samples/forms/">
       Cocoon Forms examples.
     </sample>
   </group>

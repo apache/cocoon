@@ -26,7 +26,7 @@
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
   <bean name="org.apache.cocoon.forms.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
-    <servlet:context mount-path="/cocoon-forms-sample" context-path="blockcontext:/cocoon-forms-sample/">
+    <servlet:context mount-path="/samples/forms" context-path="blockcontext:/cocoon-forms-sample/">
       <servlet:connections>
         <entry key="ajax" value-ref="org.apache.cocoon.ajax.impl.servlet"/>
         <entry key="forms" value-ref="org.apache.cocoon.forms.impl.servlet"/>
