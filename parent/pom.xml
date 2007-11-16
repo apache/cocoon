@@ -3167,8 +3167,8 @@
     <docs.m.captcha.relPath>2.2/blocks/captcha/${docs.m.captcha.version}/</docs.m.captcha.relPath>
     <docs.m.databases.version>1.0</docs.m.databases.version>
     <docs.m.databases.relPath>2.2/blocks/databases/${docs.m.databases.version}/</docs.m.databases.relPath>
-    <docs.m.databases-bridge.version>1.0</docs.m.databases.version>
-    <docs.m.databases-bridge.relPath>2.2/blocks/databases-bridge/${docs.m.databases-brdge.version}/</docs.m.databases.relPath>
+    <docs.m.databases-bridge.version>1.0</docs.m.databases-bridge.version>
+    <docs.m.databases-bridge.relPath>2.2/blocks/databases-bridge/${docs.m.databases-brdge.version}/</docs.m.databases-bridge.relPath>
     <docs.m.flowscript.version>1.0</docs.m.flowscript.version>
     <docs.m.flowscript.relPath>2.2/blocks/flowscript/${docs.m.flowscript.version}/</docs.m.flowscript.relPath>
     <docs.m.fop.version>1.0</docs.m.fop.version>
