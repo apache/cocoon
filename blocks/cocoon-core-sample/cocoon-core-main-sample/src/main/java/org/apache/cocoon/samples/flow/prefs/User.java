@@ -54,6 +54,9 @@ public class User
 
   public boolean equals(Object obj)
   {
+    if (!(obj instanceof User)) {
+        return false;
+    }
     User anotherUser = (User)obj;
     return anotherUser.login.equals(login);
   }
