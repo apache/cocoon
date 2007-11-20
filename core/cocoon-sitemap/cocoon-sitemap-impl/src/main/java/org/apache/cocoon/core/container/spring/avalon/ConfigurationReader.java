@@ -66,8 +66,10 @@ public class ConfigurationReader {
     /** Is this the root context? */
     protected final boolean isRootContext;
 
+
     /**
      * This method reads in an Avalon style configuration.
+     *
      * @param source         The location of the configuration.
      * @param resourceLoader The resource loader to load included configs.
      * @return               A configuration containing all defined objects.
@@ -83,6 +85,7 @@ public class ConfigurationReader {
 
     /**
      * This method reads in an Avalon style sitemap.
+     *
      * @param src         The location of the sitemap.
      * @param resourceLoader The resource loader to load included configs.
      * @return               A configuration containing all defined objects.
@@ -93,9 +96,10 @@ public class ConfigurationReader {
                                                 ResourceLoader    resourceLoader)
     throws Exception {
         String source = src;
-        if ( source == null || source.trim().length() == 0 ) {
+        if (source == null || source.trim().length() == 0) {
             source = "sitemap.xmap";
         }
+
         final ConfigurationReader converter = new ConfigurationReader(parentInfo, resourceLoader);
         converter.convertSitemap(source);
         return converter.configInfo;
@@ -112,27 +116,28 @@ public class ConfigurationReader {
     private ConfigurationReader(ConfigurationInfo parentInfo,
                                 ResourceLoader    resourceLoader)
     throws Exception {
-        if ( resourceLoader == null ) {
+        if (resourceLoader == null) {
             throw new IllegalArgumentException("ResourceLoader not set!");
         }
         this.isRootContext = parentInfo == null;
         this.resolver = new ServletContextResourcePatternResolver(resourceLoader);
 
         // now add selectors from parent
-        if ( parentInfo != null ) {
+        if (parentInfo != null) {
             this.configInfo = new ConfigurationInfo(parentInfo);
+
             final Iterator i = parentInfo.getComponents().values().iterator();
-            while ( i.hasNext() ) {
-                final ComponentInfo current = (ComponentInfo)i.next();
-                if ( current.isSelector() ) {
+            while (i.hasNext()) {
+                final ComponentInfo current = (ComponentInfo) i.next();
+                if (current.isSelector()) {
                     this.configInfo.addRole(current.getRole(), current.copy());
                 }
             }
-            // TODO - we should add the processor to each container
-            //        This would avoid the hacky getting of the current container in the tree processor
-            /*
+
+            /* TODO - we should add the processor to each container
+                      This would avoid the hacky getting of the current container in the tree processor
             ComponentInfo processorInfo = (ComponentInfo) parentInfo.getComponents().get(Processor.ROLE);
-            if ( processorInfo != null ) {
+            if (processorInfo != null) {
                 this.configInfo.getComponents().put(Processor.ROLE, processorInfo.copy());
             }
             */
@@ -143,20 +148,21 @@ public class ConfigurationReader {
 
     /**
      * Convert an avalon url (with possible cocoon protocols) to a spring url.
+     *
      * @param url The avalon url.
      * @return The spring url.
      */
     protected String convertUrl(String url) {
-        if ( url == null ) {
+        if (url == null) {
             return null;
         }
-        if ( url.startsWith("context:") ) {
+        if (url.startsWith("context:")) {
             return url.substring(10);
         }
-        if ( url.startsWith("resource:") ) {
+        if (url.startsWith("resource:")) {
             return "classpath:" + url.substring(10);
         }
-        //if ( url.indexOf(':') == -1 && !url.startsWith("/")) {
+        //if (url.indexOf(':') == -1 && !url.startsWith("/")) {
         //    return '/' + url;
         //}
         return url;
@@ -165,31 +171,33 @@ public class ConfigurationReader {
     protected InputSource getInputSource(Resource rsrc)
     throws Exception {
         final InputSource is = new InputSource(rsrc.getInputStream());
-        is.setSystemId(this.getUrl(rsrc));
+        is.setSystemId(getUrl(rsrc));
         return is;
     }
 
     protected String getUrl(Resource rsrc)
     throws IOException {
-        if ( rsrc instanceof SourceResource ) {
-            return ((SourceResource)rsrc).getUrlString();
+        if (rsrc instanceof SourceResource) {
+            return ((SourceResource) rsrc).getUrlString();
         } else {
             return rsrc.getURL().toExternalForm();
         }
     }
 
     protected String getUrl(String url, String base) {
-        if ( url == null || base == null ) {
+        if (url == null || base == null) {
             return this.convertUrl(url);
         }
-        if ( url.indexOf(":/") < 2) {
+
+        if (url.indexOf(":/") < 2) {
             int posSeparator = base.lastIndexOf('/');
             int posFileSeparator = base.lastIndexOf(File.separatorChar);
-            if ( posFileSeparator > posSeparator ) {
+            if (posFileSeparator > posSeparator) {
                 posSeparator = posFileSeparator;
             }
-            return this.convertUrl(base.substring(0, posSeparator+1) + url);
+            return this.convertUrl(base.substring(0, posSeparator + 1) + url);
         }
+
         return this.convertUrl(url);
     }
 
@@ -198,7 +206,7 @@ public class ConfigurationReader {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Reading Avalon configuration from " + relativePath);
         }
-        Resource root = this.resolver.getResource(this.getUrl(relativePath, null));
+        Resource root = this.resolver.getResource(getUrl(relativePath, null));
         final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
 
         final Configuration config = b.build(this.getInputSource(root));
@@ -212,40 +220,40 @@ public class ConfigurationReader {
             this.logger.debug("Configuration version: " + config.getAttribute("version"));
         }
         if (!Constants.CONF_VERSION.equals(config.getAttribute("version"))) {
-            throw new ConfigurationException(
-                    "Invalid configuration schema version. Must be '"
-                            + Constants.CONF_VERSION + "'.");
+            throw new ConfigurationException("Invalid configuration schema version. Must be '" +
+                                             Constants.CONF_VERSION + "'.");
         }
 
-        this.convert(config, null, this.getUrl(root));
+        convert(config, null, getUrl(root));
     }
 
     protected void convertSitemap(String sitemapLocation)
     throws Exception {
-        if ( this.logger.isDebugEnabled() ) {
+        if (this.logger.isDebugEnabled()) {
             this.logger.debug("Reading sitemap from " + sitemapLocation);
         }
-        final Resource root = this.resolver.getResource(this.getUrl(sitemapLocation, null));
-        if ( this.logger.isDebugEnabled() ) {
+        final Resource root = this.resolver.getResource(getUrl(sitemapLocation, null));
+        if (this.logger.isDebugEnabled()) {
             this.logger.debug("Resolved sitemap: " + root.getURL());
         }
         final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
 
-        final Configuration config = b.build(this.getInputSource(root));
+        final Configuration config = b.build(getInputSource(root));
         // validate cocoon.xconf
         if (!"sitemap".equals(config.getName())) {
-            throw new ConfigurationException("Invalid sitemap\n"
-                    + config.toString());
+            throw new ConfigurationException("Invalid sitemap\n" +
+                                             config);
         }
+
         final Configuration completeConfig = SitemapHelper.createSitemapConfiguration(config);
-        if ( completeConfig != null ) {
-            this.convert(completeConfig, null, this.getUrl(root));
+        if (completeConfig != null) {
+            convert(completeConfig, null, getUrl(root));
         }
     }
 
     protected void convert(Configuration config, Configuration additionalConfig, String rootUri)
     throws Exception {
-        if (this.logger.isDebugEnabled() ) {
+        if (this.logger.isDebugEnabled()) {
             this.logger.debug("Converting Avalon configuration from configuration object: " + config);
         }
 
@@ -256,41 +264,41 @@ public class ConfigurationReader {
         // and load configuration with a empty list of loaded configurations
         final Set loadedConfigs = new HashSet();
         // what is it?
-        if ( "role-list".equals(config.getName()) || "roles".equals(config.getName())) {
-            this.configureRoles(config);
+        if ("role-list".equals(config.getName()) || "roles".equals(config.getName())) {
+            configureRoles(config);
         } else {
-            this.parseConfiguration(config, null, loadedConfigs);
+            parseConfiguration(config, null, loadedConfigs);
         }
 
         // test for optional user-roles attribute
-        if ( rootUri != null ) {
+        if (rootUri != null) {
             final String userRoles = config.getAttribute("user-roles", null);
             if (userRoles != null) {
-                if ( this.logger.isDebugEnabled() ) {
+                if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Reading additional user roles: " + userRoles);
                 }
                 final Resource userRolesSource = this.resolver.getResource(this.getUrl(userRoles, rootUri));
                 final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
                 final Configuration userRolesConfig = b.build(this.getInputSource(userRolesSource));
-                this.parseConfiguration(userRolesConfig, this.getUrl(userRolesSource), loadedConfigs);
+                parseConfiguration(userRolesConfig, getUrl(userRolesSource), loadedConfigs);
             }
         }
-        if ( additionalConfig != null ) {
-            if ( "role-list".equals(additionalConfig.getName()) || "roles".equals(additionalConfig.getName())) {
-                this.configureRoles(additionalConfig);
+        if (additionalConfig != null) {
+            if ("role-list".equals(additionalConfig.getName()) || "roles".equals(additionalConfig.getName())) {
+                configureRoles(additionalConfig);
             } else {
-                this.parseConfiguration(additionalConfig, null, loadedConfigs);
+                parseConfiguration(additionalConfig, null, loadedConfigs);
             }
         }
 
         // now process all component configurations
-        this.processComponents();
+        processComponents();
 
         // add roles as components
         final Iterator i = this.configInfo.getRoles().iterator();
-        while ( i.hasNext() ) {
-            final ComponentInfo current = (ComponentInfo)i.next();
-            if ( !current.hasConfiguredLazyInit() ) {
+        while (i.hasNext()) {
+            final ComponentInfo current = (ComponentInfo) i.next();
+            if (!current.hasConfiguredLazyInit()) {
                 current.setLazyInit(true);
             }
             this.configInfo.addComponent(current);
@@ -310,17 +318,17 @@ public class ConfigurationReader {
             final String componentName = componentConfig.getName();
 
             if ("include".equals(componentName)) {
-                this.handleInclude(contextURI, loadedURIs, componentConfig);
-            } else if ( "include-beans".equals(componentName) ) {
+                handleInclude(contextURI, loadedURIs, componentConfig);
+            } else if ("include-beans".equals(componentName)) {
                 // we ignore include-beans if this is a child context as this has already been
                 // processed by the sitemap element
-                if ( this.isRootContext ) {
-                    this.handleBeanInclude(contextURI, componentConfig);
+                if (this.isRootContext) {
+                    handleBeanInclude(contextURI, componentConfig);
                 }
                 // we ignore include-properties if this is a child context
-            } else if ( this.isRootContext || !"include-properties".equals(componentName) ) {
+            } else if (this.isRootContext || !"include-properties".equals(componentName)) {
                 // Component declaration, add it to list
-                this.componentConfigs.add(componentConfig);
+                componentConfigs.add(componentConfig);
             }
         }
     }
@@ -328,8 +336,8 @@ public class ConfigurationReader {
     protected void processComponents()
     throws ConfigurationException {
         final Iterator i = this.componentConfigs.iterator();
-        while ( i.hasNext() ) {
-            final Configuration componentConfig = (Configuration)i.next();
+        while (i.hasNext()) {
+            final Configuration componentConfig = (Configuration) i.next();
             final String componentName = componentConfig.getName();
 
             // Find the role
@@ -337,14 +345,15 @@ public class ConfigurationReader {
             String alias = null;
             if (role == null) {
                 // Get the role from the role manager if not explicitely specified
-                role = (String)this.configInfo.getShorthands().get( componentName );
+                role = (String) this.configInfo.getShorthands().get(componentName);
                 alias = componentName;
                 if (role == null) {
                     // Unknown role
                     throw new ConfigurationException("Unknown component type '" + componentName +
-                        "' at " + componentConfig.getLocation());
+                                                     "' at " + componentConfig.getLocation());
                 }
             }
+
             // Find the className
             String className = componentConfig.getAttribute("class", null);
             // If it has a "name" attribute, add it to the role (similar to the
@@ -354,77 +363,84 @@ public class ConfigurationReader {
             ComponentInfo info;
             if (className == null) {
                 // Get the default class name for this role
-                info = this.configInfo.getRole( role );
+                info = this.configInfo.getRole(role);
                 if (info == null) {
-                    if ( this.configInfo.getComponents().get( role) != null ) {
+                    if (this.configInfo.getComponents().get(role) != null) {
                         throw new ConfigurationException("Duplicate component definition for role " + role + " at " + componentConfig.getLocation());
                     }
                     throw new ConfigurationException("Cannot find a class for role " + role + " at " + componentConfig.getLocation());
                 }
+
                 className = info.getComponentClassName();
-                if ( name != null ) {
+                if (name != null) {
                     info = info.copy();
-                } else if ( !className.endsWith("Selector") ) {
+                } else if (!className.endsWith("Selector")) {
                     this.configInfo.removeRole(role);
                 }
             } else {
                 info = new ComponentInfo();
-                if ( !className.endsWith("Selector") ) {
+                if (!className.endsWith("Selector")) {
                     this.configInfo.removeRole(role);
                 }
             }
+
             // check for name attribute
             // Note: this has to be done *after* finding the className above as we change the role
             if (name != null) {
                 role = role + "/" + name;
-                if ( alias != null ) {
+                if (alias != null) {
                     alias = alias + '-' + name;
                 }
             }
+
             info.fill(componentConfig);
             info.setComponentClassName(className);
             info.setRole(role);
-            if ( alias != null ) {
+            if (alias != null) {
                 info.setAlias(alias);
             }
             info.setConfiguration(componentConfig);
+
             final boolean isSelector = className.endsWith("Selector");
-            if ( !isSelector && this.configInfo.getComponents().get(role) != null ) {
+            if (!isSelector && this.configInfo.getComponents().get(role) != null) {
                 // we now have a duplicate definition which we explictly allow to make
                 // overriding of pre defined components possible
-                if ( this.logger.isDebugEnabled() ) {
+                if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Duplicate component definition for role " + role +
-                                      " at " + componentConfig.getLocation()+ ". Component " +
-                                      "has already been defined at " + ((ComponentInfo)this.configInfo.getComponents().get(role)).getConfiguration().getLocation());
+                                      " at " + componentConfig.getLocation() + ". Component " +
+                                      "has already been defined at " + ((ComponentInfo) this.configInfo.getComponents().get(role)).getConfiguration().getLocation());
                 }
             }
+
             this.configInfo.addComponent(info);
+
             // now if this is a selector, then we have to register the single components
-            if ( info.getConfiguration() != null && className.endsWith("Selector") ) {
+            if (info.getConfiguration() != null && className.endsWith("Selector")) {
                 String classAttribute = null;
-                if ( className.equals("org.apache.cocoon.core.container.DefaultServiceSelector") ) {
+                if (className.equals("org.apache.cocoon.core.container.DefaultServiceSelector")) {
                     classAttribute = "class";
-                } else if (className.equals("org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector") ) {
+                } else if (className.equals("org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector")) {
                     classAttribute = "src";
                 }
-                if ( classAttribute == null ) {
+
+                if (classAttribute == null) {
                     this.logger.warn("Found unknown selector type (continuing anyway: " + className);
                 } else {
                     String componentRole = role;
-                    if ( componentRole.endsWith("Selector") ) {
+                    if (componentRole.endsWith("Selector")) {
                         componentRole = componentRole.substring(0, componentRole.length() - 8);
                     }
                     componentRole += '/';
                     Configuration[] children = info.getConfiguration().getChildren();
-                    final Map hintConfigs = (Map)this.configInfo.getKeyClassNames().get(role);
-                    for (int j=0; j<children.length; j++) {
+                    final Map hintConfigs = (Map) this.configInfo.getKeyClassNames().get(role);
+                    for (int j = 0; j < children.length; j++) {
                         final Configuration current = children[j];
                         final ComponentInfo childInfo = new ComponentInfo();
                         childInfo.fill(current);
                         childInfo.setConfiguration(current);
-                        final ComponentInfo hintInfo = (hintConfigs == null ? null : (ComponentInfo)hintConfigs.get(current.getName()));
-                        if ( current.getAttribute(classAttribute, null ) != null
-                             || hintInfo == null ) {
+                        final ComponentInfo hintInfo = hintConfigs == null ? null
+                                                                           : (ComponentInfo) hintConfigs.get(current.getName());
+                        if (current.getAttribute(classAttribute, null) != null || hintInfo == null) {
                             childInfo.setComponentClassName(current.getAttribute(classAttribute));
                         } else {
                             childInfo.setComponentClassName(hintInfo.getComponentClassName());
@@ -439,6 +455,7 @@ public class ConfigurationReader {
 
     /**
      * Handle includes of avalon configurations.
+     *
      * @param contextURI
      * @param loadedURIs
      * @param includeStatement
@@ -450,16 +467,16 @@ public class ConfigurationReader {
     throws ConfigurationException {
         final String includeURI = includeStatement.getAttribute("src", null);
         String directoryURI = null;
-        if ( includeURI == null ) {
+        if (includeURI == null) {
             // check for directories
             directoryURI = includeStatement.getAttribute("dir", null);
         }
-        if ( includeURI == null && directoryURI == null ) {
+        if (includeURI == null && directoryURI == null) {
             throw new ConfigurationException("Include statement must either have a 'src' or 'dir' attribute, at " +
-                    includeStatement.getLocation());
+                                             includeStatement.getLocation());
         }
 
-        if ( includeURI != null ) {
+        if (includeURI != null) {
             try {
                 Resource src = this.resolver.getResource(getUrl(includeURI, contextURI));
                 loadURI(src, loadedURIs, includeStatement);
@@ -471,23 +488,23 @@ public class ConfigurationReader {
         } else {
             boolean load = true;
             // test if directory exists (only if not classpath protocol is used)
-            if ( !ResourceUtils.isClasspathUri(directoryURI) ) {
+            if (!ResourceUtils.isClasspathUri(directoryURI)) {
                 Resource dirResource = this.resolver.getResource(this.getUrl(directoryURI, contextURI));
-                if ( !dirResource.exists() ) {
-                    if ( !includeStatement.getAttributeAsBoolean("optional", false) ) {
+                if (!dirResource.exists()) {
+                    if (!includeStatement.getAttributeAsBoolean("optional", false)) {
                         throw new ConfigurationException("Directory '" + directoryURI + "' does not exist (" + includeStatement.getLocation() + ").");
                     }
                     load = false;
                 }
             }
-            if ( load ) {
+            if (load) {
                 final String pattern = includeStatement.getAttribute("pattern", null);
                 try {
                     Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
-                    if ( resources != null ) {
+                    if (resources != null) {
                         Arrays.sort(resources, ResourceUtils.getResourceComparator());
-                        for(int i=0; i < resources.length; i++) {
-                           this.loadURI(resources[i], loadedURIs, includeStatement);
+                        for (int i = 0; i < resources.length; i++) {
+                            loadURI(resources[i], loadedURIs, includeStatement);
                         }
                     }
                 } catch (Exception e) {
@@ -504,7 +521,7 @@ public class ConfigurationReader {
         // If already loaded: do nothing
         final String uri = ResourceUtils.getUri(src);
         if (!loadedURIs.contains(uri)) {
-            if ( this.logger.isDebugEnabled() ) {
+            if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Loading configuration: " + uri);
             }
             // load it and store it in the read set
