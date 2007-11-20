@@ -168,13 +168,6 @@ public class ConfigurationReader {
         return url;
     }
 
-    protected InputSource getInputSource(Resource rsrc)
-    throws Exception {
-        final InputSource is = new InputSource(rsrc.getInputStream());
-        is.setSystemId(getUrl(rsrc));
-        return is;
-    }
-
     protected String getUrl(Resource rsrc)
     throws IOException {
         if (rsrc instanceof SourceResource) {
@@ -186,7 +179,7 @@ public class ConfigurationReader {
 
     protected String getUrl(String url, String base) {
         if (url == null || base == null) {
-            return this.convertUrl(url);
+            return convertUrl(url);
         }
 
         if (url.indexOf(":/") < 2) {
@@ -195,10 +188,24 @@ public class ConfigurationReader {
             if (posFileSeparator > posSeparator) {
                 posSeparator = posFileSeparator;
             }
-            return this.convertUrl(base.substring(0, posSeparator + 1) + url);
+            return convertUrl(base.substring(0, posSeparator + 1) + url);
         }
 
-        return this.convertUrl(url);
+        return convertUrl(url);
+    }
+
+    /**
+     * Construct input source from given Resource, initialize system Id.
+     *
+     * @param rsrc Resource for the input source
+     * @return Input source
+     * @throws Exception if resource URL is not valid or input stream is not available
+     */
+    protected InputSource getInputSource(Resource rsrc)
+    throws IOException {
+        final InputSource is = new InputSource(rsrc.getInputStream());
+        is.setSystemId(getUrl(rsrc));
+        return is;
     }
 
     protected void convert(String relativePath)
@@ -213,7 +220,7 @@ public class ConfigurationReader {
         // validate cocoon.xconf
         if (!"cocoon".equals(config.getName())) {
             throw new ConfigurationException("Invalid configuration file\n" +
-                                             config.toString());
+                                             config);
         }
 
         if (this.logger.isDebugEnabled()) {
@@ -239,7 +246,7 @@ public class ConfigurationReader {
         final DefaultConfigurationBuilder b = new DefaultConfigurationBuilder(true);
 
         final Configuration config = b.build(getInputSource(root));
-        // validate cocoon.xconf
+        // validate sitemap.xmap
         if (!"sitemap".equals(config.getName())) {
             throw new ConfigurationException("Invalid sitemap\n" +
                                              config);
@@ -551,6 +558,7 @@ public class ConfigurationReader {
 
     /**
      * Handle include for spring bean configurations.
+     *
      * @param contextURI
      * @param includeStatement
      * @throws ConfigurationException
@@ -615,10 +623,10 @@ public class ConfigurationReader {
     protected final void configureRoles( final Configuration configuration )
     throws ConfigurationException {
         final Configuration[] roles = configuration.getChildren();
-        for( int i = 0; i < roles.length; i++ ) {
+        for (int i = 0; i < roles.length; i++) {
             final Configuration role = roles[i];
 
-            if ( "alias".equals(role.getName()) ) {
+            if ("alias".equals(role.getName())) {
                 final String roleName = role.getAttribute("role");
                 final String shorthand = role.getAttribute("shorthand");
                 this.configInfo.getShorthands().put(shorthand, roleName);
@@ -634,14 +642,14 @@ public class ConfigurationReader {
 
             if (shorthand != null) {
                 // Store the shorthand and check that its consistent with any previous one
-                Object previous = this.configInfo.getShorthands().put( shorthand, roleName );
+                Object previous = this.configInfo.getShorthands().put(shorthand, roleName);
                 if (previous != null && !previous.equals(roleName)) {
                     throw new ConfigurationException("Shorthand '" + shorthand + "' already used for role " +
-                            previous + ": inconsistent declaration at " + role.getLocation());
+                                                     previous + ": inconsistent declaration at " + role.getLocation());
                 }
             }
 
-            if ( defaultClassName != null ) {
+            if (defaultClassName != null) {
                 ComponentInfo info = this.configInfo.getRole(roleName);
                 if (info == null) {
                     // Create a new info and store it
@@ -656,39 +664,39 @@ public class ConfigurationReader {
                     // Check that it's consistent with the existing info
                     if (!defaultClassName.equals(info.getComponentClassName())) {
                         throw new ConfigurationException("Invalid redeclaration: default class already set to " + info.getComponentClassName() +
-                                " for role " + roleName + " at " + role.getLocation());
+                                                         " for role " + roleName + " at " + role.getLocation());
                     }
                     //FIXME: should check also other ServiceInfo members
                 }
             }
 
-            final Configuration[] keys = role.getChildren( "hint" );
-            if( keys.length > 0 ) {
-                Map keyMap = (Map)this.configInfo.getKeyClassNames().get(roleName);
+            final Configuration[] keys = role.getChildren("hint");
+            if (keys.length > 0) {
+                Map keyMap = (Map) this.configInfo.getKeyClassNames().get(roleName);
                 if (keyMap == null) {
                     keyMap = new HashMap();
                     this.configInfo.getKeyClassNames().put(roleName, keyMap);
                 }
 
-                for( int j = 0; j < keys.length; j++ ) {
+                for (int j = 0; j < keys.length; j++) {
                     Configuration key = keys[j];
 
-                    final String shortHand = key.getAttribute( "shorthand" ).trim();
-                    final String className = key.getAttribute( "class" ).trim();
+                    final String shortHand = key.getAttribute("shorthand").trim();
+                    final String className = key.getAttribute("class").trim();
 
-                    ComponentInfo info = (ComponentInfo)keyMap.get(shortHand);
+                    ComponentInfo info = (ComponentInfo) keyMap.get(shortHand);
                     if (info == null) {
                         info = new ComponentInfo();
                         info.setComponentClassName(className);
                         info.fill(key);
                         info.setConfiguration(key);
                         info.setAlias(shortHand);
-                        keyMap.put( shortHand, info );
+                        keyMap.put(shortHand, info);
                     } else {
                         // Check that it's consistent with the existing info
                         if (!className.equals(info.getComponentClassName())) {
                             throw new ConfigurationException("Invalid redeclaration: class already set to " + info.getComponentClassName() +
-                                    " for hint " + shortHand + " at " + key.getLocation());
+                                                             " for hint " + shortHand + " at " + key.getLocation());
                         }
                         //FIXME: should check also other ServiceInfo members
                     }
