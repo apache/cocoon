@@ -22,6 +22,9 @@ import java.io.InputStream;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
+/**
+ * @version $Id$
+ */
 public class SourceIOInputStream extends InputStream {
 
     protected final InputStream delegate;
@@ -32,11 +35,11 @@ public class SourceIOInputStream extends InputStream {
 
     protected final SourceResolver resolver;
 
+
     public SourceIOInputStream(SourceResolver resolver, Source source) throws IOException {
         this.source = source;
         this.delegate = source.getInputStream();
         this.resolver = resolver;
-        this.closed = false;
     }
 
     /**

@@ -24,14 +24,20 @@ import org.apache.excalibur.source.SourceResolver;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
+import org.apache.cocoon.spring.configurator.ResourceUtils;
+
+/**
+ * @version $Id$
+ */
 public class SourceResourceLoader implements ResourceLoader {
 
-    protected final ResourceLoader wrappedLoader;
+    protected final ResourceLoader delegate;
 
     protected final SourceResolver resolver;
 
-    public SourceResourceLoader(ResourceLoader wrappedLoader, SourceResolver resolver) {
-        this.wrappedLoader = wrappedLoader;
+
+    public SourceResourceLoader(ResourceLoader delegate, SourceResolver resolver) {
+        this.delegate = delegate;
         this.resolver = resolver;
     }
 
@@ -39,20 +45,31 @@ public class SourceResourceLoader implements ResourceLoader {
      * @see org.springframework.core.io.ResourceLoader#getClassLoader()
      */
     public ClassLoader getClassLoader() {
-        return this.wrappedLoader.getClassLoader();
+        return this.delegate.getClassLoader();
     }
 
     /**
      * @see org.springframework.core.io.ResourceLoader#getResource(java.lang.String)
      */
     public Resource getResource(String location) {
-        if ( location != null && (location.indexOf(':') > 0 || !location.startsWith("/"))) {
-            try {
-                return new SourceResource(this.resolver.resolveURI(location), this.resolver);
-            } catch (IOException e) {
-                // we ignore it and leave it up to the wrapped loader
+        if (location != null) {
+            // If this is Spring 'classpath:' resource, call delegate before
+            // source resolver - it can not handle 'classpath:'.
+            if (ResourceUtils.isClasspathUri(location)) {
+                return this.delegate.getResource(location);
+            }
+
+            // If this is absolute URL with protocol, try source resolver
+            if (location.indexOf(':') > 0 || !location.startsWith("/")) {
+                try {
+                    return new SourceResource(this.resolver.resolveURI(location), this.resolver);
+                } catch (IOException e) {
+                    // we ignore it and leave it up to the wrapped loader
+                }
             }
         }
-        return this.wrappedLoader.getResource(location);
+
+        // Fallback to delegate
+        return this.delegate.getResource(location);
     }
 }
