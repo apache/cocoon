@@ -28,11 +28,15 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceUtil;
 import org.springframework.core.io.Resource;
 
+/**
+ * @version $Id$
+ */
 public class SourceResource implements Resource {
 
     protected Source source;
     protected SourceResolver resolver;
-    protected boolean open = false;
+    protected boolean open;
+
 
     public SourceResource(Source s, SourceResolver r) {
         this.source = s;
@@ -101,5 +105,4 @@ public class SourceResource implements Resource {
     public boolean isOpen() {
         return this.open;
     }
-
 }
