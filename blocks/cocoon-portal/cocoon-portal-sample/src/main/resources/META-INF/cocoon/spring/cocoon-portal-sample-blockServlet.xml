@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -19,14 +19,14 @@
 <!--
   - $Id$
   -->
-<xsamples>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
-  <group name="Application Frameworks">
-    <sample name="Portal Block" href="/samples/portal">
-      This is a demo of the powerful portal engine based on Apache Cocoon. Make sure that
-      you have installed the portlet api 1.0 (e.g. in commons/lib for Tomcat or WEB-INF/lib
-      for Jetty).
-    </sample>
-  </group>
-  
-</xsamples>
+  <bean name="org.apache.cocoon.portal.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
+    <servlet:context mount-path="/samples/portal" context-path="blockcontext:/cocoon-portal-sample/">
+    </servlet:context>
+  </bean>
+</beans>
