@@ -168,6 +168,25 @@ public class ConfigurationReader {
         return url;
     }
 
+    /**
+     * Copied from {@link ResourceUtils#correctUri(String)}. Comment says:
+     * <br><blockquote>
+     * If it is a file we have to recreate the url, otherwise we get problems
+     * under windows with some file references starting with "/DRIVELETTER" and
+     * some just with "DRIVELETTER".
+     * </blockquote>
+     * @param url to correct
+     * @return corrected (or same) url
+     */
+    protected String correctUrl(String url) {
+        if (url.startsWith("file:")) {
+            final File f = new File(url.substring(5));
+            return "file://" + f.getAbsolutePath();
+        }
+
+        return url;
+    }
+
     protected String getUrl(Resource rsrc)
     throws IOException {
         if (rsrc instanceof SourceResource) {
@@ -526,7 +545,7 @@ public class ConfigurationReader {
                            final Configuration includeStatement)
     throws ConfigurationException, IOException {
         // If already loaded: do nothing
-        final String uri = ResourceUtils.getUri(src);
+        final String uri = correctUrl(getUrl(src));
         if (!loadedURIs.contains(uri)) {
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Loading configuration: " + uri);
@@ -597,7 +616,7 @@ public class ConfigurationReader {
                     if ( resources != null ) {
                         Arrays.sort(resources, ResourceUtils.getResourceComparator());
                         for(int i=0; i < resources.length; i++) {
-                           this.configInfo.addImport(this.getUrl(resources[i]));
+                           this.configInfo.addImport(getUrl(resources[i]));
                         }
                     }
                 } catch (IOException ioe) {
