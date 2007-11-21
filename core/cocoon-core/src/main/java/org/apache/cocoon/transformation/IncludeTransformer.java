@@ -33,6 +33,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
@@ -230,6 +232,9 @@ public class IncludeTransformer extends AbstractTransformer
     /** The {@link SourceResolver} used to resolve included URIs. */
     protected SourceResolver resolver;
 
+    /** The {@link RequestAttributes} used within parallel threads */
+    protected RequestAttributes attributes;
+
     /** The {@link Environment} used within parallel threads */
     protected Environment environment;
 
@@ -298,6 +303,7 @@ public class IncludeTransformer extends AbstractTransformer
 
         /* Init transformer state */
         if (this.pipe.parallel) {
+            this.attributes = RequestContextHolder.getRequestAttributes();
             this.environment = EnvironmentHelper.getCurrentEnvironment();
             this.processor = EnvironmentHelper.getCurrentProcessor();
         }
@@ -342,6 +348,8 @@ public class IncludeTransformer extends AbstractTransformer
 
         this.processor = null;
         this.environment = null;
+        this.attributes = null;
+
         super.recycle();
     }
 
@@ -513,7 +521,7 @@ public class IncludeTransformer extends AbstractTransformer
                 }
                 // Stream fallback through IncludeXMLPipe
                 this.fallback.toSAX(new IncludeXMLPipe(buffer, buffer,
-                                                       recursive, recursiveParallel? parallel: false, recursiveParallel));
+                                                       recursive, recursiveParallel && parallel, recursiveParallel));
             }
         }
 
@@ -551,6 +559,7 @@ public class IncludeTransformer extends AbstractTransformer
                     source = resolver.resolveURI(this.source);
                 }
                 if (validity != null) {
+                    //noinspection SynchronizeOnNonFinalField
                     synchronized (validity) {
                         validity.addSource(source);
                     }
@@ -560,7 +569,7 @@ public class IncludeTransformer extends AbstractTransformer
                 if (this.parse && recursive) {
                     SourceUtil.toSAX(manager, source, this.mimeType,
                                      new IncludeXMLPipe(contentHandler, lexicalHandler,
-                                                        recursive, recursiveParallel? parallel: false, recursiveParallel));
+                                                        recursive, recursiveParallel && parallel, recursiveParallel));
                 } else if (this.parse) {
                     SourceUtil.toSAX(manager, source, this.mimeType,
                                      new IncludeXMLConsumer(contentHandler, lexicalHandler));
@@ -978,6 +987,7 @@ public class IncludeTransformer extends AbstractTransformer
          * Increment active threads counter
          */
         int incrementThreads() {
+            //noinspection SynchronizeOnNonFinalField
             synchronized (buffer) {
                 return ++threads;
             }
@@ -987,6 +997,7 @@ public class IncludeTransformer extends AbstractTransformer
          * Decrement active threads counter
          */
         void decrementThreads() {
+            //noinspection SynchronizeOnNonFinalField
             synchronized (buffer) {
                 if (--threads <= 0) {
                     buffer.notify();
@@ -998,6 +1009,7 @@ public class IncludeTransformer extends AbstractTransformer
          * Wait till there is no active threads
          */
         private void waitForThreads() {
+            //noinspection SynchronizeOnNonFinalField
             synchronized (buffer) {
                 if (threads > 0) {
                     if (getLogger().isDebugEnabled()) {
@@ -1055,6 +1067,7 @@ public class IncludeTransformer extends AbstractTransformer
                     }
 
                     // Setup this thread's environment
+                    RequestContextHolder.setRequestAttributes(attributes);
                     EnvironmentHelper.enterProcessor(processor, environment);
                     try {
                         element.process(this);
@@ -1064,6 +1077,7 @@ public class IncludeTransformer extends AbstractTransformer
 
                     } finally {
                         EnvironmentHelper.leaveProcessor();
+                        RequestContextHolder.resetRequestAttributes();
                     }
                 } catch (ProcessingException e) {
                     /* Unable to set thread's environment */
