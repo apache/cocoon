@@ -22,13 +22,10 @@
   - $Id$
   -->
 <page xmlns:x="http://www.w3.org/2001/XInclude">
-    <slashdot>
-        <x:include href="cocoon:/slashdot"/>
-    </slashdot>
-    <moreover>
-        <x:include href="cocoon:/moreover"/>
-    </moreover>
-    <xmlhack>
-        <x:include href="cocoon:/xmlhack"/>
-    </xmlhack>
+  <group name="Include Transformer Aggregation">
+    <note>This page was assembled using XInclude transformer.</note>
+  </group>
+  <x:include href="cocoon:/slashdot.xml"/>
+  <x:include href="cocoon:/moreover.xml"/>
+  <x:include href="cocoon:/xmlhack.xml"/>
 </page>

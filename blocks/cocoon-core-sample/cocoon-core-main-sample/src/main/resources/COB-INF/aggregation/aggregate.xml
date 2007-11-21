@@ -16,16 +16,16 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - Example showing aggrgation of 3 sources using Include transformer.
+  -
+  - $Id$
+  -->
 <page xmlns:i="http://apache.org/cocoon/include/1.0">
-  <slashdot>
-    <i:include src="cocoon:/slashdot"/>
-  </slashdot>
-  <moreover>
-    <i:include src="cocoon:/moreover"/>
-  </moreover>
-  <xmlhack>
-    <i:include src="cocoon:/xmlhack"/>
-  </xmlhack>
+  <group name="Include Transformer Aggregation">
+    <note>This page was assembled using include transformer.</note>
+  </group>
+  <i:include src="cocoon:/slashdot.xml"/>
+  <i:include src="cocoon:/moreover.xml"/>
+  <i:include src="cocoon:/xmlhack.xml"/>
 </page>

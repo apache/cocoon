@@ -57,13 +57,9 @@
       content from each aggregated source. This is useful when
       aggregating several sources with large latency.
     </sample>
-    <sample name="CInclude Content Aggregation" href="aggregate4">
-      Same as 'Flexible Content Aggregation' sample above, using
-      CInclude transformer.
-    </sample>
     <sample name="XInclude Content Aggregation" href="aggregate5">
       Same as 'Flexible Content Aggregation' sample above, using
-      XInclude transformer.
+      XInclude transformer which supports standard XInclude syntax.
     </sample>
   </group>
   
