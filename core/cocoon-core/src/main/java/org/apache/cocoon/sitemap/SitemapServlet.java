@@ -165,14 +165,5 @@ public class SitemapServlet extends HttpServlet {
             treeProcessorConf.setAttribute("file", sitemapURI);
             return treeProcessorConf;
         }
-
-        /* (non-Javadoc)
-         * @see org.apache.cocoon.servlet.RequestProcessor#cleanup()
-         */
-        // The cleanup should be done in the end of the request processing. In the
-        // block servlet context this is not certain to happen in this servlet as
-        // it can have been called from a block protocol.
-        protected void cleanup() {
-        }
     }
 }
