@@ -21,6 +21,8 @@ package org.apache.cocoon.core.container.spring.avalon;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.excalibur.source.Source;
@@ -105,4 +107,14 @@ public class SourceResource implements Resource {
     public boolean isOpen() {
         return this.open;
     }
+    public URI getURI() throws IOException {
+        try {
+            return new URI(this.source.getURI());
+        } catch (URISyntaxException e) {
+            IOException ioe = new IOException("Exception because of the URI syntax.");
+            ioe.initCause(e);
+            throw ioe;
+        }
+    }
+
 }

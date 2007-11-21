@@ -35,25 +35,29 @@
   <description>
     Implementation of the DOMParser and SAXParser.
   </description>
-  <url>http://cocoon.apache.org/${docs.m.xml-impl.relPath}</url>    
-  
+  <url>http://cocoon.apache.org/${docs.m.xml-impl.relPath}</url>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.xml-impl.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.xml-impl.relPath}</url>
     </site>
-  </distributionManagement>    
-  
+  </distributionManagement>
+
   <dependencies>
     <!-- Cocoon -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -72,7 +76,15 @@
           <artifactId>log4j</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>   
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
