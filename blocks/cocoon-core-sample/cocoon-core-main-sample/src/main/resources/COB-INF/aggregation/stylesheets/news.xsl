@@ -16,25 +16,22 @@
   limitations under the License.
 -->
 
+<!--
+  - $Id$
+  -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-	<!-- Match The Root Node -->
 	<xsl:template match="page">
-		<html>
-            <body>
-                <xsl:apply-templates/>
-            </body>
-		</html>
+    <samples name="Aggregated News Page">
+      <xsl:apply-templates/>
+		</samples>
 	</xsl:template>
 
-	<xsl:template match="slashdot | moreover | xmlhack">
-	    <xsl:variable name="ABC" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
-	    <xsl:variable name="abc" select="'abcdefghijklmnopqrstuvwxyz'"/>
-        <xsl:apply-templates select="*[translate(local-name(), $ABC, $abc) = 'html']/
-                                     *[translate(local-name(), $ABC, $abc) = 'body']/*"/>
-    </xsl:template>
+  <xsl:template match="samples">
+    <xsl:apply-templates/>
+  </xsl:template>
 
-	<xsl:template match="@*|*|text()" priority="-1">
+  <xsl:template match="@*|*|text()" priority="-1">
 		<xsl:copy>
 			<xsl:apply-templates select="@*|*|text()"/>
 		</xsl:copy>
