@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -18,6 +18,8 @@
  */
 package org.apache.cocoon.environment.mock;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,7 +38,7 @@ import org.springframework.web.context.request.RequestAttributes;
  * @version $Id$
  * @since 2.2
  */
-public class MockRequestAttributes 
+public class MockRequestAttributes
     implements RequestAttributes {
 
     final protected Request request;
@@ -126,4 +128,10 @@ public class MockRequestAttributes
             task.run();
         }
     }
+
+    public String[] getAttributeNames(int scope) {
+        ArrayList attributeNames = Collections.list(this.request.getAttributeNames(scope));
+        return (String[]) attributeNames.toArray(new String[attributeNames.size()]);
+    }
+
 }
