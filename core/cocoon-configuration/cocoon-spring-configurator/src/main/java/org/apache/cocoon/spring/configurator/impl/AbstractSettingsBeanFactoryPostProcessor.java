@@ -290,9 +290,8 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
             BeanDefinition bd = beanFactoryToProcess.getBeanDefinition(beanNames[i]);
             try {
                 visitor.visitBeanDefinition(bd);
-            } catch (BeanDefinitionStoreException ex) {
-                throw new BeanDefinitionStoreException(bd.getResourceDescription(),
-                        beanNames[i], ex.getMessage());
+            } catch (BeanDefinitionStoreException e) {
+                throw new BeanDefinitionStoreException(bd.getResourceDescription(), beanNames[i], e);
             }
         }
     }
