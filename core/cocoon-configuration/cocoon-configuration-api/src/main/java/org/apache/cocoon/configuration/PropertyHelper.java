@@ -159,8 +159,10 @@ public class PropertyHelper {
            String value = props.getProperty(key);
            // replace
            value = replace(value, props, settings);
-           // and put back
-           props.put(key, value);
+           // and put back but prevent NPE because of null value ?!?!?
+           // TODO: How to handle value==null situations?
+           if (value != null)
+               props.put(key, value);
        }
     }
 }
