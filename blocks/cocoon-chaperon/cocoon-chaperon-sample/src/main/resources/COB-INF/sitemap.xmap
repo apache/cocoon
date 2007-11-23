@@ -69,30 +69,26 @@
   <!-- =========================== Views =================================== -->
 
   <map:views>
-    <map:view from-label="content" name="content">
+    <map:view name="content" from-label="content">
       <map:serialize type="xml"/>
     </map:view>
 
     <map:view name="pretty-content" from-label="content">
       <map:serialize type="servletService">
-        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
       </map:serialize>
     </map:view>
 
-    <map:view from-position="last" name="links">
+    <map:view name="links" from-position="last">
       <map:serialize type="links"/>
     </map:view>
 
-    <map:view from-label="ast" name="ast">
+    <map:view name="ast" from-label="ast">
       <map:serialize type="xml"/>
     </map:view>
 
-    <map:view from-label="xdoc" name="xdoc">
+    <map:view name="xdoc" from-label="xdoc">
       <map:serialize type="xml"/>
-    </map:view>
-
-    <map:view from-position="last" name="links">
-      <map:serialize type="links"/>
     </map:view>
   </map:views>
 
@@ -150,7 +146,7 @@
         <map:transform src="stylesheets/error2page.xsl"/>
         <map:transform src="stylesheets/wiki2xdoc.xsl" label="xdoc"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/complex-page2html"/>
         </map:serialize>
       </map:match>
 
@@ -171,7 +167,7 @@
       <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
         </map:serialize>
       </map:match>
 
@@ -205,7 +201,7 @@
         <map:transform type="parser" src="grammars/mathexp.xgrm"/>
         <map:transform src="stylesheets/mathexp2html.xsl"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
         </map:serialize>
       </map:match>
 
@@ -215,7 +211,7 @@
         <map:transform type="parser" src="cocoon:/quote.xgrm" label="ast"/>
         <map:transform src="stylesheets/quote2page.xsl"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/complex-page2html"/>
         </map:serialize>
       </map:match>
 
@@ -224,7 +220,7 @@
         <map:transform type="pattern" src="grammars/link.xlex"/>
         <map:transform src="stylesheets/pattern2link.xsl"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/complex-page2html"/>
         </map:serialize>
       </map:match>
 
@@ -239,7 +235,7 @@
           <map:parameter name="class" value="{2}"/>
         </map:transform>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/complex-page2html"/>
         </map:serialize>
       </map:match>
 
@@ -257,7 +253,7 @@
           <map:parameter name="class" value="{2}"/>
         </map:transform>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/complex-page2html"/>
         </map:serialize>
       </map:match>
 
