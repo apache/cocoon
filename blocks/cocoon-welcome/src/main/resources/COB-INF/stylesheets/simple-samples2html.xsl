@@ -68,7 +68,7 @@
                 <xsl:apply-templates select="$stdLinks"/>
               </xsl:if>
               <xsl:if test="not(samples/@add-view-links='false')">
-                <li class="sep">Orthogonal views:</li>
+                <li class="sep">Views:</li>
                 <li><a href="?cocoon-view=content">Content</a></li>
                 <li><a href="?cocoon-view=pretty-content">Pretty content</a></li>
                 <li><a href="?cocoon-view=links">Links</a></li>
