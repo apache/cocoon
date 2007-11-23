@@ -25,22 +25,25 @@
     private static int count = 0;
   </xsp:logic>
 
-  <document i18n:attr="language" language="language">
+  <page i18n:attr="language" language="language">
     <xsp-request:get-session/>
     <xsp:logic>
       synchronized (this) {
           count++;
       }
     </xsp:logic>
+
     <title>
       <i18n:text>titletext</i18n:text>
     </title>
+
     <form method="GET">
       <input type="text" name="username">
         <xsp:attribute name="value"><xsp-request:get-parameter name="username" default="[yourname]" as="string" form-encoding="UTF-8"/></xsp:attribute>
       </input>
       <input type="submit" name="submit" value="Submit"/>
     </form>
+
     <annotation>
       <i18n:translate>
         <i18n:text key="doclink"/>
@@ -49,6 +52,7 @@
         </i18n:param>
       </i18n:translate>
     </annotation>
+
     <sub-title>
       <i18n:translate>
         <i18n:text key="count_title"/>
@@ -75,7 +79,7 @@
           <i18n:text key="Hello"/>
           <i18n:param>
             <strong>
-              <xsp-request:get-parameter name="username" default="none" as="string" form-encoding="UTF-8"/>
+              <xsp-request:get-parameter name="username" default="Anonymous" as="string" form-encoding="UTF-8"/>
             </strong>
           </i18n:param>
         </i18n:translate>
@@ -113,16 +117,16 @@
         </i18n:translate>
       </para>
 
-      <!--
-        - Possibly bug in XSP: requires escaping of '\'
-        -->
-      <para title="Evaluated {first}, {second}, escaped \\{third\\}." name="i18n:expr" i18n:expr="title">
+      <para title="Evaluated {first}, {second}, escaped \{third\}." name="i18n:expr" i18n:expr="title">
         This paragraph is an example of attribute expression evaluation.
       </para>
+
+      <i18n:if locale="ru">
+        <para title="ru" name="i18n:if">
+          Этот текст отображается только для <strong>русского</strong> языка.
+        </para>
+      </i18n:if>
     </content>
 
-    <bottom>
-      <copyright>Copyright 1999-2005 The Apache Software Foundation</copyright>
-    </bottom>
-  </document>
+  </page>
 </xsp:page>

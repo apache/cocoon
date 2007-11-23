@@ -16,12 +16,11 @@
   limitations under the License.
 -->
 
-<!--+
-    | Russian override message catalogue file for Cocoon 2 i18n sample
-    |
-    | CVS $Id$
-    +-->
-
+<!--
+  - Russian override message catalogue file for Cocoon 2 i18n sample
+  -
+  - $Id$
+  -->
 <catalogue xml:lang="ru">
     <message key="a_key">Это локально перекрытое значение по ключу.</message>
 </catalogue>

@@ -16,9 +16,10 @@
   limitations under the License.
 -->
 
-<document xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
-          i18n:attr="language"
-          language="language">
+<page xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+      i18n:attr="language"
+      language="language">
+
   <title>
     <i18n:text>titletext</i18n:text>
   </title>
@@ -40,9 +41,11 @@
     <para title="first" name="article" i18n:attr="title name">
       <i18n:text key="a_key">article_text1</i18n:text>
     </para>
+
     <para title="second" name="article" i18n:attr="title name">
       <i18n:text>article_text2</i18n:text>
     </para>
+
     <para title="third" name="article" i18n:attr="title name">
       <i18n:translate>
         <i18n:text key="Hello"/>
@@ -51,6 +54,7 @@
         </i18n:param>
       </i18n:translate>
     </para>
+    
     <para title="forth" name="article" i18n:attr="title name">
       <i18n:translate>
         One = {one}, two = {two}, {third}!
@@ -62,6 +66,7 @@
         <i18n:param name="forth"> ~ </i18n:param>
       </i18n:translate>
     </para>
+
     <para title="Number formatting (not translated)" name="Article">
       <i18n:translate>
         Number: {0} | Currency: {1} | Percent: {2} | Processed on: {3}
@@ -85,7 +90,4 @@
     </i18n:if>
   </content>
 
-  <bottom>
-    <copyright>Copyright 1999-2005 The Apache Software Foundation</copyright>
-  </bottom>
-</document>
+</page>
