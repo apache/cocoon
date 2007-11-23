@@ -19,7 +19,7 @@
 -->
 
 <!--
-  - @version $Id: servlet-service.xml 523714 2007-03-29 13:54:20Z gkossakowski $
+  - @version $Id$
   -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
