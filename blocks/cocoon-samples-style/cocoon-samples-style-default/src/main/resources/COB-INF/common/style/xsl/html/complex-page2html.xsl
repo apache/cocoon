@@ -51,7 +51,7 @@
               <xsl:apply-templates select="document/header/tab"/>
             </td>
             <td nowrap="nowrap" align="right">
-              Orthogonal views:
+              Views:
               <a href="?cocoon-view=content">Content</a>
               &#160;
               <a href="?cocoon-view=pretty-content">Pretty content</a>
