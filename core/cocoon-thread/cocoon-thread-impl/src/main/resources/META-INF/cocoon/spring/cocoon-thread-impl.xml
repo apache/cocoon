@@ -126,7 +126,7 @@
         | specifies the fully qualified class name of an org.apache.cocoon.thread.ThreadFactory
         | implementation. It is responsible to create Thread classes.
         +-->
-    <property name="factory" ref="defaultThreadFactory"/>
+    <property name="factory" ref="org.apache.cocoon.thread.ThreadFactory"/>
   </bean>
 
   <!--+
@@ -146,8 +146,8 @@
     <property name="blockPolicy" value="ABORT"/>
     <property name="shutdownGraceful" value="false"/>
     <property name="shutdownWaitTimeMs" value="-1"/>
-    <property name="factory" ref="defaultThreadFactory"/>
+    <property name="factory" ref="org.apache.cocoon.thread.ThreadFactory"/>
   </bean>
   
-  <bean id="defaultThreadFactory" class="org.apache.cocoon.thread.impl.DefaultThreadFactory" scope="prototype" />
+  <bean id="org.apache.cocoon.thread.ThreadFactory" class="org.apache.cocoon.thread.impl.DefaultThreadFactory" scope="prototype" />
 </beans>
