@@ -17,18 +17,13 @@
 var resolver = cocoon.getComponent(Packages.org.apache.excalibur.source.SourceResolver.ROLE);
 
 function view() {
-
     var page = cocoon.request.getParameter("page");
-
-    if (page==null)
+    if (page == null)
         page = "index";
-
-    var source = null;
 
     var text = "";
 
     if (!exists(page)) {
-
         cocoon.sendPageAndWait("wiki/new.html", {page:page});
 
         text = cocoon.request.getParameter("text");
@@ -42,17 +37,15 @@ function view() {
 }
 
 function edit() {
-
     var page = cocoon.request.getParameter("page");
-
-    if (page==null)
+    if (page == null)
         page = "index";
 
     var text = read(page);
 
     cocoon.sendPageAndWait("wiki/edit.html", {page:page, text:text});
 
-    var text = cocoon.request.getParameter("text");
+    text = cocoon.request.getParameter("text");
 
     write(page, text);
 
@@ -60,12 +53,10 @@ function edit() {
 }
 
 function source() {
-                                                                                                                                                                               
     var page = cocoon.request.getParameter("page");
-                                                                                                                                                                               
-    if (page==null)
+    if (page == null)
         page = "index";
-                                                                                                                                                                               
+
     var text = read(page);
                                                                                                                                                                                
     cocoon.sendPage("wiki/source.xml", {page:page, text:text});
@@ -73,7 +64,6 @@ function source() {
 
 
 function read(page) {
-
     var text = "";
     var source = null;                                                                                                                                       
     try {
@@ -102,7 +92,6 @@ function read(page) {
 }
 
 function write(page, text) {
-
     var source = null;
     try {
         source = resolver.resolveURI("wiki/"+page+".txt");
@@ -120,7 +109,6 @@ function write(page, text) {
 }
 
 function exists(page)  {
-
     var exists = true;
     var source = null;
     try {
@@ -135,10 +123,9 @@ function exists(page)  {
 }
 
 function mathexp() {
-    var value;
-    if ( cocoon.request.getParameter("text") != null )
-        value = cocoon.request.getParameter("text");
-    else
+    var value = cocoon.request.getParameter("text");
+    if (value == null)
         value = "3*a-5*6/7 + ( b-c)*5- b";
+
     cocoon.sendPage("mathexp-view.html", {"value" : value});
 }

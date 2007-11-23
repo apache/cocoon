@@ -15,11 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <document>
- <header>
-  <title>Wiki example</title>
- </header>
- <body>
-  <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0" source="wiki/${page}.txt" line="1" column="1">${text}</text>
- </body>
+  <header>
+    <title>Wiki example</title>
+  </header>
+  <body>
+    <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0" source="wiki/${page}.txt" line="1" column="1">${text}</text>
+  </body>
 </document>
