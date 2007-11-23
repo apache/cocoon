@@ -61,8 +61,10 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="stylesheets/xml2html.xslt"/>
-      <map:serialize type="html"/>
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html" />
+      </map:serialize>
     </map:view>
 
     <map:view from-position="last" name="links">
@@ -134,27 +136,23 @@
             | sends the events produced by the parser down the pipeline to
             | be processed by the next stage.
             +-->
-        <map:generate src="welcome.xml"/>
-
-        <!--+
-            | This transformer gets the input SAX events and transforms them
-            | using the default transformer (the XSLT transformer) thus
-            | applying the XSLT stylesheet indicated in the "src" attribute
-            | and sending the output down the pipeline to be processed by the
-            | next stage.
-            +-->
-        <map:transform src="welcome.xslt">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
+        <map:generate src="welcome.xml" label="content, pretty-content"/>
 
         <!--+
             | The serializer concludes the SAX events journey into the pipeline
             | since it serializes the events it receives into a representation
-            | depending on the serializer type. Here we choose the "XHMTL"
-            | serializer, which will produce an XHTML representation of the
-            | SAX stream.
+            | depending on the serializer type.
             +-->
-        <map:serialize type="xhtml"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html" />
+        </map:serialize>
+      </map:match>
+
+      <!--+
+          | Show the this sitemap.xmap.
+          +-->
+      <map:match pattern="sitemap.xmap">
+        <map:read src="sitemap.xmap" mime-type="text/xml" />
       </map:match>
 
       <!--+
