@@ -23,7 +23,6 @@ import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.processing.ProcessInfoProvider;
-import org.apache.cocoon.xml.AttributeTypes;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.jxpath.JXPathContext;
@@ -117,11 +116,7 @@ public class FlowJXPathSelectionList implements SelectionList {
         }
 
         // Start the selection-list
-        //FIXME: I added attribute for namespace declaration because it would not be serialized otherwise
-        //why it's not printed even if we specify necessary information in startElement() method? (GK)
-        AttributesImpl attrs = new AttributesImpl();
-        attrs.addAttribute("", FormsConstants.INSTANCE_PREFIX, "xmlns:" + FormsConstants.INSTANCE_PREFIX, AttributeTypes.CDATA, FormsConstants.INSTANCE_NS);
-        contentHandler.startElement(FormsConstants.INSTANCE_NS, SELECTION_LIST_EL, FormsConstants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, attrs);
+        contentHandler.startElement(FormsConstants.INSTANCE_NS, SELECTION_LIST_EL, FormsConstants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, XMLUtils.EMPTY_ATTRIBUTES);
         if( this.nullable ) {
             final AttributesImpl voidAttrs = new AttributesImpl(  );
             voidAttrs.addCDATAAttribute( "value", "" );
