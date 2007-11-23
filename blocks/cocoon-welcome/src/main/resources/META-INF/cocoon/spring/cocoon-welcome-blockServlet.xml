@@ -28,6 +28,10 @@
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
   <bean name="org.apache.cocoon-welcome.block" class="org.apache.cocoon.sitemap.SitemapServlet">
-    <servlet:context mount-path="/" context-path="blockcontext:/cocoon-welcome/"/>
+    <servlet:context mount-path="/" context-path="blockcontext:/cocoon-welcome/">
+      <servlet:connections>
+        <entry key="style" value-ref="org.apache.cocoon.samples.style.default.servlet"/>
+      </servlet:connections>
+    </servlet:context>
   </bean>
 </beans>

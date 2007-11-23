@@ -22,12 +22,17 @@
     |
     | $Id$
     +-->
-<welcome>
-  <message>
-    Congratulations! If you are reading this page, it means that
-    your Apache Cocoon installation was successful.
-  </message>
-  <message>
-    To know more about Cocoon capabilities, look at the <link href="samples/">sample blocks</link>.    
-  </message>
-</welcome>
+<document>
+
+  <page>
+    <title>Welcome to Apache Cocoon!</title>
+    <p align="center">
+      Congratulations! If you are reading this page, it means that your Apache 
+      Cocoon installation was successful.
+    </p>
+    <p align="center">
+      To know more about Cocoon capabilities, look at the <a href="samples/">sample</a> blocks.
+    </p>
+  </page>
+
+</document>

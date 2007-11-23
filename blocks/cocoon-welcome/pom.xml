@@ -62,5 +62,9 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-components</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-samples-style-default</artifactId>
+    </dependency>
   </dependencies>
 </project>
