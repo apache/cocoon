@@ -19,10 +19,10 @@
 <!--
   - $Id$
   -->
-<xsamples xpath="/samples" unless="group[@name='QDox']">
+<xsamples>
 
   <group name="Input Data Formats" priority="50">
-    <sample name="QDox Block" href="/cocoon-qdox-samples/">
+    <sample name="QDox Block" href="/cocoon-qdox-sample/">
       Javadoc-like parsing of Java source code files using QDox.
     </sample>
   </group>

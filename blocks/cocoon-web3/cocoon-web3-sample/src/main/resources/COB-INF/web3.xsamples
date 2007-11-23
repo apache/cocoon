@@ -22,7 +22,7 @@
 <xsamples>
 
   <group name="Backend Components">
-    <sample name="Web3 Block" href="/cocoon-web3-samples/">
+    <sample name="Web3 Block" href="/cocoon-web3-sample/">
       Continue to Web3 block samples.
     </sample>
   </group>
