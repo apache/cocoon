@@ -69,8 +69,7 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
         // FIXME: Why is the namespace declaration available as attribute on the expected document?
-        //        That's the reason why we have to add it to destDocument as well.
-        destDocument.getDocumentElement().setAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX, FormsConstants.INSTANCE_NS);
+        expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
         assertEqual("Test if generated list matches expected", expected, destDocument);
     }
     
@@ -97,8 +96,7 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
         // FIXME: Why is the namespace declaration available as attribute on the expected document?
-        //        That's the reason why we have to add it to destDocument as well.
-        destDocument.getDocumentElement().setAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX, FormsConstants.INSTANCE_NS);
+        expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
         assertEqual("Test if generated list matches expected", expected, destDocument);
     }
     
