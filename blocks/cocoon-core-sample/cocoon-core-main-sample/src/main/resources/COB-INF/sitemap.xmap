@@ -35,7 +35,7 @@
 
     <map:view from-label="content" name="pretty-content">
       <map:serialize type="servletService">
-        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
       </map:serialize>
     </map:view>
 
@@ -51,7 +51,7 @@
       <map:match pattern="">
         <map:generate src="samples.xml"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
         </map:serialize>
       </map:match>
 
@@ -63,7 +63,7 @@
         <map:select type="exception">
           <map:when test="not-found">
             <map:generate type="exception"/>
-            <map:transform src="servlet:style-default:/stylesheets/system/exception2html.xslt">
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
               <map:parameter name="realPath" value="{realpath:}"/>
               <map:parameter name="pageTitle" value="Resource not found"/>
             </map:transform>
@@ -72,7 +72,7 @@
 
           <map:when test="invalid-continuation">
             <map:generate type="exception"/>
-            <map:transform src="servlet:style-default:/stylesheets/system/exception2html.xslt">
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
               <map:parameter name="realPath" value="{realpath:}"/>
               <map:parameter name="pageTitle" value="Invalid Continuation"/>
             </map:transform>
@@ -81,7 +81,7 @@
 
           <map:otherwise>
             <map:generate type="exception"/>
-            <map:transform src="servlet:style-default:/stylesheets/system/exception2html.xslt">
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
               <map:parameter name="realPath" value="{realpath:}"/>
             </map:transform>
             <map:serialize status-code="500"/>

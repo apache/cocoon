@@ -30,7 +30,7 @@
 
     <map:view from-label="content" name="pretty-content">
       <map:serialize type="servletService">
-        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
       </map:serialize>
     </map:view>
 
@@ -50,7 +50,7 @@
       <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
         </map:serialize>
       </map:match>
 
@@ -58,7 +58,7 @@
       <map:match pattern="all-static">
         <map:generate src="content/simple.xml" />
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html" />
         </map:serialize>
       </map:match>
 
@@ -72,13 +72,13 @@
         <map:match pattern="xsl-file">
           <map:generate src="content/simple.xml"/>
           <map:serialize type="servletService">
-            <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+            <map:parameter name="service" value="servlet:style:/service/common/simple-page2html" />
           </map:serialize>
         </map:match>
 
         <!-- Generate XSL source from local file -->
         <map:match pattern="xsl-source">
-          <map:generate src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl"/>
+          <map:generate src="servlet:style:/common/style/xsl/html/simple-page2html.xsl"/>
           <map:serialize type="xml"/>
         </map:match>
 
@@ -136,7 +136,7 @@
         <map:generate src="content/upload.xml"/>
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
         </map:serialize>
       </map:match>
 
@@ -144,7 +144,7 @@
         <map:generate src="upload://formFieldOne"/>
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
+          <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
         </map:serialize>
       </map:match>
 
