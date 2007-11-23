@@ -16,40 +16,44 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                               xmlns="http://www.w3.org/1999/xhtml">
 
   <xsl:template match="page">
-   <html>
-    <head>
-     <title>
-      <xsl:value-of select="title"/>
-     </title>
-     <link href="servlet:style-default:/styles/main.css" type="text/css" rel="stylesheet"/>
-    </head>
-    <body>
-     <xsl:apply-templates/>
-    </body>
-   </html>
+    <html>
+      <head>
+        <title><xsl:value-of select="title"/></title>
+        <link href="servlet:style:/styles/main.css" type="text/css" rel="stylesheet"/>
+      </head>
+      <body>
+        <xsl:apply-templates/>
+      </body>
+    </html>
   </xsl:template>
 
   <xsl:template match="title">
-   <h1><xsl:apply-templates/></h1>
+    <h1><xsl:apply-templates/></h1>
   </xsl:template>
 
   <xsl:template match="content">
-   <xsl:apply-templates/>
+    <xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="para">
-   <p>
-    <xsl:apply-templates/>
-   </p>
+    <p><xsl:apply-templates/></p>
   </xsl:template>
 
-  <xsl:template match="@*|node()" priority="-2"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
-  <xsl:template match="text()" priority="-1"><xsl:value-of select="."/></xsl:template>
+  <xsl:template match="@*|node()" priority="-2">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="text()" priority="-1">
+    <xsl:value-of select="."/>
+  </xsl:template>
 
 </xsl:stylesheet>

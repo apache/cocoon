@@ -54,7 +54,7 @@
       <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
         </map:serialize>
       </map:match>
 
@@ -88,7 +88,7 @@
 
     <map:handle-errors>
       <map:generate type="notifying"/>
-      <map:transform src="servlet:style-default:/stylesheets/system/error2html.xslt"/>
+      <map:transform src="servlet:style:/stylesheets/system/error2html.xslt"/>
     </map:handle-errors>
   </map:pipelines>
 

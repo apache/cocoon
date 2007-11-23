@@ -16,8 +16,9 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <map:pipelines>
@@ -29,9 +30,8 @@
 
       <map:match pattern="welcome">
         <map:generate src="samples.xml" />
-        <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html" />
         </map:serialize>
       </map:match>
 
@@ -65,12 +65,7 @@
         <map:read src="context://resources/images/{1}.gif" mime-type="image/gif" />
       </map:match>
 
-      <!-- delegate to parent sitemap 
-        <map:handle-errors/> -->
-
     </map:pipeline>
   </map:pipelines>
 
 </map:sitemap>
-
-<!-- end of file -->

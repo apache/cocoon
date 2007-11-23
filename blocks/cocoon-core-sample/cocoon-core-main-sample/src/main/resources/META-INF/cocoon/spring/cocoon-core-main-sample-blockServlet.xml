@@ -28,7 +28,7 @@
   <bean name="org.apache.cocoon.core.main.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
     <servlet:context mount-path="/samples/core" context-path="blockcontext:/cocoon-core-main-sample/">
       <servlet:connections>
-        <entry key="style-default" value-ref="org.apache.cocoon.samples.style.default.servlet"/>
+        <entry key="style" value-ref="org.apache.cocoon.samples.style.default.servlet"/>
       </servlet:connections>
     </servlet:context>
   </bean>

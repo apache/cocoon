@@ -32,7 +32,7 @@
 
     <map:view from-label="content" name="pretty-content">
       <map:serialize type="servletService">
-        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
       </map:serialize>
     </map:view>
 
@@ -48,14 +48,14 @@
       <map:match pattern="">
         <map:generate src="samples.xml"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html"/>
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
         </map:serialize>
       </map:match>
 
       <map:match pattern="status.html">
         <map:generate type="status"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/status2html"/>
+          <map:parameter name="service" value="servlet:style:/service/system/status2html"/>
         </map:serialize>
       </map:match>
 
@@ -69,7 +69,7 @@
       <map:match pattern="status-with-continuations.html">
         <map:generate src="cocoon:/status-with-continuations.xml"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/status2html"/>
+          <map:parameter name="service" value="servlet:style:/service/system/status2html"/>
         </map:serialize>
       </map:match>
 
@@ -77,7 +77,7 @@
         <map:act type="clear-cache">
           <map:generate src="status" type="status"/>
           <map:serialize type="servletService">
-            <map:parameter name="service" value="servlet:style-default:/service/system/status2html"/>
+            <map:parameter name="service" value="servlet:style:/service/system/status2html"/>
           </map:serialize>
         </map:act>
       </map:match>
@@ -86,20 +86,20 @@
         <map:act type="clear-persistent-store">
           <map:generate src="status" type="status"/>
           <map:serialize type="servletService">
-            <map:parameter name="service" value="servlet:style-default:/service/system/status2html"/>
+            <map:parameter name="service" value="servlet:style:/service/system/status2html"/>
           </map:serialize>
         </map:act>
 
         <map:generate src="no-persistent-store.xml"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
+          <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
         </map:serialize>
       </map:match>
 
       <map:match pattern="request.html">
         <map:generate type="request"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
+          <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
         </map:serialize>
       </map:match>
 
