@@ -16,45 +16,49 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
+<!--
+  - $Id$
+  -->
+<samples name="Catalogs and DocBook">
 
-<samples name="Catalogs and DocBook" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
 
- <group name="Back">
-  <sample name="Back" href="../">
-   Back to the samples home page.
-  </sample>
- </group>
+  <group name="Back">
+    <sample name="Back" href="../">
+      Back to the samples home page.
+    </sample>
+  </group>
 
- <group name="XML Entity Catalogs">
-  <sample name="Entity Resolution Using Catalogs" href="catalog-demo">
-   Catalog entity resolver. External entities (e.g. DTDs, symbols,
-   character entity sets, images) are resolved to local copies of the
-   resources. The catalog manager facilitates the mapping between public
-   identifiers or system identifiers and other system identifiers.
-  </sample>
- </group>
+  <group name="XML Entity Catalogs">
+    <sample name="Entity Resolution Using Catalogs" href="catalog-demo">
+      Catalog entity resolver. External entities (e.g. DTDs, symbols,
+      character entity sets, images) are resolved to local copies of the
+      resources. The catalog manager facilitates the mapping between public
+      identifiers or system identifiers and other system identifiers.
+    </sample>
+  </group>
 
- <group name="DocBook">
-  <note>
-   Follow the configuration steps first ...
-  </note>
-  <sample name="Entity Resolution With Catalogs"
-          href="../../docs/userdocs/concepts/catalog.html#config">
-    The Apache Cocoon documentation "Entity
-    resolution with catalogs" has a section "Example local configuration
-    for Simplified DocBook". Do that and then ...
-  </sample>
-  <sample name="DocBook Demo"
-          href="sdocbook-demo">
-   Demonstration of Catalog Entity Resolver and Simplified DocBook.
-   You will need the DocBook DTDs installed locally and the catalog
-   properly configured.
-  </sample>
-  <note>
-   If you get a FileNotFoundException, then you have not configured the
-   OASIS catalog properly. Follow the documentation as suggested above.
-  </note>
- </group>
+  <group name="DocBook">
+    <note>
+      Follow the configuration steps first ...
+    </note>
+    <sample name="Entity Resolution With Catalogs"
+            href="../../docs/userdocs/concepts/catalog.html#config">
+      The Apache Cocoon documentation "Entity
+      resolution with catalogs" has a section "Example local configuration
+      for Simplified DocBook". Do that and then ...
+    </sample>
+    <sample name="DocBook Demo" href="sdocbook-demo">
+      Demonstration of Catalog Entity Resolver and Simplified DocBook.
+      You will need the DocBook DTDs installed locally and the catalog
+      properly configured.
+    </sample>
+    <note>
+      If you get a FileNotFoundException, then you have not configured the
+      OASIS catalog properly. Follow the documentation as suggested above.
+    </note>
+  </group>
 
 </samples>

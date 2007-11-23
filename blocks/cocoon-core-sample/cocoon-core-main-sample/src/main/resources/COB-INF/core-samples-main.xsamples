@@ -21,7 +21,7 @@
   -->
 <xsamples>
 
-  <group name="Core samples" priority="100" >
+  <group name="Core Samples" priority="100" >
     <sample name="Core Samples" priority="100" href="/samples/core/">
       Samples of the most important core concepts and components.
     </sample>

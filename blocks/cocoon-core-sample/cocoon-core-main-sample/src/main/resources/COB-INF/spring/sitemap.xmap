@@ -15,10 +15,33 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- @version $Id$ -->
+
+<!--
+  - $Id$
+  -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <!-- By default all flow scripts from the ./flow directory are read. -->
   <map:flow language="javascript"/>
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view name="pretty-content" from-label="content">
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+      </map:serialize>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines =============================== -->
 
   <map:pipelines>
     <map:pipeline>

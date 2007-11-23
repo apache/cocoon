@@ -30,7 +30,7 @@
       <map:serialize type="xml"/>
     </map:view>
 
-    <map:view from-label="content" name="pretty-content">
+    <map:view name="pretty-content" from-label="content">
       <map:serialize type="servletService">
         <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
       </map:serialize>
@@ -41,7 +41,7 @@
     </map:view>
   </map:views>
 
-  <!-- =========================== Pipelines ================================= -->
+  <!-- =========================== Pipelines =============================== -->
 
   <map:pipelines>
     <map:pipeline>

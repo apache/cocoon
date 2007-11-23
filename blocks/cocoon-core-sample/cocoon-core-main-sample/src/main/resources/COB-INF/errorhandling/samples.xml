@@ -16,10 +16,14 @@
   limitations under the License.
 -->
 
-<!--+
-    | $Id$
-    +-->
-<samples name="Error Handling Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!--
+  - $Id$
+  -->
+<samples name="Error Handling Samples">
+
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
 
   <group name="Back">
     <sample name="Back" href="../">
