@@ -16,20 +16,43 @@
   limitations under the License.
 -->
 
+<!--
+  - $Id$
+  -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
- <map:components>
-  <map:classloader factory-role="org.apache.cocoon.classloader.ClassLoaderFactory/reloading">  
-    <class-dir src="../../../../../../../blocks/cocoon-core-sample/cocoon-core-main-sample/target/classes">
-      <store class="org.apache.commons.jci.stores.MemoryResourceStore"/>
-    </class-dir>
-    <!-- Implicit exclude-all, except those included -->
-    <include-classes pattern="org.apache.cocoon.core.container.reloading.**"/>
-  </map:classloader>
-  <map:generators default="file">
-   <map:generator name="mygenerator" src="org.apache.cocoon.core.container.reloading.MyGenerator"/>
-  </map:generators>  
- </map:components>
+  <map:components>
+    <map:classloader factory-role="org.apache.cocoon.classloader.ClassLoaderFactory/reloading">
+      <class-dir src="../../../../../../../blocks/cocoon-core-sample/cocoon-core-main-sample/target/classes">
+        <store class="org.apache.commons.jci.stores.MemoryResourceStore"/>
+      </class-dir>
+      <!-- Implicit exclude-all, except those included -->
+      <include-classes pattern="org.apache.cocoon.core.container.reloading.**"/>
+    </map:classloader>
+    <map:generators default="file">
+      <map:generator name="mygenerator" src="org.apache.cocoon.core.container.reloading.MyGenerator"/>
+    </map:generators>
+  </map:components>
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view name="pretty-content" from-label="content">
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+      </map:serialize>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines =============================== -->
 
   <map:pipelines>
     <map:pipeline>

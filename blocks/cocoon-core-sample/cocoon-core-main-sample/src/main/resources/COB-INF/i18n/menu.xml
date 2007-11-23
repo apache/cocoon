@@ -20,10 +20,8 @@
 <book software="Apache Cocoon" 
       title="Apache Cocoon i18n Samples" 
       copyright="@year@ The Apache Software Foundation"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
-      i18n:attr="title"
->
+      i18n:attr="title">
 
   <menu label="Samples" i18n:attr="label">
     <menu-item label="Static (XML)" href="simple.xml" i18n:attr="label"/>

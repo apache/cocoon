@@ -22,21 +22,25 @@
     <map:script src="sendpage.js"/>
   </map:flow>
 
+  <!-- =========================== Views =================================== -->
+
   <map:views>
     <map:view name="content" from-label="content">
       <map:serialize type="xml"/>
     </map:view>
 
-    <map:view from-label="content" name="pretty-content">
-      <map:transform src="servlet:style:/stylesheets/system/xml2html.xslt"/>
-      <map:transform type="servletLinkRewriter" />
-      <map:serialize type="html"/>
+    <map:view name="pretty-content" from-label="content">
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+      </map:serialize>
     </map:view>
 
     <map:view name="links" from-position="last">
       <map:serialize type="links"/>
     </map:view>
   </map:views>
+
+  <!-- =========================== Pipelines =============================== -->
 
   <map:pipelines>
     <map:pipeline>

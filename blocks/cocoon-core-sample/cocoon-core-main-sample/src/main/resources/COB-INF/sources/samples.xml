@@ -16,10 +16,14 @@
   limitations under the License.
 -->
 
-<!--+
-    | $Id$
-    +-->
+<!--
+  - $Id$
+  -->
 <samples name="Using Sources">
+
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
 
   <group name="Back">
     <sample name="Back" href="../">

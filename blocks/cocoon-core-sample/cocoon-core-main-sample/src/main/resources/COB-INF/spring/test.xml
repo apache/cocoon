@@ -15,7 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+
+<!--
+  - $Id$
+  -->
 <document xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <p>This is a simple demo page</p>
   <p>Message from a Spring Bean:</p>

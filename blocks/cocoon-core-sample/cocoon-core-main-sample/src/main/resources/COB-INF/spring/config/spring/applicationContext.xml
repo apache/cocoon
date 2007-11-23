@@ -15,14 +15,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- @version $Id$ -->
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
+<!--
+  - $Id$
+  -->
 <beans>
 
-  <bean id="spring-test" class="org.apache.cocoon.core.container.spring.test.TestBean" abstract="false" singleton="true" lazy-init="default">
-    <property name="settings" ref="org.apache.cocoon.configuration.Settings" />
-    <property name="javaVersion" value="${java.specification.version}" />
+  <bean name="spring-test"
+        class="org.apache.cocoon.core.container.spring.test.TestBean"
+        abstract="false" singleton="true" lazy-init="default">
+    <property name="settings" ref="org.apache.cocoon.configuration.Settings"/>
+    <property name="javaVersion" value="${java.specification.version}"/>
   </bean>
 
 </beans>

@@ -16,25 +16,30 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <samples name="XML-ized Web Sites">
 
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
+
   <group name="Back">
-   <sample name="Back" href="../">
-    Back to the samples home page.
-   </sample>
+    <sample name="Back" href="../">
+      Back to the samples home page.
+    </sample>
   </group>
 
   <group name="Sites">
-   <sample name="jakarta.apache.org" href="jakarta.apache.org/">
-    This is a snapshot of the jakarta.apache.org web site and then 
-    XML-ized.
-   </sample>
-   <sample name="java.apache.org" href="java.apache.org/">
-    This is a snapshot of the java.apache.org web site and then 
-    XML-ized.    
-   </sample>
+    <sample name="jakarta.apache.org" href="jakarta.apache.org/">
+      This is a snapshot of the jakarta.apache.org web site and then
+      XML-ized.
+    </sample>
+    <sample name="java.apache.org" href="java.apache.org/">
+      This is a snapshot of the java.apache.org web site and then
+      XML-ized.
+    </sample>
   </group>
-   
+
 </samples>

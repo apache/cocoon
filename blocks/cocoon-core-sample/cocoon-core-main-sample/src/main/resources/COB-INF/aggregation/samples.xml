@@ -22,6 +22,10 @@
   -->
 <samples name="Aggregation">
 
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
+
   <group name="Back">
     <sample name="Back" href="../">
       Back to the samples home page.

@@ -18,7 +18,7 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <!-- =========================== Flowscripts =================================== -->
+  <!-- ======================== Flowscripts ================================ -->
 
   <map:flow language="javascript">
     <map:script src="calc.js" />
@@ -28,22 +28,22 @@
 
   <map:views>
     <map:view name="content" from-label="content">
-      <map:serialize type="xml" />
+      <map:serialize type="xml"/>
     </map:view>
 
-    <map:view from-label="content" name="pretty-content">
-      <!-- Make use of servlet services -->
+    <map:view name="pretty-content" from-label="content">
       <map:serialize type="servletService">
-        <map:parameter name="service" value="servlet:style:/service/system/xml2html" />
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
       </map:serialize>
     </map:view>
 
     <map:view name="links" from-position="last">
-      <map:serialize type="links" />
+      <map:serialize type="links"/>
     </map:view>
   </map:views>
 
-  <!-- =========================== Pipelines ================================= -->
+  <!-- =========================== Pipelines =============================== -->
+
   <map:pipelines>
     <map:pipeline>
       <!--+

@@ -21,6 +21,10 @@
   -->
 <samples name="Internal Requests Error Handling Samples">
 
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
+
   <group name="Back">
     <sample name="Back" href="../">
       Back to the error handling samples page.

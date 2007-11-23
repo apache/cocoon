@@ -23,6 +23,10 @@
   -->
 <samples name="Cocoon Core Samples">
 
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
+
   <group name="Cocoon Pipelines">
     <sample name="Hello World!" href="hello-world/">
       Generating various types of content

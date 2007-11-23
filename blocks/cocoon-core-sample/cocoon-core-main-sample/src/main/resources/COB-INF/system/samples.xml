@@ -16,18 +16,22 @@
   limitations under the License.
 -->
 
-<!--+
-    | Main samples page
-    |
-    | CVS $Id$
-    +-->
+<!--
+  - Core Samples : System Samples
+  -
+  - $Id$
+  -->
 
 <samples name="System Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
+
   <group name="Back">
-   <sample name="Back" href="../">
-    Back to the samples home page.
-   </sample>
+    <sample name="Back" href="../">
+      Back to the samples home page.
+    </sample>
   </group>
 
   <group name="System Tools And Pages">
@@ -38,11 +42,11 @@
     <sample name="Status Page (with continuations)" href="status-with-continuations.html">
       This page shows the current internal status of cocoon, along with
       information on the cache and the object stores and the continuations.
-    </sample>    
+    </sample>
     <sample name="Status Page (with continuations - XML)" href="status-with-continuations.xml">
       This page shows the current internal status of cocoon, along with
       information on the cache and the object stores and the continuations.
-    </sample>        
+    </sample>
     <sample name="Clear Cache" href="clearcache.html">
       Empties the Cocoon in-memory cache.
     </sample>

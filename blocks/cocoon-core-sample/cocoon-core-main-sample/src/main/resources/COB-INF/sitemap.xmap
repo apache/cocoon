@@ -33,7 +33,7 @@
       <map:serialize type="xml"/>
     </map:view>
 
-    <map:view from-label="content" name="pretty-content">
+    <map:view name="pretty-content" from-label="content">
       <map:serialize type="servletService">
         <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
       </map:serialize>
@@ -53,6 +53,16 @@
         <map:serialize type="servletService">
           <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
         </map:serialize>
+      </map:match>
+
+      <map:match pattern="sitemap.xmap">
+        <map:generate src="sitemap.xmap"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="**/sitemap.xmap">
+        <map:generate src="{1}/sitemap.xmap"/>
+        <map:serialize type="xml"/>
       </map:match>
 
       <map:match pattern="*/**">
