@@ -15,49 +15,37 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
   <xsl:param name="locale"/>
   <xsl:param name="page"/>
 
-  <xsl:template match="root">
-    <document>
-      <header>
-        <title>Internationalization (i18n) and Localization (l10n)</title>
-      </header>
-      <body>
+  <xsl:template match="composite">
+    <page>
+      <title>Internationalization (i18n) and Localization (l10n)</title>
+      <content>
         <row>
           <column title="Menu">
             <xsl:apply-templates select="book"/>
           </column>
-          <column title="{document/title}">
-            <xsl:apply-templates select="document"/>
+          <column title="{page/title}">
+            <xsl:apply-templates select="page"/>
           </column>
         </row>
-      </body>
-    </document>
+      </content>
+    </page>
   </xsl:template>
 
-  <xsl:template match="document">
-    <h2>
-      <font color="navy">
-        <xsl:value-of select="title"/>
-      </font>
-      <xsl:apply-templates select="form"/>
-    </h2>
-    <h5>
-      <xsl:value-of select="sub-title"/>
-    </h5>
-    <hr align="left" noshade="noshade" size="1"/>
-    <small>
-      <font color="red">
-        <i>
-          <xsl:apply-templates select="annotation"/>
-        </i>
-      </font>
-    </small>
+  <xsl:template match="page">
+    <h5><xsl:value-of select="sub-title"/></h5>
+    <xsl:apply-templates select="form"/>
+
     <xsl:apply-templates select="content"/>
+
     <hr align="left" noshade="noshade" size="1"/>
-    <xsl:apply-templates select="bottom"/>
+    <i><xsl:apply-templates select="annotation"/></i>
   </xsl:template>
 
   <xsl:template match="book">
@@ -66,14 +54,9 @@
 
   <xsl:template match="para">
     <p>
-      <font color="navy">
-        <b>
-          <xsl:number format="0. "/>
-          <xsl:value-of select="@name"/>
-        </b>
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="@title"/>
-      </font>
+      <b><xsl:number format="0. "/><xsl:value-of select="@name"/></b>
+      <xsl:text> </xsl:text>
+      <xsl:value-of select="@title"/>
       <br/>
       <xsl:apply-templates select="text() | strong | i"/>
     </p>
@@ -85,12 +68,8 @@
       <img src="{@icon}" align="middle"/>
       <xsl:text> </xsl:text>
     </xsl:if>
-    <h3>
-      <xsl:value-of select="@label"/>
-    </h3>
-    <ul>
-      <xsl:apply-templates/>
-    </ul>
+    <h3><xsl:value-of select="@label"/></h3>
+    <ul><xsl:apply-templates/></ul>
   </xsl:template>
 
   <!-- Display a link to a page -->
@@ -104,22 +83,19 @@
     </li>
   </xsl:template>
 
-  <xsl:template match="menu-item | external">
+  <xsl:template match="menu-item">
     <li class="page">
       <xsl:if test="@icon">
         <img src="{@icon}" align="middle"/>
         <xsl:text> </xsl:text>
       </xsl:if>
-      <a href="{@href}" class="page">
-        <xsl:value-of select="@label"/>
-      </a>
+      <a href="{@href}" class="page"><xsl:value-of select="@label"/></a>
     </li>
   </xsl:template>
 
-  <xsl:template match="node()|@*" priority="-1">
+  <xsl:template match="@*|node()" priority="-1">
     <xsl:copy>
-      <xsl:apply-templates select="@*"/>
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
 

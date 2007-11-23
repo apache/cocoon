@@ -27,21 +27,24 @@
 
   <map:components>
     <map:generators default="file">
-      <!--+
-        | Redefine generators to remove their labels (otherwise aggregated parts also go through views)
-        +-->
-      <map:generator name="file" logger="sitemap.generator.file" src="org.apache.cocoon.generation.FileGenerator" />
-      <map:generator name="serverpages" logger="sitemap.generator.serverpages" src="org.apache.cocoon.generation.ServerPagesGenerator" />
+      <!--
+        - Redefine generators to remove their labels (otherwise aggregated parts also go through views)
+        -->
+      <map:generator name="file"
+                     src="org.apache.cocoon.generation.FileGenerator"/>
+      <map:generator name="serverpages"
+                     src="org.apache.cocoon.generation.ServerPagesGenerator"/>
     </map:generators>
 
     <map:transformers default="xslt">
-      <!--+
-        | Configure i18n transformer with message catalogues
-        +-->
-      <map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+      <!--
+        - Configure i18n transformer with message catalogues
+        -->
+      <map:transformer name="i18n"
+                       src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="messages">
-          <catalogue id="messages" name="messages" location="translations" />
-          <catalogue id="menu" name="menu" location="translations" />
+          <catalogue id="messages" name="messages" location="translations"/>
+          <catalogue id="menu" name="menu" location="translations"/>
           <catalogue id="tiered" name="messages">
             <location>translations/tiered</location>
             <location>translations</location>
@@ -51,28 +54,29 @@
     </map:transformers>
 
     <map:actions>
-      <!--+
-        | Locale action is used to set/get current user locale.
-        | See Javadocs for details.
-        +-->
-      <map:action name="locale" logger="sitemap.action.locale" src="org.apache.cocoon.acting.LocaleAction">
+      <!--
+        - Locale action is used to set/get current user locale.
+        - See Javadocs for details.
+        -->
+      <map:action name="locale"
+                  src="org.apache.cocoon.acting.LocaleAction">
         <!-- Creates a new session if needed. Used with 'store-in-session' param -->
         <create-session>true</create-session>
-        <!--+
-          | Stores locale information in session. A session should be created before,
-          | otherwise 'create-session' should be true.
-          +-->
+        <!--
+          - Stores locale information in session. A session should be created before,
+          - otherwise 'create-session' should be true.
+          -->
         <store-in-session>true</store-in-session>
         <!-- Stores locale information in request attributes -->
         <store-in-request>true</store-in-request>
         <!-- Stores locale information in a client cookie -->
         <store-in-cookie>false</store-in-cookie>
-        <!--+
-          | Uncomment to override default:
-          <locale-attribute>locale</locale-attribute>
-          <use-locale>true</use-locale>
-          <default-locale language="en" country="US"/>
-          +-->
+        <!--
+          - Uncomment to override defaults:
+        <locale-attribute>locale</locale-attribute>
+        <use-locale>true</use-locale>
+        <default-locale language="en" country="US"/>
+          -->
       </map:action>
     </map:actions>
   </map:components>
@@ -80,21 +84,21 @@
   <!-- =========================== Resources =============================== -->
 
   <map:resources>
-    <!--+
-      | This resource is used to create a composite page from menu and content
-      +-->
+    <!--
+      - This resource is used to create a composite page from menu and content
+      -->
     <map:resource name="composite">
-      <map:aggregate element="root">
-        <map:part src="cocoon:/menu/{../0}" />
-        <map:part src="cocoon:/content/{../0}" label="content" />
+      <map:aggregate element="composite">
+        <map:part src="cocoon:/menu/{../0}"/>
+        <map:part src="cocoon:/content/{../0}" label="content"/>
       </map:aggregate>
       <map:transform src="simple2page.xsl">
-        <map:parameter name="page" value="{../0}" />
-        <map:parameter name="locale" value="{../../locale}" />
+        <map:parameter name="page" value="{../0}"/>
+        <map:parameter name="locale" value="{../../locale}"/>
       </map:transform>
-      <map:transform src="servlet:style:/common/style/xsl/html/complex-page2html.xsl" />
-      <map:transform type="servletLinkRewriter" />
-      <map:serialize type="html" />
+      <map:transform src="servlet:style:/common/style/xsl/html/simple-page2html.xsl"/>
+      <map:transform type="servletLinkRewriter"/>
+      <map:serialize type="html"/>
     </map:resource>
   </map:resources>
 
@@ -120,85 +124,73 @@
 
   <map:pipelines>
     <map:pipeline>
+
       <!-- Default pipeline -->
       <map:match pattern="">
-        <map:redirect-to uri="simple.xml" />
+        <map:redirect-to uri="simple.xml"/>
       </map:match>
 
-      <map:act type="locale">
-        <!--+
-          | Locale aware content generation pipeline
-          +-->
+      <!--
+        - Locale aware content generation pipelines
+        -->
 
+      <map:act type="locale">
         <!-- Generate static output (simple.xml) -->
         <map:match pattern="*.xml">
-          <map:call resource="composite" />
+          <map:call resource="composite"/>
         </map:match>
 
         <!-- Generate dynamic output (simple.xsp) -->
         <map:match pattern="*.xsp">
-          <map:call resource="composite" />
+          <map:call resource="composite"/>
         </map:match>
 
         <!-- A helper matcher for static content translation and generation -->
         <map:match pattern="content/tiered.xml">
-          <map:generate src="tiered.xml" />
+          <map:generate src="simple.xml"/>
           <map:transform type="i18n">
-            <map:parameter name="default-catalogue-id" value="tiered" />
-            <map:parameter name="locale" value="{../locale}" />
+            <map:parameter name="default-catalogue-id" value="tiered"/>
+            <map:parameter name="locale" value="{../locale}"/>
           </map:transform>
-          <map:serialize />
+          <map:serialize/>
         </map:match>
 
         <!-- A helper matcher for static content translation and generation -->
         <map:match pattern="content/*.xml">
-          <map:generate src="{1}.xml" />
+          <map:generate src="{1}.xml"/>
           <map:transform type="i18n">
-            <map:parameter name="locale" value="{../locale}" />
+            <map:parameter name="locale" value="{../locale}"/>
           </map:transform>
-          <map:serialize />
+          <map:serialize/>
         </map:match>
 
         <!-- A helper matcher for dynamic content translation and generation -->
         <map:match pattern="content/*.xsp">
-          <map:generate type="serverpages" src="{1}.xsp" />
+          <map:generate type="serverpages" src="{1}.xsp"/>
           <map:transform type="i18n">
-            <map:parameter name="locale" value="{../locale}" />
+            <map:parameter name="locale" value="{../locale}"/>
           </map:transform>
-          <map:serialize />
+          <map:serialize/>
         </map:match>
 
         <!-- Menu generation -->
         <map:match pattern="menu/*">
-          <map:generate src="menu.xml" />
+          <map:generate src="menu.xml"/>
           <map:transform type="i18n">
             <!-- Override default catalogue for this pipeline -->
-            <map:parameter name="default-catalogue-id" value="menu" />
-            <map:parameter name="locale" value="{../locale}" />
+            <map:parameter name="default-catalogue-id" value="menu"/>
+            <map:parameter name="locale" value="{../locale}"/>
           </map:transform>
-          <map:serialize />
+          <map:serialize/>
         </map:match>
       </map:act>
 
-      <!--+
-        | Locale agnostic pipeline part below
-        +-->
-
-      <!-- Display this sitemap source -->
-      <map:match pattern="sitemap.xmap">
-        <map:generate src="sitemap.xmap" />
-        <!-- Make use of servlet services -->
-        <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style:/service/system/xml2html" />
-        </map:serialize>
-      </map:match>
-
-      <map:match pattern="*.css">
-        <map:read src="{1}.css" mime-type="text/css" />
-      </map:match>
+      <!--
+        - Locale agnostic pipeline part below
+        -->
 
       <map:match pattern="images/*.gif">
-        <map:read src="images/{1}.gif" mime-type="image/gif" />
+        <map:read src="images/{1}.gif" mime-type="image/gif"/>
       </map:match>
 
     </map:pipeline>
