@@ -22,7 +22,7 @@
 <xsamples>
 
   <group name="Backend Components">
-    <sample name="Mail Block" href="/cocoon-mail-samples/">
+    <sample name="Mail Block" href="/cocoon-mail-sample/">
       Continue to mail block samples.
     </sample>
   </group>

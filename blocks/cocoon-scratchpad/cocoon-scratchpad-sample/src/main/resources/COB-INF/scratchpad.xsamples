@@ -22,7 +22,7 @@
 <xsamples>
   
   <group name="Unsorted And Miscellaneous">
-    <sample name="Scratchpad Block" href="/cocoon-scratchpad-samples/">
+    <sample name="Scratchpad Block" href="/cocoon-scratchpad-sample/">
       Here you find the samples about the functionality included in the scratchpad, which is the 
       place where new stuff is developed but not yet considered stable enough for production.
     </sample>
