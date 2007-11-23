@@ -1,6 +1,6 @@
 !!! Boken page
 
-Here comes a text with __an inclomplete element.
+Here comes a text with __an incomplete element.
 
 !!! Next section
 

@@ -22,7 +22,7 @@
 <xsamples>
 
   <group name="Input Data Formats" priority="50">
-    <sample name="Chaperon Block" href="/cocoon-chaperon-sample/">
+    <sample name="Chaperon Block" href="/samples/chaperon/">
       Examples showing how to use the Chaperon text parser to parse common text files
       (like Wiki or Java files) into the XML.
     </sample>

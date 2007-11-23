@@ -15,25 +15,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- @version $Id$ -->
-<document xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-  <header>
-   <title>Chaperon examples</title>
-   <tab title="back" href="."/>
-  </header>
-  <body>
-   <row>
-    <column title="Mathematical expression">
 
-     <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0" source="" line="1" column="1">${value}</text>
+<!--
+  - $Id$
+  -->
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <title>Chaperon Block Samples</title>
+  <content>
+    <row>
+      <column title="Mathematical Expression">
 
-     <p>
-      <form action="mathexp.html" method="post">
-        <input name="text" type="text" size="80" maxlength="110" value="${value}"/>
-        <input type="submit"/>
-      </form>
-     </p>
-    </column>
-   </row>
-  </body>
-</document>
+        <text xmlns="http://chaperon.sourceforge.net/schema/text/1.0" source="" line="1" column="1">${value}</text>
+
+        <p>
+          <form action="mathexp.html" method="post">
+            <input name="text" type="text" size="80" maxlength="110" value="${value}"/>
+            <input type="submit"/>
+          </form>
+        </p>
+      </column>
+    </row>
+  </content>
+</page>

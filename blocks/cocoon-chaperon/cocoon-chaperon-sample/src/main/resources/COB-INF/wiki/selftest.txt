@@ -1,12 +1,16 @@
-This wiki document is a self-describing test of the Cocoon Chaperon cwiki grammar. Comparing what follows should show you that the tests are successful.
+This wiki document is a self-describing test of the Cocoon Chaperon cwiki
+grammar. Comparing what follows should show you that the tests are
+successful.
 
 The document in the Cocoon Samples is at: src/blocks/chaperon/samples/wiki/selftest.txt
 
 The document in the JSPWiki is at: http://www.jspwiki.org/Wiki.jsp?page=ChaperonTestPage
 
-Both documents should be synchronised, so as to be able to compare the output of both, as the Chaperon wiki grammar is meant to emulate the JSPWiki syntax.
+Both documents should be synchronised, so as to be able to compare the output
+of both, as the Chaperon wiki grammar is meant to emulate the JSPWiki syntax.
 
-In the Cocoon Samples, the "content", "parser-output" and "xdoc" views can be used to check the various stages of parsing and conversion.
+In the Cocoon Samples, the "content", "parser-output" and "xdoc" views can be
+used to check the various stages of parsing and conversion.
 
 Lines like -- THIS TEXT -- are comments about this test, they must appear as is.
 ----
