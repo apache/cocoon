@@ -26,7 +26,7 @@
    <html>
      <head>
        <title><xsl:value-of select="title"/></title>
-       <link rel="stylesheet" href="servlet:/styles/main.css" title="Default Style"/>
+       <link href="servlet:/styles/main.css" rel="stylesheet" type="text/css" title="Default Style"/>
        <!-- copy local CSS, if any -->
        <xsl:copy-of select="style"/>
      </head>
@@ -39,9 +39,12 @@
 
   <xsl:template name="resources">
     <div class="resources">
-      <a href="?cocoon-view=content">Content View</a>
-      <a href="?cocoon-view=pretty-content">Source</a>
-      <a href="sitemap.xmap?cocoon-view=pretty-content">Sitemap</a>
+      <a href="sitemap.xmap">Sitemap</a>
+      &#160;
+      Views:
+      <a href="?cocoon-view=content">Content</a>
+      <a href="?cocoon-view=pretty-content">Pretty Content</a>
+      <a href="?cocoon-view=links">Links</a>
 
       <xsl:for-each select="resources/resource">
         <xsl:variable name="href">
@@ -68,29 +71,32 @@
 
   <xsl:template match="resources"/>
 
-  <xsl:template match="title">
-   <h2><xsl:apply-templates/></h2>
-  </xsl:template>
   
+  <xsl:template match="title">
+    <h2><xsl:apply-templates/></h2>
+  </xsl:template>
+
   <xsl:template match="content">
     <xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="para">
-   <p><xsl:apply-templates/></p>
+    <p><xsl:apply-templates/></p>
   </xsl:template>
 
   <xsl:template match="link">
-   <a href="{@href}"><xsl:apply-templates/></a>
+    <a href="{@href}"><xsl:apply-templates/></a>
   </xsl:template>
 
   <xsl:template match="error">
     <span class="error"><xsl:apply-templates/></span>
   </xsl:template>
 
-  
+
   <xsl:template match="@*|node()" priority="-2">
-    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
   </xsl:template>
 
   <xsl:template match="text()" priority="-1">
