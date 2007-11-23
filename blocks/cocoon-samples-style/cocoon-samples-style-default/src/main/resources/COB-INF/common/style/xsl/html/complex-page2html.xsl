@@ -157,8 +157,10 @@
     </p>
   </xsl:template>
 
-  <xsl:template match="*|@*|node()|text()" priority="-1">
-    <xsl:copy><xsl:apply-templates select="*|@*|node()|text()"/></xsl:copy>
+  <xsl:template match="@*|node()" priority="-1">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
   </xsl:template>
 
 </xsl:stylesheet>

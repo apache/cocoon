@@ -22,30 +22,59 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+  <xsl:param name="contextPath">servlet:/</xsl:param>
+
+  <xsl:template match="/">
+    <html>
+      <xsl:apply-templates/>
+    </html>
+  </xsl:template>
+
   <xsl:template match="page">
-   <html>
-     <head>
-       <title><xsl:value-of select="title"/></title>
-       <link href="servlet:/styles/main.css" rel="stylesheet" type="text/css" title="Default Style"/>
-       <!-- copy local CSS, if any -->
-       <xsl:copy-of select="style"/>
-     </head>
-     <body>
-       <xsl:call-template name="resources"/>
-       <xsl:apply-templates/>
-     </body>
-   </html>
+   <head>
+     <title>
+       <xsl:text>Apache Cocoon @version@</xsl:text>
+       <xsl:if test="title">
+         <xsl:text> | </xsl:text>
+         <xsl:value-of select="title"/>
+       </xsl:if>
+     </title>
+     <link rel="SHORTCUT ICON" href="{$contextPath}/icons/cocoon.ico"/>
+     <link href="{$contextPath}/styles/main.css" type="text/css" rel="stylesheet" title="Default Style"/>
+     <!-- copy local CSS, if any -->
+     <xsl:copy-of select="style"/>
+   </head>
+   <body>
+     <div id="top">
+       <div id="header">
+         <div class="projectlogo">
+           <a href="http://cocoon.apache.org/"><img class="logoImage" src="{$contextPath}/images/cocoon-logo.jpg" alt="Apache Cocoon" border="0"/></a>
+         </div>
+         <div class="grouplogo">
+           <p class="grouptitle">
+             <a href="http://cocoon.apache.org/">The Apache Cocoon Project</a>
+             <img src="{$contextPath}/images/apache-logo.jpg" alt="Cocoon Project Logo"/>
+           </p>
+         </div>
+       </div>
+       <div id="samplesBar">
+         <h1 class="samplesTitle"><xsl:value-of select="title"/></h1>
+         <xsl:call-template name="resources"/>
+       </div>
+       <div class="samplesBarClear"/>
+     </div>
+
+     <xsl:apply-templates/>
+
+     <p class="copyright">
+       Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+       All rights reserved.
+     </p>
+   </body>
   </xsl:template>
 
   <xsl:template name="resources">
-    <div class="resources">
-      <a href="sitemap.xmap">Sitemap</a>
-      &#160;
-      Views:
-      <a href="?cocoon-view=content">Content</a>
-      <a href="?cocoon-view=pretty-content">Pretty Content</a>
-      <a href="?cocoon-view=links">Links</a>
-
+    <ul id="links">
       <xsl:for-each select="resources/resource">
         <xsl:variable name="href">
           <xsl:choose>
@@ -62,30 +91,56 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <a class="{@type}" href="{$href}">
-          <xsl:apply-templates/>
-        </a>
+        <li><a class="{@type}" href="{$href}"><xsl:apply-templates/></a></li>
       </xsl:for-each>
-    </div>
+      <li class="sep">See also:</li>
+      <li><a href="sitemap.xmap">Sitemap</a></li>
+      <li class="sep">Views:</li>
+      <li><a href="?cocoon-view=content">Content</a></li>
+      <li><a href="?cocoon-view=pretty-content">Pretty content</a></li>
+      <li><a href="?cocoon-view=links">Links</a></li>
+    </ul>
   </xsl:template>
+
 
   <xsl:template match="resources"/>
+  <xsl:template match="title"/>
 
-  
-  <xsl:template match="title">
-    <h2><xsl:apply-templates/></h2>
-  </xsl:template>
 
   <xsl:template match="content">
     <xsl:apply-templates/>
   </xsl:template>
 
+  <xsl:template match="content[row]">
+    <table width="100%">
+      <xsl:apply-templates/>
+    </table>
+  </xsl:template>
+
+  <xsl:template match="row">
+    <tr>
+      <xsl:apply-templates select="column"/>
+    </tr>
+  </xsl:template>
+
+  <xsl:template match="column">
+    <td valign="top">
+      <h4 class="samplesGroup"><xsl:value-of select="@title"/></h4>
+      <p class="samplesText"><xsl:apply-templates/></p>
+    </td>
+  </xsl:template>
+  
   <xsl:template match="para">
     <p><xsl:apply-templates/></p>
   </xsl:template>
 
+
   <xsl:template match="link">
     <a href="{@href}"><xsl:apply-templates/></a>
+  </xsl:template>
+
+  <xsl:template match="anchor">
+    <a name="{@name}"><xsl:apply-templates/></a>
   </xsl:template>
 
   <xsl:template match="error">
@@ -93,13 +148,10 @@
   </xsl:template>
 
 
-  <xsl:template match="@*|node()" priority="-2">
+  <xsl:template match="@*|node()" priority="-1">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="text()" priority="-1">
-    <xsl:value-of select="."/>
-  </xsl:template>
 </xsl:stylesheet>
