@@ -18,7 +18,6 @@ package org.apache.cocoon.sitemap;
 
 import java.io.IOException;
 import java.net.URL;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,11 +28,13 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.springframework.beans.factory.BeanCreationException;
+
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
-import org.springframework.beans.factory.BeanCreationException;
+import org.apache.cocoon.servlet.RequestUtil;
 
 /**
  * Use this servlet as entry point to Cocoon. It wraps the {@link TreeProcessor}
@@ -58,7 +59,7 @@ public class SitemapServlet extends HttpServlet {
      * Process the incoming request using the Cocoon tree processor.
      */
     protected void service(HttpServletRequest request, HttpServletResponse response)
-    	throws ServletException, IOException {
+    throws ServletException, IOException {
 
         this.processor.service(request, response);
     }
@@ -120,22 +121,11 @@ public class SitemapServlet extends HttpServlet {
             }
         }
 
-        /* (non-Javadoc)
-         * @see org.apache.cocoon.servlet.RequestProcessor#getURI(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+        /**
+         * @see org.apache.cocoon.servlet.RequestProcessor#getURI(HttpServletRequest, HttpServletResponse)
          */
-        // The original implementation prepend the servlet context path which doesn't work
-        // in the tree processor if there actually is a servlet context path
-        protected String getURI(HttpServletRequest request, HttpServletResponse res) throws IOException {
-            String uri = request.getPathInfo();
-            if (uri == null) {
-                return "";
-            }
-
-            if (uri.length() > 0 && uri.charAt(0) == '/') {
-                return uri.substring(1);
-            }
-
-            return uri;
+        protected String getURI(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            return RequestUtil.getCompleteBlockUri(request, response);
         }
 
         /**

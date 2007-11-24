@@ -169,10 +169,10 @@ public class RequestProcessor extends AbstractLogEnabled {
         }
 
         try {
-            if (this.process(env)) {
+            if (process(env)) {
                 contentType = env.getContentType();
             } else {
-                // We reach this when there is nothing in the processing change that matches
+                // We reach this when there is nothing in the processing chain that matches
                 // the request. For example, no matcher matches.
                 getLogger().fatal("The Cocoon engine failed to process the request.");
 
