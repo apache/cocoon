@@ -105,6 +105,7 @@
 
   <xsl:template match="resources"/>
   <xsl:template match="title"/>
+  <xsl:template match="style"/>
 
 
   <xsl:template match="content">

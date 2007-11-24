@@ -24,7 +24,7 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:param name="contextPath">servlet:/</xsl:param>
+  <xsl:param name="contextPath">servlet:</xsl:param>
 
   <xsl:variable name="stdLinks" select="samples/links/link[not(@role)]"/>
   <xsl:variable name="seeAlsoLinks" select="samples/links/link[@role='see-also']"/>
