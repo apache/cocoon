@@ -144,15 +144,15 @@
             | depending on the serializer type.
             +-->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html" />
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
         </map:serialize>
       </map:match>
 
       <!--+
-          | Show the this sitemap.xmap.
+          | Show this sitemap.xmap file.
           +-->
       <map:match pattern="sitemap.xmap">
-        <map:read src="sitemap.xmap" mime-type="text/xml" />
+        <map:read src="sitemap.xmap" mime-type="text/xml"/>
       </map:match>
 
       <!--+
@@ -232,13 +232,6 @@
       </map:match>
 
       <!--+
-          | Map the API documentation.
-          +-->
-      <map:match pattern="api/**">
-        <map:read src="api/{1}"/>
-      </map:match>
-
-      <!--+
           | Find a match in the "mount-table.xml" file, if present. It allows to mount other
           | directories without touching this main sitemap (and thus loosing changes on rebuild).
           |
@@ -285,11 +278,6 @@
         </map:select>
       </map:match>
 
-
-      <!-- FIXME: It's a simple work-around -->
-      <map:match pattern="blocks/**">
-        <map:redirect-to uri="{1}/" global="true"/>
-      </map:match>
 
       <!--+
           | Mount everything else by calling the sitemap.xmap file located
