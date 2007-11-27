@@ -56,7 +56,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class TestProfileManager extends GroupBasedProfileManager {
 
-    protected ProfileHolder loadProfile() 
+    protected ProfileHolder loadProfile()
     throws ProfileException {
         final PortalUser user = this.portalService.getUserService().getUser();
         if ( user.getUserName().equals("test") ) {
@@ -65,7 +65,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                 // display the portlets specified with the parameter. Otherwise
                 // we show all portlets
                 final List portletNames = new ArrayList();
-                final HttpServletRequest r = this.portalService.getProcessInfoProvider().getRequest();
+                final HttpServletRequest r = this.portalService.getRequestContext().getRequest();
                 final String[] values = r.getParameterValues("portletName");
                 if ( values != null && values.length > 0 ) {
                     for(int i=0; i<values.length; i++) {
@@ -73,14 +73,14 @@ public class TestProfileManager extends GroupBasedProfileManager {
                     }
                 }
                 final ProfileHolder profile = new ProfileHolder();
-    
+
                 // first "load" the global coplet types
                 profile.setCopletTypes( this.getGlobalCopletTypes() );
                 profile.setCopletDefinitions( this.getGlobalCopletDefinitions( user, profile ) );
-    
+
                 // create root layout
                 CompositeLayout rootLayout = new CompositeLayout("root", "row");
-    
+
                 // create coplet instances and layouts
                 final List instances = new ArrayList();
                 final Iterator i = this.deployedCopletDefinitions.values().iterator();
@@ -103,7 +103,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                 }
                 profile.setCopletInstances(this.processCopletInstances(profile, instances));
                 profile.setRootLayout(this.processLayout(profile, rootLayout));
-    
+
                 this.storeUserProfile(profile);
                 return profile;
             } catch (ProfileException e) {
@@ -124,7 +124,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
         if ( event instanceof UserIsAccessingEvent ) {
             if ( "test".equals(event.getPortalUser().getUserName()) ) {
                 final List portletNames = new ArrayList();
-                final HttpServletRequest r = this.portalService.getProcessInfoProvider().getRequest();
+                final HttpServletRequest r = this.portalService.getRequestContext().getRequest();
                 final String[] values = r.getParameterValues("portletName");
                 if ( values != null && values.length > 0 ) {
                     for(int i=0; i<values.length; i++) {

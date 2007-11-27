@@ -73,7 +73,7 @@ import org.apache.pluto.util.impl.NamespaceMapperFactoryImpl;
  * @see Factory
  * @version $Id$
  */
-public class FactoryManagerServiceImpl 
+public class FactoryManagerServiceImpl
     extends AbstractComponent
     implements FactoryManagerService, Parameterizable {
 
@@ -124,7 +124,7 @@ public class FactoryManagerServiceImpl
         public String getServletName() {
             return this.servletContext.getServletContextName();
         }
-        
+
     }
     /**
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
@@ -139,11 +139,11 @@ public class FactoryManagerServiceImpl
     public void initialize()
     throws Exception {
         super.initialize();
-        final ServletContext servletContext = this.portalService.getProcessInfoProvider().getServletContext();
+        final ServletContext servletContext = this.portalService.getRequestContext().getServletContext();
         this.servletConfig = new PortalServletConfig(servletContext);
         final Map factories = new HashMap();
 
-        factories.put(ActionRequest.class.getName(), 
+        factories.put(ActionRequest.class.getName(),
                       this.parameters.getParameter("action-request-factory", ActionRequestFactoryImpl.class.getName()));
         factories.put(RenderRequest.class.getName(),
                       this.parameters.getParameter("render-request-factory", RenderRequestFactoryImpl.class.getName()));
