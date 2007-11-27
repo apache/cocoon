@@ -16,16 +16,16 @@
   limitations under the License.
 -->
 
-<!--+
-    | Prints out all passed parameters.
-    |
-    | @version $Id$
-    +-->
+<!--
+  - Prints out all passed parameters.
+  -
+  - $Id$
+  -->
 <properties xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-  <jx:forEach var="name" items="${cocoon.parameters.names}">
+  <jx:forEach var="name" items="${cocoon.parameters.keySet()}">
     <property>
       <name>${name}</name>
-      <value>${cocoon.parameters.getParameter(name)}</value>
+      <value>${cocoon.parameters[name]}</value>
     </property>
   </jx:forEach>
 </properties>
