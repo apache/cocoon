@@ -52,23 +52,12 @@
     </bean>
 
     <!--+
-        | This is the pipeline/uri based adapter.
+        | This is the uri based adapter.
         +-->
     <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/uri"
           class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter"
           parent="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter" scope="singleton">
-      <property name="notifyingBuilder" ref="org.apache.cocoon.components.notification.NotifyingBuilder"/>
-      <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
-    </bean>
-
-    <!--+
-        |  This is the application adapter.
-        +-->
-    <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/application"
-          class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter"
-          parent="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter" scope="singleton">
-      <property name="notifyingBuilder" ref="org.apache.cocoon.components.notification.NotifyingBuilder"/>
-      <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+      <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
     </bean>
 
   <!--+
