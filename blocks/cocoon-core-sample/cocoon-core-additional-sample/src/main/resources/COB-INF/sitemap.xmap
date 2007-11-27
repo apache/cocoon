@@ -49,7 +49,7 @@
     <map:view from-label="content" name="pretty-content">
       <!-- Make use of servlet services -->
       <map:serialize type="servletService">
-        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html" />
       </map:serialize>
     </map:view>
 
@@ -72,7 +72,7 @@
         <map:generate src="samples.xml" />
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html" />
         </map:serialize>
       </map:match>
 
@@ -86,7 +86,7 @@
         <map:generate src="stream/OrderPage.xml" />
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+          <map:parameter name="service" value="servlet:style:/service/blocks/dynamic-page2html" />
         </map:serialize>
       </map:match>
 
@@ -96,7 +96,7 @@
         </map:generate>
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+          <map:parameter name="service" value="servlet:style:/service/system/xml2html" />
         </map:serialize>
       </map:match>
 
@@ -105,14 +105,14 @@
       <map:match pattern="components">
         <map:generate src="components-samples.xml" />
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html" />
         </map:serialize>
       </map:match>
 
       <map:match pattern="request.html">
         <map:generate type="request" />
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+          <map:parameter name="service" value="servlet:style:/service/system/xml2html" />
         </map:serialize>
       </map:match>
 
@@ -161,7 +161,7 @@
         <map:generate type="linkstatus" src="http://{1}:{2}/{3}" />
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/linkstatus2html" />
+          <map:parameter name="service" value="servlet:style:/service/system/linkstatus2html" />
         </map:serialize>
       </map:match>
 
@@ -169,7 +169,7 @@
         <map:generate type="status" />
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/status2html" />
+          <map:parameter name="service" value="servlet:style:/service/system/status2html" />
         </map:serialize>
       </map:match>
 
@@ -184,7 +184,7 @@
         <map:generate src="cocoon:/status-with-continuations.xml" />
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/status2html" />
+          <map:parameter name="service" value="servlet:style:/service/system/status2html" />
         </map:serialize>
       </map:match>
 
@@ -193,7 +193,7 @@
           <map:generate src="status" type="status" />
           <!-- Make use of servlet services -->
           <map:serialize type="servletService">
-            <map:parameter name="service" value="servlet:style-default:/service/system/status2html" />
+            <map:parameter name="service" value="servlet:style:/service/system/status2html" />
           </map:serialize>
         </map:act>
       </map:match>
@@ -203,13 +203,13 @@
           <map:generate src="status" type="status" />
           <!-- Make use of servlet services -->
           <map:serialize type="servletService">
-            <map:parameter name="service" value="servlet:style-default:/service/system/status2html" />
+            <map:parameter name="service" value="servlet:style:/service/system/status2html" />
           </map:serialize>
         </map:act>
         <map:generate src="no-persistent-store.xml" />
         <!-- Make use of servlet services -->
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+          <map:parameter name="service" value="servlet:style:/service/system/xml2html" />
         </map:serialize>
       </map:match>
 
