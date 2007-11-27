@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.pluto.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.portlet.PortletMode;
@@ -31,7 +30,6 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.serializers.util.EncodingSerializer;
-import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
@@ -151,15 +149,15 @@ public class PortletAdapter
             coplet.setTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME, portletWindow);
 
             // load the portlet
-            final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
-            ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
+            final HttpServletRequest servletRequest = this.portalService.getRequestContext().getRequest();
+            ServletRequestImpl  req = (ServletRequestImpl) servletRequest.getAttribute("portlet-request-" + coplet.getId());
             if ( req == null ) {
-                final HttpServletResponse res = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-                objectModel.put("portlet-response",  new ServletResponseImpl(res));
-                req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null);
-                objectModel.put("portlet-request",  req);
+                final HttpServletResponse res = this.portalService.getRequestContext().getResponse();
+                servletRequest.setAttribute("portlet-response-" + coplet.getId(),  new ServletResponseImpl(res));
+                req = new ServletRequestImpl(servletRequest, null);
+                servletRequest.setAttribute("portlet-request-" + coplet.getId(),  req);
             }
-            final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
+            final HttpServletResponse res = (HttpServletResponse) servletRequest.getAttribute("portlet-response-" + coplet.getId());
             try {
                 this.portletContainer.portletLoad(portletWindow, req.getRequest(portletWindow),
                                                   res);
@@ -187,9 +185,23 @@ public class PortletAdapter
             if ( window == null ) {
                 throw new SAXException("Portlet couldn't be loaded: " + coplet.getId() + "(" + portletEntityId + ")");
             }
-            final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
-            final ServletRequestImpl  req = (ServletRequestImpl) objectModel.get("portlet-request");
-            final HttpServletResponse res = (HttpServletResponse) objectModel.get("portlet-response");
+            final HttpServletRequest servletRequest = this.portalService.getRequestContext().getRequest();
+
+            ServletRequestImpl  req = (ServletRequestImpl) servletRequest.getAttribute("portlet-request-" + coplet.getId());
+            HttpServletResponse res = (HttpServletResponse) servletRequest.getAttribute("portlet-response-" + coplet.getId());
+
+            if ( res == null ) {
+                res = new ServletResponseImpl(this.portalService.getRequestContext().getResponse());
+                servletRequest.setAttribute("portlet-response-" + coplet.getId(), res);
+            }
+            if ( req == null ) {
+                req = new ServletRequestImpl(this.portalService.getRequestContext().getRequest(), null);
+                servletRequest.setAttribute("portlet-request-" + coplet.getId(),  req);
+            }
+            if ( !this.portalService.getUserService().getUser().isAnonymous() ) {
+                req.setAttribute(PortletRequest.USER_INFO,
+                        this.portalService.getUserService().getUser().getUserInfos());
+            }
 
             // TODO - for parallel processing we have to clone the response!
             this.portletContainer.renderPortlet(window, req.getRequest(window), res);
@@ -304,15 +316,15 @@ public class PortletAdapter
      * @see Receiver
      */
     public void inform(PortletURLProviderImpl event) {
-        final Map objectModel = this.portalService.getProcessInfoProvider().getObjectModel();
-        final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), event);
-        final HttpServletResponse res = new ServletResponseImpl((HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT));
+        final HttpServletRequest servletRequest = this.portalService.getRequestContext().getRequest();
+        final ServletRequestImpl req = new ServletRequestImpl(servletRequest, event);
+        final HttpServletResponse res = new ServletResponseImpl(this.portalService.getRequestContext().getResponse());
         if ( !this.portalService.getUserService().getUser().isAnonymous() ) {
             req.setAttribute(PortletRequest.USER_INFO,
                     this.portalService.getUserService().getUser().getUserInfos());
         }
-        objectModel.put("portlet-response",  res);
-        objectModel.put("portlet-request", req);
+        servletRequest.setAttribute("portlet-response-" + event.getTarget().getId(),  res);
+        servletRequest.setAttribute("portlet-request-" + event.getTarget().getId(), req);
         // change portlet mode and window state
         final InformationProviderService ips = (InformationProviderService)this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
         final DynamicInformationProvider dynProv = ips.getDynamicProvider(req);
@@ -328,7 +340,8 @@ public class PortletAdapter
         }
         if ( event.isAction() ) {
             // This means we can only have ONE portlet event per request!
-            objectModel.put("portlet-event", event);
+            servletRequest.setAttribute("portlet-event", event);
+            servletRequest.setAttribute("portlet-event-target", event.getTarget().getId());
         } else {
             ((PortletActionProviderImpl)pap).changeRenderParameters(event.getParameters());
         }
@@ -364,26 +377,18 @@ public class PortletAdapter
 
         // do we already have an environment?
         // if not, create one
-        final Map objectModel = aspectContext.getPortalService().getProcessInfoProvider().getObjectModel();
+        final HttpServletRequest servletRequest = this.portalService.getRequestContext().getRequest();
 
-        PortletURLProviderImpl event = (PortletURLProviderImpl) objectModel.get("portlet-event");
+        PortletURLProviderImpl event = (PortletURLProviderImpl) servletRequest.getAttribute("portlet-event");
         if ( event != null ) {
+            final String targetId = (String) servletRequest.getAttribute("portlet-event-target");
             PortletWindow actionWindow = event.getPortletWindow();
             try {
-                final ServletRequestImpl req = (ServletRequestImpl) objectModel.get("portlet-request");
-                final ServletResponseImpl res= (ServletResponseImpl)objectModel.get("portlet-response");
+                final ServletRequestImpl req = (ServletRequestImpl) servletRequest.getAttribute("portlet-request-" + targetId);
+                final ServletResponseImpl res= (ServletResponseImpl)servletRequest.getAttribute("portlet-response-" + targetId);
                 this.portletContainer.processPortletAction(actionWindow, req.getRequest(actionWindow), res);
             } catch (Exception ignore) {
                 this.getLogger().error("Error during processing of portlet action.", ignore);
-            }
-        } else if ( objectModel.get("portlet-response") == null ) {
-            final HttpServletResponse res = (HttpServletResponse) objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-            objectModel.put("portlet-response",  new ServletResponseImpl(res));
-            final ServletRequestImpl req = new ServletRequestImpl((HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT), null);
-            objectModel.put("portlet-request",  req);
-            if ( !aspectContext.getPortalService().getUserService().getUser().isAnonymous() ) {
-                req.setAttribute(PortletRequest.USER_INFO,
-                        aspectContext.getPortalService().getUserService().getUser().getUserInfos());
             }
         }
     }
@@ -395,12 +400,14 @@ public class PortletAdapter
                        ContentHandler ch,
                        Properties properties)
     throws SAXException {
-        final Map objectModel = aspectContext.getPortalService().getProcessInfoProvider().getObjectModel();
+        final HttpServletRequest servletRequest = aspectContext.getPortalService().getRequestContext().getRequest();
 
         // don't generate a response, if we issued a redirect
-        if (objectModel.remove("portlet-event") == null) {
+        if (servletRequest.getAttribute("portlet-event") == null) {
             aspectContext.invokeNext(ch, properties);
         }
+        servletRequest.removeAttribute("portlet-event");
+        servletRequest.removeAttribute("portlet-event-target");
     }
 
     protected String getResponse(CopletInstance instance, HttpServletResponse response) {
@@ -415,7 +422,7 @@ public class PortletAdapter
         final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {
             InformationProviderService ips = (InformationProviderService) this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
-            DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest) this.portalService.getProcessInfoProvider().getObjectModel().get("portlet-request"));
+            DynamicInformationProvider dip = ips.getDynamicProvider(this.portalService.getRequestContext().getRequest());
 
             // portlet modes
             final String pmString = (String)copletInstanceData.getTemporaryAttribute(PORTLET_MODE_ATTRIBUTE_NAME);
@@ -456,7 +463,7 @@ public class PortletAdapter
         final PortletWindow window = (PortletWindow)copletInstanceData.getTemporaryAttribute(PORTLET_WINDOW_ATTRIBUTE_NAME);
         if ( window != null ) {
             InformationProviderService ips = (InformationProviderService) this.portletContainerEnvironment.getContainerService(InformationProviderService.class);
-            DynamicInformationProvider dip = ips.getDynamicProvider((HttpServletRequest)this.portalService.getProcessInfoProvider().getObjectModel().get("portlet-request"));
+            DynamicInformationProvider dip = ips.getDynamicProvider(this.portalService.getRequestContext().getRequest());
 
             // Sizing
             final String wsString = (String)copletInstanceData.getTemporaryAttribute(WINDOW_STATE_ATTRIBUTE_NAME);
