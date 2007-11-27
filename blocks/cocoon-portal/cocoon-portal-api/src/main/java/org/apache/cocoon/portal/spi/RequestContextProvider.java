@@ -14,27 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal;
+package org.apache.cocoon.portal.spi;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.apache.cocoon.portal.RequestContext;
 
 /**
- * Information and object dealing with the current request response cycle.
+ * This service provides the current request context.
  *
  * @version $Id$
- * @since 2.2
  */
-public interface RequestContext {
+public interface RequestContextProvider {
 
-     HttpServletRequest getRequest();
-
-     HttpServletResponse getResponse();
-
-     /**
-      * Is the request an Ajax request?
-      *
-      * @return true if this is an Ajax request
-      */
-     boolean isAjaxRequest();
+    RequestContext getCurrentRequestContext();
 }

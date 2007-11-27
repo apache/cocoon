@@ -29,13 +29,16 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This is the adapter to use pipelines as coplets.
+ * This is the adapter to use uris through the java.net.* classes as coplets.
  *
+ * TODO - We should provide a configuration option to directly stream the output
+ *        into the resulting output stream like the portlet adapter does.
  * @version $Id$
  */
 public class URICopletAdapter
     extends AbstractCopletAdapter {
 
+    /** The parser for parsing the output and streaming it into the pipeline. */
     protected SAXParser parser;
 
     public void setParser(final SAXParser p) {

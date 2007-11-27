@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -35,7 +33,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.ajax.AjaxHelper;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.RequestContext;
@@ -52,7 +49,7 @@ import org.apache.cocoon.portal.services.PortalManager;
 import org.apache.cocoon.portal.services.UserService;
 import org.apache.cocoon.portal.services.VariableResolver;
 import org.apache.cocoon.portal.services.VariableResolver.CompiledExpression;
-import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.cocoon.portal.spi.RequestContextProvider;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -116,20 +113,20 @@ public class PortalServiceImpl
     /** The portal manager. */
     protected PortalManager portalManager;
 
-    /** The process info provider. */
-    protected ProcessInfoProvider processInfoProvider;
-
     /** The user service. */
     protected UserService userService;
+
+    /** The request context provider. */
+    protected RequestContextProvider requestContextProvider;
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
-        this.processInfoProvider = (ProcessInfoProvider)this.manager.lookup(ProcessInfoProvider.ROLE);
         this.renderers = (Map)this.manager.lookup(Renderer.class.getName()+"Map");
         this.copletAdapters = (Map)this.manager.lookup(CopletAdapter.class.getName()+"Map");
+        this.requestContextProvider = (RequestContextProvider)this.manager.lookup(RequestContextProvider.class.getName());
     }
 
     /**
@@ -169,10 +166,10 @@ public class PortalServiceImpl
             this.eventManager = null;
             this.manager.release(this.portalManager);
             this.portalManager = null;
-            this.manager.release(this.processInfoProvider);
-            this.processInfoProvider = null;
             this.manager.release(this.userService);
             this.userService = null;
+            this.manager.release(this.requestContextProvider);
+            this.requestContextProvider = null;
             this.manager = null;
         }
     }
@@ -405,11 +402,10 @@ public class PortalServiceImpl
     }
 
     /**
-     * TODO - Remove dependency on ProcessInfoProvider!
      * @see org.apache.cocoon.portal.PortalService#getRequestContext()
      */
     public RequestContext getRequestContext() {
-        return new RequestContextImpl(this.processInfoProvider);
+        return this.requestContextProvider.getCurrentRequestContext();
     }
 
     /**
@@ -441,37 +437,6 @@ public class PortalServiceImpl
 
         public String resolve() {
             return this.expression;
-        }
-
-    }
-    public static final class RequestContextImpl implements RequestContext {
-
-        protected final ProcessInfoProvider provider;
-
-        public RequestContextImpl(ProcessInfoProvider prov) {
-            this.provider = prov;
-        }
-
-        /**
-         * @see org.apache.cocoon.portal.RequestContext#getRequest()
-         */
-        public HttpServletRequest getRequest() {
-            return this.provider.getRequest();
-        }
-
-        /**
-         * @see org.apache.cocoon.portal.RequestContext#getResponse()
-         */
-        public HttpServletResponse getResponse() {
-            return this.provider.getResponse();
-        }
-
-        /**
-         * @see org.apache.cocoon.portal.RequestContext#isAjaxRequest()
-         */
-        public boolean isAjaxRequest() {
-            final HttpServletRequest req = this.getRequest();
-            return req.getParameter(AjaxHelper.AJAX_REQUEST_PARAMETER) != null;
         }
 
     }

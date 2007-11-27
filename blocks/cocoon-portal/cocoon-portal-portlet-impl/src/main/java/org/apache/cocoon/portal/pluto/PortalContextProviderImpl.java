@@ -18,15 +18,14 @@ package org.apache.cocoon.portal.pluto;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.portal.RequestContext;
 import org.apache.pluto.services.information.PortalContextProvider;
 
 /**
@@ -34,7 +33,7 @@ import org.apache.pluto.services.information.PortalContextProvider;
  *
  * @version $Id$
  */
-public class PortalContextProviderImpl 
+public class PortalContextProviderImpl
 implements PortalContextProvider {
 
     /** Portal information */
@@ -64,15 +63,15 @@ implements PortalContextProvider {
     /**
      * Constructor
      */
-    public PortalContextProviderImpl(Map objectModel) {        
-        // these are the minimum modes that the portal needs to support        
+    public PortalContextProviderImpl(RequestContext context) {
+        // these are the minimum modes that the portal needs to support
         this.modes = this.getDefaultModes();
-        // these are the minimum states that the portal needs to support        
-        this.states = this.getDefaultStates(); 
-        // set info       
+        // these are the minimum states that the portal needs to support
+        this.states = this.getDefaultStates();
+        // set info
         this.info = "Apache Cocoon/" + Constants.VERSION;
         this.properties = new HashMap();
-        this.init(objectModel);
+        this.init(context);
     }
 
     /**
@@ -144,8 +143,8 @@ implements PortalContextProvider {
     /**
      * Initialize some infos.
      */
-    protected void init(Map objectModel) {
-        final Request request = ObjectModelHelper.getRequest(objectModel);
+    protected void init(final RequestContext requestContext) {
+        final HttpServletRequest request = requestContext.getRequest();
         final String hostName   = request.getServerName();
         final String contextRoot = request.getContextPath();
         final int hostPortHTTP  = request.getServerPort();

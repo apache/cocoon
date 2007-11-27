@@ -58,8 +58,8 @@ public class InformationProviderServiceImpl
      */
     public StaticInformationProvider getStaticProvider() {
         if ( this.staticProvider == null ) {
-            this.staticProvider = new StaticInformationProviderImpl(this.getPortalContextProvider(), 
-                    (PortletDefinitionRegistry)this.portletContainerEnvironment.getContainerService(PortletDefinitionRegistry.class));            
+            this.staticProvider = new StaticInformationProviderImpl(this.getPortalContextProvider(),
+                    (PortletDefinitionRegistry)this.portletContainerEnvironment.getContainerService(PortletDefinitionRegistry.class));
         }
         return this.staticProvider;
     }
@@ -86,8 +86,8 @@ public class InformationProviderServiceImpl
      */
     protected PortalContextProviderImpl getPortalContextProvider() {
         if ( this.provider == null ) {
-            this.provider = new PortalContextProviderImpl(this.portalService.getProcessInfoProvider().getObjectModel());
+            this.provider = new PortalContextProviderImpl(this.portalService.getRequestContext());
         }
-        return this.provider;        
+        return this.provider;
     }
 }

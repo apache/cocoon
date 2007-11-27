@@ -31,6 +31,14 @@
                            http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
 
   <!--+
+      | SPI Implementations
+      +-->
+    <bean name="org.apache.cocoon.portal.spi.RequestContextProvider"
+          class="org.apache.cocoon.portal.sitemap.impl.CocoonRequestContextProvider">
+      <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>
+    </bean>
+    
+  <!--+
       | Coplet Adapters
       |
       +-->

@@ -66,7 +66,7 @@ import org.xml.sax.InputSource;
  *
  * @version $Id$
  */
-public class PortletDefinitionRegistryImpl 
+public class PortletDefinitionRegistryImpl
     extends AbstractComponent
     implements PortletDefinitionRegistry, Receiver, Parameterizable, Runnable {
 
@@ -80,7 +80,7 @@ public class PortletDefinitionRegistryImpl
     /** The mapping */
     public static final String PORTLET_MAPPING = "resource://org/apache/cocoon/portal/pluto/om/portletdefinitionmapping.xml";
 
-    /** The mapping */    
+    /** The mapping */
     public static final String WEBXML_MAPPING = "resource://org/apache/cocoon/portal/pluto/om/servletdefinitionmapping.xml";
 
     /** The portlet application entity list */
@@ -137,7 +137,7 @@ public class PortletDefinitionRegistryImpl
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void service(ServiceManager serviceManager) 
+    public void service(ServiceManager serviceManager)
     throws ServiceException {
         super.service(serviceManager);
         this.entityResolver = (EntityResolver) this.manager.lookup(EntityResolver.ROLE);
@@ -182,7 +182,7 @@ public class PortletDefinitionRegistryImpl
         }
         super.initialize();
 
-        this.servletContext = this.portalService.getProcessInfoProvider().getServletContext();
+        this.servletContext = this.portalService.getRequestContext().getServletContext();
 
         // get our context path
         String baseWMDir = this.servletContext.getRealPath("");
@@ -250,7 +250,7 @@ public class PortletDefinitionRegistryImpl
             }
         } finally {
             this.manager.release(resolver);
-        } 
+        }
 
         // now load existing webapps/portlets
         if ( this.scanOnStartup ) {
@@ -273,7 +273,7 @@ public class PortletDefinitionRegistryImpl
         try {
             if ( this.webAppDir == null ) {
                 if (this.getLogger().isWarnEnabled()) {
-                    this.getLogger().warn("Only local portlets are supported when deployed as a war " 
+                    this.getLogger().warn("Only local portlets are supported when deployed as a war "
                                         + "and 'webapp-directory' is not configured.");
                 }
                 this.contextName = "local";
@@ -300,7 +300,7 @@ public class PortletDefinitionRegistryImpl
         return (PortletDefinition)portletsKeyObjectId.get(id);
     }
 
-    protected void scanWebapps() 
+    protected void scanWebapps()
     throws Exception {
         File f = new File(this.webAppDir);
         String[] entries = f.list();
@@ -344,7 +344,7 @@ public class PortletDefinitionRegistryImpl
             InputSource copletSource = null;
             if ( url != null ) {
                 copletSource = new InputSource(url.openStream());
-                copletSource.setSystemId(url.toExternalForm());                
+                copletSource.setSystemId(url.toExternalForm());
             }
             this.load(portletSource, webSource, copletSource, this.contextName);
         }
@@ -374,7 +374,7 @@ public class PortletDefinitionRegistryImpl
                 entry = war.getEntry(COPLET_XML);
                 if ( entry != null ) {
                     copletSource = new InputSource(war.getInputStream(entry));
-                    copletSource.setSystemId("/" + COPLET_XML);                    
+                    copletSource.setSystemId("/" + COPLET_XML);
                 }
                 this.load(portletSource, webSource, copletSource, webModule);
             }
@@ -420,7 +420,7 @@ public class PortletDefinitionRegistryImpl
             InputSource copletSource = null;
             if ( copletXml.exists() ) {
                 copletSource = new InputSource(new FileInputStream(copletXml));
-                copletSource.setSystemId(copletXml.toURL().toExternalForm());    
+                copletSource.setSystemId(copletXml.toURL().toExternalForm());
             }
 
             this.load(portletSource, webSource, copletSource, webModule);
@@ -498,7 +498,7 @@ public class PortletDefinitionRegistryImpl
             if (this.contextName.equals(webModule)) {
                 ((PortletDefinitionImpl) portlet).setLocalPortlet(true);
             } else if ( portlet.getServletDefinition() == null ) {
-                throw new DeploymentException("Unable to deploy portlet '" + portlet.getId() + 
+                throw new DeploymentException("Unable to deploy portlet '" + portlet.getId() +
                           "'. Servlet definition for '"+WebApplicationRewriter.CONTAINER+"' not found in web.xml.");
             }
             ((PortletDefinitionImpl) portlet).setPortletClassLoader(Thread.currentThread()
@@ -544,7 +544,7 @@ public class PortletDefinitionRegistryImpl
             try {
                 File toFile = new File(this.webAppDir, fileName);
                 if ( Deployer.deploy(event.getDeploymentObject().getSource(),
-                                     toFile.getAbsolutePath(), 
+                                     toFile.getAbsolutePath(),
                                      this.stripLoggers,
                                      this.getLogger(), this.manager) ) {
                     // let's wait some seconds to give the web container time to
