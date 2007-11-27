@@ -27,7 +27,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.EventRegistry;
 import org.apache.cocoon.caching.validity.Event;
-import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.collections.MultiHashMap;
 
 /**
  * This abstract base implementation of <code>EventRegistry</code> stores 
@@ -50,8 +50,8 @@ public abstract class AbstractDoubleMapEventRegistry
     implements Initializable, EventRegistry, Disposable, ThreadSafe {
 
     private boolean m_init_success = false;
-    private MultiValueMap m_keyMMap;
-    private MultiValueMap m_eventMMap;
+    private MultiHashMap m_keyMMap;
+    private MultiHashMap m_eventMMap;
     
     /**
      * Registers (stores) a two-way mapping between this Event and this 
@@ -175,8 +175,8 @@ public abstract class AbstractDoubleMapEventRegistry
     }
 
     protected final void createBlankCache() {
-        this.m_eventMMap = new MultiValueMap(); 
-        this.m_keyMMap = new MultiValueMap(); 
+        this.m_eventMMap = new MultiHashMap(); 
+        this.m_keyMMap = new MultiHashMap(); 
     }
     
     /** 
