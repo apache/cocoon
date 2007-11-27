@@ -19,9 +19,9 @@
 <coplets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
    <coplet-type id="URICoplet">
-      <coplet-adapter>uri</coplet-adapter>
+      <coplet-adapter>cocoon</coplet-adapter>
    </coplet-type>
-
+<!-- 
    <coplet-type id="Portlet">
       <coplet-adapter>portlet</coplet-adapter>
       <configuration>
@@ -45,5 +45,6 @@
       	<value xsi:type="java:java.lang.Boolean">true</value>
       </configuration>
    </coplet-type>
+ -->
 </coplets>
 

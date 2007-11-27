@@ -38,7 +38,7 @@ public class URICopletAdapter
 
     protected SAXParser parser;
 
-    public void setSAXParser(final SAXParser p) {
+    public void setParser(final SAXParser p) {
         this.parser = p;
     }
 
