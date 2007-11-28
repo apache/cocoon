@@ -247,4 +247,18 @@
       +-->
     <configurator:bean-map id="org.apache.cocoon.portal.coplet.adapter.CopletAdapterMap"
                            type="org.apache.cocoon.portal.coplet.adapter.CopletAdapter"/>
+
+  <!--+
+      | Coplet Type map
+      |
+      +-->
+    <configurator:bean-map id="org.apache.cocoon.portal.om.CopletTypeMap"
+                           type="org.apache.cocoon.portal.om.CopletType"/>
+
+  <!--+
+      | Layout Type map
+      |
+      +-->
+    <configurator:bean-map id="org.apache.cocoon.portal.om.LayoutTypeMap"
+                           type="org.apache.cocoon.portal.om.LayoutType"/>
 </beans>

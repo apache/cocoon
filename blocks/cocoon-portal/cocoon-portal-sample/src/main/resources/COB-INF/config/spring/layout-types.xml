@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--+
+    | This is a sample configuration for layout types.
+    |
+    | @version $Id$
+    +-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:portal="http://cocoon.apache.org/schema/portal"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+                           http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
+
+    <bean name="org.apache.cocoon.portal.om.LayoutType/column"
+          class="org.apache.cocoon.portal.om.LayoutType">
+      <property name="className" value="org.apache.cocoon.portal.om.CompositeLayout"/>
+      <property name="defaultRendererName" value="column"/>
+      <property name="rendererNames">
+        <list>
+          <value>column</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean name="org.apache.cocoon.portal.om.LayoutType/row"
+          class="org.apache.cocoon.portal.om.LayoutType">
+      <property name="className" value="org.apache.cocoon.portal.om.CompositeLayout"/>
+      <property name="defaultRendererName" value="row"/>
+      <property name="rendererNames">
+        <list>
+          <value>row</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean name="org.apache.cocoon.portal.om.LayoutType/tab"
+          class="org.apache.cocoon.portal.om.LayoutType">
+      <property name="className" value="org.apache.cocoon.portal.om.CompositeLayout"/>
+      <property name="itemClassName" value="org.apache.cocoon.portal.om.NamedItem"/>
+      <property name="defaultRendererName" value="tab"/>
+      <property name="defaultIsStatic" value="true"/>
+      <property name="rendererNames">
+        <list>
+          <value>tab</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean name="org.apache.cocoon.portal.om.LayoutType/rawtab"
+          class="org.apache.cocoon.portal.om.LayoutType">
+      <property name="className" value="org.apache.cocoon.portal.om.CompositeLayout"/>
+      <property name="itemClassName" value="org.apache.cocoon.portal.om.NamedItem"/>
+      <property name="defaultRendererName" value="rawtab"/>
+      <property name="rendererNames">
+        <list>
+          <value>rawtab</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean name="org.apache.cocoon.portal.om.LayoutType/linktab"
+          class="org.apache.cocoon.portal.om.LayoutType">
+      <property name="className" value="org.apache.cocoon.portal.om.CompositeLayout"/>
+      <property name="itemClassName" value="org.apache.cocoon.portal.om.NamedItem"/>
+      <property name="defaultRendererName" value="linktab"/>
+      <property name="defaultIsStatic" value="true"/>
+      <property name="rendererNames">
+        <list>
+          <value>linktab</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean name="org.apache.cocoon.portal.om.LayoutType/frame"
+          class="org.apache.cocoon.portal.om.LayoutType">
+      <property name="className" value="org.apache.cocoon.portal.om.FrameLayout"/>
+      <property name="defaultRendererName" value="frame"/>
+      <property name="createId" value="true"/>
+      <property name="rendererNames">
+        <list>
+          <value>frame</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean name="org.apache.cocoon.portal.om.LayoutType/coplet"
+          class="org.apache.cocoon.portal.om.LayoutType">
+      <property name="className" value="org.apache.cocoon.portal.om.CopletLayout"/>
+      <property name="defaultRendererName" value="window"/>
+      <property name="rendererNames">
+        <list>
+          <value>window</value>
+          <value>nowindow</value>
+          <value>borderless-window</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean name="org.apache.cocoon.portal.om.LayoutType/link"
+          class="org.apache.cocoon.portal.om.LayoutType">
+      <property name="className" value="org.apache.cocoon.portal.om.LinkLayout"/>
+      <property name="defaultRendererName" value="link"/>
+      <property name="createId" value="true"/>
+      <property name="rendererNames">
+        <list>
+          <value>link</value>
+        </list>
+      </property>
+    </bean>
+</beans>
