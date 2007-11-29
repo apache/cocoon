@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ public class DemoServlet extends HttpServlet {
 
     BeanFactory beanFactory;
     SourceResolver resolver;
-    
+
     /* (non-Javadoc)
      * @see javax.servlet.GenericServlet#init()
      */
@@ -51,7 +51,10 @@ public class DemoServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getPathInfo();
-        
+
+        request.setAttribute("foo", "bar");
+        System.out.println("x=" + request.getParameter("x"));
+
         if ("/test1".equals(path)) {
             response.setContentType("text/plain");
             String attr = this.getInitParameter("foo");
@@ -67,7 +70,7 @@ public class DemoServlet extends HttpServlet {
 
             response.setContentType("text/plain");
             OutputStream os = response.getOutputStream();
-            
+
             copy(is, os);
             is.close();
             os.close();
@@ -76,15 +79,18 @@ public class DemoServlet extends HttpServlet {
             InputStream is = source.getInputStream();
             response.setContentType("text/plain");
             OutputStream os = response.getOutputStream();
-            
+
             copy(is, os);
+            os.write(("\nContent From: " + this.getClass().getName() + "\n").getBytes());
+            os.write(("******************************************************************\n").getBytes());
+            os.write(("request.getAttribute(\"foo1\") [from main request]: " + request.getAttribute("foo1")).getBytes());
             is.close();
             os.close();
         } else {
             throw new ServletException("Unknown path " + path);
         }
     }
-    
+
     private static void copy(InputStream is, OutputStream os) throws IOException {
         int bytesRead = 0;
         byte buffer[] = new byte[512];
