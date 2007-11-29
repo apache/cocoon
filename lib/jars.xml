@@ -292,7 +292,7 @@
     <description>Xerces is an XML parser.</description>
     <used-by>Cocoon</used-by>
     <ant-target>jars</ant-target>
-    <lib>endorsed/xercesImpl-2.9.0.jar</lib>
+    <lib>endorsed/xercesImpl-2.9.1.jar</lib>
     <homepage>http://xerces.apache.org/xerces2-j/</homepage>
   </file>
 

@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="AG" type="update">
+      Core: Update xercesImpl to 2.9.1.
+    </action> 
     <action dev="JH" type="fix" fixes-bug="COCOON-2146" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
       Event Cache Block: Restore serializability of persistent cache when using event-aware cache.
     </action>
@@ -228,7 +231,7 @@
     <action dev="RG" type="fix">
       Portal: Marked PreparePortalAction, CopletSetDataAction, and ObjectModelAction ThreadSafe
     </action>
-    <action dev="AG" type="add">
+    <action dev="AG" type="update">
       Core: Update log4j to 1.2.14, commons-io to 1.3.1, commons-lang to 2.3 and jakarta-regexp to 1.5.
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-2023" due-to="Larry Ruiz" due-to-email="lruiz@agssa.net">
@@ -250,7 +253,7 @@
     <action dev="CZ" type="fix" fixes-bug="COCOON-1927" due-to="Richard Frovarp">
       Core: EHCache now uses the configured cache directory instead of using the default of java.io.tempdir.
     </action>
-    <action dev="CZ" type="add">
+    <action dev="CZ" type="update">
       Core: Update ehcache to 1.2.3.
     </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-1984" due-to="Mark Lundquist">
