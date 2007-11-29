@@ -22,6 +22,7 @@ import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.om.LayoutType;
 
 /**
  * This factory is for creating and managing layout objects.
@@ -32,7 +33,7 @@ public interface LayoutFactory  {
 
     /**
      * Return all available types.
-     * TODO - Do we need this?
+     * @return A non-null collection of {@link LayoutType}s.
      */
     Collection getLayoutTypes();
 

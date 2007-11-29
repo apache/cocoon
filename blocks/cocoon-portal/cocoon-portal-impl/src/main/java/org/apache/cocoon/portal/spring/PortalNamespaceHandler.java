@@ -37,5 +37,6 @@ public class PortalNamespaceHandler extends NamespaceHandlerSupport {
         this.registerBeanDefinitionParser("request-processor-aspects", new AspectsBeanDefinitionParser(RequestProcessorAspect.class.getName()));
         this.registerBeanDefinitionParser("response-processor-aspects", new AspectsBeanDefinitionParser(ResponseProcessorAspect.class.getName()));
         this.registerBeanDefinitionParser("profile-manager-aspects", new AspectsBeanDefinitionParser(ProfileManagerAspect.class.getName()));
+        this.registerBeanDefinitionParser("layout-type", new LayoutTypeDefinitionParser());
     }
 }

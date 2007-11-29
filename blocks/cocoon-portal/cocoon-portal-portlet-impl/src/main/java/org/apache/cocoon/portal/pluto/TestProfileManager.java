@@ -74,6 +74,9 @@ public class TestProfileManager extends GroupBasedProfileManager {
                 }
                 final ProfileHolder profile = new ProfileHolder();
 
+                // set global stuff like layout types
+                profile.setLayoutTypes(this.portalService.getLayoutFactory().getLayoutTypes());
+
                 // first "load" the global coplet types
                 profile.setCopletTypes( this.getGlobalCopletTypes() );
                 profile.setCopletDefinitions( this.getGlobalCopletDefinitions( user, profile ) );

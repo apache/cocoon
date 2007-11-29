@@ -149,7 +149,7 @@ public class NewDefaultLayoutFactory
      * @see org.apache.cocoon.portal.services.LayoutFactory#getLayoutTypes()
      */
     public Collection getLayoutTypes() {
-        return this.layoutTypes.keySet();
+        return this.layoutTypes.values();
     }
 
     /**

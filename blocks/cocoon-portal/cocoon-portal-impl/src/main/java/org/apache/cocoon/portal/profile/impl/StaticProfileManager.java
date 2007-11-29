@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
@@ -30,9 +31,8 @@ import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutInstance;
-import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.portal.profile.ProfileException;
-import org.apache.cocoon.portal.PortalRuntimeException;
+import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.map.StaticBucketMap;
 import org.apache.excalibur.source.SourceValidity;
@@ -43,8 +43,8 @@ import org.apache.excalibur.source.SourceValidity;
  * FIXME - Events for adding/removing coplet instances/layouts not implemented yet
  * @version $Id$
  */
-public class StaticProfileManager 
-    extends AbstractProfileManager { 
+public class StaticProfileManager
+    extends AbstractProfileManager {
 
     protected String profilesPath = "cocoon:/profiles";
 
@@ -84,15 +84,6 @@ public class StaticProfileManager
                     return layout;
             }
 
-            // put instances into map
-            Collection c = this.loadCopletInstances();
-            final Map objectMap = new HashMap();
-            final Iterator i = c.iterator();
-            while ( i.hasNext() ) {
-                CopletInstance current = (CopletInstance)i.next();
-                objectMap.put(current.getId(), current);
-            }
-
             // load layout
             final Map map = new LinkedMap();
             map.put("base", this.profilesPath);
@@ -108,7 +99,7 @@ public class StaticProfileManager
             }
 
             // get Layout specified in the map
-            Layout layout = (Layout) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_LAYOUT, objectMap);
+            Layout layout = (Layout) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_LAYOUT, null);
             layout = this.processLayout(null, layout);
 
             final Map layouts = new HashMap();
@@ -150,7 +141,7 @@ public class StaticProfileManager
         }
     }
 
-    private Map getCopletDefinitionManager() 
+    private Map getCopletDefinitionManager()
     throws Exception {
         final String portalName = this.portalService.getPortalName();
         // ensure that profile is loaded
@@ -158,7 +149,7 @@ public class StaticProfileManager
         return (Map)this.copletDefinitions.get(portalName);
     }
 
-    private Collection loadCopletInstances() 
+    private Collection loadCopletInstances()
     throws Exception {
         String portalName = this.portalService.getPortalName();
         Collection instances = (Collection) this.copletInstances.get(portalName);

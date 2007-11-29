@@ -49,6 +49,13 @@ public class LayoutType {
     /** TODO */
     protected boolean defaultIsStatic = false;
 
+    /** The unique id of this layout type. */
+    protected final String id;
+
+    public LayoutType(String typeId) {
+        this.id = typeId;
+    }
+
     public Renderer getDefaultRenderer() {
         return (Renderer) renderers.get(0);
     }
@@ -116,5 +123,13 @@ public class LayoutType {
 
     public void setDefaultIsStatic(boolean value) {
         this.defaultIsStatic = value;
+    }
+
+    /**
+     * Return the unique id of this layout type.
+     * @return A non-null identifier.
+     */
+    public String getId() {
+        return this.id;
     }
 }
