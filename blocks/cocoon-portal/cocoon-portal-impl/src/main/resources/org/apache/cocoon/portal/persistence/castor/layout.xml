@@ -39,6 +39,12 @@
     <field name="static" type="java.lang.Boolean" set-method="setIsStatic" get-method="isStatic">
       <bind-xml name="static" node="attribute"/>
     </field>
+
+    <field name="layoutType"
+           type="java.lang.String"
+           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
+      <bind-xml name="type" node="attribute"/>
+    </field>
   </class>
 
   <class name="org.apache.cocoon.portal.om.LinkLayout"
@@ -48,10 +54,6 @@
 
     <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
       <bind-xml name="id" node="attribute" />
-    </field>
-
-    <field name="type" type="java.lang.String" set-method="%2" get-method="getType">
-      <bind-xml name="type" node="attribute"/>
     </field>
 
     <field name="profileName" type="java.lang.String">
@@ -71,10 +73,6 @@
       <bind-xml name="id" node="attribute" />
     </field>
 
-    <field name="type" type="java.lang.String" set-method="%2" get-method="getType">
-      <bind-xml name="type" node="attribute"/>
-    </field>
-
     <field name="items" type="org.apache.cocoon.portal.om.Item"
            collection="collection" set-method="addItem" get-method="getItems">
       <bind-xml matches="named-item item"/>
@@ -91,10 +89,6 @@
       <bind-xml name="id" node="attribute" />
     </field>
 
-    <field name="type" type="java.lang.String" set-method="%2" get-method="getType">
-      <bind-xml name="type" node="attribute"/>
-    </field>
-
     <field name="copletInstanceId"
            type="java.lang.String">
       <bind-xml name="coplet-instance"/>
@@ -108,10 +102,6 @@
 
     <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
       <bind-xml name="id" node="attribute" />
-    </field>
-
-    <field name="type" type="java.lang.String" set-method="%2" get-method="getType">
-      <bind-xml name="type" node="attribute"/>
     </field>
 
     <field name="source" type="java.lang.String"/>

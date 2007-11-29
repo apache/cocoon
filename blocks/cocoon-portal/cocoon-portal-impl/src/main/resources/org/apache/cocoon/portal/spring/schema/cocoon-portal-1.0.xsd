@@ -77,4 +77,22 @@
       <xsd:attribute name="value" type="xsd:string" use="required"/>
     </xsd:complexType>
   </xsd:element>
+  
+  <xsd:element name="layout-type">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="renderer" minOccurs="1" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+            <xsd:attribute name="type" type="xsd:string" use="optional"/>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="required"/>
+      <xsd:attribute name="layoutClass" type="xsd:string" use="required"/>
+      <xsd:attribute name="createLayoutId" type="xsd:boolean" use="optional"/>
+      <xsd:attribute name="itemClass" type="xsd:string" use="optional"/>
+      <xsd:attribute name="defaultIsStatic" type="xsd:boolean" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
 </xsd:schema>

@@ -55,7 +55,7 @@ public abstract class Layout extends AbstractParameters {
     protected boolean isStatic;
 
     /** The corresponding layout type. */
-    protected final LayoutType layoutType;
+    protected LayoutType layoutType;
 
     /** The optional renderer to render this layout. If this layout should use
      * a different renderer than the default renderer, this property will point
@@ -68,10 +68,9 @@ public abstract class Layout extends AbstractParameters {
      * Never create a layout object directly. Use the
      * {@link LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
-     * @param type The type of the layout.
      * @see PortalUtils#testId(String)
      */
-    public Layout(String id, LayoutType type) {
+    public Layout(String id) {
         // check id, null for id is allowed!
         if ( id != null ) {
             final String idErrorMsg = PortalUtils.testId(id);
@@ -80,7 +79,6 @@ public abstract class Layout extends AbstractParameters {
             }
         }
         this.id = id;
-        this.layoutType = type;
     }
 
     /**
@@ -189,8 +187,19 @@ public abstract class Layout extends AbstractParameters {
         }
     }
 
+    /**
+     * The type of the layout object.
+     * @return A layout type.
+     */
     public LayoutType getLayoutType() {
         return this.layoutType;
+    }
+
+    /**
+     * Set the type of the layout object.
+     */
+    public void setLayoutType(final LayoutType t) {
+        this.layoutType = t;
     }
 
     /**

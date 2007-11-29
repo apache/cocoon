@@ -58,17 +58,17 @@ import org.apache.excalibur.source.SourceValidity;
  * each user has belong to exactly one group.
  * In the case that the user does not belong to a group, a global
  * profile is loaded.
- * 
+ *
  * This profile manager does not check for changes of the profile,
  * which means for example once a global profile is loaded, it is
  * used until Cocoon is restarted. (This will be changed later on)
- * 
+ *
  * THIS IS A WORK IN PROGRESS - IT'S NOT FINISHED YET
- * 
+ *
  * @version $Id$
  */
-public class GroupBasedProfileManager 
-    extends AbstractProfileManager { 
+public class GroupBasedProfileManager
+    extends AbstractProfileManager {
 
     public static final String CATEGORY_GLOBAL = "global";
     public static final String CATEGORY_GROUP  = "group";
@@ -282,11 +282,12 @@ public class GroupBasedProfileManager
      * This loads the profile for the current user. First the default profile is read. This might
      * contain links to other profiles which are then loaded recursively.
      */
-    protected ProfileHolder loadProfile() 
+    protected ProfileHolder loadProfile()
     throws ProfileException {
         final String defaultProfileName = this.portalService.getUserService().getDefaultProfileName();
         final PortalUser user = this.portalService.getUserService().getUser();
         ProfileHolder profile = new ProfileHolder();
+        profile.setLayoutTypes(this.portalService.getLayoutFactory().getLayoutTypes());
 
         try {
             // first "load" the global data
@@ -294,7 +295,7 @@ public class GroupBasedProfileManager
             // FIXME - We should be able to merge definitions from various locations
             //         This could also be handled by aspects?
             profile.setCopletDefinitions( this.getGlobalCopletDefinitions(user, profile) );
-    
+
             // now load the user/group specific data
             this.loadProfile(profile, user, defaultProfileName);
             // FIXME - Traverse the layout tree for link layouts
@@ -317,14 +318,14 @@ public class GroupBasedProfileManager
                     }
                 }
             }
-    
+
             if ( !this.getLayout(profile, user, CATEGORY_USER, profileName) ) {
                 if ( user.getGroups().size() == 0 || !this.getLayout(profile, user, CATEGORY_GROUP, profileName)) {
                     if ( !this.getLayout(profile, user, CATEGORY_GLOBAL, profileName) ) {
                         throw new ProcessingException("No profile for layout found.");
                     }
                 }
-            }        
+            }
         } catch (ProfileException e) {
             throw e;
         } catch (Exception e) {
@@ -493,7 +494,7 @@ public class GroupBasedProfileManager
                                       true,
                                       layoutKey);
         try {
-            Layout l = (Layout)loader.loadProfile(key, ProfileLS.PROFILETYPE_LAYOUT, profile.getCopletInstancesMap());
+            Layout l = (Layout)loader.loadProfile(key, ProfileLS.PROFILETYPE_LAYOUT, profile.getLayoutTypesMap());
             l = this.processLayout(profile, l);
             profile.setRootLayout(l);
 
@@ -522,7 +523,7 @@ public class GroupBasedProfileManager
         if ( load ) {
             config.append("load");
         } else {
-            config.append("save");            
+            config.append("save");
         }
         final String uri = this.configuration.getProperty(config.toString());
         if ( uri == null ) {
@@ -572,7 +573,7 @@ public class GroupBasedProfileManager
         try {
             final ProfileHolder profile = this.getUserProfile();
             final Map key = this.buildKey(CATEGORY_USER,
-                                          ProfileLS.PROFILETYPE_LAYOUTINSTANCE, 
+                                          ProfileLS.PROFILETYPE_LAYOUTINSTANCE,
                                           this.portalService.getUserService().getUser(),
                                           false,
                                           null);
@@ -605,7 +606,7 @@ public class GroupBasedProfileManager
                 throw e;
             } catch (Exception e) {
                 throw new ProfileException("Unable to load global coplet types.", e);
-            }            
+            }
         }
         return this.copletTypes.objects.values();
     }

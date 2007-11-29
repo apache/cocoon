@@ -30,6 +30,7 @@ import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.om.LayoutType;
 
 /**
  * This class is an utility class holding all profile information of the
@@ -60,6 +61,9 @@ public class ProfileHolder {
 
     /** The root element of the layout. */
     protected Layout rootLayout;
+
+    /** A map of all layout types. */
+    protected Map layoutTypes;
 
     /**
      * Set the root layout for this profile.
@@ -234,7 +238,7 @@ public class ProfileHolder {
                     this.traverseLayouts( current.getLayout() );
                 }
             }
-        }        
+        }
     }
 
     /**
@@ -311,5 +315,19 @@ public class ProfileHolder {
 
     public Map getCopletTypesMap() {
         return this.copletTypes;
+    }
+
+    public Map getLayoutTypesMap() {
+        return this.layoutTypes;
+    }
+
+    public void setLayoutTypes(final Collection c) {
+        final Map types = new HashMap();
+        final Iterator i = c.iterator();
+        while ( i.hasNext() ) {
+            final LayoutType layoutType = (LayoutType)i.next();
+            types.put(layoutType.getId(), layoutType);
+        }
+        this.layoutTypes = types;
     }
 }
