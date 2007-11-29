@@ -33,7 +33,7 @@
   <packaging>jar</packaging>
   <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Servlet Service Sample Blocks</name>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -48,9 +48,41 @@
           </archive>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-maven-plugin</artifactId>
+        <version>1.0.0-M1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+        <version>6.1.5</version>
+        <configuration>
+          <connectors>
+            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              <port>8888</port>
+              <maxIdleTime>30000</maxIdleTime>
+            </connector>
+          </connectors>
+          <webAppSourceDirectory>target/rcl/webapp</webAppSourceDirectory>
+          <contextPath>/</contextPath>
+          <systemProperties>
+            <systemProperty>
+              <name>org.apache.cocoon.log4j.loglevel</name>
+              <value>ERROR</value>
+            </systemProperty>
+          </systemProperties>
+          <systemProperties>
+            <systemProperty>
+              <name>org.apache.cocoon.mode</name>
+              <value>dev</value>
+            </systemProperty>
+          </systemProperties>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -66,11 +98,11 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-sample/</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-sample/</developerConnection>
-    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-sample/</url>    
-  </scm>  
-  
+    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-sample/</url>
+  </scm>
+
 </project>
