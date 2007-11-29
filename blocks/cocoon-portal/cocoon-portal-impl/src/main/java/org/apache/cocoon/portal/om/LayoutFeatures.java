@@ -69,7 +69,7 @@ public class LayoutFeatures {
         if ( fullScreenLayout == null ) {
             layoutInstance.removeTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO);
         } else {
-            layoutInstance.setTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO, fullScreenLayout);            
+            layoutInstance.setTemporaryAttribute(ATTRIBUTE_FULLSCREENINFO, fullScreenLayout);
         }
     }
 
@@ -89,7 +89,7 @@ public class LayoutFeatures {
         if ( info == null ) {
             layoutInstance.removeTemporaryAttribute(ATTRIBUTE_MAXMIZEDINFO);
         } else {
-            layoutInstance.setTemporaryAttribute(ATTRIBUTE_MAXMIZEDINFO, info);            
+            layoutInstance.setTemporaryAttribute(ATTRIBUTE_MAXMIZEDINFO, info);
         }
     }
 
@@ -105,7 +105,7 @@ public class LayoutFeatures {
 		return item;
 	}
 
-    /** 
+    /**
      * The layout traverser gets notified by each layout object in the tree when
      * the layout is traversed using {@link LayoutFeatures#traverseLayout(PortalService, Layout, LayoutTraverser)}
      * and {@link LayoutFeatures#traverseLayout(PortalService, Layout, LayoutTraverser, boolean)}.
@@ -133,7 +133,7 @@ public class LayoutFeatures {
                                         LayoutTraverser traverser) {
         return traverseLayout(service, rootLayout, traverser, true);
     }
-    
+
     /**
      * Traverse the whole layout tree. Depending on the parameters, link layouts are
      * either followed or not.
@@ -210,7 +210,7 @@ public class LayoutFeatures {
     public static LayoutInstance getLayoutInstance(PortalService service, Layout layout, boolean create) {
         LayoutInstance instance = service.getProfileManager().getLayoutInstance(layout);
         if ( instance == null && create ) {
-            instance = service.getLayoutFactory().newInstace(layout);
+            instance = service.getLayoutFactory().newInstance(layout);
         }
         return instance;
     }

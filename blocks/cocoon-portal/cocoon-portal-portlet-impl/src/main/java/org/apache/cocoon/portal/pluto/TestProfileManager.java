@@ -79,7 +79,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                 profile.setCopletDefinitions( this.getGlobalCopletDefinitions( user, profile ) );
 
                 // create root layout
-                CompositeLayout rootLayout = new CompositeLayout("root", "row");
+                CompositeLayout rootLayout = (CompositeLayout) this.portalService.getLayoutFactory().newInstance("row", "root");
 
                 // create coplet instances and layouts
                 final List instances = new ArrayList();
@@ -93,7 +93,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                         cid.setCopletDefinition(cd);
                         instances.add(cid);
                         if ( portletNames.size() == 0 || portletNames.contains(cd.getId())) {
-                            final CopletLayout copletLayout = new CopletLayout(null, "coplet");
+                            final CopletLayout copletLayout = (CopletLayout) this.portalService.getLayoutFactory().newInstance("coplet");
                             copletLayout.setCopletInstanceId(cid.getId());
                             final Item item = new Item();
                             item.setLayout(copletLayout);
@@ -142,13 +142,13 @@ public class TestProfileManager extends GroupBasedProfileManager {
                     while ( i.hasNext() ) {
                         final CopletInstance cid = (CopletInstance)i.next();
                         if ( portletNames.contains(cid.getCopletDefinition().getId())) {
-                            final CopletLayout copletLayout = new CopletLayout(null, "coplet");
-                            copletLayout.setCopletInstanceId(cid.getId());
-                            final Item item = new Item();
-                            item.setLayout(copletLayout);
-                            rootLayout.addItem(item);
                             try {
-                                 this.prepareObject(this.getUserProfile(), copletLayout);
+                                final CopletLayout copletLayout = (CopletLayout) this.portalService.getLayoutFactory().newInstance("coplet");
+                                copletLayout.setCopletInstanceId(cid.getId());
+                                final Item item = new Item();
+                                item.setLayout(copletLayout);
+                                rootLayout.addItem(item);
+                                this.prepareObject(this.getUserProfile(), copletLayout);
                             } catch (LayoutException le) {
                                 // ignore this
                             }

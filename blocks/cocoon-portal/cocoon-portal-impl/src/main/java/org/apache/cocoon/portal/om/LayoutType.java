@@ -16,62 +16,53 @@
  */
 package org.apache.cocoon.portal.om;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-import org.apache.cocoon.portal.services.LayoutFactory;
+import org.apache.cocoon.portal.layout.renderer.Renderer;
 
 
 /**
- * A configured layout.
- * This description is used to instantiate new layout objects by the {@link LayoutFactory}.
- * A layout has an associated class and an associated type. The type is used to differentiate
- * layout objects having the same class but providing different features. For example
- * a composite layout can either be a row or a column - both use the same implementation class
- * but have different types.
+ * A configured layout type.
+ * Layout types a per portal configurations and define the possible layout objects for
+ * creating the portal pages. Ususally a portal has layout types for structuring like
+ * columns or rows and layout types for content like coplets.
+ * A layout type requires a class name which has to be of type {@link Layout}.
  *
  * @version $Id$
  */
 public class LayoutType {
 
+    /** The class name of the layout object. */
     protected String className;
 
+    /** Should an ID be generated for this layout object. */
     protected boolean createId = false;
 
-    protected String defaultRendererName;
-
-    protected List rendererNames = new ArrayList(2);
-
+    /** The class name of the item (if a special class is used) for composite layouts. */
     protected String itemClassName;
 
+    /** The renderers for this layout object. */
+    protected List renderers = Collections.EMPTY_LIST;
+
+    /** TODO */
     protected boolean defaultIsStatic = false;
 
-    /**
-     * This is the name of the renderer used by default to render this layout object.
-     * @return the default renderer name
-     */
-    public String getDefaultRendererName() {
-        return defaultRendererName;
-    }
-
-    /**
-     * @param string
-     */
-    public void setDefaultRendererName(String string) {
-        defaultRendererName = string;
+    public Renderer getDefaultRenderer() {
+        return (Renderer) renderers.get(0);
     }
 
     /**
      * Each layout can have several associated renderers.
      * @return the names of all allowed renderers.
      */
-    public Collection getRendererNames() {
-        return this.rendererNames;
+    public Collection getRenderers() {
+        return this.renderers;
     }
 
-    public void setRendererNames(List names) {
-        this.rendererNames = names;
+    public void setRenderers(List r) {
+        this.renderers = r;
     }
 
     /**

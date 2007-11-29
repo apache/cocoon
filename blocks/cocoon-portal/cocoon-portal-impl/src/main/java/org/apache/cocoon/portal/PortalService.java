@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.services.LayoutFactory;
@@ -89,11 +88,6 @@ public interface PortalService {
      * Get the current profile manager.
      */
     ProfileManager getProfileManager();
-
-    /**
-     * Get the renderer.
-     */
-    Renderer getRenderer(String name);
 
     /**
      * Get the coplet adapter.

@@ -35,10 +35,10 @@ public class LinkLayout extends Layout {
      * Never create a layout object directly. Use the
      * {@link org.apache.cocoon.portal.services.LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
-     * @param name The name of the profile.
+     * @param type The layout type.
      */
-    public LinkLayout(String id, String name) {
-        super(id, name);
+    public LinkLayout(String id, LayoutType type) {
+        super(id, type);
     }
 
     public String getLayoutId() {

@@ -39,7 +39,6 @@ import org.apache.cocoon.portal.RequestContext;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.SkinDescription;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.CopletFactory;
@@ -95,9 +94,6 @@ public class PortalServiceImpl
     /** The link service. */
     protected LinkService linkService;
 
-    /** The used renderers. */
-    protected Map renderers = Collections.EMPTY_MAP;
-
     /** The used coplet adapters. */
     protected Map copletAdapters = Collections.EMPTY_MAP;
 
@@ -124,7 +120,6 @@ public class PortalServiceImpl
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
-        this.renderers = (Map)this.manager.lookup(Renderer.class.getName()+"Map");
         this.copletAdapters = (Map)this.manager.lookup(CopletAdapter.class.getName()+"Map");
         this.requestContextProvider = (RequestContextProvider)this.manager.lookup(RequestContextProvider.class.getName());
     }
@@ -310,17 +305,6 @@ public class PortalServiceImpl
             }
         }
         return this.eventManager;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#getRenderer(java.lang.String)
-     */
-    public Renderer getRenderer(String name) {
-        final Renderer o = (Renderer) this.renderers.get( name );
-        if ( o == null ) {
-            throw new PortalRuntimeException("Unable to lookup renderer with name " + name);
-        }
-        return o;
     }
 
     /**
