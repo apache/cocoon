@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class LayoutSource 
+public class LayoutSource
     implements Source, XMLizable {
 
     protected final ServiceManager manager;
@@ -103,7 +103,7 @@ public class LayoutSource
 	 * @see org.apache.excalibur.source.Source#refresh()
 	 */
 	public void refresh() {
-        // nothing to do 
+        // nothing to do
 	}
 
 	/**
@@ -130,9 +130,9 @@ public class LayoutSource
 	/**
 	 * @see org.apache.excalibur.xml.sax.XMLizable#toSAX(ContentHandler)
 	 */
-	public void toSAX(ContentHandler handler) 
+	public void toSAX(ContentHandler handler)
     throws SAXException {
-        Renderer portalLayoutRenderer = this.portalService.getRenderer( this.portalService.getLayoutFactory().getRendererName(this.layout));
+        Renderer portalLayoutRenderer = this.layout.getRenderer();
 
         handler.startDocument();
         try {

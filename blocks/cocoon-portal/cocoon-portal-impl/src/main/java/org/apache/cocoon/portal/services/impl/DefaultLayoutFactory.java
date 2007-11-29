@@ -257,20 +257,6 @@ public class DefaultLayoutFactory
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.LayoutFactory#getRendererName(org.apache.cocoon.portal.om.Layout)
-     */
-    public String getRendererName(Layout layout) {
-        if ( layout != null ) {
-            if ( layout.getRendererName() != null ) {
-                return layout.getRendererName();
-            }
-            LayoutDescription description = (LayoutDescription) this.layouts.get(layout.getType());
-            return description.getDefaultRendererName();
-        }
-        return null;
-    }
-
-    /**
      * @see org.apache.cocoon.portal.services.LayoutFactory#getLayoutTypes()
      */
     public Collection getLayoutTypes() {
@@ -293,24 +279,20 @@ public class DefaultLayoutFactory
      */
     public Item createItem(Layout layout)
     throws LayoutException {
-        LayoutDescription desc = (LayoutDescription) this.layouts.get(layout.getType());
-        if ( desc == null ) {
-            throw new LayoutException("Description not found for layout " + layout);
-        }
-        if ( desc.getItemClassName() == null ) {
+        if ( layout.getLayoutType().getItemClassName() == null ) {
             return new Item();
         }
         try {
-            return (Item) ClassUtils.newInstance(desc.getItemClassName());
+            return (Item) ClassUtils.newInstance(layout.getLayoutType().getItemClassName());
         } catch (Exception e ) {
             throw new LayoutException("Unable to create new item for layout " + layout, e);
         }
     }
 
     /**
-     * @see org.apache.cocoon.portal.services.LayoutFactory#newInstace(org.apache.cocoon.portal.om.Layout)
+     * @see org.apache.cocoon.portal.services.LayoutFactory#newInstance(org.apache.cocoon.portal.om.Layout)
      */
-    public LayoutInstance newInstace(Layout layout) {
+    public LayoutInstance newInstance(Layout layout) {
         final LayoutInstance instance = new LayoutInstance(layout);
         this.portalService.getEventManager().send(new LayoutInstanceAddedEvent(instance));
         return instance;

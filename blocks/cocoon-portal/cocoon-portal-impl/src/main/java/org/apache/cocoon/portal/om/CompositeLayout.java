@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @version $Id$
  */
-public class CompositeLayout 
+public class CompositeLayout
     extends Layout {
 
     /** The children of this layout object. */
@@ -36,10 +36,10 @@ public class CompositeLayout
      * Never create a layout object directly. Use the
      * {@link org.apache.cocoon.portal.services.LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
-     * @param name The name of the layout.
+     * @param type The layout type.
      */
-    public CompositeLayout(String id, String name) {
-        super(id, name);
+    public CompositeLayout(String id, LayoutType type) {
+        super(id, type);
     }
 
     /**

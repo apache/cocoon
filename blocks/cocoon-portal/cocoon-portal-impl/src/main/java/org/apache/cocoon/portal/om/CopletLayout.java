@@ -31,10 +31,10 @@ public final class CopletLayout extends Layout {
      * Never create a layout object directly. Use the
      * {@link org.apache.cocoon.portal.services.LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
-     * @param name The name of the layout.
+     * @param type The layout type.
      */
-    public CopletLayout(String id, String name) {
-        super(id, name);
+    public CopletLayout(String id, LayoutType type) {
+        super(id, type);
     }
 
     public void setCopletInstanceId(String cid) {

@@ -32,18 +32,9 @@ public interface LayoutFactory  {
 
     /**
      * Return all available types.
+     * TODO - Do we need this?
      */
     Collection getLayoutTypes();
-
-    /**
-     * Return all available renderer names for a type.
-     */
-    Collection getRendererNames(String type);
-
-    /**
-     * Return the renderer name for the layout.
-     */
-    String getRendererName(Layout layout);
 
     /**
      * Create a new layout instance.
@@ -65,7 +56,7 @@ public interface LayoutFactory  {
      * @param layout
      * @return A new layout instance.
      */
-    LayoutInstance newInstace(Layout layout);
+    LayoutInstance newInstance(Layout layout);
 
     /**
      * Remove the layout instance.
@@ -77,6 +68,7 @@ public interface LayoutFactory  {
     /**
      * Create a new item for the layout.
      * This item is *not* added to the layout.
+     * TODO - We could move this to the layout
      */
     Item createItem(Layout layout) throws LayoutException;
 }

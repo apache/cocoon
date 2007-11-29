@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.util.PortalUtils;
 import org.apache.commons.collections.map.LinkedMap;
@@ -38,29 +39,29 @@ import org.apache.commons.collections.map.LinkedMap;
  * in the session, it is advisable to use serializable objects only.
  *
  * If you are implementing your own layout object make sure that your
- * class provides a two string constructor which calls {@link #Layout(String, String)}.
+ * class provides a two string constructor which calls {@link #Layout(String, LayoutType)}.
  *
  * @version $Id$
  */
 public abstract class Layout extends AbstractParameters {
 
-    /**
-     * The renderer to render this layout if this layout object wants to
-     * use a different render than the default renderer.
-     */
-    protected String rendererName;
-
     /** The parent item of this layout or null if this is a layout root. */
     protected Item parent;
-
-    /** The type of the layout. */
-    protected final String type;
 
     /** The unique identifier of this layout object or null. */
     protected final String id;
 
     /** Is this layout object static? */
     protected boolean isStatic;
+
+    /** The corresponding layout type. */
+    protected final LayoutType layoutType;
+
+    /** The optional renderer to render this layout. If this layout should use
+     * a different renderer than the default renderer, this property will point
+     * to the renderer.
+     */
+    protected Renderer customRenderer;
 
     /**
      * Create a new layout object.
@@ -70,7 +71,7 @@ public abstract class Layout extends AbstractParameters {
      * @param type The type of the layout.
      * @see PortalUtils#testId(String)
      */
-    public Layout(String id, String type) {
+    public Layout(String id, LayoutType type) {
         // check id, null for id is allowed!
         if ( id != null ) {
             final String idErrorMsg = PortalUtils.testId(id);
@@ -79,14 +80,7 @@ public abstract class Layout extends AbstractParameters {
             }
         }
         this.id = id;
-        this.type = type;
-    }
-
-    /**
-     * The type given from the factory.
-     */
-    public String getType() {
-        return this.type;
+        this.layoutType = type;
     }
 
     /**
@@ -98,11 +92,11 @@ public abstract class Layout extends AbstractParameters {
     }
 
     /**
-     * Get the name of a custom {@link org.apache.cocoon.portal.layout.renderer.Renderer} for this layout.
-     * @return String The role name
+     * Get the custom {@link org.apache.cocoon.portal.layout.renderer.Renderer} for this layout.
+     * @return The custom renderer or null.
      */
-    public String getRendererName() {
-        return this.rendererName;
+    public Renderer getCustomRenderer() {
+        return this.customRenderer;
     }
 
     /**
@@ -128,8 +122,9 @@ public abstract class Layout extends AbstractParameters {
         return this.isStatic;
     }
 
-    public void setRendererName(String value) {
-        this.rendererName = value;
+    public void setCustomRenderer(Renderer value) {
+        // TODO - we have to check if this renderer is allowed
+        this.customRenderer = value;
     }
 
     public void setIsStatic(boolean value) {
@@ -154,7 +149,7 @@ public abstract class Layout extends AbstractParameters {
      */
     public String toString() {
         return "Layout (" + this.getClass() + '.' + this.hashCode() +
-               "), type=" + this.type + ", id=" + (this.getId() == null ? "" : this.getId());
+               "), type=" + this.layoutType + ", id=" + (this.getId() == null ? "" : this.getId());
     }
 
     /**
@@ -164,7 +159,7 @@ public abstract class Layout extends AbstractParameters {
         Constructor c;
         try {
             c = this.getClass().getConstructor(new Class[] {String.class, String.class});
-            final Layout clone = (Layout)c.newInstance(new Object[] {this.id, this.type});
+            final Layout clone = (Layout)c.newInstance(new Object[] {this.id, this.layoutType});
 
             // clone fields from AbstractParameters
             if ( this.parameters.size() > 0 ) {
@@ -177,7 +172,7 @@ public abstract class Layout extends AbstractParameters {
 
             // we don't clone the parent; we just set it to null
             clone.parent = null;
-            clone.rendererName = this.rendererName;
+            clone.customRenderer = this.customRenderer;
             clone.isStatic = this.isStatic;
 
             return clone;
@@ -192,5 +187,19 @@ public abstract class Layout extends AbstractParameters {
         } catch (IllegalAccessException e) {
             throw new CloneNotSupportedException("Unable to invoke constructor for new layout object.");
         }
+    }
+
+    public LayoutType getLayoutType() {
+        return this.layoutType;
+    }
+
+    /**
+     * Get the renderer to render this layout.
+     */
+    public Renderer getRenderer() {
+        if ( this.customRenderer != null ) {
+            return this.customRenderer;
+        }
+        return this.layoutType.getDefaultRenderer();
     }
 }

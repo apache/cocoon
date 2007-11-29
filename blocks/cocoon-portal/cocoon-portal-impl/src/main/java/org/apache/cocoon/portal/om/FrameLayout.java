@@ -18,7 +18,7 @@ package org.apache.cocoon.portal.om;
 
 /**
  * A frame layout holds a source URI. The URI can be changed dynamically through
- * events. The URI may contain any URI that can be resolved by the Cocoon 
+ * events. The URI may contain any URI that can be resolved by the Cocoon
  * {@link org.apache.cocoon.environment.SourceResolver}.
  *
  * @version $Id$
@@ -35,10 +35,10 @@ public class FrameLayout extends Layout {
      * Never create a layout object directly. Use the
      * {@link org.apache.cocoon.portal.services.LayoutFactory} instead.
      * @param id The unique identifier of the layout object or null.
-     * @param name The name of the layout.
+     * @param type The layout type.
      */
-    public FrameLayout(String id, String name) {
-        super(id, name);
+    public FrameLayout(String id, LayoutType type) {
+        super(id, type);
     }
 
     /**

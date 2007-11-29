@@ -50,14 +50,13 @@ public class DefaultLinkRenderer
         String layoutId = null;
         final LayoutInstance instance = LayoutFeatures.getLayoutInstance(service, layout, false);
         if ( instance != null ) {
-            layoutId = (String)instance.getTemporaryAttribute(LinkLayout.ATTRIBUTE_LAYOUT_ID);                
+            layoutId = (String)instance.getTemporaryAttribute(LinkLayout.ATTRIBUTE_LAYOUT_ID);
         }
         if ( layoutId == null){
             // get default values
             layoutId = ((LinkLayout)layout).getLayoutId();
         }
         final Layout linkedLayout = service.getProfileManager().getLayout(layoutId);
-        final String rendererName = service.getLayoutFactory().getRendererName(linkedLayout);
-        service.getRenderer(rendererName).toSAX(linkedLayout, service, handler);
+        linkedLayout.getRenderer().toSAX(linkedLayout, service, handler);
     }
 }
