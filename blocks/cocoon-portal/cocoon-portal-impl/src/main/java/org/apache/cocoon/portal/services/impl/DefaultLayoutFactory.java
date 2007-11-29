@@ -45,7 +45,7 @@ import org.apache.cocoon.util.ClassUtils;
  *
  * @version $Id$
  */
-public class NewDefaultLayoutFactory
+public class DefaultLayoutFactory
 	extends AbstractBean
     implements LayoutFactory, Receiver {
 
