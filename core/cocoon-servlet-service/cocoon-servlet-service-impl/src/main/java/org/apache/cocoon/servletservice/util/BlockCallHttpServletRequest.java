@@ -43,23 +43,24 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Create a HttpServletRequest from an URL, that is used while calling e.g. a block.
- * 
- * @version $Id$
+ * Create a HttpServletRequest from an URL, that is used while calling e.g. a
+ * block.
+ *
+ * @version $Id: BlockCallHttpServletRequest.java 577519 2007-09-20 03:05:26Z
+ *          vgritsenko $
  */
 public class BlockCallHttpServletRequest implements HttpServletRequest {
-    
+
     /**
      * Protocol of block call requests.
      */
     private static final String PROTOCOL = "HTTP/1.1";
 
     /**
-     * Date header format definied by RFC 822,
-     * see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3
+     * Date header format definied by RFC 822, see
+     * http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3
      */
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
-
 
     /**
      * The <code>parent</code> holds reference to the request object that
@@ -73,8 +74,8 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     private final URI uri;
 
     /**
-     * Request method. If not set via {@link #setMethod(String)},
-     * defaults to <code>GET</code>.
+     * Request method. If not set via {@link #setMethod(String)}, defaults to
+     * <code>GET</code>.
      */
     private String method;
 
@@ -82,11 +83,6 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * Request headers map
      */
     private final Map headers;
-
-    /**
-     * Request parameters extracted from {@link #uri}.
-     */
-    private final RequestParameters parameters;
 
     /**
      * Request character encoding.
@@ -108,23 +104,56 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      */
     private final Map attributes;
 
-
     /**
-     * @param uri points to the called servlet
-     * @param parent reference to the request object that makes a servlet call
+     * @param uri
+     *            points to the called servlet
+     * @param parentRequest
+     *            reference to the request object that makes a servlet call
      */
-    public BlockCallHttpServletRequest(URI uri, HttpServletRequest parent) {
-        this.parent = parent;
+    public BlockCallHttpServletRequest(URI uri, HttpServletRequest parentRequest) {
+        this.parent = parentRequest;
         this.uri = uri;
-        this.headers = new HashMap();
-        this.parameters = new RequestParameters(this.uri.getQuery());
+        this.headers = createRequestHeaderMap(parentRequest);
         this.method = "GET";
         this.contentLength = -1;
         this.content = NullServletInputStream.INSTANCE;
-        this.attributes = new HashMap();
+        this.attributes = createRequestAttributesMap(parentRequest);
     }
 
-    /* (non-Javadoc)
+    /**
+     * Create a new {@link Map} that contains all request attributes. A sub
+     * request can't pass parameters to the parent request, however, it can
+     * modify parameter values.
+     *
+     * TODO Is there any way to prevent sub request from altering parent
+     * attributes?
+     */
+    private Map createRequestAttributesMap(HttpServletRequest req) {
+        Map attributes = new HashMap();
+        Enumeration parentAttributes = req.getAttributeNames();
+        while (parentAttributes.hasMoreElements()) {
+            String attr = (String) parentAttributes.nextElement();
+            attributes.put(attr, req.getAttribute(attr));
+        }
+        return attributes;
+    }
+
+    /**
+     * Create a new {@link Map} that contains all headers.
+     */
+    private Map createRequestHeaderMap(HttpServletRequest req) {
+        Map headers = new HashMap();
+        Enumeration parentHeaders = req.getHeaderNames();
+        while (parentHeaders.hasMoreElements()) {
+            String header = (String) parentHeaders.nextElement();
+            headers.put(header, req.getHeader(header));
+        }
+        return headers;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getProtocol()
      */
     public String getProtocol() {
@@ -143,14 +172,18 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     // Request URI parts
     //
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getScheme()
      */
     public String getScheme() {
         return this.uri.getScheme();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getServerName()
      */
     public String getServerName() {
@@ -158,7 +191,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         return "";
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getServerPort()
      */
     public int getServerPort() {
@@ -166,14 +201,18 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         return 80;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getContextPath()
      */
     public String getContextPath() {
         return parent.getContextPath();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getServletPath()
      */
     public String getServletPath() {
@@ -181,14 +220,18 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         return "";
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getPathInfo()
      */
     public String getPathInfo() {
         return this.uri.getPath();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getPathTranslated()
      */
     public String getPathTranslated() {
@@ -196,14 +239,18 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getQueryString()
      */
     public String getQueryString() {
         return this.uri.getQuery();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getRequestURI()
      */
     public String getRequestURI() {
@@ -211,25 +258,31 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         return getContextPath() + getServletPath() + getPathInfo();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getRequestURL()
      */
     public StringBuffer getRequestURL() {
         return new StringBuffer(getScheme()).append(':').append(getRequestURI());
     }
-    
+
     //
     // Request headers
     //
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
      */
     public String getHeader(String name) {
-        return (String) headers.get(name);
+        return (String) this.headers.get(name);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
      */
     public Enumeration getHeaders(String name) {
@@ -240,7 +293,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         headers.put(name, value);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
      */
     public long getDateHeader(String name) {
@@ -255,16 +310,18 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             throw new RuntimeException(e);
         }
     }
-    
+
     public void setDateHeader(String name, long date) {
-        setHeader(name, dateFormat.format(new Date(date)));
+        this.setHeader(name, dateFormat.format(new Date(date)));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
      */
     public int getIntHeader(String name) {
-        String header = getHeader(name);
+        String header = this.getHeader(name);
         if (header == null) {
             return -1;
         }
@@ -273,10 +330,12 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     }
 
     public void setIntHeader(String name, int value) {
-        setHeader(name, String.valueOf(value));
+        this.setHeader(name, String.valueOf(value));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
      */
     public Enumeration getHeaderNames() {
@@ -287,53 +346,67 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     // Request parameters
     //
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
      */
     public String getParameter(String name) {
-        return this.parameters.getParameter(name);
+        return this.parent.getParameter(name);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
      */
     public String[] getParameterValues(String name) {
-        return this.parameters.getParameterValues(name);
+        return this.parent.getParameterValues(name);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getParameterNames()
      */
     public Enumeration getParameterNames() {
-        return this.parameters.getParameterNames();
+        return this.parent.getParameterNames();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getParameterMap()
      */
     public Map getParameterMap() {
-        return this.parameters.getParameterMap();
+        return this.parent.getParameterMap();
     }
 
     //
     // Request body
     //
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getCharacterEncoding()
      */
     public String getCharacterEncoding() {
         return this.encoding;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#setCharacterEncoding(java.lang.String)
      */
     public void setCharacterEncoding(String encoding) throws UnsupportedEncodingException {
         this.encoding = encoding;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getContentLength()
      */
     public int getContentLength() {
@@ -343,16 +416,21 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     public void setContentLength(int contentLength) {
         this.contentLength = contentLength;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getContentType()
+     *
+     * TODO Doesn't handle input streams yet
      */
     public String getContentType() {
-        // TODO Doesn't handle input streams yet
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getInputStream()
      */
     public ServletInputStream getInputStream() throws IOException {
@@ -373,7 +451,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         };
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getReader()
      */
     public BufferedReader getReader() throws IOException {
@@ -392,22 +472,29 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     // Request attributes
     //
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
         return this.attributes.get(name);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
         return new IteratorEnumeration(this.attributes.keySet().iterator());
     }
 
-    /* (non-Javadoc)
-     * @see javax.servlet.ServletRequest#setAttribute(java.lang.String, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     *
+     * @see javax.servlet.ServletRequest#setAttribute(java.lang.String,
+     *      java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
         if (value != null) {
@@ -417,45 +504,49 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String name) {
         this.attributes.remove(name);
     }
 
-    //
-    //
-    //
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getAuthType()
      */
     public String getAuthType() {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getCookies()
      */
     public Cookie[] getCookies() {
-        return null;
+        return this.parent.getCookies();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getLocale()
      */
     public Locale getLocale() {
-        // TODO Implement this
-        throw new UnsupportedOperationException();
+        return this.parent.getLocale();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getLocales()
      */
     public Enumeration getLocales() {
-        // TODO Implement this
-        throw new UnsupportedOperationException();
+        return this.parent.getLocales();
     }
 
     /**
@@ -466,53 +557,75 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getRemoteAddr()
      */
     public String getRemoteAddr() {
-        // TODO The URI of the current block might be an appropriate choice.
-        throw new UnsupportedOperationException();
+        return this.parent.getRemoteAddr();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getRemoteHost()
      */
     public String getRemoteHost() {
-        // TODO Local host might be an appropriate choice
-        throw new UnsupportedOperationException();
+        return this.parent.getRemoteHost();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getRemoteUser()
      */
     public String getRemoteUser() {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#getRequestDispatcher(java.lang.String)
-     */
-    public RequestDispatcher getRequestDispatcher(String path) {
+     *
+     * TODO delegate to parent?
+     */public RequestDispatcher getRequestDispatcher(String path) {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getRequestedSessionId()
+     *
+     * TODO What do we do with the session? Make it available in sub requests
+     * too?
      */
     public String getRequestedSessionId() {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getSession()
+     *
+     * TODO What do we do with the session? Make it available in sub requests
+     * too?
      */
     public HttpSession getSession() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getSession(boolean)
+     *
+     * TODO What do we do with the session? Make it available in sub requests
+     * too?
      */
     public HttpSession getSession(boolean create) {
         // TODO Auto-generated method stub
@@ -571,7 +684,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
                 public void invalidate() {
                     // TODO Auto-generated method stub
-                    
+
                 }
 
                 public boolean isNew() {
@@ -581,104 +694,135 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
                 public void putValue(String name, Object value) {
                     // TODO Auto-generated method stub
-                    
+
                 }
 
                 public void removeAttribute(String name) {
                     // TODO Auto-generated method stub
-                    
+
                 }
 
                 public void removeValue(String name) {
                     // TODO Auto-generated method stub
-                    
+
                 }
 
                 public void setAttribute(String name, Object value) {
                     // TODO Auto-generated method stub
-                    
+
                 }
 
                 public void setMaxInactiveInterval(int interval) {
                     // TODO Auto-generated method stub
-                    
+
                 }
             };
         }
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#getUserPrincipal()
+     *
+     * TODO No authentication handling between blocks yet
      */
     public Principal getUserPrincipal() {
-        // TODO No authentication handling between blocks yet
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromCookie()
+     *
+     * TODO What do we do with the session? Make it available in sub requests
+     * too?
      */
     public boolean isRequestedSessionIdFromCookie() {
-        // TODO Auto-generated method stub
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromUrl()
+     *
+     * TODO What do we do with the session? Make it available in sub requests
+     * too?
      */
     public boolean isRequestedSessionIdFromUrl() {
         // TODO Auto-generated method stub
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromURL()
+     *
+     * TODO What do we do with the session? Make it available in sub requests
+     * too?
      */
     public boolean isRequestedSessionIdFromURL() {
         // TODO Auto-generated method stub
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdValid()
+     *
+     * TODO What do we do with the session? Make it available in sub requests
+     * too?
      */
     public boolean isRequestedSessionIdValid() {
         // TODO Auto-generated method stub
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.ServletRequest#isSecure()
      */
     public boolean isSecure() {
         // TODO Auto-generated method stub
-        return false;
+        return this.parent.isSecure();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.servlet.http.HttpServletRequest#isUserInRole(java.lang.String)
+     *
+     * TODO No authentication handling between blocks yet
      */
     public boolean isUserInRole(String role) {
-        // TODO No authentication handling between blocks yet
         return false;
     }
 
     public String getLocalAddr() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.parent.getLocalAddr();
     }
 
     public String getLocalName() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.parent.getLocalName();
     }
 
+    /*
+     * TODO delegate to parent?
+     */
     public int getLocalPort() {
         // TODO Auto-generated method stub
         return 0;
     }
 
+    /*
+     * TODO delegate to parent?
+     */
     public int getRemotePort() {
         // TODO Auto-generated method stub
         return 0;
