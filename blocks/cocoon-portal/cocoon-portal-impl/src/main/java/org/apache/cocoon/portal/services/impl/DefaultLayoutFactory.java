@@ -90,9 +90,10 @@ public class DefaultLayoutFactory
         }
         Layout layout = null;
         try {
-            Class clazz = ClassUtils.loadClass( layoutType.getClassName() );
-            Constructor constructor = clazz.getConstructor(new Class[] {String.class, String.class});
-            layout = (Layout)constructor.newInstance(new Object[] {layoutId, layoutType});
+            Class clazz = ClassUtils.loadClass( layoutType.getLayoutClassName() );
+            Constructor constructor = clazz.getConstructor(new Class[] {String.class});
+            layout = (Layout)constructor.newInstance(new Object[] {layoutId});
+            layout.setLayoutType(layoutType);
         } catch (Exception e) {
             throw new LayoutException("Unable to create new layout instance for: " + layoutType , e );
         }
@@ -150,21 +151,6 @@ public class DefaultLayoutFactory
      */
     public Collection getLayoutTypes() {
         return this.layoutTypes.values();
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.services.LayoutFactory#createItem(org.apache.cocoon.portal.om.Layout)
-     */
-    public Item createItem(Layout layout)
-    throws LayoutException {
-        if ( layout.getLayoutType().getItemClassName() == null ) {
-            return new Item();
-        }
-        try {
-            return (Item) ClassUtils.newInstance( layout.getLayoutType().getItemClassName());
-        } catch (Exception e ) {
-            throw new LayoutException("Unable to create new item for layout " + layout, e);
-        }
     }
 
     /**

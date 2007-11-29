@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.services;
 
 import java.util.Collection;
 
-import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutInstance;
@@ -65,11 +64,4 @@ public interface LayoutFactory  {
      * the profile manager.
      */
     void remove(Layout layout);
-
-    /**
-     * Create a new item for the layout.
-     * This item is *not* added to the layout.
-     * TODO - We could move this to the layout
-     */
-    Item createItem(Layout layout) throws LayoutException;
 }
