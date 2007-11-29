@@ -130,10 +130,12 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      */
     private Map createRequestAttributesMap(HttpServletRequest req) {
         Map attributes = new HashMap();
-        Enumeration parentAttributes = req.getAttributeNames();
-        while (parentAttributes.hasMoreElements()) {
-            String attr = (String) parentAttributes.nextElement();
-            attributes.put(attr, req.getAttribute(attr));
+        if (req != null) {
+            Enumeration parentAttributes = req.getAttributeNames();
+            while (parentAttributes.hasMoreElements()) {
+                String attr = (String) parentAttributes.nextElement();
+                attributes.put(attr, req.getAttribute(attr));
+            }
         }
         return attributes;
     }
@@ -143,10 +145,12 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      */
     private Map createRequestHeaderMap(HttpServletRequest req) {
         Map headers = new HashMap();
-        Enumeration parentHeaders = req.getHeaderNames();
-        while (parentHeaders.hasMoreElements()) {
-            String header = (String) parentHeaders.nextElement();
-            headers.put(header, req.getHeader(header));
+        if (req != null) {
+            Enumeration parentHeaders = req.getHeaderNames();
+            while (parentHeaders.hasMoreElements()) {
+                String header = (String) parentHeaders.nextElement();
+                headers.put(header, req.getHeader(header));
+            }
         }
         return headers;
     }
