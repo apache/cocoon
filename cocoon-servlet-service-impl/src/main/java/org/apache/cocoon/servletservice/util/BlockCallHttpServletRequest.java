@@ -16,6 +16,9 @@
  */
 package org.apache.cocoon.servletservice.util;
 
+import org.apache.cocoon.callstack.CallFrame;
+import org.apache.cocoon.callstack.CallStack;
+import org.apache.cocoon.callstack.environment.CallFrameHelper;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 
 import javax.servlet.RequestDispatcher;
@@ -29,6 +32,7 @@ import javax.servlet.http.HttpSessionContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -36,11 +40,18 @@ import java.net.URI;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * Create a HttpServletRequest from an URL, that is used while calling e.g. a
@@ -63,10 +74,10 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
 
     /**
-     * The <code>parent</code> holds reference to the request object that
-     * makes a servlet call.
+     * The <code>parentRequest</code> holds reference to the request object
+     * that makes a servlet call.
      */
-    private HttpServletRequest parent;
+    private HttpServletRequest parentRequest;
 
     /**
      * Block call request URI
@@ -82,7 +93,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     /**
      * Request headers map
      */
-    private final Map headers;
+    private final Headers headers;
 
     /**
      * Request character encoding.
@@ -102,7 +113,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     /**
      * Request attributes map.
      */
-    private final Map attributes;
+    private final Attributes attributes;
+
+    private Parameters parameters;
 
     /**
      * @param uri
@@ -111,48 +124,14 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      *            reference to the request object that makes a servlet call
      */
     public BlockCallHttpServletRequest(URI uri, HttpServletRequest parentRequest) {
-        this.parent = parentRequest;
+        this.parentRequest = parentRequest;
         this.uri = uri;
-        this.headers = createRequestHeaderMap(parentRequest);
+        this.headers = new Headers();
         this.method = "GET";
         this.contentLength = -1;
         this.content = NullServletInputStream.INSTANCE;
-        this.attributes = createRequestAttributesMap(parentRequest);
-    }
-
-    /**
-     * Create a new {@link Map} that contains all request attributes. A sub
-     * request can't pass parameters to the parent request, however, it can
-     * modify parameter values.
-     *
-     * TODO Is there any way to prevent sub request from altering parent
-     * attributes?
-     */
-    private Map createRequestAttributesMap(HttpServletRequest req) {
-        Map attributes = new HashMap();
-        if (req != null) {
-            Enumeration parentAttributes = req.getAttributeNames();
-            while (parentAttributes.hasMoreElements()) {
-                String attr = (String) parentAttributes.nextElement();
-                attributes.put(attr, req.getAttribute(attr));
-            }
-        }
-        return attributes;
-    }
-
-    /**
-     * Create a new {@link Map} that contains all headers.
-     */
-    private Map createRequestHeaderMap(HttpServletRequest req) {
-        Map headers = new HashMap();
-        if (req != null) {
-            Enumeration parentHeaders = req.getHeaderNames();
-            while (parentHeaders.hasMoreElements()) {
-                String header = (String) parentHeaders.nextElement();
-                headers.put(header, req.getHeader(header));
-            }
-        }
-        return headers;
+        this.attributes = new Attributes();
+        this.parameters = new Parameters();
     }
 
     /*
@@ -191,8 +170,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getServerName()
      */
     public String getServerName() {
-        // TODO implement this
-        return "";
+        return this.parentRequest.getServerName();
     }
 
     /*
@@ -201,8 +179,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getServerPort()
      */
     public int getServerPort() {
-        // TODO implement this
-        return 80;
+        return this.parentRequest.getServerPort();
     }
 
     /*
@@ -211,7 +188,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.http.HttpServletRequest#getContextPath()
      */
     public String getContextPath() {
-        return parent.getContextPath();
+        return parentRequest.getContextPath();
     }
 
     /*
@@ -281,7 +258,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
      */
     public String getHeader(String name) {
-        return (String) this.headers.get(name);
+        return (String) this.headers.getValue(name);
     }
 
     /*
@@ -290,11 +267,11 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
      */
     public Enumeration getHeaders(String name) {
-        return new IteratorEnumeration(headers.values().iterator());
+        return this.headers.getNames();
     }
 
     public void setHeader(String name, String value) {
-        headers.put(name, value);
+        this.headers.setValue(name, value);
     }
 
     /*
@@ -343,7 +320,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
      */
     public Enumeration getHeaderNames() {
-        return new IteratorEnumeration(headers.keySet().iterator());
+        return this.headers.getNames();
     }
 
     //
@@ -356,7 +333,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
      */
     public String getParameter(String name) {
-        return this.parent.getParameter(name);
+        return (String) this.parameters.getValue(name);
     }
 
     /*
@@ -365,7 +342,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
      */
     public String[] getParameterValues(String name) {
-        return this.parent.getParameterValues(name);
+        return this.parameters.getValues(name);
     }
 
     /*
@@ -374,7 +351,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getParameterNames()
      */
     public Enumeration getParameterNames() {
-        return this.parent.getParameterNames();
+        return this.parameters.getNames();
     }
 
     /*
@@ -383,7 +360,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getParameterMap()
      */
     public Map getParameterMap() {
-        return this.parent.getParameterMap();
+        return this.parameters.getValues();
     }
 
     //
@@ -482,7 +459,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
-        return this.attributes.get(name);
+        return this.attributes.getValue(name);
     }
 
     /*
@@ -491,7 +468,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
-        return new IteratorEnumeration(this.attributes.keySet().iterator());
+        return this.attributes.getNames();
     }
 
     /*
@@ -502,9 +479,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      */
     public void setAttribute(String name, Object value) {
         if (value != null) {
-            this.attributes.put(name, value);
+            this.attributes.setValue(name, value);
         } else {
-            removeAttribute(name);
+            this.removeAttribute(name);
         }
     }
 
@@ -532,7 +509,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.http.HttpServletRequest#getCookies()
      */
     public Cookie[] getCookies() {
-        return this.parent.getCookies();
+        return this.parentRequest.getCookies();
     }
 
     /*
@@ -541,7 +518,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getLocale()
      */
     public Locale getLocale() {
-        return this.parent.getLocale();
+        return this.parentRequest.getLocale();
     }
 
     /*
@@ -550,7 +527,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getLocales()
      */
     public Enumeration getLocales() {
-        return this.parent.getLocales();
+        return this.parentRequest.getLocales();
     }
 
     /**
@@ -567,7 +544,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getRemoteAddr()
      */
     public String getRemoteAddr() {
-        return this.parent.getRemoteAddr();
+        return this.parentRequest.getRemoteAddr();
     }
 
     /*
@@ -576,7 +553,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getRemoteHost()
      */
     public String getRemoteHost() {
-        return this.parent.getRemoteHost();
+        return this.parentRequest.getRemoteHost();
     }
 
     /*
@@ -794,7 +771,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      */
     public boolean isSecure() {
         // TODO Auto-generated method stub
-        return this.parent.isSecure();
+        return this.parentRequest.isSecure();
     }
 
     /*
@@ -809,11 +786,11 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     }
 
     public String getLocalAddr() {
-        return this.parent.getLocalAddr();
+        return this.parentRequest.getLocalAddr();
     }
 
     public String getLocalName() {
-        return this.parent.getLocalName();
+        return this.parentRequest.getLocalName();
     }
 
     /*
@@ -831,4 +808,232 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         // TODO Auto-generated method stub
         return 0;
     }
+
+    private abstract static class Values implements Serializable {
+
+        /** The parameter names are the keys and the value is a List object */
+        Map values = new HashMap();
+
+        /**
+         * Construct a new object from a queryString
+         */
+        public Values() {
+        }
+
+        protected void setValue(String name, Object value) {
+            List list;
+            if (this.values.containsKey(name)) {
+                list = (List) values.get(name);
+            } else {
+                list = new ArrayList();
+                this.values.put(name, list);
+            }
+            list.add(value);
+        }
+
+        public Object getValue(String name) {
+            if (this.values.containsKey(name)) {
+                return ((List) values.get(name)).get(0);
+            }
+
+            return getValueOfCaller(name);
+        }
+
+        protected abstract Object getValueOfCaller(String name);
+
+        public Enumeration getNames() {
+            Set names = new HashSet();
+            for (int i = 0; i < CallStack.size(); i++) {
+                CallFrame frame = CallStack.frameAt(i);
+                HttpServletRequest request = (HttpServletRequest) frame.getAttribute(CallFrameHelper.REQUEST_OBJECT);
+                if (request instanceof BlockCallHttpServletRequest) {
+                    names.addAll(this.values.keySet());
+                } else {
+                    for (Enumeration enumeration = request.getParameterNames(); enumeration.hasMoreElements();) {
+                        names.add(enumeration.nextElement());
+                    }
+                }
+                if (request.equals(this.getRequest())) {
+                    break;
+                }
+            }
+
+            return new EnumerationFromIterator(names.iterator());
+        }
+
+        public Map getValues() {
+            Map result = new HashMap();
+            for (int i = 0; i < CallStack.size(); i++) {
+                CallFrame frame = CallStack.frameAt(i);
+                HttpServletRequest request = (HttpServletRequest) frame.getAttribute(CallFrameHelper.REQUEST_OBJECT);
+                if (request instanceof BlockCallHttpServletRequest)
+                    result.putAll(this.values);
+                else {
+                    result.putAll(request.getParameterMap());
+                }
+                if (request.equals(this.getRequest()))
+                    break;
+            }
+
+            return result;
+        }
+
+        protected abstract BlockCallHttpServletRequest getRequest();
+
+        // protected abstract Map getValues(HttpServletRequest request);
+
+        final class EnumerationFromIterator implements Enumeration {
+
+            private Iterator iterator;
+
+            EnumerationFromIterator(Iterator iter) {
+                this.iterator = iter;
+            }
+
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            public Object nextElement() {
+                return iterator.next();
+            }
+        }
+
+    }
+
+    private class Parameters extends Values {
+
+        public Parameters() {
+            if (this.getRequest().uri.getQuery() != null) {
+                StringTokenizer st = new StringTokenizer(this.getRequest().uri.getQuery(), "&");
+                while (st.hasMoreTokens()) {
+                    String pair = st.nextToken();
+                    int pos = pair.indexOf('=');
+                    if (pos != -1) {
+                        this.setValue(this.parseName(pair.substring(0, pos)), this.parseName(pair.substring(pos + 1,
+                                        pair.length())));
+                    }
+                }
+            }
+        }
+
+        private String parseName(String s) {
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < s.length(); i++) {
+                char c = s.charAt(i);
+                switch (c) {
+                case '+':
+                    sb.append(' ');
+                    break;
+                case '%':
+                    try {
+                        if (s.charAt(i + 1) == 'u') {
+                            // working with multi-byte symbols in format %uXXXX
+                            sb.append((char) Integer.parseInt(s.substring(i + 2, i + 6), 16));
+                            i += 5; // 4 digits and 1 symbol u
+                        } else {
+                            // working with single-byte symbols in format %YY
+                            sb.append((char) Integer.parseInt(s.substring(i + 1, i + 3), 16));
+                            i += 2;
+                        }
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException();
+                    } catch (StringIndexOutOfBoundsException e) {
+                        String rest = s.substring(i);
+                        sb.append(rest);
+                        if (rest.length() == 2)
+                            i++;
+                    }
+
+                    break;
+                default:
+                    sb.append(c);
+                    break;
+                }
+            }
+            return sb.toString();
+        }
+
+        public String[] getValues(String name) {
+            List list = (List) this.values.get(name);
+            if (list == null)
+                return null;
+
+            String[] result = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                result[i] = (String) list.get(i);
+            }
+            return result;
+        }
+
+        protected BlockCallHttpServletRequest getRequest() {
+            return BlockCallHttpServletRequest.this;
+        }
+
+        protected Object getValueOfCaller(String name) {
+            return this.getRequest().parentRequest.getParameter(name);
+        }
+    }
+
+    private class Headers extends Values {
+        public Object getValueOfCaller(String name) {
+            return this.getRequest().parentRequest.getHeader(name);
+        }
+
+        public Enumeration getValues(String name) {
+            List list = (List) this.values.get(name);
+            if (list == null) {
+                return new Enumeration() {
+
+                    public boolean hasMoreElements() {
+                        return false;
+                    }
+
+                    public Object nextElement() {
+                        throw new NoSuchElementException();
+                    }
+
+                };
+            }
+
+            return new IteratorEnumeration(list.iterator());
+        }
+
+        protected BlockCallHttpServletRequest getRequest() {
+            return BlockCallHttpServletRequest.this;
+        }
+    }
+
+    private class Attributes extends Values {
+
+        public Object getValue(String name) {
+            if (values.containsKey(name)) {
+                return values.get(name);
+            }
+
+            return getValueOfCaller(name);
+        }
+
+        public Object getValueOfCaller(String name) {
+            return this.getRequest().parentRequest.getAttribute(name);
+        }
+
+        protected void setValue(String name, Object value) {
+            this.values.put(name, value);
+        }
+
+        public void remove(String name) {
+            if (this.values.containsKey(name)) {
+                this.values.remove(name);
+            } else {
+                this.getRequest().parentRequest.removeAttribute(name);
+            }
+        }
+
+        protected BlockCallHttpServletRequest getRequest() {
+            return BlockCallHttpServletRequest.this;
+        }
+
+    }
+
 }
