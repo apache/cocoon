@@ -213,6 +213,17 @@
           scope="singleton"/>
 
   <!--+
+      | Layout Factory.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.LayoutFactory"
+          class="org.apache.cocoon.portal.services.impl.DefaultLayoutFactory"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton">
+      <property name="layoutTypesMap" ref="org.apache.cocoon.portal.om.LayoutTypeMap"/>
+    </bean>
+
+  <!--+
       | User Service.
       |
       +-->

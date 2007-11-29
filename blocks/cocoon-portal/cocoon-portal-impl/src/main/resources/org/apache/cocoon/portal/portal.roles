@@ -52,14 +52,6 @@
           shorthand="portal-service"/>
 
   <!--+
-      | Layout Factory.
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.services.LayoutFactory"
-          default-class="org.apache.cocoon.portal.services.impl.DefaultLayoutFactory"
-          shorthand="portal-layout-factory"/>
-
-  <!--+
       | Deployment Manager
       |
       +-->
