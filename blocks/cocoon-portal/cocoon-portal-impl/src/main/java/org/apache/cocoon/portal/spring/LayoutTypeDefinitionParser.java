@@ -42,7 +42,7 @@ public class LayoutTypeDefinitionParser extends AbstractElementParser {
         final String layoutTypeId = element.getAttribute("id");
         beanDef.getConstructorArgumentValues().addIndexedArgumentValue(0, layoutTypeId);
 
-        beanDef.getPropertyValues().addPropertyValue("className", element.getAttribute("layoutClass"));
+        beanDef.getPropertyValues().addPropertyValue("layoutClassName", element.getAttribute("layoutClass"));
         if ( this.getAttributeValue(element, "createLayoutId", null) != null ) {
             beanDef.getPropertyValues().addPropertyValue("createId", this.getAttributeValue(element, "createLayoutId", "false"));
         }

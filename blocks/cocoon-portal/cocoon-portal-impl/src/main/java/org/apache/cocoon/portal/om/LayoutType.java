@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.cocoon.portal.layout.renderer.Renderer;
+import org.apache.cocoon.util.ClassUtils;
 
 
 /**
@@ -35,7 +36,7 @@ import org.apache.cocoon.portal.layout.renderer.Renderer;
 public class LayoutType {
 
     /** The class name of the layout object. */
-    protected String className;
+    protected String layoutClassName;
 
     /** Should an ID be generated for this layout object. */
     protected boolean createId = false;
@@ -92,15 +93,15 @@ public class LayoutType {
      * The name of the implementation class for this layout object.
      * @return The class name.
      */
-    public String getClassName() {
-        return className;
+    public String getLayoutClassName() {
+        return this.layoutClassName;
     }
 
     /**
      * @param string
      */
-    public void setClassName(String string) {
-        className = string;
+    public void setLayoutClassName(String string) {
+        this.layoutClassName = string;
     }
 
     /**
@@ -131,5 +132,28 @@ public class LayoutType {
      */
     public String getId() {
         return this.id;
+    }
+
+    /**
+     * Create a new item which can be used with all layout objects of this type.
+     */
+    public Item createItem()
+    throws LayoutException {
+        if ( this.itemClassName == null ) {
+            return new Item();
+        }
+        try {
+            return (Item) ClassUtils.newInstance( this.itemClassName );
+        } catch (Exception e ) {
+            throw new LayoutException("Unable to create new item for layout type " + this + " of class" + this.itemClassName, e);
+        }
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "LayoutType (" + this.hashCode() +
+               "), id=" + this.getId() + ", layout-class=" + this.getLayoutClassName();
     }
 }
