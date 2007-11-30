@@ -16,26 +16,13 @@
  */
 package org.apache.cocoon.servletservice.util;
 
-import org.apache.cocoon.callstack.CallFrame;
-import org.apache.cocoon.callstack.CallStack;
-import org.apache.cocoon.callstack.environment.CallFrameHelper;
-import org.apache.commons.collections.iterators.IteratorEnumeration;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.Principal;
 import java.text.ParseException;
@@ -53,6 +40,19 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
+
+import org.apache.cocoon.callstack.CallFrame;
+import org.apache.cocoon.callstack.CallStack;
+import org.apache.cocoon.callstack.environment.CallFrameHelper;
+import org.apache.commons.collections.iterators.IteratorEnumeration;
+
 /**
  * <p>
  * Create a HttpServletRequest from an URL, that is used while calling e.g. a
@@ -63,7 +63,7 @@ import java.util.StringTokenizer;
  * Note: Session handling and HTTP authentication information hasn't been
  * implemented yet.
  * </p>
- *
+ * 
  * @version $Id: BlockCallHttpServletRequest.java 577519 2007-09-20 03:05:26Z
  *          vgritsenko $
  */
@@ -143,7 +143,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getProtocol()
      */
     public String getProtocol() {
@@ -151,7 +151,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     }
 
     public String getMethod() {
-        return method;
+        return this.method;
     }
 
     public void setMethod(String method) {
@@ -164,7 +164,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getScheme()
      */
     public String getScheme() {
@@ -173,7 +173,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getServerName()
      */
     public String getServerName() {
@@ -182,7 +182,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getServerPort()
      */
     public int getServerPort() {
@@ -191,16 +191,16 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getContextPath()
      */
     public String getContextPath() {
-        return parentRequest.getContextPath();
+        return this.parentRequest.getContextPath();
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getServletPath()
      */
     public String getServletPath() {
@@ -210,7 +210,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getPathInfo()
      */
     public String getPathInfo() {
@@ -219,7 +219,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getPathTranslated()
      */
     public String getPathTranslated() {
@@ -229,7 +229,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getQueryString()
      */
     public String getQueryString() {
@@ -238,21 +238,21 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getRequestURI()
      */
     public String getRequestURI() {
         // TODO Is this right?
-        return getContextPath() + getServletPath() + getPathInfo();
+        return this.getContextPath() + this.getServletPath() + this.getPathInfo();
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getRequestURL()
      */
     public StringBuffer getRequestURL() {
-        return new StringBuffer(getScheme()).append(':').append(getRequestURI());
+        return new StringBuffer(this.getScheme()).append(':').append(this.getRequestURI());
     }
 
     //
@@ -261,7 +261,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
      */
     public String getHeader(String name) {
@@ -270,7 +270,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
      */
     public Enumeration getHeaders(String name) {
@@ -283,29 +283,29 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
      */
     public long getDateHeader(String name) {
-        String header = getHeader(name);
+        String header = this.getHeader(name);
         if (header == null) {
             return -1;
         }
 
         try {
-            return dateFormat.parse(header).getTime();
+            return this.dateFormat.parse(header).getTime();
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void setDateHeader(String name, long date) {
-        this.setHeader(name, dateFormat.format(new Date(date)));
+        this.setHeader(name, this.dateFormat.format(new Date(date)));
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getIntHeader(java.lang.String)
      */
     public int getIntHeader(String name) {
@@ -323,7 +323,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
      */
     public Enumeration getHeaderNames() {
@@ -336,7 +336,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
      */
     public String getParameter(String name) {
@@ -345,7 +345,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
      */
     public String[] getParameterValues(String name) {
@@ -354,7 +354,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getParameterNames()
      */
     public Enumeration getParameterNames() {
@@ -363,7 +363,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getParameterMap()
      */
     public Map getParameterMap() {
@@ -376,7 +376,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getCharacterEncoding()
      */
     public String getCharacterEncoding() {
@@ -385,7 +385,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#setCharacterEncoding(java.lang.String)
      */
     public void setCharacterEncoding(String encoding) throws UnsupportedEncodingException {
@@ -394,11 +394,11 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getContentLength()
      */
     public int getContentLength() {
-        return contentLength;
+        return this.contentLength;
     }
 
     public void setContentLength(int contentLength) {
@@ -407,9 +407,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getContentType()
-     *
+     * 
      * TODO Doesn't handle input streams yet
      */
     public String getContentType() {
@@ -418,7 +418,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getInputStream()
      */
     public ServletInputStream getInputStream() throws IOException {
@@ -441,16 +441,16 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getReader()
      */
     public BufferedReader getReader() throws IOException {
         Reader reader;
-        String encoding = getCharacterEncoding();
+        String encoding = this.getCharacterEncoding();
         if (encoding == null) {
-            reader = new InputStreamReader(getInputStream());
+            reader = new InputStreamReader(this.getInputStream());
         } else {
-            reader = new InputStreamReader(getInputStream(), encoding);
+            reader = new InputStreamReader(this.getInputStream(), encoding);
         }
 
         return new BufferedReader(reader);
@@ -462,7 +462,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
@@ -471,7 +471,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
@@ -480,7 +480,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#setAttribute(java.lang.String,
      *      java.lang.Object)
      */
@@ -494,7 +494,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String name) {
@@ -503,7 +503,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getAuthType()
      */
     public String getAuthType() {
@@ -512,7 +512,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getCookies()
      */
     public Cookie[] getCookies() {
@@ -521,7 +521,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getLocale()
      */
     public Locale getLocale() {
@@ -530,7 +530,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getLocales()
      */
     public Enumeration getLocales() {
@@ -547,7 +547,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getRemoteAddr()
      */
     public String getRemoteAddr() {
@@ -556,7 +556,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getRemoteHost()
      */
     public String getRemoteHost() {
@@ -565,7 +565,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getRemoteUser()
      */
     public String getRemoteUser() {
@@ -574,9 +574,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#getRequestDispatcher(java.lang.String)
-     *
+     * 
      * TODO delegate to parent?
      */public RequestDispatcher getRequestDispatcher(String path) {
         return null;
@@ -584,9 +584,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getRequestedSessionId()
-     *
+     * 
      * TODO What do we do with the session? Make it available in sub requests
      * too?
      */
@@ -596,9 +596,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getSession()
-     *
+     * 
      * TODO What do we do with the session? Make it available in sub requests
      * too?
      */
@@ -609,9 +609,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getSession(boolean)
-     *
+     * 
      * TODO What do we do with the session? Make it available in sub requests
      * too?
      */
@@ -711,9 +711,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#getUserPrincipal()
-     *
+     * 
      * TODO No authentication handling between blocks yet
      */
     public Principal getUserPrincipal() {
@@ -722,9 +722,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromCookie()
-     *
+     * 
      * TODO What do we do with the session? Make it available in sub requests
      * too?
      */
@@ -734,9 +734,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromUrl()
-     *
+     * 
      * TODO What do we do with the session? Make it available in sub requests
      * too?
      */
@@ -747,9 +747,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromURL()
-     *
+     * 
      * TODO What do we do with the session? Make it available in sub requests
      * too?
      */
@@ -760,9 +760,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdValid()
-     *
+     * 
      * TODO What do we do with the session? Make it available in sub requests
      * too?
      */
@@ -773,7 +773,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletRequest#isSecure()
      */
     public boolean isSecure() {
@@ -783,9 +783,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.http.HttpServletRequest#isUserInRole(java.lang.String)
-     *
+     * 
      * TODO No authentication handling between blocks yet
      */
     public boolean isUserInRole(String role) {
@@ -822,7 +822,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         protected void setValue(String name, Object value) {
             List list;
             if (this.values.containsKey(name)) {
-                list = (List) values.get(name);
+                list = (List) this.values.get(name);
             } else {
                 list = new ArrayList();
                 this.values.put(name, list);
@@ -832,10 +832,10 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
         public Object getValue(String name) {
             if (this.values.containsKey(name)) {
-                return ((List) values.get(name)).get(0);
+                return ((List) this.values.get(name)).get(0);
             }
 
-            return getValueOfCaller(name);
+            return this.getValueOfCaller(name);
         }
 
         protected abstract Object getValueOfCaller(String name);
@@ -865,13 +865,14 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             for (int i = 0; i < CallStack.size(); i++) {
                 CallFrame frame = CallStack.frameAt(i);
                 HttpServletRequest request = (HttpServletRequest) frame.getAttribute(CallFrameHelper.REQUEST_OBJECT);
-                if (request instanceof BlockCallHttpServletRequest)
+                if (request instanceof BlockCallHttpServletRequest) {
                     result.putAll(this.values);
-                else {
+                } else {
                     result.putAll(request.getParameterMap());
                 }
-                if (request.equals(this.getRequest()))
+                if (request.equals(this.getRequest())) {
                     break;
+                }
             }
 
             return result;
@@ -890,11 +891,11 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             }
 
             public boolean hasMoreElements() {
-                return iterator.hasNext();
+                return this.iterator.hasNext();
             }
 
             public Object nextElement() {
-                return iterator.next();
+                return this.iterator.next();
             }
         }
 
@@ -940,8 +941,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
                     } catch (StringIndexOutOfBoundsException e) {
                         String rest = s.substring(i);
                         sb.append(rest);
-                        if (rest.length() == 2)
+                        if (rest.length() == 2) {
                             i++;
+                        }
                     }
 
                     break;
@@ -955,8 +957,9 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
         public String[] getValues(String name) {
             List list = (List) this.values.get(name);
-            if (list == null)
+            if (list == null) {
                 return null;
+            }
 
             String[] result = new String[list.size()];
             for (int i = 0; i < list.size(); i++) {
@@ -1006,11 +1009,11 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
     private class Attributes extends Values {
 
         public Object getValue(String name) {
-            if (values.containsKey(name)) {
-                return values.get(name);
+            if (this.values.containsKey(name)) {
+                return this.values.get(name);
             }
 
-            return getValueOfCaller(name);
+            return this.getValueOfCaller(name);
         }
 
         public Object getValueOfCaller(String name) {
