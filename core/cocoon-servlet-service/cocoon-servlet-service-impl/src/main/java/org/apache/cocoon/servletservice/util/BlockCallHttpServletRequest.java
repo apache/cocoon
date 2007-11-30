@@ -54,8 +54,15 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
+ * <p>
  * Create a HttpServletRequest from an URL, that is used while calling e.g. a
- * block.
+ * servlet service. The current implementation forwards headers, attributes and
+ * parameters.
+ * </p>
+ * <p>
+ * Note: Session handling and HTTP authentication information hasn't been
+ * implemented yet.
+ * </p>
  *
  * @version $Id: BlockCallHttpServletRequest.java 577519 2007-09-20 03:05:26Z
  *          vgritsenko $
@@ -415,17 +422,17 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @see javax.servlet.ServletRequest#getInputStream()
      */
     public ServletInputStream getInputStream() throws IOException {
-        return content;
+        return this.content;
     }
 
     public void setInputStream(final InputStream inputStream) {
         try {
-            contentLength = inputStream.available();
+            this.contentLength = inputStream.available();
         } catch (IOException e) {
-            contentLength = -1;
+            this.contentLength = -1;
         }
 
-        content = new ServletInputStream() {
+        this.content = new ServletInputStream() {
             public int read() throws IOException {
                 return inputStream.read();
             }
@@ -793,20 +800,12 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
         return this.parentRequest.getLocalName();
     }
 
-    /*
-     * TODO delegate to parent?
-     */
     public int getLocalPort() {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.parentRequest.getLocalPort();
     }
 
-    /*
-     * TODO delegate to parent?
-     */
     public int getRemotePort() {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.parentRequest.getRemotePort();
     }
 
     private abstract static class Values implements Serializable {
