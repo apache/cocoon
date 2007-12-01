@@ -20,8 +20,8 @@ import java.util.Properties;
 
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.portal.om.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Layout;

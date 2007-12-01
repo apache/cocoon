@@ -25,7 +25,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.portal.om.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.excalibur.source.Source;

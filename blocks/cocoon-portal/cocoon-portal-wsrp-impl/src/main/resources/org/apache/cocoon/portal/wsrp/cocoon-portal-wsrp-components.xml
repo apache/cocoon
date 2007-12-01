@@ -41,9 +41,9 @@
     <!--+
         |  This is the WSRP coplet adapter.
         +-->
-    <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/wsrp"
+    <bean name="org.apache.cocoon.portal.om.CopletAdapter.wsrp"
           class="org.apache.cocoon.portal.wsrp.adapter.WSRPAdapter"
-          parent="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter" scope="singleton">
+          parent="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter" scope="singleton">
       <property name="userContextProvider" ref="org.apache.cocoon.portal.wsrp.consumer.UserContextProvider"/>
       <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
       <property name="serviceManager" ref="org.apache.avalon.framework.service.ServiceManager"/>

@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceAddedEvent;
@@ -34,6 +33,7 @@ import org.apache.cocoon.portal.event.coplet.CopletInstanceRemovedEvent;
 import org.apache.cocoon.portal.event.layout.LayoutAddedEvent;
 import org.apache.cocoon.portal.event.layout.LayoutInstanceAddedEvent;
 import org.apache.cocoon.portal.event.layout.LayoutRemovedEvent;
+import org.apache.cocoon.portal.om.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.Layout;

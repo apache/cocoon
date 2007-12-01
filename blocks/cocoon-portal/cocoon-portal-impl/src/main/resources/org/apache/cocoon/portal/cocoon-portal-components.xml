@@ -44,7 +44,7 @@
       | Coplet Adapters
       |
       +-->
-    <bean name="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter"
+    <bean name="org.apache.cocoon.portal.adapter.impl.AbstractCopletAdapter"
           class="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter"
           parent="org.apache.cocoon.portal.util.AbstractBean" abstract="true">
       <property name="cache" ref="org.apache.cocoon.caching.Cache"/>
@@ -54,9 +54,9 @@
     <!--+
         | This is the uri based adapter.
         +-->
-    <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/uri"
+    <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter.uri"
           class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter"
-          parent="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter" scope="singleton">
+          parent="org.apache.cocoon.portal.adapter.impl.AbstractCopletAdapter" scope="singleton">
       <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
     </bean>
 
@@ -256,8 +256,8 @@
       | Coplet Adapter map
       |
       +-->
-    <configurator:bean-map id="org.apache.cocoon.portal.coplet.adapter.CopletAdapterMap"
-                           type="org.apache.cocoon.portal.coplet.adapter.CopletAdapter"/>
+    <configurator:bean-map id="org.apache.cocoon.portal.om.CopletAdapterMap"
+                           type="org.apache.cocoon.portal.om.CopletAdapter"/>
 
   <!--+
       | Coplet Type map

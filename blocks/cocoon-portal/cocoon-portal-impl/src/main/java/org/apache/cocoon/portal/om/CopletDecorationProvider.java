@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.coplet.adapter;
+package org.apache.cocoon.portal.om;
 
 import java.util.List;
 
-import org.apache.cocoon.portal.om.CopletInstance;
 
 /**
  * @version $Id$

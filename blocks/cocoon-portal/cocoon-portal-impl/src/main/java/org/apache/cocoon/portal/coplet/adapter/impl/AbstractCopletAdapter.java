@@ -29,9 +29,9 @@ import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.environment.CocoonRunnable;
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Receiver;
+import org.apache.cocoon.portal.om.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
@@ -218,7 +218,7 @@ public abstract class AbstractCopletAdapter
      * {@link #streamContent(CopletInstance, ContentHandler)}
      * for creating the content.
      *
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#toSAX(org.apache.cocoon.portal.om.CopletInstance, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.om.CopletAdapter#toSAX(org.apache.cocoon.portal.om.CopletInstance, org.xml.sax.ContentHandler)
      */
     public void toSAX(CopletInstance coplet, ContentHandler contentHandler)
     throws SAXException {
@@ -352,7 +352,7 @@ public abstract class AbstractCopletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#init(org.apache.cocoon.portal.om.CopletDefinition)
+     * @see org.apache.cocoon.portal.om.CopletAdapter#init(org.apache.cocoon.portal.om.CopletDefinition)
      */
     public void init(CopletDefinition coplet) {
         if ( this.getLogger().isDebugEnabled() ) {
@@ -362,7 +362,7 @@ public abstract class AbstractCopletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#destroy(org.apache.cocoon.portal.om.CopletDefinition)
+     * @see org.apache.cocoon.portal.om.CopletAdapter#destroy(org.apache.cocoon.portal.om.CopletDefinition)
      */
     public void destroy(CopletDefinition coplet) {
         // nothing to do here, can be overwritten in subclasses
@@ -372,7 +372,7 @@ public abstract class AbstractCopletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.om.CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletAdapter#login(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void login(CopletInstance coplet) {
         if ( this.getLogger().isDebugEnabled() ) {
@@ -393,7 +393,7 @@ public abstract class AbstractCopletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.om.CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletAdapter#logout(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void logout(CopletInstance coplet) {
         if ( this.getLogger().isDebugEnabled() ) {
