@@ -36,7 +36,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.RequestContext;
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.om.SkinDescription;
@@ -94,9 +93,6 @@ public class PortalServiceImpl
     /** The link service. */
     protected LinkService linkService;
 
-    /** The used coplet adapters. */
-    protected Map copletAdapters = Collections.EMPTY_MAP;
-
     /** The coplet factory. */
     protected CopletFactory copletFactory;
 
@@ -120,7 +116,6 @@ public class PortalServiceImpl
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
-        this.copletAdapters = (Map)this.manager.lookup(CopletAdapter.class.getName()+"Map");
         this.requestContextProvider = (RequestContextProvider)this.manager.lookup(RequestContextProvider.class.getName());
     }
 
@@ -305,17 +300,6 @@ public class PortalServiceImpl
             }
         }
         return this.eventManager;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.PortalService#getCopletAdapter(java.lang.String)
-     */
-    public CopletAdapter getCopletAdapter(String name) {
-        CopletAdapter o = (CopletAdapter) this.copletAdapters.get( name );
-        if ( o == null ) {
-            throw new PortalRuntimeException("Unable to lookup coplet adapter with name " + name);
-        }
-        return o;
     }
 
     /**

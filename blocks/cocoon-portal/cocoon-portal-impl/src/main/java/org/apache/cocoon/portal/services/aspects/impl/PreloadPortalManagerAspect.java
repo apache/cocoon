@@ -57,8 +57,7 @@ public class PreloadPortalManagerAspect
         final Iterator i = changedCoplets.iterator();
         while (i.hasNext()) {
             final CopletInstance cid = (CopletInstance)i.next();
-            final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
-            final CopletAdapter adapter = context.getPortalService().getCopletAdapter(adapterName);
+            final CopletAdapter adapter = cid.getCopletDefinition().getCopletType().getCopletAdapter();
             adapter.toSAX(cid, nullHandler );
         }
         // start "real" rendering

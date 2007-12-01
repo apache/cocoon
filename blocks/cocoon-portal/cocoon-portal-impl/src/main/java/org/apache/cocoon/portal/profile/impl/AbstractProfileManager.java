@@ -17,6 +17,7 @@
 package org.apache.cocoon.portal.profile.impl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import org.apache.cocoon.portal.event.user.UserWillLogoutEvent;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
+import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
@@ -51,6 +53,13 @@ public abstract class AbstractProfileManager
     /** The chain for the configured profile manager aspects. */
     protected AspectChainImpl chain;
 
+    /** The map of coplet types. */
+    protected Map copletTypesMap = Collections.EMPTY_MAP;
+
+    public void setCopletTypesMap(final Map m) {
+        this.copletTypesMap = (m != null ? m : Collections.EMPTY_MAP);
+    }
+
     /**
      * Set the event chain.
      * @param a A chain.
@@ -64,6 +73,20 @@ public abstract class AbstractProfileManager
      */
     public AspectChain getProfileManagerAspectChain() {
         return this.chain;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletTypes()
+     */
+    public Collection getCopletTypes() {
+        return this.copletTypesMap.values();
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletType(java.lang.String)
+     */
+    public CopletType getCopletType(String id) {
+        return (CopletType)this.copletTypesMap.get(id);
     }
 
     /**
@@ -122,7 +145,7 @@ public abstract class AbstractProfileManager
                         if ( cid.getCopletDefinition() != null ) {
                             // now invoke login on each instance
                             CopletAdapter adapter;
-                            adapter = this.portalService.getCopletAdapter(cid.getCopletDefinition().getCopletType().getCopletAdapterName());
+                            adapter = cid.getCopletDefinition().getCopletType().getCopletAdapter();
                             adapter.login( cid );
                         }
                     }
@@ -155,23 +178,6 @@ public abstract class AbstractProfileManager
             }
         }
         return layout;
-    }
-
-    /**
-     * Process a freshly loaded profile.
-     */
-    protected Collection processCopletTypes(Collection copletTypes)
-    throws LayoutException {
-        Collection result = copletTypes;
-        if ( this.chain.hasAspects() ) {
-            final ProfileManagerAspectContextImpl aspectContext = new ProfileManagerAspectContextImpl(this.portalService,
-                                                                                                      this.chain,
-                                                                                                      ProfileManagerAspectContextImpl.PHASE_COPLET_TYPES);
-            aspectContext.invokeNext(copletTypes);
-            result = (Collection)aspectContext.getResult();
-        }
-        this.prepareObject(null, result);
-        return result;
     }
 
     /**

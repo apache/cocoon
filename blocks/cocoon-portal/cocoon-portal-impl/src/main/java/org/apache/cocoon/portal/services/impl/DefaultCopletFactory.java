@@ -33,8 +33,8 @@ import org.apache.cocoon.portal.util.AbstractBean;
  *
  * @version $Id$
  */
-public class DefaultCopletFactory  
-    extends AbstractBean 
+public class DefaultCopletFactory
+    extends AbstractBean
     implements CopletFactory {
 
     protected static long idCounter = System.currentTimeMillis();
@@ -63,8 +63,7 @@ public class DefaultCopletFactory
         instance.setCopletDefinition(copletData);
 
         // now lookup the adapter
-        final String adapterName = copletData.getCopletType().getCopletAdapterName();
-        final CopletAdapter adapter = this.portalService.getCopletAdapter(adapterName);
+        final CopletAdapter adapter = instance.getCopletDefinition().getCopletType().getCopletAdapter();
         adapter.login( instance );
 
         // send an event
@@ -77,9 +76,7 @@ public class DefaultCopletFactory
      */
     public void remove(CopletInstance copletInstanceData) {
         if ( copletInstanceData != null ) {
-            // now lookup the adapter
-            final String adapterName = copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapterName();
-            final CopletAdapter adapter = this.portalService.getCopletAdapter(adapterName);
+            final CopletAdapter adapter = copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapter();
             adapter.logout( copletInstanceData );
 
             // send an event
@@ -99,17 +96,16 @@ public class DefaultCopletFactory
                 idCounter += 1;
             }
         }
-        final CopletDefinition instance = new CopletDefinition(id);
-        instance.setCopletType(copletType);
+        final CopletDefinition definition = new CopletDefinition(id);
+        definition.setCopletType(copletType);
 
-        final String adapterName = instance.getCopletType().getCopletAdapterName();
-        final CopletAdapter adapter = this.portalService.getCopletAdapter(adapterName);
-        adapter.init( instance );
+        final CopletAdapter adapter = definition.getCopletType().getCopletAdapter();
+        adapter.init( definition );
 
         // send an event
-        this.portalService.getEventManager().send(new CopletDefinitionAddedEvent(instance));
+        this.portalService.getEventManager().send(new CopletDefinitionAddedEvent(definition));
 
-        return instance;
+        return definition;
     }
 
     /**
@@ -117,8 +113,7 @@ public class DefaultCopletFactory
      */
     public void remove(CopletDefinition copletDefinition) {
         if ( copletDefinition != null ) {
-            final String adapterName = copletDefinition.getCopletType().getCopletAdapterName();
-            final CopletAdapter adapter = this.portalService.getCopletAdapter(adapterName);
+            final CopletAdapter adapter = copletDefinition.getCopletType().getCopletAdapter();
             adapter.destroy( copletDefinition );
 
             // send an event

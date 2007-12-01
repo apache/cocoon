@@ -36,7 +36,6 @@ import org.apache.cocoon.portal.event.layout.LayoutInstanceAddedEvent;
 import org.apache.cocoon.portal.event.layout.LayoutRemovedEvent;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
-import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutInstance;
@@ -81,7 +80,6 @@ public class GroupBasedProfileManager
         public SourceValidity validity;
     }
 
-    final protected ProfileInfo copletTypes = new ProfileInfo();
     final protected ProfileInfo copletDefinitions = new ProfileInfo();
 
     /** All deployed coplet datas. */
@@ -132,7 +130,7 @@ public class GroupBasedProfileManager
             Iterator iter = profile.getCopletInstances().iterator();
             while ( iter.hasNext() ) {
                 CopletInstance cid = (CopletInstance) iter.next();
-                CopletAdapter adapter = this.portalService.getCopletAdapter(cid.getCopletDefinition().getCopletType().getCopletAdapterName());
+                CopletAdapter adapter = cid.getCopletDefinition().getCopletType().getCopletAdapter();
                 adapter.logout( cid );
             }
 
@@ -290,8 +288,6 @@ public class GroupBasedProfileManager
         profile.setLayoutTypes(this.portalService.getLayoutFactory().getLayoutTypes());
 
         try {
-            // first "load" the global data
-            profile.setCopletTypes( this.getGlobalCopletTypes() );
             // FIXME - We should be able to merge definitions from various locations
             //         This could also be handled by aspects?
             profile.setCopletDefinitions( this.getGlobalCopletDefinitions(user, profile) );
@@ -333,65 +329,6 @@ public class GroupBasedProfileManager
         }
     }
 
-    /**
-     * Return the current set of global coplet types.
-     * @return The global set of coplet types.
-     * @throws Exception
-     */
-    protected Map getGlobalCopletTypes()
-    throws Exception {
-        // if we already have loaded the profile and don't check
-        // for changes, just return the profile
-        if ( this.copletTypes.objects != null && !this.checkForChanges ) {
-            return this.copletTypes.objects;
-        }
-
-        // build key for loading the profile
-        final Map key = this.buildKey(CATEGORY_GLOBAL,
-                ProfileLS.PROFILETYPE_COPLETTYPE,
-                null,
-                true,
-                null);
-
-        SourceValidity newValidity = null;
-        // if we have a profile, check for reloading
-        if ( this.copletTypes.validity != null ) {
-            // if it's still valid just return the profile
-            final int validity = this.copletTypes.validity.isValid();
-            if ( validity == SourceValidity.VALID) {
-                return this.copletTypes.objects;
-            } else if ( validity == SourceValidity.UNKNOWN ) {
-                newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETTYPE);
-                if ( newValidity != null
-                     && this.copletTypes.validity.isValid(newValidity) == SourceValidity.VALID) {
-                    return this.copletTypes.objects;
-                }
-            }
-        }
-
-        // we have to load/reload
-        synchronized ( this ) {
-            Collection collection = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETTYPE, null);
-            collection = this.processCopletTypes(collection);
-            final Map objects = new HashMap();
-            final Iterator i = collection.iterator();
-            while ( i.hasNext() ) {
-                final CopletType current = (CopletType)i.next();
-                objects.put(current.getId(), current);
-            }
-            this.copletTypes.objects = objects;
-            if ( newValidity == null ) {
-                newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETTYPE);
-            }
-            this.copletTypes.validity = newValidity;
-            // now invalidate coplet definitions
-            this.copletDefinitions.objects = null;
-            this.copletDefinitions.validity = null;
-
-            return this.copletTypes.objects;
-        }
-    }
-
     protected Map getGlobalCopletDefinitions(final PortalUser  info,
                                              final ProfileHolder profile)
     throws Exception {
@@ -423,7 +360,7 @@ public class GroupBasedProfileManager
         }
 
         synchronized ( this ) {
-            Collection collection = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETDEFINITION, profile.getCopletTypesMap());
+            Collection collection = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETDEFINITION, this.copletTypesMap);
             collection = this.processCopletDefinitions(collection);
             final Iterator i = collection.iterator();
             final Map objects = new HashMap();
@@ -582,33 +519,6 @@ public class GroupBasedProfileManager
             // TODO
             throw new ProfileException("Exception during save profile", e);
         }
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletType(java.lang.String)
-     */
-    public CopletType getCopletType(String id) {
-        if ( this.copletTypes.objects == null ) {
-            this.getCopletTypes();
-        }
-        return (CopletType)this.copletTypes.objects.get(id);
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletTypes()
-     */
-    public Collection getCopletTypes() {
-        if ( this.copletTypes.objects == null ) {
-            try {
-                // first "load" the global data
-                this.getGlobalCopletTypes();
-            } catch (ProfileException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new ProfileException("Unable to load global coplet types.", e);
-            }
-        }
-        return this.copletTypes.objects.values();
     }
 
     /**

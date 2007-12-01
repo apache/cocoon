@@ -88,8 +88,7 @@ public class DefaultCopletAspect extends AbstractAspect {
             a.addCDATAAttribute("type", "text/javascript");
             XMLUtils.createElement(handler, "script", a, buffer.toString());
         } else {
-            final String adapterName = cid.getCopletDefinition().getCopletType().getCopletAdapterName();
-            final CopletAdapter copletAdapter = rendererContext.getPortalService().getCopletAdapter(adapterName);
+            final CopletAdapter copletAdapter = cid.getCopletDefinition().getCopletType().getCopletAdapter();
             copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
         }
 

@@ -41,9 +41,6 @@ import org.apache.cocoon.portal.om.LayoutType;
  */
 public class ProfileHolder {
 
-    /** A map of all coplet types. */
-    protected Map copletTypes;
-
     /** A map of all coplet definitions. */
     protected Map copletDefinitions;
 
@@ -71,14 +68,6 @@ public class ProfileHolder {
     public void setRootLayout(Layout rootLayout) {
         this.rootLayout = rootLayout;
         this.createLayoutCollections();
-    }
-
-    /**
-     * Set all coplet types.
-     * @param copletTypes An id based map of the types.
-     */
-    public void setCopletTypes(Map copletTypes) {
-        this.copletTypes = copletTypes;
     }
 
     /**
@@ -110,13 +99,6 @@ public class ProfileHolder {
     }
 
     /**
-     * Return all coplet types of this profile.
-     */
-    public Collection getCopletTypes() {
-        return this.copletTypes.values();
-    }
-
-    /**
      * Return all coplet definitions.
      */
     public Collection getCopletDefinitions() {
@@ -135,13 +117,6 @@ public class ProfileHolder {
      */
     public Collection getLayoutObjects() {
         return this.layouts;
-    }
-
-    /**
-     * Search for a coplet type.
-     */
-    public CopletType searchCopletType(String copletTypeId) {
-        return (CopletType) this.copletTypes.get(copletTypeId);
     }
 
     /**
@@ -164,17 +139,6 @@ public class ProfileHolder {
             }
         }
         return list;
-    }
-
-    /**
-     * Search for all coplet definitions of the coplet type.
-     */
-    public Collection searchCopletDefinitions(String copletTypeId) {
-        final CopletType cbd = this.searchCopletType(copletTypeId);
-        if ( cbd != null ) {
-            return this.searchCopletDefinitions(cbd);
-        }
-        return null;
     }
 
     /**
@@ -311,10 +275,6 @@ public class ProfileHolder {
 
     public Map getCopletDefinitionsMap() {
         return this.copletDefinitions;
-    }
-
-    public Map getCopletTypesMap() {
-        return this.copletTypes;
     }
 
     public Map getLayoutTypesMap() {

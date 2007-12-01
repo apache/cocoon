@@ -16,30 +16,31 @@
  */
 package org.apache.cocoon.portal.om;
 
-import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.util.PortalUtils;
 
 /**
  * A coplet base data defines a coplet type, like a pipeline based coplet,
- * a JSR 168 portlet or a WSRP portlet. For each type exists a coplet base
- * data with some configuration.
+ * a JSR 168 portlet or a WSRP portlet. For each type exists a coplet type
+ * with some configuration.
  * Based on the coplet type, coplets are created ({@link CopletDefinition}.
  *
  * @version $Id$
  */
-public final class CopletType implements Serializable, Cloneable { 
+public final class CopletType {
 
-	protected final Map copletConfig = new HashMap();
+	protected Map copletConfig = Collections.EMPTY_MAP;
 
     protected final String id;
 
-    protected String copletAdapterName;
+    protected CopletAdapter copletAdapter;
 
     /**
-     * Create a new coplet base data object. 
+     * Create a new coplet base data object.
      * @param id The unique id of the object.
      * @see PortalUtils#testId(String)
      */
@@ -51,12 +52,20 @@ public final class CopletType implements Serializable, Cloneable {
         this.id = id;
     }
 
+    /**
+     * Return the unique identifier for the coplet type.
+     * @return The non-null unique identifier.
+     */
 	public String getId() {
 		return id;
 	}
 
-	public String getCopletAdapterName() {
-		return this.copletAdapterName;
+	public CopletAdapter getCopletAdapter() {
+		return this.copletAdapter;
+	}
+
+	public void setCopletAdapter(final CopletAdapter ca) {
+	    this.copletAdapter = ca;
 	}
 
 	public Object getCopletConfig(String key) {
@@ -64,19 +73,30 @@ public final class CopletType implements Serializable, Cloneable {
 	}
 
 	public void setCopletConfig(String key, Object value) {
+	    if ( this.copletConfig.size() == 0 ) {
+	        this.copletConfig = new HashMap();
+	    }
 		this.copletConfig.put(key, value);
 	}
 
     public Object removeCopletConfig(String key) {
-        return this.copletConfig.remove(key);
+        final Object oldValue = this.copletConfig.remove(key);
+        if ( this.copletConfig.size() == 0 ) {
+            this.copletConfig = Collections.EMPTY_MAP;
+        }
+        return oldValue;
     }
 
 	public Map getCopletConfig() {
 		return this.copletConfig;
 	}
 
-	public void setCopletAdapterName(String name) {
-		this.copletAdapterName = name;
+	public void setCopletConfig(final Map config) {
+	    if ( config.size() == 0 ) {
+	        this.copletConfig = Collections.EMPTY_MAP;
+	    } else {
+		    this.copletConfig = new HashMap(config);
+	    }
 	}
 
     /**
@@ -84,6 +104,6 @@ public final class CopletType implements Serializable, Cloneable {
      */
     public String toString() {
         return "CopletType (" + this.hashCode() +
-               "), id=" + this.getId() + ", coplet-adapter=" + this.getCopletAdapterName();
+               "), id=" + this.getId() + ", coplet-adapter=" + this.getCopletAdapter();
     }
 }

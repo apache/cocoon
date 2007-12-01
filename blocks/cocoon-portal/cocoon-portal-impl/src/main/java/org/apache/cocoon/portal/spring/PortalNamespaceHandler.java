@@ -24,6 +24,12 @@ import org.apache.cocoon.portal.services.aspects.ResponseProcessorAspect;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
+ * This is the namespace handler for the portal spring extension.
+ * It registers the parsers for the supported elements.
+ *
+ * @see AspectsBeanDefinitionParser
+ * @see LayoutTypeDefinitionParser
+ * @see CopletTypeDefinitionParser
  *
  * @version $Id$
  */
@@ -38,5 +44,6 @@ public class PortalNamespaceHandler extends NamespaceHandlerSupport {
         this.registerBeanDefinitionParser("response-processor-aspects", new AspectsBeanDefinitionParser(ResponseProcessorAspect.class.getName()));
         this.registerBeanDefinitionParser("profile-manager-aspects", new AspectsBeanDefinitionParser(ProfileManagerAspect.class.getName()));
         this.registerBeanDefinitionParser("layout-type", new LayoutTypeDefinitionParser());
+        this.registerBeanDefinitionParser("coplet-type", new CopletTypeDefinitionParser());
     }
 }
