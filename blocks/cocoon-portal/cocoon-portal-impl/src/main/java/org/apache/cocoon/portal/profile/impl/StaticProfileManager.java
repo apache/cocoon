@@ -27,7 +27,6 @@ import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
-import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutInstance;
@@ -50,7 +49,6 @@ public class StaticProfileManager
 
     protected final StaticBucketMap copletInstances = new StaticBucketMap();
     protected final StaticBucketMap copletDefinitions = new StaticBucketMap();
-    protected final StaticBucketMap copletTypes = new StaticBucketMap();
 
     protected static final String LAYOUTKEY_PREFIX = StaticProfileManager.class.getName() + "/Layout/";
 
@@ -157,31 +155,16 @@ public class StaticProfileManager
             return instances;
         }
 
+        // CopletDefinition
         final Map map = new LinkedMap();
         map.put("base", this.profilesPath);
         map.put("portalname", this.portalService.getPortalName());
         map.put("profile", "coplet");
-        map.put("name", "basedata");
-        Collection cBase = (Collection) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_COPLETTYPE, null);
-        cBase = this.processCopletTypes(cBase);
-        final Map types = new HashMap();
-        Iterator i = cBase.iterator();
-        while ( i.hasNext() ) {
-            final CopletDefinition current = (CopletDefinition)i.next();
-            types.put(current.getId(), current);
-        }
-        this.copletTypes.put(portalName, types);
-
-        // CopletDefinition
-        map.clear();
-        map.put("base", this.profilesPath);
-        map.put("portalname", this.portalService.getPortalName());
-        map.put("profile", "coplet");
         map.put("name", "data");
-        Collection c = (Collection) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_COPLETDEFINITION, types);
+        Collection c = (Collection) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_COPLETDEFINITION, this.copletTypesMap);
         c = this.processCopletDefinitions(c);
         final Map definitions = new HashMap();
-        i = c.iterator();
+        final Iterator i = c.iterator();
         while ( i.hasNext() ) {
             final CopletDefinition current = (CopletDefinition)i.next();
             definitions.put(current.getId(), current);
@@ -284,20 +267,6 @@ public class StaticProfileManager
         } catch (Exception e) {
             throw new ProfileException("Error in getCopletInstanceDatas.", e);
         }
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletType(java.lang.String)
-     */
-    public CopletType getCopletType(String id) {
-        return (CopletType)((Map)this.copletTypes.get(this.portalService.getPortalName())).get(id);
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletTypes()
-     */
-    public Collection getCopletTypes() {
-        return ((Map)this.copletTypes.get(this.portalService.getPortalName())).values();
     }
 
     /**

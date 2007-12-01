@@ -32,7 +32,7 @@ import org.apache.excalibur.source.SourceFactory;
  *
  * @version $Id$
  */
-public class CopletSourceFactory     
+public class CopletSourceFactory
     extends AbstractComponent
     implements SourceFactory {
 
@@ -59,8 +59,7 @@ public class CopletSourceFactory
             CopletSource copletSource =
                 new CopletSource(uri,
                                  protocol,
-                                 coplet,
-                                 this.portalService);
+                                 coplet);
             copletSource.service(this.manager);
             return copletSource;
         } catch (ServiceException ce) {
@@ -72,6 +71,6 @@ public class CopletSourceFactory
      * @see org.apache.excalibur.source.SourceFactory#release(Source)
      */
     public void release(Source source) {
-        // nothing to do 
+        // nothing to do
     }
 }

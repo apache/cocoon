@@ -78,7 +78,6 @@ public class TestProfileManager extends GroupBasedProfileManager {
                 profile.setLayoutTypes(this.portalService.getLayoutFactory().getLayoutTypes());
 
                 // first "load" the global coplet types
-                profile.setCopletTypes( this.getGlobalCopletTypes() );
                 profile.setCopletDefinitions( this.getGlobalCopletDefinitions( user, profile ) );
 
                 // create root layout
@@ -90,7 +89,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                 while ( i.hasNext() ) {
                     final CopletDefinition cd = (CopletDefinition)i.next();
                     // check for portlets
-                    if ( "portlet".equals(cd.getCopletType().getCopletAdapterName()) ) {
+                    if ( "portlet".equals(cd.getCopletType().getId()) ) {
                         final String id = StringUtils.replaceChars(cd.getId() + "-1", '_', '-');
                         final CopletInstance cid = new CopletInstance(id);
                         cid.setCopletDefinition(cd);

@@ -57,7 +57,6 @@
     <property name="profileLS" ref="org.apache.cocoon.portal.profile.ProfileLS"/>
     <property name="configuration">
       <value>
-        coplettype-global-load=cocoon:raw:/load-global-profile?profile=coplettype
         copletdefinition-global-load=cocoon:raw:/load-global-profile?profile=copletdefinition
         copletdefinition-role-load=cocoon:raw:/load-role-profile?profile=copletdefinition
         copletdefinition-user-load=cocoon:raw:/load-user-profile?profile=copletdefinition

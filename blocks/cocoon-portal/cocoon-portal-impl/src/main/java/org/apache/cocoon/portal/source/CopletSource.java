@@ -25,7 +25,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.serialization.Serializer;
@@ -41,20 +40,16 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class CopletSource 
+public class CopletSource
     implements Source, XMLizable, Serviceable {
 
     protected ServiceManager manager;
 
     protected String uri;
-    protected String copletControllerName;
     protected CopletInstance copletInstanceData;
 
     /** The used protocol */
     protected String scheme;
-
-    /** The portal service. */
-    protected final PortalService portalService;
 
     /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -65,13 +60,10 @@ public class CopletSource
 
     public CopletSource(String         location,
                         String         protocol,
-                        CopletInstance coplet,
-                        PortalService  service) {
-        this.portalService = service;
+                        CopletInstance coplet) {
         this.uri = location;
         this.scheme = (protocol == null ? "coplet" : protocol);
         this.copletInstanceData = coplet;
-        this.copletControllerName = this.copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapterName();
     }
 
 	/**
@@ -112,7 +104,7 @@ public class CopletSource
 	 * @see org.apache.excalibur.source.Source#refresh()
 	 */
 	public void refresh() {
-        // nothing to do 
+        // nothing to do
 	}
 
 	/**
@@ -139,9 +131,9 @@ public class CopletSource
 	/**
 	 * @see org.apache.excalibur.xml.sax.XMLizable#toSAX(ContentHandler)
 	 */
-	public void toSAX(ContentHandler handler) 
+	public void toSAX(ContentHandler handler)
     throws SAXException {
-        final CopletAdapter copletAdapter = this.portalService.getCopletAdapter(this.copletControllerName);
+        final CopletAdapter copletAdapter = this.copletInstanceData.getCopletDefinition().getCopletType().getCopletAdapter();
 
         copletAdapter.toSAX(this.copletInstanceData, handler);
 	}

@@ -39,7 +39,7 @@ import org.apache.commons.collections.map.LinkedMap;
  * in the session, it is advisable to use serializable objects only.
  *
  * If you are implementing your own layout object make sure that your
- * class provides a two string constructor which calls {@link #Layout(String, LayoutType)}.
+ * class provides a one string constructor which calls {@link #Layout(String)}.
  *
  * @version $Id$
  */

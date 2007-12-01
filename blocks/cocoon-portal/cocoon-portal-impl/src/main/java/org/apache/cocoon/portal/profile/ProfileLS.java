@@ -29,7 +29,6 @@ import org.apache.excalibur.source.SourceValidity;
  * This object map varies depending on the profile type:
  * PROFILETYPE_LAYOUT: A map with layout types.
  * PROFILETYPE_LAYOUTINSTANCE: -
- * PROFILETYPE_COPLETTYPE: -
  * PROFILETYPE_COPLETDEFINITION: A map with coplet types.
  * PROFILETYPE_COPLETINSTANCE: A map with coplet definitions
  *
@@ -42,7 +41,6 @@ public interface ProfileLS {
 
     String PROFILETYPE_LAYOUT = "layout";
     String PROFILETYPE_LAYOUTINSTANCE = "layoutinstance";
-    String PROFILETYPE_COPLETTYPE = "coplettype";
     String PROFILETYPE_COPLETDEFINITION = "copletdefinition";
     String PROFILETYPE_COPLETINSTANCE = "copletinstance";
 

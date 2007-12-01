@@ -27,36 +27,21 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
                            http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
 
-    <bean name="org.apache.cocoon.portal.om.CopletType/URICoplet"
-          class="org.apache.cocoon.portal.om.CopletType">
-      <constructor-arg value="URICoplet"/>
-      <property name="copletAdapterName" value="cocoon"/>
-    </bean>
+    <portal:coplet-type id="uri">
+      <portal:coplet-adapter type="cocoon"/>
+    </portal:coplet-type>
+    
+    <portal:coplet-type id="portlet">
+      <portal:coplet-adapter type="portlet"/>
+      <portal:configuration key="buffer" type="boolean" value="true"/>
+      <portal:configuration key="full-screen" type="boolean" value="false"/>
+      <portal:configuration key="handle-sizing" type="boolean" value="true"/>
+    </portal:coplet-type>
 
-    <bean name="org.apache.cocoon.portal.om.CopletType/Portlet"
-          class="org.apache.cocoon.portal.om.CopletType">
-      <constructor-arg value="Portlet"/>
-      <property name="copletAdapterName" value="portlet"/>
-<!-- TODO Configuration
-      <property name="configuration">
-        <map>
-          <entry key="buffer" value="true"/>
-          <entry key="full-screen" value="false"/>
-          <entry key="handle-sizing" value="true"/>
-        </map>
-      </property>
- -->
-    </bean>
 <!-- 
-    <bean name="org.apache.cocoon.portal.om.CopletType/WSRP"
-          class="org.apache.cocoon.portal.om.CopletType">
-      <constructor-arg value="WSRP"/>
-      <property name="copletAdapterName" value="wsrp"/>
-      <property name="configuration">
-        <map>
-          <entry key="buffer" value="true"/>
-        </map>
-      </property>
-    </bean>
+    <portal:coplet-type id="wsrp">
+      <portal:coplet-adapter type="wsrp"/>
+      <portal:configuration key="buffer" type="boolean" value="true"/>
+    </portal:coplet-type>
  -->
 </beans>

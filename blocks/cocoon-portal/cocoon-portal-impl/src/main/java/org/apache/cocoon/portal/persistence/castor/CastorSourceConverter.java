@@ -55,12 +55,12 @@ import org.xml.sax.InputSource;
  * This is a component that converts a profile (= object tree) to XML and vice-versa
  * using Castor. It could be used to persist objects as a XML representation.
  *
- * In order to work properly the methods provided by this interface require some 
+ * In order to work properly the methods provided by this interface require some
  * parameters:
  * objectmap : containing a map of objects for resolving references during load
  * profiletype: specifying the mapping (e.g. in the portal this is one of layout, copletinstancedata, copletdata or copletbasedate)
  * suppressXSIType: Sets whether or not the xsi:type attributes should appear on the marshalled document.
- * 
+ *
  * @version $Id$
  */
 public class CastorSourceConverter
@@ -112,7 +112,7 @@ public class CastorSourceConverter
                             Object       referenceObject,
                             Map          parameters)
     throws ConverterException {
-        Object references = referenceObject; 
+        Object references = referenceObject;
         if ( referenceObject instanceof Collection && !(referenceObject instanceof CollectionWrapper) ) {
             references = new CollectionWrapper((Collection)referenceObject);
         }
@@ -161,7 +161,6 @@ public class CastorSourceConverter
         // default configuration
         final String prefix = "resource://org/apache/cocoon/portal/persistence/castor/";
         this.mappingSources.put(ProfileLS.PROFILETYPE_LAYOUT, prefix + ProfileLS.PROFILETYPE_LAYOUT +".xml");
-        this.mappingSources.put(ProfileLS.PROFILETYPE_COPLETTYPE, prefix + ProfileLS.PROFILETYPE_COPLETTYPE + ".xml");
         this.mappingSources.put(ProfileLS.PROFILETYPE_COPLETDEFINITION, prefix + ProfileLS.PROFILETYPE_COPLETDEFINITION + ".xml");
         this.mappingSources.put(ProfileLS.PROFILETYPE_COPLETINSTANCE, prefix + ProfileLS.PROFILETYPE_COPLETINSTANCE + ".xml");
         boolean plutoAvailable = false;
@@ -198,10 +197,10 @@ public class CastorSourceConverter
 			Mapping mapping;
 			Iterator iterator = this.mappingSources.entrySet().iterator();
         	while (iterator.hasNext()) {
-        		entry = (Map.Entry)iterator.next(); 
+        		entry = (Map.Entry)iterator.next();
         		name = (String)entry.getKey();
         		mappingSource = (String)entry.getValue();
-        		
+
 				source = resolver.resolveURI(mappingSource);
 				mapping = new Mapping();
 				mapping.loadMapping(SourceUtil.getInputSource(source));

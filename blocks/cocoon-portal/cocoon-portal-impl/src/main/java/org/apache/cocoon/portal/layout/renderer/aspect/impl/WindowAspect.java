@@ -115,11 +115,11 @@ public final class WindowAspect extends AbstractAspect {
         if ( config.rootTag ) {
             XMLUtils.startElement(contenthandler, config.tagName);
         }
-        final CopletAdapter adapter = rendererContext.getPortalService().getCopletAdapter(copletInstance.getCopletDefinition().getCopletType().getCopletAdapterName());
+        final CopletAdapter adapter = copletInstance.getCopletDefinition().getCopletType().getCopletAdapter();
 
         // stream some general infos about the copet instance data
         this.streamCopletInstanceDataInfos(copletInstance, adapter, layout, contenthandler);
-        
+
         // stream the title
         this.streamTitle(copletInstance, adapter, layout, contenthandler);
 
