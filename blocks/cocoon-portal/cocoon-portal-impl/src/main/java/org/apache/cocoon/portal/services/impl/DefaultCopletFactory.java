@@ -17,11 +17,11 @@
 package org.apache.cocoon.portal.services.impl;
 
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionRemovedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceRemovedEvent;
+import org.apache.cocoon.portal.om.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletType;

@@ -19,7 +19,7 @@ package org.apache.cocoon.portal.spring;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.portal.om.CopletAdapter;
 import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
 import org.springframework.beans.factory.BeanDefinitionStoreException;

@@ -14,10 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.coplet.adapter;
+package org.apache.cocoon.portal.om;
 
-import org.apache.cocoon.portal.om.CopletDefinition;
-import org.apache.cocoon.portal.om.CopletInstance;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 

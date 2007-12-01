@@ -45,9 +45,9 @@
     <!--+
         | This is the pipeline based adapter.
         +-->
-    <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/cocoon"
+    <bean name="org.apache.cocoon.portal.om.CopletAdapter.cocoon"
           class="org.apache.cocoon.portal.coplet.adapter.impl.CocoonCopletAdapter"
-          parent="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter" scope="singleton">
+          parent="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter" scope="singleton">
       <property name="notifyingBuilder" ref="org.apache.cocoon.components.notification.NotifyingBuilder"/>
       <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
       <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>
@@ -56,9 +56,9 @@
     <!--+
         |  This is the application adapter.
         +-->
-    <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter/application"
+    <bean name="org.apache.cocoon.portal.om.CopletAdapter.application"
           class="org.apache.cocoon.portal.coplet.adapter.impl.ApplicationCopletAdapter"
-          parent="org.apache.cocoon.portal.coplet.adapter.AbstractCopletAdapter" scope="singleton">
+          parent="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter" scope="singleton">
       <property name="notifyingBuilder" ref="org.apache.cocoon.components.notification.NotifyingBuilder"/>
       <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
       <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>

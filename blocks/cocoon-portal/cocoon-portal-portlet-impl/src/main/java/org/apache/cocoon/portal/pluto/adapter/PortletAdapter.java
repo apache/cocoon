@@ -32,13 +32,13 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.serializers.util.EncodingSerializer;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalException;
-import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
-import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
+import org.apache.cocoon.portal.om.CopletDecorationProvider;
 import org.apache.cocoon.portal.om.CopletDefinitionFeatures;
 import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.DecorationAction;
 import org.apache.cocoon.portal.pluto.PortletActionProviderImpl;
 import org.apache.cocoon.portal.pluto.PortletContainerEnvironmentImpl;
 import org.apache.cocoon.portal.pluto.PortletURLProviderImpl;
@@ -124,7 +124,7 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#login(org.apache.cocoon.portal.om.CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletAdapter#login(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void login(CopletInstance coplet) {
         super.login(coplet);
@@ -222,7 +222,7 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletAdapter#logout(org.apache.cocoon.portal.om.CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletAdapter#logout(org.apache.cocoon.portal.om.CopletInstance)
      */
     public void logout(CopletInstance coplet) {
         super.logout(coplet);
@@ -415,7 +415,7 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes(CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletDecorationProvider#getPossibleCopletModes(CopletInstance)
      */
     public List getPossibleCopletModes(CopletInstance copletInstanceData) {
         final List modes = new ArrayList();
@@ -456,7 +456,7 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates(CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletDecorationProvider#getPossibleWindowStates(CopletInstance)
      */
     public List getPossibleWindowStates(CopletInstance copletInstanceData) {
         final List states = new ArrayList();
@@ -505,7 +505,7 @@ public class PortletAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.om.CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.om.CopletInstance)
      */
     public String getTitle(CopletInstance copletInstanceData) {
         String title = null;

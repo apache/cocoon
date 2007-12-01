@@ -44,14 +44,14 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.serializers.util.EncodingSerializer;
 import org.apache.cocoon.environment.wrapper.RequestParameters;
-import org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider;
-import org.apache.cocoon.portal.coplet.adapter.DecorationAction;
 import org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
+import org.apache.cocoon.portal.om.CopletDecorationProvider;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.DecorationAction;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.services.aspects.DynamicAspect;
@@ -793,7 +793,7 @@ public class WSRPAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleCopletModes(CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletDecorationProvider#getPossibleCopletModes(CopletInstance)
      */
     public List getPossibleCopletModes(CopletInstance copletInstanceData) {
         final List modes = new ArrayList();
@@ -853,7 +853,7 @@ public class WSRPAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getPossibleWindowStates(CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletDecorationProvider#getPossibleWindowStates(CopletInstance)
      */
     public List getPossibleWindowStates(CopletInstance copletInstanceData) {
         final List states = new ArrayList();
@@ -914,7 +914,7 @@ public class WSRPAdapter
     }
 
     /**
-     * @see org.apache.cocoon.portal.coplet.adapter.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.om.CopletInstance)
+     * @see org.apache.cocoon.portal.om.CopletDecorationProvider#getTitle(org.apache.cocoon.portal.om.CopletInstance)
      */
     public String getTitle(CopletInstance copletInstanceData) {
         String title = null;
