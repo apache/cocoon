@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="AN" type="fix" fixes-bug="COCOON-1990" due-to="Robert Hoffmann" due-to-email="roberth@mit.edu">
+      Sitemap: Redirect to cocoon:/foo did not work in sub-sitemap when it is in same directory as the root sitemap. 
+    </action>
     <action dev="AG" type="update">
       Core: Update xercesImpl to 2.9.1.
     </action> 
