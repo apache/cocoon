@@ -286,7 +286,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 
         // Get the processor that should process this request
         ConcreteTreeProcessor processor;
-        if (newEnv.getRootContext().equals(newEnv.getContext())) {
+        if ( newEnv.getURIPrefix().equals("") ) {
             processor = ((TreeProcessor)getRootProcessor()).concreteProcessor;
         } else {
             processor = this;
