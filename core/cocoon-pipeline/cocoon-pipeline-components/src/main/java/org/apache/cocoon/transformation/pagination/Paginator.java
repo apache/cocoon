@@ -627,4 +627,12 @@ public class Paginator extends AbstractTransformer
                    uri.substring(index+currentS.length());
         }
     }
+
+    public ServiceManager getManager() {
+      return manager;
+    }
+
+    public void setManager(ServiceManager manager) {
+      this.manager = manager;
+    }
 }
