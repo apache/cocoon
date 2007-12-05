@@ -206,7 +206,8 @@ public class DASLTransformer extends AbstractSAXTransformer {
             SearchMethod searchMethod = new SearchMethod(this.targetUrl, query);
             HttpURL url = new HttpURL(this.targetUrl);
             HttpState state = new HttpState();
-            state.setCredentials(null, new UsernamePasswordCredentials(
+            // TODO: See COCOON-2153
+            state.setCredentials(null, null, new UsernamePasswordCredentials(
                     url.getUser(),
                     url.getPassword()));
             HttpConnection conn = new HttpConnection(url.getHost(), url.getPort());
