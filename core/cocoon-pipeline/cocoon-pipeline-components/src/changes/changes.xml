@@ -24,6 +24,12 @@
     +-->
 <document>
   <body>
+    <release version="1.0.0-RC3-SNAPSHOT" date="TBA" description="Unreleased">
+      <action dev="thorsten" type="fix">
+        The paginator when used with spring has thrown errors since the service()
+        method never got called. Adding workaround to use the paginator with spring.
+      </action>
+    </release>
     <release version="1.0.0-RC1-SNAPSHOT" date="TBA" description="Unreleased">
       <action dev="vgritsenko" type="add">
         Implement support of XMLizable exceptions in the ExceptionGenerator

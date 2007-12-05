@@ -111,6 +111,18 @@ public class Paginator extends AbstractTransformer
                       Parameters par)
                         throws ProcessingException, SAXException,
                                IOException {
+      
+      // FIXME: service is not called when in spring
+      // making parser null. 
+      if(null==this.parser){
+        getLogger().debug("Looking up "+SAXParser.ROLE);
+        try {
+          this.parser = (SAXParser) manager.lookup(SAXParser.ROLE);
+        } catch (ServiceException e) {
+            throw new ProcessingException("Could not lookup '" +
+                SAXParser.ROLE + "'");
+        }
+      }
 
         if (src == null) {
             throw new ProcessingException("I need the paginate instructions (pagesheet) to continue. Set the 'src' attribute.");
