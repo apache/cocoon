@@ -283,7 +283,7 @@
     </description>
     <ant-target>jar</ant-target>
     <used-by>Cocoon</used-by>
-    <lib>endorsed/xalan-2.7.0.jar</lib>
+    <lib>endorsed/xalan-2.7.1.jar</lib>
     <homepage>http://xml.apache.org/xalan-j/</homepage>
   </file>
 
@@ -521,7 +521,7 @@
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>NekoHTML generator (html block)</used-by>
     <lib>optional/nekohtml-0.9.5.jar</lib>
-    <homepage>http://www.apache.org/~andyc/neko/doc/</homepage>
+    <homepage>http://people.apache.org/~andyc/neko/doc/html/</homepage>
   </file>
 
   <file>
@@ -529,7 +529,7 @@
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>Forms block</used-by>
     <lib>optional/nekodtd-0.1.11.jar</lib>
-    <homepage>http://www.apache.org/~andyc/neko/doc/</homepage>
+    <homepage>http://people.apache.org/~andyc/neko/doc/dtd/</homepage>
   </file>
   
   <file>
