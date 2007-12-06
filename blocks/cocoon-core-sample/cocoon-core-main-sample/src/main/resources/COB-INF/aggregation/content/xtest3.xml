@@ -15,4 +15,5 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<para>This is the content of the test3.xml file.</para>
+
+<para>This is the content of the <b>xtest3.xml</b> file.</para>

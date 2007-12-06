@@ -124,9 +124,7 @@
       -->
     <h3>Text include</h3>
     <pre><![CDATA[<i:include src="itest4.xml" parse="text"/>]]></pre>
-    <pre>
-<i:include src="itest4.xml" parse="text"/>
-    </pre>
+    <pre><i:include src="itest4.xml" parse="text"/></pre>
     <hr/>
 
   </content>

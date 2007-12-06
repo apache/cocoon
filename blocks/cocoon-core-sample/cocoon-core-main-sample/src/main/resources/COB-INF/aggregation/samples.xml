@@ -69,28 +69,29 @@
   
   <group name="Include Samples">
     <sample name="General" href="include-true-true-test">
-      Demonstration of various include features.
+      Demonstration of various include features. Recursive inclusion
+      is on. Inclusion is done in parallel threads.
     </sample>
     <sample name="Not Recursive" href="include-true-false-test">
-      Demonstration of various include features - no recursion.
+      Demonstration of various include features. Recursion is off.
     </sample>
     <sample name="Not Parallel" href="include-false-true-test">
-      Demonstration of various include features - no includes in
-      parallel threads.
+      Demonstration of various include features. Parallel threads
+      are off.
     </sample>
   </group>
 
   <group name="XInclude Samples">
-    <sample name="General" href="test.html">
+    <sample name="General" href="xinclude-test">
       Demonstration of various XInclude and XPointer features.
     </sample>
-    <sample name="XML Base" href="xbase.html">
+    <sample name="XML Base" href="xinclude-base">
       Demonstration of xml:base support.
     </sample>
-    <sample name="Loop Inclusion" href="xloop.html">
+    <sample name="Loop Inclusion" href="xinclude-loop">
       Example of a loop inclusion. This will show an error page.
     </sample>
-    <sample name="Elementpath XPointer Scheme" href="xhtml.html">
+    <sample name="Elementpath XPointer Scheme" href="xinclude-html">
       Example of streaming inclusion using the custom elementpath XPointer scheme.
     </sample>
   </group>
