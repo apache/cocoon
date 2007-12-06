@@ -332,34 +332,33 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * @return List the identity of the row context
      */
     private List getIdentity(JXPathContext rowContext) {
-        if (this.identityBinding == null) {
-            return Collections.EMPTY_LIST;
-        }
-
-        List identity = new ArrayList();
-
-        JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
-        if (childBindings != null) {
-            int size = childBindings.length;
-            for (int i = 0; i < size; i++) {
-                ValueJXPathBinding vBinding = (ValueJXPathBinding)childBindings[i];
-                Object value = rowContext.getValue(vBinding.getXPath());
-                if (value != null && vBinding.getConvertor() != null) {
-                    if (value instanceof String) {
-                        ConversionResult conversionResult = vBinding.getConvertor().convertFromString(
-                                (String)value, vBinding.getConvertorLocale(), null);
-                        if (conversionResult.isSuccessful())
-                            value = conversionResult.getResult();
-                        else
-                            value = null;
-                    } else {
-                        if (getLogger().isWarnEnabled()) {
-                            getLogger().warn("Convertor ignored on backend-value " +
-                            "which isn't of type String.");
+        List identity = Collections.EMPTY_LIST;
+        if (this.identityBinding != null) {
+            JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
+            if (childBindings != null) {
+                int size = childBindings.length;
+                identity = new ArrayList(size);
+                for (int i = 0; i < size; i++) {
+                    ValueJXPathBinding vBinding = (ValueJXPathBinding)childBindings[i];
+                    Object value = rowContext.getValue(vBinding.getXPath());
+                    if (value != null && vBinding.getConvertor() != null) {
+                        if (value instanceof String) {
+                            ConversionResult conversionResult = vBinding.getConvertor().convertFromString(
+                                    (String)value, vBinding.getConvertorLocale(), null);
+                            if (conversionResult.isSuccessful()) {
+                                value = conversionResult.getResult();
+                            } else {
+                                value = null;
+                            }
+                        } else {
+                            if (getLogger().isWarnEnabled()) {
+                                getLogger().warn("Convertor ignored on backend-value " +
+                                "which isn't of type String.");
+                            }
                         }
                     }
+                    identity.add(value);
                 }
-                identity.add(value);
             }
         }
         return identity;
@@ -373,20 +372,18 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      */
     private List getIdentity(Repeater.RepeaterRow row) {
         // quit if we don't have an identity binding
-        if (this.identityBinding == null) {
-            return Collections.EMPTY_LIST;
-        }
-
-        List identity = new ArrayList();
-
-        JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
-        if (childBindings != null) {
-            int size = childBindings.length;
-            for (int i = 0; i < size; i++) {
-                String fieldId = ((ValueJXPathBinding) childBindings[i]).getFieldId();
-                Widget widget = row.lookupWidget(fieldId);
-                Object value = widget.getValue();
-                identity.add(value);
+        List identity = Collections.EMPTY_LIST;
+        if (this.identityBinding != null) {
+            JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
+            if (childBindings != null) {
+                int size = childBindings.length;
+                identity = new ArrayList(size);
+                for (int i = 0; i < size; i++) {
+                    String fieldId = ((ValueJXPathBinding) childBindings[i]).getFieldId();
+                    Widget widget = row.lookupWidget(fieldId);
+                    Object value = widget.getValue();
+                    identity.add(value);
+                }
             }
         }
         return identity;
