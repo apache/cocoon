@@ -21,14 +21,12 @@
   <title>Include Transformer Lock Test</title>
 
   <content>
-    <h3>Including cocoon:/lock</h3>
-    <pre><![CDATA[<i:include src="cocoon:/lock"/>]]></pre>
-    <i:include src="cocoon:/lock"/>
+    <h3>Including cocoon:/lock as text:</h3>
+    <pre><i:include src="cocoon:/lock" parse="text"/></pre>
     <hr/>
 
-    <h3>Including cocoon:/lock second time</h3>
-    <pre><![CDATA[<i:include src="cocoon:/lock"/>]]></pre>
-    <i:include src="cocoon:/lock"/>
+    <h3>Including cocoon:/lock as text again:</h3>
+    <pre><i:include src="cocoon:/lock" parse="text"/></pre>
     <hr/>
   </content>
 </page>
