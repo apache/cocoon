@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.binding;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 
@@ -25,6 +26,7 @@ import org.apache.cocoon.forms.formmodel.EnhancedRepeater;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
 
@@ -91,7 +93,24 @@ public class EnhancedRepeaterJXPathBinding extends RepeaterJXPathBinding {
         // iterate updated rows. note: we don't iterate over the whole context
         for (Iterator iter = collection.getUpdatedRows().iterator(); iter.hasNext();) {
             RepeaterItem item = (RepeaterItem) iter.next();
-            getRowBinding().saveFormToModel(item.getRow(), item.getContext());
+            Repeater.RepeaterRow thisRow = item.getRow();
+            // Get the identity
+            List identity = getIdentity(thisRow);
+            if (hasNonNullElements(identity)) {
+                 // iterate nodes to find match
+                Iterator rowPointers = repeaterContext.iteratePointers(getRowPath());
+                while (rowPointers.hasNext()) {
+                    Pointer jxp = (Pointer) rowPointers.next();
+                    JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
+                    List contextIdentity = getIdentity(rowContext);
+                    if (ListUtils.isEqualList(identity, contextIdentity)) {
+                        getRowBinding().saveFormToModel(thisRow, rowContext);
+                        break;
+                    }
+                }
+            } else {
+                getRowBinding().saveFormToModel(thisRow, item.getContext().getContextPointer());
+            }
         }
 
         for (Iterator iter = collection.getDeletedRows().iterator(); iter.hasNext();) {
