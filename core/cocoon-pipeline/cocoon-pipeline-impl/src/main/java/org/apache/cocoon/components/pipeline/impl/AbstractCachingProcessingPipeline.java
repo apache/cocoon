@@ -16,15 +16,14 @@
  */
 package org.apache.cocoon.components.pipeline.impl;
 
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.caching.CachedResponse;
-import org.apache.cocoon.caching.CachingOutputStream;
-import org.apache.cocoon.caching.ComponentCacheKey;
-import org.apache.cocoon.caching.PipelineCacheKey;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.transformation.Transformer;
-import org.apache.cocoon.util.HashUtil;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -34,16 +33,17 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.source.impl.validity.DeferredValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.excalibur.store.Store;
+import org.springframework.web.context.request.RequestContextHolder;
 
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.caching.CachedResponse;
+import org.apache.cocoon.caching.CachingOutputStream;
+import org.apache.cocoon.caching.ComponentCacheKey;
+import org.apache.cocoon.caching.PipelineCacheKey;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.util.HashUtil;
 
 /**
  * This is the base class for all caching pipeline implementations
@@ -166,6 +166,11 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
         this.readerRole = role;
     }
 
+    /**
+     * Look up the lock object by key, and if present, wait till notified.
+     *
+     * @return false if able to find a lock and was notified
+     */
     protected boolean waitForLock(Object key) {
         if (transientStore != null) {
             final String lockKey = PIPELOCK_PREFIX + key;
@@ -177,7 +182,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
             }
 
             // Avoid deadlock with self (see JIRA COCOON-1985).
-            if (lock != null && lock != Thread.currentThread()) {
+            Object current = RequestContextHolder.getRequestAttributes();
+            if (lock != null && lock != current) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Waiting on Lock '" + lockKey + "'");
                 }
@@ -217,7 +223,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                         getLogger().debug("Lock EXISTS: '" + lockKey + "'");
                     }
                 } else {
-                    Object lock = Thread.currentThread();
+                    Object lock = RequestContextHolder.getRequestAttributes();
                     try {
                         transientStore.store(lockKey, lock);
                     } catch (IOException e) {
