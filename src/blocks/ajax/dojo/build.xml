@@ -26,11 +26,11 @@
 <project name="build-dojo" default="jar">
 
 	<property file="local.build.properties"/>
-	
-    <!-- Set dojo.revision to the date if unspecified -->
-    <target name="check-dojo.revision" unless="dojo.revision">
+
+	<!-- Set dojo.revision to the date if unspecified -->
+	<target name="check-dojo.revision" unless="dojo.revision">
 		<tstamp>
-	      <format property="dojo.revision" pattern="yyyyMMdd"/>
+			<format property="dojo.revision" pattern="yyyyMMdd"/>
 		</tstamp>
 	</target>
 
@@ -39,11 +39,11 @@
 Variable "dojo.home" is not set.
 Set it either on the command-line or in your local.build.properties.
 	    </fail>
-    </target>
+	</target>
 
-    <target name="init" depends="check-dojo.home, check-dojo.revision">
+	<target name="init" depends="check-dojo.home, check-dojo.revision">
 		<echo>dojo.home=${dojo.home}</echo>
-	 	<echo>dojo.revision=${dojo.revision}</echo>
+		<echo>dojo.revision=${dojo.revision}</echo>
 	</target>
 
 	<target name="jar" depends="init">
@@ -52,21 +52,24 @@ Set it either on the command-line or in your local.build.properties.
 			<property name="release_dir" location="build/org/apache/cocoon/dojo/resources"/>
 			<property name="revision" value="${dojo.revision}"/>
 			<property name="profile" value="widget"/>
-	    </ant>
-	
-	    <delete>
-		  <!-- remove demos, useless files and js sources (they're all packed in dojo.js) -->
-		  <fileset dir="build/org/apache/cocoon/dojo/resources"
-			       includes="CHANGELOG, README, build.txt, dojo.js.uncompressed.js"/>
-		  <fileset dir="build/org/apache/cocoon/dojo/resources/demos"/>
-	      <!--
-	      <fileset dir="build/org/apache/cocoon/dojo/resources/src"
-				   includes="*.js, **/*.js"/>
-	      -->
+			<property name="version" value="0.4.3"/>
+		</ant>
+
+		<delete includeemptydirs="true">
+			<!-- remove demos, useless files and js sources (they're all packed in dojo.js) -->
+			<fileset dir="build/org/apache/cocoon/dojo/resources"
+			       includes="CHANGELOG, README, build.txt, dojo.js.uncompressed.js, DojoFileStorageProvider.jar"/>
+			<fileset dir="build/org/apache/cocoon/dojo/resources/demos"/>
+			<fileset dir="build/org/apache/cocoon/dojo/resources/release"/>
+			<fileset dir="build/org/apache/cocoon/dojo/resources/tests"/>
+
+			<!--<fileset dir="build/org/apache/cocoon/dojo/resources/src"
+				   includes="*.js, **/*.js"/>-->
+
 		</delete>
 
-	    <jar destfile="dojo-rsrc-${dojo.revision}.jar" basedir="build"/>
-	
-	    <echo>You can now replace the dojo lib in "lib/optional" with dojo-rsrc-${dojo.revision}.jar</echo>
-    </target>
+		<jar destfile="dojo-rsrc-${dojo.revision}.jar" basedir="build"/>
+
+		<echo>You can now replace the dojo lib in "lib/optional" with dojo-rsrc-${dojo.revision}.jar</echo>
+	</target>
 </project>
