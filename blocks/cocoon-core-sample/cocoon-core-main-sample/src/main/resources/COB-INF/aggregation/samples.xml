@@ -95,4 +95,12 @@
       Example of streaming inclusion using the custom elementpath XPointer scheme.
     </sample>
   </group>
+
+  <group name="Tests">
+    <sample name="Self Include" href="include-lock">
+      Document created by Cocoon pipeline includes this same pipeline
+      twice, in parallel. Should not cause deadlocks in the caching
+      pipeline (COCOON-1985).
+    </sample>
+  </group>
 </samples>
