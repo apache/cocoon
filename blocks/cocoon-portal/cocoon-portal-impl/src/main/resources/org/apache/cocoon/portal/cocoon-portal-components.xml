@@ -44,7 +44,7 @@
       | Coplet Adapters
       |
       +-->
-    <bean name="org.apache.cocoon.portal.adapter.impl.AbstractCopletAdapter"
+    <bean name="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter"
           class="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter"
           parent="org.apache.cocoon.portal.util.AbstractBean" abstract="true">
       <property name="cache" ref="org.apache.cocoon.caching.Cache"/>
@@ -56,7 +56,7 @@
         +-->
     <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter.uri"
           class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter"
-          parent="org.apache.cocoon.portal.adapter.impl.AbstractCopletAdapter" scope="singleton">
+          parent="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter" scope="singleton">
       <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
     </bean>
 
