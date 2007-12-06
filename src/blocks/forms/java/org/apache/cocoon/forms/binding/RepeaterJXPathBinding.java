@@ -315,7 +315,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * Tests if any of the elements in a List is not null.
      * @param list
      */
-    private boolean hasNonNullElements(List list) {
+    protected boolean hasNonNullElements(List list) {
         Iterator iter = list.iterator();
         while (iter.hasNext()) {
             if (iter.next() != null) {
@@ -331,7 +331,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * @param rowContext
      * @return List the identity of the row context
      */
-    private List getIdentity(JXPathContext rowContext) {
+    protected List getIdentity(JXPathContext rowContext) {
         List identity = Collections.EMPTY_LIST;
         if (this.identityBinding != null) {
             JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
@@ -370,7 +370,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * @param row
      * @return List the identity of the row
      */
-    private List getIdentity(Repeater.RepeaterRow row) {
+    protected List getIdentity(Repeater.RepeaterRow row) {
         // quit if we don't have an identity binding
         List identity = Collections.EMPTY_LIST;
         if (this.identityBinding != null) {
