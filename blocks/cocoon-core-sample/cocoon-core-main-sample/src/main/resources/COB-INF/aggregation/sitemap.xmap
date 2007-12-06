@@ -51,10 +51,6 @@
         </map:serialize>
       </map:match>
 
-      <map:match pattern="sitemap.xmap">
-        <map:read src="sitemap.xmap" mime-type="text/xml"/>
-      </map:match>
-
       <!--
         - News sources, post processed using XSLT, for content aggregation
         - samples.
@@ -212,12 +208,38 @@
         - XInclude Samples
         -->
 
-      <map:match pattern="*.html">
-        <map:generate src="content/{1}.xml"/>
+      <map:match pattern="xinclude-*">
+        <map:generate src="content/x{1}.xml"/>
         <map:transform type="xinclude"/>
         <map:serialize type="servletService">
           <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
         </map:serialize>
+      </map:match>
+
+
+      <!--
+        - COCOON-1985 Pipeline locking and parallel includes:
+        - Generating from cocoon source which includes self, in parallel threads, should not dead lock
+        -->
+      <map:match pattern="lock">
+        <map:generate src="content/ilock.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="include-lock">
+        <map:generate src="cocoon:/lock"/>
+        <map:transform type="include">
+          <map:parameter name="parallel" value="true"/>
+        </map:transform>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+        </map:serialize>
+      </map:match>
+
+
+      <!-- This Sitemap -->
+      <map:match pattern="sitemap.xmap">
+        <map:read src="sitemap.xmap" mime-type="text/xml"/>
       </map:match>
 
       <!-- Source Files -->

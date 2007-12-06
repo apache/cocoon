@@ -15,7 +15,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<para xmlns:xi="http://www.w3.org/2001/XInclude">
-  This is content in test4.xml, will do a include of test5.xml here:
-  <xi:include href="test5.xml#xpointer(/para/node())"/>
-</para>
+
+<page xmlns:my="http://localhost/my">
+  <content>
+    <para>This is paragraph 1 from xtest2.xml</para>
+    <para>This is paragraph 2 from xtest2.xml</para>
+    <my:abc>
+      <para>This is paragraph 3 from xtest2.xml (inside my:abc element)</para>
+    </my:abc>
+  </content>
+</page>

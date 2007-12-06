@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -15,12 +16,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<page xmlns:my="http://localhost/my">
- <content>
-  <para>This is paragraph 1 from test2.xml</para>
-  <para>This is paragraph 2 from test2.xml</para>
-  <my:abc>
-    <para>This is paragraph 3 from test2.xml (inside my:abc element)</para>
-  </my:abc>
- </content>
+
+<page xmlns:i="http://apache.org/cocoon/include/1.0">
+  <title>Include Transformer Lock Test</title>
+
+  <content>
+    <h3>Including cocoon:/lock</h3>
+    <pre><![CDATA[<i:include src="cocoon:/lock"/>]]></pre>
+    <i:include src="cocoon:/lock"/>
+    <hr/>
+
+    <h3>Including cocoon:/lock second time</h3>
+    <pre><![CDATA[<i:include src="cocoon:/lock"/>]]></pre>
+    <i:include src="cocoon:/lock"/>
+    <hr/>
+  </content>
 </page>

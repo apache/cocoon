@@ -15,6 +15,5 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<para>
-  This is the content of test5.xml
-</para>
+
+<para>This is the content of <b>xtest5.xml</b> file.</para>

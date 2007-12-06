@@ -16,12 +16,7 @@
   limitations under the License.
 -->
 
-<html>
-  <head>
-    <title></title>
-  </head>
-  <body>
-    <p>Hello, this is the content of the <tt>sample.xhtml</tt> file.</p>
-    <p>And here's yet another paragraph from that file.</p>
-  </body>
-</html>
+<para xmlns:xi="http://www.w3.org/2001/XInclude">
+  This is content of the <b>xtest4.xml</b> file, will include content of the <b>xtest5.xml</b> file:
+  <xi:include href="xtest5.xml#xpointer(/para/node())"/>
+</para>
