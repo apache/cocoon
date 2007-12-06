@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+<!--
+  - $Id$
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
@@ -8,6 +11,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
+
   <artifactId>cocoon-pipeline-impl</artifactId>
   <version>1.0.0-RC3-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -17,8 +21,7 @@
     needed classes and components. Abstract classes for making it easier to
     write sitemap components.
   </description>
-  
-  <url>http://cocoon.apache.org/${docs.m.pipeline-impl.relPath}</url>  
+  <url>http://cocoon.apache.org/${docs.m.pipeline-impl.relPath}</url>
   
   <build>
     <plugins>
