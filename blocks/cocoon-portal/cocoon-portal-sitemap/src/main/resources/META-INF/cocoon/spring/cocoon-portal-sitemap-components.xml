@@ -30,6 +30,9 @@
                            http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd
                            http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
 
+  <!-- Include default beans? -->
+  <import resource="classpath:org/apache/cocoon/portal/cocoon-portal-components.xml"/>
+
   <!--+
       | SPI Implementations
       +-->
