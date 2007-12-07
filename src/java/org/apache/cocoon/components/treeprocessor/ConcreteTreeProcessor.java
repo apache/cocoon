@@ -285,12 +285,10 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
 
         // Get the processor that should process this request
-        ConcreteTreeProcessor processor;
-        if ( newEnv.getURIPrefix().equals("") ) {
+        // (see https://issues.apache.org/jira/browse/COCOON-1990).
+        ConcreteTreeProcessor processor = this;
+        if (uri.startsWith("cocoon://"))
             processor = ((TreeProcessor)getRootProcessor()).concreteProcessor;
-        } else {
-            processor = this;
-        }
 
         // Process the redirect
         // No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
