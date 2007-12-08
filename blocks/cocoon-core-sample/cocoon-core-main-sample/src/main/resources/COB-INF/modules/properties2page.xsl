@@ -39,8 +39,8 @@
   <xsl:template match="properties">
     <table class="table">
       <tr>
-        <th>Accessor</th>
-        <th>Value</th>
+        <th>Expression</th>
+        <th>Result</th>
       </tr>
       <xsl:apply-templates>
         <xsl:sort select="name"/>
