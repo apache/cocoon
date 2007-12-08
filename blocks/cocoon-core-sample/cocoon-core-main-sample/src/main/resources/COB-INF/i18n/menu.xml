@@ -26,7 +26,6 @@
   <menu label="Samples" i18n:attr="label">
     <menu-item label="Static (XML)" href="simple.xml" i18n:attr="label"/>
     <menu-item label="Dynamic (XSP)" href="simple.xsp" i18n:attr="label"/>
-    <menu-item label="Sitemap source" href="sitemap.xmap" i18n:attr="label"/>    
     <menu-item label="Multi catalogues" href="multi.xml" i18n:attr="label"/>
     <menu-item label="Tiered catalogues" href="tiered.xml" i18n:attr="label"/>
     <menu-item label="Back" href=".." i18n:attr="label"/>

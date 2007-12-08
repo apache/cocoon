@@ -62,7 +62,6 @@
     </p>
   </xsl:template>
 
-  <!-- Current (open) menu -->
   <xsl:template match="menu">
     <xsl:if test="@icon">
       <img src="{@icon}" align="middle"/>
@@ -74,7 +73,7 @@
 
   <!-- Display a link to a page -->
   <xsl:template match="menu-item[substring-after(@href, 'locale=') = $locale or @href=$page or (@href='' and $locale='')]">
-    <li class="current" title="{@href}">
+    <li title="{@href}">
       <xsl:if test="@icon">
         <img src="{@icon}" align="middle"/>
         <xsl:text> </xsl:text>
@@ -89,7 +88,7 @@
         <img src="{@icon}" align="middle"/>
         <xsl:text> </xsl:text>
       </xsl:if>
-      <a href="{@href}" class="page"><xsl:value-of select="@label"/></a>
+      <a href="{@href}"><xsl:value-of select="@label"/></a>
     </li>
   </xsl:template>
 

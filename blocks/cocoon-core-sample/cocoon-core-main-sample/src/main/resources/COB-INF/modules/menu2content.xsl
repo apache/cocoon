@@ -16,41 +16,34 @@
   limitations under the License.
 -->
 
-<!--+
-    | Transforms menu.xml to the index page
-    |
-    | @version $Id$
-    +-->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<!--
+  - Transforms menu.xml to the index page
+  -
+  - $Id$
+  -->
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="book">
     <page>
       <title>Input Modules</title>
-      <table>
-        <tr>
-          <td>
-            <h3>Input Modules</h3>
-            <p>Modules are used to access input and output data in
-               modular way. Below there are samples for some of the
-               available input modules.
-            </p>
-            <table class="table">
-              <xsl:apply-templates select="menu/menu-item[@desc]"/>
-            </table>
-          </td>
-        </tr>
-      </table>
+      <content>
+        <h3>Input Modules</h3>
+        <p>Modules are used to access input and output data in a
+           pluggable way. Below there are samples for some of the
+           available input modules.
+        </p>
+        <table class="table">
+          <xsl:apply-templates select="menu/menu-item[@desc]"/>
+        </table>
+      </content>
     </page>
   </xsl:template>
 
   <xsl:template match="menu-item[@desc]">
     <tr>
-      <td>
-        <a href="{@href}"><xsl:value-of select="@label" /></a>
-      </td>
-      <td>
-        <xsl:value-of select="@desc" />
-      </td>
+      <td><a href="{@href}"><xsl:value-of select="@label"/></a></td>
+      <td><xsl:value-of select="@desc" /></td>
     </tr>
   </xsl:template>
 </xsl:stylesheet>
