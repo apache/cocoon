@@ -35,15 +35,19 @@
   </group>
 
   <group name="Cocoon Sitemap">
-    <sample href="sources/" name="Sources">
+    <sample name="Sources" href="sources/">
       This example shows the usage of sources in the sitemap.
+    </sample>
+    <sample name="Expressions" href="modules/">
+      This example shows the usage of input modules in the sitemap attribute
+      expressions.
     </sample>
     <sample name="Content Syndication &amp; Aggregation" href="aggregation/">
       Separation of content and style allows not only to serve your content
       in different ways, but also to syndicate, aggregate or otherwise include
       and transform content provided by other web sites.
     </sample>
-    <sample href="errorhandling/" name="Error Handling">
+    <sample name="Error Handling" href="errorhandling/">
       An example page producing exceptions and handling them. Demonstrates the
       error handlers hierarchy and the exception selectors.
     </sample>

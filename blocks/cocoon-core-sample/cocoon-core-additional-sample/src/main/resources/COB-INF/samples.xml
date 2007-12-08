@@ -24,9 +24,6 @@
 <samples name="Additional Cocoon Core Samples">
 
   <group name="More Core Samples">
-    <sample href="modules/" name="The Power of Sitemap: Input Modules">
-      This example shows the usage of Input Modules in sitemap attribute expressions.
-    </sample>
     <sample href="components" name="Core Components">
       Some samples of various components that are included with the core,
       e.g. Stream Generators, Paginator Transformers, Image Readers.

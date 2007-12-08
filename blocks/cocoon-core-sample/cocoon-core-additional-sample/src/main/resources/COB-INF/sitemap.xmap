@@ -24,8 +24,6 @@
   <!-- ========================= Components ================================ -->
 
   <map:components>
-    <map:include-properties dir="properties"/>
-
     <map:generators default="file">
       <map:generator name="linkstatus" src="org.apache.cocoon.generation.LinkStatusGenerator"/>
       <map:generator name="calendar" src="org.apache.cocoon.generation.CalendarGenerator"/>
