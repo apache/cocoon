@@ -28,7 +28,6 @@
     <page>
       <title>Input Modules</title>
       <content>
-        <h3>Input Modules</h3>
         <p>Modules are used to access input and output data in a
            pluggable way. Below there are samples for some of the
            available input modules.
