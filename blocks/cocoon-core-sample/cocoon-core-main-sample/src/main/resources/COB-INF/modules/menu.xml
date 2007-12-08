@@ -15,44 +15,43 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    | Menu definition.
-    |
-    | @version $Id$
-    +-->
+
+<!--
+  - Menu definition.
+  -
+  - $Id$
+  -->
 <book software="Apache Cocoon"
       title="Apache Cocoon Input Modules Samples"
       copyright="@year@ The Apache Software Foundation">
 
   <menu label="Overview">
-    <menu-item label="Index" href="index.html"/>
-    <menu-item label="Sitemap" href="sitemap.xmap"/>
+    <menu-item label="Index" href="welcome"/>
   </menu>
 
   <menu label="Modules">
-    <menu-item label="BaseLinkModule" href="baselink.html" desc="BaseLink properties"/>
-    <menu-item label="ChainMetaModule" href="chain.html" desc="Chained values"/>
-    <menu-item label="CookieModule" href="cookie.html" desc="Cookie values"/>
-    <menu-item label="DateInputModule" href="date.html" desc="Date"/>
-    <menu-item label="DefaultsModule" href="defaults.html" desc="Default (static) values"/>
-    <menu-item label="GlobalInputModule" href="global.html" desc="Access to the global variables defined in the sitemap."/>
-    <menu-item label="NamingInputModule" href="naming.html" desc="JNDI Resources. This sample does not work with built-in Jetty as it does not provide JNDI."/>
-    <menu-item label="PropertiesFileModule" href="properties.html" desc="Properties file values"/>
-    <menu-item label="RandomNumberModule" href="randomnumber.html" desc="Random number"/>
-    <menu-item label="RealPathModule" href="realpath.html" desc="Real filesystem paths of context paths"/>
-    <menu-item label="RequestModule" href="request.html" desc="Request object properties"/>
-    <menu-item label="RequestParameterModule" href="requestparam.html" desc="Request parameters"/>
-    <menu-item label="SessionModule" href="session.html" desc="Session object properties"/>
-    <menu-item label="SessionAttributeModule" href="session-attr.html" desc="Session attributes"/>
-    <menu-item label="SystemPropertyModule" href="system-property.html" desc="System properties (environment variables)"/>
-    <menu-item label="URLEncodeModule" href="url-encode.html" desc="URLEncode passed parameter"/>
-    <menu-item label="URLDecodeModule" href="url-decode.html" desc="URLDecode passed parameter"/>
+    <menu-item label="BaseLinkModule" href="baselink" desc="BaseLink properties"/>
+    <menu-item label="ChainMetaModule" href="chain" desc="Chained values"/>
+    <menu-item label="CookieModule" href="cookie" desc="Cookie values"/>
+    <menu-item label="DateInputModule" href="date" desc="Date"/>
+    <menu-item label="DefaultsModule" href="defaults" desc="Default (static) values"/>
+    <menu-item label="GlobalInputModule" href="global" desc="Access to the global variables defined in the sitemap."/>
+    <menu-item label="NamingInputModule" href="naming" desc="JNDI Resources. This sample does not work with built-in Jetty as it does not provide JNDI."/>
+    <menu-item label="PropertiesFileModule" href="properties" desc="Properties file values"/>
+    <menu-item label="RandomNumberModule" href="randomnumber" desc="Random number"/>
+    <menu-item label="RealPathModule" href="realpath" desc="Real filesystem paths of context paths"/>
+    <menu-item label="RequestModule" href="request" desc="Request object properties"/>
+    <menu-item label="RequestParameterModule" href="requestparam" desc="Request parameters"/>
+    <menu-item label="SessionModule" href="session" desc="Session object properties"/>
+    <menu-item label="SessionAttributeModule" href="session-attr" desc="Session attributes"/>
+    <menu-item label="SystemPropertyModule" href="system-property" desc="System properties (environment variables)"/>
+    <menu-item label="URLEncodeModule" href="url-encode" desc="URLEncode passed parameter"/>
+    <menu-item label="URLDecodeModule" href="url-decode" desc="URLDecode passed parameter"/>
     <menu-item label="XMLFileModule" href="xml.html" desc="XML node values"/>
   </menu>
 
   <menu label="Documentation">
-    <external label="Input Modules Docs" href="../../docs/userdocs/concepts/modules.html"/>
-    <external label="API Docs" href="../../api/java/org/apache/cocoon/components/modules/input/package-summary.html"/>
+    <menu-item label="Input Modules Docs" href="../../docs/userdocs/concepts/modules.html"/>
+    <menu-item label="API Docs" href="../../api/java/org/apache/cocoon/components/modules/input/package-summary.html"/>
   </menu>
-
 </book>

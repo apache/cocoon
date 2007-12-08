@@ -15,73 +15,62 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    | Transforms to HTML page.
-    |
-    | @version $Id$
-    +-->
-<!DOCTYPE html [
-<!ENTITY nbsp "&#160;">
-<!ENTITY copy "&#0169;">
-<!ENTITY laquo "&#0171;">
-<!ENTITY raquo "&#0187;">
-]>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:param name="page" />
+<!--
+  - Transforms 'composite' aggregated element to sample page.
+  -
+  - $Id$
+  -->
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:template match="site">
-    <html>
-      <head>
-        <title>
-          <xsl:value-of select="page/title" />
-        </title>
-        <link rel="stylesheet" href="page.css" type="text/css"/>
-      </head>
-      <body>
-        <table class="path">
-          <tr>
-            <td>
-              <a href="../../">Apache Cocoon Main</a>&#160;&gt;&#160;<a href="../">Samples</a>&#160;&gt;&#160;<a href="./">Modules</a>&#160;&gt;&#160;<span class="current"><xsl:value-of select="page/title"/></span>
-            </td>
-          </tr>
-        </table>
-        <table class="topline"><tr><td>&#160;</td></tr></table>
-        <table cellspacing="0" cellpadding="0" summary="content pane">
-          <tr>
-            <td width="5" class="navbar">&#160;</td>
-            <td rowspan="2" valign="top" nowrap="nowrap" width="200">
-              <xsl:apply-templates select="table[@class='menu']"/>
-            </td>
-            <td valign="top" class="navbar" align="left">
-              &#160;
-            </td>
-            <td width="*" valign="top" class="navbar" align="right">
-              Page: <xsl:value-of select="$page" />
-            </td>
-          </tr>
-          <tr>
-            <td>&#160;</td>
-            <td class="content" valign="top" colspan="2">
-              <xsl:apply-templates select="page"/>
-            </td>
-          </tr>
-        </table>
-        <table>
-          <tr>
-            <td class="copyright">
-              Copyright (c) 1999-2006 <a href="http://www.apache.org/">The Apache Software Foundation</a>. All Rights Reserved.
-            </td>
-          </tr>
-        </table>
-      </body>
-    </html>
+  <xsl:param name="page"/>
+
+  <xsl:template match="composite">
+    <page>
+      <title>Sitemap Expressions &amp; Input Modules</title>
+      <content>
+        <row>
+          <column title="Menu">
+            <xsl:apply-templates select="book"/>
+          </column>
+          <column title="{page/title}">
+            <xsl:apply-templates select="page"/>
+          </column>
+        </row>
+      </content>
+    </page>
   </xsl:template>
 
-  <xsl:template match="node()|@*" priority="-1">
+  <xsl:template match="page">
+    <xsl:apply-templates select="content"/>
+  </xsl:template>
+
+  <xsl:template match="book">
+    <xsl:apply-templates select="menu"/>
+  </xsl:template>
+
+  <xsl:template match="menu">
+    <h3><xsl:value-of select="@label"/></h3>
+    <ul><xsl:apply-templates/></ul>
+  </xsl:template>
+
+  <!-- Display a link to a page -->
+  <xsl:template match="menu-item[@href=$page]">
+    <li title="{@href}">
+      <xsl:value-of select="@label"/>
+    </li>
+  </xsl:template>
+
+  <xsl:template match="menu-item">
+    <li class="page">
+      <a href="{@href}"><xsl:value-of select="@label"/></a>
+    </li>
+  </xsl:template>
+
+  <xsl:template match="@*|node()" priority="-1">
     <xsl:copy>
-      <xsl:apply-templates select="@*"/>
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
 
