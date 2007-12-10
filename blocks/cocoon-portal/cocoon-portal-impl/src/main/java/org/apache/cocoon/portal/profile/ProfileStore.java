@@ -19,23 +19,17 @@ package org.apache.cocoon.portal.profile;
 import org.apache.excalibur.source.SourceValidity;
 
 /**
- * This component is used for loading/saving of a profile.
+ * This component is used storing and retrieving (parts of) the portal profile.
  *
  * The load/save method is able to load/save the various parts of the profile.
- * The correct profile type is specified by a constant. For resolving
- * references during loading an object map is passsed to the loadProfile method.
- * This object map varies depending on the profile type:
- * PROFILETYPE_LAYOUT: A map with layout types.
- * PROFILETYPE_LAYOUTINSTANCE: -
- * PROFILETYPE_COPLETDEFINITION: A map with coplet types.
- * PROFILETYPE_COPLETINSTANCE: A map with coplet definitions
+ * The correct profile type is specified by a {@link PersistenceType}. The persistence
+ * type is also used for resolving references between the profile parts.
+ *
+ * @see PersistenceType
  *
  * @version $Id$
  */
 public interface ProfileStore {
-
-    /** Component role */
-    String ROLE = ProfileStore.class.getName();
 
     String PROFILETYPE_LAYOUT = "layout";
     String PROFILETYPE_LAYOUTINSTANCE = "layoutinstance";
@@ -46,7 +40,7 @@ public interface ProfileStore {
      * Load a profile.
      * @param key The key to identifier the profile. This key contains information
      *            like user etc.
-     * @param profileType The type of the profile (instances, types, layouts etc. )
+     * @param type The type of the profile (instances, types, layouts etc. )
      * @param objectMap Map with objects which might be references by the profile.
      */
     Object loadProfile(Object key, PersistenceType type)
@@ -56,7 +50,7 @@ public interface ProfileStore {
      * Save a profile.
      * @param key The key to identifier the profile. This key contains information
      *            like user etc.
-     * @param profileType The type of the profile (instances, types, layouts etc. )
+     * @param type The type of the profile (instances, types, layouts etc. )
      * @param profile The profile itself.
      */
     void saveProfile(Object key, PersistenceType type, Object profile) throws Exception;
@@ -65,7 +59,7 @@ public interface ProfileStore {
      * Get the validity of a profile.
      * @param key The key to identifier the profile. This key contains information
      *            like user etc.
-     * @param profileType The type of the profile (instances, types, layouts etc. )
+     * @param persistenceType The type of the profile (instances, types, layouts etc. )
      */
-    SourceValidity getValidity(Object key, String type);
+    SourceValidity getValidity(Object key, String persistenceType);
 }

@@ -17,6 +17,8 @@
 package org.apache.cocoon.portal.profile;
 
 /**
+ * This exception is thrown by the {@link Converter} service.
+ *
  * @version $Id$
  */
 public class ConverterException extends Exception {

@@ -19,6 +19,7 @@ package org.apache.cocoon.portal.persistence.castor;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletType;
@@ -89,6 +90,9 @@ public class ReferenceFieldHandler extends AbstractFieldHandler {
         if ( this.getFieldDescriptor().getFieldName().equals("layoutType") ) {
             ((Layout)object).setLayoutType(null);
         }
+        if ( this.getFieldDescriptor().getFieldName().equals("customRenderer") ) {
+            ((Layout)object).setCustomRenderer(null);
+        }
     }
 
     /**
@@ -106,6 +110,9 @@ public class ReferenceFieldHandler extends AbstractFieldHandler {
         }
         if ( this.getFieldDescriptor().getFieldName().equals("layoutType") ) {
             ((Layout)object).setLayoutType((LayoutType)reference);
+        }
+        if ( this.getFieldDescriptor().getFieldName().equals("customRenderer") ) {
+            ((Layout)object).setCustomRenderer((Renderer)reference);
         }
     }
 }
