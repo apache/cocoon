@@ -31,9 +31,9 @@ public interface Converter {
 
     /**
      * Load an object from the given input stream.
+     *
      * @param stream      The input stream with the data.
-     * @param profileType {@link org.apache.cocoon.portal.profile.ProfileStore}
-     * @param references  A map of references referenced from the profile.
+     * @param type        The persistence type.
      * @param parameters  An optional map of parameters for the conversion.
      * @return The loaded object.
      * @throws ConverterException
@@ -45,9 +45,10 @@ public interface Converter {
 
     /**
      * Save an object to a given stream.
+     *
      * @param stream The output stream.
-     * @param profileType {@link org.apache.cocoon.portal.profile.ProfileStore}
      * @param object The object to save.
+     * @param type   The persistence type.
      * @param parameters  An optional map of parameters for the conversion.
      * @throws ConverterException
      */

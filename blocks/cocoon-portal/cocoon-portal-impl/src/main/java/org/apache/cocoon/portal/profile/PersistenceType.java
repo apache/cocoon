@@ -21,16 +21,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This component is used for loading/saving of a profile.
+ * This bean describes a persistence type. It is used by the {@link Converter} and
+ * the {@link ProfileStore} to load and save parts of the portal profile.
  *
- * The load/save method is able to load/save the various parts of the profile.
  * The correct profile type is specified by a constant. For resolving
- * references during loading an object map is passsed to the loadProfile method.
- * This object map varies depending on the profile type:
- * PROFILETYPE_LAYOUT: A map with layout types.
- * PROFILETYPE_LAYOUTINSTANCE: -
- * PROFILETYPE_COPLETDEFINITION: A map with coplet types.
- * PROFILETYPE_COPLETINSTANCE: A map with coplet definitions
+ * references during loading/saving keyed maps can be provided.
+ *
+ * This is a list of maps that should be set for the persistence types:
+ * PROFILETYPE_LAYOUT: "layoutType" : A map with layout types.
+ *                     "customRenderer" : A map with renderers
+ * PROFILETYPE_LAYOUTINSTANCE: "layout" : A map with layouts.
+ * PROFILETYPE_COPLETDEFINITION: "copletType" : A map with coplet types.
+ * PROFILETYPE_COPLETINSTANCE: "copletDefinition" : A map with coplet definitions.
  *
  * @version $Id$
  */
