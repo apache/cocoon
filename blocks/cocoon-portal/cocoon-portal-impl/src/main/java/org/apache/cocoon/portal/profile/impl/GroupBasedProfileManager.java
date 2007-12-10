@@ -95,7 +95,7 @@ public class GroupBasedProfileManager
     /** The configuration for loading/saving the profile. */
     protected Properties configuration;
 
-    public void setProfileLS(ProfileStore loader) {
+    public void setProfileStore(ProfileStore loader) {
         this.loader = loader;
     }
 

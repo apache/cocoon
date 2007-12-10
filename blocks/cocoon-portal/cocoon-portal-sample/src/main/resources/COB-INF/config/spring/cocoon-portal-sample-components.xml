@@ -58,7 +58,7 @@
         parent="org.apache.cocoon.portal.util.AbstractBean"
         scope="singleton">
     <property name="aspectChain" ref="org.apache.cocoon.portal.profile.ProfileManager.aspects"/>
-    <property name="profileLS" ref="org.apache.cocoon.portal.profile.ProfileLS"/>
+    <property name="profileStore" ref="org.apache.cocoon.portal.profile.ProfileStore"/>
     <property name="configuration">
       <value>
         copletdefinition-global-load=cocoon:raw:/load-global-profile?profile=copletdefinition
