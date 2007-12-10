@@ -195,7 +195,8 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled implement
         }
 
         try {
-            Query query = QueryParser.parse(query_string, default_field, analyzer);
+            final QueryParser parser = new QueryParser(default_field, analyzer);
+            Query query = parser.parse(query_string);
 
             // release index searcher for each new search
             releaseIndexSearcher();

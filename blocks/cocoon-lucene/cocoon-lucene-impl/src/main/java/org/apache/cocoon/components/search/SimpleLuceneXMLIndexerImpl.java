@@ -31,6 +31,8 @@ import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.lucene.document.DateField;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 import org.springframework.beans.factory.InitializingBean;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -175,9 +177,9 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled implements Lu
                 Iterator it = luceneIndexContentHandler.iterator();
                 while (it.hasNext()) {
                     Document d = (Document) it.next();
-                    d.add(Field.UnIndexed(URL_FIELD, url.toString()));
+                    d.add(new Field(URL_FIELD, url.toString(), Field.Store.YES, Field.Index.NO));
                     // store ... false, index ... true, token ... false
-                    d.add(new Field(UID_FIELD, uid(contentURLConnection), false, true, false));
+                    d.add(new Field(UID_FIELD, uid(contentURLConnection), Field.Store.NO, Field.Index.UN_TOKENIZED));
                 }
 
                 return luceneIndexContentHandler.allDocuments();

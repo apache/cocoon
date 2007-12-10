@@ -54,8 +54,8 @@
       <artifactId>cocoon-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>lucene</groupId>
-      <artifactId>lucene</artifactId>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-core</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
