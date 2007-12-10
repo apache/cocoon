@@ -33,8 +33,9 @@
   <!-- Include default beans -->
   <import resource="classpath:org/apache/cocoon/portal/cocoon-portal-components.xml"/>
 
-  <!-- If you don't need WSRP support, you can remove the following include: -->
+  <!-- If you don't need WSRP support, you can remove the following include: 
   <import resource="classpath:org/apache/cocoon/portal/wsrp/cocoon-portal-wsrp-components.xml"/>
+  -->
 
   <!--+
       | Portal Link Service.
