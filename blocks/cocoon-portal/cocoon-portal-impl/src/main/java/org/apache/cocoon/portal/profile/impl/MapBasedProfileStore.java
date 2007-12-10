@@ -17,30 +17,20 @@
 package org.apache.cocoon.portal.profile.impl;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.portal.persistence.Converter;
-import org.apache.cocoon.portal.profile.ProfileLS;
-import org.apache.cocoon.util.AbstractLogEnabled;
+import org.apache.cocoon.portal.profile.Converter;
+import org.apache.cocoon.portal.profile.PersistenceType;
+import org.apache.cocoon.portal.profile.ProfileStore;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
-import org.w3c.dom.Element;
 
 /**
  * This implementation uses a {@link Converter} component to load/save
@@ -48,15 +38,9 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-public class MapProfileLS
-    extends AbstractLogEnabled
-    implements Serviceable, ProfileLS, ThreadSafe, Disposable {
-
-    /** The service manager. */
-    protected ServiceManager manager;
-
-    /** The XPath Processor. */
-    protected XPathProcessor xpathProcessor;
+public class MapBasedProfileStore
+    extends AbstractBean
+    implements ProfileStore {
 
     /** The converter component. */
     protected Converter converter;
@@ -64,32 +48,15 @@ public class MapProfileLS
     /** The source resolver. */
     protected SourceResolver resolver;
 
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release( this.xpathProcessor );
-            this.xpathProcessor = null;
-            this.manager.release( this.converter );
-            this.converter = null;
-            this.manager.release( this.resolver );
-            this.resolver = null;
-            this.manager = null;
-        }
+    public void setSourceResolver(SourceResolver sr) {
+        this.resolver = sr;
     }
 
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
-        this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
-        this.converter = (Converter)this.manager.lookup(Converter.ROLE);
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+    public void setConverter(Converter c) {
+        this.converter = c;
     }
 
-    protected String getURI(Map keyMap) 
+    protected String getURI(Map keyMap)
     throws Exception {
         final StringBuffer buffer = new StringBuffer();
         Iterator iter = keyMap.entrySet().iterator();
@@ -124,14 +91,14 @@ public class MapProfileLS
                 buffer.append(append);
             }
         }
-        
+
         return buffer.toString();
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileLS#loadProfile(java.lang.Object, java.lang.String, java.util.Map)
+     * @see org.apache.cocoon.portal.profile.ProfileStore#loadProfile(java.lang.Object, org.apache.cocoon.portal.profile.PersistenceType)
      */
-    public Object loadProfile(Object key, String profileType, Map objectMap)
+    public Object loadProfile(Object key, PersistenceType type)
     throws Exception {
 		final Map keyMap = (Map) key;
 
@@ -142,8 +109,7 @@ public class MapProfileLS
 			source = this.resolver.resolveURI(uri);
 
 			return this.converter.getObject(source.getInputStream(),
-                                       profileType,
-                                       objectMap,
+                                       type,
                                        null);
 		} finally {
             this.resolver.release(source);
@@ -151,9 +117,9 @@ public class MapProfileLS
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileLS#saveProfile(java.lang.Object, java.lang.String, java.lang.Object)
+     * @see org.apache.cocoon.portal.profile.ProfileStore#saveProfile(java.lang.Object, org.apache.cocoon.portal.profile.PersistenceType, java.lang.Object)
      */
-    public void saveProfile(Object key, String profileType, Object profile)
+    public void saveProfile(Object key, PersistenceType type, Object profile)
     throws Exception {
         final Map keyMap = (Map) key;
 
@@ -165,8 +131,8 @@ public class MapProfileLS
             source = this.resolver.resolveURI(uri);
             if ( source instanceof ModifiableSource ) {
                 this.converter.storeObject( ((ModifiableSource)source).getOutputStream(),
-                                        profileType,
                                         profile,
+                                        type,
                                         null);
                 return;
             }
@@ -176,39 +142,26 @@ public class MapProfileLS
         }
 
         final StringBuffer buffer = new StringBuffer(uri);
-		SAXParser parser = null;
-		try {
-            ByteArrayOutputStream writer = new ByteArrayOutputStream();
-            this.converter.storeObject(writer,
-                                  profileType,
-                                  profile,
-                                  null);
+        ByteArrayOutputStream writer = new ByteArrayOutputStream();
+        this.converter.storeObject(writer,
+                              profile,
+                              type,
+                              null);
 
-            buffer.append("&content=");
-            try {
-                buffer.append(NetUtils.encode(writer.toString(), "utf-8"));
-            } catch (UnsupportedEncodingException uee) {
-                // ignore this as utf-8 is always supported
-            }
+        buffer.append("&content=");
+        try {
+            buffer.append(NetUtils.encode(writer.toString(), "utf-8"));
+        } catch (UnsupportedEncodingException uee) {
+            // ignore this as utf-8 is always supported
+        }
 
-            source = this.resolver.resolveURI(buffer.toString());
-
-            parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
-            Element element = DOMUtil.getDocumentFragment(parser, new InputStreamReader(source.getInputStream())).getOwnerDocument().getDocumentElement();
-            if (!DOMUtil.getValueOf(element, "descendant::sourceResult/execution", this.xpathProcessor).trim().equals("success")) {
-                throw new IOException("Could not save profile: "+DOMUtil.getValueOf(element, "descendant::sourceResult/message", this.xpathProcessor));
-            }
-
-		} finally {
-            this.resolver.release(source);
-			this.manager.release(parser);
-		}
+        source = this.resolver.resolveURI(buffer.toString());
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileLS#getValidity(java.lang.Object, java.lang.String)
+     * @see org.apache.cocoon.portal.profile.ProfileStore#getValidity(java.lang.Object, java.lang.String)
      */
-    public SourceValidity getValidity(Object key, String profileType) {
+    public SourceValidity getValidity(Object key, String type) {
 		Source source = null;
 		try {
             final Map keyMap = (Map) key;

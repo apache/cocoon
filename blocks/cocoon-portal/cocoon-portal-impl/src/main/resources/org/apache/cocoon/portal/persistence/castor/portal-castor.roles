@@ -22,7 +22,7 @@
       | Castor Converter
       |
       +-->
-    <role name="org.apache.cocoon.portal.persistence.Converter"
+    <role name="org.apache.cocoon.portal.profile.Converter"
           default-class="org.apache.cocoon.portal.persistence.castor.CastorSourceConverter"
           shorthand="castor-converter"/>
 

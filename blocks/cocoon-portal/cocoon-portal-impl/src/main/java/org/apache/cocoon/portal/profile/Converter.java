@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.persistence;
+package org.apache.cocoon.portal.profile;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
+
 
 /**
  * This is a component that converts a profile (= object tree) to a persistence
@@ -28,35 +29,31 @@ import java.util.Map;
  */
 public interface Converter {
 
-    /** The role to lookup this component. */
-    public static final String ROLE = Converter.class.getName();
-
     /**
-     * Load an object from the given input stream. 
+     * Load an object from the given input stream.
      * @param stream      The input stream with the data.
-     * @param profileType {@link org.apache.cocoon.portal.profile.ProfileLS}
+     * @param profileType {@link org.apache.cocoon.portal.profile.ProfileStore}
      * @param references  A map of references referenced from the profile.
      * @param parameters  An optional map of parameters for the conversion.
      * @return The loaded object.
      * @throws ConverterException
      */
     Object getObject(InputStream stream,
-                     String      profileType,
-                     Map         references,
+                     PersistenceType type,
                      Map         parameters)
     throws ConverterException;
 
     /**
      * Save an object to a given stream.
      * @param stream The output stream.
-     * @param profileType {@link org.apache.cocoon.portal.profile.ProfileLS}
+     * @param profileType {@link org.apache.cocoon.portal.profile.ProfileStore}
      * @param object The object to save.
      * @param parameters  An optional map of parameters for the conversion.
      * @throws ConverterException
      */
     void storeObject(OutputStream stream,
-                     String       profileType,
                      Object       object,
+                     PersistenceType type,
                      Map          parameters)
     throws ConverterException;
 }

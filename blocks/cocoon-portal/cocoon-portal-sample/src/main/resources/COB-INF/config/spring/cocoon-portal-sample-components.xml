@@ -70,6 +70,8 @@
         layout-user-save=cocoon:raw:/save-user-profile?profile=layout
       </value>
     </property>
+    <property name="copletTypesMap" ref="org.apache.cocoon.portal.om.CopletTypeMap"/>
+    <property name="rendererMap" ref="org.apache.cocoon.portal.layout.renderer.RendererMap"/>
   </bean>
 
   <!--+

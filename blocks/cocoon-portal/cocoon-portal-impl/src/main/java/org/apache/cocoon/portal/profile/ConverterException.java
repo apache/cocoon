@@ -14,14 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.persistence;
-
-import org.apache.avalon.framework.CascadingException;
+package org.apache.cocoon.portal.profile;
 
 /**
  * @version $Id$
  */
-public class ConverterException extends CascadingException {
+public class ConverterException extends Exception {
 
     public ConverterException(String message) {
         super(message);

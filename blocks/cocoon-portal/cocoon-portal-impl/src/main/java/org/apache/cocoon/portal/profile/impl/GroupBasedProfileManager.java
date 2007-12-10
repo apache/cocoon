@@ -40,8 +40,9 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.PortalUser;
+import org.apache.cocoon.portal.profile.PersistenceType;
 import org.apache.cocoon.portal.profile.ProfileException;
-import org.apache.cocoon.portal.profile.ProfileLS;
+import org.apache.cocoon.portal.profile.ProfileStore;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.excalibur.source.SourceNotFoundException;
@@ -89,12 +90,12 @@ public class GroupBasedProfileManager
     protected boolean checkForChanges = true;
 
     /** The profiler loader/saver. */
-    protected ProfileLS loader;
+    protected ProfileStore loader;
 
     /** The configuration for loading/saving the profile. */
     protected Properties configuration;
 
-    public void setProfileLS(ProfileLS loader) {
+    public void setProfileLS(ProfileStore loader) {
         this.loader = loader;
     }
 
@@ -339,7 +340,7 @@ public class GroupBasedProfileManager
         }
 
         final Map key = this.buildKey(CATEGORY_GLOBAL,
-                ProfileLS.PROFILETYPE_COPLETDEFINITION,
+                ProfileStore.PROFILETYPE_COPLETDEFINITION,
                 info,
                 true,
                 null);
@@ -351,7 +352,7 @@ public class GroupBasedProfileManager
             if ( validity == SourceValidity.VALID) {
                 return this.copletDefinitions.objects;
             } else if ( validity == SourceValidity.UNKNOWN ) {
-                newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETDEFINITION);
+                newValidity = loader.getValidity(key, ProfileStore.PROFILETYPE_COPLETDEFINITION);
                 if ( newValidity != null
                      && this.copletDefinitions.validity.isValid(newValidity) == SourceValidity.VALID) {
                     return this.copletDefinitions.objects;
@@ -360,7 +361,10 @@ public class GroupBasedProfileManager
         }
 
         synchronized ( this ) {
-            Collection collection = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETDEFINITION, this.copletTypesMap);
+            final PersistenceType persType = new PersistenceType(ProfileStore.PROFILETYPE_COPLETDEFINITION);
+            persType.setReferences("copletType", this.copletTypesMap);
+
+            Collection collection = (Collection)loader.loadProfile(key, persType);
             collection = this.processCopletDefinitions(collection);
             final Iterator i = collection.iterator();
             final Map objects = new HashMap();
@@ -377,7 +381,7 @@ public class GroupBasedProfileManager
             // now add deployed coplets
             this.copletDefinitions.objects.putAll(this.deployedCopletDefinitions);
             if ( newValidity == null ) {
-                newValidity = loader.getValidity(key, ProfileLS.PROFILETYPE_COPLETDEFINITION);
+                newValidity = loader.getValidity(key, ProfileStore.PROFILETYPE_COPLETDEFINITION);
             }
             this.copletDefinitions.validity = newValidity;
 
@@ -402,12 +406,15 @@ public class GroupBasedProfileManager
                                          final String      layoutKey)
     throws Exception {
         Map key = this.buildKey(category,
-                                ProfileLS.PROFILETYPE_COPLETINSTANCE,
+                                ProfileStore.PROFILETYPE_COPLETINSTANCE,
                                 info,
                                 true,
                                 layoutKey);
         try {
-            Collection cidm = (Collection)loader.loadProfile(key, ProfileLS.PROFILETYPE_COPLETINSTANCE, profile.getCopletDefinitionsMap());
+            final PersistenceType persType = new PersistenceType(ProfileStore.PROFILETYPE_COPLETINSTANCE);
+            persType.setReferences("copletDefinition", profile.getCopletDefinitionsMap());
+
+            Collection cidm = (Collection)loader.loadProfile(key, persType);
             cidm = this.processCopletInstances(profile, cidm);
             profile.setCopletInstances(cidm);
 
@@ -426,12 +433,16 @@ public class GroupBasedProfileManager
                                 final String      layoutKey)
     throws Exception {
         final Map key = this.buildKey(category,
-                                      ProfileLS.PROFILETYPE_LAYOUT,
+                                      ProfileStore.PROFILETYPE_LAYOUT,
                                       info,
                                       true,
                                       layoutKey);
         try {
-            Layout l = (Layout)loader.loadProfile(key, ProfileLS.PROFILETYPE_LAYOUT, profile.getLayoutTypesMap());
+            final PersistenceType persType = new PersistenceType(ProfileStore.PROFILETYPE_LAYOUT);
+            persType.setReferences("layoutType", profile.getLayoutTypesMap());
+            persType.setReferences("customRenderer", this.rendererMap);
+
+            Layout l = (Layout)loader.loadProfile(key, persType);
             l = this.processLayout(profile, l);
             profile.setRootLayout(l);
 
@@ -495,11 +506,14 @@ public class GroupBasedProfileManager
         try {
             final ProfileHolder profile = this.getUserProfile();
             final Map key = this.buildKey(CATEGORY_USER,
-                                          ProfileLS.PROFILETYPE_COPLETINSTANCE,
+                                          ProfileStore.PROFILETYPE_COPLETINSTANCE,
                                           this.portalService.getUserService().getUser(),
                                           false,
                                           null);
-            this.loader.saveProfile(key, ProfileLS.PROFILETYPE_COPLETINSTANCE, profile.getCopletInstances());
+            final PersistenceType persType = new PersistenceType(ProfileStore.PROFILETYPE_COPLETINSTANCE);
+            persType.setReferences("copletDefinition", profile.getCopletDefinitionsMap());
+
+            this.loader.saveProfile(key, persType, profile.getCopletInstances());
         } catch (Exception e) {
             // TODO
             throw new ProfileException("Exception during save profile", e);
@@ -510,11 +524,14 @@ public class GroupBasedProfileManager
         try {
             final ProfileHolder profile = this.getUserProfile();
             final Map key = this.buildKey(CATEGORY_USER,
-                                          ProfileLS.PROFILETYPE_LAYOUTINSTANCE,
+                                          ProfileStore.PROFILETYPE_LAYOUTINSTANCE,
                                           this.portalService.getUserService().getUser(),
                                           false,
                                           null);
-            this.loader.saveProfile(key, ProfileLS.PROFILETYPE_LAYOUTINSTANCE, profile.getRootLayout());
+            final PersistenceType persType = new PersistenceType(ProfileStore.PROFILETYPE_LAYOUTINSTANCE);
+            persType.setReferences("layout", profile.keyedLayouts);
+
+            this.loader.saveProfile(key, persType, profile.getRootLayout());
         } catch (Exception e) {
             // TODO
             throw new ProfileException("Exception during save profile", e);

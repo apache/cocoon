@@ -36,9 +36,10 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.portal.persistence.Converter;
-import org.apache.cocoon.portal.persistence.ConverterException;
-import org.apache.cocoon.portal.profile.ProfileLS;
+import org.apache.cocoon.portal.profile.Converter;
+import org.apache.cocoon.portal.profile.ConverterException;
+import org.apache.cocoon.portal.profile.PersistenceType;
+import org.apache.cocoon.portal.profile.ProfileStore;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.excalibur.source.Source;
@@ -82,21 +83,20 @@ public class CastorSourceConverter
     protected ReferenceResolver idResolver = new ReferenceResolver();
 
     /**
-     * @see org.apache.cocoon.portal.persistence.Converter#getObject(java.io.InputStream, java.lang.String, java.util.Map, java.util.Map)
+     * @see org.apache.cocoon.portal.profile.Converter#getObject(java.io.InputStream, org.apache.cocoon.portal.profile.PersistenceType, java.util.Map)
      */
     public Object getObject(InputStream stream,
-                            String      mappingName,
-                            Map         references,
+                            PersistenceType type,
                             Map         parameters)
     throws ConverterException {
         try {
-            threadLocalMap.set(references);
-            final Unmarshaller unmarshaller = (Unmarshaller)((Object[])this.mappings.get(mappingName))[1];
+            threadLocalMap.set(type);
+            final Unmarshaller unmarshaller = (Unmarshaller)((Object[])this.mappings.get(type.getType()))[1];
             final Object result = unmarshaller.unmarshal(new InputSource(stream));
             stream.close();
             return result;
         } catch (IllegalStateException ise) {
-            throw new ConverterException("Unable to unmarshal objects for mapping " + mappingName, ise);
+            throw new ConverterException("Unable to unmarshal objects for mapping " + type.getType(), ise);
         } catch (Exception e) {
             throw new ConverterException(e.getMessage(), e);
         } finally {
@@ -105,21 +105,22 @@ public class CastorSourceConverter
     }
 
 	/**
-	 * @see org.apache.cocoon.portal.persistence.Converter#storeObject(java.io.OutputStream, java.lang.String, java.lang.Object, java.util.Map)
+	 * @see org.apache.cocoon.portal.profile.Converter#storeObject(java.io.OutputStream, java.lang.Object, org.apache.cocoon.portal.profile.PersistenceType, java.util.Map)
 	 */
 	public void storeObject(OutputStream stream,
-                            String       mappingName,
-                            Object       referenceObject,
+	                        Object       object,
+                            PersistenceType type,
                             Map          parameters)
     throws ConverterException {
-        Object references = referenceObject;
-        if ( referenceObject instanceof Collection && !(referenceObject instanceof CollectionWrapper) ) {
-            references = new CollectionWrapper((Collection)referenceObject);
+        Object references = object;
+        if ( object instanceof Collection && !(object instanceof CollectionWrapper) ) {
+            references = new CollectionWrapper((Collection)object);
         }
         Writer writer = new OutputStreamWriter(stream);
 		try {
+            threadLocalMap.set(type);
 			Marshaller marshaller = new Marshaller( writer );
-			marshaller.setMapping((Mapping)((Object[])this.mappings.get(mappingName))[0]);
+			marshaller.setMapping((Mapping)((Object[])this.mappings.get(type.getType()))[0]);
             boolean suppressXSIType = this.defaultSuppressXSIType;
             if ( parameters != null ) {
                 Boolean value = (Boolean)parameters.get("suppressXSIType");
@@ -134,6 +135,8 @@ public class CastorSourceConverter
 			throw new ConverterException("Can't create Unmarshaller", e);
 		} catch (Exception e) {
 			throw new ConverterException(e.getMessage(), e);
+        } finally {
+            threadLocalMap.set(null);
 		}
 	}
 
@@ -160,9 +163,9 @@ public class CastorSourceConverter
 
         // default configuration
         final String prefix = "resource://org/apache/cocoon/portal/persistence/castor/";
-        this.mappingSources.put(ProfileLS.PROFILETYPE_LAYOUT, prefix + ProfileLS.PROFILETYPE_LAYOUT +".xml");
-        this.mappingSources.put(ProfileLS.PROFILETYPE_COPLETDEFINITION, prefix + ProfileLS.PROFILETYPE_COPLETDEFINITION + ".xml");
-        this.mappingSources.put(ProfileLS.PROFILETYPE_COPLETINSTANCE, prefix + ProfileLS.PROFILETYPE_COPLETINSTANCE + ".xml");
+        this.mappingSources.put(ProfileStore.PROFILETYPE_LAYOUT, prefix + ProfileStore.PROFILETYPE_LAYOUT +".xml");
+        this.mappingSources.put(ProfileStore.PROFILETYPE_COPLETDEFINITION, prefix + ProfileStore.PROFILETYPE_COPLETDEFINITION + ".xml");
+        this.mappingSources.put(ProfileStore.PROFILETYPE_COPLETINSTANCE, prefix + ProfileStore.PROFILETYPE_COPLETINSTANCE + ".xml");
         boolean plutoAvailable = false;
         try {
             ClassUtils.loadClass("org.apache.cocoon.portal.pluto.adapter.PortletAdapter");

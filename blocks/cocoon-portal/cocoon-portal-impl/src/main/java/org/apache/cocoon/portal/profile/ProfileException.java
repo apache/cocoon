@@ -23,6 +23,7 @@ import org.apache.cocoon.portal.PortalRuntimeException;
  * @version $Id$
  */
 public class ProfileException extends PortalRuntimeException {
+
     public ProfileException() {
         super();
     }
