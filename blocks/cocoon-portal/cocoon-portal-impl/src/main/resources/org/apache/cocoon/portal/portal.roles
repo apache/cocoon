@@ -26,14 +26,6 @@
           default-class="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"/>
 
   <!--+
-      | Components.
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.profile.ProfileLS"
-          default-class="org.apache.cocoon.portal.profile.impl.MapProfileLS"/>
-
-
-  <!--+
       | Coplet and Layout Source.
       |
       +-->

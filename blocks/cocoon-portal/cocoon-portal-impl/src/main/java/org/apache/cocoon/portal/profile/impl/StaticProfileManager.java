@@ -30,8 +30,9 @@ import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutInstance;
+import org.apache.cocoon.portal.profile.PersistenceType;
 import org.apache.cocoon.portal.profile.ProfileException;
-import org.apache.cocoon.portal.profile.ProfileLS;
+import org.apache.cocoon.portal.profile.ProfileStore;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.map.StaticBucketMap;
 import org.apache.excalibur.source.SourceValidity;
@@ -53,9 +54,9 @@ public class StaticProfileManager
     protected static final String LAYOUTKEY_PREFIX = StaticProfileManager.class.getName() + "/Layout/";
 
     /** The profiler loader/saver. */
-    protected ProfileLS loader;
+    protected ProfileStore loader;
 
-    public void setProfileLS(ProfileLS loader) {
+    public void setProfileLS(ProfileStore loader) {
         this.loader = loader;
     }
 
@@ -89,7 +90,7 @@ public class StaticProfileManager
             map.put("profile", "layout");
             map.put("groupKey", layoutKey);
 
-            SourceValidity newValidity = this.loader.getValidity(map, ProfileLS.PROFILETYPE_LAYOUT);
+            SourceValidity newValidity = this.loader.getValidity(map, ProfileStore.PROFILETYPE_LAYOUT);
             if (valid == SourceValidity.UNKNOWN) {
                 if (sourceValidity.isValid(newValidity) == SourceValidity.VALID) {
                     return (Layout) ((Map) objects[0]).get(layoutID);
@@ -97,7 +98,11 @@ public class StaticProfileManager
             }
 
             // get Layout specified in the map
-            Layout layout = (Layout) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_LAYOUT, null);
+            final PersistenceType lType = new PersistenceType(ProfileStore.PROFILETYPE_LAYOUT);
+            lType.setReferences("layoutType", this.copletTypesMap);
+            lType.setReferences("customRenderer", this.rendererMap);
+
+            Layout layout = (Layout) this.loader.loadProfile(map, lType);
             layout = this.processLayout(null, layout);
 
             final Map layouts = new HashMap();
@@ -161,7 +166,10 @@ public class StaticProfileManager
         map.put("portalname", this.portalService.getPortalName());
         map.put("profile", "coplet");
         map.put("name", "data");
-        Collection c = (Collection) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_COPLETDEFINITION, this.copletTypesMap);
+        final PersistenceType cdType = new PersistenceType(ProfileStore.PROFILETYPE_COPLETDEFINITION);
+        cdType.setReferences("copletType", this.copletTypesMap);
+
+        Collection c = (Collection) this.loader.loadProfile(map, cdType);
         c = this.processCopletDefinitions(c);
         final Map definitions = new HashMap();
         final Iterator i = c.iterator();
@@ -177,7 +185,10 @@ public class StaticProfileManager
         map.put("portalname", this.portalService.getPortalName());
         map.put("profile", "coplet");
         map.put("name", "instancedata");
-        instances = (Collection) this.loader.loadProfile(map, ProfileLS.PROFILETYPE_COPLETINSTANCE, definitions);
+        final PersistenceType ciType = new PersistenceType(ProfileStore.PROFILETYPE_COPLETINSTANCE);
+        ciType.setReferences("copletDefinition", definitions);
+
+        instances = (Collection) this.loader.loadProfile(map, ciType);
         instances = this.processCopletInstances(null, instances);
 
         // store managers

@@ -25,7 +25,8 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
-import org.apache.cocoon.portal.profile.ProfileLS;
+import org.apache.cocoon.portal.profile.PersistenceType;
+import org.apache.cocoon.portal.profile.ProfileStore;
 import org.apache.cocoon.portal.util.AbstractComponent;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.pluto.om.common.PreferenceSet;
@@ -45,10 +46,10 @@ public class PortletPreferencesProviderImpl
     extends AbstractComponent
     implements Parameterizable, PortletPreferencesProvider {
 
-    protected static final String PROFILETYPE_PREFERENCES = "portletpreferences";
+    protected static final String PERSISTENCETYPE_PREFERENCES = "portletpreferences";
 
     /** The component for loading/saving the profiles. */
-    protected ProfileLS loader;
+    protected ProfileStore loader;
 
     /** The configuration for this component. */
     protected Parameters configuration;
@@ -76,19 +77,19 @@ public class PortletPreferencesProviderImpl
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         super.service(serviceManager);
-        this.loader = (ProfileLS)this.manager.lookup(ProfileLS.ROLE);
+        this.loader = (ProfileStore)this.manager.lookup(ProfileStore.ROLE);
     }
 
     protected Map buildKey(boolean load, String copletId)
     throws ParameterException {
-        final StringBuffer config = new StringBuffer(PROFILETYPE_PREFERENCES);
+        final StringBuffer config = new StringBuffer(PERSISTENCETYPE_PREFERENCES);
         config.append('-');
         config.append("user");
         config.append('-');
         if ( load ) {
             config.append("load");
         } else {
-            config.append("save");            
+            config.append("save");
         }
         final String uri = this.configuration.getParameter(config.toString());
 
@@ -108,7 +109,9 @@ public class PortletPreferencesProviderImpl
      */
     public PreferenceSet getPreferenceSet(CopletInstance cid) {
         try {
-            return (PreferenceSet)this.loader.loadProfile(this.buildKey(true, cid.getId()), PROFILETYPE_PREFERENCES, null);
+            final PersistenceType persType = new PersistenceType(PERSISTENCETYPE_PREFERENCES);
+
+            return (PreferenceSet)this.loader.loadProfile(this.buildKey(true, cid.getId()), persType);
         } catch (Exception ignore) {
             // we ignore all exceptions for now (TODO)
         }
@@ -120,7 +123,9 @@ public class PortletPreferencesProviderImpl
      */
     public void storePreferenceSet(CopletInstance cid, PreferenceSet prefs) {
         try {
-             this.loader.saveProfile(this.buildKey(false, cid.getId()), PROFILETYPE_PREFERENCES, prefs);
+            final PersistenceType persType = new PersistenceType(PERSISTENCETYPE_PREFERENCES);
+
+            this.loader.saveProfile(this.buildKey(false, cid.getId()), persType, prefs);
         } catch (Exception ignore) {
              // we ignore all exceptions for now (TODO)
         }

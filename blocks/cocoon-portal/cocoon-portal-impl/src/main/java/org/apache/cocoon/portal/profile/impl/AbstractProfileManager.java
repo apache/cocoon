@@ -56,8 +56,15 @@ public abstract class AbstractProfileManager
     /** The map of coplet types. */
     protected Map copletTypesMap = Collections.EMPTY_MAP;
 
+    /** The map of renderers. */
+    protected Map rendererMap = Collections.EMPTY_MAP;
+
     public void setCopletTypesMap(final Map m) {
         this.copletTypesMap = (m != null ? m : Collections.EMPTY_MAP);
+    }
+
+    public void setRendererMap(final Map m) {
+        this.rendererMap = (m != null ? m : Collections.EMPTY_MAP);
     }
 
     /**

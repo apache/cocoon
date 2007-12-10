@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.portal.profile;
 
-import java.util.Map;
-
 import org.apache.excalibur.source.SourceValidity;
 
 /**
@@ -34,10 +32,10 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @version $Id$
  */
-public interface ProfileLS {
+public interface ProfileStore {
 
     /** Component role */
-    String ROLE = ProfileLS.class.getName();
+    String ROLE = ProfileStore.class.getName();
 
     String PROFILETYPE_LAYOUT = "layout";
     String PROFILETYPE_LAYOUTINSTANCE = "layoutinstance";
@@ -51,7 +49,7 @@ public interface ProfileLS {
      * @param profileType The type of the profile (instances, types, layouts etc. )
      * @param objectMap Map with objects which might be references by the profile.
      */
-    Object loadProfile(Object key, String profileType, Map objectMap)
+    Object loadProfile(Object key, PersistenceType type)
     throws Exception;
 
     /**
@@ -61,7 +59,7 @@ public interface ProfileLS {
      * @param profileType The type of the profile (instances, types, layouts etc. )
      * @param profile The profile itself.
      */
-    void saveProfile(Object key, String profileType, Object profile) throws Exception;
+    void saveProfile(Object key, PersistenceType type, Object profile) throws Exception;
 
     /**
      * Get the validity of a profile.
@@ -69,5 +67,5 @@ public interface ProfileLS {
      *            like user etc.
      * @param profileType The type of the profile (instances, types, layouts etc. )
      */
-    SourceValidity getValidity(Object key, String profileType);
+    SourceValidity getValidity(Object key, String type);
 }
