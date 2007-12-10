@@ -27,6 +27,9 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
                            http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
 
+  <!-- Include sitemap default beans -->
+  <import resource="classpath:org/apache/cocoon/portal/sitemap/cocoon-portal-sitemap-components.xml"/>
+
   <!-- Include default beans -->
   <import resource="classpath:org/apache/cocoon/portal/cocoon-portal-components.xml"/>
 

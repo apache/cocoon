@@ -31,6 +31,9 @@
       | components properly. However, the best way is to start your
       | portal project from scratch!
       +-->
+  <!-- Include sitemap specific stuff -->
+  <include src="resource://org/apache/cocoon/portal/sitemap/portal-sitemap.roles"/>
+
   <!-- Include portal roles -->
   <include src="resource://org/apache/cocoon/portal/portal.roles"/>
 
