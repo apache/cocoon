@@ -64,18 +64,8 @@
       <artifactId>cocoon-forms-impl</artifactId>
     </dependency>
     <dependency>
-      <groupId>castor</groupId>
+      <groupId>org.codehaus.castor</groupId>
       <artifactId>castor</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xerces</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
