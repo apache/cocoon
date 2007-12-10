@@ -18,6 +18,8 @@ package org.apache.cocoon.components.search;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -103,7 +105,7 @@ public class LuceneIndexContentHandler implements ContentHandler {
     }
 
     public void endDocument() {
-        bodyDocument.add(Field.UnStored(LuceneXMLIndexer.BODY_FIELD, bodyText.toString()));
+        bodyDocument.add(new Field(LuceneXMLIndexer.BODY_FIELD, bodyText.toString(), Field.Store.NO, Field.Index.TOKENIZED));
     }
 
     public void endElement(String namespaceURI, String localName, String qName) {
@@ -119,7 +121,7 @@ public class LuceneIndexContentHandler implements ContentHandler {
 
             String atts_lname = atts.getLocalName(i);
             String atts_value = atts.getValue(i);
-            bodyDocument.add(Field.UnStored(lname + "@" + atts_lname, atts_value));
+            bodyDocument.add(new Field(lname + "@" + atts_lname, atts_value, Field.Store.NO, Field.Index.TOKENIZED));
             if (attributesToText) {
                 text.append(' ');
                 text.append(atts_value);
@@ -130,9 +132,9 @@ public class LuceneIndexContentHandler implements ContentHandler {
 
         if (text != null && text.length() > 0) {
             if (isFieldTag(lname)) {
-                bodyDocument.add(Field.UnIndexed(lname, text.toString()));
+                bodyDocument.add(new Field(lname, text.toString(), Field.Store.YES, Field.Index.NO));
             }
-            bodyDocument.add(Field.UnStored(lname, text.toString()));
+            bodyDocument.add(new Field(lname, text.toString(), Field.Store.NO, Field.Index.TOKENIZED));
         }
     }
 

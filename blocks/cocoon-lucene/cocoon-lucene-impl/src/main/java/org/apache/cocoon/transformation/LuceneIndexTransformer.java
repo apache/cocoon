@@ -35,8 +35,10 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
@@ -409,13 +411,12 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
         } else if (processing == STATE_DOCUMENT) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_DOCUMENT_ELEMENT.equals(localName)) {
                 // End document processing
-                this.bodyDocument.add(Field.UnStored(LuceneXMLIndexer.BODY_FIELD, this.bodyText.toString()));
+                this.bodyDocument.add(new Field(LuceneXMLIndexer.BODY_FIELD, this.bodyText.toString(), Field.Store.NO, Field.Index.TOKENIZED));
                 this.bodyText = null;
 
-                this.bodyDocument.add(Field.UnIndexed(LuceneXMLIndexer.URL_FIELD, this.bodyDocumentURL));
+                this.bodyDocument.add(new Field(LuceneXMLIndexer.URL_FIELD, this.bodyDocumentURL, Field.Store.YES, Field.Index.NO));
                 // store: false, index: true, tokenize: false
-                this.bodyDocument.add(new Field(LuceneXMLIndexer.UID_FIELD, uid(this.bodyDocumentURL), false, true,
-                        false));
+                this.bodyDocument.add(new Field(LuceneXMLIndexer.UID_FIELD, uid(this.bodyDocumentURL), Field.Store.NO, Field.Index.UN_TOKENIZED));
                 try {
                     reindexDocument();
                 } catch (IOException e) {
@@ -447,7 +448,7 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
 
                     String atts_lname = atts.getLocalName(i);
                     String atts_value = atts.getValue(i);
-                    bodyDocument.add(Field.UnStored(localName + "@" + atts_lname, atts_value));
+                    bodyDocument.add(new Field(localName + "@" + atts_lname, atts_value, Field.Store.NO, Field.Index.TOKENIZED));
                     if (attributesToText) {
                         text.append(atts_value);
                         text.append(' ');
@@ -459,9 +460,9 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
                 boolean store = atts.getIndex(LUCENE_URI, LUCENE_ELEMENT_ATTR_STORE_VALUE) != -1;
                 if (text != null && text.length() > 0) {
                     if (store) {
-                        bodyDocument.add(Field.Text(localName, text.toString()));
+                        bodyDocument.add(new Field(localName, text.toString(), Field.Store.YES, Field.Index.TOKENIZED));
                     } else {
-                        bodyDocument.add(Field.UnStored(localName, text.toString()));
+                        bodyDocument.add(new Field(localName, text.toString(), Field.Store.NO, Field.Index.TOKENIZED));
                     }
                 }
             }
@@ -502,8 +503,8 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
         Directory directory = LuceneCocoonHelper.getDirectory(indexDirectory, createIndex);
         Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(queryConfiguration.analyzerClassname);
         this.writer = new IndexWriter(directory, analyzer, createIndex);
-        this.writer.mergeFactor = queryConfiguration.indexerMergeFactor;
-        this.writer.maxFieldLength = queryConfiguration.indexerMaxFieldLength;
+        this.writer.setMergeFactor(queryConfiguration.indexerMergeFactor);
+        this.writer.setMaxFieldLength(queryConfiguration.indexerMaxFieldLength);
     }
 
     private IndexReader openReader() throws IOException {
@@ -534,7 +535,7 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
             // from the index before adding it
             try {
                 IndexReader reader = openReader();
-                reader.delete(new Term(LuceneXMLIndexer.UID_FIELD, uid(this.bodyDocumentURL)));
+                reader.deleteDocuments(new Term(LuceneXMLIndexer.UID_FIELD, uid(this.bodyDocumentURL)));
                 reader.close();
             } catch (IOException e) { /* ignore */
             }

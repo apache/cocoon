@@ -97,7 +97,7 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled implements
 
         try {
             writer = new IndexWriter(index, analyzer, create);
-            writer.mergeFactor = this.mergeFactor;
+            writer.setMergeFactor(this.mergeFactor);
 
             getCocoonCrawler().crawl(base_url);
 
@@ -178,7 +178,7 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled implements
          */
         public void deleteAllStaleDocuments() throws IOException {
             while (uidIter.term() != null && uidIter.term().field() == "uid") {
-                reader.delete(uidIter.term());
+                reader.deleteDocuments(uidIter.term());
                 uidIter.next();
             }
         }
@@ -193,7 +193,7 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled implements
          */
         public void deleteModifiedDocuments(String uid) throws IOException {
             while (documentHasBeenModified(uidIter.term(), uid)) {
-                reader.delete(uidIter.term());
+                reader.deleteDocuments(uidIter.term());
                 uidIter.next();
             }
             if (documentHasNotBeenModified(uidIter.term(), uid)) {
