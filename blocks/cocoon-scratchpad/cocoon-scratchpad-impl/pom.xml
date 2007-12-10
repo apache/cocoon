@@ -94,7 +94,7 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>castor</groupId>
+      <groupId>org.codehaus.castor</groupId>
       <artifactId>castor</artifactId>
     </dependency>
     <dependency>
