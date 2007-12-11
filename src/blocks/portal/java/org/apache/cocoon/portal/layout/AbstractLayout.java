@@ -40,8 +40,8 @@ public abstract class AbstractLayout
     protected String rendererName;
     
     protected Item parent;
-    
-    protected Map parameters = new LinkedMap();
+
+    protected Map parameters = new LinkedMap(3);
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.Parameters#getParameters()
