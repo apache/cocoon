@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public final class CopletBaseData { 
 
-	private Map copletConfig = new HashMap();
+	private Map copletConfig = new HashMap(3);
 
 	private String id;
 

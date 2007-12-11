@@ -81,7 +81,7 @@ public abstract class AbstractAspectalizable
 
     public void addPersistentAspectData(String aspectName, Object data) {
         if ( this.persistentDatas == null ) {
-            this.persistentDatas = new HashMap();
+            this.persistentDatas = new HashMap(3);
         }
         this.persistentDatas.put(aspectName, data);
     }

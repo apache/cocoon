@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="CZ" type="fix">
+      Portal: Some memory consumption improvements for the user profiles.
+    </action>
     <action dev="AG" type="update">
       Core: Update xalan to 2.7.1.
     </action>

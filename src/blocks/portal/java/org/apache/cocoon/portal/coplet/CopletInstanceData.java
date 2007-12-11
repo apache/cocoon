@@ -42,10 +42,10 @@ public final class CopletInstanceData
 
 	protected CopletData copletData;
 
-    protected Map attributes = new HashMap();
+    protected Map attributes = new HashMap(3);
 
     /** Temporary attributes are not persisted */
-    protected Map temporaryAttributes = new HashMap();
+    protected Map temporaryAttributes = new HashMap(3);
 
     /** Portlet preferences */
     protected PreferenceSetImpl preferences = new PreferenceSetImpl();
