@@ -35,8 +35,8 @@ import org.apache.cocoon.portal.pluto.om.common.ParameterImpl;
 public abstract class AbstractParameters 
     implements Parameters, Cloneable {
 
-    protected Map parameters = new LinkedMap();
-     
+    protected Map parameters = new LinkedMap(3);
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.Parameters#getParameters()
      */

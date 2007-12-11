@@ -39,7 +39,7 @@ public class CompositeLayoutImpl
     extends AbstractLayout
     implements CompositeLayout {
 
-    protected List items = new ArrayList();
+    protected List items = new ArrayList(3);
 
     /** The class name of the items */
     protected String itemClassName;
