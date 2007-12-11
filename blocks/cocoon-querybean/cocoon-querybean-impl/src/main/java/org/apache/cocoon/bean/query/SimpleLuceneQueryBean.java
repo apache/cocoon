@@ -30,6 +30,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.cocoon.components.search.LuceneCocoonSearcher;
 import org.apache.cocoon.ProcessingException;
@@ -184,7 +185,15 @@ public class SimpleLuceneQueryBean implements SimpleLuceneQuery, Cloneable, Seri
 		while (it.hasNext()) {
 			SimpleLuceneCriterion criterion = (SimpleLuceneCriterion)it.next();
 			Query subquery = criterion.getQuery (searcher.getAnalyzer());
-			query.add(subquery, required, criterion.isProhibited());
+			if(!required) {
+				if(criterion.isProhibited()) {
+					query.add(subquery, BooleanClause.Occur.MUST_NOT);
+				} else {
+					query.add(subquery, BooleanClause.Occur.SHOULD);
+				}
+			} else {
+				query.add(subquery, BooleanClause.Occur.MUST);
+			}
 		}
 		Hits hits = searcher.search(query);
 		this.total = new Long (hits.length());

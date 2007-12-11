@@ -26,6 +26,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.PhraseQuery;
@@ -124,7 +125,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 			if (words.size() > 1) {
 				query = new BooleanQuery();
 				for (int i = 0; i < words.size(); i++) {
-					((BooleanQuery)query).add(new TermQuery(new Term(f, (String)words.elementAt(i))), false, false);
+					((BooleanQuery)query).add(new TermQuery(new Term(f, (String)words.elementAt(i))), BooleanClause.Occur.SHOULD);
 				}
 			} else if (words.size() == 1) {
 				query = new TermQuery(new Term(f, (String)words.elementAt(0)));
@@ -135,7 +136,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 			if (words.size() > 1) {
 				query = new BooleanQuery();
 				for (int i = 0; i < words.size(); i++) {
-					((BooleanQuery)query).add(new TermQuery(new Term (f, (String)words.elementAt(i))), true, false);
+					((BooleanQuery)query).add(new TermQuery(new Term (f, (String)words.elementAt(i))), BooleanClause.Occur.MUST);
 				}
 			} else if (words.size() == 1) {
 				query = new TermQuery(new Term(f, (String)words.elementAt(0)));
@@ -146,7 +147,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 			if (words.size() > 1) {
 				query = new BooleanQuery();
 				for (int i = 0; i < words.size(); i++) {
-					((BooleanQuery)query).add(new TermQuery(new Term(f, (String)words.elementAt(i))), true, true);
+					((BooleanQuery)query).add(new TermQuery(new Term(f, (String)words.elementAt(i))), BooleanClause.Occur.MUST_NOT);
 				}
 			} else if (words.size() == 1) {
 				query = new TermQuery(new Term(f, (String)words.elementAt(0)));
@@ -157,7 +158,7 @@ public class SimpleLuceneCriterionBean implements SimpleLuceneCriterion, Cloneab
 			if (words.size() > 1) {
 				query = new BooleanQuery();
 				for (int i = 0; i < words.size(); i++) {
-					((BooleanQuery)query).add(new FuzzyQuery(new Term(f, (String)words.elementAt(i))), false, false);
+					((BooleanQuery)query).add(new FuzzyQuery(new Term(f, (String)words.elementAt(i))), BooleanClause.Occur.SHOULD);
 				}
 			} else if (words.size() == 1) {
 				query = new FuzzyQuery(new Term(f, (String)words.elementAt(0)));
