@@ -43,7 +43,7 @@ implements DeltaApplicable {
 
     protected CopletBaseData copletBaseData;
 
-    protected Map attributes = new HashMap();
+    protected Map attributes = new HashMap(3);
 
     protected String allowedRoles;
     

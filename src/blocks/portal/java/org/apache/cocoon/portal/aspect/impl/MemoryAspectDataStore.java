@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.portal.aspect.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,11 +42,15 @@ public class MemoryAspectDataStore
     /**
      * Get the aspect map for an object
      */
-    protected Map getMap(Aspectalizable owner) {
+    protected Map getMap(Aspectalizable owner, boolean create) {
         Map result = (Map)this.objectMap.get(owner);
         if ( result == null ) {
-            result = new HashMap();
-            this.objectMap.put(owner, result);
+            if ( create ) {
+                result = new HashMap(4);
+                this.objectMap.put(owner, result);
+            } else {
+                result = Collections.EMPTY_MAP;
+            }
         }
         return result;
     }
@@ -54,14 +59,14 @@ public class MemoryAspectDataStore
      * @see org.apache.cocoon.portal.aspect.AspectDataStore#getAspectData(org.apache.cocoon.portal.aspect.Aspectalizable, java.lang.String)
      */
     public Object getAspectData(Aspectalizable owner, String aspectName) {
-        return this.getMap(owner).get( aspectName );
+        return this.getMap(owner, false).get( aspectName );
     }
     
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.aspect.AspectDataStore#setAspectData(org.apache.cocoon.portal.aspect.Aspectalizable, java.lang.String, java.lang.Object)
      */
     public void setAspectData(Aspectalizable owner, String aspectName, Object data) {
-        this.getMap(owner).put(aspectName, data);
+        this.getMap(owner, true).put(aspectName, data);
     }
 
     /* (non-Javadoc)

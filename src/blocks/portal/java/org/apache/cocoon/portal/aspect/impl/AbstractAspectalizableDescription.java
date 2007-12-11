@@ -34,7 +34,7 @@ import org.apache.cocoon.portal.aspect.AspectalizableDescription;
 public abstract class AbstractAspectalizableDescription
     implements AspectalizableDescription  {
 
-    protected List aspects = new ArrayList();
+    protected List aspects = new ArrayList(3);
 
     public List getAspectDescriptions() {
         return this.aspects;
