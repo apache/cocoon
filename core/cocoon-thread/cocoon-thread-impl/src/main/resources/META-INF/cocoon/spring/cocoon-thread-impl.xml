@@ -149,5 +149,7 @@
     <property name="factory" ref="org.apache.cocoon.thread.ThreadFactory"/>
   </bean>
   
-  <bean id="org.apache.cocoon.thread.ThreadFactory" class="org.apache.cocoon.thread.impl.DefaultThreadFactory" scope="prototype" />
+  <bean name="org.apache.cocoon.thread.ThreadFactory"
+        class="org.apache.cocoon.thread.impl.DefaultThreadFactory"
+        scope="prototype"/>
 </beans>
