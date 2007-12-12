@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="CZ" type="add">
+      Portal: New SiteProfileManager providing the same profile to several users based on a configured key.
+    </action>
     <action dev="CZ" type="fix">
       Portal: Some memory consumption improvements for the user profiles.
     </action>
