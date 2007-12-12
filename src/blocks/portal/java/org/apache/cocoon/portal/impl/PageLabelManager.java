@@ -21,6 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -29,20 +33,15 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
+import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.NamedItem;
-import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.components.ContextHelper;
 
 /**
  * Manages the various activities required for page labels.
@@ -64,29 +63,29 @@ public class PageLabelManager
 
     /** The service manager */
     protected ServiceManager manager;
-    /** The portal Service */
-    protected PortalService service;
+    /** The portal service */
+    protected PortalService portalService;
     /** The cocoon context */
     protected Context context;
     protected String aspectName = null;
     private String requestParameterName;
 
-   //boolean to determine if page label should use directory structure
+    /** boolean to determine if page label should use directory structure */
     private boolean useUrlPath;
     private boolean nonStickyTabs;
     private boolean marshallEvents;
 
     protected static final String LABEL_ARRAY = PageLabelManager.class.getName() + "A";
-    protected static final String LABEL_MAP = PageLabelManager.class.getName() + "M";
+    protected static final String LABEL_MAP = "page-labels";
     protected static final String EVENT_MAP = PageLabelManager.class.getName() + "E";
     private static final String DEFAULT_REQUEST_PARAMETER_NAME = "pageLabel";
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.service = (PortalService) this.manager.lookup(PortalService.ROLE);
+        this.portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
     }
 
     /**
@@ -94,7 +93,7 @@ public class PageLabelManager
      */
     public void dispose() {
         if (this.manager != null) {
-            this.manager.release(this.service);
+            this.manager.release(this.portalService);
             this.manager = null;
         }
     }
@@ -187,25 +186,24 @@ public class PageLabelManager
      * Return the Map that contains events for all the page labels.
      * @return The Map to use for converting events to and from urls.
      */
-    public Map getPageEventMap()
-    {
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            Map map = (Map) service.getAttribute(EVENT_MAP);
-            if (null == map) {
-                map = new HashMap();
-                service.setAttribute(EVENT_MAP, map);
-            }
+    public Map getPageEventMap() {
+        Map map = (Map) portalService.getAttribute(EVENT_MAP);
+        if (null == map) {
+            map = new HashMap();
+            portalService.setAttribute(EVENT_MAP, map);
+        }
 
-            return map;
+        return map;
+    }
+
+    protected Map getLabelMap() {
+        final Layout rootLayout = portalService.getComponentManager().getProfileManager().getPortalLayout(null, null);
+        Map map = (Map) rootLayout.getAspectData(LABEL_MAP);
+        if (null == map) {
+            map = this.initializeLabels();
+            rootLayout.setAspectData(LABEL_MAP, map);
         }
-        catch (ServiceException ce) {
-            throw new CascadingRuntimeException("Unable to lookup component.", ce);
-        }
-        finally {
-            this.manager.release(service);
-        }
+        return map;
     }
 
     /**
@@ -216,54 +214,21 @@ public class PageLabelManager
      *         should occur.
      */
     public List getPageLabelEvents(String pageLabel) {
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            Map map = (Map) service.getAttribute(LABEL_MAP);
-            if (null == map) {
-                map = initializeLabels(service);
-                service.setAttribute(LABEL_MAP, map);
-            }
+        final Map labelMap = this.getLabelMap();
+        List list = (List) labelMap.get(pageLabel);
 
-            List list = (List) map.get(pageLabel);
+        if (list == null) {
+            list = new ArrayList();
+            labelMap.put(pageLabel, list);
+        }
 
-            if (list == null) {
-                list = new ArrayList();
-                map.put(pageLabel, list);
-            }
-
-            return list;
-        }
-        catch (ServiceException ce) {
-            throw new CascadingRuntimeException("Unable to lookup component.", ce);
-        }
-        finally {
-            this.manager.release(service);
-        }
+        return list;
     }
 
     public boolean isLabel(String pageLabel) {
-        PortalService service = null;
-        try
-        {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            Map map = (Map) service.getAttribute(LABEL_MAP);
-            if (null == map)
-            {
-                map = initializeLabels(service);
-                service.setAttribute(LABEL_MAP, map);
-            }
+        final Map labelMap = this.getLabelMap();
 
-            return map.containsKey(pageLabel);
-        }
-        catch (ServiceException ce)
-        {
-            throw new CascadingRuntimeException("Unable to lookup component.", ce);
-        }
-        finally
-        {
-            this.manager.release(service);
-        }
+        return labelMap.containsKey(pageLabel);
     }
 
     /**
@@ -273,27 +238,17 @@ public class PageLabelManager
         return this.marshallEvents;
     }
 
-    /*
+    /**
      * Return the array containing the current and previous labels.
      */
     private String[] getLabels() {
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            String[] labels = (String[]) service.getAttribute(LABEL_ARRAY);
-            if (null == labels) {
-                labels = new String[2];
-                labels[0] = getRoot();
-                service.setAttribute(LABEL_ARRAY, labels);
-            }
-            return labels;
+        String[] labels = (String[]) portalService.getAttribute(LABEL_ARRAY);
+        if (null == labels) {
+            labels = new String[2];
+            labels[0] = getRoot();
+            portalService.setAttribute(LABEL_ARRAY, labels);
         }
-        catch (ServiceException ce) {
-            throw new CascadingRuntimeException("Unable to lookup component.", ce);
-        }
-        finally {
-            this.manager.release(service);
-        }
+        return labels;
     }
 
     /**
@@ -302,28 +257,22 @@ public class PageLabelManager
      * @param service The portal service
      * @return The page label map.
      */
-    private Map initializeLabels(PortalService service) {
-        Map map = new HashMap();
+    private Map initializeLabels() {
+        final Map map = new HashMap();
 
-        Layout portalLayout = service.getEntryLayout(null);
-        if (portalLayout == null) {
-            portalLayout =
-                service.getComponentManager().getProfileManager().getPortalLayout(null, null);
-        }
+        final Layout portalLayout =
+            portalService.getComponentManager().getProfileManager().getPortalLayout(null, null);
 
         if (portalLayout instanceof CompositeLayout) {
-            populate((CompositeLayout) portalLayout, map, "", new ArrayList());
+            this.populate((CompositeLayout) portalLayout, map, "", new ArrayList());
         }
 
         return map;
     }
 
     private String getRoot() {
-        Layout portalLayout = service.getEntryLayout(null);
-        if (portalLayout == null) {
-            portalLayout =
-                service.getComponentManager().getProfileManager().getPortalLayout(null, null);
-        }
+        final Layout portalLayout =
+            portalService.getComponentManager().getProfileManager().getPortalLayout(null, null);
 
         if (portalLayout instanceof CompositeLayout) {
             return getRoot((CompositeLayout)portalLayout, new StringBuffer(""));
