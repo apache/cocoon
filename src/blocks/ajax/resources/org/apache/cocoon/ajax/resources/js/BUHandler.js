@@ -26,7 +26,6 @@
 
 dojo.provide("cocoon.ajax.BUHandler");
 dojo.require("dojo.dom");
-dojo.require("dojo.html");
 dojo.require("cocoon.ajax.common");
 dojo.require("cocoon.ajax.insertion");
 
@@ -36,10 +35,10 @@ cocoon.ajax.BUHandler = function() { };
 cocoon.ajax.BUHandler.highlight = null;
 
 dojo.lang.extend(cocoon.ajax.BUHandler, {
-    
+
     processResponse: function(doc) {
-		var base = doc.documentElement;		
-		
+		var base = doc.documentElement;
+
 		var nodes = [];
 		if (base.nodeName.toLowerCase() == "bu:document") {
 			nodes = base.childNodes;
@@ -67,7 +66,7 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 			}
 		}
 	},
-	
+
 	handleError: function(message, response) {
 		if (confirm(message + "\nShow server response?")) {
 			var w = window.open(undefined, "Cocoon Error", "location=no,resizable=yes,scrollbars=yes");
@@ -92,14 +91,14 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 			if (!id) {
 				alert("no id found on update element");
 				return;
-			}    
+			}
 			// Get the first child element (the first child may be some text!)
 			var firstChild = dojo.dom.getFirstChildElement(element);
-			if (!firstChild && element.nodeName.toLowerCase() == "textarea") 
+			if (!firstChild && element.nodeName.toLowerCase() == "textarea")
 				firstChild = dojo.dom.createDocumentFromText(element.value).documentElement;
 
 			var oldElement = document.getElementById(id);
-			
+
 			if (!oldElement) {
 				alert("no element '" + id + "' in source document");
 				return;
@@ -110,5 +109,5 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 				cocoon.ajax.BUHandler.highlight(newElement);
 			}
 		}
-	}	
+	}
 });
