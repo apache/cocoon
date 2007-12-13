@@ -25,7 +25,6 @@ import org.w3c.dom.Element;
  *
  * @version $Id$
  */
-
 public abstract class AbstractContainerDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     protected void setupContainer(Element element, String widgetsElementName, AbstractContainerDefinition definition)
@@ -40,33 +39,35 @@ public abstract class AbstractContainerDefinitionBuilder extends AbstractWidgetD
 
         // All child elements of the widgets element are widgets
         Element[] widgetElements = DomHelper.getChildElements(widgetsElement, FormsConstants.DEFINITION_NS);
+
         WidgetDefinitionBuilderContext oldContext = this.context;
+        try {
+            for (int i = 0; i < widgetElements.length; i++) {
+                Element widgetElement = widgetElements[i];
 
-        for (int i = 0; i < widgetElements.length; i++) {
-            Element widgetElement = widgetElements[i];
+                this.context = new WidgetDefinitionBuilderContext(oldContext);
+                this.context.setSuperDefinition(null);
 
-            this.context = new WidgetDefinitionBuilderContext(oldContext);
-            this.context.setSuperDefinition(null);
-
-            String newId = DomHelper.getAttribute(widgetElement, "extends", null);
-            WidgetDefinition def;
-            if (newId != null) {
-                if ((def = this.context.getLocalLibrary().getDefinition(newId)) != null) {
-                    this.context.setSuperDefinition(def);
-                } else if ((def = definition.getWidgetDefinition(newId)) != null) {
-                    this.context.setSuperDefinition(def);
+                String newId = DomHelper.getAttribute(widgetElement, "extends", null);
+                if (newId != null) {
+                    WidgetDefinition def;
+                    if ((def = this.context.getLocalLibrary().getDefinition(newId)) != null) {
+                        this.context.setSuperDefinition(def);
+                    } else if ((def = definition.getWidgetDefinition(newId)) != null) {
+                        this.context.setSuperDefinition(def);
+                    }
+                    // throw new FormsException("Widget to inherit from ("+newId+") not
+                    // found!", DomHelper.getLocationObject(element));
                 }
-                // throw new FormsException("Widget to inherit from ("+newId+") not
-                // found!", DomHelper.getLocationObject(element));
-            }
 
-            WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElement);
-            if (widgetDefinition != null) {
-                definition.addWidgetDefinition(widgetDefinition);
-            }
+                WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElement);
+                if (widgetDefinition != null) {
+                    definition.addWidgetDefinition(widgetDefinition);
+                }
 
+            }
+        } finally {
+            this.context = oldContext;
         }
-
-        this.context = oldContext;
     }
 }

@@ -59,18 +59,18 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     throws Exception {
         // so changes don't pollute upper levels
         this.context = new WidgetDefinitionBuilderContext(context);
+        try {
+            WidgetDefinition def = buildWidgetDefinition(widgetElement);
 
-        WidgetDefinition def = buildWidgetDefinition(widgetElement);
+            // register this class with the local library, if any.
+            if (DomHelper.getAttributeAsBoolean(widgetElement, "register", false)) {
+                this.context.getLocalLibrary().addDefinition(def);
+            }
 
-        // register this class with the local library, if any.
-        if (DomHelper.getAttributeAsBoolean(widgetElement, "register", false) &&
-                this.context != null &&
-                this.context.getLocalLibrary() != null) {
-            this.context.getLocalLibrary().addDefinition(def);
+            return def;
+        } finally {
+            this.context = null;
         }
-
-        this.context = null;
-        return def;
     }
 
     protected void setupDefinition(Element widgetElement, AbstractWidgetDefinition definition)
@@ -139,7 +139,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     protected WidgetDefinition buildAnotherWidgetDefinition(Element widgetDefinition)
     throws Exception {
         String widgetName = widgetDefinition.getLocalName();
-        WidgetDefinitionBuilder builder = (WidgetDefinitionBuilder)widgetDefinitionBuilders.get(widgetName);
+        WidgetDefinitionBuilder builder = (WidgetDefinitionBuilder) widgetDefinitionBuilders.get(widgetName);
         if (builder == null) {
             throw new FormsException("Unknown kind of widget '" + widgetName + "'.",
                                      DomHelper.getLocationObject(widgetDefinition));

@@ -61,8 +61,7 @@ public class Library {
 
     public Library(LibraryManager lm, Map builderSelector) {
         manager = lm;
-        context = new WidgetDefinitionBuilderContext();
-        context.setLocalLibrary(this);
+        context = new WidgetDefinitionBuilderContext(this);
         widgetDefinitionBuilders = builderSelector;
     }
 
@@ -180,7 +179,7 @@ public class Library {
             context.setSuperDefinition(getDefinition(extend));
         }
 
-        return builder.buildWidgetDefinition(widgetDefinition,context);
+        return builder.buildWidgetDefinition(widgetDefinition, context);
     }
 
 
