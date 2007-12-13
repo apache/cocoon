@@ -305,7 +305,7 @@
   </bean>
 
   <bean name="org.apache.cocoon.forms.formmodel.AbstractWidgetDefinitionBuilder"
-        abstract="true">
+        abstract="true" scope="prototype">
     <property name="widgetDefinitionBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder" strip-prefix="true"/>
     </property>
