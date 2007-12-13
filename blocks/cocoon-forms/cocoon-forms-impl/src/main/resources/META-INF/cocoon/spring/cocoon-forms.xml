@@ -15,7 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- @version $Id$ -->
+
+<!--
+  - $Id$
+  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
@@ -24,28 +27,13 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
                            http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
 
-  <bean name="org.apache.cocoon.forms.CacheManager" class="org.apache.cocoon.forms.DefaultCacheManager"/>
+  <bean name="org.apache.cocoon.forms.CacheManager"
+        class="org.apache.cocoon.forms.DefaultCacheManager"/>
 
-  <bean name="org.apache.cocoon.forms.binding.BindingManager"
-        class="org.apache.cocoon.forms.binding.JXPathBindingManager">
-    <property name="cacheManager" ref="org.apache.cocoon.forms.CacheManager"/>
-    <property name="datatypeManager" ref="org.apache.cocoon.forms.datatype.DatatypeManager"/>
-    <property name="bindingBuilders">
-      <configurator:bean-map type="org.apache.cocoon.forms.binding.JXPathBindingBuilder" strip-prefix="true"/>
-    </property>
-    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
-    <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
-    <property name="libraryManager" ref="org.apache.cocoon.forms.binding.library.LibraryManager"/>
-  </bean>
-  
-  <bean name="org.apache.cocoon.forms.binding.library.LibraryManager"
-        class="org.apache.cocoon.forms.binding.library.LibraryManagerImpl">
-    <property name="cacheManager" ref="org.apache.cocoon.forms.CacheManager"/>
-    <property name="bindingManager" ref="org.apache.cocoon.forms.binding.BindingManager"/>
-    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
-    <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
-  </bean>
-  
+  <!--
+    - Forms Datatypes
+    -->
+
   <bean name="org.apache.cocoon.forms.datatype.DatatypeManager"
         class="org.apache.cocoon.forms.datatype.DefaultDatatypeManager">
     <property name="datatypeBuilders">
@@ -56,7 +44,8 @@
     </property>
   </bean>
   
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/string" class="org.apache.cocoon.forms.datatype.typeimpl.StringTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/string"
+        class="org.apache.cocoon.forms.datatype.typeimpl.StringTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.StringConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -73,12 +62,13 @@
     <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
   </bean>
         
-  <!-- FIXME: The class is missing, so let's uncomment it for now 
+  <!-- FIXME: The class is missing, so let's comment it out for now
   <bean name="org.apache.cocoon.forms.datatype.convertor.StringConvertorBuilder/html2xml" 
         class="org.apache.cocoon.forms.datatype.convertor.HTMLtoXMLStringConvertorBuilder"/>
   -->
   
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/integer" class="org.apache.cocoon.forms.datatype.typeimpl.IntegerTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/integer"
+        class="org.apache.cocoon.forms.datatype.typeimpl.IntegerTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.IntegerConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -92,7 +82,8 @@
   <bean name="org.apache.cocoon.forms.datatype.convertor.IntegerConvertorBuilder/formatting" 
         class="org.apache.cocoon.forms.datatype.convertor.FormattingIntegerConvertorBuilder"/>
   
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/long" class="org.apache.cocoon.forms.datatype.typeimpl.LongTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/long"
+        class="org.apache.cocoon.forms.datatype.typeimpl.LongTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.LongConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -106,7 +97,8 @@
   <bean name="org.apache.cocoon.forms.datatype.convertor.LongConvertorBuilder/formatting" 
         class="org.apache.cocoon.forms.datatype.convertor.FormattingLongConvertorBuilder"/>
 
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/decimal" class="org.apache.cocoon.forms.datatype.typeimpl.DecimalTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/decimal"
+        class="org.apache.cocoon.forms.datatype.typeimpl.DecimalTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.DecimalConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -120,7 +112,8 @@
   <bean name="org.apache.cocoon.forms.datatype.convertor.DecimalConvertorBuilder/formatting" 
         class="org.apache.cocoon.forms.datatype.convertor.FormattingDecimalConvertorBuilder"/>
 
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/float" class="org.apache.cocoon.forms.datatype.typeimpl.FloatTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/float"
+        class="org.apache.cocoon.forms.datatype.typeimpl.FloatTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.FloatConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -134,7 +127,8 @@
   <bean name="org.apache.cocoon.forms.datatype.convertor.FloatConvertorBuilder/formatting" 
         class="org.apache.cocoon.forms.datatype.convertor.FormattingFloatConvertorBuilder"/>
 
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/double" class="org.apache.cocoon.forms.datatype.typeimpl.DoubleTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/double"
+        class="org.apache.cocoon.forms.datatype.typeimpl.DoubleTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.DoubleConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -148,7 +142,8 @@
   <bean name="org.apache.cocoon.forms.datatype.convertor.DoubleConvertorBuilder/formatting" 
         class="org.apache.cocoon.forms.datatype.convertor.FormattingDoubleConvertorBuilder"/>
 
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/date" class="org.apache.cocoon.forms.datatype.typeimpl.DateTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/date"
+        class="org.apache.cocoon.forms.datatype.typeimpl.DateTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.DateConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -165,7 +160,8 @@
   <bean name="org.apache.cocoon.forms.datatype.convertor.DateConvertorBuilder/icu4j" 
         class="org.apache.cocoon.forms.datatype.convertor.Icu4jDateConvertorBuilder"/>
 
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/boolean" class="org.apache.cocoon.forms.datatype.typeimpl.BooleanTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/boolean"
+        class="org.apache.cocoon.forms.datatype.typeimpl.BooleanTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.BooleanConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -176,7 +172,8 @@
   <bean name="org.apache.cocoon.forms.datatype.convertor.BooleanConvertorBuilder/plain" 
         class="org.apache.cocoon.forms.datatype.convertor.PlainBooleanConvertorBuilder"/>
 
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/enum" class="org.apache.cocoon.forms.datatype.typeimpl.EnumTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/enum"
+        class="org.apache.cocoon.forms.datatype.typeimpl.EnumTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.EnumConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -187,7 +184,8 @@
   <bean name="org.apache.cocoon.forms.datatype.convertor.EnumConvertorBuilder/enum" 
         class="org.apache.cocoon.forms.datatype.convertor.PlainEnumConvertorBuilder"/>
 
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/bean" class="org.apache.cocoon.forms.datatype.typeimpl.BeanTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/bean"
+        class="org.apache.cocoon.forms.datatype.typeimpl.BeanTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.BeanConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -198,7 +196,8 @@
   <bean name="org.apache.cocoon.forms.datatype.convertor.BeanConvertorBuilder/bean" 
         class="org.apache.cocoon.forms.datatype.convertor.PlainBeanConvertorBuilder"/>
 
-  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/char" class="org.apache.cocoon.forms.datatype.typeimpl.CharTypeBuilder">
+  <bean name="org.apache.cocoon.forms.datatype.DatatypeBuilder/char"
+        class="org.apache.cocoon.forms.datatype.typeimpl.CharTypeBuilder">
     <property name="convertorBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.datatype.convertor.CharConvertorBuilder" strip-prefix="true"/>
     </property>
@@ -210,41 +209,70 @@
         class="org.apache.cocoon.forms.datatype.convertor.PlainCharConvertorBuilder"/>
 
 
+  <!--
+    - Forms Validation Rules
+    -->
+
   <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/length"
         class="org.apache.cocoon.forms.datatype.validationruleimpl.LengthValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"></property>
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
   </bean>
 
   <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/email"
         class="org.apache.cocoon.forms.datatype.validationruleimpl.EmailValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"></property>
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
   </bean>
         
   <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/value-count"
         class="org.apache.cocoon.forms.datatype.validationruleimpl.ValueCountValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"></property>
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
   </bean>
         
   <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/range"
         class="org.apache.cocoon.forms.datatype.validationruleimpl.RangeValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"></property>
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
   </bean>
         
   <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/assert"
         class="org.apache.cocoon.forms.datatype.validationruleimpl.AssertValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"></property>
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
   </bean>
         
   <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/mod10"
         class="org.apache.cocoon.forms.datatype.validationruleimpl.Mod10ValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"></property>
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
   </bean>
         
   <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/regexp"
         class="org.apache.cocoon.forms.datatype.validationruleimpl.RegExpValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"></property>
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
   </bean>
-        
+
+
+  <!--
+    - Forms Binding
+    -->
+
+  <bean name="org.apache.cocoon.forms.binding.BindingManager"
+        class="org.apache.cocoon.forms.binding.JXPathBindingManager">
+    <property name="cacheManager" ref="org.apache.cocoon.forms.CacheManager"/>
+    <property name="datatypeManager" ref="org.apache.cocoon.forms.datatype.DatatypeManager"/>
+    <property name="bindingBuilders">
+      <configurator:bean-map type="org.apache.cocoon.forms.binding.JXPathBindingBuilder" strip-prefix="true"/>
+    </property>
+    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
+    <property name="libraryManager" ref="org.apache.cocoon.forms.binding.library.LibraryManager"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.forms.binding.library.LibraryManager"
+        class="org.apache.cocoon.forms.binding.library.LibraryManagerImpl">
+    <property name="cacheManager" ref="org.apache.cocoon.forms.CacheManager"/>
+    <property name="bindingManager" ref="org.apache.cocoon.forms.binding.BindingManager"/>
+    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
+  </bean>
+
   <bean name="org.apache.cocoon.forms.binding.JXPathBindingBuilder/group" class="org.apache.cocoon.forms.binding.GroupJXPathBindingBuilder"/>
   <bean name="org.apache.cocoon.forms.binding.JXPathBindingBuilder/value" class="org.apache.cocoon.forms.binding.ValueJXPathBindingBuilder"/>
   <bean name="org.apache.cocoon.forms.binding.JXPathBindingBuilder/multi-value" class="org.apache.cocoon.forms.binding.MultiValueJXPathBindingBuilder"/>
@@ -290,6 +318,11 @@
   <bean name="org.outerj.expression.Expression/Sum"
         class="org.apache.cocoon.forms.expression.SumFunction"/>
 
+
+  <!--
+    - Forms Widgets
+    -->
+
   <bean name="org.apache.cocoon.forms.FormManager"
         class="org.apache.cocoon.forms.DefaultFormManager">
     <property name="widgetDefinitionBuilders">
@@ -301,7 +334,18 @@
     <property name="avalonContext" ref="org.apache.avalon.framework.context.Context"/>
   </bean>
   
-  <bean name="org.apache.cocoon.forms.formmodel.AbstractWidgetDefinitionBuilder" abstract="true">
+  <bean name="org.apache.cocoon.forms.formmodel.library.LibraryManager"
+        class="org.apache.cocoon.forms.formmodel.library.LibraryManagerImpl">
+    <property name="widgetDefinitionBuilders">
+      <configurator:bean-map type="org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder" strip-prefix="true"/>
+    </property>
+    <property name="cacheManager" ref="org.apache.cocoon.forms.CacheManager"/>
+    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.forms.formmodel.AbstractWidgetDefinitionBuilder"
+        abstract="true">
     <property name="widgetDefinitionBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder" strip-prefix="true"/>
     </property>
@@ -312,7 +356,7 @@
       <configurator:bean-map type="org.apache.cocoon.forms.event.WidgetListenerBuilder" strip-prefix="true"/>
     </property>
     <property name="datatypeManager" ref="org.apache.cocoon.forms.datatype.DatatypeManager"/>
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"></property>
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
   </bean>  
   
   <bean name="org.apache.cocoon.forms.formmodel.AbstractDatatypeWidgetDefinitionBuilder" abstract="true"
@@ -468,17 +512,12 @@
         class="org.apache.cocoon.forms.formmodel.RepeaterFilterFieldDefinitionBuilder"
         parent="org.apache.cocoon.forms.formmodel.AbstractDatatypeWidgetDefinitionBuilder">
   </bean>
-  
-  <bean name="org.apache.cocoon.forms.formmodel.library.LibraryManager"
-        class="org.apache.cocoon.forms.formmodel.library.LibraryManagerImpl">
-    <property name="widgetDefinitionBuilders">
-      <configurator:bean-map type="org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder" strip-prefix="true"/>
-    </property>
-    <property name="cacheManager" ref="org.apache.cocoon.forms.CacheManager"/>
-    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
-    <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
-  </bean>
-  
+
+
+  <!--
+    - Forms Selection Lists
+    -->
+
   <bean name="org.apache.cocoon.forms.datatype.SelectionListBuilder/default"
         class="org.apache.cocoon.forms.datatype.DefaultSelectionListBuilder">
     <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
@@ -502,6 +541,7 @@
         class="org.apache.cocoon.forms.datatype.JavaScriptSelectionListBuilder">
     <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>
   </bean>
+
 
   <!-- new-style validators -->
   <bean name="org.apache.cocoon.forms.validation.WidgetValidatorBuilder/javascript" class="org.apache.cocoon.forms.validation.impl.JavaScriptValidatorBuilder">
