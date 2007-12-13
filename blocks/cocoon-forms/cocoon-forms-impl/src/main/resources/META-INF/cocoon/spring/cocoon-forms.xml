@@ -210,46 +210,6 @@
 
 
   <!--
-    - Forms Validation Rules
-    -->
-
-  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/length"
-        class="org.apache.cocoon.forms.datatype.validationruleimpl.LengthValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
-  </bean>
-
-  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/email"
-        class="org.apache.cocoon.forms.datatype.validationruleimpl.EmailValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
-  </bean>
-        
-  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/value-count"
-        class="org.apache.cocoon.forms.datatype.validationruleimpl.ValueCountValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
-  </bean>
-        
-  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/range"
-        class="org.apache.cocoon.forms.datatype.validationruleimpl.RangeValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
-  </bean>
-        
-  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/assert"
-        class="org.apache.cocoon.forms.datatype.validationruleimpl.AssertValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
-  </bean>
-        
-  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/mod10"
-        class="org.apache.cocoon.forms.datatype.validationruleimpl.Mod10ValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
-  </bean>
-        
-  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/regexp"
-        class="org.apache.cocoon.forms.datatype.validationruleimpl.RegExpValidationRuleBuilder">
-    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
-  </bean>
-
-
-  <!--
     - Forms Binding
     -->
 
@@ -543,7 +503,50 @@
   </bean>
 
 
-  <!-- new-style validators -->
+  <!--
+    - Forms Validations (Deprecated)
+    -->
+
+  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/length"
+        class="org.apache.cocoon.forms.datatype.validationruleimpl.LengthValidationRuleBuilder">
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/email"
+        class="org.apache.cocoon.forms.datatype.validationruleimpl.EmailValidationRuleBuilder">
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/value-count"
+        class="org.apache.cocoon.forms.datatype.validationruleimpl.ValueCountValidationRuleBuilder">
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/range"
+        class="org.apache.cocoon.forms.datatype.validationruleimpl.RangeValidationRuleBuilder">
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/assert"
+        class="org.apache.cocoon.forms.datatype.validationruleimpl.AssertValidationRuleBuilder">
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/mod10"
+        class="org.apache.cocoon.forms.datatype.validationruleimpl.Mod10ValidationRuleBuilder">
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.forms.datatype.ValidationRuleBuilder/regexp"
+        class="org.apache.cocoon.forms.datatype.validationruleimpl.RegExpValidationRuleBuilder">
+    <property name="expressionManager" ref="org.apache.cocoon.forms.expression.ExpressionManager"/>
+  </bean>
+
+
+  <!--
+    - Forms Validations (New Style)
+    -->
+
   <bean name="org.apache.cocoon.forms.validation.WidgetValidatorBuilder/javascript" class="org.apache.cocoon.forms.validation.impl.JavaScriptValidatorBuilder">
     <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>
   </bean>
@@ -579,11 +582,21 @@
   <bean name="org.apache.cocoon.forms.validation.WidgetValidatorBuilder/captcha" class="org.apache.cocoon.forms.validation.impl.CaptchaValidatorBuilder"/>
   <bean name="org.apache.cocoon.forms.validation.WidgetValidatorBuilder/java" class="org.apache.cocoon.forms.validation.impl.JavaClassValidatorBuilder"/>
 
+
+  <!--
+    - Listeners
+    -->
+
   <bean name="org.apache.cocoon.forms.event.WidgetListenerBuilder/java" class="org.apache.cocoon.forms.event.impl.JavaClassWidgetListenerBuilder"/>
 
   <bean name="org.apache.cocoon.forms.event.WidgetListenerBuilder/javascript" class="org.apache.cocoon.forms.event.impl.JavaScriptWidgetListenerBuilder">
     <property name="processInfoProvider" ref="org.apache.cocoon.processing.ProcessInfoProvider"/>
   </bean>
+
+
+  <!--
+    - Other
+    -->
 
   <bean name="org.apache.cocoon.forms.formmodel.tree.builder.TreeModelDefinitionBuilder/java" class="org.apache.cocoon.forms.formmodel.tree.builder.JavaTreeModelDefinitionBuilder"/>
 
@@ -598,7 +611,12 @@
   <bean name="org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithmBuilder/java" class="org.apache.cocoon.forms.formmodel.algorithms.JavaAlgorithmBuilder"/>
   <bean name="org.apache.cocoon.forms.formmodel.CalculatedFieldAlgorithmBuilder/repeatedformula" class="org.apache.cocoon.forms.formmodel.algorithms.RepeatedFormulaBuilder"/>
 
-  <bean name="org.apache.cocoon.generation.Generator/forms" 
+
+  <!--
+    - Sitemap Components
+    -->
+
+  <bean name="org.apache.cocoon.generation.Generator/forms"
         class="org.apache.cocoon.forms.generation.FormsGenerator"
         scope="prototype"/>
         
