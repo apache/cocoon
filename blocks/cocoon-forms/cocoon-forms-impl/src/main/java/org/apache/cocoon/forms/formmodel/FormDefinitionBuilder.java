@@ -32,6 +32,10 @@ public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuil
 
     protected LibraryManager libraryManager;
 
+    public void setLibraryManager(LibraryManager libraryManager) {
+        this.libraryManager = libraryManager;
+    }
+
     public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
     throws Exception {
         throw new UnsupportedOperationException("Please use the other signature without WidgetDefinitionBuilderContext!");
@@ -39,32 +43,29 @@ public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuil
 
     public WidgetDefinition buildWidgetDefinition(Element formElement) throws Exception {
         FormDefinition formDefinition = new FormDefinition(libraryManager);
-        this.context = new WidgetDefinitionBuilderContext();
-        this.context.setLocalLibrary(formDefinition.getLocalLibrary());
+        this.context = new WidgetDefinitionBuilderContext(formDefinition.getLocalLibrary());
 
-        // set local URI
-        formDefinition.getLocalLibrary().setSourceURI(LocationAttributes.getURI(formElement));
+        try {
+            // set local URI
+            formDefinition.getLocalLibrary().setSourceURI(LocationAttributes.getURI(formElement));
 
-        Iterator i = buildEventListeners(formElement, "on-processing-phase", ProcessingPhaseListener.class).iterator();
-        while (i.hasNext()) {
-            formDefinition.addProcessingPhaseListener((ProcessingPhaseListener) i.next());
+            Iterator i = buildEventListeners(formElement, "on-processing-phase", ProcessingPhaseListener.class).iterator();
+            while (i.hasNext()) {
+                formDefinition.addProcessingPhaseListener((ProcessingPhaseListener) i.next());
+            }
+
+            super.setupDefinition(formElement, formDefinition);
+            setDisplayData(formElement, formDefinition);
+
+            setupContainer(formElement,"widgets",formDefinition);
+
+            formDefinition.resolve();
+
+            formDefinition.makeImmutable();
+        } finally {
+            this.context = null;
         }
 
-        super.setupDefinition(formElement, formDefinition);
-        setDisplayData(formElement, formDefinition);
-
-        setupContainer(formElement,"widgets",formDefinition);
-
-        formDefinition.resolve();
-
-        formDefinition.makeImmutable();
-
-        this.context = null;
         return formDefinition;
-    }
-
-    public void setLibraryManager( LibraryManager libraryManager )
-    {
-        this.libraryManager = libraryManager;
     }
 }
