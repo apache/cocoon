@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.11" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
+      Forms: Allow Ajax submission of forms with empty upload field.
+    </action>
     <action dev="CZ" type="add">
       Portal: New SiteProfileManager providing the same profile to several users based on a configured key.
     </action>
