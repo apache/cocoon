@@ -48,13 +48,13 @@ dojo.widget.defineWidget(
         var form = this.domNode;                                /* the form node */
         var mimetype = "text/xml";                              /* the default mime-type */
         if (!params) params = {};                               /* create if not passed */
-        
+
         // TODO: should CForm's onSubmit handlers be called for Ajax events ?
         //if (cocoon.forms.callOnSubmitHandlers(form)) == false) return; /* call CForm's onSubmit handlers */
-        
+
         // Provide feedback that something is happening.
         document.body.style.cursor = "wait";
-        
+
         // The "ajax-action" attribute specifies an alternate submit location used in Ajax mode.
         // This allows to use Ajax in the portal where forms are normally posted to the portal URL.
         var uri = form.getAttribute("ajax-action");
@@ -82,7 +82,7 @@ dojo.widget.defineWidget(
         // Avoid the use of widget.lastClickTarget as it may already be out of date
         if (form[name]) form[name].disabled = true;
     },
-        
+
     /**
      * Handle the server's BrowserUpdate response.
      * Update the part of the form referenced by ids in the reponse.
@@ -100,7 +100,7 @@ dojo.widget.defineWidget(
                 return;
             }
             // add the continue handler for CForms
-            updater.handlers['continue'] = function() { widget._continue(); } 
+            updater.handlers['continue'] = function() { widget._continue(); }
             // Handle browser update directives
             updater.processResponse(data);
         } else if (type == "error") {
@@ -109,7 +109,7 @@ dojo.widget.defineWidget(
             dojo.debug("WARNING: dojo.io.bind returned an unhandled state : " + type);
         }
     },
-    
+
     /**
      * Handle the server continue message.
      * The server is signalling in a BrowserUpdate response that the CForm is finished.
@@ -130,7 +130,7 @@ dojo.widget.defineWidget(
             div.innerHTML = content;
             document.body.appendChild(div);
             div.firstChild.submit();
-        } else {            
+        } else {
             // Redirect to the form's action URL
             var contParam = '?cocoon-ajax-continue=true';
             if (form.elements["continuation-id"]) {
@@ -151,7 +151,7 @@ dojo.io.checkChildrenForFile = function(node) {
     var inputs = node.getElementsByTagName("input");
     dojo.lang.forEach(inputs, function(input){
         if(hasFile){ return; }
-        if(input.getAttribute("type")=="file" && !input.disabled){
+        if(input.getAttribute("type")=="file" && !input.disabled && input.value){
             hasFile = true;
         }
     });
