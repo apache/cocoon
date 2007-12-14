@@ -77,7 +77,7 @@ public class PortletPreferencesProviderImpl
      */
     public void service(ServiceManager serviceManager) throws ServiceException {
         super.service(serviceManager);
-        this.loader = (ProfileStore)this.manager.lookup(ProfileStore.ROLE);
+        this.loader = (ProfileStore)this.manager.lookup(ProfileStore.class.getName());
     }
 
     protected Map buildKey(boolean load, String copletId)
