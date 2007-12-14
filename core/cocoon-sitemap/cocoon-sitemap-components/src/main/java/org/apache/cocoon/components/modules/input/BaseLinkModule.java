@@ -16,13 +16,15 @@
  */
 package org.apache.cocoon.components.modules.input;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
@@ -31,23 +33,24 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * instance, if called within a &lt;map:match pattern="a/b/c.xsp"> pipeline,
  * <code>{baselink:SitemapBaseLink}</code> would evaluate to <code>../../</code>.
  *
- * based on {@link RequestURIModule}
+ * <p>Based on {@link RequestURIModule}
  *
+ * @version $Id$
  */
-public class BaseLinkModule extends AbstractInputModule implements ThreadSafe {
+public class BaseLinkModule extends AbstractInputModule
+                            implements ThreadSafe {
 
-    final static Vector returnNames = new Vector() {
-        {
-            add("RequestBaseLink");
-            add("SitemapBaseLink");
-        }
-    };
+    private static final List NAMES = new ArrayList(2);
+    static {
+        NAMES.add("RequestBaseLink");
+        NAMES.add("SitemapBaseLink");
+    }
 
-    public Object getAttribute(
-        final String name,
-        final Configuration modeConf,
-        final Map objectModel)
-        throws ConfigurationException {
+    
+    public Object getAttribute(final String name,
+                               final Configuration modeConf,
+                               final Map objectModel)
+    throws ConfigurationException {
 
         String uri;
         if (name.equals("SitemapBaseLink"))
@@ -68,27 +71,25 @@ public class BaseLinkModule extends AbstractInputModule implements ThreadSafe {
             result.append("../");
         }
 
-        if (getLogger().isDebugEnabled())
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("Returns " + result + " for uri " + uri + " and attribute " + name);
+        }
 
         return result.toString();
     }
 
     public Iterator getAttributeNames(final Configuration modeConf, final Map objectModel)
-        throws ConfigurationException {
+    throws ConfigurationException {
 
-        return RequestURIModule.returnNames.iterator();
+        return NAMES.iterator();
     }
 
-    public Object[] getAttributeValues(
-        final String name,
-        final Configuration modeConf,
-        final Map objectModel)
-        throws ConfigurationException {
+    public Object[] getAttributeValues(final String name,
+                                       final Configuration modeConf,
+                                       final Map objectModel)
+    throws ConfigurationException {
 
-        Object result = new Object[1];
-        result = getAttribute(name, modeConf, objectModel);
-        return (result == null? null : new Object[]{result});        
+        Object result = getAttribute(name, modeConf, objectModel);
+        return result == null ? null : new Object[]{result};
     }
-
 }
