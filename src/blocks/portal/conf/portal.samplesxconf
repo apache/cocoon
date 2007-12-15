@@ -338,8 +338,8 @@
             </renderers>
             <aspects>
                 <!-- This aspect stores the page label information - you can remove it, if you don't use page labels. -->
-                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory">
-            <aspects>
+                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory"/>
+            </aspects>
         </layout>
         <layout name="row" 
                 class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl">
@@ -348,8 +348,8 @@
             </renderers>
             <aspects>
                 <!-- This aspect stores the page label information - you can remove it, if you don't use page labels. -->
-                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory">
-            <aspects>
+                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory"/>
+            </aspects>
         </layout>
         <layout name="tab" 
                 class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
@@ -359,8 +359,8 @@
             </renderers>
             <aspects>
                 <!-- This aspect stores the page label information - you can remove it, if you don't use page labels. -->
-                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory">
-            <aspects>
+                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory"/>
+            </aspects>
         </layout>
         <layout name="rawtab" 
                 class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
@@ -370,8 +370,8 @@
             </renderers>
             <aspects>
                 <!-- This aspect stores the page label information - you can remove it, if you don't use page labels. -->
-                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory">
-            <aspects>
+                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory"/>
+            </aspects>
         </layout>
         <layout name="linktab"
                 class="org.apache.cocoon.portal.layout.impl.CompositeLayoutImpl"
@@ -381,8 +381,8 @@
             </renderers>
             <aspects>
                 <!-- This aspect stores the page label information - you can remove it, if you don't use page labels. -->
-                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory">
-            <aspects>
+                <aspect auto-create="false" class="java.util.HashMap" name="page-labels" store="memory"/>
+            </aspects>
         </layout>
         <layout name="frame" 
                 class="org.apache.cocoon.portal.layout.impl.FrameLayout"
