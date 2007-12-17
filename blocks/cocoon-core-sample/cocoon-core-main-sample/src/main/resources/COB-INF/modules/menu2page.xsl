@@ -42,7 +42,7 @@
   <xsl:template match="menu-item[@desc]">
     <tr>
       <td><a href="{@href}"><xsl:value-of select="@label"/></a></td>
-      <td><xsl:value-of select="@desc" /></td>
+      <td><xsl:value-of select="@desc"/></td>
     </tr>
   </xsl:template>
 </xsl:stylesheet>

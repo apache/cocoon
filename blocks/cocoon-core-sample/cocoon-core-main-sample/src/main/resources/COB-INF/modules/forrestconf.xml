@@ -15,11 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--+
-    | Demo file for XMLFileModule
-    |
-    | @version $Id$
-    +-->
+
+<!--
+  - Demo file for XMLFileModule
+  -
+  - $Id$
+  -->
 <forrestconf version="1.0">
   <skin>forrest-site</skin>
   <base-url>http://localhost:8787/cocoon</base-url>
