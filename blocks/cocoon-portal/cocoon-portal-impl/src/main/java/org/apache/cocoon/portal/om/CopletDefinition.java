@@ -16,8 +16,8 @@
  */
 package org.apache.cocoon.portal.om;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @version $Id$
  */
-public final class CopletDefinition implements Serializable, Cloneable {
+public final class CopletDefinition {
 
     /** The unique identifier. */
     protected final String id;
@@ -46,7 +46,7 @@ public final class CopletDefinition implements Serializable, Cloneable {
     protected CopletType copletType;
 
     /** Attributes (configuration) of this coplet. */
-    protected final Map attributes = new HashMap();
+    protected Map attributes = Collections.EMPTY_MAP;
 
     protected String allowedRoles;
 
@@ -57,12 +57,22 @@ public final class CopletDefinition implements Serializable, Cloneable {
      * @param id The unique id of the object.
      * @see PortalUtils#testId(String)
      */
-    public CopletDefinition(String id) {
+    public CopletDefinition(String id, CopletType type) {
         final String idErrorMsg = PortalUtils.testId(id);
         if ( idErrorMsg != null ) {
             throw new IllegalArgumentException(idErrorMsg);
         }
         this.id = id;
+        this.copletType = type;
+    }
+
+    /**
+     * Constructor to instantiate a new coplet data object.
+     * @param id The unique id of the object.
+     * @see PortalUtils#testId(String)
+     */
+    public CopletDefinition(String id) {
+        this(id, null);
     }
 
     /**
@@ -97,16 +107,16 @@ public final class CopletDefinition implements Serializable, Cloneable {
         return this.copletType;
     }
 
-    /**
-     * Sets the type of the coplet.
-     * @param copletType The coplet type to set
-     */
-    public void setCopletType(CopletType copletType) {
-        this.copletType = copletType;
+    public void setCopletType(final CopletType ct) {
+        this.copletType = ct;
     }
 
     public Object removeAttribute(String key) {
-        return this.attributes.remove(key);
+        final Object result = this.attributes.remove(key);
+        if ( this.attributes.size() == 0 ) {
+            this.attributes = Collections.EMPTY_MAP;
+        }
+        return result;
     }
 
     public Object getAttribute(String key) {
@@ -114,6 +124,9 @@ public final class CopletDefinition implements Serializable, Cloneable {
     }
 
     public void setAttribute(String key, Object value) {
+        if ( this.attributes.size() == 0 ) {
+            this.attributes = new HashMap();
+        }
         this.attributes.put(key, value);
     }
 

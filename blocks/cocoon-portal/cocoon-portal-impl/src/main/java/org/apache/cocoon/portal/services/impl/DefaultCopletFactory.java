@@ -50,20 +50,19 @@ public class DefaultCopletFactory
     /**
      * @see org.apache.cocoon.portal.services.CopletFactory#newInstance(org.apache.cocoon.portal.om.CopletDefinition, String)
      */
-    public CopletInstance newInstance(CopletDefinition copletData, String key)
+    public CopletInstance newInstance(CopletDefinition copletDefinition, String key)
     throws PortalException {
         String id = key;
         if (id == null ) {
             synchronized (this) {
-                id = copletData.getId() + '-' + idCounter;
+                id = copletDefinition.getId() + '-' + idCounter;
                 idCounter += 1;
             }
         }
-        CopletInstance instance = new CopletInstance(id);
-        instance.setCopletDefinition(copletData);
+        CopletInstance instance = new CopletInstance(id, copletDefinition);
 
         // now lookup the adapter
-        final CopletAdapter adapter = instance.getCopletDefinition().getCopletType().getCopletAdapter();
+        final CopletAdapter adapter = copletDefinition.getCopletType().getCopletAdapter();
         adapter.login( instance );
 
         // send an event
@@ -96,8 +95,7 @@ public class DefaultCopletFactory
                 idCounter += 1;
             }
         }
-        final CopletDefinition definition = new CopletDefinition(id);
-        definition.setCopletType(copletType);
+        final CopletDefinition definition = new CopletDefinition(id, copletType);
 
         final CopletAdapter adapter = definition.getCopletType().getCopletAdapter();
         adapter.init( definition );

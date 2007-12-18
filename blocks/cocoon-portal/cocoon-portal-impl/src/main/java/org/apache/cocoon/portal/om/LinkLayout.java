@@ -55,16 +55,4 @@ public class LinkLayout extends Layout {
     public void setProfileName(String linkedProfileName) {
         this.linkedProfileName = linkedProfileName;
     }
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        LinkLayout clone = (LinkLayout)super.clone();
-
-        clone.linkedLayoutId = this.linkedLayoutId;
-        clone.linkedProfileName = this.linkedProfileName;
-
-        return clone;
-    }
 }

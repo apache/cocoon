@@ -91,8 +91,7 @@ public class TestProfileManager extends GroupBasedProfileManager {
                     // check for portlets
                     if ( "portlet".equals(cd.getCopletType().getId()) ) {
                         final String id = StringUtils.replaceChars(cd.getId() + "-1", '_', '-');
-                        final CopletInstance cid = new CopletInstance(id);
-                        cid.setCopletDefinition(cd);
+                        final CopletInstance cid = new CopletInstance(id, cd);
                         instances.add(cid);
                         if ( portletNames.size() == 0 || portletNames.contains(cd.getId())) {
                             final CopletLayout copletLayout = (CopletLayout) this.portalService.getLayoutFactory().newInstance("coplet");
