@@ -16,14 +16,9 @@
  */
 package org.apache.cocoon.portal.om;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.util.PortalUtils;
-import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * A layout describes a graphical element on the portal page. This can
@@ -130,61 +125,11 @@ public abstract class Layout extends AbstractParameters {
     }
 
     /**
-     * Make a copy of this layout object and of all it's children.
-     * This includes copies of items and coplet instances.
-     */
-    public Layout copy() {
-        try {
-            return (Layout)this.clone();
-        } catch (CloneNotSupportedException cnse) {
-            // ignore
-        }
-        return null;
-    }
-
-    /**
      * @see java.lang.Object#toString()
      */
     public String toString() {
         return "Layout (" + this.getClass() + '.' + this.hashCode() +
                "), type=" + this.layoutType + ", id=" + (this.getId() == null ? "" : this.getId());
-    }
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        Constructor c;
-        try {
-            c = this.getClass().getConstructor(new Class[] {String.class, String.class});
-            final Layout clone = (Layout)c.newInstance(new Object[] {this.id, this.layoutType});
-
-            // clone fields from AbstractParameters
-            if ( this.parameters.size() > 0 ) {
-                clone.parameters = new LinkedMap(this.parameters);
-            }
-
-            if ( this.temporaryAttributes.size() > 0 ) {
-                clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
-            }
-
-            // we don't clone the parent; we just set it to null
-            clone.parent = null;
-            clone.customRenderer = this.customRenderer;
-            clone.isStatic = this.isStatic;
-
-            return clone;
-        } catch (NoSuchMethodException e) {
-            throw new CloneNotSupportedException("Unable to find constructor for new layout object.");
-        } catch (InstantiationException e) {
-            throw new CloneNotSupportedException("Unable to create layout object.");
-        } catch (InvocationTargetException e) {
-            throw new CloneNotSupportedException("Unable to invoke constructor for new layout object.");
-        } catch (IllegalArgumentException e) {
-            throw new CloneNotSupportedException("Unable to invoke constructor for new layout object.");
-        } catch (IllegalAccessException e) {
-            throw new CloneNotSupportedException("Unable to invoke constructor for new layout object.");
-        }
     }
 
     /**

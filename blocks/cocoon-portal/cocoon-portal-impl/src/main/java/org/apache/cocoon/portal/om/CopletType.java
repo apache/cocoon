@@ -23,19 +23,24 @@ import java.util.Map;
 import org.apache.cocoon.portal.util.PortalUtils;
 
 /**
- * A coplet base data defines a coplet type, like a pipeline based coplet,
+ * A coplet type defines a way of adding content to the portal, like a
+ * Cocoon pipeline based coplet,
  * a JSR 168 portlet or a WSRP portlet. For each type exists a coplet type
- * with some configuration.
+ * with corresponding configuration.
+ *
  * Based on the coplet type, coplets are created ({@link CopletDefinition}.
  *
  * @version $Id$
  */
 public final class CopletType {
 
+    /** The configuration. */
 	protected Map copletConfig = Collections.EMPTY_MAP;
 
+	/** The unique identifier. */
     protected final String id;
 
+    /** The coplet adapter. */
     protected CopletAdapter copletAdapter;
 
     /**
@@ -43,12 +48,22 @@ public final class CopletType {
      * @param id The unique id of the object.
      * @see PortalUtils#testId(String)
      */
-    public CopletType(String id) {
+    public CopletType(String id, CopletAdapter adapter) {
         final String idErrorMsg = PortalUtils.testId(id);
         if ( idErrorMsg != null ) {
             throw new IllegalArgumentException(idErrorMsg);
         }
         this.id = id;
+        this.copletAdapter = adapter;
+    }
+
+    /**
+     * Create a new coplet base data object.
+     * @param id The unique id of the object.
+     * @see PortalUtils#testId(String)
+     */
+    public CopletType(String id) {
+        this(id, null);
     }
 
     /**
@@ -91,7 +106,7 @@ public final class CopletType {
 	}
 
 	public void setCopletConfig(final Map config) {
-	    if ( config.size() == 0 ) {
+	    if ( config == null || config.size() == 0 ) {
 	        this.copletConfig = Collections.EMPTY_MAP;
 	    } else {
 		    this.copletConfig = new HashMap(config);

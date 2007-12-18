@@ -39,15 +39,4 @@ public class NamedItem extends Item {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        NamedItem clone = (NamedItem)super.clone();
-
-        clone.name = this.name;
-
-        return clone;
-    }
 }

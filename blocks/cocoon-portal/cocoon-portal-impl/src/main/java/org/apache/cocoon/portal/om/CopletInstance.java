@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.portal.om;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +44,7 @@ import org.apache.cocoon.portal.util.PortalUtils;
  *
  * @version $Id$
  */
-public final class CopletInstance implements Cloneable, Serializable {
+public final class CopletInstance {
 
     public final static int SIZE_MINIMIZED  = 0;
     public final static int SIZE_NORMAL     = 1;
@@ -79,13 +78,18 @@ public final class CopletInstance implements Cloneable, Serializable {
      * @param id The unique id of the object.
      * @see PortalUtils#testId(String)
 	 */
-	public CopletInstance(String id) {
+	public CopletInstance(String id, CopletDefinition def) {
         final String idErrorMsg = PortalUtils.testId(id);
         if ( idErrorMsg != null ) {
             throw new IllegalArgumentException(idErrorMsg);
         }
+        this.copletDefinition = def;
         this.id = id;
 	}
+
+    public CopletInstance(String id) {
+        this(id, null);
+    }
 
 	/**
 	 * @return CopletDefinition
@@ -94,12 +98,8 @@ public final class CopletInstance implements Cloneable, Serializable {
 		return this.copletDefinition;
 	}
 
-	/**
-	 * Sets the coplet definition..
-	 * @param copletDef The copletDef to set
-	 */
-	public void setCopletDefinition(CopletDefinition copletDef) {
-		this.copletDefinition = copletDef;
+	public void setCopletDefinition(final CopletDefinition cd) {
+	    this.copletDefinition = cd;
 	}
 
     public String getTitle() {
@@ -115,35 +115,6 @@ public final class CopletInstance implements Cloneable, Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        final CopletInstance clone = new CopletInstance(this.id);
-
-        if ( this.attributes.size() > 0 ) {
-            clone.attributes = new HashMap(this.attributes);
-        }
-        if ( this.temporaryAttributes.size() > 0 ) {
-            clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
-        }
-
-        clone.size = this.size;
-        clone.copletDefinition = this.copletDefinition;
-        clone.title = this.title;
-
-        return clone;
-    }
-
-    public CopletInstance copy() {
-        try {
-            return (CopletInstance)this.clone();
-        } catch (CloneNotSupportedException cnse) {
-            // ignore
-            return null;
-        }
     }
 
     /**

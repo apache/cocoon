@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.portal.om;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +26,7 @@ import org.apache.commons.collections.map.LinkedMap;
  *
  * @version $Id$
  */
-public abstract class AbstractParameters
-    implements Cloneable, Serializable {
+public abstract class AbstractParameters {
 
     protected Map parameters = Collections.EMPTY_MAP;
 
@@ -105,21 +103,5 @@ public abstract class AbstractParameters
      */
     public Map getTemporaryAttributes() {
         return this.temporaryAttributes;
-    }
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        final AbstractParameters clone = (AbstractParameters)super.clone();
-
-        if ( this.parameters.size() > 0 ) {
-            clone.parameters = new LinkedMap(this.parameters);
-        }
-        if ( this.temporaryAttributes.size() > 0 ) {
-            clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
-        }
-
-        return clone;
     }
 }

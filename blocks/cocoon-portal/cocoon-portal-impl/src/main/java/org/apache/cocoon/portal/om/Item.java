@@ -53,31 +53,4 @@ public class Item extends AbstractParameters {
     public final void setParent(CompositeLayout layout) {
         this.parentLayout = layout;
     }
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        Item clone = (Item)super.clone();
-
-        clone.layout = null;
-        clone.parentLayout = null;
-
-        return clone;
-    }
-
-    public Item copy(CompositeLayout parent) {
-        try {
-            Item clone = (Item)this.clone();
-            if ( this.layout != null ) {
-                clone.layout = this.layout.copy();
-                clone.layout.setParent(clone);
-            }
-            clone.parentLayout = parent;
-            return clone;
-        } catch (CloneNotSupportedException cnse) {
-            // ignore
-        }
-        return null;
-    }
 }

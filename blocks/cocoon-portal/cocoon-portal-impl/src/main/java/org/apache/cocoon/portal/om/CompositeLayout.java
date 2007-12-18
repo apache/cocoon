@@ -17,7 +17,6 @@
 package org.apache.cocoon.portal.om;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -90,31 +89,5 @@ public class CompositeLayout
     public final void removeItem(Item item) {
         this.items.remove(item);
         item.setParent(null);
-    }
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        CompositeLayout clone = (CompositeLayout)super.clone();
-
-        // we are not cloning the items
-        clone.items.clear();
-
-        return clone;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.om.Layout#copy()
-     */
-    public Layout copy() {
-        CompositeLayout clone = (CompositeLayout)super.copy();
-        final Iterator i = this.items.iterator();
-        while ( i.hasNext() ) {
-            final Item current = (Item)i.next();
-            final Item clonedItem = current.copy(clone);
-            clone.addItem(clonedItem);
-        }
-        return clone;
     }
 }

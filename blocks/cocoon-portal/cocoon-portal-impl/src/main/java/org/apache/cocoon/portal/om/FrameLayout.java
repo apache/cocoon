@@ -50,15 +50,4 @@ public class FrameLayout extends Layout {
     public void setSource(String source) {
         this.source = source;
     }
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        FrameLayout clone = (FrameLayout)super.clone();
-
-        clone.source = this.source;
-
-        return clone;
-    }
 }

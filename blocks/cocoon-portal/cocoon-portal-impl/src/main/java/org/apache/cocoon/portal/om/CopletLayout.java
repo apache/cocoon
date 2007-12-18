@@ -43,26 +43,4 @@ public final class CopletLayout extends Layout {
     public String getCopletInstanceId() {
         return this.copletInstanceId;
     }
-
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone() throws CloneNotSupportedException {
-        CopletLayout clone = (CopletLayout)super.clone();
-
-        clone.copletInstanceId = null;
-
-        return clone;
-    }
-
-    /**
-     * @see org.apache.cocoon.portal.om.Layout#copy()
-     */
-    public Layout copy() {
-        CopletLayout clone = (CopletLayout)super.copy();
-
-        clone.copletInstanceId = this.copletInstanceId;
-
-        return clone;
-    }
 }
