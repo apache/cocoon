@@ -15,15 +15,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
+<!--
+  - $Id$
+  -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://cocoon.apache.org/schema/pipeline"
-        xmlns:tns="http://cocoon.apache.org/schema/pipeline">
+            targetNamespace="http://cocoon.apache.org/schema/pipeline"
+            xmlns:tns="http://cocoon.apache.org/schema/pipeline">
 
-    <xsd:element name="component" type="tns:componentType"/>
+  <xsd:element name="component" type="tns:componentType"/>
 
-    <xsd:complexType name="componentType">
-    	<xsd:attribute name="mime-type" type="xsd:string" use="optional"/>
-    	<xsd:attribute name="label" type="xsd:string" use="optional"/>
-        <xsd:attribute name="hint" type="xsd:string" use="optional"/>
-    </xsd:complexType>
+  <xsd:complexType name="componentType">
+    <xsd:attribute name="mime-type" type="xsd:string" use="optional"/>
+    <xsd:attribute name="label" type="xsd:string" use="optional"/>
+    <xsd:attribute name="hint" type="xsd:string" use="optional"/>
+  </xsd:complexType>
 </xsd:schema>
+        
