@@ -37,7 +37,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A simple parser converting a Comma Separated Values (CSV) file into XML.
  * 
  * <p>This parser is controlled by the following sitemap parameters:</p>
@@ -98,6 +97,14 @@ import org.xml.sax.SAXException;
  * Unfortunately no official CSV specification has ever been published by
  * any standard body, so the interpretation of the format might be slightly
  * different in cases.</p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * A simple parser converting a Comma Separated Values (CSV) file into XML.
+ * @cocoon.sitemap.component.name   csv
+ * @cocoon.sitemap.component.documentation.caching
+ *     Uses the last modification date of the xml document for validation
+ *
+ * @version $Id$
  */
 public class CSVGenerator extends FileGenerator {
 
