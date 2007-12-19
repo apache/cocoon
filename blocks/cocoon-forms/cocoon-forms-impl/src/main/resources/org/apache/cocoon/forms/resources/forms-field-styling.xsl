@@ -612,47 +612,54 @@
     </div>
   </xsl:template>
 
+  <!--+
+      | fi:validation-errors : collect all fi:validation-message elements
+      | present on the form and render as a list, with customizable header
+      | and footer.
+      +-->
   <xsl:template match="fi:validation-errors">
-    <xsl:variable name="header">
-      <xsl:choose>
-        <xsl:when test="header">
-          <xsl:copy-of select="header"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <p class="forms-validation-errors forms validation-errors-header">The following errors have been detected (marked with !):</p>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="footer">
-      <xsl:choose>
-        <xsl:when test="footer">
-          <xsl:copy-of select="footer"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <p class="forms-validation-errors forms validation-errors-footer">Please, correct them and re-submit the form.</p>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
     <xsl:variable name="messages" select="ancestor::fi:form-template//fi:validation-message"/>
     <xsl:if test="$messages">
+      <xsl:variable name="header">
+        <xsl:choose>
+          <xsl:when test="header">
+            <xsl:copy-of select="header"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <p class="forms-validation-errors forms validation-errors-header">The following errors have been detected (marked with !):</p>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="footer">
+        <xsl:choose>
+          <xsl:when test="footer">
+            <xsl:copy-of select="footer"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <p class="forms-validation-errors forms validation-errors-footer">Please, correct them and re-submit the form.</p>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
       <div class="forms-validation-errors forms validation-errors">
         <xsl:copy-of select="$header"/>
         <ul>
-          <xsl:for-each select="$messages">
-            <li class="forms-validation-error forms validation-errors-content">
-              <xsl:variable name="label">
-                <xsl:apply-templates select=".." mode="label"/>
-              </xsl:variable>
-              <xsl:if test="$label">
-                <xsl:copy-of select="$label"/><xsl:text>: </xsl:text>
-              </xsl:if>
-              <xsl:value-of select="."/>
-            </li>
-          </xsl:for-each>
+          <xsl:apply-templates select="$messages" mode="validation-errors"/>
         </ul>
         <xsl:copy-of select="$footer"/>
       </div>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="fi:validation-message" mode="validation-errors">
+    <li class="forms-validation-error forms validation-errors-content">
+      <xsl:variable name="label">
+        <xsl:apply-templates select=".." mode="label"/>
+      </xsl:variable>
+      <xsl:if test="$label">
+        <xsl:copy-of select="$label"/><xsl:text>: </xsl:text>
+      </xsl:if>
+      <xsl:value-of select="."/>
+    </li>
   </xsl:template>
 
   <xsl:template match="fi:union">
