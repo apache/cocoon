@@ -413,9 +413,9 @@
           <map:parameter name="global:global-sitemap-override" value="{global:global-sitemap-override}"/>
         </map:generate>
         <map:transform src="properties2page.xsl">
-          <map:parameter name="title" value="Global Input Module (GlobalInputModule)"/>
-          <map:parameter name="description" value="GlobalInputModule contains 'global'
-            values defined in the sitemap. Children sitemaps can override values defined
+          <map:parameter name="title" value="Settings Input Module (SettingsInputModule)"/>
+          <map:parameter name="description" value="SettingsInputModule contains 'global'
+            values defined in the sitemap properties. Children sitemaps can override values defined
             in the parent sitemap."/>
         </map:transform>
         <map:serialize type="xml"/>
