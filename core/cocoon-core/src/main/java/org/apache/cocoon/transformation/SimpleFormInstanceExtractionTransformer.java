@@ -38,7 +38,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This transformer sieves an incoming stream of xml and extracts a
  * document fragment from it depending on a given tag and stores the
  * fragment using an OutputModule with a name based an attribute of
@@ -50,12 +49,23 @@ import org.xml.sax.SAXException;
  * that the extracted form instance data is used only when no similar
  * request parameter exists.
  * 
+ * @cocoon.sitemap.component.documentation
+ * This transformer sieves an incoming stream of xml and extracts a
+ * document fragment from it depending on a given tag and stores the
+ * fragment using an OutputModule with a name based an attribute of
+ * another enclosing tag. Default configuration fires on
+ * &lt;form-instance/&gt; and uses @name of enclosing &lt;form/&gt;
+ * tag. Default OutputModule is request-attr. This is usefull in
+ * conjunction with the SimpleFormTransformer when setting the
+ * InputModule for it to a chain of request-param and request-attr so
+ * that the extracted form instance data is used only when no similar
+ * request parameter exists.
  * @cocoon.sitemap.component.name   simple-form-instance
  *
  * @version $Id$
  */
 public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer 
-    implements Configurable, Serviceable {
+                                                     implements Configurable, Serviceable {
 
     protected class ElementData {
         public String uri = null;
@@ -72,7 +82,6 @@ public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionT
         }
 
         public boolean equals(String uri, String loc, String raw) {
-
             if (!this.uri.equals(uri))
                 return false;
             if (!this.loc.equals(loc))
@@ -98,6 +107,7 @@ public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionT
 
     ServiceManager manager = null;
     Map objectModel = null;
+
 
     public void configure(Configuration config) throws ConfigurationException {
         this.startElement = new ElementData();

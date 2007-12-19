@@ -164,6 +164,7 @@ import org.xml.sax.ext.LexicalHandler;
  * A simple transformer including resolvable sources (accessed through
  * Cocoon's SourceResolver) from its input.
  * @cocoon.sitemap.component.name include
+ * @cocoon.sitemap.component.documentation.caching Yes
  * @cocoon.sitemap.component.pooling.max 16
  * 
  * @version $Id$
