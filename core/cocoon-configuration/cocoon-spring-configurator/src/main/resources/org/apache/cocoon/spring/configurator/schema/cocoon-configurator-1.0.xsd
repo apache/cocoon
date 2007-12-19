@@ -15,54 +15,57 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- @version $Id$ -->
+
+<!--
+  - $Id$
+  -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             targetNamespace="http://cocoon.apache.org/schema/configurator"
             xmlns:tns="http://cocoon.apache.org/schema/configurator"
             xmlns="http://cocoon.apache.org/schema/configurator">
 
-    <xsd:element name="settings">
-      <xsd:complexType>
-    	<xsd:sequence>
-    	    <xsd:element ref="include-beans" minOccurs="0" maxOccurs="unbounded"/>
-    	    <xsd:element ref="include-properties" minOccurs="0" maxOccurs="unbounded"/>
-    	    <xsd:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
-    	</xsd:sequence>
-    	<xsd:attribute name="runningMode" type="xsd:string" use="optional"/>
-    	<xsd:attribute name="readFromClasspath" type="xsd:boolean" use="optional"/>
-    	<xsd:attribute name="readFromGlobalLocation" type="xsd:boolean" use="optional"/>
-        <xsd:attribute name="extractBlockResources" type="xsd:boolean" use="optional"/>
-      </xsd:complexType>
-    </xsd:element>
+  <xsd:element name="settings">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="include-beans" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="include-properties" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="runningMode" type="xsd:string" use="optional"/>
+      <xsd:attribute name="readFromClasspath" type="xsd:boolean" use="optional"/>
+      <xsd:attribute name="readFromGlobalLocation" type="xsd:boolean" use="optional"/>
+      <xsd:attribute name="extractBlockResources" type="xsd:boolean" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
 
-    <xsd:element name="child-settings">
-      <xsd:complexType>
-    	<xsd:sequence>
-    	    <xsd:element ref="include-beans" minOccurs="0" maxOccurs="unbounded"/>
-    	    <xsd:element ref="include-properties" minOccurs="0" maxOccurs="unbounded"/>
-    	    <xsd:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
-    	</xsd:sequence>
-    	<xsd:attribute name="name" type="xsd:string" use="required"/>
-      </xsd:complexType>
-    </xsd:element>
+  <xsd:element name="child-settings">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="include-beans" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="include-properties" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
 
-    <xsd:element name="include-beans">
-      <xsd:complexType>
-    	<xsd:attribute name="dir" type="xsd:string" use="optional"/>
-      </xsd:complexType>
-    </xsd:element>
+  <xsd:element name="include-beans">
+    <xsd:complexType>
+      <xsd:attribute name="dir" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
 
-    <xsd:element name="include-properties">
-      <xsd:complexType>
-    	<xsd:attribute name="dir" type="xsd:string" use="required"/>
-      </xsd:complexType>
-    </xsd:element>
+  <xsd:element name="include-properties">
+    <xsd:complexType>
+      <xsd:attribute name="dir" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
 
-    <xsd:element name="property">
-      <xsd:complexType>
-    	<xsd:attribute name="name" type="xsd:string" use="required"/>
-    	<xsd:attribute name="value" type="xsd:string" use="required"/>
-      </xsd:complexType>
-    </xsd:element>
+  <xsd:element name="property">
+    <xsd:complexType>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
 
 </xsd:schema>
