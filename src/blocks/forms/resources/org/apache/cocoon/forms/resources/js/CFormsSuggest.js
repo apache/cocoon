@@ -60,7 +60,7 @@ dojo.widget.defineWidget(
         cocoon.forms.CFormsSuggest.superclass.fillInTemplate.call(this, args, frag);
         if (node.value) {
             // Get the suggestion text from the server
-            this.getData(this, "_cocoon/forms/suggest?widget=" + node.getAttribute("name") + 
+            this.getData(this, "_cocoon/forms/suggest?widget=" + node.getAttribute("name") +
                     "&continuation-id=" + contId + "&filter=" + node.value + "&phase=init", node);
         } else {
             // Restore the initial value and the associated suggestion text, if any
@@ -69,16 +69,18 @@ dojo.widget.defineWidget(
         }
     },
 
-    onValueChanged: function(/*String*/ value){
+    onValueChanged: function(/*String*/ value) {
         if (this.onchange == "cocoon.forms.submitForm(this)") {
             cocoon.forms.submitForm(this.domNode, this.name);
+        } else {
+        	eval(this.onchange);
         }
     },
 
     getData: function(widget, url, node) {
         dojo.io.bind({
             url: url,
-            load: dojo.lang.hitch(this, function(type, data, evt){ 
+            load: dojo.lang.hitch(this, function(type, data, evt){
                 if(!dojo.lang.isArray(data)){
                     var arrData = [];
                     for(var key in data){
@@ -91,7 +93,7 @@ dojo.widget.defineWidget(
                 // numeric value
                 widget.setSelectedValue(node.value);
             }),
-            mimetype: "text/json"
+            mimetype: "text/json-comment-filtered"
         });
     }
 });
