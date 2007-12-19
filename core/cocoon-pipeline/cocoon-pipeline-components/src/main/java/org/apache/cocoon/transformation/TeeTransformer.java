@@ -45,7 +45,6 @@ import org.xml.sax.SAXException;
 
 /**
  * @cocoon.sitemap.component.name tee
- * @cocoon.sitemap.component.logger sitemap.transformer.tee
  * @cocoon.sitemap.component.pooling.max  16
  * 
  * @cocoon.sitemap.component.documentation

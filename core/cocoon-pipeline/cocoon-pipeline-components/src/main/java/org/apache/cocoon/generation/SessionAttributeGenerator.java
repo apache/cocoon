@@ -38,7 +38,6 @@ import org.xml.sax.SAXException;
  *
  * @cocoon.sitemap.component.name   sessionattribute
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.sessionattribute
  *
  * Generates a document from a session attribute. The attribute may be a DOM
  * node, an <code>XMLizable</code>, or any other object, and is streamed using

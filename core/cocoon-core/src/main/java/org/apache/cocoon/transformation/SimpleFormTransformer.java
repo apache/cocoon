@@ -48,7 +48,6 @@ import java.util.Map;
  * Caveat: Select options need a value attribute to work correctly.
  *
  * @cocoon.sitemap.component.name   simple-form
- * @cocoon.sitemap.component.logger sitemap.transformer.simple-form
  *
  *
  * <p>This transformer fills all HTML 4 form elements with values from

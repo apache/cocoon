@@ -52,7 +52,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * @cocoon.sitemap.component.name   directory
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.directory
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the directory and the contained files
  * 

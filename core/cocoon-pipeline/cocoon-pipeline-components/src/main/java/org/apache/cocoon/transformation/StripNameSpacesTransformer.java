@@ -35,8 +35,6 @@ import org.xml.sax.SAXException;
  * streams, but easily factor 100) then the conventional stripnamespaces.xsl
  *
  * @cocoon.sitemap.component.name  stripnamespaces
- * @cocoon.sitemap.component.logger sitemap.transformer.stripnamespaces
- *
  * @cocoon.sitemap.component.pooling.max  32
  *
  * @version $Id$

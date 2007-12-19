@@ -34,7 +34,6 @@ import org.xml.sax.SAXException;
  * 
  * @cocoon.sitemap.component.name   imagedirectory
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.imagedirectory
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the directory and the contained files
  * 

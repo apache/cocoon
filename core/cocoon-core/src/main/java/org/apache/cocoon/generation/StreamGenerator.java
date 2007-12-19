@@ -41,8 +41,6 @@ import java.io.StringReader;
  * 
  * @cocoon.sitemap.component.name   stream
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.stream
- * 
  * @cocoon.sitemap.component.pooling.max  16
  *
  * For the POST requests with a mimetype of application/x-www-form-urlencoded,

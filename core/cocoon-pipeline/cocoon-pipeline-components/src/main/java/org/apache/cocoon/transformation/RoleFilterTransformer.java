@@ -40,7 +40,6 @@ import java.util.StringTokenizer;
  * by using comma delimiting.
  * 
  * @cocoon.sitemap.component.name   role-filter
- * @cocoon.sitemap.component.logger sitemap.transformer.role-filter
  * 
  * Filter XML fragments based on a user's role.  This will help in
  * the development of smart forms that must only show information to

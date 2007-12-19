@@ -53,8 +53,6 @@ import org.xml.sax.SAXException;
  *
  * @cocoon.sitemap.component.name jx
  * @cocoon.sitemap.component.label content
- * @cocoon.sitemap.component.logger sitemap.generator.jx
- *
  * @cocoon.sitemap.component.pooling.max 16
  *
  *

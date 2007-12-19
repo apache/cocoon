@@ -163,10 +163,9 @@ import org.xml.sax.ext.LexicalHandler;
  * @cocoon.sitemap.component.documentation
  * A simple transformer including resolvable sources (accessed through
  * Cocoon's SourceResolver) from its input.
- *
  * @cocoon.sitemap.component.name include
- * @cocoon.sitemap.component.logger sitemap.transformer.include
  * @cocoon.sitemap.component.pooling.max 16
+ * 
  * @version $Id$
  */
 public class IncludeTransformer extends AbstractTransformer

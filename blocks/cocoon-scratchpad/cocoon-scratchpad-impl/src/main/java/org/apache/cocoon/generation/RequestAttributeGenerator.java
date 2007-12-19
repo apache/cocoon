@@ -37,7 +37,6 @@ import org.xml.sax.SAXException;
  *
  * @cocoon.sitemap.component.name       req-attr
  * @cocoon.sitemap.component.label      content
- * @cocoon.sitemap.component.logger     sitemap.generator.req-attr
  * @cocoon.sitemap.component.parameter  attribute-name
  *   type="String"
  *   description="Specifies name of request attribute holding xml data. This xml data will be sent into the cocoon pipeline."

@@ -42,7 +42,6 @@ import java.util.Map;
  *
  * @cocoon.sitemap.component.name   file
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.file
  * @cocoon.sitemap.component.documentation.caching
  *     Uses the last modification date of the xml document for validation
  *

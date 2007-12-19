@@ -84,7 +84,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * @cocoon.sitemap.component.documentation.caching TBD
  * @cocoon.sitemap.component.name   calendar
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.calendar
  *
  * @version $Id$
  */
