@@ -29,8 +29,8 @@ import org.apache.cocoon.transformation.Transformer;
 /**
  * Holds informations defined in &lt;map:components&gt; such as default hint, labels and mime-types
  * that are needed when building a processor and to manage inheritance when building child processors.
- * <p>
- * In previous versions of the sitemap engine, these informations where store in specialized
+ *
+ * <p>In previous versions of the sitemap engine, this information was stored in specialized
  * extensions of ComponentSelector (<code>SitemapComponentSelector</code> and
  * <code>OutputComponentSelector</code>), which led to a strong dependency on the chosen component
  * container implementation. This is now a regular component that also "listens" to modifications
