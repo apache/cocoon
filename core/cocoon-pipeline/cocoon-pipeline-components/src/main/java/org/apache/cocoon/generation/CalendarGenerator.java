@@ -38,18 +38,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Generates an XML document representing a calendar for a given month and year.
- * 
- * @cocoon.sitemap.component.documentation.caching TBD
- * @cocoon.sitemap.component.name   calendar
- * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.calendar
- * 
- * 
- * <p>
- * Here is a sample output:
- * </p>
+ *
+ * <p>Here is a sample output:
  * <pre>
  * &lt;calendar:calendar xmlns:calendar="http://apache.org/cocoon/calendar/1.0"
  *     year="2004" month="January" prevMonth="12" prevYear="2003"
@@ -63,9 +54,9 @@ import org.xml.sax.helpers.AttributesImpl;
  *   ...
  * &lt;/calendar:calendar&gt;
  * </pre>
- * <p>
- * The <i>src</i> parameter is ignored.
- * </p>
+ *
+ * <p>The <i>src</i> parameter is ignored.
+ *
  * <p>
  *  <b>Configuration options:</b>
  *  <dl>
@@ -88,9 +79,17 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </dl>
  * </p>
  *               
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML document representing a calendar for a given month and year.
+ * @cocoon.sitemap.component.documentation.caching TBD
+ * @cocoon.sitemap.component.name   calendar
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.calendar
+ *
  * @version $Id$
  */
-public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
+public class CalendarGenerator extends ServiceableGenerator
+                               implements CacheableProcessingComponent {
     
     /** The URI of the namespace of this generator. */
     protected static final String URI = "http://apache.org/cocoon/calendar/1.0";
