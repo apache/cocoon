@@ -33,15 +33,15 @@
     
     <portal:coplet-type id="portlet">
       <portal:coplet-adapter type="portlet"/>
-      <portal:configuration key="buffer" type="boolean" value="true"/>
-      <portal:configuration key="full-screen" type="boolean" value="false"/>
-      <portal:configuration key="handle-sizing" type="boolean" value="true"/>
+      <portal:configuration name="buffer" type="boolean" value="true"/>
+      <portal:configuration name="full-screen" type="boolean" value="false"/>
+      <portal:configuration name="handle-sizing" type="boolean" value="true"/>
     </portal:coplet-type>
 
 <!-- 
     <portal:coplet-type id="wsrp">
       <portal:coplet-adapter type="wsrp"/>
-      <portal:configuration key="buffer" type="boolean" value="true"/>
+      <portal:configuration name="buffer" type="boolean" value="true"/>
     </portal:coplet-type>
  -->
 </beans>

@@ -81,12 +81,7 @@
   <xsd:element name="layout-type">
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element name="renderer" minOccurs="1" maxOccurs="unbounded">
-          <xsd:complexType>
-            <xsd:attribute name="ref" type="xsd:string" use="optional"/>
-            <xsd:attribute name="type" type="xsd:string" use="optional"/>
-          </xsd:complexType>
-        </xsd:element>
+        <xsd:element ref="renderer" minOccurs="1" maxOccurs="unbounded"/>
       </xsd:sequence>
       <xsd:attribute name="id" type="xsd:ID" use="required"/>
       <xsd:attribute name="layoutClass" type="xsd:string" use="required"/>
@@ -96,25 +91,36 @@
     </xsd:complexType>
   </xsd:element>
   
+  <xsd:element name="renderer">
+    <xsd:complexType>
+      <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
   <xsd:element name="coplet-type">
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element name="coplet-adapter" minOccurs="1" maxOccurs="1">
-          <xsd:complexType>
-            <xsd:attribute name="ref" type="xsd:string" use="optional"/>
-            <xsd:attribute name="type" type="xsd:string" use="optional"/>
-          </xsd:complexType>
-        </xsd:element>
-        <xsd:element name="configuration" minOccurs="0" maxOccurs="unbounded">
-          <xsd:complexType>
-            <xsd:attribute name="name" type="xsd:string" use="required"/>
-            <xsd:attribute name="value" type="xsd:string" use="required"/>
-            <xsd:attribute name="type" type="xsd:string" use="optional"/>
-          </xsd:complexType>
-        </xsd:element>
+        <xsd:element ref="coplet-adapter" minOccurs="1" maxOccurs="1"/>
+        <xsd:element ref="configuration" minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
       <xsd:attribute name="id" type="xsd:ID" use="optional"/>
       <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="coplet-adapter">
+    <xsd:complexType>
+      <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="configuration">
+    <xsd:complexType>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="value" type="xsd:string" use="required"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
     </xsd:complexType>
   </xsd:element>
 </xsd:schema>
