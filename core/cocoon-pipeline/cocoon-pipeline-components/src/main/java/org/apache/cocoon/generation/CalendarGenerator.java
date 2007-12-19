@@ -329,19 +329,20 @@ public class CalendarGenerator extends ServiceableGenerator
      */
     protected void addContent(Calendar date, Locale locale) throws SAXException {}
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
      */
     public Serializable getKey() {
         StringBuffer buffer = new StringBuffer();
         int len = this.cacheKeyParList.size();
         for (int i = 0; i < len; i++) {
-            buffer.append(this.cacheKeyParList.get(i) + ":");
+            buffer.append(this.cacheKeyParList.get(i)).append(":");
         }
+
         return buffer.toString();
     }
     
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
      */
     public SourceValidity getValidity() {
@@ -360,5 +361,4 @@ public class CalendarGenerator extends ServiceableGenerator
         this.locale = null;
         super.recycle();
     }
-
 }
