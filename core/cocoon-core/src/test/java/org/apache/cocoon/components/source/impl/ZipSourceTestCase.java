@@ -17,9 +17,7 @@
 package org.apache.cocoon.components.source.impl;
 
 import org.apache.avalon.framework.service.ServiceException;
-
 import org.apache.cocoon.core.container.ContainerTestCase;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -27,8 +25,9 @@ import org.apache.excalibur.source.SourceResolver;
 public class ZipSourceTestCase extends ContainerTestCase {
 
     public void testURIHandling() throws Exception {
-    	/*
-        final String zipSourceUri = "zip:file://test.zip!/test.xml";
+        final String zipFilePath = "/test.zip";
+        final String filePath = "test.xml";
+        final String zipSourceUri = "zip:file:/" + zipFilePath + "!/" + filePath;
         Source zipSource;
         SourceResolver resolver = null;
         try {
@@ -42,8 +41,16 @@ public class ZipSourceTestCase extends ContainerTestCase {
         assertTrue("Resolved Source is not an instance of ZipSource.",
                    zipSource instanceof ZipSource);
         assertEquals("Scheme/protocol is wrong.", "zip", zipSource.getScheme());
-        assertEquals("Uri is wrong.", zipSourceUri, zipSource.getURI());
-        */
+        // test file path
+        int index = zipSource.getURI().lastIndexOf(':');
+        String testFilePath = zipSource.getURI().substring(index + 2);
+        // depending on the operation system, the uri can either contain two or three slashes
+        // so we remove all slashed and then append one slash
+        while ( testFilePath.startsWith("/") ) {
+            testFilePath = testFilePath.substring(1);
+        }
+        testFilePath = "/" + testFilePath;
+        assertEquals("Uri is wrong.", zipSourceUri, zipSource.getURI().substring(0, index + 2) + testFilePath);
     }
 
 }
