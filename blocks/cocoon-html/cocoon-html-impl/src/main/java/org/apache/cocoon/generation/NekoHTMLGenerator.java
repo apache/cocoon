@@ -55,21 +55,22 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
- * The neko html generator reads HTML from a source, converts it to XHTML
+ * The Neko HTML generator reads HTML from a source, converts it to XHTML
  * and generates SAX Events. It uses the NekoHTML library to do this.
- * 
+ *
+ * @cocoon.sitemap.component.documentation
+ * The Neko HTML generator reads HTML from a source, converts it to XHTML
+ * and generates SAX Events. It uses the NekoHTML library to do this.
  * @cocoon.sitemap.component.name   nekohtml
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.documentation.caching
- *               Uses the last modification date of the xml document for validation
- * 
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ *   Uses the last modification date of the xml document for validation
  * @cocoon.sitemap.component.pooling.max  32
  *
  * @version $Id$
  */
 public class NekoHTMLGenerator extends ServiceableGenerator
-implements Configurable, CacheableProcessingComponent, Disposable {
+                               implements Configurable, CacheableProcessingComponent, Disposable {
 
     /** The parameter that specifies what request attribute to use, if any */
     public static final String FORM_NAME = "form-name";
@@ -81,25 +82,25 @@ implements Configurable, CacheableProcessingComponent, Disposable {
     private InputStream requestStream;
 
     /** XPATH expression */
-    private String xpath = null;
+    private String xpath;
 
     /** XPath Processor */
-    private XPathProcessor processor = null;
+    private XPathProcessor processor;
 
     /** Neko properties */
     private Properties properties;
 
+    
     public void service(ServiceManager manager)
     throws ServiceException {
-        super.service( manager );
-        this.processor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
+        super.service(manager);
+        this.processor = (XPathProcessor) this.manager.lookup(XPathProcessor.ROLE);
     }
 
     public void configure(Configuration config) throws ConfigurationException {
 
         String configUrl = config.getChild("neko-config").getValue(null);
-
-        if(configUrl != null) {
+        if (configUrl != null) {
             org.apache.excalibur.source.SourceResolver resolver = null;
             Source configSource = null;
             try {
@@ -130,7 +131,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
      */
     public void recycle() {
         if (this.inputSource != null) {
-            this.resolver.release( this.inputSource );
+            this.resolver.release(this.inputSource);
             this.inputSource = null;
             this.requestStream = null;
         }
@@ -289,13 +290,12 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         }
     }
 
-
     public void dispose() {
-        if (this.manager != null) {
+        if (this.processor != null) {
             this.manager.release(this.processor);
-            this.manager = null;
+            this.processor = null;
         }
-        this.processor = null;
+        this.manager = null;
         super.dispose();
     }
 
@@ -309,7 +309,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
             HTMLConfiguration config = new HTMLConfiguration();
             config.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
             if (properties != null) {
-                for (Iterator i = properties.keySet().iterator();i.hasNext();) {
+                for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
                     String name = (String) i.next();
                     if (name.indexOf("/features/") > -1) {
                         config.setFeature(name, Boolean.getBoolean(properties.getProperty(name)));
@@ -318,6 +318,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                     }
                 }
             }
+
             return config;
         }
     }
