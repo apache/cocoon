@@ -122,7 +122,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * which surrounds the included content.
  * @cocoon.sitemap.component.name   cinclude
  * @cocoon.sitemap.component.documentation.caching
- *   Limited. See documentation for further information.
+ * Limited. See documentation for further information.
  * @cocoon.sitemap.component.pooling.max  16
  *
  * @version $Id$

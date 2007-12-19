@@ -55,7 +55,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @cocoon.sitemap.component.name   directory
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.documentation.caching Yes.
- *   Uses the last modification date of the directory and the contained files.
+ * Uses the last modification date of the directory and the contained files.
  * @cocoon.sitemap.component.pooling.max  16
  *
  * @version $Id$

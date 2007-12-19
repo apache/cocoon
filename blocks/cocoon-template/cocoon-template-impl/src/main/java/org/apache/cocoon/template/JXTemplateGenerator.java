@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.excalibur.source.SourceValidity;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.core.xml.SAXParser;
@@ -38,28 +40,32 @@ import org.apache.cocoon.template.script.ScriptManager;
 import org.apache.cocoon.template.script.event.Event;
 import org.apache.cocoon.template.script.event.StartDocument;
 import org.apache.cocoon.template.xml.AttributeAwareXMLConsumerImpl;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.xml.RedundantNamespacesFilter;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.util.NamespacesTable;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.excalibur.source.SourceValidity;
+
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation Provides a generic page template with embedded JSTL and
- *                                         XPath expression substitution to access data sent by
- *                                         Cocoon Flowscripts.
+ * Provides a generic page template with embedded JSTL and
+ * XPath expression substitution to access data sent by
+ * Cocoon Flowscripts.
  *
+ * @cocoon.sitemap.component.documentation
+ * Provides a generic page template with embedded JSTL and
+ * XPath expression substitution to access data sent by
+ * Cocoon Flowscripts.
  * @cocoon.sitemap.component.name jx
  * @cocoon.sitemap.component.label content
+ * @cocoon.sitemap.component.documentation.caching Supported.
+ * Caching key and validity should be supplied by jx template.
  * @cocoon.sitemap.component.pooling.max 16
- *
  *
  * @version $Id$
  */
-public class JXTemplateGenerator implements Generator, CacheableProcessingComponent {
-    protected final static Log logger = LogFactory.getLog(JXTemplateGenerator.class);
+public class JXTemplateGenerator extends AbstractLogEnabled
+                                 implements Generator, CacheableProcessingComponent {
 
     /** The namespace used by this generator */
     public final static String NS = "http://apache.org/cocoon/templates/jx/1.0";
@@ -80,6 +86,7 @@ public class JXTemplateGenerator implements Generator, CacheableProcessingCompon
     protected Parameters parameters;
 
     protected String src;
+
 
     public ScriptManager getScriptManager() {
         return scriptManager;
@@ -110,11 +117,10 @@ public class JXTemplateGenerator implements Generator, CacheableProcessingCompon
     }
 
     /**
-     * @see org.apache.cocoon.generation.AbstractGenerator#setup(org.apache.cocoon.environment.SourceResolver,
-     *      java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.generation.AbstractGenerator#setup(SourceResolver, Map, String, Parameters)
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
-            throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         this.parameters = parameters;
         this.src = src;
 
@@ -160,14 +166,16 @@ public class JXTemplateGenerator implements Generator, CacheableProcessingCompon
         if (cacheKeyExpr == null) {
             return null;
         }
+
         try {
             final Serializable templateKey = (Serializable) cacheKeyExpr.getValue(this.objectModel);
             if (templateKey != null) {
                 return new JXCacheKey(this.startDocument.getUri(), templateKey);
             }
         } catch (Exception e) {
-            logger.error("error evaluating cache key", e);
+            getLogger().error("error evaluating cache key", e);
         }
+
         return null;
     }
 
@@ -179,6 +187,7 @@ public class JXTemplateGenerator implements Generator, CacheableProcessingCompon
         if (validityExpr == null) {
             return null;
         }
+
         try {
             final SourceValidity sourceValidity = this.startDocument.getSourceValidity();
             final SourceValidity templateValidity = (SourceValidity) validityExpr.getValue(this.objectModel);
@@ -186,8 +195,9 @@ public class JXTemplateGenerator implements Generator, CacheableProcessingCompon
                 return new JXSourceValidity(sourceValidity, templateValidity);
             }
         } catch (Exception e) {
-            logger.error("error evaluating cache validity", e);
+            getLogger().error("error evaluating cache validity", e);
         }
+
         return null;
     }
 }

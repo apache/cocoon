@@ -44,6 +44,10 @@ import org.xml.sax.SAXException;
  * The <code>ServletServiceGenerator</code> POSTs its input data to a called service and passes the XML data returned
  * by the service down the pipeline.
  * @cocoon.sitemap.component.name servletService 
+ * @cocoon.sitemap.component.documentation.caching Not Implemented
+ *
+ * @since 2.2
+ * @version $Id$
  */
 public class ServletServiceGenerator extends AbstractGenerator {
 	
@@ -52,7 +56,16 @@ public class ServletServiceGenerator extends AbstractGenerator {
 	private PostableSource servletSource;
 	
 
-	/* (non-Javadoc)
+    public SAXParser getSaxParser() {
+        return saxParser;
+    }
+
+    public void setSaxParser(SAXParser saxParser) {
+        this.saxParser = saxParser;
+    }
+
+
+    /**
 	 * @see org.apache.cocoon.generation.Generator#generate()
 	 */
 	public void generate() throws IOException, SAXException, ProcessingException {
@@ -63,7 +76,7 @@ public class ServletServiceGenerator extends AbstractGenerator {
         }
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
 	 */
 	public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
@@ -94,13 +107,5 @@ public class ServletServiceGenerator extends AbstractGenerator {
         }
         
         IOUtils.copy(inputSource.getInputStream(), servletSource.getOutputStream());
-	}
-
-	public SAXParser getSaxParser() {
-		return saxParser;
-	}
-
-	public void setSaxParser(SAXParser saxParser) {
-		this.saxParser = saxParser;
 	}
 }

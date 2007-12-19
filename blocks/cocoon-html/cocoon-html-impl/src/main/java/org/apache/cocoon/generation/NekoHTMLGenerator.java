@@ -64,7 +64,7 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.name   nekohtml
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.documentation.caching Yes.
- *   Uses the last modification date of the xml document for validation
+ * Uses the last modification date of the xml document for validation
  * @cocoon.sitemap.component.pooling.max  32
  *
  * @version $Id$

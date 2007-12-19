@@ -142,6 +142,7 @@ import java.util.Map;
  * Eliminates the need for XSP to use FormValidatorAction or HTML forms.
  * Caveat: Select options need a value attribute to work correctly.
  * @cocoon.sitemap.component.name   simple-form
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @version $Id$
  */

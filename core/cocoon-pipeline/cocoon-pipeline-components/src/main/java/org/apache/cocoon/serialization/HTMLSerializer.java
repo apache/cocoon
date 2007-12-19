@@ -31,8 +31,8 @@ import java.io.OutputStream;
  * @cocoon.sitemap.component.documentation
  * The html serializer serializes sax events into an html document.
  * @cocoon.sitemap.component.name      html
- * @cocoon.sitemap.component.documentation.caching Yes
  * @cocoon.sitemap.component.mimetype  text/html
+ * @cocoon.sitemap.component.documentation.caching Yes
  * @cocoon.sitemap.component.pooling.max  32
  * 
  * @cocoon.sitemap.component.configuration

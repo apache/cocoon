@@ -29,19 +29,22 @@ import org.xml.sax.SAXException;
 /**
  * The <code>RequestAttributeGenerator</code> is a class that reads XML from a
  * request attribute and generates SAX Events.
- * <p>
- * The response encoding is taken as the encoding of the xml-data.
- * </p>
  *
- * @version $Id$
+ * <p>The response encoding is taken as the encoding of the xml-data.
  *
+ * @cocoon.sitemap.component.documentation
+ * The <code>RequestAttributeGenerator</code> is a class that reads XML from a
+ * request attribute and generates SAX Events.
  * @cocoon.sitemap.component.name       req-attr
  * @cocoon.sitemap.component.label      content
+ * @cocoon.sitemap.component.documentation.caching No
  * @cocoon.sitemap.component.parameter  attribute-name
  *   type="String"
  *   description="Specifies name of request attribute holding xml data. This xml data will be sent into the cocoon pipeline."
  *   required="no"
  *   default="org.apache.cocoon.xml-data"
+ *
+ * @version $Id$
  */
 public class RequestAttributeGenerator extends ServiceableGenerator {
 
