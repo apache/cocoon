@@ -626,7 +626,7 @@
             <xsl:copy-of select="header"/>
           </xsl:when>
           <xsl:otherwise>
-            <p class="forms-validation-errors forms validation-errors-header">The following errors have been detected (marked with !):</p>
+            <p class="forms validation-errors-header">The following errors have been detected (marked with !):</p>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -636,11 +636,11 @@
             <xsl:copy-of select="footer"/>
           </xsl:when>
           <xsl:otherwise>
-            <p class="forms-validation-errors forms validation-errors-footer">Please, correct them and re-submit the form.</p>
+            <p class="forms validation-errors-footer">Please, correct them and re-submit the form.</p>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-      <div class="forms-validation-errors forms validation-errors">
+      <div class="forms forms-validation-errors">
         <xsl:copy-of select="$header"/>
         <ul>
           <xsl:apply-templates select="$messages" mode="validation-errors"/>
@@ -651,7 +651,7 @@
   </xsl:template>
 
   <xsl:template match="fi:validation-message" mode="validation-errors">
-    <li class="forms-validation-error forms validation-errors-content">
+    <li class="forms forms-validation-error">
       <xsl:variable name="label">
         <xsl:apply-templates select=".." mode="label"/>
       </xsl:variable>
@@ -712,14 +712,15 @@
   </xsl:template>
 
   <xsl:template match="*" mode="css">
-      <xsl:variable name="class"><xsl:text>forms </xsl:text>
-          <xsl:value-of select="local-name()"/><xsl:text> </xsl:text>
-          <xsl:value-of select="@state"/><xsl:text> </xsl:text>
-          <xsl:value-of select="fi:styling/@class"/><xsl:text> </xsl:text>
-          <xsl:if test="@required = 'true'"><xsl:text>required </xsl:text></xsl:if> 
-          <xsl:if test="count(fi:validation-error) != 0">with-errors</xsl:if>
-      </xsl:variable>
-      <xsl:attribute name="class"><xsl:value-of select="normalize-space($class)"/></xsl:attribute>
+    <xsl:variable name="class">
+      <xsl:text>forms </xsl:text>
+      <xsl:value-of select="local-name()"/><xsl:text> </xsl:text>
+      <xsl:value-of select="@state"/><xsl:text> </xsl:text>
+      <xsl:value-of select="fi:styling/@class"/><xsl:text> </xsl:text>
+      <xsl:if test="@required = 'true'"><xsl:text>required </xsl:text></xsl:if>
+      <xsl:if test="count(fi:validation-error) != 0">with-errors</xsl:if>
+    </xsl:variable>
+    <xsl:attribute name="class"><xsl:value-of select="normalize-space($class)"/></xsl:attribute>
   </xsl:template>
   
   <!--+
@@ -868,7 +869,7 @@
     <xsl:apply-templates select="fi:validation-message"/>
     <!-- required mark -->
     <xsl:if test="@required='true'">
-      <span class="forms-field-required forms {local-name()} required-mark"> * </span>
+      <span class="forms forms-field-required {local-name()}"> * </span>
     </xsl:if>
   </xsl:template>
 
