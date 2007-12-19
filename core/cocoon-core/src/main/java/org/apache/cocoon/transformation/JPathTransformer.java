@@ -33,11 +33,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
- *   Transformer implementation of the JPath XSP tag library.
- *
- * @cocoon.sitemap.component.name   jpath
- *
+ * Transformer implementation of the JPath XSP tag library.
  *
  * <p>
  *  This transformer (so far) supports the following jpath elements:
@@ -52,6 +48,11 @@ import org.xml.sax.helpers.AttributesImpl;
  *         <pre>&lt;form name="myform" jpath:action="../cont/id"&gt;..&lt;/form&gt;</pre>
  *   </ul>
  * </p>
+ *
+ * @cocoon.sitemap.component.documentation
+ *   Transformer implementation of the JPath XSP tag library.
+ * @cocoon.sitemap.component.name   jpath
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @version $Id$
  */

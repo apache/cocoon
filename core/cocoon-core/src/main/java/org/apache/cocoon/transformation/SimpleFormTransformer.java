@@ -43,14 +43,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Eliminates the need for XSP to use FormValidatorAction or HTML forms.
  * Caveat: Select options need a value attribute to work correctly.
  *
- * @cocoon.sitemap.component.name   simple-form
- *
- *
- * <p>This transformer fills all HTML 4 form elements with values from
+ * <p>This transformer fills all HTML form elements with values from
  * an InputModule, e.g. request, with the same name. It handles select
  * boxes, textareas, checkboxes, radio buttons, password and text
  * fields, and buttons. Form elements and complete forms can be protected
@@ -141,6 +137,11 @@ import java.util.Map;
  *     &lt;input name="user.name" size="50" maxlength="60"/&gt;
  *     &lt;error name="user.name" when-ge="error"&gt;required&lt;/error&gt;
  * </pre></p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * Eliminates the need for XSP to use FormValidatorAction or HTML forms.
+ * Caveat: Select options need a value attribute to work correctly.
+ * @cocoon.sitemap.component.name   simple-form
  *
  * @version $Id$
  */

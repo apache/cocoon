@@ -62,14 +62,10 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Internationalization transformer is used to transform i18n markup into text
  * based on a particular locale.
  *
- * @cocoon.sitemap.component.name   i18n
- * @cocoon.sitemap.component.documentation.caching TBD
- *
- * <h3>I18n Transformer</h3>
+ * <h3>Overview</h3>
  * <p>The i18n transformer works by finding a translation for the user's locale
  * in the configured catalogues. Locale is passed as parameter to the transformer,
  * and it can be determined based on the request, session, or a cookie data by
@@ -263,6 +259,12 @@ import java.util.StringTokenizer;
  *  <li>Introduce new &lt;get-locale/&gt; element
  *  <li>Move all formatting routines to I18nUtils
  * </ul>
+ *
+ * @cocoon.sitemap.component.documentation
+ * Internationalization transformer is used to transform i18n markup into text
+ * based on a particular locale.
+ * @cocoon.sitemap.component.name   i18n
+ * @cocoon.sitemap.component.documentation.caching Yes
  *
  * @version $Id$
  */
