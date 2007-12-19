@@ -15,21 +15,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+
+<!--
+  - $Id$
+  -->
 <components>
 
-  <!--+
-      | Saxon XSLT Processor
-      | For old (6.5.2) Saxon use:
-      |  <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
-      | For new (7+) Saxon use:
-      |  <parameter name="transformer-factory" value="net.sf.saxon.TransformerFactoryImpl"/>
-      <component logger="core.xslt"
-             role="org.apache.excalibur.xml.xslt.XSLTProcessor/saxon"
+  <!--
+    - Saxon XSLT Processor
+    - For old (6.5.2) Saxon use:
+    -  <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
+    - For new (7+) Saxon use:
+    -  <parameter name="transformer-factory" value="net.sf.saxon.TransformerFactoryImpl"/>
+  <component role="org.apache.excalibur.xml.xslt.XSLTProcessor/saxon"
              class="org.apache.cocoon.components.xslt.TraxProcessor">
-         <parameter name="use-store" value="true"/>
-         <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
-      </component>
-      +-->
+    <parameter name="use-store" value="true"/>
+    <parameter name="transformer-factory" value="com.icl.saxon.TransformerFactoryImpl"/>
+  </component>
+    -->
 
 </components>
