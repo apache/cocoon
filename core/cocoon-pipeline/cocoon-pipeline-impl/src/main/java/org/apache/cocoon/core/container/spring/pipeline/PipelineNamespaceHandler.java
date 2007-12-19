@@ -22,20 +22,23 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
  * Spring namespace handler for the cocoon pipeline namespace.
- * Currently this namespace defines the following elements
- * (in the namespace "http://cocoon.apache.org/schema/pipeline"):
- * "component" : with optional attributes "mime-type", "label" and "hint".
+ *
+ * <p>Currently this namespace defines the following elements
+ * (in the <code>http://cocoon.apache.org/schema/pipeline</code> namespace):
+ * <dl>
+ * <dt>component</dt>
+ * <dd>with optional attributes "mime-type", "label" and "hint".</dd>
+ * </dl>
  *
  * @version $Id$
  * @since 2.2
  */
 public class PipelineNamespaceHandler extends NamespaceHandlerSupport {
 
-    /* (non-Javadoc)
+    /**
      * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
      */
     public void init() {
-        this.registerBeanDefinitionDecorator("component", new PipelineComponentInfoInitializerDecorator());
+        registerBeanDefinitionDecorator("component", new PipelineComponentInfoInitializerDecorator());
     }
-
 }
