@@ -15,19 +15,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+
+<!--
+  - $Id$
+  -->
 <components>
 
-  <!--+
-      | XSLT Processor using xsltc from Xalan
-      | For Interpreted Xalan use:
-      | <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
-      +-->
-  <component logger="core.xslt"
-             role="org.apache.excalibur.xml.xslt.XSLTProcessor/xsltc"
+  <!--
+    - XSLT Processor using xsltc from Xalan
+    - For Interpreted Xalan use:
+    - <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
+    -->
+  <component role="org.apache.excalibur.xml.xslt.XSLTProcessor/xsltc"
              class="org.apache.cocoon.components.xslt.TraxProcessor">
-     <parameter name="use-store" value="true"/>
-     <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
+    <parameter name="use-store" value="true"/>
+    <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
   </component>
 
 </components>

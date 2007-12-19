@@ -15,12 +15,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+
+<!--
+  - $Id$
+  -->
 <components>
 
-  <!--+
-      | Xpath Processor (Based on Xalan)
-      +-->
-  <xpath-processor class="org.apache.excalibur.xml.xpath.XPathProcessorImpl" logger="core.xpath"/>
+  <!--
+    - Xpath Processor (Based on Xalan)
+    -->
+  <xpath-processor class="org.apache.excalibur.xml.xpath.XPathProcessorImpl"/>
 
 </components>

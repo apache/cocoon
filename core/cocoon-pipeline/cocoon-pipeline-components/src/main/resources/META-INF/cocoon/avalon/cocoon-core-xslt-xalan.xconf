@@ -15,14 +15,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+
+<!--
+  - $Id$
+  -->
 <components>
 
-  <!--+
-      | Xalan XSLT Processor
-      +-->
-  <component logger="core.xslt"
-             role="org.apache.excalibur.xml.xslt.XSLTProcessor/xalan"
+  <!--
+    - Xalan XSLT Processor
+    -->
+  <component role="org.apache.excalibur.xml.xslt.XSLTProcessor/xalan"
              class="org.apache.cocoon.components.xslt.TraxProcessor">
      <parameter name="use-store" value="true"/>
      <parameter name="incremental-processing" value="false"/>
