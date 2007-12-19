@@ -50,45 +50,40 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
- * This transformer triggers for the element <code>include</code> in the
- * namespace "http://apache.org/cocoon/include/1.0".
+ * This transformer processes <code>include</code> elements in the
+ * <code>http://apache.org/cocoon/include/1.0</code> namespace.
  * The <code>src</code> attribute contains the url which points to
- * an xml resource which is include instead of the element.
+ * an xml resource which is included instead of the element.
  * With the attributes <code>element</code>, <code>ns</code> and
  * <code>prefix</code> it is possible to specify an element
  * which surrounds the included content.
  *
- * @cocoon.sitemap.component.name   cinclude
- * @cocoon.sitemap.component.documentation.caching
- *               See documentation for further information.
- * @cocoon.sitemap.component.pooling.max  16
+ * <p>This transformer also supports a more verbose but flexible version:
+ * <pre>
+ * &lt;ci:includexml xmlns:ci="http://apache.org/cocoon/include/1.0" ignoreErrors="false"&gt;
+ *   &lt;ci:src&gt;THE SRC URI&lt;/ci:src&gt;
+ *   &lt;!-- This is an optional configuration block --&gt;
+ *   &lt;ci:configuration&gt;
+ *     &lt;!-- For example if you want to make a HTTP POST --&gt;
+ *     &lt;ci:parameter&gt;
+ *       &lt;ci:name&gt;method&lt;/ci:name&gt;
+ *       &lt;ci:value&gt;POST&lt;/ci:value&gt;
+ *     &lt;/ci:parameter&gt;
+ *   &lt;/ci:configuration&gt;
+ *   &lt;!-- The following are optional parameters appended to the URI --&gt;
+ *   &lt;ci:parameters&gt;
+ *     &lt;ci:parameter&gt;
+ *       &lt;ci:name&gt;a name&lt;/ci:name&gt;
+ *       &lt;ci:value&gt;a value&lt;/ci:value&gt;
+ *     &lt;/ci:parameter&gt;
+ *     &lt;!-- more can follow --&gt;
+ *   &lt;/ci:parameters&gt;
+ * &lt;/ci:includexml&gt;
+ * </pre>
  *
- * This transformer also supports a more verbose but flexible version:
- * <cinclude:includexml xmlns:cinclude="http://apache.org/cocoon/include/1.0" ignoreErrors="false">
- *     <cinclude:src>THE SRC URI</cinclude:src>
- *     <!-- This is an optional configuration block -->
- *     <cinclude:configuration>
- *         <!-- For example if you want to make a HTTP POST -->
- *         <cinclude:parameter>
- *             <cinclude:name>method</cinclude:name>
- *             <cinclude:value>POST</cinclude:value>
- *         </cinclude:parameter>
- *     </cinclude:configuration>
- *     <!-- The following are optional parameters appended to the URI -->
- *     <cinclude:parameters>
- *         <cinclude:parameter>
- *             <cinclude:name>a name</cinclude:name>
- *             <cinclude:value>a value</cinclude:value>
- *         </cinclude:parameter>
- *         <!-- more can follow -->
- *     </cinclude:parameters>
- * </cinclude:includexml>
- *
- *
- * This transformer also supports caching of the included content.
- * Therefore it triggers for the element <code>cached-include</code> in the
- * namespace "http://apache.org/cocoon/include/1.0".
+ * <p>This transformer also supports caching of the included content.
+ * Caching is performed only when <code>cached-include</code> element in the
+ * <code>http://apache.org/cocoon/include/1.0</code> namespace is used.
  * The <code>src</code> attribute contains the url which points to
  * an xml resource which is include instead of the element.
  * First, it works like the usual include command. But it can be
@@ -116,6 +111,19 @@ import org.xml.sax.helpers.AttributesImpl;
  * If the cached resource has expired, it is still provided. The cache
  * is updated by a background task. This task has to be started
  * beforehand.
+ *
+ * @cocoon.sitemap.component.documentation
+ * This transformer processes <code>include</code> elements in the
+ * <code>http://apache.org/cocoon/include/1.0</code> namespace.
+ * The <code>src</code> attribute contains the url which points to
+ * an xml resource which is included instead of the element.
+ * With the attributes <code>element</code>, <code>ns</code> and
+ * <code>prefix</code> it is possible to specify an element
+ * which surrounds the included content.
+ * @cocoon.sitemap.component.name   cinclude
+ * @cocoon.sitemap.component.documentation.caching
+ *   Limited. See documentation for further information.
+ * @cocoon.sitemap.component.pooling.max  16
  *
  * @version $Id$
  */
@@ -360,8 +368,8 @@ public class CIncludeTransformer extends AbstractSAXTransformer
                                               this.resourceParameters,
                                               this.resolver);
 
-                XMLByteStreamCompiler serializer = null;
-                XMLByteStreamInterpreter deserializer = null;
+                XMLByteStreamCompiler serializer;
+                XMLByteStreamInterpreter deserializer;
                 try {
                     if ( ignoreErrors ) {
                         serializer = new XMLByteStreamCompiler();
@@ -373,14 +381,20 @@ public class CIncludeTransformer extends AbstractSAXTransformer
                         SourceUtil.toSAX(source, this.xmlConsumer, this.configurationParameters, true);
                     }
                 } catch (ProcessingException pe) {
-                    if (!ignoreErrors) throw pe;
+                    if (!ignoreErrors) {
+                        throw pe;
+                    }
                 }
             } catch (SourceException se) {
                 if (!ignoreErrors) throw SourceUtil.handle(se);
             } catch (SAXException se) {
-                if (!ignoreErrors) throw se;
+                if (!ignoreErrors) {
+                    throw se;
+                }
             } catch (IOException ioe) {
-                if (!ignoreErrors) throw ioe;
+                if (!ignoreErrors) {
+                    throw ioe;
+                }
             } finally {
                 this.resolver.release(source);
             }
