@@ -16,12 +16,11 @@
   limitations under the License.
 -->
 
-<!--+
-    | Korean message catalogue file for Cocoon 2 i18n sample
-    |
-    | CVS $Id$
-    +-->
-
+<!--
+  - Korean message catalogue file for Cocoon 2 i18n sample
+  -
+  - $Id$
+  -->
 <catalogue xml:lang="ko">
   <message key="a_key">이것은 키 값입니다.</message>
   <message key="language">영어</message>

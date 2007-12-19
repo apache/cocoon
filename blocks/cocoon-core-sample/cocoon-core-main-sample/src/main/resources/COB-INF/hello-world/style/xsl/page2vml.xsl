@@ -30,33 +30,33 @@
     session.
 
     Written by Theodore B. Achacoso, MD 991122 ted@groupserve.com
-    CVS $Id$
+    $Id$
 -->
-
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="page">
     <DIALOG>
-     <STEP NAME="init">
-      <PROMPT><xsl:apply-templates/></PROMPT>
-      <INPUT TYPE="OPTIONLIST">
-       <OPTION NEXT="#init">repeat</OPTION>
-       <OPTION NEXT="#goodbye">goodbye</OPTION>
-      </INPUT>
-     </STEP>
-     <STEP NAME="goodbye">
-       <PROMPT>Goodbye</PROMPT>
-       <INPUT TYPE="NONE" NEXT="#end"/>
-     </STEP>
+      <STEP NAME="init">
+        <PROMPT><xsl:apply-templates/></PROMPT>
+        <INPUT TYPE="OPTIONLIST">
+          <OPTION NEXT="#init">repeat</OPTION>
+          <OPTION NEXT="#goodbye">goodbye</OPTION>
+        </INPUT>
+      </STEP>
+      <STEP NAME="goodbye">
+        <PROMPT>Goodbye</PROMPT>
+        <INPUT TYPE="NONE" NEXT="#end"/>
+      </STEP>
     </DIALOG>
   </xsl:template>
 
   <xsl:template match="title">
-   <!-- ignore -->
+    <!-- ignore -->
   </xsl:template>
 
   <xsl:template match="para">
-   <xsl:apply-templates/>
+    <xsl:apply-templates/>
   </xsl:template>
 
 </xsl:stylesheet>

@@ -16,8 +16,9 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <list>
   <item>This is item 1</item>
   <item>This is item 2</item>

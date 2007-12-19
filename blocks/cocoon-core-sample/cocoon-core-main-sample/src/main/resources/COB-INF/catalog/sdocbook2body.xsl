@@ -16,12 +16,13 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-<!-- DC: hacked from Avalon docbook2body.xsl -->
+  <!-- DC: hacked from Avalon docbook2body.xsl -->
 
   <xsl:template match="article">
     <html>
@@ -441,4 +442,3 @@
     </xsl:copy>
   </xsl:template>
 </xsl:stylesheet>
-

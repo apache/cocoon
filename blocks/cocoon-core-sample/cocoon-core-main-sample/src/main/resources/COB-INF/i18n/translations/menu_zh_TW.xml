@@ -16,22 +16,21 @@
   limitations under the License.
 -->
 
-<!--+
-    | Chinese message catalogue file for menu in Cocoon 2 i18n sample
-    |
-    | CVS $Id$
-    +-->
-
+<!--
+  - Chinese message catalogue file for menu in Cocoon 2 i18n sample
+  -
+  - $Id$
+  -->
 <catalogue xml:lang="zh_TW">
-    <message key="Apache Cocoon i18n Samples">國際化 例題</message>
-    <message key="Samples">例題</message>
-    <message key="Introduction">入門</message>
-    <message key="Static (XML)">靜的 (XML)</message>
-    <message key="Dynamic (XSP)">動的 (XSP)</message>
-    <message key="Sitemap source">Sitemap source</message>    
-    <message key="Locales">言語設定</message>
-    <message key="Documentation">文書</message>
-    <message key="i18n transformer docs">國際化 變換機 文書</message>
-    <message key="i18n transformer Javadoc">國際化 變換機 Javadoc</message>
-    <message key="LocaleAction Javadoc">LocaleAction Javadoc</message>
+  <message key="Apache Cocoon i18n Samples">國際化 例題</message>
+  <message key="Samples">例題</message>
+  <message key="Introduction">入門</message>
+  <message key="Static (XML)">靜的 (XML)</message>
+  <message key="Dynamic (XSP)">動的 (XSP)</message>
+  <message key="Sitemap source">Sitemap source</message>
+  <message key="Locales">言語設定</message>
+  <message key="Documentation">文書</message>
+  <message key="i18n transformer docs">國際化 變換機 文書</message>
+  <message key="i18n transformer Javadoc">國際化 變換機 Javadoc</message>
+  <message key="LocaleAction Javadoc">LocaleAction Javadoc</message>
 </catalogue>

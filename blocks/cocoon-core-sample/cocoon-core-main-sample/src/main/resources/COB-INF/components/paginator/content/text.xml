@@ -16,8 +16,9 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <list>
   <item>This is the paragraph number one (44 chars).</item>
   <item>This is the paragraph number two, a bit longer (58 chars).</item>
@@ -27,7 +28,7 @@
   <item>This is the paragraph number six.</item>
   <item>This is the paragraph number seven.</item>
   <item>This is the paragraph number eight.</item>
-  <item>This is the paragraph number nine which is longer (twice) then any other paragraph before.</item>
+  <item>This is the paragraph number nine which is longer (twice) than any other paragraph before.</item>
   <item>This is the paragraph number ten.</item>
   <item>This is the paragraph number eleven.</item>
 </list>
