@@ -61,20 +61,13 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
- * The stylesheet processor
+ * The XSLT stylesheet processor.
  *
- * @cocoon.sitemap.component.name   xslt
- * @cocoon.sitemap.component.documentation.caching
- *               Uses the last modification date of the xslt document for validation
- *
- * @cocoon.sitemap.component.pooling.max  32
- * <p>
- * This Transformer is used to transform the incoming SAX stream using
+ * <p>This Transformer is used to transform the incoming SAX stream using
  * a TrAXProcessor. Use the following sitemap declarations to define, configure
  * and parameterize it:
- * </p>
- * <b>In the map:sitemap/map:components/map:transformers:</b><br>
+ *
+ * <p><b>In the map:sitemap/map:components/map:transformers:</b>
  * <pre>
  * &lt;map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer"&gt;<br>
  *   &lt;use-request-parameters&gt;false&lt;/use-request-parameters&gt;
@@ -132,10 +125,18 @@ import org.xml.sax.SAXException;
  * All &lt;parameter&gt; declarations will be made available in the XSLT stylesheet as
  * xsl:variables.
  *
+ * @cocoon.sitemap.component.documentation
+ * The XSLT stylesheet processor
+ * @cocoon.sitemap.component.name   xslt
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ * Uses the last modification date of the xslt document for validation
+ * @cocoon.sitemap.component.pooling.max  32
+ *
  * @version SVN $Id$
  */
 public class TraxTransformer extends AbstractTransformer
-implements Serviceable, Configurable, CacheableProcessingComponent, Disposable {
+                             implements Serviceable, Configurable, CacheableProcessingComponent,
+                                        Disposable {
 
     /** The service manager instance (protected because used by subclasses) */
     protected ServiceManager manager;

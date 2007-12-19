@@ -32,23 +32,26 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Augments all <code>href</code> attributes with the full path to
  * the request. You can optionally specify the <code>mount</code>
  * parameter.
  *
- * The set of attributes to augment can be specified in the
+ * <p>The set of attributes to augment can be specified in the
  * <code>attributes</code> parameter (defaults to href if
  * <code>attributes</code> is not present).  Any blank character, comma or colon
  * is considered as a separator to delimit attributes.
  *
+ * @cocoon.sitemap.component.documentation
+ * Augments all <code>href</code> attributes with the full path to
+ * the request. You can optionally specify the <code>mount</code>
+ * parameter.
  * @cocoon.sitemap.component.name   augment
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @since October 10, 2001
  * @version $Id$
  */
-public class AugmentTransformer
-    extends AbstractTransformer {
+public class AugmentTransformer extends AbstractTransformer {
 
     protected Map objectModel;
     protected Request request;
@@ -56,6 +59,7 @@ public class AugmentTransformer
     protected Set augmentedAttributes;
 
     public static final String AUGMENTED_ATTRIBUTES="attributes";
+
 
     public void setup(SourceResolver resolver,
                       Map objectModel,

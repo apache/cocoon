@@ -29,55 +29,57 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
  * The <code>StripNameSpacesTransformer</code> is a class that can be plugged into a pipeline
  * to strip all namespaces from a SAX stream. It is much faster (certainly for larger
  * streams, but easily factor 100) then the conventional stripnamespaces.xsl
  *
+ * @cocoon.sitemap.component.documentation
+ * The <code>StripNameSpacesTransformer</code> is a class that can be plugged into a pipeline
+ * to strip all namespaces from a SAX stream. It is much faster (certainly for larger
+ * streams, but easily factor 100) then the conventional stripnamespaces.xsl
  * @cocoon.sitemap.component.name  stripnamespaces
+ * @cocoon.sitemap.component.documentation.caching Yes
  * @cocoon.sitemap.component.pooling.max  32
  *
  * @version $Id$
  * @author ard schrijvers
- *
  */
-public class StripNameSpacesTransformer extends AbstractTransformer implements
-		CacheableProcessingComponent {
+public class StripNameSpacesTransformer extends AbstractTransformer
+                                        implements CacheableProcessingComponent {
 
 	private static final String EMPTY_NS = "";
 
-	public void setup(SourceResolver resolver, Map objectModel, String src,
-			Parameters params) throws ProcessingException, SAXException,
-			IOException {
-           // nothing needed
+
+    public void setup(SourceResolver resolver, Map objectModel, String src,
+                      Parameters params)
+    throws ProcessingException, SAXException, IOException {
+        // nothing needed
 	}
 
-	public void startPrefixMapping(String prefix, String uri)
-			throws SAXException {
-		// no prefix
-	}
+    public Serializable getKey() {
+        return "1";
+    }
 
-	public void endPrefixMapping(String prefix) throws SAXException {
-		// no prefix
-	}
+    public SourceValidity getValidity() {
+        return NOPValidity.SHARED_INSTANCE;
+    }
 
-	public void startElement(String uri, String localName, String qName,
-			Attributes attr) throws SAXException {
+    public void startPrefixMapping(String prefix, String uri)
+    throws SAXException {
+        // no prefix
+    }
 
-		super.startElement(EMPTY_NS, localName, localName, attr);
+    public void endPrefixMapping(String prefix) throws SAXException {
+        // no prefix
+    }
 
-	}
+    public void startElement(String uri, String localName, String qName, Attributes attr)
+    throws SAXException {
+        super.startElement(EMPTY_NS, localName, localName, attr);
+    }
 
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
-		super.endElement(EMPTY_NS, localName, localName);
-	}
-
-	public Serializable getKey() {
-		return "1";
-	}
-
-	public SourceValidity getValidity() {
-		return NOPValidity.SHARED_INSTANCE;
-	}
+    public void endElement(String uri, String localName, String qName)
+    throws SAXException {
+        super.endElement(EMPTY_NS, localName, localName);
+    }
 }

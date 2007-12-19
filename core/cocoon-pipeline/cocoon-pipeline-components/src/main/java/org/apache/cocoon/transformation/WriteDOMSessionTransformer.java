@@ -33,22 +33,22 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
- * Make a DOM object from SAX events and write it to the session.
- * 
- * @cocoon.sitemap.component.name   writeDOMsession
- * 
  * Make a DOM object from SAX events and write it to the session.
  *
- * Usage in sitemap:
+ * <p>Usage in sitemap:
  *    &lt;map:transform type="writeDOMsession"&gt;
  *      &lt;map:parameter name="dom-name" value="content"/&gt;
  *      &lt;map:parameter name="dom-root-element" value="companies"/&gt;
  *    &lt;/map:transform&gt;
  *
- * Where:
+ * <p>Where:
  *   dom-name is the name for the DOM object in the session
  *   dom-root-element is the trigger that will be the root element of the DOM
+ *
+ * @cocoon.sitemap.component.documentation
+ * Make a DOM object from SAX events and write it to the session.
+ * @cocoon.sitemap.component.name   writeDOMsession
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @version $Id$
  */
@@ -57,11 +57,12 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
     public static final String DOM_NAME = "dom-name";
     public static final String DOM_ROOT_ELEMENT = "dom-root-element";
 
-    private boolean buildDom = false;
+    private boolean buildDom;
+
     /**
      * component was correctly setup
      */
-    private boolean setup = false;
+    private boolean setup;
 
     private HttpSession session;
     private DOMBuilder builder;
@@ -74,11 +75,11 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
      * Recyclable
      */
     public void recycle() {
-        super.recycle();
         this.session = null;
         this.builder = null;
         this.buildDom = false;
         this.setup = false;
+        super.recycle();
     }
 
     /* BEGIN SitemapComponent methods */
@@ -190,5 +191,4 @@ public class WriteDOMSessionTransformer extends AbstractTransformer {
             builder.startPrefixMapping(pre, uri);
         }
     }
-
 }

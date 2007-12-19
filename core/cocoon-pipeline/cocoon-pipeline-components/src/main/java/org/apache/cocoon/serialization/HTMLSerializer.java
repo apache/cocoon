@@ -26,22 +26,21 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * The html serializer serializes sax events into an html document.
+
  * @cocoon.sitemap.component.documentation
  * The html serializer serializes sax events into an html document.
- * 
  * @cocoon.sitemap.component.name      html
+ * @cocoon.sitemap.component.documentation.caching Yes
  * @cocoon.sitemap.component.mimetype  text/html
- * 
  * @cocoon.sitemap.component.pooling.max  32
  * 
  * @cocoon.sitemap.component.configuration
  * <doctype-public>-//W3C//DTD HTML 4.01 Transitional//EN</doctype-public>
  * <doctype-system>http://www.w3.org/TR/html4/loose.dtd</doctype-system>
  *
- * 
  * @version $Id$
  */
-
 public class HTMLSerializer extends AbstractTextSerializer {
     
     /* (non-Javadoc)

@@ -23,15 +23,16 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
- * @cocoon.sitemap.component.documentation
- * An extension of DirectoryGenerators that adds extra attributes for MP3
+ * An extension of {@link DirectoryGenerator} that adds extra attributes for MP3
  * files.
- * 
+ *
+ * @cocoon.sitemap.component.documentation
+ * An extension of {@link DirectoryGenerator} that adds extra attributes for MP3
+ * files.
  * @cocoon.sitemap.component.name   mp3directory
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.documentation.caching
- *               Uses the last modification date of the directory and the contained files
- * 
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ * Uses the last modification date of the directory and the contained files
  *
  * @version $Id$
  */

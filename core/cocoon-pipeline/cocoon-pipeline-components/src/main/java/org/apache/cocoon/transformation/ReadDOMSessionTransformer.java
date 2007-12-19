@@ -31,20 +31,12 @@ import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-
 /**
- * @cocoon.sitemap.component.documentation
- * With this transformer, an object that is stored in the session, can be inserted
- * in the SAX stream at a given position, using usual &lt;xsp:expr&gt; rules.
- * Object can be DOM Node, XMLizable, or any other object supported by &lt;xsp:expr&gt;.
- * 
- * @cocoon.sitemap.component.name   readDOMsession
- * 
  * With this transformer, an object that is stored in the session, can be inserted
  * in the SAX stream at a given position, using usual &lt;xsp:expr&gt; rules.
  * Object can be DOM Node, XMLizable, or any other object supported by &lt;xsp:expr&gt;.
  *
- * Usage in sitemap:
+ * <p>Usage in sitemap:
  * <pre>
  *    &lt;map:transform type="read-session"&gt;
  *      &lt;map:parameter name="attribute-name" value="companyInfo"/&gt;
@@ -53,13 +45,20 @@ import org.xml.sax.SAXException;
  *    &lt;/map:transform&gt;
  * </pre>
  *
- * Where:
+ * <p>Where:
  * <ul>
- *  <li><b>attribute-name</b> is the name of the object in the session
- *  <li><b>trigger-element</b> is the element that we need to insert the SAX events
- *  <li><b>postion</b> is the actual place where the stream will be inserted, ie before, after or in
- *  the trigger-element
+ * <li><b>attribute-name</b> is the name of the object in the session
+ * <li><b>trigger-element</b> is the element that we need to insert the SAX events
+ * <li><b>postion</b> is the actual place where the stream will be inserted, ie before, after or in
+ * the trigger-element
  * </ul>
+ *
+ * @cocoon.sitemap.component.documentation
+ * With this transformer, an object that is stored in the session, can be inserted
+ * in the SAX stream at a given position, using usual &lt;xsp:expr&gt; rules.
+ * Object can be DOM Node, XMLizable, or any other object supported by &lt;xsp:expr&gt;.
+ * @cocoon.sitemap.component.name   readDOMsession
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @version $Id$
  */

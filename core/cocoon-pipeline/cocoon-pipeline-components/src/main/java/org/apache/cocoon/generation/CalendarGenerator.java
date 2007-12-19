@@ -81,9 +81,9 @@ import org.xml.sax.helpers.AttributesImpl;
  *               
  * @cocoon.sitemap.component.documentation
  * Generates an XML document representing a calendar for a given month and year.
- * @cocoon.sitemap.component.documentation.caching TBD
  * @cocoon.sitemap.component.name   calendar
  * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.documentation.caching Yes
  *
  * @version $Id$
  */

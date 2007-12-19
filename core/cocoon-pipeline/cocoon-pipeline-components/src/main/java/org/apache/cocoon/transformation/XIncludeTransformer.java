@@ -58,21 +58,22 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
- * @cocoon.sitemap.component.documentation
- * Implementation of an XInclude transformer.
- * 
- * @cocoon.sitemap.component.name   xinclude
- * 
- * @cocoon.sitemap.component.pooling.max  16
- * 
  * Implementation of an XInclude transformer. It supports xml:base attributes,
  * XPointer fragment identifiers (see the xpointer package to see what exactly is
  * supported), fallback elements, and does xinclude processing on the included content
  * and on the content of fallback elements (with loop inclusion detection).
  *
+ * @cocoon.sitemap.component.documentation
+ * Implementation of an XInclude transformer.
+ * @cocoon.sitemap.component.name   xinclude
+ * @cocoon.sitemap.component.documentation.caching Yes
+ * @cocoon.sitemap.component.pooling.max  16
+ *
  * @version $Id$
  */
-public class XIncludeTransformer extends AbstractTransformer implements Serviceable, CacheableProcessingComponent { 
+public class XIncludeTransformer extends AbstractTransformer
+                                 implements Serviceable, CacheableProcessingComponent {
+
     protected SourceResolver resolver;
     protected ServiceManager manager;
     private XIncludePipe xIncludePipe;
@@ -91,8 +92,9 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
     /** The {@link SourceValidity} instance associated with this request. */ 
     protected MultiSourceValidity validity; 
 
+
     public void setup(SourceResolver resolver, Map objectModel, String source, Parameters parameters)
-            throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
         this.resolver = resolver;
         this.validity = new MultiSourceValidity(resolver, MultiSourceValidity.CHECK_ALWAYS); 
         this.xIncludePipe = new XIncludePipe(); 

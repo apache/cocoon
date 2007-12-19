@@ -30,14 +30,6 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
- * The filter transformer can be used to let only an amount of elements through in
- * a given block.
- * 
- * @cocoon.sitemap.component.name   filter
- * @cocoon.sitemap.component.documentation.caching TBD
- * 
- * 
  * The filter transformer can be used to let only an amount of elements through in
  * a given block.
  *
@@ -53,11 +45,16 @@ import java.util.Map;
  * <p><b>Known limitation: behaviour of transformer when trigger elements are nested
  * is not predictable.</b>
  *
+ * @cocoon.sitemap.component.documentation
+ * The filter transformer can be used to let only an amount of elements through in
+ * a given block.
+ * @cocoon.sitemap.component.name   filter
+ * @cocoon.sitemap.component.documentation.caching Yes
+ *
  * @version $Id$
  */
-public class FilterTransformer
-extends AbstractTransformer
-implements CacheableProcessingComponent {
+public class FilterTransformer extends AbstractTransformer
+                               implements CacheableProcessingComponent {
     
     private static final String ELEMENT = "element-name";
     private static final String COUNT = "count";
@@ -78,9 +75,9 @@ implements CacheableProcessingComponent {
     
     /** BEGIN SitemapComponent methods **/
     public void setup(SourceResolver resolver,
-    Map objectModel,
-    String source,
-    Parameters parameters)
+                      Map objectModel,
+                      String source,
+                      Parameters parameters)
     throws ProcessingException, SAXException, IOException {
         this.counter=0;
         this.currentBlocknr=0;

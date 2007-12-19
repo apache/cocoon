@@ -46,15 +46,16 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * Generates an XML directory listing.
+ * A more general approach is implemented by the {@link TraversableGenerator}.
+ *
  * @cocoon.sitemap.component.documentation
  * Generates an XML directory listing.
- * A more general approach is implemented by the TraversableGenerator (src/blocks/repository/java/org/apache/cocoon/generation/TraversableGenerator.java)
- * 
+ * A more general approach is implemented by the {@link TraversableGenerator}.
  * @cocoon.sitemap.component.name   directory
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.documentation.caching
- *               Uses the last modification date of the directory and the contained files
- * 
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ *   Uses the last modification date of the directory and the contained files.
  * @cocoon.sitemap.component.pooling.max  16
  *
  * @version $Id$

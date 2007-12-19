@@ -47,11 +47,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
- * This transformer allows you to output to a ModifiableSource.
- *
- * @cocoon.sitemap.component.name   sourcewriting
- *
  * This transformer allows you to output to a ModifiableSource.
  *
  * <p>Definition:</p>
@@ -225,6 +220,11 @@ import org.xml.sax.SAXException;
  * TODO: Use the serializer instead of the XMLUtils for inserting of fragments<br/>
  * TODO: Add a &lt;source:before/&gt; tag.
  * </b>
+ *
+ * @cocoon.sitemap.component.documentation
+ * This transformer allows you to output to a ModifiableSource.
+ * @cocoon.sitemap.component.name   sourcewriting
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @version $Id$
  */

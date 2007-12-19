@@ -44,14 +44,10 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.name tee
- * @cocoon.sitemap.component.pooling.max  16
- * 
- * @cocoon.sitemap.component.documentation
- * This transformer works just like the unix "tee" command and is useful for debugging
- * received XML streams.
- * It is also able to launch an optional system command to view or edit the generated file, so that every time the
- * pipeline is executed, your editor pops up.
+ * This transformer works just like the unix "tee" command and is useful for
+ * debugging received XML streams. It is also able to launch an optional system
+ * command to view or edit the generated file, so that every time the pipeline
+ * is executed, your editor pops up.
  * 
  * <p>The Teetransformer serializes SAX events as-is to the {@link org.apache.excalibur.source.ModifiableSource}
  * specified by its <code>src</code> parameter. 
@@ -64,6 +60,15 @@ import org.xml.sax.SAXException;
  * &lt;/map:transform&gt;
  * </pre>
  * 
+ * @cocoon.sitemap.component.documentation
+ * This transformer works just like the unix "tee" command and is useful for
+ * debugging received XML streams. It is also able to launch an optional system
+ * command to view or edit the generated file, so that every time the pipeline
+ * is executed, your editor pops up.
+ * @cocoon.sitemap.component.name tee
+ * @cocoon.sitemap.component.documentation.caching No
+ * @cocoon.sitemap.component.pooling.max  16
+ *
  * @version $Id$
  */
 public class TeeTransformer extends AbstractSAXTransformer {
@@ -80,7 +85,8 @@ public class TeeTransformer extends AbstractSAXTransformer {
     private OutputStream os;
 
     private String osCommand; 
-    private String fileName = null;
+    private String fileName;
+
     /*
      * (non-Javadoc)
      * 

@@ -32,15 +32,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
- * @cocoon.sitemap.component.documentation
- * Filter XML fragments based on a user's role.  This will help in
- * the development of smart forms that must only show information to
- * people who are logged in and have the correct role.  The Role is
- * specified by the Request semantics.  You can specify multiple roles
- * by using comma delimiting.
- * 
- * @cocoon.sitemap.component.name   role-filter
- * 
  * Filter XML fragments based on a user's role.  This will help in
  * the development of smart forms that must only show information to
  * people who are logged in and have the correct role.  The Role is
@@ -62,19 +53,27 @@ import java.util.StringTokenizer;
  * That means you can reassign the namespace to another prefix and all
  * will work as expected.
  *
+ * @cocoon.sitemap.component.documentation
+ * Filter XML fragments based on a user's role.  This will help in
+ * the development of smart forms that must only show information to
+ * people who are logged in and have the correct role.  The Role is
+ * specified by the Request semantics.  You can specify multiple roles
+ * by using comma delimiting.
+ * @cocoon.sitemap.component.name   role-filter
+ * @cocoon.sitemap.component.documentation.caching No
+ *
  * @version $Id$
  */
 public class RoleFilterTransformer extends AbstractTransformer
-        implements CacheableProcessingComponent {
+                                   implements CacheableProcessingComponent {
+
     private final static String URI = "http://apache.org/cocoon/role-filter/1.0";
     private final static String RESTRICT = "restricted";
     private final static String VIEW = "read-only";
     
-    Request request = null;
+    Request request;
     private int skipCounter = 0;
     
-    public RoleFilterTransformer() {
-    }
 
     public final void setup(SourceResolver resolver, Map objectModel, String src, Parameters params)
     throws ProcessingException, SAXException, IOException {
@@ -139,8 +138,8 @@ public class RoleFilterTransformer extends AbstractTransformer
         }
     }
 
-    private final Attributes copyAttributes(final Attributes a, final int role,
-                                            final int view, boolean readOnly) {
+    private Attributes copyAttributes(final Attributes a, final int role,
+                                      final int view, boolean readOnly) {
         if (role < 0 && view < 0) {
             return a;
         }
