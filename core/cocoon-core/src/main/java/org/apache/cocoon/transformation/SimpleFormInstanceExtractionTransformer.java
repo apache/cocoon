@@ -61,6 +61,7 @@ import org.xml.sax.SAXException;
  * that the extracted form instance data is used only when no similar
  * request parameter exists.
  * @cocoon.sitemap.component.name   simple-form-instance
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @version $Id$
  */

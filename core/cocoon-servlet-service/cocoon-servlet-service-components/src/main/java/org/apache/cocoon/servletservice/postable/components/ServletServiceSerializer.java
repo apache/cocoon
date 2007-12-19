@@ -51,6 +51,10 @@ import org.xml.sax.SAXException;
  * service. Result of the serialization is a data returned by the called
  * service.
  * @cocoon.sitemap.component.name servletService  
+ * @cocoon.sitemap.component.documentation.caching Not Implemented
+ *
+ * @since 2.2
+ * @version $Id$
  */
 public class ServletServiceSerializer extends AbstractSerializer
                                       implements SitemapModelComponent {
@@ -111,5 +115,4 @@ public class ServletServiceSerializer extends AbstractSerializer
 			throw new SAXException("Exception occured while copying response from the service to the output stream", e);
 		}
 	}
-
 }

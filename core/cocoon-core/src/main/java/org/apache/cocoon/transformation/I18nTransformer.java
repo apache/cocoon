@@ -264,7 +264,8 @@ import java.util.StringTokenizer;
  * Internationalization transformer is used to transform i18n markup into text
  * based on a particular locale.
  * @cocoon.sitemap.component.name   i18n
- * @cocoon.sitemap.component.documentation.caching Yes
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ * Currently, validity of used i18n catalogues is not verified
  *
  * @version $Id$
  */

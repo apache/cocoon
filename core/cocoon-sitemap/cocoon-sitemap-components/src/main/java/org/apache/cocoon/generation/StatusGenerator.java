@@ -66,14 +66,9 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Generates an XML representation of the current status of Cocoon.
  *
- * @cocoon.sitemap.component.name   status
- * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.pooling.max  16
- *
- * Potted DTD:
+ * <p>Potted DTD:
  *
  * <code>
  * &lt;!ELEMENT statusinfo (group|value)*&gt;
@@ -96,6 +91,13 @@ import java.util.TreeSet;
  * &lt;!ELEMENT line (#PCDATA)+&gt;
  * &gt;
  * </code>
+ *
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML representation of the current status of Cocoon.
+ * @cocoon.sitemap.component.name   status
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.documentation.caching No
+ * @cocoon.sitemap.component.pooling.max  16
  *
  * @version $Id$
  */
