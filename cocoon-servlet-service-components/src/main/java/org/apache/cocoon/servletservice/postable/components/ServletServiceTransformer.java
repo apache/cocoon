@@ -41,7 +41,11 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation
  * The <code>ServletServiceTransformer</code> POSTs its input data to a called service and passes the XML data returned
  * by the service down the pipeline.
- * @cocoon.sitemap.component.name servletService 
+ * @cocoon.sitemap.component.name servletService
+ * @cocoon.sitemap.component.documentation.caching Not Implemented
+ *
+ * @since 2.2
+ * @version $Id$
  */
 public class ServletServiceTransformer extends AbstractSAXTransformer
                                        implements DisposableSitemapComponent {
@@ -50,6 +54,15 @@ public class ServletServiceTransformer extends AbstractSAXTransformer
 	
 	private PostableSource servletSource;
 	
+
+    public SAXParser getSaxParser() {
+        return saxParser;
+    }
+
+    public void setSaxParser(SAXParser saxParser) {
+        this.saxParser = saxParser;
+    }
+
 
 	public void setupTransforming() throws IOException, ProcessingException, SAXException {
 		super.setupTransforming();
@@ -78,29 +91,22 @@ public class ServletServiceTransformer extends AbstractSAXTransformer
 	
 	public void endDocument() throws SAXException {
 		super.endDocument();
-		try {
+
+        try {
 			String xml = endSerializedXMLRecording();
 			//FIXME: Not sure if UTF-8 should always be used, do we have defined this encoding somewhere in Cocoon?
 			IOUtils.copy(new StringReader(xml), servletSource.getOutputStream(), "UTF-8");
 			SourceUtil.parse(saxParser, servletSource, contentHandler);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new SAXException("Exception occured while calling servlet service", e);
 		}
 	}
 	
 	public void dispose() {
-		if (servletSource != null)
+		if (servletSource != null) {
 			resolver.release(servletSource);
-		super.dispose();
-	}
+        }
 
-	public SAXParser getSaxParser() {
-		return saxParser;
+        super.dispose();
 	}
-
-	public void setSaxParser(SAXParser saxParser) {
-		this.saxParser = saxParser;
-	}
-
 }
