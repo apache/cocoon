@@ -57,7 +57,8 @@ public class FileGenerator extends ServiceableGenerator
     /** The SAX Parser. */
     protected SAXParser parser;
 
-	public void setParser(SAXParser parser) {
+
+    public void setParser(SAXParser parser) {
         this.parser = parser;
     }
 
@@ -66,12 +67,12 @@ public class FileGenerator extends ServiceableGenerator
      * All instance variables are set to <code>null</code>.
      */
     public void recycle() {
-        if (null != this.inputSource) {
+        if (this.inputSource != null) {
             super.resolver.release(this.inputSource);
             this.inputSource = null;
         }
-        if (null != this.parser) {
-            this.manager.release(this.parser);
+        if (this.parser != null) {
+            super.manager.release(this.parser);
             this.parser = null;
         }
         super.recycle();
@@ -84,18 +85,22 @@ public class FileGenerator extends ServiceableGenerator
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
+
         try {
         	// Lookup parser in Avalon contexts
-        	if (null == this.parser)
+        	if (this.parser == null) {
 				this.parser = (SAXParser) this.manager.lookup(SAXParser.class.getName());
+            }
         } catch (ServiceException e) {
             throw new ProcessingException("Exception when getting parser.", e);
         }
+
         try {
             this.inputSource = super.resolver.resolveURI(src);
         } catch (SourceException se) {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Source " + super.source +
                               " resolved to " + this.inputSource.getURI());
@@ -128,7 +133,7 @@ public class FileGenerator extends ServiceableGenerator
     public void generate()
     throws IOException, SAXException, ProcessingException {
         try {
-        	SourceUtil.parse(this.parser, this.inputSource, super.xmlConsumer);
+            SourceUtil.parse(this.parser, this.inputSource, super.xmlConsumer);
         } catch (SAXException e) {
             SourceUtil.handleSAXException(this.inputSource.getURI(), e);
         }
