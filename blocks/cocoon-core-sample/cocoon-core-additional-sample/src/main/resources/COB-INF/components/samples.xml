@@ -16,19 +16,21 @@
   limitations under the License.
 -->
 
-<!-- @version $Id$ -->
-
-<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Components Samples">
+<!--
+  - $Id$
+  -->
+<samples xmlns:xlink="http://www.w3.org/1999/xlink"
+         name="Components Samples">
 
   <group name="Back">
-   <sample name="Back" href="./">
-    Back to the samples home page.
-   </sample>
-   <note>
-     These are just some of the many facilities that are included with the
-     core. See the main documentation for descriptions of all available
-     components.
-   </note>
+    <sample name="Back" href="../">
+      Back to the samples home page.
+    </sample>
+    <note>
+      These are just some of the many facilities that are included with the
+      core. See the main documentation for descriptions of all available
+      components.
+    </note>
   </group>
 
   <group name="Generators">
@@ -44,7 +46,7 @@
     <sample href="imagereader/list" name="Image Directory Generator">
       Read a directory, process images and find their attributes.
     </sample>
-    <sample href="cal" name="Calendar Generator">
+    <sample href="calendar/" name="Calendar Generator">
       Generate a calendar for any month and year.
     </sample>
   </group>
