@@ -16,12 +16,11 @@
   limitations under the License.
 -->
 
-<!--+
-    | English override message catalogue file for Cocoon 2 i18n sample
-    |
-    | CVS $Id$
-    +-->
-
+<!--
+  - English override message catalogue file for Cocoon 2 i18n sample
+  -
+  - $Id$
+  -->
 <catalogue xml:lang="en">
-    <message key="a_key">This is a tiered key value.</message>
+  <message key="a_key">This is a tiered key value.</message>
 </catalogue>

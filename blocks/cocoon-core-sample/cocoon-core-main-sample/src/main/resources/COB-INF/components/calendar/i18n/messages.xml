@@ -19,7 +19,7 @@
 <!--
   - Default (English) message catalogue file for Cocoon 2 CalendarGenerator sample
   -
-  - CVS $Id$
+  - $Id$
   -->
 <catalogue xml:lang="en">
   <message key="SUNDAY">Sunday</message>

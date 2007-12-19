@@ -16,8 +16,9 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- =========================== Views =================================== -->

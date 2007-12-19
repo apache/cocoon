@@ -16,22 +16,21 @@
   limitations under the License.
 -->
 
-<!--+
-    | Russian message catalogue file for menu in Cocoon 2 i18n sample
-    |
-    | CVS $Id$
-    +-->
-
+<!--
+  - Russian message catalogue file for menu in Cocoon 2 i18n sample
+  -
+  - $Id$
+  -->
 <catalogue xml:lang="ru">
-    <message key="Apache Cocoon i18n Samples">Примеры интернационализации Apache Cocoon</message>
-    <message key="Samples">Примеры</message>
-    <message key="Introduction">Введение</message>
-    <message key="Static (XML)">Статический (XML)</message>
-    <message key="Dynamic (XSP)">Динамический (XSP)</message>
-    <message key="Sitemap source">Исходник Sitemap</message>        
-    <message key="Locales">Регион</message>
-    <message key="Documentation">Документация</message>
-    <message key="i18n transformer docs">Документация по трансформеру i18n</message>
-    <message key="i18n transformer Javadoc">Javadoc по трансформеру i18n</message>
-    <message key="LocaleAction Javadoc">Javadoc по LocaleAction</message>
+  <message key="Apache Cocoon i18n Samples">Примеры интернационализации Apache Cocoon</message>
+  <message key="Samples">Примеры</message>
+  <message key="Introduction">Введение</message>
+  <message key="Static (XML)">Статический (XML)</message>
+  <message key="Dynamic (XSP)">Динамический (XSP)</message>
+  <message key="Sitemap source">Исходник Sitemap</message>
+  <message key="Locales">Регион</message>
+  <message key="Documentation">Документация</message>
+  <message key="i18n transformer docs">Документация по трансформеру i18n</message>
+  <message key="i18n transformer Javadoc">Javadoc по трансформеру i18n</message>
+  <message key="LocaleAction Javadoc">Javadoc по LocaleAction</message>
 </catalogue>

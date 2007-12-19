@@ -1,5 +1,4 @@
-
-CVS: $Id$
+$Id$
 
 To get started, read the How-To for this component:
    http://localhost:8888/howto/howto-paginator-transformer.html

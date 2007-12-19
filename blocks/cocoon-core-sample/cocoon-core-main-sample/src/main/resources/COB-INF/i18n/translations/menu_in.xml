@@ -16,22 +16,21 @@
   limitations under the License.
 -->
 
-<!--+
-    | Indonesian message catalogue file for menu in Cocoon 2 i18n sample
-    |
-    | CVS $Id$
-    +-->
-
+<!--
+  - Indonesian message catalogue file for menu in Cocoon 2 i18n sample
+  -
+  - $Id$
+  -->
 <catalogue xml:lang="in">
-    <message key="Apache Cocoon i18n Samples">Contoh Apache Cocoon i18n</message>
-    <message key="Samples">Contoh</message>
-    <message key="Introduction">Kata pengantar</message>
-    <message key="Static (XML)">Statis (XML)</message>
-    <message key="Dynamic (XSP)">Dynamis (XSP)</message>
-    <message key="Sitemap source">Sitemap kode</message>    
-    <message key="Locales">Lokal</message>
-    <message key="Documentation">Dokumentasi</message>
-    <message key="i18n transformer docs"><![CDATA[<I18ntransformer> docs]]></message>
-    <message key="i18n transformer Javadoc"><![CDATA[<I18ntransformer> Javadoc]]></message>
-    <message key="LocaleAction Javadoc"><![CDATA[<LocaleAction> Javadoc]]></message>
+  <message key="Apache Cocoon i18n Samples">Contoh Apache Cocoon i18n</message>
+  <message key="Samples">Contoh</message>
+  <message key="Introduction">Kata pengantar</message>
+  <message key="Static (XML)">Statis (XML)</message>
+  <message key="Dynamic (XSP)">Dynamis (XSP)</message>
+  <message key="Sitemap source">Sitemap kode</message>
+  <message key="Locales">Lokal</message>
+  <message key="Documentation">Dokumentasi</message>
+  <message key="i18n transformer docs"><![CDATA[<I18ntransformer> docs]]></message>
+  <message key="i18n transformer Javadoc"><![CDATA[<I18ntransformer> Javadoc]]></message>
+  <message key="LocaleAction Javadoc"><![CDATA[<LocaleAction> Javadoc]]></message>
 </catalogue>

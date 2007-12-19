@@ -15,7 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $ID$ -->
+
+<!--
+  - $Id$
+  -->
 <elements>
   <element>1</element>
   <element>2</element>
