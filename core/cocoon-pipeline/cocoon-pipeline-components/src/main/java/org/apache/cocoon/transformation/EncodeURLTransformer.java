@@ -40,33 +40,20 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
  * The encodeURL transformer emits encoded URLs.
  *
- * @cocoon.sitemap.component.name   encodeurl
- * @cocoon.sitemap.component.documentation.caching
- *               TBD
+ * <p>This transformer applies encodeURL method to URLs.
+ * You may want to use this transform to avoid doing the manually
+ * encodeURL() calls.
  *
- * @cocoon.sitemap.component.pooling.max  32
+ * <p>Usually this transformer is appended as last transformer before
+ * the serialization process. In this case it is possible to encode
+ * URLs introduced in the generator, and xslt transformer phase.
  *
- * The encodeURL transformer emits encoded URLs.
- * <p>
- *   This transformer applies encodeURL method to URLs.
- *   You may want to use this transform to avoid doing the manually
- *   encodeURL() calls.
- * </p>
- * <p>
- *   Usually this transformer is appended as last transformer before
- *   the serialization process. In this case it is possible to encode
- *   URLs introduced in the generator, and xslt transformer phase.
- * </p>
- * <p>
- *   You can specify which attributes hold URL values in order to restrict
- *   URL rewriting to specific attributes only.
- * </p>
- * <p>
- * Usage in a sitemap:
- * </p>
+ * <p>You can specify which attributes hold URL values in order to restrict
+ * URL rewriting to specific attributes only.
+ *
+ * <p>Usage in a sitemap:
  * <pre><tt>
  *   &lt;map:composition&gt;
  *   ...
@@ -83,7 +70,15 @@ import org.xml.sax.helpers.AttributesImpl;
  *       ...
  *       &lt;map:transform type=&quot;encodeURL&quot;/&gt;
  *       ...
- * </pre></tt>
+ * </tt></pre>
+ *
+ * @cocoon.sitemap.component.documentation
+ * The encodeURL transformer emits encoded URLs.
+ * @cocoon.sitemap.component.name   encodeurl
+ * @cocoon.sitemap.component.documentation.caching Limited.
+ * Transformation result is cacheable only if no encoding was performed
+ * (no session or URL session tracking was used).
+ * @cocoon.sitemap.component.pooling.max  32
  *
  * @version $Id$
  */

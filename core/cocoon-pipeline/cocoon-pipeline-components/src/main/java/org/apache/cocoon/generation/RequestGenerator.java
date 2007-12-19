@@ -38,50 +38,56 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Generates an XML representation of the incoming request.
- * 
- * @cocoon.sitemap.component.name   request
- * @cocoon.sitemap.component.label  content
  *
- * @cocoon.sitemap.component.pooling.max  16
- * 
- * <p>
- * <b>Configuration options:</b>
+ * <p><b>Configuration options:</b>
  * <dl>
- * <dt> <i>container-encoding</i> (optional)
- * <dd> The encoding used by container. Default value is ISO-8859-1.
- * <dt> <i>form-encoding</i> (optional)
- * <dd> The supposed encoding of the request parameter. Default is null.
- * <dt> <i>generate-attributes</i> (optional)
- * <dd> If true, request attributes were also included. Default is false.
+ * <dt>container-encoding
+ * <dd>The encoding used by container. Optional, default value is ISO-8859-1.
+ * <dt>form-encoding
+ * <dd>The supposed encoding of the request parameter. Optional, default is null.
+ * <dt>generate-attributes
+ * <dd>If true, request attributes were also included. Optional, default is false.
  * </dl>
  * These configuration options are supported at both declaration and use time.
  * The configuration at use time takes priority over declaration time.
  *
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML representation of the incoming request.
+ * @cocoon.sitemap.component.name   request
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.documentation.caching No
+ * @cocoon.sitemap.component.pooling.max  16
+ *
  * @version $Id$
  */
-public class RequestGenerator extends ServiceableGenerator implements Parameterizable {
+public class RequestGenerator extends ServiceableGenerator
+                              implements Parameterizable {
 
     /** The namespace prefix of this generator. */
     private final static String PREFIX = "h";
+
     /** The namespace URI of this generator. */
     private final static String URI = "http://apache.org/cocoon/request/2.0";
 
     /** The configured container encoding at declaration time. */
     private String global_container_encoding;
+
     /** The configured container encoding at use time. */
     private String container_encoding;
 
     /** The configured form encoding at declaration time. */
     private String global_form_encoding;
+
     /** The configured form encoding at use time. */
     private String form_encoding;
 
     /** The configuration for including request attributes at declaration time. */
     private boolean global_generate_attributes;
+
     /** The configuration for including request attributes at use time. */
     private boolean generate_attributes;
+
 
     public void parameterize(Parameters parameters)
     throws ParameterException {

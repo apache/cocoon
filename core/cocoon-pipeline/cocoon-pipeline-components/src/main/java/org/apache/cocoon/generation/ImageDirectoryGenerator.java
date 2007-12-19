@@ -27,18 +27,17 @@ import org.apache.cocoon.util.ImageUtils;
 import org.xml.sax.SAXException;
 
 /**
+ * Generates an XML directory listing. This is an extension of
+ * the {@link DirectoryGenerator} that adds extra attributes for image files.
+ *
  * @cocoon.sitemap.component.documentation
  * Generates an XML directory listing. This is an extension of 
- * the <link href="directory-generator.html">Directory Generator</link> that 
- * adds extra attributes for image files.
- * 
+ * the {@link DirectoryGenerator} that adds extra attributes for image files.
  * @cocoon.sitemap.component.name   imagedirectory
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.documentation.caching
- *               Uses the last modification date of the directory and the contained files
- * 
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ * Uses the last modification date of the directory and the contained files
  * @cocoon.sitemap.component.pooling.max  16
- *
  *
  * @version $Id$
  */

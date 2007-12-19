@@ -45,11 +45,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
+ * Generates a list of links that are reachable from the src and their status.
+ *
  * @cocoon.sitemap.component.documentation
  * Generates a list of links that are reachable from the src and their status.
- * 
  * @cocoon.sitemap.component.name   linkstatus
  * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @version $Id$
  */

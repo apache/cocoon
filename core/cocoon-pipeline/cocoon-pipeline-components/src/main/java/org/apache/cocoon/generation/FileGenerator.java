@@ -35,15 +35,16 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.xml.sax.SAXException;
 
 /**
+ * The <code>FileGenerator</code> is a class that reads XML from a source
+ * and generates SAX Events. The <code>FileGenerator</code> is cacheable.
+ *
  * @cocoon.sitemap.component.documentation
  * The <code>FileGenerator</code> is a class that reads XML from a source
- * and generates SAX Events. The <code>FileGenerator</code> implements the
- * <code>CacheableProcessingComponent</code> interface.
- *
+ * and generates SAX Events. The <code>FileGenerator</code> is cacheable.
  * @cocoon.sitemap.component.name   file
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.documentation.caching
- *     Uses the last modification date of the xml document for validation
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ * Uses the last modification date of the xml document for validation
  *
  * @version $Id$
  */

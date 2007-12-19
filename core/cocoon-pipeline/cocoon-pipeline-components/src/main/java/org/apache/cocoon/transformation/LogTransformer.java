@@ -32,14 +32,6 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
- * The <code>LogTransformer</code> is a class that can be plugged into a pipeline
- * to print the SAX events which passes thru this transformer in a readable form
- * to a file.
- * 
- * @cocoon.sitemap.component.name  log
- * @cocoon.sitemap.component.pooling.max  16
- *
  * The <code>LogTransformer</code> is a class that can be plugged into a pipeline
  * to print the SAX events which passes thru this transformer in a readable form
  * to a file.
@@ -60,11 +52,17 @@ import java.util.Map;
  * <br>
  * This transformations main purpose is debugging.
  *
- * @version $Id$
+ * @cocoon.sitemap.component.documentation
+ * The <code>LogTransformer</code> is a class that can be plugged into a pipeline
+ * to print the SAX events which passes thru this transformer in a readable form
+ * to a file.
+ * @cocoon.sitemap.component.name  log
+ * @cocoon.sitemap.component.documentation.caching No
+ * @cocoon.sitemap.component.pooling.max  16
  *
+ * @version $Id$
  */
-public class LogTransformer
-  extends AbstractTransformer {
+public class LogTransformer extends AbstractTransformer {
 
     private static String lf = System.getProperty("line.separator", "\n");
 

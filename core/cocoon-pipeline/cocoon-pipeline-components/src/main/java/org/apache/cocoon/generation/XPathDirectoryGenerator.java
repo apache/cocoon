@@ -47,17 +47,10 @@ import org.xml.sax.helpers.AttributesImpl;
 
 
 /**
- * @cocoon.sitemap.component.documentation
- * Generates an XML directory listing performing XPath queries on XML files. It can be used both as a plain
- * DirectoryGenerator or, by specifying a parameter <code>xpath</code>, it will perform an XPath query on every XML
- * resource. 
- * 
- * @cocoon.sitemap.component.name   xpathdirectory
- * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.documentation.caching
- *               Uses the last modification date of the directory and the contained documents
- * 
- * 
+ * Generates an XML directory listing performing XPath queries on XML files. It
+ * can be used both as a plain DirectoryGenerator or, by specifying a parameter
+ * <code>xpath</code>, it will perform an XPath query on every XML resource.
+
  * <p>
  * Generates an XML directory listing performing XPath queries on XML files. It can be used both as a plain
  * DirectoryGenerator or, by specifying a parameter <code>xpath</code>, it will perform an XPath query on every XML
@@ -113,10 +106,18 @@ import org.xml.sax.helpers.AttributesImpl;
  *  &lt;/dir:directory&gt;
  * </pre>
  *
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML directory listing performing XPath queries on XML files. It
+ * can be used both as a plain DirectoryGenerator or, by specifying a parameter
+ * <code>xpath</code>, it will perform an XPath query on every XML resource.
+ * @cocoon.sitemap.component.name   xpathdirectory
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ * Uses the last modification date of the directory and the contained documents
+ *
  * @version $Id$
  */
-public class XPathDirectoryGenerator
-extends DirectoryGenerator {
+public class XPathDirectoryGenerator extends DirectoryGenerator {
     /** Local name for the element that contains the included XML snippet. */
     protected static final String XPATH_NODE_NAME = "xpath";
 

@@ -33,11 +33,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Generates a document from a session attribute.
- *
- * @cocoon.sitemap.component.name   sessionattribute
- * @cocoon.sitemap.component.label  content
  *
  * Generates a document from a session attribute. The attribute may be a DOM
  * node, an <code>XMLizable</code>, or any other object, and is streamed using
@@ -68,6 +64,12 @@ import org.xml.sax.SAXException;
  *     &lt;map:parameter name="root-element" value="root"/&gt;
  *   &lt;/map:generate&gt;
  * </pre>
+ *
+ * @cocoon.sitemap.component.documentation
+ * Generates a document from a session attribute.
+ * @cocoon.sitemap.component.name   sessionattribute
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @see org.apache.cocoon.transformation.ReadDOMSessionTransformer
  * @see org.apache.cocoon.transformation.WriteDOMSessionTransformer

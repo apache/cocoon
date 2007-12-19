@@ -35,21 +35,21 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * The <code>FileGenerator</code> is a class that reads XML from a source
+ * and generates SAX Events. The <code>FileGenerator</code> is cacheable.
+ *
  * @cocoon.sitemap.component.documentation
  * The <code>FileGenerator</code> is a class that reads XML from a source
- * and generates SAX Events. The <code>FileGenerator</code> implements the
- * <code>CacheableProcessingComponent</code> interface.
- *
+ * and generates SAX Events. The <code>FileGenerator</code> is cacheable.
  * @cocoon.sitemap.component.name   file
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.documentation.caching
- *     Uses the last modification date of the xml document for validation
+ * Uses the last modification date of the xml document for validation
  *
  * @version $Id$
  */
-public class FileGeneratorBean
-    extends AbstractLogEnabled
-    implements Generator, CacheableProcessingComponent, DisposableSitemapComponent {
+public class FileGeneratorBean extends AbstractLogEnabled
+                               implements Generator, CacheableProcessingComponent, DisposableSitemapComponent {
 
     /** The input source */
     protected Source inputSource;
@@ -63,6 +63,7 @@ public class FileGeneratorBean
     /** The SAX Parser. */
     protected SAXParser parser;
 
+
     public void setParser(SAXParser parser) {
         this.parser = parser;
     }
@@ -71,7 +72,7 @@ public class FileGeneratorBean
      * @see org.apache.cocoon.sitemap.DisposableSitemapComponent#dispose()
      */
     public void dispose() {
-        if ( this.inputSource != null ) {
+        if (this.inputSource != null) {
             this.resolver.release(this.inputSource);
             this.inputSource = null;
         }

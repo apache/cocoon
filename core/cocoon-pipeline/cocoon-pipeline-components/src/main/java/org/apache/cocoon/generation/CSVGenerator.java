@@ -101,8 +101,8 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation
  * A simple parser converting a Comma Separated Values (CSV) file into XML.
  * @cocoon.sitemap.component.name   csv
- * @cocoon.sitemap.component.documentation.caching
- *     Uses the last modification date of the xml document for validation
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ *   Uses the last modification date of the xml document for validation
  *
  * @version $Id$
  */
