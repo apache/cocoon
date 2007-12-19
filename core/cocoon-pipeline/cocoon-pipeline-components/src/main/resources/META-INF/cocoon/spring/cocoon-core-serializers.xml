@@ -16,12 +16,12 @@
   limitations under the License.
 -->
 
-<!-- @version $Id$ -->
-
-<!--+
-    | Serializers consume SAX events and produce a character stream. Every
-    | pipeline needs to be terminated by a serializer.
-    +-->
+<!--
+  - Serializers consume SAX events and produce a character stream. Every
+  - pipeline needs to be terminated by a serializer.
+  -
+  - $Id$
+  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:pipeline="http://cocoon.apache.org/schema/pipeline"
@@ -30,7 +30,8 @@
        default-init-method="init">
 
   <!-- Abstract parent bean that sets the default encoding from the settings bean -->
-  <bean name="org.apache.cocoon.serialization.AbstractTextSerializer" class="org.apache.cocoon.serialization.AbstractTextSerializer" abstract="true">
+  <bean name="org.apache.cocoon.serialization.AbstractTextSerializer" class="org.apache.cocoon.serialization.AbstractTextSerializer"
+        scope="prototype" abstract="true">
     <property name="defaultEncoding">
       <bean class="org.springframework.beans.factory.config.PropertyPathFactoryBean">
         <property name="targetBeanName" value="org.apache.cocoon.configuration.Settings"/>
@@ -47,50 +48,50 @@
   <bean name="org.apache.cocoon.serialization.Serializer/html" class="org.apache.cocoon.serialization.HTMLSerializer"
         scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
     <pipeline:component mime-type="text/html"/>
-	<property name="format">
-	  <props>
-	    <prop key="doctype-public">-//W3C//DTD HTML 4.01 Transitional//EN</prop>
-	    <prop key="doctype-system">http://www.w3.org/TR/html4/loose.dtd</prop>
-	  </props>
-	</property>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD HTML 4.01 Transitional//EN</prop>
+        <prop key="doctype-system">http://www.w3.org/TR/html4/loose.dtd</prop>
+      </props>
+    </property>
   </bean>
 
   <bean name="org.apache.cocoon.serialization.Serializer/wml" class="org.apache.cocoon.serialization.XMLSerializer"
         scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
     <pipeline:component mime-type="text/vnd.wap.wml"/>
-	<property name="format">
-	  <props>
-	    <prop key="doctype-public">-//WAPFORUM//DTD WML 1.1//EN</prop>
-	    <prop key="doctype-system">http://www.wapforum.org/DTD/wml_1.1.xml</prop>
-	    <prop key="encoding">ASCII</prop>
-	    <prop key="omit-xml-declaration">yes</prop>
-	  </props>
-	</property>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//WAPFORUM//DTD WML 1.1//EN</prop>
+        <prop key="doctype-system">http://www.wapforum.org/DTD/wml_1.1.xml</prop>
+        <prop key="encoding">ASCII</prop>
+        <prop key="omit-xml-declaration">yes</prop>
+      </props>
+    </property>
   </bean>
 
   <!--+
       | Compact HTML for Small Information Appliances,
       | based on http://www.w3.org/TR/1998/NOTE-compactHTML-19980209/
-      + -->
+      +-->
   <bean name="org.apache.cocoon.serialization.Serializer/chtml" class="org.apache.cocoon.serialization.HTMLSerializer"
         scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
     <pipeline:component mime-type="text/html"/>
-	<property name="format">
-	  <props>
-	    <prop key="doctype-public">-//W3C//DTD Compact HTML 1.0 Draft//EN</prop>
-	  </props>
-	</property>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD Compact HTML 1.0 Draft//EN</prop>
+      </props>
+    </property>
   </bean>
 
   <bean name="org.apache.cocoon.serialization.Serializer/svgxml" class="org.apache.cocoon.serialization.XMLSerializer"
         scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
     <pipeline:component mime-type="image/svg+xml"/>
-	<property name="format">
-	  <props>
-	    <prop key="doctype-public">-//W3C//DTD SVG 1.0//EN</prop>
-	    <prop key="doctype-system">http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</prop>
-	  </props>
-	</property>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD SVG 1.0//EN</prop>
+        <prop key="doctype-system">http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</prop>
+      </props>
+    </property>
   </bean>
 
   <!--+
@@ -111,25 +112,25 @@
   <bean name="org.apache.cocoon.serialization.Serializer/xhtml" class="org.apache.cocoon.serialization.XMLSerializer"
         scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
     <pipeline:component mime-type="text/html"/>
-	<property name="format">
-	  <props>
-	    <prop key="doctype-public">-//W3C//DTD XHTML 1.0 Strict//EN</prop>
-	    <prop key="doctype-system">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</prop>
-	    <prop key="encoding">UTF-8</prop>
-	  </props>
-	</property>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD XHTML 1.0 Strict//EN</prop>
+        <prop key="doctype-system">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</prop>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
   </bean>
 
   <bean name="org.apache.cocoon.serialization.Serializer/xhtml11" class="org.apache.cocoon.serialization.XMLSerializer"
         scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
     <pipeline:component mime-type="application/xhtml+xml"/>
-	<property name="format">
-	  <props>
-	    <prop key="doctype-public">-//W3C//DTD XHTML 1.1//EN</prop>
-	    <prop key="doctype-system">http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd</prop>
-	    <prop key="encoding">UTF-8</prop>
-	  </props>
-	</property>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD XHTML 1.1//EN</prop>
+        <prop key="doctype-system">http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd</prop>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
   </bean>
 
   <bean name="org.apache.cocoon.serialization.Serializer/text" class="org.apache.cocoon.serialization.TextSerializer"
@@ -142,3 +143,4 @@
     <pipeline:component mime-type="model/vrml"/>
   </bean>
 </beans>
+        
