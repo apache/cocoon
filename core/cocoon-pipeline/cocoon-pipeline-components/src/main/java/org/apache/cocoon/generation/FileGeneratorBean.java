@@ -84,16 +84,18 @@ public class FileGeneratorBean extends AbstractLogEnabled
      * Setup the file generator.
      * Try to get the last modification date of the source for caching.
      *
-     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(SourceResolver, Map, String, Parameters)
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
         this.resolver = resolver;
+
         try {
             this.inputSource = this.resolver.resolveURI(src);
         } catch (SourceException se) {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Source " + src +
                               " resolved to " + this.inputSource.getURI());
@@ -121,7 +123,7 @@ public class FileGeneratorBean extends AbstractLogEnabled
     }
 
     /**
-     * @see org.apache.cocoon.xml.XMLProducer#setConsumer(org.apache.cocoon.xml.XMLConsumer)
+     * @see org.apache.cocoon.xml.XMLProducer#setConsumer(XMLConsumer)
      */
     public void setConsumer(XMLConsumer consumer) {
         this.consumer = consumer;
@@ -133,7 +135,7 @@ public class FileGeneratorBean extends AbstractLogEnabled
     public void generate()
     throws IOException, SAXException, ProcessingException {
         try {
-            this.parser.parse(SourceUtil.getInputSource(this.inputSource), this.consumer);
+            SourceUtil.parse(this.parser, this.inputSource, this.consumer);
         } catch (SAXException e) {
             SourceUtil.handleSAXException(this.inputSource.getURI(), e);
         }
