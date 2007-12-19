@@ -102,6 +102,10 @@
     <sample name="Class Reloading" href="reloading/">
       Trivial sample of class reloading.
     </sample>
+    <sample name="Components" href="components/">
+      Samples of various components included with the Cocoon core,
+      such as Stream Generator, Paginator Transformer, Image Reader.
+    </sample>
   </group>
 
   <group name="System Tools And Pages">

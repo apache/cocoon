@@ -24,10 +24,6 @@
 <samples name="Additional Cocoon Core Samples">
 
   <group name="More Core Samples">
-    <sample href="components/" name="Core Components">
-      Some samples of various components that are included with the core,
-      e.g. Stream Generators, Paginator Transformers, Image Readers.
-    </sample>
     <sample href="text-wrap/" name="Text wrap">
       Addresses the problem of wrapping long lines of text in source elements.
     </sample>
