@@ -21,14 +21,6 @@
   -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <!-- ========================= Components ================================ -->
-
-  <map:components>
-    <map:generators default="file">
-      <map:generator name="linkstatus" src="org.apache.cocoon.generation.LinkStatusGenerator"/>
-    </map:generators>
-  </map:components>
-
   <!-- =========================== Views =================================== -->
 
   <map:views>
@@ -63,21 +55,37 @@
         <map:read src="sitemap.xmap" mime-type="text/xml"/>
       </map:match>
 
-      <!-- ======================== Utilities ============================== -->
+      <!-- ========================= Stream ================================ -->
 
-      <map:match pattern="**sitemap.xmap">
-        <map:read src="{0}" mime-type="text/xml"/>
-      </map:match>
-
-      <map:match pattern="linkstatus">
-        <map:redirect-to uri="linkstatus/localhost/8888/docs/index.html"/>
-      </map:match>
-
-      <map:match pattern="linkstatus/*/*/**">
-        <map:generate type="linkstatus" src="http://{1}:{2}/{3}"/>
+      <map:match pattern="order">
+        <map:generate src="stream/OrderPage.xml"/>
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style:/service/system/linkstatus2html"/>
+          <map:parameter name="service" value="servlet:style:/service/blocks/dynamic-page2html"/>
         </map:serialize>
+      </map:match>
+
+      <map:match pattern="process-order">
+        <map:generate type="stream">
+          <map:parameter name="form-name" value="Foo"/>
+        </map:generate>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!-- ======================= Other Samples =========================== -->
+
+      <map:match pattern="request.html">
+        <map:generate type="request"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="source-write.xml">
+        <map:generate src="source-writing-transformer.xml"/>
+        <map:transform type="write-source"/>
+        <map:serialize type="xml"/>
       </map:match>
 
       <!-- ========================= Automount ============================= -->

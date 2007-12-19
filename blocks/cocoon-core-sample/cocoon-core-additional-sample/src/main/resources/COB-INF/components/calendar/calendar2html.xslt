@@ -16,8 +16,9 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
@@ -102,10 +103,10 @@ td {
               following examples:
           </p>
           <p>
-              <a href="cal?lang=en&amp;country=US">US English</a><br/>
-              <a href="cal?lang=en&amp;country=GB">UK English</a><br/>
-              <a href="cal?lang=nl">Dutch</a><br/>
-              <a href="cal?lang=fr">French</a><br/>
+              <a href="?lang=en&amp;country=US">US English</a><br/>
+              <a href="?lang=en&amp;country=GB">UK English</a><br/>
+              <a href="?lang=nl">Dutch</a><br/>
+              <a href="?lang=fr">French</a><br/>
           </p>
           <p>Note: the column headers are not localized, you can do that by simply inserting the appropriate
               i18n tags and transformer. Check the sample sources (sitemap and XSLT style sheet) and uncomment

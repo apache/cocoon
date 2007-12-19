@@ -19,12 +19,12 @@
 <!--
   - Main samples page
   -
-  - @version $Id$
+  - $Id$
   -->
 <samples name="Additional Cocoon Core Samples">
 
   <group name="More Core Samples">
-    <sample href="components" name="Core Components">
+    <sample href="components/" name="Core Components">
       Some samples of various components that are included with the core,
       e.g. Stream Generators, Paginator Transformers, Image Readers.
     </sample>

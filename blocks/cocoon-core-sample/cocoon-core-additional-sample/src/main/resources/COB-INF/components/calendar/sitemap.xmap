@@ -25,8 +25,18 @@
 
   <map:components>
     <map:generators default="file">
-      <map:generator name="linkstatus" src="org.apache.cocoon.generation.LinkStatusGenerator"/>
+      <map:generator name="calendar"
+                     label="content"
+                     src="org.apache.cocoon.generation.CalendarGenerator"/>
     </map:generators>
+
+    <map:transformers default="xslt">
+      <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+        <catalogues default="messages">
+          <catalogue id="messages" name="messages" location="i18n"/>
+        </catalogues>
+      </map:transformer>
+    </map:transformers>
   </map:components>
 
   <!-- =========================== Views =================================== -->
@@ -53,38 +63,29 @@
     <map:pipeline>
 
       <map:match pattern="">
-        <map:generate src="samples.xml"/>
-        <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
-        </map:serialize>
+        <map:generate type="calendar">
+          <!-- Uncomment and set a value for the desired month and year
+            <map:parameter name="month" value="6"/>
+            <map:parameter name="year" value="1998"/>
+          -->
+          <!-- Uncomment the line below to set a fixed date format -->
+          <!--
+            <map:parameter name="dateFormat" value="EEEE, MMMM d yyyy"/>
+          -->
+          <map:parameter name="lang" value="{request-param:lang}"/>
+          <map:parameter name="country" value="{request-param:country}"/>
+        </map:generate>
+        <map:transform src="calendar2html.xslt"/>
+        <!-- to localize the column headers, remove the comments below -->
+        <!--
+          <map:transform type="i18n">
+          <map:parameter name="default-catalogue-id" value="messages"/>
+          <map:parameter name="locale" value="{request-param:lang}"/>
+          </map:transform>
+        -->
+        <map:serialize />
       </map:match>
 
-      <map:match pattern="sitemap.xmap">
-        <map:read src="sitemap.xmap" mime-type="text/xml"/>
-      </map:match>
-
-      <!-- ======================== Utilities ============================== -->
-
-      <map:match pattern="**sitemap.xmap">
-        <map:read src="{0}" mime-type="text/xml"/>
-      </map:match>
-
-      <map:match pattern="linkstatus">
-        <map:redirect-to uri="linkstatus/localhost/8888/docs/index.html"/>
-      </map:match>
-
-      <map:match pattern="linkstatus/*/*/**">
-        <map:generate type="linkstatus" src="http://{1}:{2}/{3}"/>
-        <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style:/service/system/linkstatus2html"/>
-        </map:serialize>
-      </map:match>
-
-      <!-- ========================= Automount ============================= -->
-
-      <map:match pattern="*/**">
-        <map:mount uri-prefix="{1}" src="{1}/"/>
-      </map:match>
     </map:pipeline>
 
   </map:pipelines>

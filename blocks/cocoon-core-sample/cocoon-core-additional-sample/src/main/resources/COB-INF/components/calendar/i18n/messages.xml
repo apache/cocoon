@@ -16,19 +16,17 @@
   limitations under the License.
 -->
 
-<!--+
-    | Dutch message catalogue file for Cocoon 2 CalendarGenerator sample
-    |
-    | CVS $Id$
-    +-->
-    
-    <catalogue xml:lang="nl">
-        <message key="SUNDAY">Zondag</message>
-        <message key="MONDAY">Maandag</message>
-        <message key="TUESDAY">Dinsdag</message>
-        <message key="WEDNESDAY">Woensdag</message>
-        <message key="THURSDAY">Donderdag</message>
-        <message key="FRIDAY">Vrijdag</message>
-        <message key="SATURDAY">Zaterdag</message>
-    </catalogue>
-    
+<!--
+  - Default (English) message catalogue file for Cocoon 2 CalendarGenerator sample
+  -
+  - CVS $Id$
+  -->
+<catalogue xml:lang="en">
+  <message key="SUNDAY">Sunday</message>
+  <message key="MONDAY">Monday</message>
+  <message key="TUESDAY">Tuesday</message>
+  <message key="WEDNESDAY">Wednesday</message>
+  <message key="THURSDAY">Thursday</message>
+  <message key="FRIDAY">Friday</message>
+  <message key="SATURDAY">Saturday</message>
+</catalogue>

@@ -16,19 +16,17 @@
   limitations under the License.
 -->
 
-<!--+
-    | French message catalogue file for Cocoon 2 CalendarGenerator sample
-    |
-    | CVS $Id$
-    +-->
-    
-    <catalogue xml:lang="fr">
-        <message key="SUNDAY">dimanche</message>
-        <message key="MONDAY">lundi</message>
-        <message key="TUESDAY">mardi</message>
-        <message key="WEDNESDAY">mercredi</message>
-        <message key="THURSDAY">jeudi</message>
-        <message key="FRIDAY">vendredi</message>
-        <message key="SATURDAY">samedi</message>
-    </catalogue>
-    
+<!--
+  - French message catalogue file for Cocoon 2 CalendarGenerator sample
+  -
+  - $Id$
+  -->
+<catalogue xml:lang="fr">
+  <message key="SUNDAY">dimanche</message>
+  <message key="MONDAY">lundi</message>
+  <message key="TUESDAY">mardi</message>
+  <message key="WEDNESDAY">mercredi</message>
+  <message key="THURSDAY">jeudi</message>
+  <message key="FRIDAY">vendredi</message>
+  <message key="SATURDAY">samedi</message>
+</catalogue>
