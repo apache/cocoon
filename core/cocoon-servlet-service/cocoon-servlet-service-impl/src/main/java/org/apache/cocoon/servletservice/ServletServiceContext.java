@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -71,13 +71,13 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
      */
     /*
      *  TODO ineritance of attributes from the parent context is only
      *  partly implemented: removeAttribute and getAttributeNames
-     *  doesn't respect inheritance yet.  
+     *  doesn't respect inheritance yet.
      */
     public Object getAttribute(String name) {
         Object value = this.attributes.get(name);
@@ -86,7 +86,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#setAttribute(java.lang.String,
      *      java.lang.Object)
      */
@@ -96,7 +96,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String name) {
@@ -105,7 +105,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
@@ -122,7 +122,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getResource(java.lang.String)
      */
     public URL getResource(String path) throws MalformedURLException {
@@ -163,7 +163,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getRealPath(java.lang.String)
      */
     public String getRealPath(String path) {
@@ -173,7 +173,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getInitParameter(java.lang.String)
      */
     // FIXME, this should be defined in the config instead
@@ -201,7 +201,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getInitParameterNames()
      */
     public Enumeration getInitParameterNames() {
@@ -232,7 +232,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
      */
     public InputStream getResourceAsStream(String path) {
@@ -247,7 +247,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getContext(java.lang.String)
      */
     public ServletContext getContext(String uripath) {
@@ -256,7 +256,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getMajorVersion()
      */
     public int getMajorVersion() {
@@ -265,7 +265,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getMinorVersion()
      */
     public int getMinorVersion() {
@@ -292,10 +292,14 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getResourcePaths(java.lang.String)
      */
     public Set getResourcePaths(String path) {
+        if (path == null) {
+            return Collections.EMPTY_SET;
+        }
+
         String pathPrefix;
         if (this.contextPath.startsWith("file:")) {
             pathPrefix = this.contextPath.substring("file:".length());
@@ -304,10 +308,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         }
 
         path = pathPrefix + path;
-
-        if (path == null) {
-            return Collections.EMPTY_SET;
-        }
 
         File file = new File(path);
 
@@ -323,7 +323,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getRequestDispatcher(java.lang.String)
      */
     public RequestDispatcher getRequestDispatcher(String path) {
@@ -333,7 +333,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getNamedDispatcher(java.lang.String)
      */
     public RequestDispatcher getNamedDispatcher(String name) {
@@ -343,7 +343,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getServerInfo()
      */
     public String getServerInfo() {
@@ -353,7 +353,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletContext#getServletContextName()
      */
     public String getServletContextName() {
@@ -415,7 +415,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         if (this.connections == null) {
             return null;
         }
-        
+
         Servlet servlet =
             (Servlet) this.connections.get(name);
         if (servlet == null && !name.equals(SUPER)) {
@@ -424,13 +424,13 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         		ServletContext c = _super.getServletConfig().getServletContext();
         		if (c instanceof ServletServiceContext)
         			return ((ServletServiceContext)c).getNamedContext(name);
-        		
+
         		return null;
         	}
-        }        
+        }
         return servlet != null ? servlet.getServletConfig().getServletContext() : null;
     }
-    
+
     /**
      * @param mountPath The mountPath to set.
      */
@@ -487,7 +487,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest,
          *      javax.servlet.ServletResponse)
          */
@@ -513,7 +513,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest,
          *      javax.servlet.ServletResponse)
          */
@@ -596,36 +596,36 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     }
 
     private static class StatusRetrievableWrappedResponse extends HttpServletResponseWrapper {
-    	
+
        	private int status;
-    
+
        	public StatusRetrievableWrappedResponse(HttpServletResponse wrapped) {
        		super(wrapped);
        	}
-       	
+
     	public void setStatus(int sc, String sm) {
     		this.status = sc;
     		super.setStatus(sc, sm);
     	}
-    
+
     	public void setStatus(int sc) {
     		this.status = sc;
     		super.setStatus(sc);
     	}
-    	
+
     	public int getStatus() {
     		return this.status;
     	}
-    	
+
     	public void sendError(int errorCode) throws IOException {
     		this.status = errorCode;
-    		super.sendError(errorCode);	
+    		super.sendError(errorCode);
     	}
-    	
+
     	public void sendError(int errorCode, String errorMessage) throws IOException {
     		this.status = errorCode;
-    		super.sendError(errorCode, errorMessage);	
-    	}		
+    		super.sendError(errorCode, errorMessage);
+    	}
     }
-    
+
 }
