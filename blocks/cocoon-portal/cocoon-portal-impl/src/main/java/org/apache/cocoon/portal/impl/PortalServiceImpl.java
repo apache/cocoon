@@ -16,29 +16,17 @@
  */
 package org.apache.cocoon.portal.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.RequestContext;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.om.SkinDescription;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.services.LayoutFactory;
@@ -48,11 +36,8 @@ import org.apache.cocoon.portal.services.UserService;
 import org.apache.cocoon.portal.services.VariableResolver;
 import org.apache.cocoon.portal.services.VariableResolver.CompiledExpression;
 import org.apache.cocoon.portal.spi.RequestContextProvider;
-import org.apache.cocoon.util.AbstractLogEnabled;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.TraversableSource;
-import org.springframework.web.context.ServletContextAware;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Default implementation of a portal service using a session to store
@@ -61,31 +46,16 @@ import org.springframework.web.context.ServletContextAware;
  * @version $Id$
  */
 public class PortalServiceImpl
-    extends AbstractLogEnabled
-    implements Serviceable,
-                ThreadSafe,
-                PortalService,
-                ServletContextAware,
-                Disposable,
-                Configurable {
-
-    /** Parameter map for the context protocol. */
-    protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
+    implements PortalService {
 
     /** The servlet context. */
     protected ServletContext servletContext;
-
-    /** The service locator. */
-    protected ServiceManager manager;
 
     /** The list of skins. */
     protected List skinList = new ArrayList();
 
     /** The name of the portal. */
     protected String portalName;
-
-    /** The portal configuration. */
-    protected Configuration configuration;
 
     /** The profile manager. */
     protected ProfileManager profileManager;
@@ -111,12 +81,21 @@ public class PortalServiceImpl
     /** The request context provider. */
     protected RequestContextProvider requestContextProvider;
 
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager serviceManager) throws ServiceException {
-        this.manager = serviceManager;
-        this.requestContextProvider = (RequestContextProvider)this.manager.lookup(RequestContextProvider.class.getName());
+    /** The event converter. */
+    protected EventConverter eventConverter;
+
+    /** Configuration. */
+    protected Properties configuration;
+
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
     }
 
     /**
@@ -127,12 +106,11 @@ public class PortalServiceImpl
     }
 
     /**
-     * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
+     * Set the portal name.
+     * @param name The name of the portal.
      */
-    public void setServletContext(ServletContext context) {
-        this.servletContext = context;
-        // add the portal service to the servlet context
-        this.servletContext.setAttribute(PortalService.class.getName(), this);
+    public void setPortalName(String name) {
+        this.portalName = name;
     }
 
     /**
@@ -143,93 +121,18 @@ public class PortalServiceImpl
         if ( this.servletContext != null ) {
             this.servletContext.removeAttribute(PortalService.class.getName());
         }
-        if ( this.manager != null ) {
-            this.manager.release(this.profileManager);
-            this.profileManager = null;
-            this.manager.release(this.linkService);
-            this.linkService = null;
-            this.manager.release(this.copletFactory);
-            this.copletFactory = null;
-            this.manager.release(this.layoutFactory);
-            this.layoutFactory = null;
-            this.manager.release(this.eventManager);
-            this.eventManager = null;
-            this.manager.release(this.portalManager);
-            this.portalManager = null;
-            this.manager.release(this.userService);
-            this.userService = null;
-            this.manager.release(this.requestContextProvider);
-            this.requestContextProvider = null;
-            this.manager = null;
+    }
+
+    public void setSkinDescriptions(List skins) {
+        if ( skins == null ) {
+            this.skinList = Collections.EMPTY_LIST;
+        } else {
+            this.skinList = new ArrayList(skins);
         }
     }
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration config) throws ConfigurationException {
-        final Configuration portal = config.getChild("portal", false);
-        if ( portal == null ) {
-            throw new ConfigurationException("No portal configured.", config);
-        }
-        this.portalName = portal.getAttribute("name");
-        this.configuration = portal.getChild("configuration");
-        this.configureSkins(this.getConfiguration(org.apache.cocoon.portal.Constants.CONFIGURATION_SKINS_PATH,
-                                                  org.apache.cocoon.portal.Constants.DEFAULT_CONFIGURATION_SKINS_PATH),
-                            this.getConfiguration(org.apache.cocoon.portal.Constants.CONFIGURATION_SKINS_PATH, null) != null);
-    }
-
-    protected void configureSkins(String directory, boolean check)
-    throws ConfigurationException {
-        SourceResolver resolver = null;
-        Source dir = null;
-        try {
-            resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-            dir = resolver.resolveURI(directory, null, CONTEXT_PARAMETERS);
-            if ( !dir.exists() ) {
-                if ( check ) {
-                    throw new ConfigurationException("Skin directory does not exist: '" + directory + "'.");
-                }
-                this.getLogger().warn("No skin directory found at location '" + directory + "'.");
-                return;
-            }
-            if ( dir instanceof TraversableSource ) {
-                final Iterator children = ((TraversableSource)dir).getChildren().iterator();
-                while ( children.hasNext() ) {
-                    final Source s = (Source)children.next();
-                    try {
-                        this.configureSkin(s);
-                    } finally {
-                        resolver.release(s);
-                    }
-                }
-            } else {
-                throw new ConfigurationException("Skin configuration must point to a directory, '" + dir.getURI() + "' is not a directory.'");
-            }
-        } catch (IOException ioe) {
-            throw new ConfigurationException("Unable to read configurations from " + directory);
-        } catch (ServiceException e) {
-            throw new ConfigurationException("Unable to get source resolver.");
-        } finally {
-            if ( resolver != null ) {
-                resolver.release(dir);
-                this.manager.release(resolver);
-            }
-        }
-    }
-
-    protected void configureSkin(Source directory) {
-        String uri = directory.getURI();
-        if ( uri.endsWith("/") ) {
-            uri = uri.substring(0, uri.length()-1);
-        }
-        int pos = uri.lastIndexOf('/');
-        final String skinName = uri.substring(pos+1);
-        final SkinDescription desc = new SkinDescription();
-        desc.setName(skinName);
-        desc.setBasePath(directory.getURI());
-        desc.setThumbnailPath(directory.getURI() + '/' + "images/thumb.jpg");
-        this.skinList.add(desc);
+    public void setConfiguration(Properties props) {
+        this.configuration = props;
     }
 
     /**
@@ -243,7 +146,14 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getConfiguration(java.lang.String, java.lang.String)
      */
     public String getConfiguration(String key, String defaultValue) {
-        return this.configuration.getChild(key).getValue(defaultValue);
+        String result = null;
+        if ( this.configuration != null ) {
+            result = this.configuration.getProperty(key);
+        }
+        if ( result == null ) {
+            result = defaultValue;
+        }
+        return defaultValue;
     }
 
     /**
@@ -257,20 +167,17 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getConfigurationAsBoolean(java.lang.String, boolean)
      */
     public boolean getConfigurationAsBoolean(String key, boolean defaultValue) {
-        return this.configuration.getChild(key).getValueAsBoolean(defaultValue);
+        final String value = this.getConfiguration(key);
+        if ( value == null ) {
+            return defaultValue;
+        }
+        return Boolean.valueOf(value).booleanValue();
     }
 
     /**
      * @see org.apache.cocoon.portal.PortalService#getLinkService()
      */
     public LinkService getLinkService() {
-        if ( null == this.linkService ) {
-            try {
-                this.linkService = (LinkService)this.manager.lookup( LinkService.class.getName() );
-            } catch (ServiceException e) {
-                throw new PortalRuntimeException("Unable to lookup link service.", e);
-            }
-        }
         return this.linkService;
     }
 
@@ -278,13 +185,6 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getProfileManager()
      */
     public ProfileManager getProfileManager() {
-        if ( null == this.profileManager ) {
-            try {
-                this.profileManager = (ProfileManager)this.manager.lookup( ProfileManager.class.getName() );
-            } catch (ServiceException e) {
-                throw new PortalRuntimeException("Unable to lookup profile manager.", e);
-            }
-        }
         return this.profileManager;
     }
 
@@ -292,13 +192,6 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getEventManager()
      */
     public EventManager getEventManager() {
-        if ( null == this.eventManager ) {
-            try {
-                this.eventManager = (EventManager)this.manager.lookup( EventManager.class.getName() );
-            } catch (ServiceException e) {
-                throw new PortalRuntimeException("Unable to lookup event manager.", e);
-            }
-        }
         return this.eventManager;
     }
 
@@ -306,13 +199,6 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getCopletFactory()
      */
     public CopletFactory getCopletFactory() {
-        if ( null == this.copletFactory ) {
-            try {
-                this.copletFactory = (CopletFactory)this.manager.lookup( CopletFactory.class.getName() );
-            } catch (ServiceException e) {
-                throw new PortalRuntimeException("Unable to lookup coplet factory.", e);
-            }
-        }
         return this.copletFactory;
     }
 
@@ -320,13 +206,6 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getLayoutFactory()
      */
     public LayoutFactory getLayoutFactory() {
-        if ( null == this.layoutFactory ) {
-            try {
-                this.layoutFactory = (LayoutFactory)this.manager.lookup( LayoutFactory.class.getName() );
-            } catch (ServiceException e) {
-                throw new PortalRuntimeException("Unable to lookup layout factory.", e);
-            }
-        }
         return this.layoutFactory;
     }
 
@@ -334,13 +213,6 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getPortalManager()
      */
     public PortalManager getPortalManager() {
-        if ( null == this.portalManager ) {
-            try {
-                this.portalManager = (PortalManager)this.manager.lookup( PortalManager.class.getName() );
-            } catch (ServiceException e) {
-                throw new PortalRuntimeException("Unable to lookup portal manager.", e);
-            }
-        }
         return this.portalManager;
     }
 
@@ -348,13 +220,6 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getUserService()
      */
     public UserService getUserService() {
-        if ( this.userService == null ) {
-            try {
-                this.userService = (UserService)this.manager.lookup(UserService.class.getName());
-            } catch (ServiceException e) {
-                throw new PortalRuntimeException("Unable to lookup user service.", e);
-            }
-        }
         return this.userService;
     }
 
@@ -362,11 +227,7 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getEventConverter()
      */
     public EventConverter getEventConverter() {
-        try {
-            return (EventConverter)this.manager.lookup(EventConverter.class.getName());
-        } catch (ServiceException e) {
-            throw new PortalRuntimeException("Unable to lookup event converter.", e);
-        }
+        return this.eventConverter;
     }
 
     /**

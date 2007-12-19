@@ -36,19 +36,19 @@
     </portal:layout-type>
 
     <portal:layout-type id="tab" layoutClass="org.apache.cocoon.portal.om.CompositeLayout"
-                        itemClassName="org.apache.cocoon.portal.om.NamedItem"
+                        itemClass="org.apache.cocoon.portal.om.NamedItem"
                         createLayoutId="true" defaultIsStatic="true">
       <portal:renderer type="tab"/>
     </portal:layout-type>
 
     <portal:layout-type id="rawtab" layoutClass="org.apache.cocoon.portal.om.CompositeLayout"
-                        itemClassName="org.apache.cocoon.portal.om.NamedItem"
+                        itemClass="org.apache.cocoon.portal.om.NamedItem"
                         createLayoutId="true" defaultIsStatic="true">
       <portal:renderer type="rawtab"/>
     </portal:layout-type>
 
     <portal:layout-type id="linktab" layoutClass="org.apache.cocoon.portal.om.CompositeLayout"
-                        itemClassName="org.apache.cocoon.portal.om.NamedItem"
+                        itemClass="org.apache.cocoon.portal.om.NamedItem"
                         createLayoutId="true" defaultIsStatic="true">
       <portal:renderer type="linktab"/>
     </portal:layout-type>

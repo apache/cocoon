@@ -44,18 +44,6 @@
   <!-- We use Castor for persisting/mapping the profiles to XML: -->
   <include src="resource://org/apache/cocoon/portal/persistence/castor/portal-castor.roles"/>
 
-  <portal-service>
-    <portal name="portal">
-      <!-- Configuration: -->
-      <configuration>
-        <!-- The directory where all possible skins are stored. -->
-        <skins-path>skins</skins-path>
-        <!-- Whether the portal should use ajax or not -->
-        <use-ajax>false</use-ajax>
-      </configuration>
-    </portal>
-  </portal-service>
-
   <!--+
       | Deployment Manager.
       +-->

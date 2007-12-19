@@ -31,6 +31,14 @@
                            http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
 
   <!--+
+      | Spring Bean Post Processors:
+      +-->
+    <bean name="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"
+          class="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"/>
+    <bean name="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"
+          class="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"/>
+
+  <!--+
       | Abstract Bean used as a base for nearly all beans
       |
       +-->
@@ -285,4 +293,5 @@
       +-->
     <configurator:bean-map id="org.apache.cocoon.portal.om.LayoutTypeMap"
                            type="org.apache.cocoon.portal.om.LayoutType"/>
+
 </beans>

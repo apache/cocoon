@@ -27,6 +27,18 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
                            http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
 
+  <!--+
+      |                       THIS IS A SAMPLE PORTAL
+      |
+      | It demonstrates several features of the portal engine,
+      | so it's neither configured for *your* environment nor
+      | optimized for production. If you use the portal for your
+      | own projects make sure that you remove all unused stuff
+      | from the configuration and that you configure the remaining
+      | components properly. However, the best way is to start your
+      | portal project from scratch!
+      +-->
+
   <!-- Include sitemap default beans -->
   <import resource="classpath:org/apache/cocoon/portal/sitemap/cocoon-portal-sitemap-components.xml"/>
 
@@ -107,5 +119,42 @@
     <portal:profile-manager-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects">
       <!-- Add your aspects here -->
     </portal:profile-manager-aspects>
+
+  <!--+
+      | Portal Service.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.PortalService"
+          class="org.apache.cocoon.portal.spring.SpringPortalService"
+          scope="singleton">
+      <!-- Configuration: -->
+      <property name="portalName" value="portal"/>
+      <!-- The available skins -->
+      <property name="skinDescriptions">
+        <list>
+          <bean class="org.apache.cocoon.portal.om.SkinDescription">
+            <property name="name" value="basic"/>
+            <property name="basePath" value="skins/basic"/>
+            <property name="thumbnailPath" value="skins/basic/images/thumb.jpg"/>
+          </bean>
+          <bean class="org.apache.cocoon.portal.om.SkinDescription">
+            <property name="name" value="common"/>
+            <property name="basePath" value="skins/common"/>
+            <property name="thumbnailPath" value="skins/common/images/thumb.jpg"/>
+          </bean>
+          <bean class="org.apache.cocoon.portal.om.SkinDescription">
+            <property name="name" value="modern"/>
+            <property name="basePath" value="skins/modern"/>
+            <property name="thumbnailPath" value="skins/modern/images/thumb.jpg"/>
+          </bean>
+        </list>
+      </property>
+      <property name="configuration">
+        <value>
+          <!-- Whether the portal should use ajax or not -->
+          use-ajax=false
+        </value>
+      </property>
+    </bean>
 
 </beans>
