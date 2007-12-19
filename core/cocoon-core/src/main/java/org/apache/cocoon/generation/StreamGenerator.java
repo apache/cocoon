@@ -16,6 +16,15 @@
  */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.excalibur.xml.sax.SAXParser;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -23,16 +32,9 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.util.PostInputStream;
-import org.apache.excalibur.xml.sax.SAXParser;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
 
 /**
  * The <code>StreamGenerator</code> is a class that reads XML from a request
@@ -70,18 +72,6 @@ public class StreamGenerator extends ServiceableGenerator {
     /** The parameter holding the name associated with the xml data  **/
     public static final String FORM_NAME = "form-name";
 
-    /** The input source */
-    private InputSource inputSource;
-
-    /**
-     * Recycle this component.
-     * All instance variables are set to <code>null</code>.
-     */
-    public void recycle() {
-        this.inputSource = null;
-        super.recycle();
-    }
-
     /**
      * Generate XML data out of request InputStream.
      */
@@ -104,6 +94,7 @@ public class StreamGenerator extends ServiceableGenerator {
                 }
             }
 
+            InputSource source;
             if (contentType.startsWith("application/x-www-form-urlencoded") ||
                     contentType.startsWith("multipart/form-data")) {
                 String parameter = parameters.getParameter(FORM_NAME, null);
@@ -123,7 +114,7 @@ public class StreamGenerator extends ServiceableGenerator {
                                                   parameter + " : " + xmlObject);
                 }
 
-                this.inputSource = new InputSource(xmlReader);
+                source = new InputSource(xmlReader);
             } else if (contentType.startsWith("text/plain") ||
                     contentType.startsWith("text/xml") ||
                     contentType.startsWith("application/xhtml+xml") ||
@@ -139,7 +130,7 @@ public class StreamGenerator extends ServiceableGenerator {
                 }
 
                 PostInputStream anStream = new PostInputStream(httpRequest.getInputStream(), len);
-                this.inputSource = new InputSource(anStream);
+                source = new InputSource(anStream);
             } else {
                 throw new IOException("Unexpected getContentType(): " + request.getContentType());
             }
@@ -149,18 +140,18 @@ public class StreamGenerator extends ServiceableGenerator {
             }
             String charset = getCharacterEncoding(request, contentType);
             if (charset != null) {
-                this.inputSource.setEncoding(charset);
+                source.setEncoding(charset);
             }
 
             parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
-            parser.parse(this.inputSource, super.xmlConsumer);
+            parser.parse(source, super.xmlConsumer);
         } catch (IOException e) {
             getLogger().error("StreamGenerator.generate()", e);
             throw new ResourceNotFoundException("StreamGenerator could not find resource", e);
         } catch (SAXException e) {
             getLogger().error("StreamGenerator.generate()", e);
             throw(e);
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in StreamGenerator.generate()", e);
         } finally {
