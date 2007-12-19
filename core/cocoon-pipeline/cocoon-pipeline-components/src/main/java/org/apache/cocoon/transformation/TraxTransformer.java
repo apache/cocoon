@@ -65,7 +65,6 @@ import org.xml.sax.SAXException;
  * The stylesheet processor
  *
  * @cocoon.sitemap.component.name   xslt
- * @cocoon.sitemap.component.logger sitemap.transformer.xslt
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xslt document for validation
  *

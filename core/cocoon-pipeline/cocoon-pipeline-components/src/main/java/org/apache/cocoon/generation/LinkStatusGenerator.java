@@ -50,7 +50,6 @@ import java.util.ArrayList;
  * 
  * @cocoon.sitemap.component.name   linkstatus
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.linkstatus
  *
  * @version $Id$
  */

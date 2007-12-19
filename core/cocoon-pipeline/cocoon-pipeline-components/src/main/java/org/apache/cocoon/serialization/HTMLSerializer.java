@@ -31,7 +31,6 @@ import java.io.OutputStream;
  * 
  * @cocoon.sitemap.component.name      html
  * @cocoon.sitemap.component.mimetype  text/html
- * @cocoon.sitemap.component.logger sitemap.serializer.html
  * 
  * @cocoon.sitemap.component.pooling.max  32
  * 

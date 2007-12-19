@@ -62,7 +62,6 @@ import org.xml.sax.ext.LexicalHandler;
  * Implementation of an XInclude transformer.
  * 
  * @cocoon.sitemap.component.name   xinclude
- * @cocoon.sitemap.component.logger sitemap.transformer.xinclude
  * 
  * @cocoon.sitemap.component.pooling.max  16
  * 

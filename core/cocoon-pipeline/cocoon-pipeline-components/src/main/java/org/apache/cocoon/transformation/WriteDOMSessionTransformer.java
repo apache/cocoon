@@ -37,7 +37,6 @@ import org.xml.sax.SAXException;
  * Make a DOM object from SAX events and write it to the session.
  * 
  * @cocoon.sitemap.component.name   writeDOMsession
- * @cocoon.sitemap.component.logger sitemap.transformer.writeDOMsession
  * 
  * Make a DOM object from SAX events and write it to the session.
  *

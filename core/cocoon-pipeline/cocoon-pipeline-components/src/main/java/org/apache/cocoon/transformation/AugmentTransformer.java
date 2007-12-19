@@ -43,7 +43,6 @@ import java.util.StringTokenizer;
  * is considered as a separator to delimit attributes.
  *
  * @cocoon.sitemap.component.name   augment
- * @cocoon.sitemap.component.logger sitemap.transformer.augment
  *
  * @since October 10, 2001
  * @version $Id$

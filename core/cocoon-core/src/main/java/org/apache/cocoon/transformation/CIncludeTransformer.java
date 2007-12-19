@@ -60,10 +60,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * which surrounds the included content.
  *
  * @cocoon.sitemap.component.name   cinclude
- * @cocoon.sitemap.component.logger sitemap.transformer.cinclude
  * @cocoon.sitemap.component.documentation.caching
  *               See documentation for further information.
- *
  * @cocoon.sitemap.component.pooling.max  16
  *
  * This transformer also supports a more verbose but flexible version:

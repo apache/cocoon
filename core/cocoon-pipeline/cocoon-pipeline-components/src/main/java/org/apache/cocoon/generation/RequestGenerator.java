@@ -43,8 +43,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * 
  * @cocoon.sitemap.component.name   request
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.request
- * 
+ *
  * @cocoon.sitemap.component.pooling.max  16
  * 
  * <p>

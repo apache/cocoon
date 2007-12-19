@@ -38,8 +38,6 @@ import java.util.Map;
  * to a file.
  * 
  * @cocoon.sitemap.component.name  log
- * @cocoon.sitemap.component.logger sitemap.transformer.log
- * 
  * @cocoon.sitemap.component.pooling.max  16
  *
  * The <code>LogTransformer</code> is a class that can be plugged into a pipeline

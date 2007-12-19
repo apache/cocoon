@@ -71,8 +71,6 @@ import java.util.TreeSet;
  *
  * @cocoon.sitemap.component.name   status
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.status
- *
  * @cocoon.sitemap.component.pooling.max  16
  *
  * Potted DTD:

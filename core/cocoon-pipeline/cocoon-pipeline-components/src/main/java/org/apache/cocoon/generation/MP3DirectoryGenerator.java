@@ -29,7 +29,6 @@ import java.io.RandomAccessFile;
  * 
  * @cocoon.sitemap.component.name   mp3directory
  * @cocoon.sitemap.component.label  content
- * @cocoon.sitemap.component.logger sitemap.generator.mp3directory
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the directory and the contained files
  * 

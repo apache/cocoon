@@ -34,10 +34,9 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @cocoon.sitemap.component.documentation
- *  Transformer implementation of the JPath XSP tag library.
+ *   Transformer implementation of the JPath XSP tag library.
  *
  * @cocoon.sitemap.component.name   jpath
- * @cocoon.sitemap.component.logger sitemap.transformer.jpath
  *
  *
  * <p>

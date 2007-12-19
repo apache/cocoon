@@ -51,8 +51,7 @@ import org.xml.sax.SAXException;
  * request parameter exists.
  * 
  * @cocoon.sitemap.component.name   simple-form-instance
- * @cocoon.sitemap.component.logger sitemap.transformer.simple-form-instance
- * 
+ *
  * @version $Id$
  */
 public class SimpleFormInstanceExtractionTransformer extends AbstractExtractionTransformer 
