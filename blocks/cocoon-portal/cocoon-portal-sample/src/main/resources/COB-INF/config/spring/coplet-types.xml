@@ -32,7 +32,9 @@
     </portal:coplet-type>
     
     <portal:coplet-type id="portlet">
-      <portal:coplet-adapter type="portlet"/>
+      <!-- FIXME - this should be portlet, but we need to convert the portlet module
+                   to Spring first -->
+      <portal:coplet-adapter type="cocoon"/>
       <portal:configuration name="buffer" type="boolean" value="true"/>
       <portal:configuration name="full-screen" type="boolean" value="false"/>
       <portal:configuration name="handle-sizing" type="boolean" value="true"/>
