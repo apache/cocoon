@@ -45,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @version $Id$
  */
-public class PortalServiceImpl
+public abstract class PortalServiceImpl
     implements PortalService {
 
     /** The servlet context. */
@@ -113,9 +113,14 @@ public class PortalServiceImpl
         this.portalName = name;
     }
 
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
+    public void setServletContext(final ServletContext sContext) {
+        this.servletContext = sContext;
+        // add the portal service to the servlet context
+        this.servletContext.setAttribute(PortalService.class.getName(), this);
+    }
+
+    protected abstract Object getService(String name);
+
     public void dispose() {
         // remove the portal service from the servlet context - if available
         if ( this.servletContext != null ) {
@@ -178,6 +183,9 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getLinkService()
      */
     public LinkService getLinkService() {
+        if ( this.linkService == null ) {
+            this.linkService = (LinkService)this.getService(LinkService.class.getName());
+        }
         return this.linkService;
     }
 
@@ -185,6 +193,9 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getProfileManager()
      */
     public ProfileManager getProfileManager() {
+        if ( this.profileManager == null ) {
+            this.profileManager = (ProfileManager)this.getService(ProfileManager.class.getName());
+        }
         return this.profileManager;
     }
 
@@ -192,6 +203,9 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getEventManager()
      */
     public EventManager getEventManager() {
+        if ( this.eventManager == null ) {
+            this.eventManager = (EventManager)this.getService(EventManager.class.getName());
+        }
         return this.eventManager;
     }
 
@@ -199,6 +213,9 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getCopletFactory()
      */
     public CopletFactory getCopletFactory() {
+        if ( this.copletFactory == null ) {
+            this.copletFactory = (CopletFactory)this.getService(CopletFactory.class.getName());
+        }
         return this.copletFactory;
     }
 
@@ -206,6 +223,9 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getLayoutFactory()
      */
     public LayoutFactory getLayoutFactory() {
+        if ( this.layoutFactory == null ) {
+            this.layoutFactory = (LayoutFactory)this.getService(LayoutFactory.class.getName());
+        }
         return this.layoutFactory;
     }
 
@@ -213,6 +233,9 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getPortalManager()
      */
     public PortalManager getPortalManager() {
+        if ( this.portalManager == null ) {
+            this.portalManager = (PortalManager)this.getService(PortalManager.class.getName());
+        }
         return this.portalManager;
     }
 
@@ -220,6 +243,9 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getUserService()
      */
     public UserService getUserService() {
+        if ( this.userService == null ) {
+            this.userService = (UserService)this.getService(UserService.class.getName());
+        }
         return this.userService;
     }
 
@@ -227,6 +253,9 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getEventConverter()
      */
     public EventConverter getEventConverter() {
+        if ( this.eventConverter == null ) {
+            this.eventConverter = (EventConverter)this.getService(EventConverter.class.getName());
+        }
         return this.eventConverter;
     }
 
@@ -234,6 +263,9 @@ public class PortalServiceImpl
      * @see org.apache.cocoon.portal.PortalService#getRequestContext()
      */
     public RequestContext getRequestContext() {
+        if ( this.requestContextProvider == null ) {
+            this.requestContextProvider = (RequestContextProvider)this.getService(RequestContextProvider.class.getName());
+        }
         return this.requestContextProvider.getCurrentRequestContext();
     }
 

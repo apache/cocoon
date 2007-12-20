@@ -16,19 +16,7 @@
  */
 package org.apache.cocoon.portal.spring;
 
-import javax.servlet.ServletContext;
-
-import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.event.EventConverter;
-import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.impl.PortalServiceImpl;
-import org.apache.cocoon.portal.profile.ProfileManager;
-import org.apache.cocoon.portal.services.CopletFactory;
-import org.apache.cocoon.portal.services.LayoutFactory;
-import org.apache.cocoon.portal.services.LinkService;
-import org.apache.cocoon.portal.services.PortalManager;
-import org.apache.cocoon.portal.services.UserService;
-import org.apache.cocoon.portal.spi.RequestContextProvider;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -43,22 +31,20 @@ public class SpringPortalService
     extends PortalServiceImpl
     implements ApplicationContextAware {
 
+    protected ApplicationContext appContext;
+
     /**
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
      */
     public void setApplicationContext(ApplicationContext appContext)
     throws BeansException {
-        this.requestContextProvider = (RequestContextProvider) appContext.getBean(RequestContextProvider.class.getName());
-        this.servletContext = (ServletContext)appContext.getBean(ServletContext.class.getName());
-        // add the portal service to the servlet context
-        this.servletContext.setAttribute(PortalService.class.getName(), this);
-        this.profileManager = (ProfileManager)appContext.getBean(ProfileManager.class.getName());
-        this.linkService = (LinkService)appContext.getBean( LinkService.class.getName() );
-        this.eventManager = (EventManager)appContext.getBean( EventManager.class.getName() );
-        this.copletFactory = (CopletFactory)appContext.getBean( CopletFactory.class.getName() );
-        this.layoutFactory = (LayoutFactory)appContext.getBean( LayoutFactory.class.getName() );
-        this.portalManager = (PortalManager)appContext.getBean( PortalManager.class.getName() );
-        this.userService = (UserService)appContext.getBean(UserService.class.getName());
-        this.eventConverter = (EventConverter)appContext.getBean(EventConverter.class.getName());
+        this.appContext = appContext;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.impl.PortalServiceImpl#getService(java.lang.String)
+     */
+    protected Object getService(String name) {
+        return this.appContext.getBean(name);
     }
 }

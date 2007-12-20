@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.portal.om;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class LayoutType {
      * Each layout can have several associated renderers.
      * @return the names of all allowed renderers.
      */
-    public Collection getRenderers() {
+    public List getRenderers() {
         return this.renderers;
     }
 

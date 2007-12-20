@@ -50,6 +50,44 @@
   -->
 
   <!--+
+      | Portal Service.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.PortalService"
+          class="org.apache.cocoon.portal.spring.SpringPortalService"
+          parent="org.apache.cocoon.portal.PortalService/abstract"
+          scope="singleton">
+      <!-- Configuration: -->
+      <property name="portalName" value="portal"/>
+      <!-- The available skins -->
+      <property name="skinDescriptions">
+        <list>
+          <bean class="org.apache.cocoon.portal.om.SkinDescription">
+            <property name="name" value="basic"/>
+            <property name="basePath" value="skins/basic"/>
+            <property name="thumbnailPath" value="skins/basic/images/thumb.jpg"/>
+          </bean>
+          <bean class="org.apache.cocoon.portal.om.SkinDescription">
+            <property name="name" value="common"/>
+            <property name="basePath" value="skins/common"/>
+            <property name="thumbnailPath" value="skins/common/images/thumb.jpg"/>
+          </bean>
+          <bean class="org.apache.cocoon.portal.om.SkinDescription">
+            <property name="name" value="modern"/>
+            <property name="basePath" value="skins/modern"/>
+            <property name="thumbnailPath" value="skins/modern/images/thumb.jpg"/>
+          </bean>
+        </list>
+      </property>
+      <property name="configuration">
+        <value>
+          <!-- Whether the portal should use ajax or not -->
+          use-ajax=false
+        </value>
+      </property>
+    </bean>
+
+  <!--+
       | Portal Link Service.
       |
       +-->
@@ -119,42 +157,5 @@
     <portal:profile-manager-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects">
       <!-- Add your aspects here -->
     </portal:profile-manager-aspects>
-
-  <!--+
-      | Portal Service.
-      |
-      +-->
-    <bean name="org.apache.cocoon.portal.PortalService"
-          class="org.apache.cocoon.portal.spring.SpringPortalService"
-          scope="singleton">
-      <!-- Configuration: -->
-      <property name="portalName" value="portal"/>
-      <!-- The available skins -->
-      <property name="skinDescriptions">
-        <list>
-          <bean class="org.apache.cocoon.portal.om.SkinDescription">
-            <property name="name" value="basic"/>
-            <property name="basePath" value="skins/basic"/>
-            <property name="thumbnailPath" value="skins/basic/images/thumb.jpg"/>
-          </bean>
-          <bean class="org.apache.cocoon.portal.om.SkinDescription">
-            <property name="name" value="common"/>
-            <property name="basePath" value="skins/common"/>
-            <property name="thumbnailPath" value="skins/common/images/thumb.jpg"/>
-          </bean>
-          <bean class="org.apache.cocoon.portal.om.SkinDescription">
-            <property name="name" value="modern"/>
-            <property name="basePath" value="skins/modern"/>
-            <property name="thumbnailPath" value="skins/modern/images/thumb.jpg"/>
-          </bean>
-        </list>
-      </property>
-      <property name="configuration">
-        <value>
-          <!-- Whether the portal should use ajax or not -->
-          use-ajax=false
-        </value>
-      </property>
-    </bean>
 
 </beans>

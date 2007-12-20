@@ -48,7 +48,7 @@ public class LayoutTypeDefinitionParser extends AbstractElementParser {
         }
         beanDef.getPropertyValues().addPropertyValue("itemClassName", element.getAttribute("itemClass"));
         if ( this.getAttributeValue(element, "defaultIsStatic", null) != null ) {
-            beanDef.getPropertyValues().addPropertyValue("defaultIStatic", this.getAttributeValue(element, "defaultIStatic", "false"));
+            beanDef.getPropertyValues().addPropertyValue("defaultIsStatic", this.getAttributeValue(element, "defaultIStatic", "false"));
         }
 
         final ManagedList rendererBeans = new ManagedList();

@@ -39,6 +39,16 @@
           class="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"/>
 
   <!--+
+      | Abstract Definition for Portal Service
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.PortalService/abstract"
+          class="org.apache.cocoon.portal.impl.PortalServiceImpl"
+          abstract="true" destroy-method="dispose">
+      <property name="servletContext" ref="javax.servlet.ServletContext"/>
+    </bean>
+
+  <!--+
       | Abstract Bean used as a base for nearly all beans
       |
       +-->
