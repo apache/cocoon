@@ -33,12 +33,12 @@ public class LegacyStringTemplateParser extends AbstractStringTemplateParser {
     public final static String JAVASCRIPT = "js";
 
     /**
-     * @see org.apache.cocoon.el.parsing.StringTemplateParser#parseSubstitutions(java.io.Reader)
+     * @see AbstractStringTemplateParser#parseSubstitutions(java.io.Reader)
      */
-    public List parseSubstitutions(Reader in) throws Exception {
+    protected List parseSubstitutions(Reader in) throws Exception {
         LinkedList substitutions = new LinkedList();
         StringBuffer buf = new StringBuffer();
-        buf.setLength(0);
+
         int ch;
         boolean inExpr = false;
         String lang = null;
@@ -61,7 +61,6 @@ public class LegacyStringTemplateParser extends AbstractStringTemplateParser {
                 } else if (c == '$' || c == '#' || c == '@') {
                     ch = in.read();
                     if (ch == '{') {
-
                         lang = (c == '#') ? JXPATH : ((c == '$') ? JEXL : JAVASCRIPT);
                         inExpr = true;
                         if (buf.length() > 0) {
@@ -81,12 +80,15 @@ public class LegacyStringTemplateParser extends AbstractStringTemplateParser {
                 break;
             }
         }
-        if (inExpr)
-            throw new Exception("Unterminated {");
 
-        if (buf.length() > 0)
+        if (inExpr) {
+            throw new Exception("Unterminated {");
+        }
+
+        if (buf.length() > 0) {
             substitutions.add(new Literal(buf.toString()));
+        }
+
         return substitutions;
     }
-
 }

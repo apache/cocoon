@@ -46,7 +46,7 @@ public class LegacySitemapStringTemplateParser extends AbstractStringTemplatePar
         this.serviceManager = serviceManager;
     }
 
-    public List parseSubstitutions(Reader in) throws Exception {
+    protected List parseSubstitutions(Reader in) throws Exception {
         LinkedList substitutions = new LinkedList();
         StringWriter writer = new StringWriter();
         IOUtils.copy(in, writer);

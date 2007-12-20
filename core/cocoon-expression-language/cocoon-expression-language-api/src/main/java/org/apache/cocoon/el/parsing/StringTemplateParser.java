@@ -31,23 +31,24 @@ public interface StringTemplateParser {
     String ROLE = StringTemplateParser.class.getName();
 
     /**
-     * Compile a boolean expression (returns either a Compiled Expression or a
-     * Boolean literal)
+     * Compile a boolean expression. Returns either a Compiled Expression or a
+     * Boolean literal.
      */
-    Subst compileBoolean(String val, String msg, Locator location) throws SAXException;
+    Subst compileBoolean(String expr, String msg, Locator location) throws SAXException;
 
     /**
-     * Compile an integer expression (returns either a Compiled Expression or an
-     * Integer literal)
+     * Compile an integer expression. Returns either a Compiled Expression or an
+     * Integer literal.
      */
-    Subst compileInt(String val, String msg, Locator location) throws SAXException;
+    Subst compileInt(String expr, String msg, Locator location) throws SAXException;
 
-    Subst compileExpr(String inStr, String errorPrefix, Locator location) throws SAXParseException;
+    /**
+     * Compile an expression.
+     */
+    Subst compileExpr(String expr, String msg, Locator location) throws SAXParseException;
 
     /**
      * Parse a set of expressions spaced with literals
      */
-    List parseSubstitutions(Reader in, String errorPrefix, Locator location) throws SAXParseException;
-
-    List parseSubstitutions(Reader in) throws Exception;
+    List parseSubstitutions(Reader in, String msg, Locator location) throws SAXParseException;
 }
