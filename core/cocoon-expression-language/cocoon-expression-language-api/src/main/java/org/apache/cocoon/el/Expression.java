@@ -25,6 +25,10 @@ import org.apache.cocoon.el.objectmodel.ObjectModel;
  */
 public interface Expression {
 
+    String getLanguage();
+
+    String getExpression();
+
     Object evaluate(ObjectModel objectModel)
             throws ExpressionException;
 
@@ -33,10 +37,6 @@ public interface Expression {
 
     void assign(ObjectModel objectModel, Object value)
             throws ExpressionException;
-
-    String getExpression();
-
-    String getLanguage();
 
     /*
      * This method is added to handle that JXPath have two access methods
