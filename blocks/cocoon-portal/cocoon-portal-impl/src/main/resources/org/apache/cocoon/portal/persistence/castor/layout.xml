@@ -32,7 +32,8 @@
          extends="org.apache.cocoon.portal.om.AbstractParameters"
          verify-constructable="false">
 
-    <field name="rendererName" type="java.lang.String">
+    <field name="rendererName" type="java.lang.String"
+           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
       <bind-xml name="renderer" node="attribute"/>
     </field>
 
