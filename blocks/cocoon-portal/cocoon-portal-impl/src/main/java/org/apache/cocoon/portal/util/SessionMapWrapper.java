@@ -25,7 +25,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.cocoon.processing.ProcessInfoProvider;
+import org.apache.cocoon.portal.spi.RequestContextProvider;
 
 /**
  * This is a wrapper for a {@link java.util.Map} storing the real map
@@ -38,10 +38,10 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
 public class SessionMapWrapper implements Map {
 
     protected final String attrName;
-    protected final ProcessInfoProvider processInfoProvider;
+    protected final RequestContextProvider requestContextProvider;
 
-    public SessionMapWrapper(ProcessInfoProvider provider, String attrName) {
-        this.processInfoProvider = provider;
+    public SessionMapWrapper(RequestContextProvider provider, String attrName) {
+        this.requestContextProvider = provider;
         this.attrName = attrName;
     }
 
@@ -49,7 +49,7 @@ public class SessionMapWrapper implements Map {
      * Get the real map for the current user.
      */
     protected Map getRealMap(boolean create) {
-        final HttpServletRequest req = this.processInfoProvider.getRequest();
+        final HttpServletRequest req = this.requestContextProvider.getCurrentRequestContext().getRequest();
         final HttpSession session = req.getSession(create);
         if ( session != null ) {
             Map map = (Map)session.getAttribute(this.attrName);

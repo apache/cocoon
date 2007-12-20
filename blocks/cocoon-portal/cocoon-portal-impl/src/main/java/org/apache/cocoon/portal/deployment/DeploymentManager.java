@@ -27,9 +27,6 @@ import org.apache.excalibur.source.Source;
  */
 public interface DeploymentManager {
 
-    /** The role of this component. */
-    String ROLE = DeploymentManager.class.getName();
-
     /**
      * Deploy a new artifact.
      */
