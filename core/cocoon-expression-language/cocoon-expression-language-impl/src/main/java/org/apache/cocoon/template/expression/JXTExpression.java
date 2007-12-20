@@ -123,10 +123,13 @@ public class JXTExpression implements Subst {
         return getRaw();
     }
 
-    public Boolean getBooleanValue(ObjectModel objectModel)
-        throws Exception {
+    //
+    // FIXME getXXXValue methods are all inconsistent. Is there a reason for this?
+    //
+
+    public Boolean getBooleanValue(ObjectModel objectModel) throws Exception {
         Object res = getValue(objectModel);
-        return res instanceof Boolean ? (Boolean)res : null;
+        return res instanceof Boolean ? (Boolean) res : null;
     }
 
     public String getStringValue(ObjectModel objectModel) throws Exception {
