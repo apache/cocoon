@@ -29,6 +29,9 @@
 
   <xsl:template match="/">
     <samples name="Cocoon Blocks">
+      <links>
+        <link role="see-also" href="sitemap.xmap">Sitemap</link>
+      </links>
       <xsl:apply-templates select="//group">
         <xsl:sort select="@priority" data-type="number" order="descending"/>
         <xsl:sort select="@name"/>
