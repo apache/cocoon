@@ -31,8 +31,9 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <map:transform src="../stylesheets/xml2html.xslt"/>
-      <map:serialize type="html"/>
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+      </map:serialize>
     </map:view>
 
     <map:view from-position="last" name="links">
