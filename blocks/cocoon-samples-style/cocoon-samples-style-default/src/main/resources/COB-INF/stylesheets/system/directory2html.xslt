@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: directory2html.xslt,v 1.4 2004/03/06 02:25:41 antonio Exp $ -->
+<!-- CVS $Id$ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

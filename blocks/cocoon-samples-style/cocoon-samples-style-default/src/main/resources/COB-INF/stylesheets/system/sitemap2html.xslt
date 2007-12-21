@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap2html.xslt,v 1.3 2004/03/06 02:25:41 antonio Exp $ -->
+<!-- CVS $Id$ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:map="http://apache.org/cocoon/sitemap/1.0"
