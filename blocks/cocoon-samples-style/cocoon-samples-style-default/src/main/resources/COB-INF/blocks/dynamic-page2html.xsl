@@ -16,11 +16,13 @@
   limitations under the License.
 -->
 
-<xsl:stylesheet
-  version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp-request="http://apache.org/xsp/request/2.0"
-  xmlns:xsp="http://apache.org/xsp">
+<!--
+  - $Id: simple-samples2html.xsl 597805 2007-11-24 05:14:03Z vgritsenko $
+  -->
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xsp-request="http://apache.org/xsp/request/2.0"
+                xmlns:xsp="http://apache.org/xsp">
 
   <xsl:include href="../common/style/xsl/html/simple-page2html.xsl"/>
  
@@ -34,24 +36,18 @@
 
   <xsl:template match="xsp-request:parameter-values">
     <p>Parameter Values for "<xsl:value-of select="@name"/>":</p>
-
     <ul>
       <xsl:for-each select="xsp-request:value">
-        <li>
-	  <xsl:value-of select="."/>
-	</li>
+        <li><xsl:value-of select="."/></li>
       </xsl:for-each>
     </ul>
   </xsl:template>
 
   <xsl:template match="xsp-request:parameter-names">
     <p>All Parameter Names:</p>
-
     <ul>
       <xsl:for-each select="xsp-request:name">
-        <li>
-	  <xsl:value-of select="."/>
-	</li>
+        <li><xsl:value-of select="."/></li>
       </xsl:for-each>
     </ul>
   </xsl:template>
@@ -61,10 +57,10 @@
     
     <ul>
       <xsl:for-each select="xsp-request:header">
-	<li>
+        <li>
           <i><xsl:value-of select="@name"/></i>:
           <b><xsl:value-of select="."/></b>
-	</li>
+        </li>
       </xsl:for-each>
     </ul>
     <br/>
@@ -76,12 +72,9 @@
 
   <xsl:template match="xsp-request:header-names">
     <p>All Header names:</p>
-
     <ul>
       <xsl:for-each select="xsp-request:name">
-        <li>
-	  <xsl:value-of select="."/>
-	</li>
+        <li><xsl:value-of select="."/></li>
       </xsl:for-each>
     </ul>
   </xsl:template>
@@ -117,9 +110,9 @@
   </xsl:template>
 
   <xsl:template match="@*|node()" priority="-1" name="copy">
-   <xsl:copy>
-    <xsl:apply-templates select="@*|node()"/>
-   </xsl:copy>
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
   </xsl:template>
 
 </xsl:stylesheet>

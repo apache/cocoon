@@ -24,10 +24,13 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+  <xsl:param name="version">2</xsl:param>
+  <xsl:param name="year">????</xsl:param>
+
   <xsl:template match="/">
     <html>
       <head>
-        <title>Apache Cocoon @version@</title>
+        <title>Apache Cocoon <xsl:value-of select="$version"/></title>
         <link rel="SHORTCUT ICON" href="servlet:/icons/cocoon.ico"/>
         <link href="servlet:/styles/main.css" type="text/css" rel="stylesheet"/>
         <xsl:apply-templates select="document/header/style"/>
@@ -38,7 +41,7 @@
           <tr>
             <td width="*">The Apache Software Foundation is proud to present...</td>
             <td width="40%" align="center"><img border="0" src="servlet:/images/cocoon.gif"/></td>
-            <td width="30%" align="center">Version: <b>@version@</b></td>
+            <td width="30%" align="center">Version: <b><xsl:value-of select="$version"/></b></td>
           </tr>
         </table>
 
@@ -75,8 +78,8 @@
         </p>
 
         <p class="copyright">
-          Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
-          All rights reserved.
+          <xsl:text>Copyright &#169; </xsl:text><xsl:value-of select="$year"/><xsl:text> </xsl:text>
+          <a href="http://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.
         </p>
       </body>
     </html>
