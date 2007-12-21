@@ -296,8 +296,7 @@
 
           <map:when test="not-found">
             <map:generate type="exception"/>
-            <map:transform src="stylesheets/exception2html.xslt">
-              <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
               <map:parameter name="realPath" value="{realpath:}"/>
               <map:parameter name="pageTitle" value="Resource not found"/>
             </map:transform>
@@ -306,8 +305,7 @@
 
           <map:when test="invalid-continuation">
             <map:generate type="exception"/>
-            <map:transform src="stylesheets/exception2html.xslt">
-              <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
               <map:parameter name="realPath" value="{realpath:}"/>
               <map:parameter name="pageTitle" value="Invalid Continuation"/>
             </map:transform>
@@ -316,8 +314,7 @@
 
           <map:otherwise>
             <map:generate type="exception"/>
-            <map:transform src="stylesheets/exception2html.xslt">
-              <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
               <map:parameter name="realPath" value="{realpath:}"/>
             </map:transform>
             <map:serialize status-code="500"/>
