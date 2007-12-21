@@ -17,7 +17,7 @@
 -->
 
 <!--
-  - $Id: simple-samples2html.xsl 595367 2007-11-15 17:16:37Z vgritsenko $
+  - $Id$
   -->
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">

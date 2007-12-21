@@ -24,7 +24,7 @@
     | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
     | Cleaned up and ported to standard DOM by Stefano Mazzocchi (stefano@apache.org)
     |
-    | CVS $Id: xml2html.xslt,v 1.10 2004/05/01 13:20:55 joerg Exp $
+    | CVS $Id$
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
