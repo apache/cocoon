@@ -16,11 +16,12 @@
  */
 package org.apache.cocoon.spring.configurator;
 
-import org.apache.cocoon.spring.configurator.impl.ServletContextFactoryBean;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import org.apache.cocoon.spring.configurator.impl.ServletContextFactoryBean;
 
 /**
  * Utility class to manage hierarchical application contexts.
@@ -35,6 +36,7 @@ public abstract class WebAppContextUtils {
 
     /**
      * Get the current web application context.
+     *
      * @throws IllegalStateException if no WebApplicationContext could not be found
      * @return The current web application context.
      */
@@ -45,34 +47,42 @@ public abstract class WebAppContextUtils {
 
     /**
      * Return the current web application context or if the attributes are null, the parent context.
+     *
      * @param attributes     The request attributes.
      * @throws IllegalStateException if no WebApplicationContext could not be found
      * @return The web application context.
      */
     protected static WebApplicationContext getCurrentWebApplicationContext(RequestAttributes attributes) {
-        if ( attributes != null ) {
-            if (attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST) != null) {
-                return (WebApplicationContext) attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        if (attributes != null) {
+            Object obj = attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+            if (obj != null) {
+                return (WebApplicationContext) obj;
             }
         }
+
         // return the root context
         return WebApplicationContextUtils.getRequiredWebApplicationContext(ServletContextFactoryBean.getServletContext());
     }
 
     /**
      * Notify about entering this context.
+     *
      * @param webAppContext The current web application context.
      * @return A handle which should be passed to {@link #leavingContext(WebApplicationContext, Object)}.
      */
     public static Object enteringContext(WebApplicationContext webAppContext) {
         // get request attributes
         final RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+
+        // save current class loader and web application context
         final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-        final WebApplicationContext oldContext = (WebApplicationContext)attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
-        final ContextInfo info = new ContextInfo(oldContext, oldClassLoader);
+        final WebApplicationContext oldContext = (WebApplicationContext) attributes.getAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+
+        // set new class loader and context
         attributes.setAttribute(CONTAINER_REQUEST_ATTRIBUTE, webAppContext, RequestAttributes.SCOPE_REQUEST);
         Thread.currentThread().setContextClassLoader(webAppContext.getClassLoader());
-        return info;
+
+        return new ContextInfo(oldContext, oldClassLoader);
     }
 
     /**
@@ -81,16 +91,17 @@ public abstract class WebAppContextUtils {
      * @param handle     The returned handle from {@link #enteringContext(WebApplicationContext)}.
      */
     public static void leavingContext(WebApplicationContext webAppContext, Object handle) {
-        if ( !(handle instanceof ContextInfo) ) {
+        if (!(handle instanceof ContextInfo)) {
             throw new IllegalArgumentException("Handle must be an instance of ContextInfo and not " + handle);
         }
-        final ContextInfo info = (ContextInfo)handle;
+        final ContextInfo info = (ContextInfo) handle;
+
         // get request attributes
         final RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
-        // restore class loader
+
+        // restore class loader and previous web application context
         Thread.currentThread().setContextClassLoader(info.classLoader);
-        // restore previous web application context (or remove attribute)
-        if ( info.webAppContext == null ) {
+        if (info.webAppContext == null) {
             attributes.removeAttribute(CONTAINER_REQUEST_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         } else {
             attributes.setAttribute(CONTAINER_REQUEST_ATTRIBUTE, info.webAppContext, RequestAttributes.SCOPE_REQUEST);
