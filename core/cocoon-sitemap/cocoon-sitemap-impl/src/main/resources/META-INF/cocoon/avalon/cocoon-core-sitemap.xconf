@@ -15,24 +15,28 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+
+<!--
+  - $Id$
+  -->
 <components>
 
-  <!--+
-      | New implementation of the sitemap. It is interpreted, so load times
-      | are super-fast, and request processing is slightly faster than with
-      | the compiled engine thanks to the HotSpot VM.
-      |
-      | Reloading of the sitemap:
-      |   If a sitemap is checked for reloading is determined by the
-      |   org.apache.cocoon.reloading (resp. org.apache.cocoon.reloading.sitemap)
-      |   property.
-      |   Set to "no", the sitemap is generated once at startup.
-      |   Set to "yes", the sitemap is regenerated if it changes.
-      |
-      | For development environment, set the check-reload to yes.
-      | For production environment, it is advisable to set check-reload to no.
-      +-->
+  <!--
+    - New implementation of the sitemap. It is interpreted, so load times
+    - are super-fast, and request processing is slightly faster than with
+    - the compiled engine thanks to the HotSpot VM.
+    -
+    - Reloading of the sitemap:
+    -   If check-reload attribute is present, its value is used. If it is
+    -   missing, reloading is determined by the properties:
+    -     org.apache.cocoon.reloading.sitemap,
+    -     org.apache.cocoon.reloading
+    -   If reloading is enabled, the sitemap is regenerated if it changes.
+    -   Otherwise, the sitemap is generated once at startup.
+    -
+    - For development environment, set the check-reload to yes.
+    - For production environment, it is advisable to set check-reload to no.
+    -->
   <sitemap file="context://sitemap.xmap" logger="sitemap"/>
   
 </components>
