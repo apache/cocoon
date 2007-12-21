@@ -182,20 +182,9 @@
 
 
   <xsl:template match="sample">
-    <xsl:variable name="link">
-      <xsl:choose>
-        <xsl:when test="starts-with(@href,'/')">
-          <xsl:value-of select="concat($contextPath, @href)"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@href"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
     <xsl:choose>
-      <xsl:when test="string-length($link) &gt; 0">
-        <a href="{$link}"><xsl:value-of select="@name"/></a>
+      <xsl:when test="string-length(@href) &gt; 0">
+        <a href="{@href}"><xsl:value-of select="@name"/></a>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="@name"/>
