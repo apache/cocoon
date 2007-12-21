@@ -22,7 +22,11 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+  <xsl:param name="version">2</xsl:param>
+  <xsl:param name="year">????</xsl:param>
+
   <xsl:param name="contextPath">servlet:/</xsl:param>
+
 
   <xsl:template match="/">
     <html>
@@ -33,7 +37,7 @@
   <xsl:template match="page">
    <head>
      <title>
-       <xsl:text>Apache Cocoon @version@</xsl:text>
+       <xsl:text>Apache Cocoon </xsl:text><xsl:value-of select="$version"/>
        <xsl:if test="title">
          <xsl:text> | </xsl:text>
          <xsl:value-of select="title"/>
@@ -67,8 +71,8 @@
      <xsl:apply-templates/>
 
      <p class="copyright">
-       Copyright &#169; @year@ <a href="http://www.apache.org/">The Apache Software Foundation</a>.
-       All rights reserved.
+       <xsl:text>Copyright &#169; </xsl:text><xsl:value-of select="$year"/><xsl:text> </xsl:text>
+       <a href="http://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.
      </p>
    </body>
   </xsl:template>

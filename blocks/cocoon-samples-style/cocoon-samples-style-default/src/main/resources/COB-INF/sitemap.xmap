@@ -26,21 +26,27 @@
   <map:pipelines>
     <map:pipeline id="services">
       <!--
-        These matchers are intended to be called
-        when making use of servlet services from other blocks
-      -->
+        - These matchers are intended to be called
+        - when making use of servlet services from other blocks
+        -->
+
       <map:match pattern="service/blocks/*">
         <map:generate src="service-consumer:"/>
         <map:transform src="blocks/{1}.xsl"/>
         <map:transform type="servletLinkRewriter"/>
         <map:serialize type="html"/>
       </map:match>
+
       <map:match pattern="service/common/*">
         <map:generate src="service-consumer:"/>
-        <map:transform src="common/style/xsl/html/{1}.xsl"/>
+        <map:transform src="common/style/xsl/html/{1}.xsl">
+          <map:parameter name="version" value="{cocoon-properties:version}"/>
+          <map:parameter name="year" value="{cocoon-properties:year}"/>
+        </map:transform>
         <map:transform type="servletLinkRewriter"/>
         <map:serialize type="html"/>
       </map:match>
+
       <map:match pattern="service/system/*">
         <map:generate src="service-consumer:"/>
         <map:transform src="stylesheets/system/{1}.xslt"/>
