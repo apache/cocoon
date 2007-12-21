@@ -61,7 +61,11 @@
     </map:view>
 
     <map:view from-label="content" name="pretty-content">
-      <!-- Make use of servlet services -->
+      <!--+
+          | Use servlet service serializer from the named block 'style'.
+          | Name 'style' is mapped to the 'cocoon-samples-style-default' block
+          | in the META-INF/cocoon/spring/cocoon-welcome-blockServlet.xml file.
+          +-->
       <map:serialize type="servletService">
         <map:parameter name="service" value="servlet:style:/service/system/xml2html" />
       </map:serialize>
@@ -200,21 +204,30 @@
       </map:match>
 
       <!--+
-          | Mount user directories
+          | Mount user directories.
           |
           | The location of user directories depends heavily on the operating
-          | system used. Uncomment the one below that suits your environment.
+          | system used. Here we try to detect if we are running on one of 3
+          | most used platforms and mount appropriate home directory.
           |
-          | NOTE: you might want to comment out the entire section for a
+          | NOTE: You might want to comment out this entire section in a
           |       production environment.
           +-->
       <map:match pattern="~*/**">
-        <!-- unix -->
-        <map:mount src="/home/{1}/public_html/" uri-prefix="~{1}"/>
-        <!-- macosx -->
-        <!--map:mount src="/Users/{1}/Sites/" uri-prefix="~{1}"/-->
-        <!-- win32 -->
-        <!--map:mount src="/Documents and Settings/{1}/My Documents/My Website/" uri-prefix="~{1}"/-->
+        <map:select type="resource-exists">
+          <!-- macosx -->
+          <map:when test="/Users/">
+            <map:mount src="/Users/{1}/Sites/" uri-prefix="~{1}"/>
+          </map:when>
+          <!-- unix -->
+          <map:when test="/home/">
+            <map:mount src="/home/{1}/public_html/" uri-prefix="~{1}"/>
+          </map:when>
+          <!-- win32 -->
+          <map:when test="/Documents and Settings/">
+            <map:mount src="/Documents and Settings/{1}/My Documents/My Website/" uri-prefix="~{1}"/>
+          </map:when>
+        </map:select>
       </map:match>
 
       <!--+
@@ -278,7 +291,6 @@
         </map:select>
       </map:match>
 
-
       <!--+
           | Mount everything else by calling the sitemap.xmap file located
           | in the requested folder.
@@ -292,9 +304,9 @@
           | by the pipeline execution. The error handler is an internal sitemap
           | component that, when triggered by an error, takes over the normal
           | pipeline execution.
-          | You can here use the "notifying" generator that produces an XML
-          | representation and further manipulate this document for presentation
-          | on screen.
+          | You can here use the "exception" generator that produces an XML
+          | representation of the error and further manipulate this document
+          | for presentation on screen.
           | You can also use any other generator if you don't want the
           | error to be displayed on screen. The "exception" selector can help
           | you to define different screens for different error types.
