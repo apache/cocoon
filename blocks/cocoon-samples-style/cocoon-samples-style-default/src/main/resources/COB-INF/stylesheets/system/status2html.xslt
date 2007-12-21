@@ -16,12 +16,11 @@
   limitations under the License.
 -->
 
-<!--+
-    | Converts output of the StatusGenerator into HTML page
-    | 
-    | CVS $Id$
-    +-->
-
+<!--
+  - Converts output of the StatusGenerator into HTML page
+  -
+  - $Id$
+  -->
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:status="http://apache.org/cocoon/status/2.0"
