@@ -24,6 +24,9 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+  <xsl:param name="contextPath"/>
+
+
   <xsl:template match="/">
     <samples name="Cocoon Blocks">
       <xsl:apply-templates select="//group">
@@ -47,7 +50,7 @@
       - Document structure is:
       - /collection[@name]/collection/resource/group[@name]/sample[@name]
       -->
-    <sample href="{@href}" name="{@name}">
+    <sample href="{$contextPath}{@href}" name="{@name}">
       <xsl:copy-of select="*|text()"/>
     </sample>
   </xsl:template>
