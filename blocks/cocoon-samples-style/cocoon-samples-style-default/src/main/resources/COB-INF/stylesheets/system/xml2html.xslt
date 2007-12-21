@@ -16,17 +16,16 @@
   limitations under the License.
 -->
 
-<!--+
-    | XSLT REC Compliant Version of IE5 Default Stylesheet
-    |
-    | Original version by Jonathan Marsh (jmarsh@microsoft.com)
-    | Conversion to XSLT 1.0 REC Syntax by Steve Muench (smuench@oracle.com)
-    | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
-    | Cleaned up and ported to standard DOM by Stefano Mazzocchi (stefano@apache.org)
-    |
-    | CVS $Id$
-    +-->
-
+<!--
+  - XSLT REC Compliant Version of IE5 Default Stylesheet
+  -
+  - Original version by Jonathan Marsh (jmarsh@microsoft.com)
+  - Conversion to XSLT 1.0 REC Syntax by Steve Muench (smuench@oracle.com)
+  - Added script support by Andrew Timberlake (andrew@timberlake.co.za)
+  - Cleaned up and ported to standard DOM by Stefano Mazzocchi (stefano@apache.org)
+  -
+  - $Id$
+  -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
    <xsl:template match="/">

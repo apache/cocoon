@@ -16,8 +16,9 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <xsl:stylesheet version="1.0"
                 xmlns:map="http://apache.org/cocoon/sitemap/1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
