@@ -92,10 +92,10 @@ public class ContextSourceFactory extends AbstractLogEnabled
             // Remove the protocol and the first '/'
             final int pos = location.indexOf(":/");
             final String scheme = location.substring(0, pos);
-            final String path = location.substring(pos+1);
+            final String path = location.substring(pos + 2);
 
             // fix for #24093, we don't give access to files outside the context:
-            if ( path.indexOf("../") != -1 ) {
+            if (path.indexOf("../") != -1) {
                 throw new MalformedURLException("Invalid path ('../' is not allowed) : " + path);
             }
 
@@ -121,28 +121,30 @@ public class ContextSourceFactory extends AbstractLogEnabled
                     }
                 }
                 return source;                
-            } 
+            }
+
             final String message = location + " could not be found. (possible context problem)";
-            this.getLogger().info(message);
+            getLogger().info(message);
             throw new MalformedURLException(message);
         } catch (ServiceException se) {
             throw new SourceException("Unable to lookup source resolver.", se);
         } finally {
-            this.manager.release( resolver );
+            this.manager.release(resolver);
         }
     }
 
     /**
      * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
      */
-    public void release( Source source ) {
+    public void release(Source source) {
         // In fact, this method should never be called as this factory
         // returns a source object from a different factory. So that
         // factory should release the source
-        if (null != source) {
+        if (source != null) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Releasing source " + source.getURI());
             }
+
             SourceResolver resolver = null;
             try {
                 resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
