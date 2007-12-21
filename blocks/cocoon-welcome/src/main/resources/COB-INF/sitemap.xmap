@@ -67,7 +67,7 @@
           | in the META-INF/cocoon/spring/cocoon-welcome-blockServlet.xml file.
           +-->
       <map:serialize type="servletService">
-        <map:parameter name="service" value="servlet:style:/service/system/xml2html" />
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
       </map:serialize>
     </map:view>
 
