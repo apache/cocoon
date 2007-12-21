@@ -89,50 +89,6 @@
         <xsl:apply-templates select="ex:stacktrace"/>
         <xsl:apply-templates select="ex:full-stacktrace"/>
 
-<!-- Do we really need all that stuff?
-     Application developers know this, and application users get really confused by this information.
-
-        <p class="topped">
-          If you need help and this information is not enough, you
-          are invited to read the
-          <a href="http://cocoon.apache.org/2.1/faq/">Cocoon FAQ</a>.<br/>
-          If you still don't find the answers you need,
-          can send a mail to the
-          <a href="http://cocoon.apache.org/community/mail-lists.html">
-          Cocoon mailing lists</a>,
-          remembering to:
-        </p>
-
-        <ul>
-          <li>specify the version of Cocoon you're using, or we'll assume that you
-              are talking about the latest released version;</li>
-          <li>specify the platform-operating system-version-servlet container version;</li>
-          <li>send any pertinent error message;</li>
-          <li>send pertinent log snippets;</li>
-          <li>send pertinent sitemap snippets;</li>
-          <li>send pertinent parts of the page that give you problems.</li>
-        </ul>
-
-        <p>
-          For more detailed technical information, take a look at the log
-          files in the log directory of Cocoon, which is placed by default in
-          the <code>WEB-INF/logs/</code> folder of your cocoon webapp context.<br/>
-          If the logs don't give you enough information, you might want to increase the
-          log level by changing the Logging configuration which is by default the
-          <code>WEB-INF/log4j.xconf</code> file.
-        </p>
-
-        <p>
-          If you think you found a bug, please report it to the 
-          <a href="http://issues.apache.org/jira/browse/COCOON">Apache Cocoon issue tracker</a>;
-          a message will automatically be sent to the developer mailing list and you'll
-          be kept in contact automatically with the further progress on that bug.
-        </p>
-
-        <p>
-          Thanks, and sorry for the trouble if this is our fault.
-        </p>
--->
         <p class="topped">
           The <a href="http://cocoon.apache.org/">Apache Cocoon</a> Project
         </p>
@@ -160,7 +116,7 @@
   
   <xsl:template name="print-location">
      <xsl:choose>
-       <xsl:when test="contains(@uri, $realPath)">
+       <xsl:when test="$realPath and contains(@uri, $realPath)">
          <xsl:text>context:/</xsl:text>
          <xsl:value-of select="substring-after(@uri, $realPath)"/>
        </xsl:when>
