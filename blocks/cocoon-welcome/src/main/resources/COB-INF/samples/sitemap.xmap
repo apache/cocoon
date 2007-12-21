@@ -50,12 +50,13 @@
           <map:parameter name="depth" value="2"/>
           <map:parameter name="xmlFiles" value="\.xsamples$"/>
         </map:generate>
-        <map:transform src="prepare-samples.xsl"/>
-        <map:transform src="merge-samples.xsl" label="content"/>
-        <map:transform src="../stylesheets/simple-samples2html.xsl">
+        <map:transform src="prepare-samples.xsl">
           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>
-        <map:serialize type="html"/>
+        <map:transform src="merge-samples.xsl" label="content"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
       </map:match>
     </map:pipeline>
   </map:pipelines>
