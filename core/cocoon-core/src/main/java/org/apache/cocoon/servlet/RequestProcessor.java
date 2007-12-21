@@ -107,6 +107,7 @@ public class RequestProcessor extends AbstractLogEnabled {
 
         this.processor = getProcessor();
         this.environmentContext = new HttpContext(this.servletContext);
+
         // get the optional request listener
         if (this.cocoonBeanFactory.containsBean(RequestListener.ROLE)) {
             this.requestListener = (RequestListener) this.cocoonBeanFactory.getBean(RequestListener.ROLE);
@@ -115,10 +116,6 @@ public class RequestProcessor extends AbstractLogEnabled {
 
     protected Processor getProcessor() {
         return (Processor) this.cocoonBeanFactory.getBean(Processor.ROLE);
-    }
-
-    public void setProcessor(Processor processor) {
-        this.processor = processor;
     }
 
     protected boolean rethrowExceptions() {
@@ -135,7 +132,7 @@ public class RequestProcessor extends AbstractLogEnabled {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        // add the cocoon header timestamp
+        // add the cocoon version header stamp
         if (this.servletSettings.isShowVersion()) {
             res.addHeader("X-Cocoon-Version", Constants.VERSION);
         }
@@ -146,7 +143,6 @@ public class RequestProcessor extends AbstractLogEnabled {
             // a redirect occured, so we are finished
             return;
         }
-        String contentType = null;
 
         Environment env;
         try{
@@ -168,6 +164,7 @@ public class RequestProcessor extends AbstractLogEnabled {
             return;
         }
 
+        String contentType = null;
         try {
             if (process(env)) {
                 contentType = env.getContentType();
