@@ -45,6 +45,11 @@
 
   <map:pipelines>
     <map:pipeline>
+
+      <!--
+        - Create samples page with links to all deployed blocks,
+        - using directory listing from 'blockcontext:/' source.
+        -->
       <map:match pattern="">
         <map:generate type="xpathtraversable" src="blockcontext:/">
           <map:parameter name="xpath" value="/xsamples/group"/>
@@ -59,6 +64,14 @@
           <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
         </map:serialize>
       </map:match>
+
+      <!--
+        - Show this sitemap.xmap file.
+        -->
+      <map:match pattern="sitemap.xmap">
+        <map:read src="sitemap.xmap" mime-type="text/xml"/>
+      </map:match>
+
     </map:pipeline>
   </map:pipelines>
 </map:sitemap>
