@@ -28,21 +28,41 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.BeanCreationException;
 
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.servlet.RequestUtil;
 
 /**
- * Use this servlet as entry point to Cocoon. It wraps the {@link TreeProcessor}
+ * Use this servlet as an entry point to Cocoon. It wraps the {@link TreeProcessor}
  * and delegates all requests to it.
  *
  * @version $Id$
  */
 public class SitemapServlet extends HttpServlet {
+
+    /**
+     * Name of the 'sitemap-path' servlet init parameter. Value should point
+     * to the location of sitemap file, defaults to '/sitemap.xmap'.
+     */
+    private static final String PARAM_SITEMAP_PATH = "sitemap-path";
+    private static final String DEFAULT_SITEMAP_PATH = "/sitemap.xmap";
+
+    /**
+     * Name of the 'check-reload' servlet init parameter. Value should be
+     * one of 'true', 'yes', 'false', 'no'.
+     */
+    private static final String PARAM_CHECK_RELOAD = "check-reload";
+
+    /**
+     * Name of the 'pass-through' servlet init parameter. Value should be
+     * one of 'true', 'yes', 'false', 'no'.
+     */
+    private static final String PARAM_PASS_THROUGH = "pass-through";
+
 
     protected RequestProcessor processor;
 
@@ -75,8 +95,6 @@ public class SitemapServlet extends HttpServlet {
     }
 
     protected class RequestProcessor extends org.apache.cocoon.servlet.RequestProcessor {
-        private static final String DEFAULT_SITEMAP_PATH = "/sitemap.xmap";
-        private static final String SITEMAP_PATH_PROPERTY = "sitemapPath";
 
         public RequestProcessor(ServletContext servletContext) {
             super(servletContext);
@@ -88,25 +106,23 @@ public class SitemapServlet extends HttpServlet {
 
         protected Processor getProcessor() {
             // read tree processor configuration
-            Configuration processorConfig;
-            ServiceManager serviceManager =
-                (ServiceManager) this.cocoonBeanFactory.getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
+            Configuration config;
             try {
-                processorConfig = createTreeProcessorConfiguration(this.servletContext);
+                config = createTreeProcessorConfiguration(this.servletContext);
             } catch (IOException e) {
                 throw new BeanCreationException("Could not create configuration for TreeProcesoor", e);
             }
 
+            ServiceManager serviceManager =
+                (ServiceManager) this.cocoonBeanFactory.getBean(AvalonUtils.SERVICE_MANAGER_ROLE);
+
             // create the tree processor
             Processor processor;
             try {
-                TreeProcessor treeProcessor = new TreeProcessor();
-                // TODO (DF/RP) The treeProcessor doesn't need to be a managed component at all.
-                processor = (Processor) LifecycleHelper.setupComponent(treeProcessor,
-                                                                       getLogger(),
-                                                                       null,
-                                                                       serviceManager,
-                                                                       processorConfig);
+                processor = new TreeProcessor();
+                ContainerUtil.service(processor, serviceManager);
+                ContainerUtil.configure(processor, config);
+                ContainerUtil.initialize(processor);
             } catch (Exception e) {
                 throw new BeanCreationException("Could not create TreeProcessor", e);
             }
@@ -134,26 +150,41 @@ public class SitemapServlet extends HttpServlet {
          */
         private Configuration createTreeProcessorConfiguration(ServletContext servletContext)
         throws IOException {
-            // get the uri to the sitemap location and resolve it in the curent servlet context,
-            // observere that it is very important that the Treeprocessor get a resolved uri,
-            // just providing a relative uri relative to the current context is not enough
+            // Get the uri to the sitemap location and resolve it in the curent servlet context.
+            // Please note that it is very important that the Treeprocessor receives a resolved
+            // uri, simply providing a uri relative to the current context is not enough
             // and doesn't work
-            String sitemapPath = servletContext.getInitParameter(SITEMAP_PATH_PROPERTY);
+            String sitemapPath = getInitParameter(PARAM_SITEMAP_PATH);
             if (sitemapPath == null) {
                 sitemapPath = DEFAULT_SITEMAP_PATH;
             }
 
-            String sitemapURI;
             URL uri = servletContext.getResource(sitemapPath);
             if (uri == null) {
                 throw new IOException("Couldn't find the sitemap " + sitemapPath);
             }
-            sitemapURI = uri.toExternalForm();
+            String sitemapURI = uri.toExternalForm();
 
-            DefaultConfiguration treeProcessorConf = new DefaultConfiguration("treeProcessorConfiguration");
-            treeProcessorConf.setAttribute("check-reload", true);
-            treeProcessorConf.setAttribute("file", sitemapURI);
-            return treeProcessorConf;
+            // Create configuration
+            DefaultConfiguration config = new DefaultConfiguration("sitemap");
+            config.setAttribute("file", sitemapURI);
+
+            // Set check-reload attribute
+            String checkReloadStr = getInitParameter(PARAM_CHECK_RELOAD);
+            if (checkReloadStr != null) {
+                boolean checkReload = BooleanUtils.toBoolean(checkReloadStr);
+                config.setAttribute("check-reload", checkReload);
+            }
+
+            // Set pass-through attribute
+            String passThroughStr = getInitParameter(PARAM_PASS_THROUGH);
+            if (passThroughStr != null) {
+                boolean passThrough = BooleanUtils.toBoolean(passThroughStr);
+                config.setAttribute("pass-through", passThrough);
+            }
+
+            // Done
+            return config;
         }
     }
 }
