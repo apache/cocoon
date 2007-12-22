@@ -17,7 +17,9 @@
 package org.apache.cocoon.servletservice.postable.components;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.io.Writer;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.ParameterException;
@@ -101,12 +103,19 @@ public class ServletServiceSerializer extends AbstractSerializer
 		} catch (ProcessingException e) {
 			throw new SAXException("Exception occured while serializing content of sax buffer", e);
 		}
-		try {
-			IOUtils.copy(new StringReader(serializedXML), servletSource.getOutputStream());
-		} catch (IOException e) {
+
+        try {
+            // TODO Improve this quick fix; it is better for Postable to provide Writer instead.
+            // TODO Need to specify 
+            // Convert output stream to writer to specify UTF-8 encoding.
+            Writer out = new OutputStreamWriter(servletSource.getOutputStream(), "UTF-8");
+            IOUtils.copy(new StringReader(serializedXML), out);
+            out.flush();
+        } catch (IOException e) {
 			throw new SAXException("Exception occured while writing to the output stream of source '" + servletSource.getURI() + "'", e);
-		}
-		try {
+        }
+
+        try {
 			//here real mime type is set, see Spring bean's configuration comment
 			response.setHeader("Content-Type", servletSource.getMimeType());
 			
