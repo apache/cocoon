@@ -56,13 +56,11 @@
       </map:match>
 
       <map:match pattern="sitemap.xmap">
-        <map:generate src="sitemap.xmap"/>
-        <map:serialize type="xml"/>
+        <map:read src="sitemap.xmap" mime-type="text/xml"/>
       </map:match>
 
       <map:match pattern="**/sitemap.xmap">
-        <map:generate src="{1}/sitemap.xmap"/>
-        <map:serialize type="xml"/>
+        <map:read src="{0}" mime-type="text/xml"/>
       </map:match>
 
       <map:match pattern="*/**">

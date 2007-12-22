@@ -55,22 +55,22 @@
         </map:serialize>
       </map:match>
 
-      <map:match pattern="sitemap.xmap">
-        <map:read src="sitemap.xmap" mime-type="text/xml" />
-      </map:match>
-
       <!-- ================ Catalog entity resolver ======================== -->
 
       <map:match pattern="catalog-demo">
         <map:generate src="catalog-demo.xml"/>
         <map:transform src="style.xsl"/>
-        <map:serialize type="html"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+        </map:serialize>
       </map:match>
 
       <map:match pattern="entity-test.html">
         <map:generate src="catalog-test.xml"/>
         <map:transform src="style.xsl"/>
-        <map:serialize type="html"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+        </map:serialize>
       </map:match>
 
       <map:match pattern="sdocbook-demo">
@@ -82,7 +82,7 @@
       <!-- ======================== Resources ============================== -->
 
       <map:match pattern="images/**.gif">
-        <map:read src="context://resources/images/{1}.gif" mime-type="image/gif"/>
+        <map:read src="servlet:style:/images/{1}.gif" mime-type="image/gif"/>
       </map:match>
 
     </map:pipeline>
