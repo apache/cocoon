@@ -45,7 +45,7 @@
       Follow the configuration steps first ...
     </note>
     <sample name="Entity Resolution With Catalogs"
-            href="../../docs/userdocs/concepts/catalog.html#config">
+            href="http://cocoon.apache.org/2.1/userdocs/concepts/catalog.html#config">
       The Apache Cocoon documentation "Entity
       resolution with catalogs" has a section "Example local configuration
       for Simplified DocBook". Do that and then ...
