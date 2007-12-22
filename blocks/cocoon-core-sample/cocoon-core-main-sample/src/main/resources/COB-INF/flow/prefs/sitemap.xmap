@@ -49,21 +49,15 @@
   <!-- =========================== Pipelines =============================== -->
 
   <map:pipelines>
-    <map:pipeline>
+    <map:pipeline internal-only="true">
       <!--
         - Produces the views called by the flowscript
         -->
       <map:match pattern="page/*">
         <map:generate type="jx" src="screens/{1}.xml"/>
-        <map:transform src="servlet:style:/common/style/xsl/html/simple-page2html.xsl">
-          <map:parameter name="servletPath" value="{request:servletPath}"/>
-          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-          <map:parameter name="file" value="servlet:/flow/prefs/screens/{1}.xsp"/>
-          <map:parameter name="remove" value="{0}"/>
-        </map:transform>
-        <map:transform type="servletLinkRewriter"/>
-        <map:serialize/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+        </map:serialize>
       </map:match>
     </map:pipeline>
 

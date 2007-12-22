@@ -51,9 +51,9 @@
       <map:transform src="composite2page.xsl">
         <map:parameter name="page" value="{../0}"/>
       </map:transform>
-      <map:transform src="servlet:style:/common/style/xsl/html/simple-page2html.xsl"/>
-      <map:transform type="servletLinkRewriter"/>
-      <map:serialize type="html"/>
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+      </map:serialize>
     </map:resource>
   </map:resources>
 

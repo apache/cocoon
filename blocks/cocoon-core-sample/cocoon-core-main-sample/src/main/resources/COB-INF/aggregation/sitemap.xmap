@@ -236,12 +236,6 @@
         </map:serialize>
       </map:match>
 
-
-      <!-- This Sitemap -->
-      <map:match pattern="sitemap.xmap">
-        <map:read src="sitemap.xmap" mime-type="text/xml"/>
-      </map:match>
-
       <!-- Source Files -->
       <map:match pattern="*.xml">
         <map:generate src="content/{1}.xml"/>

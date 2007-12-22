@@ -51,10 +51,6 @@
         </map:serialize>
       </map:match>
 
-      <map:match pattern="sitemap.xmap">
-        <map:read src="sitemap.xmap" mime-type="text/xml"/>
-      </map:match>
-
       <!-- ========================= Stream ================================ -->
 
       <map:match pattern="order">
