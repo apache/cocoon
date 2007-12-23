@@ -16,9 +16,6 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
-import org.apache.cocoon.components.treeprocessor.ProcessingNode;
-
 import org.apache.cocoon.environment.Environment;
 
 /**
@@ -26,8 +23,9 @@ import org.apache.cocoon.environment.Environment;
  */
 public abstract class SimpleParentProcessingNode extends AbstractParentProcessingNode {
 
-    /** The childrens of this matcher */
+    /** The children of this node */
     protected ProcessingNode[] children;
+
 
     public SimpleParentProcessingNode(String type) {
         super(type);

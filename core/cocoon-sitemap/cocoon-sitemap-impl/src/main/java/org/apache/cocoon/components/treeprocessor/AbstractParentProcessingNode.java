@@ -48,7 +48,7 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
     throws Exception {
 
         currentMap = this.executor.pushVariables(this, env.getObjectModel(), currentName, currentMap);
-        context.pushMap(currentName,currentMap);
+        context.pushMap(currentName, currentMap);
 
         try {
             for (int i = 0; i < nodes.length; i++) {
@@ -59,18 +59,19 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
             }
         } finally {
             this.executor.popVariables(this, env.getObjectModel());
-            // No success
             context.popMap();
         }
+
+        // No success
         return false;
     }
 
     /**
      * Invoke all nodes of a node array in order, until one succeeds.
      */
-    protected final boolean invokeNodes (ProcessingNode[] nodes,
-                                         Environment env,
-                                         InvokeContext context)
+    protected final boolean invokeNodes(ProcessingNode[] nodes,
+                                        Environment env,
+                                        InvokeContext context)
     throws Exception {
 
         for (int i = 0; i < nodes.length; i++) {

@@ -111,6 +111,7 @@ public class MountNode extends AbstractProcessingNode
                 }
                 return false;
             }
+
             // Processor will create its own pipelines
             return processor.process(env);
         } catch(Exception e) {
