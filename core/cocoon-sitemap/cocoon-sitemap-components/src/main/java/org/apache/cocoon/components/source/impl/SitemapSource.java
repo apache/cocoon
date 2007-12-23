@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceException;
@@ -423,33 +422,6 @@ public final class SitemapSource extends AbstractLogEnabled
             this.manager.release( this.sourceResolver );
             this.sourceResolver = null;
         }
-    }
-
-    /**
-     * Get the value of a parameter.
-     * Using this it is possible to get custom information provided by the
-     * source implementation, like an expires date, HTTP headers etc.
-     */
-    public String getParameter(String name) {
-        return null;
-    }
-
-    /**
-     * Get the value of a parameter.
-     * Using this it is possible to get custom information provided by the
-     * source implementation, like an expires date, HTTP headers etc.
-     */
-    public long getParameterAsLong(String name) {
-        return 0;
-    }
-
-    /**
-     * Get parameter names
-     * Using this it is possible to get custom information provided by the
-     * source implementation, like an expires date, HTTP headers etc.
-     */
-    public Iterator getParameterNames() {
-        return java.util.Collections.EMPTY_LIST.iterator();
     }
 
     /**
