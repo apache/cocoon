@@ -103,7 +103,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
     throws Exception {
         final Processor.InternalPipelineDescription desc = prepareErrorHandler(ex, env, context);
         if (desc != null) {
-            desc.release();
+            context.setInternalPipelineDescription(desc);
             return true;
         }
 
@@ -151,7 +151,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
     throws Exception {
         final Processor.InternalPipelineDescription desc = prepareErrorHandler(node, ex, env, context);
         if (desc != null) {
-            desc.release();
+            context.setInternalPipelineDescription(desc);
             return true;
         }
 
@@ -181,8 +181,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
             prepare(context, env, ex);
 
             // Create error context
-            InvokeContext errorContext = new InvokeContext(context.isBuildingPipelineOnly());
-            errorContext.setRedirector(context.getRedirector());
+            InvokeContext errorContext = new InvokeContext(context);
             errorContext.service(this.manager);
             errorContext.inform(context.getPipelineType(), context.getPipelineParameters(), env.getObjectModel());
             try {

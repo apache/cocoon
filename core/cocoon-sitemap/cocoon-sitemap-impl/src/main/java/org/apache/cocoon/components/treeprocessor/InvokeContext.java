@@ -102,14 +102,6 @@ public class InvokeContext extends AbstractLogEnabled
      * the current request is external.
      */
     public InvokeContext() {
-        this.isBuildingPipelineOnly = false;
-    }
-
-    /**
-     * Determines if the Pipeline been set for this context
-     */
-    public boolean pipelineIsSet() {
-	    return this.processingPipeline != null;
     }
 
     /**
@@ -117,6 +109,22 @@ public class InvokeContext extends AbstractLogEnabled
      */
     public InvokeContext(boolean isBuildingPipelineOnly) {
         this.isBuildingPipelineOnly = isBuildingPipelineOnly;
+    }
+
+    /**
+     * Create an <code>InvokeContext</code> based on existing context.
+     */
+    public InvokeContext(InvokeContext context) {
+        this.isBuildingPipelineOnly = context.isBuildingPipelineOnly;
+        this.redirector = context.redirector;
+        this.lastProcessor = context.lastProcessor;
+    }
+
+    /**
+     * Determines if the Pipeline been set for this context
+     */
+    public boolean pipelineIsSet() {
+	    return this.processingPipeline != null;
     }
 
     /**
