@@ -132,8 +132,9 @@ public class PipelineNode extends AbstractParentProcessingNode
         desc.type = this.processingPipeline;
         desc.parameters = params;
         desc = this.executor.enteringPipeline(this, env.getObjectModel(), desc);
-        context.inform(desc.type, desc.parameters, env.getObjectModel());
 
+        context.inform(desc.type, desc.parameters, env.getObjectModel());
+        
         try {
             if (this.errorHandlerHelper.isInternal()) {
                 // Set internal error handler in the pipeline
