@@ -488,24 +488,24 @@ public abstract class AbstractProcessingPipeline extends AbstractLogEnabled
      */
     protected void prepareInternalErrorHandler(Environment environment, ProcessingException ex)
     throws ProcessingException {
-        if (this.errorHandler != null) {
-            try {
-                this.errorPipeline = this.errorHandler.prepareErrorPipeline(ex);
-                if (this.errorPipeline != null) {
-                    this.errorPipeline.prepareInternal(environment);
-                    return;
-                }
-            } catch (ProcessingException e) {
-                // Log the original exception
-                getLogger().error("Failed to process error handler for exception", ex);
-                throw e;
-            } catch (Exception e) {
-                getLogger().error("Failed to process error handler for exception", ex);
-                throw new ProcessingException("Failed to handle exception <" + ex.getMessage() + ">", e);
-            }
-        } else {
+        if (this.errorHandler == null) {
             // propagate exception if we have no error handler
             throw ex;
+        }
+
+        try {
+            this.errorPipeline = this.errorHandler.prepareErrorPipeline(ex);
+            if (this.errorPipeline != null) {
+                this.errorPipeline.prepareInternal(environment);
+            }
+        } catch (ProcessingException e) {
+            // Log the original exception
+            getLogger().error("Failed to process error handler for exception", ex);
+            throw e;
+        } catch (Exception e) {
+            // Log the original exception
+            getLogger().error("Failed to process error handler for exception", ex);
+            throw new ProcessingException("Failed to handle exception <" + ex.getMessage() + ">", e);
         }
     }
 
