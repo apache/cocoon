@@ -77,47 +77,39 @@ public class EnvironmentWrapper extends AbstractEnvironment {
         super(env.getURI(), info.view, env.getAction());
         this.environment = env;
 
-        // create new object model and replace the request object
+        // create new object model
         Map oldObjectModel = env.getObjectModel();
-        if (oldObjectModel instanceof HashMap) {
-            this.objectModel = (Map)((HashMap)oldObjectModel).clone();
-        } else {
-            this.objectModel = new HashMap(oldObjectModel.size()*2);
-            Iterator entries = oldObjectModel.entrySet().iterator();
-            Map.Entry entry;
-            while (entries.hasNext()) {
-                entry = (Map.Entry)entries.next();
-                this.objectModel.put(entry.getKey(), entry.getValue());
-            }
-        }
+        this.objectModel = new HashMap(oldObjectModel);
+
+        // replace the request object
         this.request = new RequestWrapper(ObjectModelHelper.getRequest(oldObjectModel),
                                           info.requestURI,
                                           info.queryString,
                                           this,
                                           info.rawMode);
-
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
+
         if (wrapResponse) {
             Response response = new ResponseWrapper(ObjectModelHelper.getResponse(oldObjectModel));
             this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
         }
 
-        this.setURI(info.prefix, info.uri);        
+        setURI(info.prefix, info.uri);        
     }
     
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#redirect(java.lang.String, boolean, boolean)
+    /**
+     * @see org.apache.cocoon.environment.Environment#redirect(String, boolean, boolean)
      */
     public void redirect(String newURL, boolean global, boolean permanent)
     throws IOException {
-        if ( !global && !this.internalRedirect ) {
+        if (!global && !this.internalRedirect) {
             this.redirectURL = newURL;
         } else {
             this.environment.redirect(newURL, global, permanent);
         }
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Environment#getOutputStream(int)
      */
     public OutputStream getOutputStream(int bufferSize)
@@ -135,29 +127,28 @@ public class EnvironmentWrapper extends AbstractEnvironment {
         this.outputStream = stream;
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Environment#tryResetResponse()
      */
     public boolean tryResetResponse()
     throws IOException {
-        final OutputStream os = this.getOutputStream(-1);
-        if (os != null
-            && os instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)os).clearBuffer();
+        final OutputStream os = getOutputStream(-1);
+        if (os instanceof BufferedOutputStream) {
+            ((BufferedOutputStream) os).clearBuffer();
             return true;
         }
+
         return super.tryResetResponse();
     }
 
-    /* (non-Javadoc)
+    /**
      * @see org.apache.cocoon.environment.Environment#commitResponse()
      */
     public void commitResponse() 
     throws IOException {
-        final OutputStream os = this.getOutputStream(-1);
-        if (os != null
-            && os instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)os).realFlush();
+        final OutputStream os = getOutputStream(-1);
+        if (os instanceof BufferedOutputStream) {
+            ((BufferedOutputStream) os).realFlush();
         } else {
             super.commitResponse();
         }
@@ -242,8 +233,8 @@ public class EnvironmentWrapper extends AbstractEnvironment {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Environment#isInternRedirect()
+    /**
+     * @see org.apache.cocoon.environment.Environment#isInternalRedirect()
      */
     public boolean isInternalRedirect() {
         return this.internalRedirect;
