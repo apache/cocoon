@@ -28,6 +28,6 @@
     <resource>src/main/resources/COB-INF/resource/internal/README.txt</resource>
     <resource>src/main/resources/COB-INF/resource/external/README.txt</resource>
     <resource>src/main/resources/META-INF/cocoon/spring/demo-application-context.xml</resource>
-    <resource>src/main/resources/META-INF/cocoon/spring/servlet-service.xml</resource>
+    <resource>src/main/resources/META-INF/cocoon/spring/blockServlet.xml</resource>
   </resources>
 </archetype>
