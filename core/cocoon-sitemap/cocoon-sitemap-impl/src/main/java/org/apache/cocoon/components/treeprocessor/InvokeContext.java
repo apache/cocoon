@@ -26,7 +26,6 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.Processor;
@@ -83,9 +82,6 @@ public class InvokeContext extends AbstractLogEnabled
 
     /** The parameters for the processing pipeline */
     protected Parameters processingPipelineParameters;
-
-    /** The Selector for the processing pipeline */
-    protected ServiceSelector pipelineSelector;
 
     /** The ProcessingPipeline used */
     protected ProcessingPipeline processingPipeline;
@@ -203,13 +199,13 @@ public class InvokeContext extends AbstractLogEnabled
             // Keep current manager for proper release
             this.pipelinesManager = this.currentManager;
 
-            this.pipelineSelector = (ServiceSelector)this.pipelinesManager.lookup(ProcessingPipeline.ROLE+"Selector");
-            this.processingPipeline = (ProcessingPipeline)this.pipelineSelector.select(this.processingPipelineType);
-            this.processingPipeline.setProcessorManager(this.currentManager);
+            this.processingPipeline = (ProcessingPipeline) this.pipelinesManager.lookup(ProcessingPipeline.ROLE + '/' + this.processingPipelineType);
+            this.processingPipeline.setProcessorManager(this.pipelinesManager);
 
             this.processingPipeline.setup(this.processingPipelineParameters);
             this.processingPipeline.setErrorHandler(this.errorHandler);
         }
+
         return this.processingPipeline;
     }
 
@@ -219,11 +215,8 @@ public class InvokeContext extends AbstractLogEnabled
     public void setInternalPipelineDescription(Processor.InternalPipelineDescription desc) {
         this.processingPipeline = desc.processingPipeline;
         this.pipelinesManager = desc.pipelineManager;
-        this.lastProcessor = desc.lastProcessor;
-        this.pipelineSelector = desc.pipelineSelector;
-        this.internalPipelineDescription = new Processor.InternalPipelineDescription(
-                this.processingPipeline, this.pipelineSelector, this.pipelinesManager);
-        this.internalPipelineDescription.lastProcessor = this.lastProcessor;
+        this.lastProcessor = desc.processor;
+        this.internalPipelineDescription = new Processor.InternalPipelineDescription(this.lastProcessor, this.pipelinesManager, this.processingPipeline);
         this.internalPipelineDescription.prefix = desc.prefix;
         this.internalPipelineDescription.uri = desc.uri;
     }
@@ -233,9 +226,7 @@ public class InvokeContext extends AbstractLogEnabled
      */
     public Processor.InternalPipelineDescription getInternalPipelineDescription(Environment env) {
         if (this.internalPipelineDescription == null) {
-            this.internalPipelineDescription = new Processor.InternalPipelineDescription(
-                    this.processingPipeline, this.pipelineSelector, this.pipelinesManager);
-            this.internalPipelineDescription.lastProcessor = this.lastProcessor;
+            this.internalPipelineDescription = new Processor.InternalPipelineDescription(this.lastProcessor, this.pipelinesManager, this.processingPipeline);
             this.internalPipelineDescription.prefix = env.getURIPrefix();
             this.internalPipelineDescription.uri = env.getURI();
         }
@@ -345,12 +336,8 @@ public class InvokeContext extends AbstractLogEnabled
     public void dispose() {
         if (this.internalPipelineDescription == null && this.pipelinesManager != null) {
             if (this.processingPipeline != null) {
-                this.pipelineSelector.release(this.processingPipeline);
+                this.pipelinesManager.release(this.processingPipeline);
                 this.processingPipeline = null;
-            }
-            if (this.pipelineSelector != null) {
-                this.pipelinesManager.release(this.pipelineSelector);
-                this.pipelineSelector = null;
             }
             this.pipelinesManager = null;
 
