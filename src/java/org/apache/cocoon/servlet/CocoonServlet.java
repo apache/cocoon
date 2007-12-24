@@ -946,7 +946,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         if (result == null) {
-            String msg = "Init parameter 'configuration' doesn't name an existing resource : " + usedFileName;
+            String msg = "Init parameter 'configurations' doesn't name an existing resource : " + usedFileName;
             getLogger().error(msg);
             throw new ServletException(msg);
         }
