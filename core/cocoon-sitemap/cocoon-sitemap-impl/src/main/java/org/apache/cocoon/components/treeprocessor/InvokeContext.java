@@ -58,26 +58,31 @@ public class InvokeContext extends AbstractLogEnabled
     private Map mapToName = new HashMap();
 
     /** True if building pipeline only, not processing it. */
-    private boolean isBuildingPipelineOnly;
+    private final boolean isBuildingPipelineOnly;
 
     /** The redirector */
     protected Redirector redirector;
 
-
-    /** The current component manager, as set by the last call to compose() or recompose() */
+    /** The current component manager, as set by the last call to {@link #service}. */
     private ServiceManager currentManager;
+
+    /** Unified Object Model */
+    private ObjectModel newObjectModel;
+
+    /** The last processor */
+    protected Processor lastProcessor;
+
+    /** The error handler for the pipeline. */
+    protected SitemapErrorHandler errorHandler;
 
     /** The component manager that was used to get the pipelines */
     private ServiceManager pipelinesManager;
 
     /** The name of the processing pipeline component */
-    protected String processingPipelineName;
+    protected String processingPipelineType;
 
     /** The parameters for the processing pipeline */
     protected Parameters processingPipelineParameters;
-
-    /** The object model used to resolve processingPipelineParameters */
-    protected Map processingPipelineObjectModel;
 
     /** The Selector for the processing pipeline */
     protected ServiceSelector pipelineSelector;
@@ -88,20 +93,13 @@ public class InvokeContext extends AbstractLogEnabled
     /** The internal pipeline description */
     protected Processor.InternalPipelineDescription internalPipelineDescription;
 
-    /** The error handler for the pipeline. */
-    protected SitemapErrorHandler errorHandler;
-
-    /** The last processor */
-    protected Processor lastProcessor;
-    
-    /** Unified Object Model */
-    private ObjectModel newObjectModel;
 
     /**
      * Create an <code>InvokeContext</code> without existing pipelines. This also means
      * the current request is external.
      */
     public InvokeContext() {
+        this.isBuildingPipelineOnly = false;
     }
 
     /**
@@ -119,18 +117,11 @@ public class InvokeContext extends AbstractLogEnabled
         this.redirector = context.redirector;
         this.lastProcessor = context.lastProcessor;
         service(manager);
-        inform(context.processingPipelineName, context.processingPipelineParameters, context.processingPipelineObjectModel);
+        inform(context.processingPipelineType, context.processingPipelineParameters);
     }
 
     /**
-     * Determines if the Pipeline been set for this context
-     */
-    public boolean pipelineIsSet() {
-	    return this.processingPipeline != null;
-    }
-
-    /**
-     * Serviceable interface
+     * Serviceable interface. InvokeContext receives manager from {@link ConcreteTreeProcessor}.
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.currentManager = manager;
@@ -141,22 +132,66 @@ public class InvokeContext extends AbstractLogEnabled
     }
 
     /**
+     * Are we building a pipeline (and not executing it) ?
+     */
+    public final boolean isBuildingPipelineOnly() {
+        return this.isBuildingPipelineOnly;
+    }
+
+    /**
+     * Set the redirector to be used by nodes that need it.
+     *
+     * @param redirector the redirector
+     */
+    public void setRedirector(Redirector redirector) {
+        this.redirector = redirector;
+    }
+
+    /**
+     * Get the redirector to be used by nodes that need it.
+     *
+     * @return the redirector
+     */
+    public Redirector getRedirector() {
+        return this.redirector;
+    }
+
+    /**
+     * Set the last processor
+     */
+    public void setLastProcessor(Processor p) {
+        this.lastProcessor = p;
+    }
+
+    /**
      * Informs the context about a new pipeline section
      */
-    public void inform(String     pipelineName,
-                       Parameters parameters,
-                       Map        objectModel) {
-        this.processingPipelineName = pipelineName;
+    public void inform(String     pipelineType,
+                       Parameters parameters) {
+        this.processingPipelineType = pipelineType;
         this.processingPipelineParameters = parameters;
-        this.processingPipelineObjectModel = objectModel;
     }
     
+    public String getPipelineType() {
+        return this.processingPipelineType;
+    }
+
     public Parameters getPipelineParameters() {
         return this.processingPipelineParameters;
     }
     
-    public String getPipelineType() {
-        return this.processingPipelineName;
+    /**
+     * Set the error handler for the pipeline.
+     */
+    public void setErrorHandler(SitemapErrorHandler handler) {
+        this.errorHandler = handler;
+    }
+
+    /**
+     * Returns true if pipeline has been set for this context
+     */
+    public boolean hasPipeline() {
+	    return this.processingPipeline != null;
     }
 
     /**
@@ -169,7 +204,7 @@ public class InvokeContext extends AbstractLogEnabled
             this.pipelinesManager = this.currentManager;
 
             this.pipelineSelector = (ServiceSelector)this.pipelinesManager.lookup(ProcessingPipeline.ROLE+"Selector");
-            this.processingPipeline = (ProcessingPipeline)this.pipelineSelector.select(this.processingPipelineName);
+            this.processingPipeline = (ProcessingPipeline)this.pipelineSelector.select(this.processingPipelineType);
             this.processingPipeline.setProcessorManager(this.currentManager);
 
             this.processingPipeline.setup(this.processingPipelineParameters);
@@ -206,20 +241,6 @@ public class InvokeContext extends AbstractLogEnabled
         }
 
         return this.internalPipelineDescription;
-    }
-
-    /**
-     * Set the last processor
-     */
-    public void setLastProcessor(Processor p) {
-        this.lastProcessor = p;
-    }
-
-    /**
-     * Are we building a pipeline (and not executing it) ?
-     */
-    public final boolean isBuildingPipelineOnly() {
-        return this.isBuildingPipelineOnly;
     }
 
     /**
@@ -271,6 +292,22 @@ public class InvokeContext extends AbstractLogEnabled
     }
 
     /**
+     * Pop the topmost element of the current Map stack.
+     */
+    public final void popMap() {
+        Object map = this.mapStack.remove(this.mapStack.size() - 1);
+        Object name = this.mapToName.get(map);
+        this.mapToName.remove(map);
+        this.nameToMap.remove(name);
+        //if cocoon: protocol is used the isBuildingPipelineOnly() is true that means pipeline going to be set up
+        //but not executed at the same time therefore it must be cocoon: protocol that takes responsibility for
+        //maintaining OM's cleaness
+        if (!isBuildingPipelineOnly()) {
+        	this.newObjectModel.cleanupLocalContext();
+        }
+    }
+
+    /**
      * Dumps all sitemap parameters to log
      */
     protected void dumpParameters() {
@@ -303,39 +340,6 @@ public class InvokeContext extends AbstractLogEnabled
     }
 
     /**
-     * Pop the topmost element of the current Map stack.
-     */
-    public final void popMap() {
-        Object map = this.mapStack.remove(this.mapStack.size() - 1);
-        Object name = this.mapToName.get(map);
-        this.mapToName.remove(map);
-        this.nameToMap.remove(name);
-        //if cocoon: protocol is used the isBuildingPipelineOnly() is true that means pipeline going to be set up 
-        //but not executed at the same time therefore it must be cocoon: protocol that takes responsibility for 
-        //maintaining OM's cleaness 
-        if (!isBuildingPipelineOnly())
-        	this.newObjectModel.cleanupLocalContext();
-    }
-
-    /**
-     * Set the redirector to be used by nodes that need it.
-     *
-     * @param redirector the redirector
-     */
-    public void setRedirector(Redirector redirector) {
-        this.redirector = redirector;
-    }
-
-    /**
-     * Get the redirector to be used by nodes that need it.
-     *
-     * @return the redirector
-     */
-    public Redirector getRedirector() {
-        return this.redirector;
-    }
-
-    /**
      * Release the pipelines, if any, if they were looked up by this context.
      */
     public void dispose() {
@@ -350,9 +354,8 @@ public class InvokeContext extends AbstractLogEnabled
             }
             this.pipelinesManager = null;
 
-            this.processingPipelineName = null;
+            this.processingPipelineType = null;
             this.processingPipelineParameters = null;
-            this.processingPipelineObjectModel = null;
         }
 
         if (this.newObjectModel != null) {
@@ -361,12 +364,5 @@ public class InvokeContext extends AbstractLogEnabled
         }
 
         this.currentManager = null;
-    }
-
-    /**
-     * Set the error handler for the pipeline.
-     */
-    public void setErrorHandler(SitemapErrorHandler handler) {
-        this.errorHandler = handler;
     }
 }

@@ -133,7 +133,7 @@ public class PipelineNode extends AbstractParentProcessingNode
         desc.parameters = params;
         desc = this.executor.enteringPipeline(this, env.getObjectModel(), desc);
 
-        context.inform(desc.type, desc.parameters, env.getObjectModel());
+        context.inform(desc.type, desc.parameters);
         
         try {
             if (this.errorHandlerHelper.isInternal()) {

@@ -51,7 +51,7 @@ public abstract class SimpleParentProcessingNode extends AbstractParentProcessin
     public boolean invoke(Environment env, InvokeContext context) throws Exception {
         // Inform the pipeline (if available) that we have come across
         // a possible branch point
-        if (context.pipelineIsSet() && hasChildren()) {
+        if (context.hasPipeline() && hasChildren()) {
             context.getProcessingPipeline().informBranchPoint();
         }
 
