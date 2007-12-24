@@ -142,23 +142,6 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
     }
 
     /**
-     * Handle error using specified error handler processing node.
-     */
-    public boolean invokeErrorHandler(ProcessingNode node,
-                                      Exception ex,
-                                      Environment env,
-                                      InvokeContext context)
-    throws Exception {
-        final Processor.InternalPipelineDescription desc = prepareErrorHandler(node, ex, env, context);
-        if (desc != null) {
-            context.setInternalPipelineDescription(desc);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Prepare (or execute) error handler using specified error handler
      * processing node.
      *
@@ -181,9 +164,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
             prepare(context, env, ex);
 
             // Create error context
-            InvokeContext errorContext = new InvokeContext(context);
-            errorContext.service(this.manager);
-            errorContext.inform(context.getPipelineType(), context.getPipelineParameters(), env.getObjectModel());
+            InvokeContext errorContext = new InvokeContext(context, this.manager);
             try {
                 // Process error handling node
                 if (node.invoke(env, errorContext)) {

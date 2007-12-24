@@ -31,22 +31,26 @@ public interface Processor {
     /** The role of the root processor */
     String ROLE = Processor.class.getName();
 
+    /**
+     *
+     */
     public static class InternalPipelineDescription {
         
-        public InternalPipelineDescription(ProcessingPipeline pp, 
-                                           ServiceSelector selector,
-                                           ServiceManager manager) {
-            this.processingPipeline = pp;
-            this.pipelineSelector = selector;
-            this.pipelineManager = manager;
-        }
         public ProcessingPipeline processingPipeline;
         public ServiceManager pipelineManager;
         public ServiceSelector pipelineSelector;
         public Processor lastProcessor;
         public String prefix;
         public String uri;
-        
+
+        public InternalPipelineDescription(ProcessingPipeline pipeline,
+                                           ServiceSelector selector,
+                                           ServiceManager manager) {
+            this.processingPipeline = pipeline;
+            this.pipelineSelector = selector;
+            this.pipelineManager = manager;
+        }
+
         public void release() {
             if (this.pipelineSelector != null) {
                 this.pipelineSelector.release(this.processingPipeline);
