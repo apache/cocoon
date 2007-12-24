@@ -114,10 +114,12 @@ public class InvokeContext extends AbstractLogEnabled
     /**
      * Create an <code>InvokeContext</code> based on existing context.
      */
-    public InvokeContext(InvokeContext context) {
+    public InvokeContext(InvokeContext context, ServiceManager manager) throws ServiceException {
         this.isBuildingPipelineOnly = context.isBuildingPipelineOnly;
         this.redirector = context.redirector;
         this.lastProcessor = context.lastProcessor;
+        service(manager);
+        inform(context.processingPipelineName, context.processingPipelineParameters, context.processingPipelineObjectModel);
     }
 
     /**

@@ -109,6 +109,7 @@ public class MountNode extends AbstractProcessingNode
                     context.setInternalPipelineDescription(pp);
                     return true;
                 }
+
                 return false;
             }
 
@@ -126,11 +127,6 @@ public class MountNode extends AbstractProcessingNode
             } else {
                 env.removeAttribute(COCOON_PASS_THROUGH);
             }
-
-            // Turning recomposing as a test, according to:
-            // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2
-            // Recompose pipelines which may have been recomposed by subsitemap
-            // context.recompose(this.manager);
         }
     }
 

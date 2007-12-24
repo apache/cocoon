@@ -35,8 +35,6 @@ import org.apache.cocoon.environment.Environment;
 public final class PipelinesNode extends SimpleParentProcessingNode
                                  implements Serviceable, Disposable {
 
-    private ServiceManager manager;
-
     private ErrorHandlerHelper errorHandlerHelper;
 
 
@@ -49,11 +47,9 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     }
 
     /**
-     * Keep the component manager used everywhere in the tree so that we can
-     * cleanly dispose it.
+     * Pass manager to {@link ErrorHandlerHelper}.
      */
     public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
         this.errorHandlerHelper.service(manager);
     }
 
@@ -78,9 +74,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         // Perform any common invoke functionality
         super.invoke(env, context);
 
-        // Recompose context (and pipelines) to the local component manager
-        context.service(this.manager);
-
         try {
             // FIXME: Is there any useful information that can be passed as top-level parameters,
             //        such as the URI of the mount point ?
@@ -90,19 +83,14 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         } catch (ConnectionResetException e) {
             // Will be reported by CocoonServlet, rethrowing
             throw e;
+
         } catch (Exception ex) {
             // Invoke pipelines handler
             return this.errorHandlerHelper.invokeErrorHandler(ex, env, context);
         }
     }
 
-    /**
-     * Dispose the component manager.
-     */
     public void dispose() {
-        if (this.manager instanceof Disposable) {
-            ((Disposable) this.manager).dispose();
-        }
-        this.manager = null;
+        this.errorHandlerHelper = null;
     }
 }
