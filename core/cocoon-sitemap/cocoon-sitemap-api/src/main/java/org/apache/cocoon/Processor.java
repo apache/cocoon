@@ -17,7 +17,7 @@
 package org.apache.cocoon;
 
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
+
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
@@ -32,34 +32,40 @@ public interface Processor {
     String ROLE = Processor.class.getName();
 
     /**
-     *
+     * Keeps together processing pipeline, its owners, and environment state variables.
      */
     public static class InternalPipelineDescription {
-        
-        public ProcessingPipeline processingPipeline;
+
+        /** Processor owning this service manager and pipeline */
+        public Processor processor;
+
+        /** Service manager of this pipeline */
         public ServiceManager pipelineManager;
-        public ServiceSelector pipelineSelector;
-        public Processor lastProcessor;
+
+        /** Processing pipeline itself */
+        public ProcessingPipeline processingPipeline;
+
+        /** Environment prefix */
         public String prefix;
+
+        /** Environment URI */
         public String uri;
 
-        public InternalPipelineDescription(ProcessingPipeline pipeline,
-                                           ServiceSelector selector,
-                                           ServiceManager manager) {
-            this.processingPipeline = pipeline;
-            this.pipelineSelector = selector;
+        public InternalPipelineDescription(Processor processor,
+                                           ServiceManager manager,
+                                           ProcessingPipeline pipeline) {
+            this.processor = processor;
             this.pipelineManager = manager;
+            this.processingPipeline = pipeline;
         }
 
         public void release() {
-            if (this.pipelineSelector != null) {
-                this.pipelineSelector.release(this.processingPipeline);
-                this.pipelineManager.release(this.pipelineSelector);
+            if (this.pipelineManager != null) {
+                this.pipelineManager.release(this.processingPipeline);
             }
-            this.lastProcessor = null;
             this.processingPipeline = null;
             this.pipelineManager = null;
-            this.pipelineSelector = null;
+            this.processor = null;
         }
     }
     
