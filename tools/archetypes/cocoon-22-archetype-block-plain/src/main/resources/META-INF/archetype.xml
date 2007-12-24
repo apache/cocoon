@@ -22,6 +22,6 @@
     <resource>src/main/java/demo/App.java</resource>
     <resource>src/test/java/demo/AppTest.java</resource>    
     <resource>src/main/resources/COB-INF/sitemap.xmap</resource>
-    <resource>src/main/resources/META-INF/cocoon/spring/servlet-service.xml</resource>    
+    <resource>src/main/resources/META-INF/cocoon/spring/blockServlet.xml</resource>    
   </resources>
 </archetype>
