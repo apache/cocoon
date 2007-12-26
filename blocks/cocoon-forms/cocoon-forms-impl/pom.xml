@@ -45,13 +45,6 @@
             <include>**/*TestCase.class</include>
             <include>**/*Test.class</include>
           </includes>
-          <excludes>
-            <exclude>**/DynamicSelectionListTestCase*</exclude>
-            <exclude>**/EnumSelectionListTestCase*</exclude>
-            <exclude>**/FlowJXPathSelectionListTestCase*</exclude>
-            <exclude>**/FieldTestCase*</exclude>
-            <exclude>**/GroupTestCase*</exclude>
-          </excludes>
         </configuration>
       </plugin>
     </plugins>
