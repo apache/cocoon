@@ -251,6 +251,17 @@
           scope="singleton" init-method="init"/>
 
   <!--+
+      | Variable Resolver.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.VariableResolver"
+          class="org.apache.cocoon.portal.services.impl.DefaultVariableResolver"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton">
+        <property name="settings" ref="org.apache.cocoon.configuration.Settings"/>
+    </bean>
+
+  <!--+
       | Profile Manager.
       |
       +-->
