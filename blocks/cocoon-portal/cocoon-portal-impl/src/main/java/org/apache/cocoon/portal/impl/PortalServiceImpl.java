@@ -34,7 +34,6 @@ import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.portal.services.PortalManager;
 import org.apache.cocoon.portal.services.UserService;
 import org.apache.cocoon.portal.services.VariableResolver;
-import org.apache.cocoon.portal.services.VariableResolver.CompiledExpression;
 import org.apache.cocoon.portal.spi.RequestContextProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -86,6 +85,9 @@ public abstract class PortalServiceImpl
 
     /** Configuration. */
     protected Properties configuration;
+
+    /** The variable resolver. */
+    protected VariableResolver variableResolver;
 
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
@@ -270,36 +272,13 @@ public abstract class PortalServiceImpl
     }
 
     /**
-     * TODO Make this a real service
      * @see org.apache.cocoon.portal.PortalService#getVariableResolver()
      */
     public VariableResolver getVariableResolver() {
-        return new VariableResolverImpl();
-    }
-
-    public static final class VariableResolverImpl implements VariableResolver {
-
-        public CompiledExpression compile(String expression) {
-            return new CompiledExpressionImpl(expression);
+        if ( this.variableResolver == null ) {
+            this.variableResolver = (VariableResolver)this.getService(VariableResolver.class.getName());
         }
-
-        public String resolve(String expression) {
-            return expression;
-        }
-    }
-
-    public static final class CompiledExpressionImpl implements CompiledExpression {
-
-        protected final String expression;
-
-        public CompiledExpressionImpl(String e) {
-            this.expression = e;
-        }
-
-        public String resolve() {
-            return this.expression;
-        }
-
+        return this.variableResolver;
     }
 }
 
