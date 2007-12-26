@@ -19,6 +19,7 @@ package org.apache.cocoon.forms.datatype;
 
 import java.util.Locale;
 
+import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.datatype.typeimpl.EnumType;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 
@@ -47,6 +48,9 @@ public class EnumSelectionListTestCase extends AbstractSelectionListTestCase {
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/EnumSelectionListTestCase.dest-no-null.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
+        // FIXME: Why is the namespace declaration available as attribute on the expected document? (see COCOON-2155)
+        expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
+        expected.getDocumentElement().removeAttribute("xmlns:i18n");
         assertEqual("Test if output is what is expected",
                 expected, destDocument);
     }
@@ -65,6 +69,9 @@ public class EnumSelectionListTestCase extends AbstractSelectionListTestCase {
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/EnumSelectionListTestCase.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
+        // FIXME: Why is the namespace declaration available as attribute on the expected document? (see COCOON-2155)
+        expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
+        expected.getDocumentElement().removeAttribute("xmlns:i18n");
         assertEqual("Test if output is what is expected",
                 expected, destDocument);
     }

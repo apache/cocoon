@@ -17,7 +17,7 @@
 
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.cocoon.core.container.ContainerTestCase;
+import org.apache.cocoon.CocoonTestCase;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
@@ -30,7 +30,7 @@ import org.w3c.dom.Document;
  * @version $Id$
  */
 
-public class FieldTestCase extends ContainerTestCase {
+public class FieldTestCase extends CocoonTestCase {
     
     public static final String VALUE_PATH = "fi:fragment/fi:field/fi:value";
     public static final String VALIDATION_PATH = "fi:fragment/fi:field/fi:validation-message";

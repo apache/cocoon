@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.formmodel;
 
 import junit.framework.Assert;
 
-import org.apache.cocoon.core.container.ContainerTestCase;
+import org.apache.cocoon.CocoonTestCase;
 import org.apache.cocoon.forms.datatype.typeimpl.IntegerType;
 
 /**
@@ -28,7 +28,7 @@ import org.apache.cocoon.forms.datatype.typeimpl.IntegerType;
  * @version $Id$
  */
 
-public class GroupTestCase extends ContainerTestCase {
+public class GroupTestCase extends CocoonTestCase {
 
     /**
      * checks for correct inheritance

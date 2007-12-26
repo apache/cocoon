@@ -25,17 +25,15 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.cocoon.core.container.ContainerTestCase;
-
+import org.apache.cocoon.CocoonTestCase;
 import org.custommonkey.xmlunit.Diff;
-
 import org.w3c.dom.Document;
 
 /**
  * Abstract TestCase for CForms's SelectionList datatypes.
  * @version $Id$
  */
-public abstract class AbstractSelectionListTestCase extends ContainerTestCase {
+public abstract class AbstractSelectionListTestCase extends CocoonTestCase {
 
     protected DatatypeManager datatypeManager;
     protected DocumentBuilder parser;
