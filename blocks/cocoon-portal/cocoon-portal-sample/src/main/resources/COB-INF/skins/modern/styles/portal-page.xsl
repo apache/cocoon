@@ -31,6 +31,7 @@
         <link type="text/css" rel="stylesheet" href="{$rsrcprefix}skin/{$skin}/css/page.css"/>
         <link type="text/css" rel="stylesheet" href="{$rsrcprefix}skin/{$skin}/css/wsrp.css"/>
         <link type="text/css" rel="stylesheet" href="{$rsrcprefix}skin/{$skin}/css/portal-page.css"/>
+        <script src="resources/portal/js/cocoon-portal.js" type="text/javascript"/>
       </head>
       <body>
         <div class="cocoon-portal-header">
