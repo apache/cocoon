@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.impl;
+package org.apache.cocoon.portal.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @version $Id$
  */
-public abstract class PortalServiceImpl
+public abstract class AbstractPortalService
     implements PortalService {
 
     /** The servlet context. */
