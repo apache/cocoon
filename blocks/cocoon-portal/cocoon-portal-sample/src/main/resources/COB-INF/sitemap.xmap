@@ -341,25 +341,6 @@
         <map:redirect-to uri="login"/>
       </map:match>
       
-      	<!-- ==== P O R T A L   T O O L S ==== -->
-	
-	<!-- mount sitemap of the portal tools -->
-	<map:match pattern="tools/**"> 
-		<map:act type="cauth-is-logged-in">
-			<map:parameter name="application" value="portal"/> 
-			
-			<map:mount uri-prefix="tools" src="tools/sitemap.xmap"/>
-		</map:act>
-	</map:match>
-	
-    <!-- portal tools image reader -->
-	<map:match pattern="toolImages/*/*.jpg">
-		<map:read mime-type="image/jpg" src="tools/skins/{1}/images/{2}.jpg"/>
-	</map:match>
-	<map:match pattern="userImages/*.jpg">
-		<map:read mime-type="image/jpg" src="tools/plugins/userManagement/userImages/{1}.jpg"/>
-	</map:match>
-
       <!-- Everything else redirect to the portal -->
       <map:match pattern="**">
         <map:redirect-to uri="portal"/>
