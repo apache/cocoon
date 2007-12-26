@@ -16,16 +16,16 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.commons.lang.SystemUtils;
 
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
-import org.apache.commons.lang.SystemUtils;
 
 /**
  * Handles &lt;map:handle-errors&gt;
@@ -47,6 +47,7 @@ public final class HandleErrorsNode extends AbstractParentProcessingNode {
     public HandleErrorsNode(int statusCode, String scope)
     throws ConfigurationException {
         this.statusCode = statusCode;
+        
         if ("internal".equals(scope)) {
             this.internal = true;
         } else if ("external".equals(scope)) {

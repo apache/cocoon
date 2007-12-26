@@ -21,6 +21,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.apache.cocoon.util.Deprecation;
 
 /**
  * Builds a &lt;map:handle-errors&gt;
@@ -38,7 +39,13 @@ public class HandleErrorsNodeBuilder extends AbstractParentProcessingNodeBuilder
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
-        HandleErrorsNode node = new HandleErrorsNode(config.getAttributeAsInteger("type", -1),
+        int type = config.getAttributeAsInteger("type", -1);
+        if (type != -1) {
+            Deprecation.logger.warn("Attribute 'type' on <map:handle-errors> is deprecated. " +
+                                    "Omit type attribute and use <map:select type='exception'> instead, at " + config.getLocation());
+        }
+
+        HandleErrorsNode node = new HandleErrorsNode(type,
                                                      config.getAttribute("when", "external"));
         this.treeBuilder.setupNode(node, config);
 
