@@ -31,7 +31,7 @@ import org.apache.cocoon.portal.om.SkinDescription;
  *
  * @version $Id$
  */
-public class SkinModule 
+public class SkinModule
     extends AbstractModule {
 
     /** The global input module. */
@@ -51,7 +51,7 @@ public class SkinModule
     /**
 	 * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
 	 */
-	public Object getAttribute(String name, Configuration modeConf, Map objectModel) 
+	public Object getAttribute(String name, Configuration modeConf, Map objectModel)
     throws ConfigurationException {
         String key = name;
         // lazy init
@@ -104,7 +104,7 @@ public class SkinModule
             if ( "skin".equals(key) ) {
                 return skinName;
             } else if ( "skin.basepath".equals(key) ) {
-                return desc.getBasePath();
+                return desc.getBasePath().getAbsoluteFile();
             } else if ( "skin.thumbnailpath".equals(key) ) {
                 return desc.getThumbnailPath();
             } else if ( key.startsWith("skin.thumbnailuri.") ) {
@@ -112,7 +112,7 @@ public class SkinModule
                 for(Iterator it = portalService.getSkinDescriptions().iterator(); it.hasNext();) {
                     SkinDescription selected = (SkinDescription) it.next();
                     if(selected.getName().equals(selectedSkinName)) {
-                        return selected.getBasePath() + "/"  + selected.getThumbnailPath(); 
+                        return selected.getBasePath() + "/"  + selected.getThumbnailPath();
                     }
                 }
             }

@@ -104,7 +104,7 @@ public class DefaultVariableResolver
             }
             String skinPath = "";
             if ( desc != null ) {
-                skinPath = desc.getBasePath();
+                skinPath = desc.getBasePath().getAbsolutePath();
             }
             if ( insertPos == 0 ) {
                 return skinPath + this.value;
