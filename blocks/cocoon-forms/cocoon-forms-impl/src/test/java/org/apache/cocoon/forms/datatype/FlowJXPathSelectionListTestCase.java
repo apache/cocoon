@@ -68,7 +68,7 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
-        // FIXME: Why is the namespace declaration available as attribute on the expected document?
+        // FIXME: Why is the namespace declaration available as attribute on the expected document? (see COCOON-2155)
         expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
         assertEqual("Test if generated list matches expected", expected, destDocument);
     }
@@ -95,7 +95,7 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
-        // FIXME: Why is the namespace declaration available as attribute on the expected document?
+        // FIXME: Why is the namespace declaration available as attribute on the expected document? (see COCOON-2155)
         expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
         assertEqual("Test if generated list matches expected", expected, destDocument);
     }
