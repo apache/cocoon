@@ -16,6 +16,8 @@
  */
 package org.apache.cocoon.portal.om;
 
+import java.io.File;
+
 /**
  *
  * @version $Id$
@@ -23,20 +25,20 @@ package org.apache.cocoon.portal.om;
 public class SkinDescription {
 
     protected String name;
-    protected String basePath;
+    protected File basePath;
     protected String thumbnailPath;
 
     /**
      * @return Returns the basePath.
      */
-    public String getBasePath() {
+    public File getBasePath() {
         return basePath;
     }
 
     /**
      * @param basePath The basePath to set.
      */
-    public void setBasePath(String basePath) {
+    public void setBasePath(File basePath) {
         this.basePath = basePath;
     }
 

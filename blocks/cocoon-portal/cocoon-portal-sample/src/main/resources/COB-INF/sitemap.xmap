@@ -222,7 +222,7 @@
               <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
                 <map:parameter name="user" value="{ID}"/>
                 <map:parameter name="title" value="{global:mainTitle}"/>
-                <map:parameter name="skin" value="{portal-skin:skin}"/>
+                <map:parameter name="skin" value="{global:skin}"/>
               </map:transform>
            <!--   
               <map:transform src="{portal-skin:skin.basepath}/styles/forms-styling.xsl">
