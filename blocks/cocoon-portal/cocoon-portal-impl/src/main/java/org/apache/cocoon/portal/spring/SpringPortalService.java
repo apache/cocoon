@@ -16,21 +16,22 @@
  */
 package org.apache.cocoon.portal.spring;
 
-import org.apache.cocoon.portal.impl.PortalServiceImpl;
+import org.apache.cocoon.portal.services.impl.AbstractPortalService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * This extensions of the {@link PortalServiceImpl} uses Spring
+ * This extension of the {@link AbstractPortalService} uses Spring
  * to resolve the dependencies.
  *
  * @version $Id$
  */
 public class SpringPortalService
-    extends PortalServiceImpl
+    extends AbstractPortalService
     implements ApplicationContextAware {
 
+    /** The application context. */
     protected ApplicationContext appContext;
 
     /**
@@ -42,7 +43,7 @@ public class SpringPortalService
     }
 
     /**
-     * @see org.apache.cocoon.portal.impl.PortalServiceImpl#getService(java.lang.String)
+     * @see org.apache.cocoon.portal.services.impl.AbstractPortalService#getService(java.lang.String)
      */
     protected Object getService(String name) {
         return this.appContext.getBean(name);
