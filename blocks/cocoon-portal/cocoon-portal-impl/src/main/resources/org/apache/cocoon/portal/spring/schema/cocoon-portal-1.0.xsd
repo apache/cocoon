@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- @version $Id: cocoon-portal-1.0.xsd 605714 2007-12-19 21:44:14Z cziegeler $ -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://cocoon.apache.org/schema/portal"
+            xmlns:tns="http://cocoon.apache.org/schema/portal"
+            xmlns="http://cocoon.apache.org/schema/portal">
+
+  <xsd:element name="renderer-aspects">
+    <xsd:complexType>
+      <xsd:sequence>
+    	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="profile-manager-aspects">
+    <xsd:complexType>
+      <xsd:sequence>
+    	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="request-processor-aspects">
+    <xsd:complexType>
+      <xsd:sequence>
+    	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="response-processor-aspects">
+    <xsd:complexType>
+      <xsd:sequence>
+    	<xsd:element ref="aspect" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="aspect">
+    <xsd:complexType>
+      <xsd:sequence>
+    	<xsd:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="property">
+    <xsd:complexType>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="layout-type">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="renderer" minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="required"/>
+      <xsd:attribute name="layoutClass" type="xsd:string" use="required"/>
+      <xsd:attribute name="createLayoutId" type="xsd:boolean" use="optional"/>
+      <xsd:attribute name="itemClass" type="xsd:string" use="optional"/>
+      <xsd:attribute name="defaultIsStatic" type="xsd:boolean" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="renderer">
+    <xsd:complexType>
+      <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="coplet-type">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="coplet-adapter" minOccurs="1" maxOccurs="1"/>
+        <xsd:element ref="configuration" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="coplet-adapter">
+    <xsd:complexType>
+      <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="configuration">
+    <xsd:complexType>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="value" type="xsd:string" use="required"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
