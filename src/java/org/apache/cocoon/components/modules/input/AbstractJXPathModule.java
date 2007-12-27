@@ -104,7 +104,7 @@ public abstract class AbstractJXPathModule extends AbstractInputModule {
         if (modeConf != null) {
             name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name);
         }
-        return JXPathHelper.getAttribute(name, modeConf, this.configuration, contextObj);
+        return JXPathHelper.getAttributeValue(name, modeConf, this.configuration, contextObj);
     }
 
 

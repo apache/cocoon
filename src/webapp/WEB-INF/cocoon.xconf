@@ -228,6 +228,12 @@
     <component-instance logger="core.modules.input" name="slashdot"     class="org.apache.cocoon.components.modules.input.XMLFileModule">
       <file src="http://slashdot.org/slashdot.rss"/>
     </component-instance>
+    <component-instance logger="core.modules.input" name="xmyxml"        class="org.apache.cocoon.components.modules.input.XPathXMLFileModule">
+      <file src="context://samples/modules/forrestconf.xml"/>
+    </component-instance>
+    <component-instance logger="core.modules.input" name="varxml"        class="org.apache.cocoon.components.modules.input.XPathXMLFileModule">
+      <file src="context://samples/modules/{request-param:dir}/forrestconf.xml"/>
+    </component-instance>
     <component-instance logger="core.modules.input" name="random-100-to-500" class="org.apache.cocoon.components.modules.input.RandomNumberModule">
       <min>100</min>
       <max>500</max>
@@ -447,6 +453,19 @@
   <transient-store logger="core.store.transient">
     <parameter name="maxobjects" value="${transient-store.maxobjects}"/>
   </transient-store>
+
+
+  <!--+
+      | Transient Store: holds objects that don't have to survive shutdown
+      |
+      | Common configuration parameters:
+      | maxobjects: Indicates how many objects will be held in the cache.
+      |    When the number of maxobjects has been reached. The last object
+      |    in the cache will be thrown out.
+      +-->
+  <xmlfile-store logger="core.store.transient">
+    <parameter name="maxobjects" value="${xmlfile-store.maxobjects}"/>
+  </xmlfile-store>
 
   <!--+
       | Store: generic store. The default implementation is an in-memory store

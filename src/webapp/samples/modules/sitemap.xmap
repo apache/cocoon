@@ -220,6 +220,28 @@
         <map:serialize/>
       </map:match>
 
+       <map:match pattern="content/xxml.xml">
+        <map:generate type="jx" src="properties.xml">
+          <map:parameter name="/forrestconf/@version" value="{xmyxml:/forrestconf/@version}"/>
+          <map:parameter name="/forrestconf/skin" value="{xmyxml:/forrestconf/skin}"/>
+          <map:parameter name="/*/base-url" value="{xmyxml:/*/base-url}"/>
+          <map:parameter name="a/forestconf/@version" value="{varxml:/forrestconf/@version}"/>
+          <map:parameter name="a/forrestconf/skin" value="{varxml:/forrestconf/skin}"/>
+          <map:parameter name="a/*/base-url" value="{varxml:/*/base-url}"/>
+            <!--
+            <map:parameter name="slashdot-headline" value="{slashdot:/*:RDF/item[1]/title}"/>
+            -->
+        </map:generate>
+        <map:transform src="properties2html.xsl">
+          <map:parameter name="title" value="Xpath XML File Input Module (XPathXMLFileModule)"/>
+          <map:parameter name="description" value="XMLFileModule uses an XML
+            file as a data source, with XPath expressions as the key values. In
+            this example, the keys identify nodes in
+            context://samples/modules/forrestconf.xml"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
       <map:match pattern="content/xml.xml">
         <map:generate type="jx" src="properties.xml">
           <map:parameter name="/forrestconf/@version" value="{myxml:/forrestconf/@version}"/>
