@@ -140,6 +140,8 @@ public final class Constants {
 
     /**
      * The name of a <code>NotifyingObject</code> in the so called objectModel <code>Map</code>.
+     * @deprecated Usage of Notifying object has been deprecated in favor of using Exception object at
+     *             {@link org.apache.cocoon.environment.ObjectModelHelper#THROWABLE_OBJECT}.
      */
     public static final String NOTIFYING_OBJECT = "notifying-object";
 

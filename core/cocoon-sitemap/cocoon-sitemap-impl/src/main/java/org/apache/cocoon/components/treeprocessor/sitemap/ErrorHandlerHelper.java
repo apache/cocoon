@@ -190,7 +190,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
     private void prepare(InvokeContext context, Environment env, Exception ex)
     throws IOException, ServiceException {
         Map objectModel = env.getObjectModel();
-        if (objectModel.get(Constants.NOTIFYING_OBJECT) == null) {
+        if (objectModel.get(ObjectModelHelper.THROWABLE_OBJECT) == null) {
             // error has not been processed by another handler before
 
             // Try to reset the response to avoid mixing already produced output
@@ -199,7 +199,7 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
                 env.tryResetResponse();
             }
 
-            // Create a Notifying
+            // Create a Notifying (deprecated)
             NotifyingBuilder notifyingBuilder = (NotifyingBuilder) this.manager.lookup(NotifyingBuilder.ROLE);
             Notifying currentNotifying = null;
             try {
@@ -207,11 +207,9 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
             } finally {
                 this.manager.release(notifyingBuilder);
             }
-
-            // Add it to the object model
             objectModel.put(Constants.NOTIFYING_OBJECT, currentNotifying);
 
-            // Also add the exception
+            // Add it to the object model
             objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, ex);
         }
     }
