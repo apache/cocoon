@@ -16,16 +16,16 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.commons.lang.SystemUtils;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
-import org.apache.commons.lang.SystemUtils;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
  * Handles &lt;map:handle-errors&gt;
@@ -92,7 +92,7 @@ public final class HandleErrorsNode extends AbstractParentProcessingNode {
                 // explicit ones, in order to provide meaningful messages that will ease the migration
                 if (e.getMessage().indexOf("Must set a generator before adding") != -1) {
 
-                    env.getObjectModel().remove(Constants.NOTIFYING_OBJECT);
+                    env.getObjectModel().remove(ObjectModelHelper.THROWABLE_OBJECT);
                     throw new ProcessingException(
                         "Incomplete pipeline: 'handle-error' without a 'type' must include a generator." +
                         SystemUtils.LINE_SEPARATOR +
@@ -111,7 +111,7 @@ public final class HandleErrorsNode extends AbstractParentProcessingNode {
         } catch (ProcessingException e) {
             if (e.getMessage().indexOf("Generator already set") != -1){
 
-                env.getObjectModel().remove(Constants.NOTIFYING_OBJECT);
+                env.getObjectModel().remove(ObjectModelHelper.THROWABLE_OBJECT);
                 throw new ProcessingException(
                         "Error: 'handle-error' with a 'type' attribute has an implicit generator." +
                         SystemUtils.LINE_SEPARATOR +

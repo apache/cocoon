@@ -119,7 +119,8 @@ public class CocoonCopletAdapter
     }
 
     /**
-     * Render the error content for a coplet
+     * Render the error content for a coplet.
+     *
      * @param coplet  The coplet instance data
      * @param handler The content handler
      * @param error   The exception that occured
@@ -131,25 +132,25 @@ public class CocoonCopletAdapter
                                          Exception          error)
     throws SAXException {
         final String uri = (String) this.getConfiguration(coplet, "error-uri");
-        if ( uri != null ) {
+        if (uri != null) {
             // TODO - if an error occured for this coplet, remember this
             //         and use directly the error-uri from now on
 
             // Create a Notifying object - if builder is set
             Notifying currentNotifying = null;
-            if ( this.notifyingBuilder != null ) {
+            if (this.notifyingBuilder != null) {
                 currentNotifying = notifyingBuilder.build(this, error);
             }
 
-            final Map objectModel = this.processInfoProvider.getObjectModel();
             // Add it to the object model
-            if ( currentNotifying != null ) {
+            final Map objectModel = this.processInfoProvider.getObjectModel();
+            if (currentNotifying != null) {
                 objectModel.put(org.apache.cocoon.Constants.NOTIFYING_OBJECT, currentNotifying);
-                objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, error);
             }
+            objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, error);
 
             try {
-                this.streamContent( coplet, uri, handler);
+                streamContent(coplet, uri, handler);
             } finally {
                 objectModel.remove(org.apache.cocoon.Constants.NOTIFYING_OBJECT);
                 objectModel.remove(ObjectModelHelper.THROWABLE_OBJECT);
@@ -157,6 +158,7 @@ public class CocoonCopletAdapter
 
             return true;
         }
+
         return false;
     }
 }

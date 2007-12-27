@@ -26,13 +26,20 @@ import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.util.Deprecation;
+import org.apache.cocoon.util.location.LocationUtils;
 
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Generates an XML representation of the current notification.
  *
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML representation of the current notification.
+ * @cocoon.sitemap.component.documentation.caching No
+ *
+ * @deprecated Use &lt;map:handle-errors&gt; without type attribute together with
+ *             {@link org.apache.cocoon.generation.ExceptionGenerator}.
  * @version $Id$
  */
 public class NotifyingGenerator extends AbstractGenerator {
@@ -42,14 +49,17 @@ public class NotifyingGenerator extends AbstractGenerator {
      */
     private Notifying notification;
 
-    public void setup(SourceResolver resolver, Map objectModel, String src,
-                      Parameters par) throws ProcessingException, SAXException, IOException {
+
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
-        this.notification  = (Notifying)objectModel.get(Constants.NOTIFYING_OBJECT);
+        Deprecation.logger.warn("NotifyingGenerator is deprecated in favor of ExceptionGenerator, at " +
+                                LocationUtils.getLocation(par));
 
-        if ( this.notification  == null) {
-            throw new ProcessingException("Expected Constants.NOTIFYING_OBJECT not found in object model");
+        this.notification = (Notifying) objectModel.get(Constants.NOTIFYING_OBJECT);
+        if (this.notification == null) {
+            throw new ProcessingException("Expected Constants.NOTIFYING_OBJECT not found in object model.");
         }
     }
 
@@ -60,7 +70,7 @@ public class NotifyingGenerator extends AbstractGenerator {
      *      output SAX events.
      */
     public void generate() throws SAXException {
-        Notifier.notify(notification, this.contentHandler, "text/xml");
+        Notifier.notify(this.notification, this.contentHandler, "text/xml");
     }
 
     /**
@@ -71,4 +81,3 @@ public class NotifyingGenerator extends AbstractGenerator {
         this.notification = null;
     }
 }
-
