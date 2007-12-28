@@ -54,7 +54,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     }
 
     public void setErrorHandler(ProcessingNode node) {
-        this.errorHandlerHelper.set500Handler(node);
+        this.errorHandlerHelper.setErrorHandler(node);
     }
 
     public void setChildren(ProcessingNode[] nodes) {

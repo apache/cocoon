@@ -52,15 +52,9 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
     protected Log handledErrorsLogger;
 
     /**
-     * Error handling node for the ResourceNotFoundException
-     * (deprecated)
-     */
-    private HandleErrorsNode error404;
-
-    /**
      * Error handling node for all other exceptions
      */
-    private HandleErrorsNode error500;
+    private HandleErrorsNode error;
 
 
     /**
@@ -71,27 +65,23 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
         this.handledErrorsLogger = LoggerUtils.getChildLogger(this.manager, "handled");
     }
 
-    void set404Handler(ProcessingNode node) {
-        this.error404 = (HandleErrorsNode) node;
-    }
-
-    void set500Handler(ProcessingNode node) {
-        this.error500 = (HandleErrorsNode) node;
+    void setErrorHandler(ProcessingNode node) {
+        this.error = (HandleErrorsNode) node;
     }
 
     /**
      * @return true if has no error handler nodes set
      */
     public boolean isEmpty() {
-        return this.error404 == null && this.error500 == null;
+        return this.error == null;
     }
 
     public boolean isInternal() {
-        return this.error500 != null && this.error500.isInternal();
+        return this.error != null && this.error.isInternal();
     }
 
     public boolean isExternal() {
-        return this.error500 != null && this.error500.isExternal();
+        return this.error != null && this.error.isExternal();
     }
 
     /**
@@ -129,15 +119,12 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
         } else if (!internal && !isExternal()) {
             // Propagate exception on external request: No external handler.
             throw ex;
-        } else if (!internal && error404 != null && ex instanceof ResourceNotFoundException) {
-            // Invoke 404-specific handler: Only on external requests. Deprecated.
-            return prepareErrorHandler(error404, ex, env, context);
-        } else if (error500 != null) {
-            // Invoke global handler
-            return prepareErrorHandler(error500, ex, env, context);
+        } else if (error != null) {
+            // Invoke error handler
+            return prepareErrorHandler(error, ex, env, context);
         }
 
-        // Exception was not handled in this error handler, propagate.
+        // Exception was not handled by this error handler, propagate.
         throw ex;
     }
 

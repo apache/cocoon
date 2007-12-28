@@ -17,8 +17,6 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.commons.lang.SystemUtils;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
@@ -34,18 +32,15 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  */
 public final class HandleErrorsNode extends AbstractParentProcessingNode {
 
-    private ProcessingNode[] children;
-    private int statusCode;
     private boolean internal;
     private boolean external;
+    private ProcessingNode[] children;
 
     /**
-     * @param statusCode Value of the type attribute: 404 (deprecated), 500 (deprecated), or -1 (no attribute present).
      * @param scope Value of the error handler scope attribute: external, internal, always.
      */
-    public HandleErrorsNode(int statusCode, String scope)
+    public HandleErrorsNode(String scope)
     throws ConfigurationException {
-        this.statusCode = statusCode;
         if ("internal".equals(scope)) {
             this.internal = true;
         } else if ("external".equals(scope)) {
@@ -57,10 +52,6 @@ public final class HandleErrorsNode extends AbstractParentProcessingNode {
             throw new ConfigurationException("Unrecognized value of when attribute on <handle-errors> at " +
                                              getLocation());
         }
-    }
-
-    public int getStatusCode() {
-        return this.statusCode;
     }
 
     public boolean isInternal() {
@@ -82,41 +73,20 @@ public final class HandleErrorsNode extends AbstractParentProcessingNode {
             getLogger().info("Processing handle-errors at " + getLocation());
         }
 
-		if (statusCode == -1) {
-            // No 'type' attribute : new Cocoon 2.1 behaviour, no implicit generator
-            try {
-                return invokeNodes(this.children, env, context);
-
-            } catch (ProcessingException e) {
-                // Handle the various cases related to the transition from implicit generators in handle-errors to
-                // explicit ones, in order to provide meaningful messages that will ease the migration
-                if (e.getMessage().indexOf("Must set a generator before adding") != -1) {
-
-                    env.getObjectModel().remove(ObjectModelHelper.THROWABLE_OBJECT);
-                    throw new ProcessingException(
-                        "Incomplete pipeline: 'handle-error' without a 'type' must include a generator." +
-                        SystemUtils.LINE_SEPARATOR +
-                        "Either add a generator (preferred) or a type='500' attribute (deprecated) on 'handle-errors'", getLocation());
-                }
-
-                // Rethrow the exception
-                throw e;
-            }
-		}
-	    // A 'type' attribute is present : add the implicit generator
-        context.getProcessingPipeline().setGenerator("<notifier>", "", Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
-
+        // No 'type' attribute : new Cocoon 2.1 behaviour, no implicit generator
         try {
             return invokeNodes(this.children, env, context);
+
         } catch (ProcessingException e) {
-            if (e.getMessage().indexOf("Generator already set") != -1){
+            // Handle the transition from implicit generators in handle-errors to
+            // explicit ones, in order to provide meaningful messages that will ease the migration
+            if (e.getMessage().indexOf("Must set a generator before adding") != -1) {
 
                 env.getObjectModel().remove(ObjectModelHelper.THROWABLE_OBJECT);
-                throw new ProcessingException(
-                        "Error: 'handle-error' with a 'type' attribute has an implicit generator." +
-                        SystemUtils.LINE_SEPARATOR +
-                        "Please remove the 'type' attribute on 'handle-error'", getLocation());
+                throw new ProcessingException("Incomplete pipeline: 'handle-error' must include a generator.",
+                                              getLocation());
             }
+
             // Rethrow the exception
             throw e;
         }

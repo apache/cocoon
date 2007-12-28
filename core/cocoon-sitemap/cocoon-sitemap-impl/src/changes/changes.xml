@@ -18,18 +18,24 @@
   under the License.
 -->
 
-<!--+
-    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
-    |
-    | @version $Id$
-    +-->
+<!--
+  - See http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  -
+  - $Id$
+  -->
 <document>
   <body>
-    <release version="1.0.0-RC2" date="2007-??-??" description="unreleased">
+    <release version="1.0.0" date="2008-??-??" description="unreleased">
+      <action dev="vgritsenko" type="remove">
+        Remove support for Cocoon 2.0 error handlers, &lt;map:handle-errors type="500"&gt;,
+        which were deprecated since Cocoon 2.1m1.
+      </action>
+    </release>
+    <release version="1.0.0-RC2" date="2007-10-12" description="released">
       <action dev="gkossakowski" type="fix" issue="COCOON-2108" due-to="Hugh Sparks" due-to-email="hugh@csparks.com">
-        Construct xmodule:flow-attr does not accept document object. Fixes problem that caused 
-        "The object type: class java.lang.String could not be serialized to XML" exception. 
-      </action> 
+        Construct xmodule:flow-attr does not accept document object. Fixes problem that caused
+        "The object type: class java.lang.String could not be serialized to XML" exception.
+      </action>
       <action dev="vgritsenko" type="fix">
         Regression in &lt;map:serialize/&gt; - do not override status code if
         it was not set on serialize element.
