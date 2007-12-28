@@ -89,12 +89,8 @@ public class PipelineNode extends AbstractParentProcessingNode
         this.isLast = isLast;
     }
 
-    public void set404Handler(ProcessingNode node) {
-        this.errorHandlerHelper.set404Handler(node);
-    }
-
-    public void set500Handler(ProcessingNode node) {
-        this.errorHandlerHelper.set500Handler(node);
+    public void setErrorHandler(ProcessingNode node) {
+        this.errorHandlerHelper.setErrorHandler(node);
     }
 
     public void setInternalOnly(boolean internalOnly) {

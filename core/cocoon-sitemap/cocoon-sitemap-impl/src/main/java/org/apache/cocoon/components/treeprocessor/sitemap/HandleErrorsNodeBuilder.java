@@ -37,8 +37,7 @@ public class HandleErrorsNodeBuilder extends AbstractParentProcessingNodeBuilder
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
 
-        HandleErrorsNode node = new HandleErrorsNode(config.getAttributeAsInteger("type", -1),
-                                                     config.getAttribute("when", "external"));
+        HandleErrorsNode node = new HandleErrorsNode(config.getAttribute("when", "external"));
         this.treeBuilder.setupNode(node, config);
 
         // Set a flag that will prevent redirects
