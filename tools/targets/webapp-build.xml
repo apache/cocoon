@@ -25,9 +25,33 @@
   <target name="prepare-webapp" depends="blocks, package">
     <mkdir dir="${build.webapp}"/>
 
-  	<copy todir="${build.webapp}" filtering="on">
-  	    <fileset dir="${webapp}"/>
-  	</copy>
+    <copy file="${webapp}/welcome.xml" tofile="${build.webapp}/welcome.xml" filtering="on"/>
+    <copy file="${webapp}/not-found.xml" tofile="${build.webapp}/not-found.xml" filtering="on"/>
+    <copy file="${webapp}/welcome.xslt" tofile="${build.webapp}/welcome.xslt" filtering="on"/>
+    <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
+
+    <!-- generate sitemap entries
+    <sitemap-components sitemap="${build.webapp}/sitemap.xmap" source="${java}"/>
+    -->
+
+    <copy todir="${build.webapp}/stylesheets" filtering="on">
+      <fileset dir="${webapp}/stylesheets">
+        <include name="**/*.xslt"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.webapp}/resources" filtering="off">
+      <fileset dir="${webapp}/resources"/>
+    </copy>
+
+    <copy todir="${build.webapp}/WEB-INF" filtering="on">
+      <fileset dir="${webapp}/WEB-INF">
+        <include name="entities/**"/>
+        <include name="classes/**"/>
+        <include name="*.x*"/>
+        <include name="properties/**"/>
+      </fileset>
+    </copy>
 
     <copy file="${build}/${name}.jar"
           tofile="${build.webapp.lib}/${name}-${version}.jar"/>
