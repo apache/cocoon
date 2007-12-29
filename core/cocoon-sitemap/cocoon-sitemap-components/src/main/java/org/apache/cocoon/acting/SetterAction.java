@@ -27,13 +27,16 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This action can be used to set information in either the object model,
  * the request or the session.
  * 
- * All parameters set for this action are set in the according location
+ * <p>All parameters set for this action are set in the according location
  * whereas the parameter name is the key and the value of the parameter
  * will be set as a string value for this key.
+ *
+ * @cocoon.sitemap.component.documentation
+ * This action can be used to set information in either the object model,
+ * the request or the session.
  *
  * @version $Id$
  */

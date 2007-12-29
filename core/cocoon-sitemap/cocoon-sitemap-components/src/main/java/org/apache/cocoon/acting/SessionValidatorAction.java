@@ -28,13 +28,16 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This is the action used to validate Session parameters (attributes).
  * The parameters are described via the external xml
  * file.
  * 
- * @see org.apache.cocoon.acting.AbstractValidatorAction
+ * @cocoon.sitemap.component.documentation
+ * This is the action used to validate Session parameters (attributes).
+ * The parameters are described via the external xml
+ * file.
  *
+ * @see org.apache.cocoon.acting.AbstractValidatorAction
  * @version $Id$
  */
 public class SessionValidatorAction extends AbstractValidatorAction implements ThreadSafe {

@@ -28,15 +28,14 @@ import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Additional to the inherited functionality from its superclass ExceptionSelector,
  * this selector allows to define xpath expressions to evaluate supplemental information
  * given in the thrown exception.
  * 
- * The configuration of this selector allows to map not only exceptions but also
+ * <p>The configuration of this selector allows to map not only exceptions but also
  * xpath expressions to symbolic names that are used in the &lt;map:when> alternatives.
- * <p>
- * Example configuration :
+ *
+ * <p>Example configuration :
  * <pre>
  *   &lt;map:selector type="error" src="....XPathExceptionSelector">
  *     &lt;exception name="denied" class="my.comp.auth.AuthenticationFailure">
@@ -46,9 +45,16 @@ import org.apache.commons.jxpath.JXPathContext;
  *     &lt;/exception>
  *   &lt;/map:selector>
  * </pre>
- * This example shows several features :
+ * This example shows several features:
+ * <ul>
  * <li>the test is the xpath expression that will be evaluated against the exception ,</li>
- * <li>an xpath expression can be given a name, which is used in the &lt;map:when> tests,</li>
+ * <li>an xpath expression can be given a name, which is used in the &lt;map:when> tests</li>
+ * <ul>
+ *
+ * @cocoon.sitemap.component.documentation
+ * Additional to the inherited functionality from its superclass ExceptionSelector,
+ * this selector allows to define xpath expressions to evaluate supplemental information
+ * given in the thrown exception.
  *
  * @since 2.1
  * @version $Id$

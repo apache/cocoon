@@ -28,7 +28,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string against a configurable
  * request header, e.g. "referer".
  *
@@ -37,6 +36,10 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  * <tr><td><code>header-name</code></td><td>Name of the request header to
  * match against</td></tr>
  * </table>
+ *
+ * @cocoon.sitemap.component.documentation
+ * A <code>Selector</code> that matches a string against a configurable
+ * request header, e.g. "referer".
  *
  * @version $Id$
  */

@@ -22,13 +22,15 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * Match the request URI against a wildcard expression.
+ *
  * @cocoon.sitemap.component.documentation
  * Match the request URI against a wildcard expression.
  *
  * @version $Id$
  */
-public class WildcardURIMatcher extends AbstractWildcardMatcher
-{
+public class WildcardURIMatcher extends AbstractWildcardMatcher {
+    
     /**
      * Return the request URI.
      */

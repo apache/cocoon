@@ -30,11 +30,10 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This action simply checks to see if a given request parameter
  * exists. 
  * 
- * It takes an arbitrary number of default parameters to check
+ * <p>It takes an arbitrary number of default parameters to check
  * named 'parameter-name'. Non-default parameters need to be separated
  * by spaces and passed as value of a sitemap parameter named
  * 'parameters'. The action returns a map with all parameters if all
@@ -52,6 +51,10 @@ import org.apache.cocoon.environment.SourceResolver;
  * checked, whether all parameters with a wildcard have the same
  * matches. E.g. "id_* name_*" enforces, that if "id_1" exists,
  * "name_1" must also exist and vice versa.</p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * This action simply checks to see if a given request parameter
+ * exists.
  *
  * @version $Id$
  */

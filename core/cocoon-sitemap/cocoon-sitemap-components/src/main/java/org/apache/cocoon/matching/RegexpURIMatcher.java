@@ -22,13 +22,15 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * Matches the request URIs against a regular expression pattern.
+ *
  * @cocoon.sitemap.component.documentation
  * Matches the request URIs against a regular expression pattern.
  *
  * @version $Id$
  */
-public class RegexpURIMatcher extends AbstractRegexpMatcher
-{
+public class RegexpURIMatcher extends AbstractRegexpMatcher {
+
     /**
      * Return the request URI.
      */

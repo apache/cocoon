@@ -31,10 +31,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Simple helper action to allow passing sitemap variables to InputModules.
  * 
- * Sitemap evaluation of input modules using the curly bracket syntax e.g.
+ * <p>Sitemap evaluation of input modules using the curly bracket syntax e.g.
  * {defaults:skin} suffers from the fact that it is not
  * possible to use a sitemap variable as part of the invocation like
  * {defaults:{1})}. This action takes three parameters, the name
@@ -66,8 +65,10 @@ import java.util.Map;
  * </pre>
  * 
  * 
+ * @cocoon.sitemap.component.documentation
+ * Simple helper action to allow passing sitemap variables to InputModules.
+ *
  * @see org.apache.cocoon.components.modules.input.InputModule
- * 
  * @version $Id$
  */
 public class InputModuleAction extends ConfigurableServiceableAction implements ThreadSafe {

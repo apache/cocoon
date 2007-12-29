@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This class allows for matching based on a request parameter.
  * If the specified request parameter exists, its value is retrieved for later
  * sitemap substitution.
@@ -36,6 +35,11 @@ import java.util.Map;
  *     &lt;map:redirect-to uri="{1}"/&gt;
  * &lt;/map:match&gt;
  * </pre>
+ *
+ * @cocoon.sitemap.component.documentation
+ * This class allows for matching based on a request parameter.
+ * If the specified request parameter exists, its value is retrieved for later
+ * sitemap substitution.
  *
  * @version $Id$
  */

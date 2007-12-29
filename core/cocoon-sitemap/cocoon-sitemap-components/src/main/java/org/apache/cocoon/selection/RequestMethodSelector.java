@@ -25,6 +25,8 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
+ * A <code>Selector</code> that matches a getMethod() of the HTTP request.
+ *
  * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a getMethod() of the HTTP request.
  *

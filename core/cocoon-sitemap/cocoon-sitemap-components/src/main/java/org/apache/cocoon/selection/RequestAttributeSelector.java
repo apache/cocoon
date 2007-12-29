@@ -28,7 +28,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string against a configurable request
  * attribute's string represenation.
  *
@@ -36,6 +35,10 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  * <table border="1">
  * <tr><td><code>attribute-name</code></td><td>String identifying the request attribute.</td></tr>
  * </table>
+ *
+ * @cocoon.sitemap.component.documentation
+ * A <code>Selector</code> that matches a string against a configurable request
+ * attribute's string represenation.
  *
  * @version $Id$
  */

@@ -25,7 +25,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string against a configurable request parameter's value.
  *
  * <p><b>Global and local configuration</b></p>
@@ -33,6 +32,9 @@ import java.util.Map;
  * <tr><td><code>parameter-name</code></td><td>Name of the request
  * parameter whose value to match against</td></tr>
  * </table>
+ *
+ * @cocoon.sitemap.component.documentation
+ * A <code>Selector</code> that matches a string against a configurable request parameter's value.
  *
  * @version $Id$
  */

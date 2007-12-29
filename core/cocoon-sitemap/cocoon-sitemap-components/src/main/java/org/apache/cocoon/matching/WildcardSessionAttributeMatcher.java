@@ -26,7 +26,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Matches a session attribute against a wildcard expression.
  *
  * <p><b>Global and local configuration</b></p>
@@ -34,11 +33,14 @@ import java.util.Map;
  * <tr><td><code>attribute-name</code></td><td>String identifying the session attribute</td></tr>
  * </table>
  *
+ * @cocoon.sitemap.component.documentation
+ * Matches a session attribute against a wildcard expression.
+ *
  * @version $Id$
  */
 public class WildcardSessionAttributeMatcher extends AbstractWildcardMatcher
-    implements Configurable
-{
+                                             implements Configurable {
+    
     private String defaultParam;
 
     public void configure(Configuration config) throws ConfigurationException {

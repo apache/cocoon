@@ -27,8 +27,10 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
-
 /**
+ * This action just checks if a session exists and whether the current
+ * seesion is still valid.
+ *
  * @cocoon.sitemap.component.documentation
  * This action just checks if a session exists and whether the current
  * seesion is still valid.

@@ -24,7 +24,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string from within the host parameter
  * of the HTTP request.
  *
@@ -45,6 +44,10 @@ import java.util.Map;
  *   &lt;/map:otherwise&gt;
  * &lt;/map:select&gt;
  * </pre>
+ *
+ * @cocoon.sitemap.component.documentation
+ * A <code>Selector</code> that matches a string from within the host parameter
+ * of the HTTP request.
  *
  * @version $Id$
  */

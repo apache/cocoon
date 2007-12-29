@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This action adds the <code>Last-Modified</code>, <code>Expires</code> and
  * <code>Cache-Control</code> HTTP headers to the response.
  *
@@ -80,6 +79,10 @@ import java.util.Map;
  * parameters called <code>last-modified</code>, <code>expires</code> and
  * <code>cache-control</code> (all lowercase).
  * </p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * This action adds the <code>Last-Modified</code>, <code>Expires</code> and
+ * <code>Cache-Control</code> HTTP headers to the response.
  *
  * @version $Id$
  */

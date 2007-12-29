@@ -34,7 +34,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This is the action used to propagate parameters into session. It
  * simply propagates given expression to the session. If session does not
  * exist, action fails. Additionaly it will make all propagated values
@@ -42,10 +41,16 @@ import org.apache.cocoon.environment.SourceResolver;
  *
  * <pre>
  * &lt;map:act type="session-propagator"&gt;
- *      &lt;paramater name="example" value="{example}"&gt;
- *      &lt;paramater name="example1" value="xxx"&gt;
+ *   &lt;paramater name="example" value="{example}"&gt;
+ *   &lt;paramater name="example1" value="xxx"&gt;
  * &lt;/map:act&gt;
  * </pre>
+ *
+ * @cocoon.sitemap.component.documentation
+ * This is the action used to propagate parameters into session. It
+ * simply propagates given expression to the session. If session does not
+ * exist, action fails. Additionaly it will make all propagated values
+ * available via returned Map.
  *
  * @version $Id$
  */

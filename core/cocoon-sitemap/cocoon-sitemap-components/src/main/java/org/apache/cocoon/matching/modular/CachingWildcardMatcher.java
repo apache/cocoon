@@ -34,7 +34,6 @@ import org.apache.cocoon.matching.AbstractWildcardMatcher;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Matches against a wildcard expression. Needs an input module to
  * obtain value to match against.
  *
@@ -44,11 +43,15 @@ import java.util.Map;
  * <tr><td><code>parameter-name</code></td><td>Name of the parameter to match * against</td></tr>
  * </table>
  *
+ * @cocoon.sitemap.component.documentation
+ * Matches against a wildcard expression. Needs an input module to
+ * obtain value to match against.
+ *
  * @version $Id$
  */
 public class CachingWildcardMatcher extends AbstractWildcardMatcher
-    implements Configurable,  Initializable, Serviceable, Disposable
-{
+                                    implements Configurable,  Initializable, Serviceable,
+                                               Disposable {
 
     /** The service manager instance */
     protected ServiceManager manager;

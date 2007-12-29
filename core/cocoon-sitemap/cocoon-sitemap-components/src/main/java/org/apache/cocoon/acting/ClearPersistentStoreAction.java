@@ -25,6 +25,8 @@ import org.apache.excalibur.store.Store;
 import java.util.Map;
 
 /**
+ * Simple action which ensures the persistent store is cleared.
+ *
  * @cocoon.sitemap.component.documentation
  * Simple action which ensures the persistent store is cleared.
  *

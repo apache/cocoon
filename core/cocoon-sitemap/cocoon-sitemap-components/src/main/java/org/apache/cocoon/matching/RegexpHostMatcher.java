@@ -21,13 +21,15 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * Matches the target host ("Host" request header) against a regular expression.
+ *
  * @cocoon.sitemap.component.documentation
  * Matches the target host ("Host" request header) against a regular expression.
  *
  * @version $Id$
  */
-public class RegexpHostMatcher extends AbstractRegexpMatcher
-{
+public class RegexpHostMatcher extends AbstractRegexpMatcher {
+
     protected String getMatchString(Map objectModel, Parameters parameters) {
         return ObjectModelHelper.getRequest(objectModel).getHeader("Host");
     }

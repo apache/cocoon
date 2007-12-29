@@ -24,7 +24,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Matches a sitemap parameter against a wildcard expression.
  *
  * <p><b>Global and local configuration</b></p>
@@ -32,6 +31,9 @@ import java.util.Map;
  * <tr><td><code>parameter-name</code></td><td>Name of the sitemap parameter to
  * match against</td></tr>
  * </table>
+ *
+ * @cocoon.sitemap.component.documentation
+ * Matches a sitemap parameter against a wildcard expression.
  *
  * @version $Id$
  */

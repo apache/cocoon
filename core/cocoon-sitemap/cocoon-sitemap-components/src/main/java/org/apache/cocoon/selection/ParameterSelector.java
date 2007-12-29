@@ -22,7 +22,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string in the parameters object passed to it.
  *
  * <pre>
@@ -44,6 +43,9 @@ import java.util.Map;
  * The purpose of this selector is to allow an action to set parameters
  * and to be able to select between different pipeline configurations
  * depending on those parameters.
+ *
+ * @cocoon.sitemap.component.documentation
+ * A <code>Selector</code> that matches a string in the parameters object passed to it.
  *
  * @version $Id$
  */
