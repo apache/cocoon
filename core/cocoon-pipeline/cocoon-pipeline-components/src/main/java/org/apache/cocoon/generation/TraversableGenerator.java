@@ -51,7 +51,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Generates an XML source hierarchy listing from a Traversable Source.
  * 
  * <p>
@@ -99,6 +98,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *        for changed content. Defaults to 1 second.
  *  </dl>
  * </p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML source hierarchy listing from a Traversable Source.
+ * @cocoon.sitemap.component.documentation.caching Yes
  *
  * @version $Id$
  */

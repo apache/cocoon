@@ -35,7 +35,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.NamespaceSupport;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A serializer that builds Zip archives by aggregating several sources.
  * 
  * <p>
@@ -67,6 +66,10 @@ import org.xml.sax.helpers.NamespaceSupport;
  *     &lt;/zip:entry&gt;
  *   &lt;/zip:archive:zip&gt;
  * </pre>
+ *
+ * @cocoon.sitemap.component.documentation
+ * A serializer that builds Zip archives by aggregating several sources.
+ * @cocoon.sitemap.component.documentation.caching Not Implemented
  *
  * @version $Id$
  */

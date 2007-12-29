@@ -45,12 +45,11 @@ import org.apache.cocoon.util.ByteRange;
 import org.xml.sax.SAXException;
 
 /**
- * @version $Id$
- * @cocoon.sitemap.component.documentation The <code>ResourceReader</code> component is used to serve binary data
+ * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
  * the requested resource should be written to the <code>OutputStream</code>
  * or if it can signal that it hasn't changed.
- * <p/>
+ *
  * <p>Configuration:
  * <dl>
  * <dt>&lt;expires&gt;</dt>
@@ -71,16 +70,25 @@ import org.xml.sax.SAXException;
  * broken/interrupted downloads).
  * Defaults to true.
  * </dl>
- * <p/>
+ *
  * <p>Default configuration:
  * <pre>
  *   &lt;expires&gt;-1&lt;/expires&gt;
  *   &lt;quick-modified-test&gt;false&lt;/quick-modified-test&gt;
  *   &lt;byte-ranges&gt;true&lt;/byte-ranges&gt;
  * </pre>
- * <p/>
+ *
  * <p>In addition to reader configuration, above parameters can be passed
  * to the reader at the time when it is used.
+ *
+ * @cocoon.sitemap.component.documentation
+ * The <code>ResourceReader</code> component is used to serve binary data
+ * in a sitemap pipeline. It makes use of HTTP Headers to determine if
+ * the requested resource should be written to the <code>OutputStream</code>
+ * or if it can signal that it hasn't changed.
+ * @cocoon.sitemap.component.documentation.caching Yes
+ *
+ * @version $Id$
  */
 public class ResourceReader extends AbstractReader
                             implements CacheableProcessingComponent, Configurable {
