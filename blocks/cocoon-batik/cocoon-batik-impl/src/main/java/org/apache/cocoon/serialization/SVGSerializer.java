@@ -46,13 +46,19 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * A <a href="http://xml.apache.org/batik/">Batik</a> based Serializer for
+ * generating PNG/JPEG images
+ *
  * @cocoon.sitemap.component.documentation
- * A <a href="http://xml.apache.org/batik/">Batik</a> based Serializer for generating PNG/JPEG images
+ * A <a href="http://xml.apache.org/batik/">Batik</a> based Serializer for
+ * generating PNG/JPEG images
+ * @cocoon.sitemap.component.documentation.caching Yes
  *
  * @version $Id$
  */
 public class SVGSerializer extends SVGBuilder
-implements Serializer, Configurable, CacheableProcessingComponent, Contextualizable {
+                           implements Contextualizable, Configurable, CacheableProcessingComponent,
+                                      Serializer {
 
     /**
      * Get the context
@@ -76,9 +82,8 @@ implements Serializer, Configurable, CacheableProcessingComponent, Contextualiza
     /** The Transcoder Factory to use */
     TranscoderFactory factory = ExtendableTranscoderFactory.getTranscoderFactoryImplementation();
     
-//    private ServiceManager manager;
-
-//    private SourceResolver resolver;
+    // private ServiceManager manager;
+    // private SourceResolver resolver;
 
     /**
      * Set the <code>OutputStream</code> where the XML should be serialized.
@@ -257,6 +262,7 @@ implements Serializer, Configurable, CacheableProcessingComponent, Contextualiza
     /**
      * Returns true so the pipeline implementation will buffer generated
      * output and write content length to the response.
+     *
      * <p>Batik's PNGTranscoder closes the output stream, therefore we
      * cannot pass the output stream directly to Batik and have to
      * instruct pipeline to buffer it. If we do not buffer, we would get

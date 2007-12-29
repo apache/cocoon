@@ -33,13 +33,16 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * The <code>BrowserUpdateTransformer</code> transformer filters the result of
+ * the form template, so that only updated widgets are sent back to the browser
+ *
  * @cocoon.sitemap.component.documentation
- * The <code>BrowserUpdateTransformer</code> transformer filters the result of the template, so that only 
- * updated widgets are sent back to the browser
- * 
+ * The <code>BrowserUpdateTransformer</code> transformer filters the result of
+ * the form template, so that only updated widgets are sent back to the browser
+ * @cocoon.sitemap.component.documentation.caching No
+ *
  * @version $Id$
  */
-
 public class BrowserUpdateTransformer extends AbstractTransformer {
     
     public static final String AJAXMODE_PARAM = "cocoon-ajax";
@@ -54,7 +57,9 @@ public class BrowserUpdateTransformer extends AbstractTransformer {
     
     Locator locator;
 
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
+
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {
 
         Request request = ObjectModelHelper.getRequest(objectModel);
         this.ajaxRequest = request.getParameter(AJAXMODE_PARAM) != null;

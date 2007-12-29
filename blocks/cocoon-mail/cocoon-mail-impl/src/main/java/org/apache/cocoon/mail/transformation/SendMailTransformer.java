@@ -52,7 +52,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
  * The <code>SendMailTransformer</code> send mails with optional attachments using a SMTP
  * server and delivers furthermore a status report of each sent mail.
  *
@@ -197,6 +196,11 @@ import org.xml.sax.helpers.AttributesImpl;
  *     <li>No support for different mail servers, first one will always be used</li>
  *   </ul>
  * </p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * The <code>SendMailTransformer</code> send mails with optional attachments using a SMTP
+ * server and delivers furthermore a status report of each sent mail.
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @version $Id$
  */

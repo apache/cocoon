@@ -29,16 +29,17 @@ import org.apache.cocoon.auth.ApplicationUtil;
 import org.apache.cocoon.auth.User;
 
 /**
+ * This action tests if the user is logged in for a given application.
+ *
  * @cocoon.sitemap.component.documentation
  * This action tests if the user is logged in for a given application.
  *
  * @version $Id$
 */
-public final class LoggedInAction
-extends AbstractAuthAction {
+public final class LoggedInAction extends AbstractAuthAction {
 
     /**
-     * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.acting.Action#act
      */
     public Map act(final Redirector redirector,
                    final SourceResolver resolver,
@@ -46,11 +47,11 @@ extends AbstractAuthAction {
                    final String source,
                    final Parameters par)
     throws Exception {
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN act resolver="+resolver+
-                                   ", objectModel="+objectModel+
-                                   ", source="+source+
-                                   ", par="+par);
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("BEGIN act resolver="+resolver+
+                              ", objectModel="+objectModel+
+                              ", source="+source+
+                              ", par="+par);
         }
 
         Map map = null;
@@ -58,27 +59,27 @@ extends AbstractAuthAction {
         final String roleName = par.getParameter("role", null);
 
         final boolean negate = par.getParameterAsBoolean("negate-result", false);
-        if ( this.applicationManager.isLoggedIn(applicationName) ) {
+        if (this.applicationManager.isLoggedIn(applicationName)) {
             final User user = ApplicationUtil.getUser(objectModel);
-            if ( roleName == null || ApplicationUtil.isUserInRole(user, roleName, objectModel) ) {
-                if ( !negate ) {
+            if (roleName == null || ApplicationUtil.isUserInRole(user, roleName, objectModel)) {
+                if (!negate) {
                     map = new HashMap();
                     map.put("ID", user.getId());
                     Iterator i = user.getAttributeNames();
-                    while ( i.hasNext() ) {
-                        final String key = (String)i.next();
+                    while (i.hasNext()) {
+                        final String key = (String) i.next();
                         map.put(key, user.getAttribute(key));
                     }
                 }
             }
         } else {
-            if ( negate ) {
+            if (negate) {
                 map = EMPTY_MAP;
             }
         }
 
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END act map={}");
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("END act map={}");
         }
 
         return map;

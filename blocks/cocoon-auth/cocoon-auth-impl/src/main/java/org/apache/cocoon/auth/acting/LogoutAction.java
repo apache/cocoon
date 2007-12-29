@@ -28,16 +28,17 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.auth.ApplicationManager;
 
 /**
+ * This action logs the current user out of a given application.
+ *
  * @cocoon.sitemap.component.documentation
  * This action logs the current user out of a given application.
  *
  * @version $Id$
 */
-public final class LogoutAction
-extends AbstractAuthAction {
+public final class LogoutAction extends AbstractAuthAction {
 
     /**
-     * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.acting.Action#act
      */
     public Map act(final Redirector redirector,
                    final SourceResolver resolver,

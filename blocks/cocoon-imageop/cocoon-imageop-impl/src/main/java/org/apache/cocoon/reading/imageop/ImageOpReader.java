@@ -51,15 +51,22 @@ import org.apache.excalibur.source.SourceNotFoundException;
 import org.xml.sax.SAXException;
 
 /**
+ * The <code>ImageOpReader</code> component is used to serve binary image data
+ * in a sitemap pipeline. It makes use of HTTP Headers to determine if
+ * the requested resource should be written to the <code>OutputStream</code>
+ * or if it can signal that it hasn't changed.
+ *
  * @cocoon.sitemap.component.documentation
  * The <code>ImageOpReader</code> component is used to serve binary image data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
  * the requested resource should be written to the <code>OutputStream</code>
- * or if it can signal that it hasn't changed. 
+ * or if it can signal that it hasn't changed.
+ * @cocoon.sitemap.component.documentation.caching Yes
+ *
+ * @version $Id$
  */
-final public class ImageOpReader
-    extends ResourceReader
-    implements Configurable, Serviceable, Disposable {
+final public class ImageOpReader extends ResourceReader
+                                 implements Configurable, Serviceable, Disposable {
 
     private final static String FORMAT_DEFAULT = "png";
 

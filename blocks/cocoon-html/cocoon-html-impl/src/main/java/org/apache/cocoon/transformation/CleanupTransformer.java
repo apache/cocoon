@@ -18,30 +18,31 @@ package org.apache.cocoon.transformation;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Map;
-import java.util.LinkedList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.transformation.AbstractSAXTransformer;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.environment.SourceResolver;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
 /**
- * @cocoon.sitemap.component.documentation
  * Cleanup transformer: Removes excess whitespace while adding some where needed
  * for legibility. Strips unwanted namespace declarations.
  *
  * <p>The cleanup transformer can be used for basically any document as-is or customized by
- *  schema (inline vs. block elements) for easier reading.</p>
+ * schema (inline vs. block elements) for easier reading.</p>
  *
  * <p>Transformer declaration:
  *  &lt;map:components&gt;
@@ -61,10 +62,10 @@ import org.apache.excalibur.source.impl.validity.NOPValidity;
  * </p>
  *
  * <p>The "inline-elements" configuration element refers to a list of element names that are
- *  <strong>not</strong> to be indented.  The "preserve-uri" configuration element specifies a
- *  namespace uri mapping that is meant for output.  All other namespace declarations are
- *  stripped from the output.  The "preserve-uri" element may appear more than once.  If
- *  "preserve-uri" is omitted, all namespaces/prefixes are removed from the output.</p>
+ * <strong>not</strong> to be indented.  The "preserve-uri" configuration element specifies a
+ * namespace uri mapping that is meant for output.  All other namespace declarations are
+ * stripped from the output.  The "preserve-uri" element may appear more than once.  If
+ * "preserve-uri" is omitted, all namespaces/prefixes are removed from the output.</p>
  *
  * <p>Transformer usage:
  *  &lt;transform type="xhtmlcleanup"&gt;
@@ -73,13 +74,19 @@ import org.apache.excalibur.source.impl.validity.NOPValidity;
  * </p>
  *
  * <p>The optional parameter "indent-size" specifies the number of additional space characters
- *  appearing at each level of the output document.  The default value is 2.</p>
+ * appearing at each level of the output document.  The default value is 2.</p>
  *
  * <p>Bugs: Nested namespace declarations with the same namespace prefix will break the code.</p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * Cleanup transformer: Removes excess whitespace while adding some where needed
+ * for legibility. Strips unwanted namespace declarations.
+ * @cocoon.sitemap.component.documentation.caching Yes
+ *
+ * @version $Id$
  */
-public class CleanupTransformer
-extends AbstractSAXTransformer
-implements CacheableProcessingComponent {
+public class CleanupTransformer extends AbstractSAXTransformer
+                                implements CacheableProcessingComponent {
 
     private static final char[] INDENT = ("\n" +
         "                                                                                " +

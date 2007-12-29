@@ -42,21 +42,24 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.mail.command.AbstractMailCommand;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This action creates javamail objects, and puts XMLizable object wrappers
  * of these objects into the request attribute map.
  *
  * <p>
- *  This action enables javamail access as action. It creates an http sesion,
- *  and puts the MailContext object into the session attributes.
- * </p>
+ * This action enables javamail access as action. It creates an http sesion,
+ * and puts the MailContext object into the session attributes.
+ *
+ * @cocoon.sitemap.component.documentation
+ * This action creates javamail objects, and puts XMLizable object wrappers
+ * of these objects into the request attribute map.
  *
  * @see MailContext
  *
  * @version $Id$
  * @since Cocoon 2.1, 16 December 2002
  */
-public class MailAction extends ServiceableAction implements ThreadSafe {
+public class MailAction extends ServiceableAction
+                        implements ThreadSafe {
 
     /**
      *  Request attribute name of a XMLizable folder

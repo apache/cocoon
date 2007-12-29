@@ -17,8 +17,11 @@
 package org.apache.cocoon.template;
 
 /**
+ * Provides a XML stream with embedded JSTL and XPath expression substitution
+ * access to data sent by Cocoon Flowscripts.
+ *
  * @cocoon.sitemap.component.documentation
- * Provides a XML stream with embedded JSTL and XPath expression substitution 
+ * Provides a XML stream with embedded JSTL and XPath expression substitution
  * access to data sent by Cocoon Flowscripts.
  *
  * @version $Id$

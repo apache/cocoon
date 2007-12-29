@@ -28,6 +28,10 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.auth.User;
 
 /**
+ * This action logs the current user into a given application. If the
+ * authentication is successful, a map is returned with the authentication
+ * information and a session is created (if it not already exists).
+ *
  * @cocoon.sitemap.component.documentation
  * This action logs the current user into a given application. If the
  * authentication is successful, a map is returned with the authentication
@@ -35,11 +39,10 @@ import org.apache.cocoon.auth.User;
  *
  * @version $Id$
 */
-public final class LoginAction
-extends AbstractAuthAction {
+public final class LoginAction extends AbstractAuthAction {
 
     /**
-     * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.acting.Action#act
      */
     public Map act(final Redirector redirector,
                    final SourceResolver resolver,
