@@ -26,11 +26,10 @@ import org.apache.cocoon.environment.SourceResolver;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * The <code>SendmailAction</code> class sends email. Please use the <code>Sendmail</code>
  * action instead.
  *
- * The action needs four parameters:
+ * <p>The action needs four parameters:
  *
  * <dl>
  *   <dt>from</dt>
@@ -49,6 +48,10 @@ import java.util.Map;
  * if they do not exist there it will read them from the request parameters.
  *
  * <p>It also supports all of the {@link Sendmail} action sitemap parameters</p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * The <code>SendmailAction</code> class sends email. Please use the <code>Sendmail</code>
+ * action instead.
  *
  * @deprecated Please use the {@link Sendmail Sendmail} action instead.
  * @version $Id$

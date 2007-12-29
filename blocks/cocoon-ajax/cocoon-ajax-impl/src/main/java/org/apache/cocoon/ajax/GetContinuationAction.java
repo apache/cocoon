@@ -35,7 +35,6 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.sitemap.SitemapParameters;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Get a continuation knowing its identifier, and set it as the current continuation
  * in the object model, in the same manner as <code>cocoon.sendPageAndWait()</code> does.
  * This action is useful when an Ajax request is made that needs to access data related
@@ -44,9 +43,16 @@ import org.apache.cocoon.sitemap.SitemapParameters;
  * <p>
  * The continuation id is either the <code>src</code> attribute in <code>&lt;map:act&gt;</code>
  * or, if not specified, the <code>continuation-id</code> request parameter.
+ *
  * <p>
  * This action is successful if the continuation exists and is still valid.
  * 
+ * @cocoon.sitemap.component.documentation
+ * Get a continuation knowing its identifier, and set it as the current continuation
+ * in the object model, in the same manner as <code>cocoon.sendPageAndWait()</code> does.
+ * This action is useful when an Ajax request is made that needs to access data related
+ * to the continuation that originally displayed the current page.
+ *
  * @since 2.1.8
  * @version $Id$
  */

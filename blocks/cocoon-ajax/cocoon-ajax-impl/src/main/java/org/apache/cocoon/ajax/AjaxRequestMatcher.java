@@ -27,18 +27,20 @@ import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A matcher that tests if the current request is an Ajax request. This matcher
  * provides no sitemap variables.
  * 
- * <p>
- * Example:
+ * <p>Example:
  * <pre>
  *   &lt;map:match type="ajax-request"&gt;
  *     ... ajax request ...
  *   &lt;/map:match&gt;
  * </pre>
  * 
+ * @cocoon.sitemap.component.documentation
+ * A matcher that tests if the current request is an Ajax request. This matcher
+ * provides no sitemap variables.
+ *
  * @since 2.1.8
  * @version $Id$
  */

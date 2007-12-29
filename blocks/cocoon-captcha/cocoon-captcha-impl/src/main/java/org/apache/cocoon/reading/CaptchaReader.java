@@ -35,10 +35,9 @@ import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
- * @cocoon.sitemap.component.documentation
  * The <code>CaptchaReader</code> is a simple tool generating JPEG images for the text
  * supplied as its source in a way so that it's hard to parse automatically.
- * 
+ *
  * <p><i>CAPTCHA</i> means quite literally <i>Completely Automated Public Turing
  * Test to Tell Computers and Humans Apart</i> and one of the best resources on
  * this can be found at the <a href="http://www.captcha.net/">Carnegie Mellon
@@ -96,6 +95,12 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * generate "unbreakable" text (that will be impossible), and improvements to the
  * algorithm are welcome.</p>
  *
+ * @cocoon.sitemap.component.documentation
+ * The <code>CaptchaReader</code> is a simple tool generating JPEG images for the text
+ * supplied as its source in a way so that it's hard to parse automatically.
+ * @cocoon.sitemap.component.documentation.caching Not Implemented
+ *
+ * @version $Id$
  */
 public class CaptchaReader extends AbstractReader {
     

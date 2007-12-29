@@ -37,7 +37,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Rewrites URIs in links to a value determined by an InputModule.
  * The URI scheme identifies the InputModule to use, and the rest of the URI is
  * used as the attribute name.
@@ -118,23 +117,28 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  *
  * <h3>Configuration</h3>
- * <p>
- * The following map:parameter's are recognised:
+ * <p>The following map:parameter's are recognised:
  * <dl>
- *  <dt>link-attrs</dt>
- *  <dd>Space-separated list of attributes to consider links (to be
- *  transformed). Defaults to 'href'.</dd>
- *  <dt>schemes</dt>
- *  <dd>Space-separated list of URI schemes to explicitly include.  If specified, all URIs with unlisted schemes will not be converted.</dd>
- *  <dt>exclude-schemes</dt>
- *  <dd>Space-separated list of URI schemes to explicitly exclude.</dd>
- *  <dt>bad-link-str</dt>
- *  <dd>String to use for links with a correct InputModule prefix, but no value
- *  therein.  Defaults to the original URI.</dd>
+ * <dt>link-attrs</dt>
+ * <dd>Space-separated list of attributes to consider links (to be
+ * transformed). Defaults to 'href'.</dd>
+ * <dt>schemes</dt>
+ * <dd>Space-separated list of URI schemes to explicitly include.
+ * If specified, all URIs with unlisted schemes will not be converted.</dd>
+ * <dt>exclude-schemes</dt>
+ * <dd>Space-separated list of URI schemes to explicitly exclude.</dd>
+ * <dt>bad-link-str</dt>
+ * <dd>String to use for links with a correct InputModule prefix, but no value
+ * therein.  Defaults to the original URI.</dd>
  * </dl>
  *
- * <p>
- * Note that currently, only links in the default ("") namespace are converted.
+ * <p>Note that currently, only links in the default ("") namespace are converted.
+ *
+ * @cocoon.sitemap.component.documentation
+ * Rewrites URIs in links to a value determined by an InputModule.
+ * The URI scheme identifies the InputModule to use, and the rest of the URI is
+ * used as the attribute name.
+ * @cocoon.sitemap.component.documentation.caching No
  *
  * @version $Id$
  */
@@ -189,10 +193,8 @@ public class VariableRewriterTransformer extends AbstractSAXTransformer
     /**
      * Setup this component to handle a map:transform instance.
      */
-    public void setup(SourceResolver resolver, Map objectModel,
-            String src, Parameters parameters)
-        throws ProcessingException, SAXException, IOException
-    {
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, parameters);
         this.badLinkStr = parameters.getParameter("bad-link-str", null);
         this.linkAttrs = split(parameters.getParameter("link-attrs", "href"), " ");
@@ -287,7 +289,7 @@ public class VariableRewriterTransformer extends AbstractSAXTransformer
     public void characters(char[] p0, int p1, int p2)
     throws SAXException {
         if (this.ignoreEventsCount == 0) {
-            if (this.ignoreEmptyCharacters == true) {
+            if (this.ignoreEmptyCharacters) {
                 String value = new String(p0, p1, p2);
                 if (value.trim().length() > 0) {
                     super.characters(p0, p1, p2);

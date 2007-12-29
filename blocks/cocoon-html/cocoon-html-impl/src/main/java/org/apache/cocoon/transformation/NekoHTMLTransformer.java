@@ -41,6 +41,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
+ * Converts (escaped) HTML snippets into tidied HTML using the NekoHTML library.
+ * This transformer expects a list of elements, passed as comma separated
+ * values of the "tags" parameter. It records the text enclosed in such
+ * elements and pass it thru Neko to obtain valid XHTML.
+ *
  * @cocoon.sitemap.component.documentation
  * Converts (escaped) HTML snippets into tidied HTML using the NekoHTML library.
  * This transformer expects a list of elements, passed as comma separated
@@ -49,9 +54,8 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class NekoHTMLTransformer
-    extends AbstractSAXTransformer
-    implements Configurable {
+public class NekoHTMLTransformer extends AbstractSAXTransformer
+                                 implements Configurable {
 
     /**
      * Properties for Neko format
@@ -70,7 +74,7 @@ public class NekoHTMLTransformer
      * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
      */
     public void endElement(String uri, String name, String raw)
-        throws SAXException {
+    throws SAXException {
         if (this.tags.containsKey(name)) {
             String toBeNormalized = this.endTextRecording();
             try {
@@ -88,12 +92,11 @@ public class NekoHTMLTransformer
      *
      * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
-    public void startElement(
-        String uri,
-        String name,
-        String raw,
-        Attributes attr)
-        throws SAXException {
+    public void startElement(String uri,
+                             String name,
+                             String raw,
+                             Attributes attr)
+    throws SAXException {
         super.startElement(uri, name, raw, attr);
 		if (this.tags.containsKey(name)) {
             this.startTextRecording();
@@ -166,12 +169,11 @@ public class NekoHTMLTransformer
      * Setup this component, passing the tag names to be tidied.
      */
 
-    public void setup(
-        SourceResolver resolver,
-        Map objectModel,
-        String src,
-        Parameters par)
-        throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver,
+                      Map objectModel,
+                      String src,
+                      Parameters par)
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         String tagsParam = par.getParameter("tags", "");        
         if (getLogger().isDebugEnabled()) {

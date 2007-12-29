@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Generates an XML listing of messages from an IMAP mail server.
  *
  * <p>You <b>must</b> configure this generator with "host", "user", and "pass" parameters
@@ -53,6 +52,9 @@ import java.util.Properties;
  * moved to lib/optional and added to jars.xml in the future.
  *
  * <br>TODO Refactor all of this to use the MailCommandManager, etc...
+ *
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML listing of messages from an IMAP mail server.
  *
  * @version $Id$
  */

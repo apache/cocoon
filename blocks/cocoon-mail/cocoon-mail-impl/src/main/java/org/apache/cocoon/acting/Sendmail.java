@@ -38,11 +38,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
 /**
- * @cocoon.sitemap.component.documentation
  * The <code>Sendmail</code> action class sends email.
  *
- * Action supports following parameters:
- *
+ * <p>Action supports following parameters:
  * <dl>
  *   <dt>smtp-host</dt>
  *   <dd>The smtp server to send the mail through. If not specified,
@@ -118,6 +116,9 @@ import javax.mail.internet.AddressException;
  * one or more email addresses. Other problems lead to a value of
  * <code>server-error</code> for <code>status</code> and
  * <code>message</code> contains a corresponding message.</p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * The <code>Sendmail</code> action class sends email.
  *
  * @since 2.1
  * @version $Id$
