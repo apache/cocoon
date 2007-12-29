@@ -20,30 +20,37 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.FileGenerator;
+
 import org.xml.sax.SAXException;
 
 /**
+ * This generator extends the usual FileGenerator with a pause parameter.
+ * During generation of the content, this generator pauses for the given
+ * amount of time.
+ *
+ * <p>This is very usefull for caching tests.
+ * 
  * @cocoon.sitemap.component.documentation
  * This generator extends the usual FileGenerator with a pause parameter.
  * During generation of the content, this generator pauses for the given
  * amount of time.
- * This is very usefull for caching tests.
- * 
- *  @version $Id$
- *  @since   2.1
+ * @cocoon.sitemap.component.documentation.caching No
+ *
+ * @since 2.1
+ * @version $Id$
  */
-public class PauseGenerator 
-    extends FileGenerator {
+public class PauseGenerator extends FileGenerator {
 
     protected long secs;
 
     /**
-     * @see org.apache.cocoon.generation.FileGenerator#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.generation.FileGenerator#setup
      */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         this.secs = par.getParameterAsLong("pause", 60);
     }
@@ -53,19 +60,18 @@ public class PauseGenerator
      */
     public void generate()
     throws IOException, SAXException, ProcessingException {
-        if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("Waiting for " + secs + " secs.");
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("Waiting for " + secs + " secs.");
         }
         try {
             Thread.sleep(secs * 1000);
         } catch (InterruptedException ie) {
             // ignore
         }
-        if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("Finished waiting.");
+
+        if (getLogger().isDebugEnabled() ) {
+            getLogger().debug("Finished waiting.");
         }
         super.generate();
     }
-
-
 }

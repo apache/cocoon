@@ -31,7 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * An action that locates and provides to the pipeline locale information
  * looked up in a range of ways.
  *
@@ -112,6 +111,10 @@ import java.util.Map;
  *   <li>{country}: The country of the found locale</li>
  *   <li>{variant}: The variant of the found locale</li>
  * </ul>
+ *
+ * @cocoon.sitemap.component.documentation
+ * An action that locates and provides to the pipeline locale information
+ * looked up in a range of ways.
  *
  * @version $Id$
  */

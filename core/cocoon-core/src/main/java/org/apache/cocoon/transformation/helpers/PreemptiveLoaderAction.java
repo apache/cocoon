@@ -25,10 +25,12 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
+ * This action starts the preemptive loader and runs forever.
+ *
  * @cocoon.sitemap.component.documentation
  * This action starts the preemptive loader and runs forever.
  * 
- * @since   2.1
+ * @since 2.1
  * @version $Id$
  */
 public class PreemptiveLoaderAction extends ServiceableAction

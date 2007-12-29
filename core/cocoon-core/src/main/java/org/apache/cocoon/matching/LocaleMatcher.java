@@ -38,7 +38,6 @@ import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A matcher that locates and identifies to the pipeline a source document to
  * be used as the content for an i18n site, based upon a locale provided in a
  * range of ways.
@@ -143,6 +142,11 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  *   <li>{country}: The country of the matching resource</li>
  *   <li>{variant}: The variant of the matching resource</li>
  * </ul>
+ *
+ * @cocoon.sitemap.component.documentation
+ * A matcher that locates and identifies to the pipeline a source document to
+ * be used as the content for an i18n site, based upon a locale provided in a
+ * range of ways.
  *
  * @since 2.1.6
  * @version $Id$
