@@ -25,13 +25,19 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.xml.sax.SAXException;
 
 /**
+ * This generator extends the usual FileGenerator with a pause parameter.
+ * During generation of the content, this generator pauses for the given
+ * amount of time (in seconds).
+ *
+ * <p>This is very usefull for caching tests.
+ * 
  * @cocoon.sitemap.component.documentation
  * This generator extends the usual FileGenerator with a pause parameter.
  * During generation of the content, this generator pauses for the given
- * amount of time (in seconds). This is very usefull for caching tests.
- * 
- * @version $Id$
+ * amount of time (in seconds).
+ *
  * @since 2.2
+ * @version $Id$
  */
 public class PauseGeneratorBean extends FileGeneratorBean {
 

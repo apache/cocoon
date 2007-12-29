@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * Generates an XML representation of the current notification.
  *
  * @cocoon.sitemap.component.documentation
- * Generates an XML representation of the current notification.
+ * Deprecated. Generates an XML representation of the current notification.
  * @cocoon.sitemap.component.documentation.caching No
  *
  * @deprecated Use &lt;map:handle-errors&gt; without type attribute together with
