@@ -41,7 +41,6 @@ import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A matcher that manages a "mount table", allowing to add subsitemaps to a Cocoon application without
  * modifying the main sitemap. This is especially useful for prototypes and demos where installing
  * a separate instance of Cocoon is overkill.
@@ -74,6 +73,11 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  * <p>
  * This configuration is used in the main sitemap of Cocoon samples, to allow users to define their own mount
  * table, but not fail if it does not exist.
+ *
+ * @cocoon.sitemap.component.documentation
+ * A matcher that manages a "mount table", allowing to add subsitemaps to a Cocoon application without
+ * modifying the main sitemap. This is especially useful for prototypes and demos where installing
+ * a separate instance of Cocoon is overkill.
  *
  * @version $Id$
  */

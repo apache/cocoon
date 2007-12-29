@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This is the action used to propagate parameters into a store using an
  * {@link org.apache.cocoon.components.modules.output.OutputModule}. It
  * simply propagates given expression. Additionaly it will make all propagated values
@@ -110,6 +109,12 @@ import java.util.Map;
  *  <td></td><td>String</td><td></td>
  * </tr>
  * </tbody></table>
+ *
+ * @cocoon.sitemap.component.documentation
+ * This is the action used to propagate parameters into a store using an
+ * {@link org.apache.cocoon.components.modules.output.OutputModule}. It
+ * simply propagates given expression. Additionaly it will make all propagated values
+ * available via returned Map.
  *
  * @version $Id$
  */

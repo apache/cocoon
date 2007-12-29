@@ -35,7 +35,6 @@ import org.apache.cocoon.matching.AbstractRegexpMatcher;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Matches against a regular expression. Needs an input module to
  * obtain value to match against.
  *
@@ -45,11 +44,15 @@ import java.util.Map;
  * <tr><td><code>parameter-name</code></td><td>Name of the parameter to match * against</td></tr>
  * </table>
  *
+ * @cocoon.sitemap.component.documentation
+ * Matches against a regular expression. Needs an input module to
+ * obtain value to match against.
+ *
  * @version $Id$
  */
 public class CachingRegexpMatcher extends AbstractRegexpMatcher
-    implements Configurable,  Initializable, Serviceable, Disposable
-{
+                                  implements Configurable,  Initializable, Serviceable,
+                                             Disposable {
 
     /** The service manager instance */
     protected ServiceManager manager;

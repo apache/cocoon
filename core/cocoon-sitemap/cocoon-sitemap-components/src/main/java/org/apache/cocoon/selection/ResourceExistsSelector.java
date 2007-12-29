@@ -31,7 +31,6 @@ import org.apache.excalibur.source.SourceResolver;
 import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Selects the first of a set of Resources (usually files) that exists.
  * 
  * <p>
@@ -75,6 +74,9 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  *    &lt;/map:select&lt;
  *    &lt;map:serialize type="fo2pdf" /&lt;
  * </pre>
+ *
+ * @cocoon.sitemap.component.documentation
+ * Selects the first of a set of Resources (usually files) that exists.
  *
  * @version $Id$
  */

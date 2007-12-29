@@ -30,14 +30,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * This action adds HTTP headers to the response.
+ *
  * @cocoon.sitemap.component.documentation
  * This action adds HTTP headers to the response.
  *
  * @version $Id$
  */
-public class HttpHeaderAction
-extends AbstractConfigurableAction
-implements ThreadSafe {
+public class HttpHeaderAction extends AbstractConfigurableAction
+                              implements ThreadSafe {
 
     /**
      * Stores keys of global configuration.

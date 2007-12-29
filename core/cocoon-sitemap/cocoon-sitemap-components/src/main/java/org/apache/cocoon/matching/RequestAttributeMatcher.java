@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This class allows for matching based on a request attribute.
  * If the specified request attribute exists, its string representation
  * is retrieved for later sitemap substitution.
@@ -35,6 +34,11 @@ import java.util.Map;
  *     &lt;map:redirect-to src="{1}"/&gt;
  * &lt;/map:match&gt;
  * </pre>
+ *
+ * @cocoon.sitemap.component.documentation
+ * This class allows for matching based on a request attribute.
+ * If the specified request attribute exists, its string representation
+ * is retrieved for later sitemap substitution.
  *
  * @version $Id$
  */

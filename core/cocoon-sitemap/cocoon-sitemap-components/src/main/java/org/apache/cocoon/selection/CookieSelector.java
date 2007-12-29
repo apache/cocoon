@@ -29,7 +29,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A <code>Selector</code> that matches a string against a configurable cookie's value.
  *
  * <p><b>Global and local configuration</b></p>
@@ -39,6 +38,9 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  *	<td>Name of the cookie whose value to match against</td>
  *	</tr>
  * </table>
+ *
+ * @cocoon.sitemap.component.documentation
+ * A <code>Selector</code> that matches a string against a configurable cookie's value.
  *
  * @version $Id$
  */

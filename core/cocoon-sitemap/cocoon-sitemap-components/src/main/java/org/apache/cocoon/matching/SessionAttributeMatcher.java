@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This class allows for matching based on a session attribute.
  * If the specified session attribute exists, its string representation
  * is retrieved for later sitemap substitution.
@@ -36,10 +35,15 @@ import java.util.Map;
  * &lt;/map:match&gt;
  * </pre>
  *
+ * @cocoon.sitemap.component.documentation
+ * This class allows for matching based on a session attribute.
+ * If the specified session attribute exists, its string representation
+ * is retrieved for later sitemap substitution.
+ *
  * @version $Id$
  */
-public class SessionAttributeMatcher implements Matcher, ThreadSafe
-{
+public class SessionAttributeMatcher implements Matcher, ThreadSafe {
+    
     /**
      * Match method to see if the request attribute exists. If it does
      * have a value the string represenation of attribute is added to

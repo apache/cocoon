@@ -26,7 +26,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Matches a request attribute against a regular expression.
  *
  * <p><b>Global and local configuration</b></p>
@@ -34,11 +33,13 @@ import java.util.Map;
  * <tr><td><code>attribute-name</code></td><td>String identifying the request attribute</td></tr>
  * </table>
  *
+ * @cocoon.sitemap.component.documentation
+ * Matches a request attribute against a regular expression.
+ *
  * @version $Id$
  */
 public class RegexpRequestAttributeMatcher extends AbstractRegexpMatcher
-    implements Configurable
-{
+                                           implements Configurable {
     private String defaultParam;
 
     public void configure(Configuration config) throws ConfigurationException {

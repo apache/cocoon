@@ -27,7 +27,6 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
- * @cocoon.sitemap.component.documentation
  * In a &lt;map:handle-errors>, selects depending on the exception that caused the error.
  * The configuration of this selector allows to map exception class names to symbolic names
  * that are used in the &lt;map:when> alternatives.
@@ -50,6 +49,11 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  *     the exception name</li>
  * Note that both "name" and "unroll" can be specified. In that case, we first try to unroll the exception,
  * and if none of the causes has a name, then the "name" attribute is considered.
+ *
+ * @cocoon.sitemap.component.documentation
+ * In a &lt;map:handle-errors>, selects depending on the exception that caused the error.
+ * The configuration of this selector allows to map exception class names to symbolic names
+ * that are used in the &lt;map:when> alternatives.
  *
  * @since 2.1
  * @version $Id$

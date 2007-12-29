@@ -21,13 +21,15 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import java.util.Map;
 
 /**
+ * Matches the target host ("Host" request header) against a wildcard expression.
+ *
  * @cocoon.sitemap.component.documentation
  * Matches the target host ("Host" request header) against a wildcard expression.
  *
  * @version $Id$
  */
-public class WildcardHostMatcher extends AbstractWildcardMatcher
-{
+public class WildcardHostMatcher extends AbstractWildcardMatcher {
+    
     protected String getMatchString(Map objectModel, Parameters parameters) {
         return ObjectModelHelper.getRequest(objectModel).getHeader("Host");
     }

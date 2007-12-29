@@ -25,6 +25,9 @@ import org.apache.cocoon.environment.SourceResolver;
 import java.util.Map;
 
 /**
+ * Simple action which ensures the cache is cleared of all
+ * cached results
+ *
  * @cocoon.sitemap.component.documentation
  * Simple action which ensures the cache is cleared of all
  * cached results

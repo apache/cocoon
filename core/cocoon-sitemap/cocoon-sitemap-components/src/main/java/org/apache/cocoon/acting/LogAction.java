@@ -26,11 +26,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A simple Action that logs a given message for a given log level.
  * 
- * <p>
- * Parameters:
+ * <p>Parameters:
  * 
  * <pre>
  * level (optional):   Indicates the log level, defaults to 'info'
@@ -38,17 +36,13 @@ import org.apache.commons.logging.LogFactory;
  * message (optional): The message to log, defaults to 'No log message given'
  * </pre>
  * 
- * <p>
- * 
- * Sitemap definition:
+ * <p>Sitemap definition:
  * 
  * <pre>
  * &lt;map:action name=&quot;log&quot; src=&quot;org.apache.cocoon.acting.LogAction&quot;/&gt;
  * </pre>
  * 
- * <p>
- * 
- * Example use:
+ * <p>Example use:
  * 
  * <pre>
  * &lt;map:match pattern=&quot;some-resource&quot;&gt;
@@ -66,7 +60,9 @@ import org.apache.commons.logging.LogFactory;
  * &lt;/map:match&gt;
  * </pre>
  * 
- * 
+ * @cocoon.sitemap.component.documentation
+ * A simple Action that logs a given message for a given log level.
+ *
  * @version $Id$
  */
 public class LogAction extends AbstractAction implements ThreadSafe {

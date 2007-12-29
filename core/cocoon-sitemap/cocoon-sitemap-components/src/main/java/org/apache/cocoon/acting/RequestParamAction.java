@@ -29,7 +29,6 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
- * @cocoon.sitemap.component.documentation
  * This action makes some request details available to the sitemap via parameter
  * substitution.
  *
@@ -79,6 +78,10 @@ import org.apache.cocoon.environment.SourceResolver;
  * </pre>
  *
  * etc, etc.
+ *
+ * @cocoon.sitemap.component.documentation
+ * This action makes some request details available to the sitemap via parameter
+ * substitution.
  *
  * @version $Id$
  */

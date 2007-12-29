@@ -29,6 +29,8 @@ import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.util.AbstractLogEnabled;
 
 /**
+ * Matches cookies agains given name. Returns value of the matched cookie.
+ *
  * @cocoon.sitemap.component.documentation
  * Matches cookies agains given name. Returns value of the matched cookie.
  *

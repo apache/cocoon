@@ -28,6 +28,9 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
 /**
+ * A simple Action that tracks if a <code>Session</code> object
+ * has been created or not.
+ *
  * @cocoon.sitemap.component.documentation
  * A simple Action that tracks if a <code>Session</code> object
  * has been created or not.
