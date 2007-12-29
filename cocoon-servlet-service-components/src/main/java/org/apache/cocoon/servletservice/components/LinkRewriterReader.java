@@ -49,7 +49,6 @@ import org.apache.cocoon.util.location.LocationImpl;
 import org.xml.sax.SAXException;
 
 /**
- * @cocoon.sitemap.component.documentation
  * <code>LinkRewriterReader<code> implements <code>servlet:</code> link rewriting in
  * text resources. It should be used especially for serving JavaScript files that have
  * paths refering to other blocks (<code>servlet:</code> links).
@@ -57,6 +56,14 @@ import org.xml.sax.SAXException;
  * <p><b>Configuration</b><br>
  * <code>encoding</code> - see {@link #setEncoding}<br>
  * <code>expires</code> - see {@link #setExpires}.
+ *
+ * @cocoon.sitemap.component.documentation
+ * <code>LinkRewriterReader<code> implements <code>servlet:</code> link rewriting in
+ * text resources. It should be used especially for serving JavaScript files that have
+ * paths refering to other blocks (<code>servlet:</code> links).
+ * @cocoon.sitemap.component.documentation.caching Yes
+ *
+ * @version $Id$
  */
 public class LinkRewriterReader extends AbstractReader
                                 implements CacheableProcessingComponent {
