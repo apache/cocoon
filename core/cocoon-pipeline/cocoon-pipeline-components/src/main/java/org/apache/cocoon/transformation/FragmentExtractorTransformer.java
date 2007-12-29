@@ -47,12 +47,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
  * The transformation half of the FragmentExtractor (see also <code>FragmentExtractorGenerator</code>.
- * This transformer recieves an incoming stream of xml and replaces
+ *
+ * <p>This transformer recieves an incoming stream of xml and replaces
  * fragments with an fragment extractor locator pointing to the fragments.
  *
- * The extracted fragments are identified by their element name and namespace URI.
+ * <p>The extracted fragments are identified by their element name and namespace URI.
  * The default is to extract SVG images ("svg" elements in namespace
  * "http://www.w3.org/2000/svg"), but this can be overriden in the configuration:
  * <pre>
@@ -65,10 +65,15 @@ import org.xml.sax.helpers.AttributesImpl;
  *   &lt;fe:fragment xmlns:fe="http://apache.org/cocoon/fragmentextractor/2.0" fragment-id="..."/&gt;
  * </pre>
  *
+ * @cocoon.sitemap.component.documentation
+ * The transformation half of the FragmentExtractor (see also <code>FragmentExtractorGenerator</code>.
+ * @cocoon.sitemap.component.documentation.caching Yes
+ *
  * @version $Id$
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
-    implements CacheableProcessingComponent, Configurable, Serviceable, Disposable {
+                                          implements CacheableProcessingComponent, Configurable,
+                                                     Serviceable, Disposable {
 
     public static final String FE_URI = "http://apache.org/cocoon/fragmentextractor/2.0";
 

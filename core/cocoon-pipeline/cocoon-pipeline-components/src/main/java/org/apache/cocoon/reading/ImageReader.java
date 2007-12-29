@@ -42,13 +42,12 @@ import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
- * @cocoon.sitemap.component.documentation
  * The <code>ImageReader</code> component is used to serve binary image data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
  * the requested resource should be written to the <code>OutputStream</code>
  * or if it can signal that it hasn't changed.
  *
- * Parameters:
+ * <p>Parameters:
  *   <dl>
  *     <dt>&lt;width&gt;</dt>
  *     <dd> This parameter is optional. When specified, it determines the
@@ -90,6 +89,13 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *         compression is used. The range is 0.0 to 1.0, if specified.
  *     </dd>
  *   </dl>
+ *
+ * @cocoon.sitemap.component.documentation
+ * The <code>ImageReader</code> component is used to serve binary image data
+ * in a sitemap pipeline. It makes use of HTTP Headers to determine if
+ * the requested resource should be written to the <code>OutputStream</code>
+ * or if it can signal that it hasn't changed.
+ * @cocoon.sitemap.component.documentation.caching Yes
  *
  * @version $Id$
  */

@@ -31,15 +31,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Text serializer converts XML into plain text.
  * It omits all XML tags and writes only character events to the output.
- * Internally, text serializer uses XML serializer with {@link OutputKeys#METHOD}
+ *
+ * <p>Internally, text serializer uses XML serializer with {@link OutputKeys#METHOD}
  * set to <code>text</code>.
  *
  * <p>Input document must have at least one element - root element - which
  * should wrap all the text inside it.
  *
+ * @cocoon.sitemap.component.documentation
+ * Text serializer converts XML into plain text.
+ * It omits all XML tags and writes only character events to the output.
+ * @cocoon.sitemap.component.documentation.caching Yes
+ * 
  * @version $Id$
  */
 public class TextSerializer extends AbstractTextSerializer {

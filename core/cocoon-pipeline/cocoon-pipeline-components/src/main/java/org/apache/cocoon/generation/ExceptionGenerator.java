@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * A generator that dumps an XML representation of the exception raised during
  * pipeline execution.
  *
@@ -80,6 +79,10 @@ import java.util.Map;
  *     &lt;/ex:full-stacktrace&gt;
  *   &lt;/ex:exception-report&gt;
  * </pre>
+ *
+ * @cocoon.sitemap.component.documentation
+ * A generator that dumps an XML representation of the exception raised during
+ * pipeline execution.
  *
  * @since 2.1.8
  * @version $Id$

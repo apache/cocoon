@@ -44,9 +44,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @cocoon.sitemap.component.documentation
  * Generates an XML collection listing performing XPath queries on XML sources.
- * It can be used both as a plain TraversableGenerator or, if an XPath is
+ *
+ * <p>It can be used both as a plain TraversableGenerator or, if an XPath is
  * specified, it will perform an XPath query on every XML resource, where "xml
  * resource" is, by default, any resource ending with ".xml", which can be
  * overriden by setting the (regexp) pattern "xmlFiles as a sitemap parameter,
@@ -94,6 +94,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * If you need to use namespaces, you can set them as sitemap parameters in
  * the form:
  * lt;map:parameter name="xmlns:<i>your prefix</i>" value="nsURI"/**"&gt;
+ *
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML collection listing performing XPath queries on XML sources.
+ * @cocoon.sitemap.component.documentation.caching Yes
  *
  * @version $Id$
  */
