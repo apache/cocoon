@@ -64,7 +64,9 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
         FlowJXPathSelectionList list = new FlowJXPathSelectionList(processInfoProvider, "beans", "key", "value", datatype,null,false,null,false);
         DOMBuilder dest = new DOMBuilder();
+        dest.startDocument();
         list.generateSaxFragment(dest, Locale.ENGLISH);
+        dest.endDocument();
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
@@ -91,7 +93,9 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
         FlowJXPathSelectionList list = new FlowJXPathSelectionList(processInfoProvider, "beans", "key", "value", datatype,null,false,null,false);
         DOMBuilder dest = new DOMBuilder();
+        dest.startDocument();
         list.generateSaxFragment(dest, Locale.ENGLISH);
+        dest.endDocument();
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         Document destDocument = dest.getDocument();
