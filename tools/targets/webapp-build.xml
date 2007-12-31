@@ -25,34 +25,41 @@
   <target name="prepare-webapp" depends="blocks, package">
     <mkdir dir="${build.webapp}"/>
 
-    <copy file="${webapp}/welcome.xml" tofile="${build.webapp}/welcome.xml" filtering="on"/>
-    <copy file="${webapp}/not-found.xml" tofile="${build.webapp}/not-found.xml" filtering="on"/>
-    <copy file="${webapp}/welcome.xslt" tofile="${build.webapp}/welcome.xslt" filtering="on"/>
-    <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
+    <!-- Important to use here encoding="iso-8859-1" to avoid
+         mutilating LATIN-1 characters in the copy operation.
+         If these were read assuming UTF-8 encoding, umlauts
+         are invalid byte sequences and get replaced by '?'.
+    
+         On the other hand, reading UTF-8 files using LATIN-1
+         encoding is not a problem in this context since every
+         UTF-8 byte sequence maps to one or more LATIN-1 characters.
+         We only need to assume that the tokens to be replaced
+         by the filtering option are written in ASCII only.
+     -->
+    <copy filtering="on" todir="${build.webapp}" encoding="iso-8859-1">
+      <fileset dir="${webapp}">
+        <exclude name="**/*.ico"/>
+        <exclude name="**/*.gif"/>
+        <exclude name="**/*.jpg"/>
+        <exclude name="**/*.png"/>
+        <exclude name="samples/**"/>
+        <exclude name="test-suite/**"/>
+      </fileset>
+    </copy>
+    <copy filtering="off" todir="${build.webapp}">
+      <fileset dir="${webapp}">
+        <exclude name="samples/**"/>
+        <exclude name="test-suite/**"/>
+        <include name="**/*.ico"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.png"/>
+      </fileset>
+    </copy>
 
     <!-- generate sitemap entries
     <sitemap-components sitemap="${build.webapp}/sitemap.xmap" source="${java}"/>
     -->
-
-    <copy todir="${build.webapp}/stylesheets" filtering="on">
-      <fileset dir="${webapp}/stylesheets">
-        <include name="**/*.xslt"/>
-      </fileset>
-    </copy>
-
-    <copy todir="${build.webapp}/resources" filtering="off">
-      <fileset dir="${webapp}/resources"/>
-    </copy>
-
-    <copy todir="${build.webapp}/WEB-INF" filtering="on">
-      <fileset dir="${webapp}/WEB-INF">
-        <include name="entities/**"/>
-        <include name="classes/**"/>
-        <include name="*.x*"/>
-        <include name="properties/**"/>
-      </fileset>
-    </copy>
-
     <copy file="${build}/${name}.jar"
           tofile="${build.webapp.lib}/${name}-${version}.jar"/>
 
