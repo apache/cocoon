@@ -22,6 +22,7 @@ import java.util.Locale;
 import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.ResourceSource;
 import org.apache.excalibur.xmlizer.XMLizer;
@@ -41,24 +42,27 @@ public class DynamicSelectionListTestCase extends AbstractSelectionListTestCase 
      * @throws ParserConfigurationException
      */
     public void testGenerateSaxFragment() throws Exception {
-        DOMBuilder dest = new DOMBuilder();
-        ResourceSource source = 
+        Source source = 
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/DynamicSelectionListTestCase.source.xml");
         Document sourceDoc = this.parser.parse(source.getInputStream());
         Element datatypeElement = (Element) sourceDoc.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "convertor").item(0);
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
         final XMLizer xmlizer = (XMLizer)getManager().lookup( XMLizer.ROLE );
         final SourceResolver sourceResolver = (SourceResolver)getManager().lookup( SourceResolver.ROLE );
-        DynamicSelectionList list = 
-            new DynamicSelectionList(datatype, null, xmlizer, sourceResolver, null);
+        DynamicSelectionList list = new DynamicSelectionList(datatype, null, xmlizer, sourceResolver, null);
+        
+        DOMBuilder dest = new DOMBuilder();
+        dest.startDocument();
         list.generateSaxFragment(dest, Locale.ENGLISH, source);
-        ResourceSource expectedSource =
+        dest.endDocument();
+        Document destDocument = dest.getDocument();
+        
+        Source expectedSource =
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/DynamicSelectionListTestCase.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
         // FIXME: Why is the namespace declaration available as attribute on the expected document? (see COCOON-2155)
         expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
-        assertEqual("Test if output is what is expected",
-                expected, dest.getDocument());
+        assertEqual("Test if output is what is expected", expected, destDocument);
     }
 
 }

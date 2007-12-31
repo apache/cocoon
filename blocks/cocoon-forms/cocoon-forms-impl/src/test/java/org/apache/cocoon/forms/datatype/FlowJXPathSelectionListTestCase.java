@@ -58,18 +58,21 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         flowContextObject.put("beans", beans);
         ObjectModel newObjectModel = new ObjectModelImpl();
         FlowHelper.setContextObject(getObjectModel(), newObjectModel, flowContextObject);
+        
         Source sampleSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.source.xml");
         Document sample = this.parser.parse(sampleSource.getInputStream());
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "datatype").item(0);
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
         FlowJXPathSelectionList list = new FlowJXPathSelectionList(processInfoProvider, "beans", "key", "value", datatype,null,false,null,false);
+        
         DOMBuilder dest = new DOMBuilder();
         dest.startDocument();
         list.generateSaxFragment(dest, Locale.ENGLISH);
         dest.endDocument();
+        Document destDocument = dest.getDocument();
+
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
-        Document destDocument = dest.getDocument();
         // FIXME: Why is the namespace declaration available as attribute on the expected document? (see COCOON-2155)
         expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
         assertEqual("Test if generated list matches expected", expected, destDocument);
@@ -87,18 +90,21 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
         flowContextObject.put("beans", beans);
         ObjectModel newObjectModel = new ObjectModelImpl();
         FlowHelper.setContextObject(getObjectModel(), newObjectModel, flowContextObject);
+        
         Source sampleSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.source.xml");
         Document sample = this.parser.parse(sampleSource.getInputStream());
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(FormsConstants.DEFINITION_NS, "datatype").item(0);
         Datatype datatype = this.datatypeManager.createDatatype(datatypeElement, false);
         FlowJXPathSelectionList list = new FlowJXPathSelectionList(processInfoProvider, "beans", "key", "value", datatype,null,false,null,false);
+        
         DOMBuilder dest = new DOMBuilder();
         dest.startDocument();
         list.generateSaxFragment(dest, Locale.ENGLISH);
         dest.endDocument();
+        Document destDocument = dest.getDocument();
+
         Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
-        Document destDocument = dest.getDocument();
         // FIXME: Why is the namespace declaration available as attribute on the expected document? (see COCOON-2155)
         expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
         assertEqual("Test if generated list matches expected", expected, destDocument);
@@ -125,4 +131,5 @@ public class FlowJXPathSelectionListTestCase extends AbstractSelectionListTestCa
             return "{ " + this.key + " : " + this.value + " }";
         }
     }
+    
 }
