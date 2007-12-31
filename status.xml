@@ -181,7 +181,7 @@
   </todo>
 
   <changes>
-  <release version="2.1.11" date="TBD">
+  <release version="2.1.11" date="December 31 2007">
     <action dev="RG" type="fix" fixes-bug="COCOON-1574">
       Created XPathXMLFileModule to address issus with XMLFileModule. XPathXMLFileModule supports variable
       replacement and caching of documents in ehcache and expressions as soft references. 
