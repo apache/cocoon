@@ -181,6 +181,9 @@
   </todo>
 
   <changes>
+  <release version="2.1.12" date="TBD">
+    <action dev="NN" type="fix">DUMMY</action>
+  </release>
   <release version="2.1.11" date="December 31 2007">
     <action dev="RG" type="fix" fixes-bug="COCOON-1574">
       Created XPathXMLFileModule to address issus with XMLFileModule. XPathXMLFileModule supports variable
