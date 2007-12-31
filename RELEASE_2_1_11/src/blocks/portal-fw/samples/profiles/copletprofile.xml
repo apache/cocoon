@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ 
+-->
+<coplets-profile>
+ 	<coplets>  
+		<coplet id="sundnnews">
+ 			<resource uri="cocoon:raw:/sunspotdemosunlet-onlinesundn.xml"/>
+     			<configuration>  
+       				<mandatory>false</mandatory>
+       				<sizable>true</sizable>
+       				<active>true</active>
+                              <timeout>5000</timeout>
+    			</configuration>
+    			<title>s&amp;n News</title>
+    			<status>
+					<customize>false</customize>
+        				<visible>true</visible>
+        				<size>max</size>
+			</status>
+		</coplet>
+		<coplet id="banknews">
+    			<resource uri="cocoon:raw:/sunspotdemosunlet-online-banking.xml"/>
+     			<configuration>  
+       			<mandatory>false</mandatory>
+       			<sizable>true</sizable>
+       			<active>true</active>  
+                        <timeout>5000</timeout>
+    			</configuration>
+    			<title>Banking News</title>
+    			<status>
+       			<visible>true</visible>
+        			<size>max</size>
+			</status>
+		</coplet>
+		<coplet id="customnews">
+    			<resource uri="cocoon:raw:/sunspotdemosunlet-customnews"/>
+    			<customization uri="cocoon:raw:/sunspotdemosunletconf-customnews"/>
+     			<configuration>  
+					<customizable>true</customizable>
+					<persistent>true</persistent>
+       				<mandatory>false</mandatory>
+       				<sizable>true</sizable>
+       				<active>true</active>  
+    			</configuration>
+    			<title>My News</title>
+    			<status>
+        			<visible>true</visible>
+        			<size>max</size>
+			</status>
+		</coplet>
+		<coplet id="germany">
+    			<resource uri="cocoon:raw:/sunspotdemosunlet-online-germany.xml"/>
+     			<configuration>  
+       				<mandatory>false</mandatory>
+       				<sizable>true</sizable>
+       				<active>true</active>  
+                                                <timeout>5000</timeout>
+    			</configuration>
+    			<title>Germany News</title>
+    			<status>
+        				<visible>true</visible>
+        				<size>max</size>
+			</status>
+		</coplet>
+		<coplet id="feedback">
+    			<resource uri="cocoon:raw:/sunspotdemosunlet-feedback.xml"/>
+     			<configuration>  
+       				<mandatory>false</mandatory>
+       				<sizable>true</sizable>
+       				<active>true</active>  
+    			</configuration>
+    			<title>Feedback</title>
+    			<status>
+        				<visible>true</visible>
+        				<size>max</size>
+			</status>
+		</coplet>
+		<coplet id="administration">
+    			<resource uri="cocoon:raw:/sunspotdemosunlet-administration.xml"/>
+     			<configuration>  
+       				<mandatory>false</mandatory>
+       				<sizable>true</sizable>
+       				<active>false</active> <!-- this is only active for admins -->  
+    			</configuration>
+    			<title>Administration</title>
+    			<status>
+        				<visible>true</visible>
+        				<size>max</size>
+			</status>
+		</coplet>
+		<coplet id="personalize">
+    			<resource uri="cocoon:raw:/sunspotdemosunlet-personalize.xml"/>
+     			<configuration>  
+       				<mandatory>true</mandatory>
+       				<sizable>true</sizable>
+       				<active>true</active>  
+    			</configuration>
+    			<title>Personalize</title>
+    			<status>
+        				<visible>true</visible>
+        				<size>max</size>
+			</status>
+		</coplet>
+		<coplet id="personalizeguest">
+   			<resource uri="cocoon:raw:/sunspotdemosunlet-personalizeguest.xml"/>
+			<configuration>  
+     				<mandatory>true</mandatory>
+     				<sizable>true</sizable>
+    				<active>false</active>  
+			</configuration>
+			<title>Personalize (Guest)</title>
+   			<status>
+     				<visible>true</visible>
+     				<size>max</size>
+			</status>
+		</coplet>
+	</coplets>
+</coplets-profile>

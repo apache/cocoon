@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page>
+  <title>Linked Updating</title>
+  <!-- include ajax scripts -->
+  <script type="text/javascript">
+    // djConfig = { isDebug: true };
+  </script>
+  <script type="text/javascript" src="resources/dojo/dojo.js"/>
+  <!--<script type="text/javascript" src="_cocoon/resources/ajax/cocoon.js"/>-->
+  <script type="text/javascript">
+    dojo.require("dojo.widget.*");
+    dojo.registerModulePath("cocoon.ajax", "../ajax/js");
+    dojo.require("cocoon.ajax.common");
+
+	function initTimer() {
+	    cocoon.ajax.periodicalUpdate(2000, "display-freememory", "freemem");
+	}
+	dojo.addOnLoad(initTimer);
+
+	function initClock() {
+  	cocoon.ajax.periodicalUpdate(1000, "display-clock", "clock");
+	}
+	dojo.addOnLoad(initClock);
+
+	function initClock1() {
+  	cocoon.ajax.periodicalUpdate(5000, "display-clock", "clock1");
+	}
+ 	dojo.addOnLoad(initClock1);
+  dojo.debug("The current version of dojo is: ", dojo.version.toString());
+  </script>
+
+	<style>
+		.container {border-color: #aaa;border-width: 1px;border-style: dotted; padding: 6px;margin:3px;}
+		#changeme {background-color: #eee; padding: 6px;margin:3px;border-color: green;border-width: 1px;border-style: dotted;padding:2px}
+		#changeme .insert {border-color: blue;border-width: 1px;border-style: dotted; padding: 6px;margin:3px;}
+		.insert {border-color: red;border-width: 1px;border-style: dotted; padding: 6px;margin:3px;}
+	</style>
+	<content>
+		<p>This sample shows dynamic page updating in action, using Ajax.</p>
+
+		<table width="100%">
+			<tr valign="top">
+				<td width="30%">
+					<a href="linked-updater-content-1" dojoType="ajax:PartialLink" target="replace#changeme">Click me to do a replace</a><br/>
+					<a href="linked-updater-content-2" dojoType="ajax:PartialLink" target="replace#changeme">Click me to do a different replace</a><br/>
+					<a href="linked-updater-content-3" dojoType="ajax:PartialLink" target="before#changeme">Click me to insert before</a><br/>
+					<a href="linked-updater-content-3" dojoType="ajax:PartialLink" target="top#changeme">Click me to insert at the top</a><br/>
+					<a href="linked-updater-content-3" dojoType="ajax:PartialLink" target="bottom#changeme">Click me to insert at the bottom</a><br/>
+					<a href="linked-updater-content-3" dojoType="ajax:PartialLink" target="after#changeme">Click me to insert after</a><br/>
+					<p>Memory available on the server:
+					  <span id="freemem">[unknown]</span>
+					</p>
+					<p>Current Time on the server (updated every 1 second):
+					  <span id="clock">[unknown]</span>
+					</p>
+  				<p>Current Time on the server (updated every 5 seconds):
+					  <span id="clock1">[unknown]</span>
+					</p>
+				</td>
+				<td>
+					<div class="container">
+						<div>Change Region</div>
+						<div id="changeme">
+							This is the region of the page that gets updated.
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</content>
+</page>

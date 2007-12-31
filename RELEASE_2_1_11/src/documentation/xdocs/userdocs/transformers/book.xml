@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "book-cocoon-v10.dtd">
+
+<book software="Apache Cocoon" 
+      title="Apache Cocoon Transformers" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="Navigation">
+    <menu-item label="Main" href="../../index.html"/>
+    <menu-item label="User Documentation" href="../index.html"/>
+  </menu>
+
+  <menu label="Transformers">
+    <menu-item label="Overview" href="transformers.html"/>
+  </menu>
+  <menu label="Default">
+    <menu-item label="XSLT Transformer" href="xslt-transformer.html"/>
+  </menu>
+  <menu label="Core">
+    <menu-item label="Fragment Extractor Transformer" href="extractor-transformer.html"/>
+    <menu-item label="I18n Transformer" href="i18n-transformer.html"/>
+    <menu-item label="Log Transformer" href="log-transformer.html"/>
+    <menu-item label="Filter Transformer" href="filter-transformer.html"/>
+    <menu-item label="Read DOM Session Transformer" href="readdomsession-transformer.html"/>
+    <menu-item label="Write DOM Session Transformer" href="writedomsession-transformer.html"/>
+    <menu-item label="XInclude Transformer" href="xinclude-transformer.html"/>
+    <menu-item label="CInclude Transformer" href="cinclude-transformer.html"/>
+    <menu-item label="EncodeURL Transformer" href="encodeurl-transformer.html"/>
+    <menu-item label="SourceWriting Transformer" href="sourcewriting-transformer.html"/>
+    <menu-item label="Augment Transformer" href="augment-transformer.html"/>
+    <menu-item label="JX Template Transformer" href="jx-template-transformer.html"/>
+  </menu>
+  <menu label="Optional">
+    <menu-item label="LDAP Transformer" href="ldap-transformer.html"/>
+    <menu-item label="Lexical Transformer" href="lexer-transformer.html"/>
+    <menu-item label="Parser Transformer" href="parser-transformer.html"/>
+    <menu-item label="Pattern Transformer" href="pattern-transformer.html"/>
+    <menu-item label="Session Transformer" href="../../developing/webapps/contexts.html"/>
+    <menu-item label="SQL Transformer" href="sql-transformer.html"/>
+  </menu>
+
+</book>
+
+

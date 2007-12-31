@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<coplets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <!--
+     + Different news coplets
+     + Read content from a file - for offline presentation
+     -->
+   <coplet-data id="Newsweek" name="standard">
+      <title>Newsweek</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/newsweek.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="NYTBusiness" name="standard">
+      <title>NYT Business</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/nyt_business.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="BBCNews" name="standard">
+      <title>BBC News</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/bbc_news.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="CNET News" name="standard">
+      <title>CNET News</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/cnet_news.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="CNET Business" name="standard">
+      <title>CNET Business News</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/cnet_business.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="CSTNews" name="standard">
+      <title>Chicago Sunday Times</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/cst_news.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="CNNEurope" name="standard">
+      <title>CNN Europe</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/cnn_europe.rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="ML Weblog" name="standard">
+      <title>ML's Weblog</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/ml_weblog.weblog-rss</value>
+      </attribute>
+   </coplet-data>
+
+   <coplet-data id="Weblog" name="standard">
+      <title>Another Weblog</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/nn_weblog.weblog-rss</value>
+      </attribute>
+   </coplet-data>
+
+   <!--
+     + Different news coplets
+     + Try to read content from the internet. 
+     + If the net is not available, use static file (for offline presentation)
+     -->
+   <coplet-data id="CZ Weblog" name="standard">
+      <title>CZ's Weblog</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/live.weblog-rss?feed=http://www.osoco.org/weblogs/rael/index.xml</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>error-uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/news/cz_weblog.weblog-rss</value>
+      </attribute>
+   </coplet-data>
+
+   <!-- 
+     + The portal introduction coplet 
+     -->
+   <coplet-data id="Portal-Intro" name="standard">
+      <title>Introduction</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/docs/portal-intro.html</value>
+      </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </aspect>
+   </coplet-data>
+   <coplet-data id="Portal-Demo" name="standard">
+      <title>Introduction</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/docs/portal-demo.html</value>
+      </attribute>
+      <attribute>
+        <name>cache-global</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </aspect>
+   </coplet-data>
+   <coplet-data id="Portal-Right" name="standard">
+      <title>Right</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/docs/portal-right.html</value>
+      </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </aspect>
+   </coplet-data>
+   <coplet-data id="Portal-Left" name="standard">
+      <title>Left</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/docs/portal-left.html</value>
+      </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </aspect>
+   </coplet-data>
+   <coplet-data id="Portal-Bottom" name="standard">
+      <title>Bottom</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/docs/portal-bottom.html</value>
+      </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </aspect>
+   </coplet-data>
+
+   <!--
+     +  The Gallery coplets
+     -->
+   <coplet-data id="Gallery" name="standard">
+      <title>Picture Gallery</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+        <name>buffer</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/gallery/browser</value>
+      </attribute>
+      <attribute>
+         <name>image-dir</name>
+         <value xsi:type="java:java.lang.String">samplepics</value>
+      </attribute>
+      <attribute>
+         <name>image-include</name>
+         <value xsi:type="java:java.lang.String">.jpg</value>
+      </attribute>
+      <attribute>
+         <name>image-uri-prefix</name>
+         <value xsi:type="java:java.lang.String">coplets/gallery/images</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="GalleryViewer" name="standard">
+      <title>Gallery Viewer</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+        <name>buffer</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/gallery/viewer</value>
+      </attribute>
+   </coplet-data>
+
+   <!--
+     +  The login coplet
+     -->
+   <coplet-data id="Login" name="standard">
+      <title>Login</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/login/coplet</value>
+      </attribute>
+      <aspect>
+        <name>mandatory</name>
+        <value xsi:type="java:java.lang.Boolean">true</value>
+      </aspect>
+   </coplet-data>
+
+   <!--
+     +  The basket coplets
+     +  The uri's for these coplets have to be absolut, so you have to use cocoon://!
+     -->
+   <coplet-data id="BasketContent" name="standard">
+      <title>Basket Item</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/content</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketAdmin" name="standard">
+      <title>Basket Administration</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/basket-admin</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="Basket" name="standard">
+      <title>Basket</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/basket</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="Basket.admin" name="standard">
+      <title>Basket</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/basket.admin</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleStaticCoplet" name="standard">
+      <title>Static Coplet</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String">document</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/staticcoplet.add.preflow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithAttribute" name="standard">
+      <title>Coplet with Attribute</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String">document</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/copletwithattr.add.preflow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithInlineProcess" name="standard">
+      <title>Coplet with Inline Process</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String">document</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/copletwithinline.add.preflow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithInputProcess" name="standard">
+      <title>Coplet with Input Processing</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String">notepad</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>handleParameters</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/application</value>
+      </attribute>
+      <attribute>
+         <name>temporary:application-uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/copletwithinput.add.flow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithInputProcessShow" name="standard">
+      <title>Show Input</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String">notepad</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/copletwithinputshow.changeTitle.preflow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithApp" name="standard">
+      <title>Coplet with Application</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String">request</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>handleParameters</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/application</value>
+      </attribute>
+      <attribute>
+         <name>temporary:application-uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/copletwithapp.add.flow</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletList" name="standard">
+      <title>Coplet List</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String">request</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>handleParameters</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/application</value>
+      </attribute>
+      <attribute>
+         <name>temporary:application-uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/copletlist</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="BasketSampleCopletWithUpload" name="standard">
+      <title>Coplet with Input Process</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <attribute>
+         <name>group</name>
+         <value xsi:type="java:java.lang.String">folder</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/basket/copletwithupload.add.preflow</value>
+      </attribute>
+   </coplet-data>
+
+
+   <!--
+     +  JSR-168 portlets from the Pluto testsuite
+     -->
+   <coplet-data id="Portlet1" name="standard">
+      <title>Portlet-Test 1</title>
+      <coplet-base-data>Portlet</coplet-base-data>
+      <attribute>
+         <name>portlet</name>
+         <value xsi:type="java:java.lang.String">testsuite.TestPortlet1</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="Portlet2" name="standard">
+      <title>Portlet-Test 2</title>
+      <coplet-base-data>Portlet</coplet-base-data>
+      <attribute>
+         <name>portlet</name>
+         <value xsi:type="java:java.lang.String">testsuite.TestPortlet2</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="TestPortlet1" name="standard">
+      <title>Portlet-Test</title>
+      <coplet-base-data>Portlet</coplet-base-data>
+      <attribute>
+         <name>portlet</name>
+         <value xsi:type="java:java.lang.String">webapp.TestPortlet1</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="CocoonPortlet" name="standard">
+      <title>CocoonPortlet</title>
+      <coplet-base-data>Portlet</coplet-base-data>
+      <attribute>
+         <name>portlet</name>
+         <value xsi:type="java:java.lang.String">webapp.CocoonPortlet</value>
+      </attribute>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+   </coplet-data>
+
+   <!--
+     +  This is an application integration sample:
+     +  - the flow based calculator
+     +  - and a forms sample
+     -->
+   <coplet-data id="app-test-one" name="standard">
+      <title>Application Test</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>handleParameters</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/html/application</value>
+      </attribute>
+      <attribute>
+         <name>temporary:application-uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/blocks/portal/coplets/samples/form</value>
+      </attribute>
+   </coplet-data>
+   <coplet-data id="app-test-two" name="standard">
+      <title>Application Test</title>
+      <coplet-base-data>CachingURICoplet</coplet-base-data>
+      <attribute>
+         <name>buffer</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>handleParameters</name>
+         <value xsi:type="java:java.lang.Boolean">true</value>
+      </attribute>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/html/application</value>
+      </attribute>
+      <attribute>
+         <name>temporary:application-uri</name>
+         <value xsi:type="java:java.lang.String">cocoon://samples/flow/jxcalc/</value>
+      </attribute>
+   </coplet-data>
+
+   <!-- Example for the application coplet -->
+   <coplet-data id="Google" name="standard">
+      <title>Application</title>
+      <coplet-base-data>Application</coplet-base-data>
+      <attribute>
+         <name>uri</name>
+         <value xsi:type="java:java.lang.String">cocoon:/coplets/html/app-coplet</value>
+      </attribute>
+      <attribute>
+         <name>start-uri</name>
+         <value xsi:type="java:java.lang.String">http://www.google.com/index.html</value>
+      </attribute>
+   </coplet-data>
+
+</coplets>

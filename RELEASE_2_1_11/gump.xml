@@ -1,0 +1,1899 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | Cocoon GUMP Descriptor
+    |
+    | $Id$
+    |
+    |  see http://vmgump.apache.org/gump/public/buildLog.html
+    |  for already existing projects
+    |
+    +-->
+<module name="cocoon-2.1">
+  <url href="http://cocoon.apache.org/"/>
+  <description>Java XML Framework</description>
+  <svn repository="cocoon" dir="branches/BRANCH_2_1_X/"/>
+
+  <!--
+    *******************************
+    ********  COCOON CORE  ********
+    *******************************
+  -->
+
+  <project name="cocoon">
+    <package>org.apache.cocoon</package>
+
+    <mkdir dir="build/cocoon-@@DATE@@/test"/>
+
+    <ant target="gump-core">
+      <property name="version" value="@@DATE@@"/>
+      <depend property="logkit.jar" project="avalon-logkit"/>
+      <depend property="avalonapi.jar" project="avalon-framework-api"/>
+    </ant>
+
+    <depend project="ant" inherit="runtime"/>
+    <depend project="ant-contrib"/>
+    
+    <depend project="xml-xerces"/>
+    <depend project="xml-xalan2"/>
+    <depend project="xml-commons-resolver"/>
+
+    <depend project="avalon-framework-api"/>
+    <depend project="avalon-framework-legacy"/>
+    <depend project="avalon-framework-impl"/>
+    <depend project="excalibur-legacy" id="compatibility"/>
+    <depend project="excalibur-instrument"/>
+    <depend project="excalibur-instrument-manager"/>
+    <depend project="excalibur-sourceresolve"/>
+    <depend project="excalibur-xmlutil"/>
+    <depend project="excalibur-store"/>
+    <depend project="excalibur-pool"/>
+    <depend project="excalibur-component"/>
+    <depend project="excalibur-logger"/>
+    <depend project="excalibur-event" inherit="runtime"/>
+    <depend project="excalibur-legacy" id="i18n"/>
+
+    <depend project="jakarta-regexp"/>
+    <depend project="jakarta-servletapi"/>
+    <depend project="jakarta-turbine-jcs"/>
+
+    <depend project="commons-cli"/>
+    <depend project="commons-httpclient"/>
+    <depend project="commons-io"/>
+    <depend project="commons-collections"/>
+    <depend project="commons-jexl"/>
+    <depend project="commons-jxpath"/>
+    <depend project="commons-lang"/>
+    <depend project="commons-beanutils"/>
+
+    <depend project="cocoon-javac"/>
+    <depend project="cocoon-javacImpl"/>
+    <depend project="rhino-cocoondev"/>
+    <depend project="ehcache"/>
+    <depend project="jing"/>
+    <depend project="pizza"/>
+    <depend project="junit"/>
+    <depend project="easymock"/>
+    <depend project="eclipse-jtd"/>
+    <depend project="concurrent"/>
+
+    <depend project="xmlunit"/><!-- used by the testcases -->
+    <depend project="qdox"/>   <!-- used by ant tasks -->
+
+    <work nested="build/cocoon-@@DATE@@/classes"/>
+    <work nested="build/cocoon-@@DATE@@/deprecated"/>
+    <work nested="build/cocoon-@@DATE@@/test"/>
+    <work nested="build/cocoon-@@DATE@@/mocks"/>
+    <work nested="tools/anttasks"/>
+    <work nested="tools/loader"/>
+
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="cocoon.jar"/>
+    <jar name="cocoon-deprecated.jar"/>
+    <jar name="cocoon-tests.jar"/>
+
+    <javadoc parent="build/cocoon-@@DATE@@/javadocs"/>
+
+    <junitreport nested="build/cocoon-@@DATE@@/test/output"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org">
+      <regexp pattern="/BUILD FAILED/" subject="Build Failure - Cocoon"/>
+    </nag>
+  </project>
+
+  <!--
+    ********************************************
+    ********       COCOON BLOCKS        ********
+    ********************************************
+  -->
+
+  <project name="cocoon-block-fop" status="stable" dir="src/blocks/fop">
+    <package>org.apache.cocoon</package>
+
+    <description><link href='xml.apache.org/fop/'>FOP</link> reads an 
+      <link href='www.w3.org/TR/xsl/'>XSL-FO</link> document and turns it into a PDF, 
+      PS or PCL format document using FOPSerializer. Include libraries and docs. 
+      Include FOP libraries, components and samples.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="fop"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="xml-fop-maintenance"/>
+    <depend project="cocoon-block-batik"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
+    
+    <library name="fop"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/fop-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="fop-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-batik" status="stable" dir="src/blocks/batik">
+    <package>org.apache.cocoon</package>
+
+    <description>Allow rendering <link href='www.w3.org/TR/SVG/'>SVG</link> 
+      images to JPEG and PNG using <link href='xml.apache.org/batik/'>Batik</link> 
+      library. Include SVGSerializer, FragmentExtractorGenerator and 
+      FragmentExtractorTransformer. Includes samples.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="batik"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="xml-batik"/>
+
+    <library name="batik-all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/batik-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="batik-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-chaperon" status="stable" dir="src/blocks/chaperon">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides TextGenerator and the required Chaperon libs 
+      for the creation of XML from a structured plaintext (Grammars).  
+      See also <link href='chaperon.sourceforge.net/'>Chaperon @ SF</link></description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="chaperon"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="chaperon"/>
+    <depend project="castor"/>
+
+    <library name="chaperon"/>
+    <library name="castor"/>
+    
+    <work nested="build/cocoon-@@DATE@@/blocks/chaperon/dest"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/chaperon/test"/>
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/chaperon-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-swf" status="deprecated"  dir="src/blocks/swf">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the SWFGenerator and SWFSerializer for the creation 
+      and manipulation of Flash animations using Cocoon.  Includes the required
+      <link href='www.tivano.de/software/spark/index.shtml'>Spark</link> 
+      library. Deprecated.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="swf"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="spark"/>
+
+    <library name="spark"/>
+    
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/swf-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-jfor" status="stable" dir="src/blocks/jfor">
+    <package>org.apache.cocoon</package>
+
+    <description>Allows you to serialize data as RTF using FO.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="jfor"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jfor"/>
+
+    <library name="jfor"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/jfor-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-itext" status="stable" dir="src/blocks/itext">
+    <package>org.apache.cocoon</package>
+
+    <description>You need <link href='www.lowagie.com/iText/'>iText</link> 
+      if you don't want to use the FOP block to generate PDF.</description>
+    <ant target="gump-block">
+      <property name="block-name" value="itext"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="itext"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
+
+    <library name="itext"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/itext-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-session-fw" status="stable" dir="src/blocks/session-fw">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the components to manage (create, modify, delete) 
+      sessions in xml with the Session Transformer.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="session-fw"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-xsp"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/session-fw-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-authentication-fw" status="stable" dir="src/blocks/authentication-fw">
+    <package>org.apache.cocoon</package>
+
+    <description>Components for the authentication framework. Provides 
+      LoginAction, LogoutAction, ProtectedAction, ConfigurationGenerator. 
+      Include samples.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="authentication-fw"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-session-fw"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/authentication-fw-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-auth" status="unstable" dir="src/blocks/auth">
+    <package>org.apache.cocoon</package>
+
+    <description>Components for the authentication framework</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="auth"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/auth-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-portal-fw" status="deprecated" dir="src/blocks/portal-fw">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the components which compose the framework which allows you 
+      to build a portal with Cocoon.  Deprecated. Use portal block.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="portal-fw"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-session-fw"/>
+    <depend project="cocoon-block-authentication-fw"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/portal-fw-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-databases" status="stable" dir="src/blocks/databases">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides various database-related actions and transformers, ESQL 
+      and other database-related logicsheets, as well as various utility classes.  
+      You probably want this if you desire any sort of database connectivity.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="databases"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="excalibur-datasource"/>
+    <depend project="cocoon-block-xsp"/>
+
+    <library name="excalibur-datasource"/>
+
+    <work nested="tools/anttasks"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/databases/mocks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/databases-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-hsqldb" status="stable" dir="src/blocks/hsqldb">
+    <package>org.apache.cocoon</package>
+
+    <description>Add support for 
+      <link href='hsqldb.sourceforge.net/'>HSQL Database Engine</link>, 
+      a 100% Java Relational Database.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="hsqldb"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-databases"/>
+    <depend project="hsqldb"/>
+
+    <library name="hsqldb"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="hsqldb-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-poi" status="stable" dir="src/blocks/poi">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides a <link href='jakarta.apache.org/poi/hssf'>HSSF</link> 
+      serializer that produce MS Excel spreadsheet format output. The input 
+      format must be the one used by 
+      <link href='www.gnome.org/projects/gnumeric/'>Gnumeric </link>.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="poi"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jakarta-poi"/>
+
+    <library name="poi"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/poi-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="poi-dev@jakarta.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-naming" status="stable" dir="src/blocks/naming">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the LDAPTransformer, for LDAP access.  "Naming" 
+      comes from the N in <link href='java.sun.com/products/jndi/'>JNDI</link>.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="naming"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jndi"/>
+
+    <library name="jndi"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/naming-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-jsp" status="stable" dir="src/blocks/jsp">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the JSPGenerator, JSPReader, utility components. 
+      Include samples.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="jsp"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/jsp/mocks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/jsp-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-php" status="deprecated" dir="src/blocks/php">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the PHPGenerator. This block is considered deprecated. 
+      The servlet that is distributed with PHP never worked correctly.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="php"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <option project="phpservlt"/>
+
+    <work nested="tools/anttasks"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/php/mocks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/php-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-python" status="stable" dir="src/blocks/python">
+    <package>org.apache.cocoon</package>
+
+    <description>Enables to use the Python language in XSP pages</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="python"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-xsp"/>
+    <option project="jython"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/python-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-lucene" status="stable" dir="src/blocks/lucene">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the components needed to add full text search to 
+      your site, including the LuceneIndexTransformer. See also 
+      <link href='jakarta.apache.org/lucene/docs/index.html'>the Lucene website</link></description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="lucene"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jakarta-lucene"/>
+
+    <library name="lucene"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/lucene-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-html" status="stable" dir="src/blocks/html">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the html file generator which extract xhtml sax 
+      events from any html file. It is based on 
+        <link href='sourceforge.net/projects/jtidy'>jtidy</link>.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="html"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jtidy"/>
+    <depend project="nekohtml"/>
+
+    <library name="jtidy"/>
+    <library name="nekohtml"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/html-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-bsf" status="stable" dir="src/blocks/bsf">
+    <package>org.apache.cocoon</package>
+
+    <description> The Bean Scripting Framework (BSF) incorporate scripting into 
+      Cocoon. Using BSF, an application can use scripting, and become scriptable, 
+      against any BSF-supported language. When BSF supports additional languages, 
+      the application will automatically support the additional languages. Provides 
+      ScriptAction and ScriptGenerator. Include the required bsf libraries.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="bsf"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="bsf"/>
+    <depend project="groovy"/>
+    <depend project="asm"/>
+    <depend project="antlr"/>
+
+    <library name="bsf"/>
+    <library name="groovy"/>
+    <library name="asm"/>
+    <library name="asm-util"/>
+    <library name="antlr"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/bsf-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-profiler" status="stable" dir="src/blocks/profiler">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the ProfilerGenerator, which allows you to debug 
+      and profile your pipelines.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="profiler"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-auth"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/profiler-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-velocity" status="stable" dir="src/blocks/velocity">
+    <package>org.apache.cocoon</package>
+
+    <description> This is a generator that uses the velocity template engine 
+      to feed velocity documents into the Cocoon pipeline. See 
+      <link href='jakarta.apache.org/velocity/'>Velocity</link>.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="velocity"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jakarta-velocity"/>
+
+    <library name="velocity"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/velocity-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-linkrewriter" status="stable" dir="src/blocks/linkrewriter">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the LinkRewriterTansformer and the 
+      VariableRewriterTransformer.  These allow you to change links in your pages, 
+      for something as simple as adding a request parameter to every URL, or 
+      something more complicated as changing links to point elsewhere.  See the 
+      samples and the Javadocs for the components for more information.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="linkrewriter"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-xsp"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/linkrewriter-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-web3" status="stable" dir="src/blocks/web3">
+    <package>org.apache.cocoon</package>
+
+    <description>Enables Cocoon to comunicate with SAP R/3(TM). Further 
+      information can be found in the documentation.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="web3"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jta"/>
+    <depend project="concurrent"/>
+
+    <work nested="tools/anttasks"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/web3/mocks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/web3-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-slide" status="unstable" dir="src/blocks/slide">
+    <package>org.apache.cocoon</package>
+
+    <description>Jakarta Slide integration.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="slide"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-repository"/>
+    <depend project="cocoon-block-jms"/>
+    <depend project="jta"/>
+    <depend project="jakarta-slide"/>
+    <depend project="jdom"/>
+    <depend project="commons-transaction"/>
+    <depend project="commons-codec"/>
+
+    <library name="geronimo-spec-jta"/>
+    <library name="slide-kernel"/>
+    <library name="slide-stores"/>
+    <library name="slide-webdavservlet"/>
+    <library name="jdom"/>
+    <library name="commons-transaction"/>
+    <library name="commons-codec"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/slide-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-proxy" status="unstable" dir="src/blocks/proxy">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides some generators which proxy requests to remote 
+      HTTP servers, including the HttpProxyGenerator and the 
+      WebServiceProxyGenerator.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="proxy"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="commons-httpclient"/>
+    <depend project="commons-logging"/>
+    <depend project="jakarta-servletapi"/>
+
+    <library name="commons-httpclient"/>
+    <library name="commons-logging"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/proxy-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-xmldb" status="stable" dir="src/blocks/xmldb">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides infrastructure for connecting to XML Databases 
+      using a number of methods, including the XMLDBGenerator, 
+      XMLDBCollectionGenerator, DbXMLAuthenticatorAction, and the XMLDBTransformer.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="xmldb"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-databases"/>
+    <depend project="xmldb"/>
+    <depend project="ws-xmlrpc"/>
+    <depend project="xml-xindice"/>
+
+    <library name="xmldb-api"/>
+    <library name="xmldb-common"/>
+    <library name="xmldb-xupdate"/>
+    <library name="xmlrpc"/>
+    <library name="xindice"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/xmldb-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-deli" status="unstable" dir="src/blocks/deli">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides deli and rdffilter libs, DeliTransformer, as well as 
+      the custom Deli components that Cocoon needs.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="deli"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="deli"/>
+    <depend project="jena"/>
+    <depend project="icu4j"/>
+    <depend project="jakarta-servletapi"/>
+
+    <library name="deli"/>
+    <library name="jena"/>
+    <library name="icu4j"/>
+    <library name="log4j"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/deli-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-asciiart" status="unstable" dir="src/blocks/asciiart">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides a generator for reading ASCII art files and 
+      rendering them into images.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="asciiart"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="build/cocoon-@@DATE@@/blocks/asciiart/dest"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/asciiart/test"/>
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/asciiart-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-mail" status="unstable" dir="src/blocks/mail">
+    <package>org.apache.cocoon</package>
+
+    <description>Functionality for sending mail using the SendmailAction, 
+      a Sendmail Logicsheet for your XSPs, and an experimental IMAPGenerator.  
+      There is also a WebMail application included in the samples for this block.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="mail"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-asciiart" type="samples"/>
+    <depend project="geronimo-spec-activation"/>
+    <depend project="geronimo-spec-javamail"/>
+    <depend project="javamail"/>
+    <depend project="jaf"/>
+
+    <library name="geronimo-spec-activation"/>
+    <library name="geronimo-spec-javamail"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/mail-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-axis" status="unstable" dir="src/blocks/axis">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the AxisRPCReader, which accepts a SOAP request. 
+      Allows you to serve SOAP requests from your Cocoon application.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="axis"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="ws-axis"/>
+    <depend project="wsdl4j"/>
+    <depend project="commons-discovery"/>
+    <depend project="jakarta-servletapi"/>
+
+    <library name="axis"/>
+    <library name="axis-saaj"/>
+    <library name="axis-jaxrpc"/>
+    <library name="wsdl4j"/>
+    <library name="commons-discovery"/>
+
+    <depend project="cocoon-block-xsp" type="samples"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/axis-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-taglib" status="unstable" dir="src/blocks/taglib">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides taglib capabilities.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="taglib"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/taglib-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-forms" status="stable" dir="src/blocks/forms">
+    <package>org.apache.cocoon</package>
+
+    <description>Cocoon Forms - Cocoon's implementation of form handling.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="forms"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-ajax"/>
+    <depend project="cocoon-block-template" type="samples"/>
+    <depend project="xreporter-expression"/>
+    <depend project="jakarta-oro"/>
+    <depend project="nekohtml"/>
+    <depend project="nekodtd"/>
+    <depend project="daisy-util"/>
+    <depend project="daisy-htmlcleaner"/>
+    <depend project="icu4j"/>
+
+    <library name="xreporter-expression"/>
+    <library name="jakarta-oro"/>
+    <library name="nekohtml"/>
+    <library name="nekodtd"/>
+    <library name="daisy-util"/>
+    <library name="daisy-htmlcleaner"/>
+    <library name="icu4j"/>
+    <library name="jdbi"/>
+
+    <work nested="build/cocoon-@@DATE@@/blocks/forms/test"/>
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/forms-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-woody" status="deprecated" dir="src/blocks/woody">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides a form framework. Include samples. Deprecated - 
+      see forms block.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="woody"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="xreporter-expression"/>
+    <depend project="jakarta-oro"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
+
+    <library name="xreporter-expression"/>
+    <library name="jakarta-oro"/>
+
+    <work nested="build/cocoon-@@DATE@@/blocks/woody/test"/>
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/woody-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>  
+
+  <project name="cocoon-block-qdox" status="unstable" dir="src/blocks/qdox">
+    <package>org.apache.cocoon</package>
+
+    <description>Parse JavaDocs using <link href='qdox.codehaus.org/'>QDox</link>.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="qdox"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="qdox"/>
+
+    <library name="qdox"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/qdox-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+    </project>
+
+  <project name="cocoon-block-portal" status="stable" dir="src/blocks/portal">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides the components for a framework for building 
+      portals within Cocoon.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="portal"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-session-fw"/>
+    <depend project="cocoon-block-auth"/>
+    <depend project="cocoon-block-authentication-fw"/>
+    <depend project="cocoon-block-forms"/>
+    <depend project="cocoon-block-cron"/>
+    <depend project="cocoon-block-ojb"/>
+    <depend project="jtidy"/>
+    <depend project="nekohtml"/>
+    <depend project="castor"/>
+    <depend project="commons-collections"/>
+    <depend project="portals-pluto" inherit="runtime"/>
+    <depend project="portals-bridges-common"/>
+
+    <library name="jtidy"/>
+    <library name="nekohtml"/>
+    <library name="castor"/>
+    <library name="commons-collections"/>
+    <library name="pluto"/>
+    <library name="portlet-api"/>
+    <library name="portals-bridges-common"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/portal-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-petstore" status="unstable" dir="src/blocks/petstore">
+    <package>org.apache.cocoon</package>
+
+    <description>The Cocoon flowscript version of the J2EE PetStore.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="petstore"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-databases"/>
+    <depend project="cocoon-block-hsqldb"/>
+    <depend project="cocoon-block-velocity"/>
+    <depend project="cocoon-block-forms"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/petstore-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-stx" status="unstable" dir="src/blocks/stx">
+    <package>org.apache.cocoon</package>
+
+    <description>Allows you to use <link href='stx.sourceforge.net/'>STX</link> 
+      for transforming your documents.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="stx"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="commons-logging"/>
+    <depend project="joost"/>
+
+    <library name="commons-logging"/>
+    <library name="joost"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/stx-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-linotype" status="unstable" dir="src/blocks/linotype">
+    <package>org.apache.cocoon</package>
+
+    <description>Linotype is a robust weblogging tool written on top of Cocoon. 
+      Check out the samples for more info.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="linotype"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/linotype-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-webdav" status="unstable" dir="src/blocks/webdav">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides interconnectivity for 
+      <link href='www.webdav.org/'>WebDav</link>. Allows you to use WebDav sources 
+      and also provides the DASLTransformer.  Check out the samples for more info.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="webdav"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-repository"/>
+    <depend project="cocoon-block-eventcache"/>
+    <depend project="commons-httpclient"/>
+    <depend project="jakarta-slide"/>
+
+    <library name="commons-httpclient"/>
+    <library name="jakarta-slide-webdavlib"/>
+    <library name="jdom"/>
+
+    <work nested="build/cocoon-@@DATE@@/blocks/webdav/dest"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/webdav/test"/>
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/webdav-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-eventcache" status="unstable" dir="src/blocks/eventcache">
+    <package>org.apache.cocoon</package>
+
+    <description>Event-based cache invalidation, where the events are external 
+      to Cocoon, such as a database update.  See the samples for more info.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="eventcache"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+    
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-jms"/>
+    <depend project="jms"/>
+    
+    <work nested="build/cocoon-@@DATE@@/blocks/eventcache/dest"/>
+    <work nested="build/cocoon-@@DATE@@/blocks/eventcache/test"/>
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/eventcache-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-apples" status="unstable" dir="src/blocks/apples">
+    <package>org.apache.cocoon</package>
+
+    <description>Apples is a new flow implementation for Cocoon that allows 
+      you to write your deciding flow components (business logic) in pure OO Java.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="apples"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-forms" type="samples"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/apples-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-querybean" status="unstable" dir="src/blocks/querybean">
+    <package>org.apache.cocoon</package>
+
+    <description>Allows more complex queries to be built up and run 
+      against a lucene full text database.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="querybean"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-forms" type="samples"/>
+    <depend project="cocoon-block-lucene"/>
+    <depend project="cocoon-block-ojb"/>
+    <depend project="jakarta-lucene"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/querybean-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-slop" status="unstable" dir="src/blocks/slop">
+    <package>org.apache.cocoon</package>
+
+    <description>Simple Line Oriented Parser. Allows you to parse text files 
+      using the SlopGenerator.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="slop"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/slop-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-midi" status="stable" dir="src/blocks/midi">
+    <package>org.apache.cocoon</package>
+
+    <description>The MIDI block provides components to generate XMidi (an XML 
+      representation of MIDI) from a MIDI file, and to serialize XMidi back 
+      to a MIDI file. There are also simple stylesheets for transposition 
+      and inversion.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="midi"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/midi-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-cron" status="unstable" dir="src/blocks/cron">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides a cron scheduler. Helps to run some task at 
+      defined intervals of time. Eg: every day at 4:00 a.m. run 
+      maintenance of the database</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="cron"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="quartz"/>
+    <depend project="excalibur-datasource"/>
+
+    <library name="quartz"/>
+    <library name="excalibur-datasource"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/cron-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-ojb" status="stable" dir="src/blocks/ojb">
+    <package>org.apache.cocoon</package>
+
+    <description>Provides components to use 
+      <link href='db.apache.org/ojb/'>Apache OJB</link>.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="ojb"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-databases" type="samples"/>
+    <depend project="cocoon-block-forms" type="samples"/>
+    <depend project="cocoon-block-hsqldb" type="samples"/>
+    <depend project="cocoon-block-xsp" type="samples"/>
+    <depend project="db-ojb"/>
+    <depend project="jdo"/>
+    <depend project="antlr"/>
+    <depend project="commons-dbcp"/>
+    <depend project="commons-pool"/>
+
+    <library name="db-ojb"/>
+    <library name="antlr"/>
+    <library name="commons-dbcp"/>
+    <library name="commons-pool"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/ojb-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-jms" status="unstable" dir="src/blocks/jms">
+    <package>org.apache.cocoon</package>
+
+    <description>Support for JMS within Cocoon</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="jms"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <!-- commented out because of circular dependency -->
+    <!--depend project="cocoon-block-eventcache" type="samples"/-->
+    <depend project="cocoon-block-databases" type="samples"/>
+    <depend project="cocoon-block-hsqldb"/>
+    <depend project="cocoon-block-cron"/>
+    <depend project="gump.resource.geronimo-spec-jms"/>
+
+    <library name="geronimo-spec-jms"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/jms-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-repository" status="unstable" dir="src/blocks/repository">
+    <package>org.apache.cocoon</package>
+
+   <description>Provides interfaces to document repositories.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="repository"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    
+    <depend project="cocoon-block-databases" />
+    <depend project="cocoon-block-eventcache" />
+    
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/repository-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-paranoid" status="stable" dir="src/blocks/paranoid">
+    <package>org.apache.cocoon</package>
+
+   <description>Provides the ParanoidCocoonServlet which uses a ParanoidClassLoader.
+     This can get around complex classloading issues, e.g. when the servlet 
+     container needs an older version of a library, and the Cocoon application 
+     requires a newer incompatible version.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="paranoid"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jakarta-servletapi"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/paranoid-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-xsp" status="stable" dir="src/blocks/xsp">
+    <package>org.apache.cocoon</package>
+
+    <description>The XSP language allows the creation of content in a 
+      combination of Java and XML. Its use is no longer recommended.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="xsp"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="concurrent"/>
+    
+    <library name="pizza"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/xsp-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-javaflow" status="unstable" dir="src/blocks/javaflow">
+    <package>org.apache.cocoon</package>
+
+    <description>A Java implementation of the Javascript flow script engine.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="javaflow"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-forms" />
+    <depend project="cocoon-block-ojb" />
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/javaflow-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-serializers" status="unstable" dir="src/blocks/serializers">
+    <package>org.apache.cocoon</package>
+
+    <description>Alternative implementation of text, XML, HTML and XHTML 
+      serializers that do not use Xalan.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="serializers"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-serializers-charsets"/>
+
+    <library name="cocoon-serializers-charsets"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/serializers-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-tour" status="unstable" dir="src/blocks/tour">
+    <package>org.apache.cocoon</package>
+
+    <description>A guided tour of Cocoon, showing off many of its features.</description>
+
+    <ant target="tour-block">
+      <property name="block-name" value="tour"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-batik"/>
+    <depend project="cocoon-block-fop"/>
+    <depend project="cocoon-block-forms"/>
+    <depend project="cocoon-block-slop"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/tour-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-faces" status="unstable" dir="src/blocks/faces">
+    <package>org.apache.cocoon</package>
+
+    <description>An implementation of Java Server Faces (JSF) using 
+      MyFaces within Cocoon.</description>
+
+    <ant target="faces-block">
+      <property name="block-name" value="faces"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-taglib"/>
+    <depend project="cocoon-block-portal"/>
+    <depend project="commons-digester"/>
+    <depend project="commons-el"/>
+    <depend project="jakarta-servletapi-5"/>
+    <depend project="myfaces"/>
+
+    <library name="commons-digester"/>
+    <library name="commons-el"/>
+    <library name="jsp-api"/>
+    <library name="myfaces"/>
+    <library name="myfaces-jsf-api"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/faces-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-jcr" status="unstable" dir="src/blocks/jcr" exclude="true">
+    <package>org.apache.cocoon</package>
+
+    <description>A "jcr:" protocol for Cocoon</description>
+
+    <ant target="jcr-block">
+      <property name="block-name" value="jcr"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jcr"/>
+
+    <library name="jackrabbit"/>
+    <library name="lucene"/>
+    <library name="jcr"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/jcr-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-xsltal" status="unstable" dir="src/blocks/xsltal">
+    <package>org.apache.cocoon</package>
+
+    <description>Process documents with XSLTAL templates</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="xsltal"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="xsltal"/>
+
+    <library name="xsltal"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/xsltal-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-validation" status="unstable" dir="src/blocks/validation">
+    <package>org.apache.cocoon</package>
+    
+    <description>In-pipeline validation of documents</description>
+    
+    <ant target="gump-block">
+      <property name="block-name" value="validation"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+    
+    <depend project="cocoon" inherit="all"/>
+    <depend project="jing"/>
+    
+    <library name="jing"/>
+    
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+    
+    <jar name="blocks/validation-block.jar"/>
+    
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-captcha" status="unstable" dir="src/blocks/captcha">
+    <package>org.apache.cocoon</package>
+    
+    <description>Utilites to generate simple CAPTCHAs</description>
+    
+    <ant target="gump-block">
+      <property name="block-name" value="validation"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+    
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-template" type="samples"/>
+    
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+    
+    <jar name="blocks/captcha-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+  
+  <project name="cocoon-block-ajax" status="unstable" dir="src/blocks/ajax">
+    <package>org.apache.cocoon</package>
+
+    <description>Ajax - Utilities and resources for Ajax applications.</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="ajax"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-template" type="samples"/>
+    <depend project="dojo-rsrc"/>
+
+    <library name="dojo-rsrc"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/ajax-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-imageop" status="unstable" dir="src/blocks/imageop">
+    <package>org.apache.cocoon</package>
+
+    <description>ImageOp - Image Operation Reader</description>
+
+    <ant target="gump-block">
+      <property name="block-name" value="imageop"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/imageop-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-template" status="unstable" dir="src/blocks/template">
+    <package>org.apache.cocoon</package>
+    
+    <description>Template block from Cocoon 2.2 (new JXTemplate implementation)</description>
+    
+    <ant target="gump-block">
+      <property name="block-name" value="validation"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+    
+    <depend project="cocoon" inherit="all"/>
+    
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+    
+    <jar name="blocks/template-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <!--
+    ********************************************
+    ********  COCOON SUPPLIED PROJECTS  ********
+    ********************************************
+  -->
+
+  <project name="pizza">
+    <url href="http://pizzacompiler.sourceforge.net/"/>
+    <package>net.sf.pizzacompiler</package>
+    <description>
+      Java Compiler
+    </description>
+    <home nested="lib/optional"/>
+    <jar name="pizza-1.1.jar"/>
+  </project>
+
+  <project name="deli">
+    <url href="http://sourceforge.net/projects/delicon/"/>
+    <package>com.hp.hpl.deli</package>
+    <description>
+      Delivery context library
+    </description>
+    <home nested="lib/optional"/>
+    <jar name="deli-x050330.jar"/>
+  </project>
+
+  <project name="jing">
+    <package>com.thaiopensource</package>
+    <url href="http://www.thaiopensource.com/relaxng/jing.html"/>
+    <description>
+      Jing performs XML Validation using RelaxNG schemas
+    </description>
+    <home nested="tools/lib"/>
+    <jar name="jing-20030619.jar"/>
+  </project>
+
+  <project name="chaperon">
+    <url href="http://chaperon.sourceforge.net/"/>
+    <description>
+      Chaperon is a project that helps to convert structured text to XML
+    </description>
+    <home nested="src/blocks/chaperon/lib"/>
+    <jar name="chaperon-20040205.jar"/>
+  </project>
+
+  <project name="itext">
+    <url href="http://www.lowagie.com/iText/"/>
+    <description>
+      iText is a library that allows you to generate PDF files on the fly
+    </description>
+    <home nested="src/blocks/itext/lib"/>
+    <jar name="itext-1.1.jar"/>
+  </project>
+
+  <project name="eclipse-jtd">
+    <url href="http://www.eclipse.org/"/>
+    <description>
+      Java Development Tools from the Eclipse IDE Project
+    </description>
+    <home nested="lib/core"/>
+    <jar name="jdtcore-3.0.2.jar"/>
+  </project>
+
+  <project name="spark">
+    <url href="http://www.tivano.de/software/spark/index.shtml"/>
+    <description>
+      Spark is a library for converting XML to Flash (swf)
+    </description>
+    <jar name="lib/optional/spark-0.2.jar"/>
+  </project>
+
+  <project name="xreporter-expression">
+    <url href="http://xreporter.cocoondev.org"/>
+    <description>
+      An expression language interpreter.
+    </description>
+    <home nested="lib/optional"/>
+    <jar name="xreporter-expression-20040701.jar"/>
+  </project>
+
+  <project name="qdox">
+    <url href="http://qdox.codehaus.org/"/>
+    <description>
+      Small footprint parser for extracting class/interface/method
+      definitions from java source files.
+    </description>
+    <home nested="src/blocks/qdox/lib"/>
+    <jar name="qdox-1.5.jar"/>
+  </project>
+
+  <project name="joost">
+    <url href="http://joost.sourceforge.net"/>
+    <description>
+      Streaming Transformation for XML (STX) library
+    </description>
+    <home nested="src/blocks/stx/lib"/>
+    <jar name="joost-20040330.jar"/>
+  </project>
+
+  <project name="cocoon-javac">
+    <package>org.tempuri.javac</package>
+    <jar name="lib/core/javacApi-0.9.jar" id="api"/>
+  </project>
+
+  <project name="cocoon-javacImpl">
+    <package>org.tempuri.javacImpl</package>
+    <jar name="lib/core/javacImpl-0.9.jar" id="impl"/>
+  </project>
+
+  <project name="ehcache">
+    <url href="http://ehcache.sourceforge.net"/>
+    <description>
+      A simple, fast and thread safe cache for Java
+    </description>
+    <jar name="lib/optional/ehcache-1.1.jar"/>
+  </project>
+
+  <project name="asm">
+    <jar name="lib/optional/asm-1.5.2.jar"/>
+    <jar name="lib/optional/asm-util-1.5.2.jar"/>
+  </project>
+
+  <project name="apache-garbage">
+    <jar name="lib/optional/apache-garbage-0.0.jar"/>
+  </project>
+
+  <project name="cocoon-serializers-charsets">
+    <jar name="lib/optional/cocoon-serializers-charsets-0.2.jar"/>
+  </project>
+
+  <project name="nekodtd">
+    <package>org.cyberneko.dtd</package>
+    <jar name="lib/optional/nekodtd-0.1.11.jar"/>
+  </project>  
+
+  <project name="daisy-htmlcleaner">
+    <package>org.outerj.daisy.htmlcleaner</package>
+    <jar name="lib/optional/daisy-htmlcleaner-1.4.1.jar"/>
+  </project>  
+  
+  <project name="daisy-util">
+    <package>org.outerj.daisy.xmlutil</package>
+    <jar name="lib/optional/daisy-util-1.4.1.jar"/>
+  </project>     
+
+  <project name="jcr">
+    <package>javax.jcr</package>
+    <jar name="lib/optional/jcr-0.16.4.jar"/>
+  </project>
+
+  <project name="jackrabbit">
+    <url href="http://incubator.apache.org/jackrabbit"/>
+    <package>org.apache.jackrabbit</package>
+    <jar name="lib/optional/jackrabbit-core-1.0.1.jar"/>
+  </project>
+
+  <project name="wsrp4j">
+    <url href="http://ws.apache.org/wsrp4j/"/>
+    <package>org.apache.wsrp4j</package>
+    <jar name="lib/optional/wsrp4j-shared-0.3-dev.jar"/>
+    <jar name="lib/optional/wsrp4j-consumer-0.3-dev.jar"/>
+  </project>
+
+  <project name="jdbi">
+     <url href="http://jdbi.codehaus.org/"/>
+     <description>
+       Provides convenient access to relational databases using Lists and Maps.
+     </description>
+    <package>org.skife.jdbi</package>
+    <jar name="lib/optional/jdbi-1.3.1.jar"/>
+  </project>
+
+</module>

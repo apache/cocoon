@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<document> 
+  <header> 
+	 <title>The Cocoon Portal</title>
+	 <version>0.1</version> 
+	 <type>Overview document</type> 
+  </header> 
+  <body> 
+	 <section title="The Apache Cocoon Portal"> 
+		<p>This is a demo of the Cocoon Portal Engine.</p>
+        <p>The Cocoon portal page you currently view displays some so called
+          <em>Coplets</em> (= Cocoon Portlets). Each coplet displays
+          a different content.</p> 
+        <p>The different tabs display/demonstrate different aspects of the portal.</p>
+        <ul>
+          <li>The TabDemo1 shows a tab inside a tab, which is useful for structuring content.</li>
+          <li>The TabDemo2 shows the same content as TabDemo2 but with just a different stylesheet for the tab.</li>
+          <li>The Gallery tab shows some more coplets.</li>
+          <li>The JSR-168 tab demonstrates the integration of Portlets (read more below).</li>
+        </ul>
+        <p><strong>THIS IS A SAMPLE PORTAL!</strong></p>
+        <p>It demonstrates several features of 
+          the portal engine, so it's not optimized for production. Make sure 
+          that if you use the portal for your own projects that you
+          remove all unused stuff from the configuration! Every configured
+          feature might have an impact on the performance.
+        </p>
+        <p>For more information <fork href="http://cocoon.apache.org">visit the Cocoon Homepage</fork>.</p>
+     </section> 
+     <section title="The JSR 168">
+        <p>The Cocoon portal supports portlets conforming to the JSR 168. The JSR 168 tab contains 
+           a sample using the testsuite from the <fork href="http://portals.apache.org/pluto">Pluto project</fork>.</p>
+        <p>These samples only work if you follow these installation instructions:</p>
+        <ul>
+         <li>Get the Pluto project and install it into Tomcat (Test Pluto now).</li>
+         <li>Install Cocoon as a web application in Tomcat and remove the Pluto webapp. Please note,
+             that it is currently not possible to start Cocoon directly from a war file; it has 
+             to be expanded.</li>
+         <li>Remove the pluto-*.jar and the portlet-api-*.jar from the Cocoon WEB-INF/lib directory.</li>
+         <li>Start Tomcat and run the Cocoon portal demo. You should now see two portlets.</li>
+        </ul>
+        <p>The current implementation searches for portlets in all directories that are next to
+         the Cocoon webapp directory. So, if you put Cocoon into the webapps directory of Tomcat,
+         you should put your portlets there as well.</p>
+     </section>
+  </body>
+</document>

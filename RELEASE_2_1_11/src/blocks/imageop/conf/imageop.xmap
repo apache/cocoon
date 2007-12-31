@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<xmap xpath="/sitemap/components/readers" unless="reader[@name='image-op-scale']">
+  
+    <map:reader logger="imageop" name="image-op-scale" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="scale" prefix="scale-" />
+      </effects>
+    </map:reader>
+
+    <map:reader logger="imageop" name="image-op-resize" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="resize" prefix="size-" />
+      </effects>
+    </map:reader>
+
+    <map:reader logger="imageop" name="image-op-rotate" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="rotate" prefix="rotate-" />
+      </effects>
+    </map:reader>
+
+    <map:reader logger="imageop" name="image-op-mirror" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="mirror" prefix="mirror-" />
+      </effects>
+    </map:reader>
+
+    <map:reader logger="imageop" name="image-op-offset" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="offset" prefix="offset-" />
+      </effects>
+    </map:reader>
+
+    <map:reader logger="imageop" name="image-op-affine" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="affine" prefix="affine-" />
+      </effects>
+    </map:reader>
+
+    <map:reader logger="imageop" name="image-op-grayscale" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="grayscale" prefix="grayscale-" />
+      </effects>
+    </map:reader>
+
+    <map:reader logger="imageop" name="image-op-color" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="color" prefix="color-" />
+      </effects>
+    </map:reader>
+
+    <map:reader logger="imageop" name="image-op-complex" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="mirror" prefix="mirror-" />
+        <op type="rotate" prefix="rotate-" />
+        <op type="offset" prefix="offset-" />
+        <op type="shear" prefix="shear-" />
+        <op type="resize" prefix="resize-" />
+      </effects>
+    </map:reader>
+    
+    <map:reader logger="imageop" name="image-op-convolve" src="org.apache.cocoon.reading.imageop.ImageOpReader" >
+      <effects>
+        <op type="convolve" prefix="convolve-" />
+      </effects>
+    </map:reader>
+</xmap>

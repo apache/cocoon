@@ -1,0 +1,74 @@
+/*
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements.  See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License.  You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+body {
+	background: white fixed no-repeat left top; 
+	color: black; 
+	font-family: sans-serif; 
+	margin: 2em 1em 2em 1em;
+}
+
+h1 {
+	text-align: left;
+	color: #005a9c;
+	font: 170% sans-serif;
+}
+
+h2 {
+	text-align: left;
+	color: #005a9c;
+	font: 140% sans-serif;
+}
+
+h3 {
+	text-align: left;
+	color: #005a9c;
+	font: 120% sans-serif;
+}
+
+h4 {
+	text-align: left;
+	color: #005a9c;
+	font: bold 100% sans-serif;
+}
+
+#main-panel {}
+#side-bar {}
+#content-panel {}
+
+#s1
+#s2
+#s3
+#s4
+
+p {
+        padding: 10px 10px 10px 10px;
+        margin: 10px 20px 10px 20px;
+        text-align: justify;
+}
+
+p.note {
+        font-style: italic;
+}
+
+p.source {
+	font-family: monospace;
+}
+
+a:link { color: #005a9c }
+a:visited { color: #a00000 }
+a:active { color: #00a000 }
+a:hover { background: #ffa }

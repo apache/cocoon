@@ -1,0 +1,23 @@
+# directory structure of the addressbook, with 2 sample departments
+
+dn: dc=ldap, dc=cocoongt, dc=org
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+dc: cocoongt
+o: Cocoon GetTogether LDAP
+
+dn: ou=addressbook, dc=ldap, dc=cocoongt, dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: addressbook
+
+dn: ou=muppets, ou=addressbook, dc=ldap, dc=cocoongt, dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: muppets
+
+dn: ou=directors, ou=addressbook, dc=ldap, dc=cocoongt, dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: directors

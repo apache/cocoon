@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ -->
+<project name="compile">
+
+  <description>
+    Compilation Targets
+  </description>
+
+  <!-- compilation parts used by all targets -->
+  <presetdef name="cocoon.javac">
+    <javac 
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           source="${source.vm}"
+           nowarn="${compiler.nowarn}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
+   </presetdef>
+
+   <macrodef name="cocoon.compile">
+   <attribute name="destdir"/>
+   <attribute name="srcdir"/>
+   <attribute name="classpathref" default="classpath"/> 
+   <sequential>
+    <mkdir dir="@{destdir}"/>
+    <!-- copy those files that need to be in the classpath -->
+      <copy todir="@{destdir}">
+        <fileset dir="@{srcdir}">
+          <exclude name="**/*.java"/>
+        </fileset>
+      </copy>
+      <cocoon.javac srcdir="@{srcdir}"
+                    destdir="@{destdir}"/>
+      </sequential>
+    </macrodef>
+
+  <!-- compiles everything -->
+  <target name="compile"
+          depends="compile-core, compile-deprecated, compile-tests"/>
+
+  <!-- compiles mocks -->
+  <target name="compile-mocks" depends="prepare">
+    <cocoon.compile srcdir="${mocks}"
+                           destdir="${build.mocks}"/>
+  </target>
+
+  <!-- compiles the core -->
+  <target name="compile-core" depends="compile-mocks, clover.on">
+    <cocoon.compile srcdir="${java}"
+                    destdir="${build.dest}"/>
+    <echo>Compiling jdk ${used.vm} core classes</echo>
+    <cocoon.compile srcdir="${jdk.java}"
+                    destdir="${build.dest}"/>
+  </target>
+
+  <!-- compiles deprecated code -->
+  <target name="compile-deprecated" depends="prepare, clover.off"
+          unless="internal.exclude.deprecated">
+    <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles"
+            srcdir="${deprecated.conf}"
+            includes="**/*.xroles"/>
+    <cocoon.compile srcdir="${deprecated.src}"
+                          destdir="${build.deprecated}"/>
+  </target>
+
+  <!-- compiles tests classes -->
+  <target name="compile-tests"
+          depends="compile-junit-tests, compile-htmlunit-tests"/>
+
+  <target name="compile-tests-prepare"
+          depends="compile-core, compile-deprecated, clover.off">
+    <mkdir dir="${build.test}"/>
+
+    <!-- Copy test files to build test dir -->
+    <copy todir="${build.test}" filtering="on">
+      <fileset dir="${test}" excludes="**/*.java"/>
+    </copy>
+  </target>
+
+  <target name="compile-junit-tests" depends="compile-tests-prepare">
+
+    <!-- Compile JUnit tests, using Cocoon libraries -->
+
+    <path id="test.classpath">
+      <path refid="classpath"/>
+      <pathelement location="${build.dest}" />
+       <!-- FIXME Resolver tests depend on deprecated stuff -->
+      <pathelement location="${build.deprecated}" />
+      <pathelement location="${build.test}" />
+      <fileset dir="${tools.lib}">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+
+    <javac srcdir="${test}"
+           destdir="${build.test}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           source="${source.vm}"
+           compiler="${compiler}"
+           classpathref="test.classpath">
+      <exclude name="htmlunit/**"/>
+    </javac>
+  </target>
+
+  <target name="compile-htmlunit-tests" if="htmlunit.present"
+          depends="compile-tests-prepare">
+
+    <!-- Compile JUnit tests using htmlUnit (requires running server) -->
+
+    <path id="htmlunit.classpath">
+      <pathelement location="${build.test.htmlunit}" />
+      <fileset dir="${htmlunit.home}/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${tools.lib}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib}">
+        <include name="core/avalon-framework-*.jar"/>
+      </fileset>
+    </path>
+
+    <javac srcdir="${test}/htmlunit/org/apache"
+           destdir="${build.test.htmlunit}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           source="${source.vm}"
+           compiler="${compiler}"
+           classpathref="htmlunit.classpath"/>
+  </target>
+
+<!-- === Package Targets ================================================= -->
+
+   <macrodef name="cocoon.jar">
+   <attribute name="name"/>
+   <attribute name="dir"/>
+   <attribute name="index" default="false"/>
+   <attribute name="update" default="yes"/>   
+   <sequential>
+        <jar jarfile="${build}/@{name}.jar" update="@{update}" index="@{index}">
+          <fileset dir="@{dir}">
+            <include name="**/*.java"/>
+          </fileset>
+        </jar>
+      </sequential>
+    </macrodef>
+   
+   <!-- optionally add source files to the core jar -->
+   <macrodef name="cocoon.package-sources">
+   <attribute name="name"/>
+   <attribute name="dir"/>
+   <sequential>
+       <!-- optionally add source files to the core jar -->
+        <if>
+          <istrue value="${include.sources-in-jars}"/>
+          <then>
+            <cocoon.jar name="@{name}"
+                        dir="@{dir}"/>
+          </then>
+        </if>
+        <if>
+          <istrue value="${include.sources-jars}"/>
+          <then>
+            <cocoon.jar name="@{name}.src"
+                        dir="@{dir}"/>
+          </then>
+        </if>
+      </sequential>
+    </macrodef>
+    
+  <!-- packages everything -->
+  <target name="package"
+          depends="package-core, package-deprecated, package-testcase"/>
+
+  <!-- package the core -->
+  <target name="package-core" depends="compile-core, block-roles">
+    <jar jarfile="${build}/${name}.jar" manifest="${java}/Manifest.mf" index="true">
+      <fileset dir="${build.dest}">
+         <exclude name="**/Manifest.mf"/>
+      </fileset>
+    </jar>
+
+    <cocoon.package-sources name="${name}"
+                            dir="${java}"/>
+ 
+  </target>
+
+  <!-- package deprecated code -->
+  <target name="package-deprecated" depends="compile-deprecated"
+      unless="internal.exclude.deprecated">
+    <jar jarfile="${build}/${name}-deprecated.jar" index="true">
+      <fileset dir="${build.deprecated}"/>
+    </jar>
+    
+    <cocoon.package-sources name="${name}-deprecated"
+                            dir="${deprecated.src}"/>
+  </target>
+
+  <!-- package testcase code -->
+  <target name="package-testcase" depends="compile-tests">
+    <jar jarfile="${build}/${name}-testcase.jar" index="true">
+      <fileset dir="${build.test}">
+        <exclude name="anteater/**"/>
+        <exclude name="htmlunit/**"/>
+      </fileset>
+    </jar>
+ 
+    <cocoon.package-sources name="${name}-testcase"
+                            dir="${test}"/>
+  </target>
+
+<!-- === Block Targets =================================================== -->
+
+  <!-- prepares the blocks build -->
+  <target name="prepare-blocks" depends="prepare">
+    <mkdir dir="${build.blocks}"/>
+
+    <copy file="${gump.descriptor}" tofile="${build.temp}/gump.xml" overwrite="true"/>
+    <xpatch file="${build.temp}/gump.xml" srcdir=".">
+       <include name="local.blocks.*.xconf"/>
+    </xpatch>
+    <xslt in="${build.temp}/gump.xml"
+          out="${build.temp}/blocks-build.xml"
+          style="${tools.src}/blocks-build.xsl"/>
+  </target>
+
+  <!-- patch the cocoon role file -->
+  <target name="block-roles" depends="prepare-blocks">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="roles"/>
+  </target>
+
+  <!-- compiles and packages all blocks -->
+  <target name="blocks" depends="compile,prepare-blocks">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="compile"/>
+  </target>
+
+  <target name="call-block-target" depends="prepare">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="cocoon-block-${block.name}-${target.name}" />
+  </target>
+</project>

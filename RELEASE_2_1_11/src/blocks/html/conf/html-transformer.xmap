@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xmap xmlns:map="http://apache.org/cocoon/sitemap/1.0"
+      xpath="/sitemap/components/transformers"
+      unless="transformers[@name='html']">
+
+    <map:transformer
+      name="html"
+      logger="sitemap.transformer.html"
+      src="org.apache.cocoon.transformation.HTMLTransformer">
+      <!-- Tidy configuration file.
+      <jtidy-config>context://WEB-INF/tidy.properties</jtidy-config>
+      -->
+    </map:transformer>
+    <map:transformer
+      name="nekohtml"
+      logger="sitemap.transformer.html"
+      src="org.apache.cocoon.transformation.NekoHTMLTransformer">
+      <!-- NekoHTML configuration file.
+      <neko-config>context://WEB-INF/neko.properties</neko-config>
+      -->
+    </map:transformer>
+
+    <map:transformer
+        name="htmlcleanup"
+        logger="sitemap.transformer.html"
+        src="org.apache.cocoon.transformation.CleanupTransformer">
+      <preserve-uri>*</preserve-uri>
+    </map:transformer>
+
+    <map:transformer
+        name="xhtmlcleanup"
+        logger="sitemap.transformer.html"
+        src="org.apache.cocoon.transformation.CleanupTransformer">
+      <inline-elements>a,abbr,acronym,b,br,font,i,u,img</inline-elements>
+      <preserve-uri>http://www.w3.org/1999/xhtml</preserve-uri>
+    </map:transformer>
+</xmap>

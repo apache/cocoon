@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--+
+    | Menu definition.
+    |
+    | SVN $Id$
+    +-->
+<book software="Apache Cocoon"
+      title="Apache Cocoon Input Modules Samples"
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="Overview">
+    <menu-item label="Index" href="index.html"/>
+    <menu-item label="Sitemap" href="sitemap.xmap"/>
+  </menu>
+
+  <menu label="Modules">
+    <menu-item label="BaseLinkModule" href="baselink.html" desc="BaseLink properties"/>
+    <menu-item label="ChainMetaModule" href="chain.html" desc="Chained values"/>
+    <menu-item label="CookieModule" href="cookie.html" desc="Cookie values"/>
+    <menu-item label="DateInputModule" href="date.html" desc="Date"/>
+    <menu-item label="DefaultsModule" href="defaults.html" desc="Default (static) values"/>
+    <menu-item label="GlobalInputModule" href="global.html" desc="Access to the global variables defined in the sitemap."/>
+    <menu-item label="NamingInputModule" href="naming.html" desc="JNDI Resources. This sample does not work with built-in Jetty as it does not provide JNDI."/>
+    <menu-item label="PropertiesFileModule" href="properties.html" desc="Properties file values"/>
+    <menu-item label="RandomNumberModule" href="randomnumber.html" desc="Random number"/>
+    <menu-item label="RealPathModule" href="realpath.html" desc="Real filesystem paths of context paths"/>
+    <menu-item label="RequestModule" href="request.html" desc="Request object properties"/>
+    <menu-item label="RequestParameterModule" href="requestparam.html" desc="Request parameters"/>
+    <menu-item label="SessionModule" href="session.html" desc="Session object properties"/>
+    <menu-item label="SessionAttributeModule" href="session-attr.html" desc="Session attributes"/>
+    <menu-item label="SystemPropertyModule" href="system-property.html" desc="System properties (environment variables)"/>
+    <menu-item label="URLEncodeModule" href="url-encode.html" desc="URLEncode passed parameter"/>
+    <menu-item label="URLDecodeModule" href="url-decode.html" desc="URLDecode passed parameter"/>
+    <menu-item label="XMLFileModule" href="xml.html" desc="XML node values"/>
+    <menu-item label="XPathXMLFileModule" href="xxml.html?dir=a" desc="XML node values"/>
+  </menu>
+
+  <menu label="Documentation">
+    <external label="Input Modules Docs" href="http://cocoon.apache.org/2.1/userdocs/concepts/modules.html"/>
+    <external label="API Docs" href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/components/modules/input/package-summary.html"/>
+  </menu>
+</book>

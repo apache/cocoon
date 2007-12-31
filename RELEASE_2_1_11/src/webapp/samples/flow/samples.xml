@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id$ -->
+
+<samples name="Other Cocoon Flow Samples">
+
+  <group name="Back">
+   <sample name="Back" href="../">to Cocoon Samples main page</sample>
+   <note>
+     Since the Cocoon Control Flow is a core technology you find more examples
+     that make use of it e.g. Cocoon Forms block, Petstore block, and
+     Supersonic Tour block.
+   </note>      
+  </group>
+
+  <group name="Cocoon Control Flow">
+    <sample name="Calculator" href="jxcalc/">
+    A simple web-based calculator that uses javascript on the server side
+    to describe the web application flow between screens in a coherent 
+    unique location and continuations to maintain state between requests.
+    </sample>
+   <sample name="User Preferences" href="prefs/">
+    A common portion of an application which requires users to be
+	registered. This example shows how to use java objects from the 
+	javascript flow as it is best practice to put business logic into
+	strongly-typed java objects and use javascript to describe only the
+	page flow.
+   </sample>
+  </group>
+  
+</samples>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id$ -->
+
+<page>
+    <title>reader-mime-type test</title>
+    <content>
+        <para>Test harness for
+            <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=25121">
+                bugzilla 25121
+            </a>, test mime-types on map:reader.
+        </para>
+        <para>
+            Test links:
+            <ul>
+                <li><link href="test10.xml">test10.xml</link></li>
+                <li><link href="test20.x20">test20.x20</link></li>
+                <li><link href="test30.x30">test30.x30</link></li>
+                <li><link href="test40.x40">test40.x40</link></li>
+                <li><link href="test50.x50">test50.x50</link></li>
+                <li><link href="test60.x60">test60.x60</link></li>
+                <li><link href="test70.x70">test70.x70</link></li>
+            </ul>
+        </para>
+        <para>
+            test10 and test50 don't have any Content-type header defined that the
+            browser will invent one, most likely text/html.
+        </para>
+        <para>
+            The other tests should all have Content-type text/xml.
+        </para>
+    </content>
+</page>

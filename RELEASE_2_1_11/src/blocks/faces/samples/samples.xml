@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id: samples.xml 30938 2004-07-29 19:08:16Z vgritsenko $ -->
+
+<samples name="Faces Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
+
+  <group name="About">
+    <note>
+      Faces block should be considered experimental. Please see Cocoon Forms
+      block for supported forms processing framework.
+    </note>
+    <note>
+      Faces block comes with <a href="http://myfaces.apache.org/">MyFaces</a>
+      JSF implementation. Cocoon Faces block can also be run with Sun (JSF 1.1_01)
+      and IBM implementations (WSAD 5.1.2, requires patching).
+    </note>
+  </group>
+
+  <group name="JavaServer Faces">
+    <sample name="Hello" href="hello">
+      Simple two-page JSF application
+    </sample>
+    <note>
+      License for CarStore JSF demo warns: Don't use in nuclear facility.
+    </note>
+    <sample name="CarStore" href="cardemo/">
+      CarStore demo JSF application
+    </sample>
+  </group>
+
+  <group name="Resources">
+    <sample name="JSF Documentation" href="http://java.sun.com/j2ee/javaserverfaces/reference/api/index.html">
+      JavaServer Faces (JSF) Documentation
+    </sample>
+    <sample name="JSR 127" href="http://www.jcp.org/en/jsr/detail?id=127">
+      JSR 127: JavaServer Faces
+    </sample>
+  </group>
+</samples>

@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<testcase>
+ <roles>
+  <role name="org.apache.excalibur.source.SourceFactorySelector"
+        shorthand="source-factories"
+        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
+
+  <role name="org.apache.excalibur.source.SourceResolver"
+        shorthand="source-resolver"
+        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
+
+  <role name="org.apache.cocoon.selection.SelectorSelector"
+        shorthand="selectors"
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+ </roles>
+
+ <components>
+  <source-factories>
+   <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
+   <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
+  </source-factories>
+
+  <source-resolver class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
+
+  <selectors logger="test">
+   <component-instance class="org.apache.cocoon.selection.HostSelector" 
+                       name="host">
+      <host name="myhost-eu" value="myhost-dns-name-in-a-europe-country"/>
+      <host name="myhost-us" value="myhost-dns-name-in-a-us-state"/>
+    </component-instance>
+  </selectors>
+ </components>
+
+</testcase>

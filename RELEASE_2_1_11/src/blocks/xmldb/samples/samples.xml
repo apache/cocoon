@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | XMLDB Samples
+    |
+    | CVS $Id$
+    +-->
+
+<samples name="XMLDB Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
+
+  <group name="Init Database">
+    <note>
+      Init database first before checking out other samples!
+    </note>
+    <sample name="Init" href="populate">
+      Populate sample XMLDB Database
+    </sample>
+  </group>
+
+  <group name="XMLDB Samples">
+    <sample name="From DB" href="xwelcome">
+      This samples page, but obtained from the XMLDB database
+    </sample>
+    <sample name="Mount DB" href="xmount/">
+      Serve these completely from the XML:DB, including sitemap, XMLs, and XSLTs.
+    </sample>
+    <sample name="Browser" href="browse/">
+      Simple database browser
+    </sample>
+  </group>
+
+  <group name="XMLDB Source">
+    <sample name="Get Collection" href="db/cocoon/">
+      Get /db/cocoon collection.
+    </sample>
+    <sample name="Get Resource" href="db/cocoon/samples.xml">
+      Get /db/cocoon/samples.xml resource (the welcome page).
+    </sample>
+    <sample name="Query Collection" href="db/cocoon/?xpath=/samples/group">
+      Query /db/cocoon collection.
+    </sample>
+    <sample name="Query Resource" href="db/cocoon/samples.xml?xpath=/samples/group">
+      Query /db/cocoon/samples.xml resource (same query).
+    </sample>
+  </group>
+</samples>

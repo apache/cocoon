@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id$
+-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <fd:widgets>
+    <fd:field id="name" required="true">
+      <fd:datatype base="string"/>
+    </fd:field>
+    
+    <!-- The datasource type. This is the union's "case" widget -->
+    <fd:field id="sourcetype">
+      <fd:datatype base="string"/>
+      <!-- If you uncomment the line below the union will initially be showing the "SQL" choice -->
+      <!-- <fd:initial-value>SQL</fd:initial-value> -->
+      <fd:selection-list>
+        <fd:item value=""/>
+        <fd:item value="SQL"/>
+        <fd:item value="file"/>
+      </fd:selection-list>
+    </fd:field>
+    
+    <!-- the datasource contents depends on its type -->
+    <fd:union id="datasource" case="sourcetype">
+      <fd:widgets>
+        
+        <!-- data for an SQL datasource -->
+        <fd:group id="SQL">
+          <fd:widgets>
+            <fd:field id="jdbc-url">
+              <fd:label>JDBC URL</fd:label>
+              <fd:datatype base="string"/>
+              <!-- pre-fill with the sample values in cocoon.xconf -->
+              <fd:initial-value>jdbc:hsqldb:hsql://localhost:9002</fd:initial-value>
+            </fd:field>
+            <fd:field id="login">
+              <fd:label>Login</fd:label>
+              <fd:datatype base="string"/>
+              <fd:initial-value>sa</fd:initial-value>
+            </fd:field>
+            <fd:field id="password">
+              <fd:label>Password</fd:label>
+              <fd:datatype base="string"/>
+            </fd:field>
+          </fd:widgets>
+        </fd:group>
+        
+        <!-- data for a file datasource -->
+        <fd:group id="file">
+          <fd:widgets>
+            <fd:field id="filename">
+              <fd:datatype base="string"/>
+            </fd:field>
+          </fd:widgets>
+        </fd:group>
+      </fd:widgets>
+    </fd:union>
+
+    <fd:submit id="ok">
+      <fd:label>OK</fd:label>
+    </fd:submit>
+    
+  </fd:widgets>
+
+</fd:form>
