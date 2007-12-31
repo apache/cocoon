@@ -244,18 +244,21 @@ final public class ImageOpReader extends ResourceReader
             }
         }
         if (newImage == null) {        	
-	        ColorModel cm = image.getColorModel();
-	        if (getLogger().isDebugEnabled()) {
-	            getLogger().debug( "Out Bounds: " + src.getBounds() );
-	        }
-	        newImage = new BufferedImage( cm, src, true, new Hashtable() );
-	        // Not sure what this should really be --------------^^^^^
+            ColorModel cm = image.getColorModel();
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug( "Out Bounds: " + src.getBounds() );
+            }
+            // Note: use cm.isAlphaPremultiplied() as third parameter (isRasterPremultiplied)
+            // because this avoids the possible non-working call to cm.coerceData() (eg. with png
+            // images) - see the code of BufferedImage
+            newImage = new BufferedImage(cm, src, cm.isAlphaPremultiplied(), new Hashtable());
         }
-        int minX = newImage.getMinX();
-        int minY = newImage.getMinY();
-        int width = newImage.getWidth();
-        int height = newImage.getHeight();        
-        if(getLogger().isInfoEnabled()) {
+
+        if (getLogger().isInfoEnabled()) {
+            int minX = newImage.getMinX();
+            int minY = newImage.getMinY();
+            int width = newImage.getWidth();
+            int height = newImage.getHeight();        
             getLogger().info( "Image: " + minX + ", " + minY + ", " + width + ", " + height );
         }
 
@@ -291,28 +294,5 @@ final public class ImageOpReader extends ResourceReader
             // Niclas Hedhman: Stream is closed in superclass.
         }
     }
-/*    
-    private void printRaster( WritableRaster r )
-    {
-        DataBuffer data = r.getDataBuffer();
-        int numBanks = data.getNumBanks();
-        int size = data.getSize();
-        for( int i=0 ; i < size ; i++ )
-        {
-            long value = 0;
-            for( int j=0 ; j < numBanks ; j++ )
-            {
-                int v = data.getElem( j, i );
-                if( v < 256 )
-                    value = value << 8 ;
-                else
-                    value = value << 16;
-                value = value + v;
-            }
-            if(getLogger().isDebugEnabled()) {
-                getLogger().debug( Long.toHexString( value ) );
-            }
-        }
-    }
-*/
+
 }
