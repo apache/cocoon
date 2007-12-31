@@ -242,6 +242,7 @@ public class DynamicSelectionList implements FilterableSelectionList {
                 } else if (convertor == null && localName.equals("convertor")) {
                     // record the content of this element in a dom-tree
                     convertorConfigDOMBuilder = new DOMBuilder();
+                    convertorConfigDOMBuilder.startDocument();
                     convertorConfigDOMBuilder.startElement(namespaceURI, localName, qName, attributes);
                     convertorConfigNestingLevel++;
                 } else {
@@ -260,6 +261,7 @@ public class DynamicSelectionList implements FilterableSelectionList {
                 convertorConfigNestingLevel--;
                 convertorConfigDOMBuilder.endElement(namespaceURI, localName, qName);
                 if (convertorConfigNestingLevel == 0) {
+                    convertorConfigDOMBuilder.endDocument();
                     Element convertorElement = convertorConfigDOMBuilder.getDocument().getDocumentElement();
                     try {
                         convertor = getDatatype().getBuilder().buildConvertor(convertorElement);
