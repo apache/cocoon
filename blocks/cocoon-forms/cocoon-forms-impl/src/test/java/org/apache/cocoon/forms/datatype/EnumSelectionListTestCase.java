@@ -23,6 +23,7 @@ import org.apache.cocoon.forms.FormsConstants;
 import org.apache.cocoon.forms.datatype.typeimpl.EnumType;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.ResourceSource;
 
 import org.w3c.dom.Document;
@@ -40,19 +41,22 @@ public class EnumSelectionListTestCase extends AbstractSelectionListTestCase {
      * @throws ParserConfigurationException
      */
     public void testGenerateSaxFragment() throws Exception {
-        DOMBuilder dest = new DOMBuilder();
         EnumSelectionList list = 
             new EnumSelectionList(Sex.class.getName(), new EnumType(), false);
+
+        DOMBuilder dest = new DOMBuilder();
+        dest.startDocument();
         list.generateSaxFragment(dest, Locale.ENGLISH);
-        ResourceSource expectedSource =
+        dest.endDocument();
+        Document destDocument = dest.getDocument();
+        
+        Source expectedSource =
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/EnumSelectionListTestCase.dest-no-null.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
-        Document destDocument = dest.getDocument();
         // FIXME: Why is the namespace declaration available as attribute on the expected document? (see COCOON-2155)
         expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
         expected.getDocumentElement().removeAttribute("xmlns:i18n");
-        assertEqual("Test if output is what is expected",
-                expected, destDocument);
+        assertEqual("Test if output is what is expected", expected, destDocument);
     }
     
     /**
@@ -61,19 +65,22 @@ public class EnumSelectionListTestCase extends AbstractSelectionListTestCase {
      * @throws ParserConfigurationException
      */
     public void testGenerateSaxFragmentNullable() throws Exception {
-        DOMBuilder dest = new DOMBuilder();
         EnumSelectionList list = 
             new EnumSelectionList(Sex.class.getName(), new EnumType(), true);
+
+        DOMBuilder dest = new DOMBuilder();
+        dest.startDocument();
         list.generateSaxFragment(dest, Locale.ENGLISH);
-        ResourceSource expectedSource =
+        dest.endDocument();
+        Document destDocument = dest.getDocument();
+
+        Source expectedSource =
             new ResourceSource("resource://org/apache/cocoon/forms/datatype/EnumSelectionListTestCase.dest.xml");
         Document expected = this.parser.parse(expectedSource.getInputStream());
-        Document destDocument = dest.getDocument();
         // FIXME: Why is the namespace declaration available as attribute on the expected document? (see COCOON-2155)
         expected.getDocumentElement().removeAttribute("xmlns:" + FormsConstants.INSTANCE_PREFIX);
         expected.getDocumentElement().removeAttribute("xmlns:i18n");
-        assertEqual("Test if output is what is expected",
-                expected, destDocument);
+        assertEqual("Test if output is what is expected", expected, destDocument);
     }
     
 }
