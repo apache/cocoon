@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @version $Id$
  */
-public abstract class AbstractServletConnection implements IServletConnection {
+public abstract class AbstractServletConnection implements ServletConnection {
 
     /** By default we use the logger for this class. */
     protected final Log logger = LogFactory.getLog(this.getClass());

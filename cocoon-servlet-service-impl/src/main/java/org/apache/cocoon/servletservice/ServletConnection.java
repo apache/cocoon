@@ -19,7 +19,7 @@ import javax.servlet.ServletException;
  *
  * @version $Id$
  */
-public interface IServletConnection {
+public interface ServletConnection {
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~ Pre-connect methods ~~~~~~~~~~~~~~~~~~
