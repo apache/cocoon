@@ -20,17 +20,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/** 
+/**
  * Attributes in the call frame and destruction callbacks that should be
  * executed when the call frame is left.
- *  
+ *
  * @version $Id$
- * @since 2.2 
+ * @since 1.0.0
  */
 public class CallFrame {
     private Map attributes;
     private Map destructionCallbacks;
-    
+
     public boolean hasAttribute(String name) {
         return this.attributes != null && this.attributes.containsKey(name);
     }
@@ -38,7 +38,7 @@ public class CallFrame {
     public Object getAttribute(String name) {
         return this.attributes != null ? this.attributes.get(name) : null;
     }
-    
+
     public void setAttribute(String name, Object value) {
         if (this.attributes == null) {
             this.attributes = new HashMap();
@@ -46,11 +46,11 @@ public class CallFrame {
 
         this.attributes.put(name, value);
     }
-    
+
     public Object removeAttribute(String name) {
         return this.attributes != null ? this.attributes.remove(name) : null;
     }
-    
+
     public void registerDestructionCallback(String name, Runnable callback) {
         if (this.destructionCallbacks == null) {
             this.destructionCallbacks = new HashMap();
@@ -58,7 +58,7 @@ public class CallFrame {
 
         this.destructionCallbacks.put(name, callback);
     }
-    
+
     void executeDestructionCallbacks() {
         if (this.destructionCallbacks == null) {
             return;

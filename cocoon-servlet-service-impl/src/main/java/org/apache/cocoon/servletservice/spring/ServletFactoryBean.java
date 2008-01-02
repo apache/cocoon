@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,9 +62,10 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
     private Map initParams;
     private Map contextParams;
     private Map connections;
+    private Map connectionServiceNames;
+    private String serviceName;
 
     private ServletServiceContext servletServiceContext;
-
 
     public ServletFactoryBean() {
     }
@@ -78,14 +79,15 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
 
         this.servletServiceContext.setInitParams(this.initParams);
         this.servletServiceContext.setAttributes(this.contextParams);
-        this.servletServiceContext.setConnections(connections);
+        this.servletServiceContext.setConnections(this.connections);
+        this.servletServiceContext.setConnectionServiceNames(this.connectionServiceNames);
+        this.servletServiceContext.setServiceName(this.serviceName);
 
-        // create a sub container that resolves paths relative to the block
-        // context rather than the parent context and make it available in
-        // a context attribute
+        // create a sub container that resolves paths relative to the servlet
+        // service context rather than the parent context and make it available
+        // in a context attribute
         if (this.parentContainer == null) {
-            this.parentContainer =
-                    WebApplicationContextUtils.getRequiredWebApplicationContext(this.servletContext);
+            this.parentContainer = WebApplicationContextUtils.getRequiredWebApplicationContext(this.servletContext);
         }
 
         GenericWebApplicationContext container = new GenericWebApplicationContext();
@@ -124,23 +126,14 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
         this.embeddedServlet.destroy();
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-     */
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.parentContainer = applicationContext;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
-     */
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
-     */
     public void setBeanName(String beanName) {
         this.beanName = beanName;
     }
@@ -189,9 +182,17 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
         this.connections = connections;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
+    /**
+     * @param connectionServiceNames
      */
+    public void setConnectionServiceNames(Map connectionServiceNames) {
+        this.connectionServiceNames = connectionServiceNames;
+    }
+
+    public void setServiceName(String name) {
+        this.serviceName = name;
+    }
+
     public Object getObject() throws Exception {
         ProxyFactory proxyFactory = new ProxyFactory(this.embeddedServlet);
         proxyFactory.addAdvice(new ServiceInterceptor());
@@ -201,25 +202,16 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
         return proxyFactory.getProxy();
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
-     */
     public Class getObjectType() {
         return this.embeddedServlet != null ? this.embeddedServlet.getClass() : null;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.FactoryBean#isSingleton()
-     */
     public boolean isSingleton() {
         return true;
     }
 
     private class ServiceInterceptor implements MethodInterceptor {
 
-        /* (non-Javadoc)
-         * @see org.aopalliance.intercept.MethodInterceptor#invoke(org.aopalliance.intercept.MethodInvocation)
-         */
         public Object invoke(MethodInvocation invocation) throws Throwable {
             if ("service".equals(invocation.getMethod().getName())) {
                 Object[] arguments = invocation.getArguments();
@@ -231,7 +223,7 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
                 return null;
             } else if ("init".equals(invocation.getMethod().getName())) {
                 // The embedded servlet is initialized by this factory bean, ignore other containers
-                return null;                
+                return null;
             } else if ("destroy".equals(invocation.getMethod().getName())) {
                 // The embedded servlet is destroyed up by this factory bean, ignore other containers
                 return null;
@@ -255,4 +247,5 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
             super(new MountableMixin(), Mountable.class);
         }
     }
+
 }
