@@ -3451,6 +3451,10 @@
                     <name>cdocs-databases</name>
                     <path>${docs.m.databases.relPath}</path>
                   </collection>
+                  <collection>
+                    <name>cdocs-databases-bridge</name>
+                    <path>${docs.m.databases-bridge.relPath}</path>
+                  </collection>
                   <!-- Maven plugins -->
                   <collection>
                     <name>cdocs-maven-plugin</name>
