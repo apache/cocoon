@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,9 +20,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * Interface for making the absolute path available from a servlet service relative path.
- * The interface is mainly introduced to make the absoluteizeURI method available when
- * the ServletServiceContext is proxied.
+ * By this interface, a {@link ServletServiceContext} provides absolute information
+ * about a mounted servlet service.
  *
  * @version $Id$
  */
@@ -37,5 +36,21 @@ public interface Absolutizable {
      * @return absolutized uri
      * @throws URISyntaxException
      */
-    public URI absolutizeURI(URI uri) throws URISyntaxException;
+    URI absolutizeURI(URI uri) throws URISyntaxException;
+
+    /**
+     * Get the fully qualified servlet service name of a connected service.
+     *
+     * @param connectionName
+     * @return The fully qualified servlet service name of a connected service.
+     */
+    String getServiceName(String connectionName);
+
+    /**
+     * Get the fully qualifed service name.
+     *
+     * @return The fully qualified servlet service name.
+     */
+    String getServiceName();
+
 }

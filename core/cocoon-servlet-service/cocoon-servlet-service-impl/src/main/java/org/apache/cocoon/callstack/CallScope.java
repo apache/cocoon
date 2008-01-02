@@ -25,7 +25,7 @@ import org.springframework.beans.factory.config.Scope;
  * an object is in scope when it is in the top frame of the stack.
  *
  * @version $Id$
- * @since 2.2 
+ * @since 1.0.0
  */
 public class CallScope implements Scope {
 

@@ -21,21 +21,16 @@ package org.apache.cocoon.servletservice.spring;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * Spring namespace handler for the cocoon servlet namespace.
- * Currently this namespace defines the following elements
- * (in the namespace "http://cocoon.apache.org/schema/servlet"):
- * "context" : with optional attributes "mountPath" and "contextPath".
- * With optional sub elements "init-params", "context-params" and
- * "connections".  
+ * <p>
+ * Spring namespace handler for the Cocoon servlet namespace (<code>http://cocoon.apache.org/schema/servlet</code>).
+ * The {@link ServletDecorator} deals with the implementation details.
  *
- * @version $Id$
+ * @version $Id: ServletNamespaceHandler.java 562806 2007-08-05 02:26:41Z
+ *          vgritsenko $
  * @since 2.2
  */
 public class ServletNamespaceHandler extends NamespaceHandlerSupport {
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
-     */
     public void init() {
         registerBeanDefinitionDecorator("context", new ServletDecorator());
     }

@@ -85,7 +85,7 @@ public class DispatcherServlet extends HttpServlet {
         }
 
         // Create a dynamic proxy class that overwrites the getServletPath and
-        // getPathInfo methods to privide reasonable values in the called servlet
+        // getPathInfo methods to provide reasonable values in the called servlet
         // the dynamic proxy implements all interfaces of the original request
         HttpServletRequest request = (HttpServletRequest) Proxy.newProxyInstance(
                 req.getClass().getClassLoader(),
