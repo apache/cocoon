@@ -67,6 +67,9 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     private String contextPath;
     private Map properties;
     private Map connections;
+    private Map connectionServiceNames;
+
+    private String serviceName;
 
 
     /*
@@ -75,7 +78,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
      * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
      */
     /*
-     *  TODO ineritance of attributes from the parent context is only
+     *  TODO inheritance of attributes from the parent context is only
      *  partly implemented: removeAttribute and getAttributeNames
      *  doesn't respect inheritance yet.
      */
@@ -156,7 +159,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                                             this.contextPath);
         }
 
-        // prefix the path with the servlet context resolve and resolve in the embeding
+        // prefix the path with the servlet context resolve and resolve in the embedding
         // servlet context
         return super.getResource(this.contextPath + path);
     }
@@ -407,6 +410,14 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         return new URI(absoluteURI);
     }
 
+    public String getServiceName(String connectionName) {
+        return (String) this.connectionServiceNames.get(connectionName);
+    }
+
+    public String getServiceName() {
+        return this.serviceName;
+    }
+
     /**
      * Get the context of a servlet service with a given name.
      */
@@ -464,6 +475,20 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
      */
     public void setConnections(Map connections) {
         this.connections = connections;
+    }
+
+    /**
+     * @param connections the service names of the connections
+     */
+    public void setConnectionServiceNames(Map connectionServletServiceNames) {
+        this.connectionServiceNames = connectionServletServiceNames;
+    }
+
+    /**
+     * @param serviceName the name of the
+     */
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 
     protected class NamedDispatcher implements RequestDispatcher {
@@ -578,6 +603,8 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                     if (_super != null) {
                         _super.forward(request, wrappedResponse);
                     } else {
+                        wrappedResponse.getWriter().println("Resource not found");
+                        wrappedResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
                         throw se;
                     }
                 }
@@ -595,7 +622,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         }
     }
 
-    private static class StatusRetrievableWrappedResponse extends HttpServletResponseWrapper {
+    public static class StatusRetrievableWrappedResponse extends HttpServletResponseWrapper {
 
        	private int status;
 

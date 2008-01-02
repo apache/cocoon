@@ -18,9 +18,13 @@
  */
 package org.apache.cocoon.servletservice.spring;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionDecorator;
@@ -29,14 +33,20 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
+ * <p>
+ * This {@link BeanDefinitionDecorator} deals with the
+ * <code>http://cocoon.apache.org/schema/servlet</code> namespace which
+ * defines following elements: <code>context</code> : with optional attributes
+ * <code>mountPath</code> and <code>contextPath</code>. With optional sub
+ * elements <code>init-params", "context-params" and "connections".</p>
+ * <p>
+ * The actual creation of the servlet service (= a bean) is done by {@link ServletFactoryBean}.</p>
+ *
  * @version $Id$
- * @since 2.2
+ * @since 1.0
  */
 public class ServletDecorator implements BeanDefinitionDecorator {
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.xml.BeanDefinitionDecorator#decorate(org.w3c.dom.Node, org.springframework.beans.factory.config.BeanDefinitionHolder, org.springframework.beans.factory.xml.ParserContext)
-     */
     public BeanDefinitionHolder decorate(Node source, BeanDefinitionHolder holder, ParserContext ctx) {
         String embeddedServletBeanName = registerEmbeddedServletBean(holder, ctx);
         return createServletFactoryBeanDefinition((Element) source, holder, ctx, embeddedServletBeanName);
@@ -51,10 +61,8 @@ public class ServletDecorator implements BeanDefinitionDecorator {
         return beanName;
     }
 
-    private BeanDefinitionHolder createServletFactoryBeanDefinition(Element source,
-                                                                    BeanDefinitionHolder holder,
-                                                                    ParserContext ctx,
-                                                                    String embeddedServletBeanName) {
+    private BeanDefinitionHolder createServletFactoryBeanDefinition(Element source, BeanDefinitionHolder holder,
+                    ParserContext ctx, String embeddedServletBeanName) {
         String ns = source.getNamespaceURI();
         String mountPath = source.hasAttribute("mount-path") ? source.getAttribute("mount-path") : null;
         String contextPath = source.hasAttribute("context-path") ? source.getAttribute("context-path") : null;
@@ -63,11 +71,13 @@ public class ServletDecorator implements BeanDefinitionDecorator {
         Element contextParamsElem = (Element) source.getElementsByTagNameNS(ns, "context-params").item(0);
         Element connectionsElem = (Element) source.getElementsByTagNameNS(ns, "connections").item(0);
 
-        BeanDefinitionBuilder servletFactoryDefBuilder = BeanDefinitionBuilder.rootBeanDefinition(ServletFactoryBean.class);
+        BeanDefinitionBuilder servletFactoryDefBuilder = BeanDefinitionBuilder
+                        .rootBeanDefinition(ServletFactoryBean.class);
         servletFactoryDefBuilder.setSource(ctx.extractSource(source));
         servletFactoryDefBuilder.addPropertyReference("embeddedServlet", embeddedServletBeanName);
         servletFactoryDefBuilder.setInitMethodName("init");
         servletFactoryDefBuilder.setDestroyMethodName("destroy");
+        servletFactoryDefBuilder.addPropertyValue("serviceName", holder.getBeanName());
 
         if (mountPath != null) {
             servletFactoryDefBuilder.addPropertyValue("mountPath", mountPath);
@@ -86,8 +96,29 @@ public class ServletDecorator implements BeanDefinitionDecorator {
         if (connectionsElem != null) {
             Map connections = ctx.getDelegate().parseMapElement(connectionsElem, null);
             servletFactoryDefBuilder.addPropertyValue("connections", connections);
+            Map connectionNames = new HashMap();
+            for (Iterator it = connections.keySet().iterator(); it.hasNext();) {
+                TypedStringValue key = (TypedStringValue) it.next();
+                if (key.getValue().endsWith("+")) {
+                    throw new InvalidBeanReferenceNameException(
+                                    "The key of a servlet connection mustn't use '+' as its last character. "
+                                                    + "This is reserved for absolute references in servlet sources.");
+                }
+                RuntimeBeanReference beanNameReference = (RuntimeBeanReference) connections.get(key);
+                connectionNames.put(key.getValue(), beanNameReference.getBeanName());
+            }
+            servletFactoryDefBuilder.addPropertyValue("connectionServiceNames", connectionNames);
         }
 
         return new BeanDefinitionHolder(servletFactoryDefBuilder.getBeanDefinition(), holder.getBeanName());
     }
+
+    private class InvalidBeanReferenceNameException extends RuntimeException {
+
+        public InvalidBeanReferenceNameException(String message) {
+            super(message);
+        }
+
+    }
+
 }
