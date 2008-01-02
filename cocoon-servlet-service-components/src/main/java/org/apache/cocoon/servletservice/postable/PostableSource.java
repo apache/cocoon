@@ -21,8 +21,15 @@ import java.io.OutputStream;
 
 import org.apache.excalibur.source.Source;
 
+/**
+ * Addition to the {@link Source} that enables passing data to the called
+ * source. This data is passed by writing it into an {@link OutputStream}.
+ *
+ * @version $Id$
+ * @since 1.0.0
+ */
 public interface PostableSource extends Source {
-	/**
+    /**
      * Return an {@link OutputStream} to post to.
      *
      * The returned stream must be closed by the calling code.
