@@ -35,7 +35,7 @@ public class DemoServlet extends HttpServlet {
         writer.println("Content From: " + this.getClass().getName());
         writer.println("******************************************************************");
         writer.println("request.getAttribute(\"foo\"): " + request.getAttribute("foo"));
-        writer.println("request.getParameter(\"x\"): " + request.getParameter("x"));
+        writer.println("request.getParameter(\"xyz\"): " + request.getParameter("xyz"));
         writer.println("request.getHeader(\"User-Agent\"): " + request.getHeader("User-Agent"));
         // set a request attribute
         request.setAttribute("foo1", "bar1");
