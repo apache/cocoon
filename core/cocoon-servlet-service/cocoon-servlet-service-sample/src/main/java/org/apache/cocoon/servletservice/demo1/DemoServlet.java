@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.cocoon.servletservice.RelativeServletConnection;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.beans.factory.BeanFactory;
@@ -53,7 +55,6 @@ public class DemoServlet extends HttpServlet {
         String path = request.getPathInfo();
 
         request.setAttribute("foo", "bar");
-        System.out.println("x=" + request.getParameter("x"));
 
         if ("/test1".equals(path)) {
             response.setContentType("text/plain");
@@ -75,15 +76,75 @@ public class DemoServlet extends HttpServlet {
             is.close();
             os.close();
         } else if ("/test4".equals(path)) {
-            Source source = this.resolver.resolveURI("servlet:demo2:/any");
-            InputStream is = source.getInputStream();
             response.setContentType("text/plain");
             OutputStream os = response.getOutputStream();
+            os.write(("\nRequest-Parameters:").getBytes());
+            os.write(("\n******************************************************************").getBytes());
+            Enumeration requestParamNames = request.getParameterNames();
+            while(requestParamNames.hasMoreElements()) {
+                String name = (String) requestParamNames.nextElement();
+                os.write(("\n  " + name  + "=" + request.getParameter(name)).getBytes());;
+            }
+            os.write(("\n\nHeaders:").getBytes());
+            os.write(("\n******************************************************************").getBytes());
+            Enumeration headers = request.getHeaderNames();
+            while(headers.hasMoreElements()) {
+                String name = (String) headers.nextElement();
+                os.write(("\n  " + name  + "=" + request.getHeader(name)).getBytes());;
+            }
+            os.write(("\n\nRequest-Attributes:").getBytes());
+            os.write(("\n******************************************************************").getBytes());
+            Enumeration requestAttributes = request.getAttributeNames();
+            while(requestAttributes.hasMoreElements()) {
+                String name = (String) requestAttributes.nextElement();
+                os.write(("\n  " + name  + "=" + request.getAttribute(name)).getBytes());;
+            }
+            os.write(("\n\nContent From: " + this.getClass().getName() ).getBytes());
+            os.write(("\n******************************************************************").getBytes());
+            os.write(("\nrequest.getAttribute(\"foo1\") [from main request]: " + request.getAttribute("foo1")).getBytes());
+            os.write("\n\n".getBytes());
+            Source source = this.resolver.resolveURI("servlet:demo2:/any?xyz=5");
+            InputStream is = source.getInputStream();
+            copy(is, os);
+            is.close();
+            os.close();
+        } else if ("/test5".equals(path)) {
+            RelativeServletConnection con = new RelativeServletConnection("demo2", "/", null);
+            InputStream is = con.getInputStream();
+            OutputStream os = response.getOutputStream();
+            copy(is, os);
+            is.close();
+            os.close();
+        } else if ("/test6".equals(path)) {
+            RelativeServletConnection con = new RelativeServletConnection(null, "/test1", null);
+            response.setContentType("text/plain");
+            InputStream is = con.getInputStream();
+            OutputStream os = response.getOutputStream();
+            copy(is, os);
+            is.close();
+            os.close();
+        } else if ("/test7".equals(path)) {
+            Source source = this.resolver.resolveURI("servlet:org.apache.cocoon.servletservice.demo1.servlet+:/test4");
+            InputStream is = source.getInputStream();
+            OutputStream os = response.getOutputStream();
+            response.setContentType("text/plain");
 
             copy(is, os);
-            os.write(("\nContent From: " + this.getClass().getName() + "\n").getBytes());
-            os.write(("******************************************************************\n").getBytes());
-            os.write(("request.getAttribute(\"foo1\") [from main request]: " + request.getAttribute("foo1")).getBytes());
+            is.close();
+            os.close();
+        } else if ("/test8".equals(path)) {
+            response.setContentType("text/plain");
+            OutputStream os = response.getOutputStream();
+            os.write(("\nForbidden").getBytes());
+            response.setStatus(403);
+            os.close();
+        } else if ("/test9".equals(path)) {
+            // FIXME Doesn't work currently!
+            RelativeServletConnection con = new RelativeServletConnection(null, "/test8", null);
+            response.setContentType("text/plain");
+            InputStream is = con.getInputStream();
+            OutputStream os = response.getOutputStream();
+            copy(is, os);
             is.close();
             os.close();
         } else {

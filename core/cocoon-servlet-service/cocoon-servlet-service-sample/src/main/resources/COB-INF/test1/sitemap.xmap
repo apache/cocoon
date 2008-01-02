@@ -53,10 +53,10 @@
         </map:generate>
         <map:serialize type="xml"/>
       </map:match>
-      
+
       <!-- This is a test of basic servlet services functionality
         servletService transformer makes a HTTP POST request on servlet:test2:/basic-service.
-        Transformer posts content of the incoming SAX stream (here it's just content of test.xml file) 
+        Transformer posts content of the incoming SAX stream (here it's just content of test.xml file)
         and returns to the pipeline result of service call.
       -->
       <map:match pattern="test6">
@@ -66,10 +66,10 @@
         </map:transform>
         <map:serialize type="xml"/>
       </map:match>
-      
+
       <!-- This is a test of basic servlet services functionality
         servletService serializer makes a HTTP POST request on servlet:test2:/basic-service.
-        Serializer posts content of the incoming SAX stream (here it's just content of test.xml file) 
+        Serializer posts content of the incoming SAX stream (here it's just content of test.xml file)
         and returns as output of serialized the output obtained from servlet service call.
       -->
       <map:match pattern="test7">
