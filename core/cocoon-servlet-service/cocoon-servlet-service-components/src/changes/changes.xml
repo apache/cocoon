@@ -25,6 +25,15 @@
   -->
 <document>
   <body>
+    <release version="1.0.0" date="2008-00-00" description="unreleased">
+      <action dev="reinhard" type="add">
+        The ServletSource supports absolute connections. An example for an absolute servlet source
+        URI is "servlet:com.mycompany.test+:/test". This URI points to the servlet "com.mycompany.test" which
+        is marked by the "+" character postfix. This also means that the "+" character at the end of connection
+        names is not allowed.
+      </action>
+    </release>
+    <release version="1.0.0-RC1" date="2007-10-29" description="released"/>
     <release version="1.0.0-M1" date="2007-02-15" description="released">
       <action dev="reinhard" type="add">
         Initial creation.

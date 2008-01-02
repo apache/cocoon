@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,12 +19,18 @@ package org.apache.cocoon.servletservice.components;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.servletservice.ServletConnection;
+import org.apache.cocoon.servletservice.AbsoluteServletConnection;
+import org.apache.cocoon.servletservice.Absolutizable;
+import org.apache.cocoon.servletservice.CallStackHelper;
+import org.apache.cocoon.servletservice.IServletConnection;
 import org.apache.cocoon.servletservice.postable.PostableSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,9 +41,10 @@ import org.apache.excalibur.source.impl.AbstractSource;
 import org.apache.excalibur.store.Store;
 
 /**
- * Implementation of a {@link Source} that gets its content by invoking the Servlet.
+ * Implementation of a {@link Source} that gets its content by invoking a servlet service.
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public class ServletSource extends AbstractSource
                            implements PostableSource {
@@ -49,30 +56,23 @@ public class ServletSource extends AbstractSource
      * This store is required because in {@link #getValidity()} we need value
      * of Last-Modified header of previous response in order to perform conditional
      * GET.</p>
-     *
-     * <p><strong>NOTE:</strong> Caching of servlet: source is broken in some cases. See thread
-     * http://news.gmane.org/find-root.php?group=gmane.text.xml.cocoon.devel&article=72801</p>
      */
     private Store store;
 
     private String location;
-    private ServletConnection servletConnection;
+
+    private IServletConnection servletConnection;
+
     private boolean connected;
 
 
     public ServletSource(String location, Store store) throws IOException {
-        // the systemId (returned by getURI()) is by default null
-        // using the block uri is a little bit questionable as it only is valid
-        // whithin the current block, not globally
         this.store = store;
-        setSystemId(location);
         this.location = location;
-        this.servletConnection = new ServletConnection(location);
+        this.servletConnection = createServletConnection(location);
+        this.setSystemId(this.servletConnection.getURI().toASCIIString());
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.impl.AbstractSource#getInputStream()
-     */
     public InputStream getInputStream() throws IOException, SourceException {
         try {
             connect();
@@ -87,7 +87,7 @@ public class ServletSource extends AbstractSource
                 //       and, as a result, GET request instead of POST.
                 //
 
-                servletConnection = new ServletConnection(location);
+                servletConnection = createServletConnection(location);
                 servletConnection.connect();
             }
 
@@ -97,9 +97,51 @@ public class ServletSource extends AbstractSource
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.impl.AbstractSource#getValidity()
+    /**
+     * Factory method that creates either a {@link ServletConnection}.
+     *
+     * @param The URI as {@link String} pointing to the servlet.
+     * @return An {@link IServletConnection} pointing to the referenced servlet.
+     * @throws MalformedURLException if there is a problem with the location URI.
      */
+    private IServletConnection createServletConnection(String location) throws MalformedURLException {
+        URI locationUri = null;
+        try {
+            locationUri = new URI(location);
+            if (!locationUri.isAbsolute()) {
+                throw new MalformedURLException("Only absolute URIs are allowed for the block protocol. "
+                                + locationUri.toString());
+            }
+
+            // get the referenced servlet and find out if it is an absolute or
+            // relative connection
+            locationUri = new URI(locationUri.getRawSchemeSpecificPart());
+
+            final String servletReference = locationUri.getScheme();
+            final Absolutizable absolutizable = (Absolutizable) CallStackHelper.getCurrentServletContext();
+            final String servletName;
+
+            // find out the type of the reference and create a service name
+            if (servletReference == null) {
+                // self-reference
+                servletName = absolutizable.getServiceName();
+            } else if (servletReference.endsWith(AbsoluteServletConnection.ABSOLUTE_SERVLET_SOURCE_POSTFIX)) {
+                // absolute reference
+                servletName = servletReference.substring(0, servletReference.length() - 1);
+            } else {
+                // relative reference
+                servletName = absolutizable.getServiceName(servletReference);
+            }
+            return new AbsoluteServletConnection(servletName, locationUri.getRawPath(), locationUri.getRawQuery());
+
+        } catch (URISyntaxException e) {
+            MalformedURLException malformedURLException = new MalformedURLException("Invalid URI syntax. "
+                            + e.getMessage());
+            malformedURLException.initCause(e);
+            throw malformedURLException;
+        }
+    }
+
     public SourceValidity getValidity() {
         try {
             connect();
@@ -111,9 +153,6 @@ public class ServletSource extends AbstractSource
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.excalibur.source.impl.AbstractSource#getLastModified()
-     */
     public long getLastModified() {
         try {
             connect();
@@ -126,9 +165,8 @@ public class ServletSource extends AbstractSource
     }
 
     /**
-     * The mime-type of the content described by this object.
-     * If the source is not able to determine the mime-type by itself
-     * this can be null.
+     * The mime-type of the content described by this object. If the source is
+     * not able to determine the mime-type by itself this can be null.
      */
     public String getMimeType() {
         try {
@@ -150,6 +188,12 @@ public class ServletSource extends AbstractSource
         return true;
     }
 
+    /**
+     * Return an {@link OutputStream} to post to. The returned stream must be closed by
+     * the calling code.
+     *
+     * @return {@link OutputStream} to post to
+     */
     public OutputStream getOutputStream() throws IOException {
         return servletConnection.getOutputStream();
     }
@@ -209,27 +253,16 @@ public class ServletSource extends AbstractSource
 
     private static final class ServletValidity implements SourceValidity {
 
-        /**
-         *
-         */
-        private static final long serialVersionUID = 1793646888814956538L;
-
         private int responseCode;
 
         public ServletValidity(int responseCode) {
             setResponseCode(responseCode);
         }
 
-        /* (non-Javadoc)
-         * @see SourceValidity#isValid()
-         */
         public int isValid() {
             return SourceValidity.UNKNOWN;
         }
 
-        /* (non-Javadoc)
-         * @see SourceValidity#isValid(SourceValidity)
-         */
         public int isValid(SourceValidity newValidity) {
             if (newValidity instanceof ServletValidity) {
                 ServletValidity newServletValidity = (ServletValidity) newValidity;
