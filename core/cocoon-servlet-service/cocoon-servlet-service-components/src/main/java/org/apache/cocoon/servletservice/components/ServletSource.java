@@ -30,7 +30,7 @@ import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.servletservice.AbsoluteServletConnection;
 import org.apache.cocoon.servletservice.Absolutizable;
 import org.apache.cocoon.servletservice.CallStackHelper;
-import org.apache.cocoon.servletservice.IServletConnection;
+import org.apache.cocoon.servletservice.ServletConnection;
 import org.apache.cocoon.servletservice.postable.PostableSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +61,7 @@ public class ServletSource extends AbstractSource
 
     private String location;
 
-    private IServletConnection servletConnection;
+    private ServletConnection servletConnection;
 
     private boolean connected;
 
@@ -101,10 +101,10 @@ public class ServletSource extends AbstractSource
      * Factory method that creates either a {@link ServletConnection}.
      *
      * @param The URI as {@link String} pointing to the servlet.
-     * @return An {@link IServletConnection} pointing to the referenced servlet.
+     * @return An {@link ServletConnection} pointing to the referenced servlet.
      * @throws MalformedURLException if there is a problem with the location URI.
      */
-    private IServletConnection createServletConnection(String location) throws MalformedURLException {
+    private ServletConnection createServletConnection(String location) throws MalformedURLException {
         URI locationUri = null;
         try {
             locationUri = new URI(location);
