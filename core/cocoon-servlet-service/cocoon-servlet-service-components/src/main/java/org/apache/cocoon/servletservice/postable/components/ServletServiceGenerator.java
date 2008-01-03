@@ -37,24 +37,24 @@ import org.xml.sax.SAXException;
 /**
  * <p>The generator takes only <code>service</code> parameter that should contain the URL of the called service.<br>
  * Use <code>servlet:</code> source for that purpose.</p>
- * 
+ *
  * <p>FIXME: Provide a link to the documents discussing servlet (and sitemap) services.</p>
- * 
+ *
  * @cocoon.sitemap.component.documentation
  * The <code>ServletServiceGenerator</code> POSTs its input data to a called service and passes the XML data returned
  * by the service down the pipeline.
- * @cocoon.sitemap.component.name servletService 
+ * @cocoon.sitemap.component.name servletService
  * @cocoon.sitemap.component.documentation.caching Not Implemented
  *
- * @since 2.2
  * @version $Id$
+ * @since 1.0.0
  */
 public class ServletServiceGenerator extends AbstractGenerator {
-	
+
 	private SAXParser saxParser;
-	
+
 	private PostableSource servletSource;
-	
+
 
     public SAXParser getSaxParser() {
         return saxParser;
@@ -87,7 +87,7 @@ public class ServletServiceGenerator extends AbstractGenerator {
 		} catch (ParameterException e) {
 			throw new ProcessingException(e);
 		}
-		
+
         Source inputSource;
         try {
         	try {
@@ -96,16 +96,16 @@ public class ServletServiceGenerator extends AbstractGenerator {
         		throw new ProcessingException("Resolved '" + service + "' to source that is not postable. Use servlet: protocol for service calls.");
         	}
             inputSource = super.resolver.resolveURI(src);
-            
+
         } catch (SourceException se) {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
         }
-        
+
         if (getLogger().isDebugEnabled()) {
         	getLogger().debug("Source " + service + " resolved to " + servletSource.getURI());
             getLogger().debug("Source " + super.source + " resolved to " + inputSource.getURI());
         }
-        
+
         IOUtils.copy(inputSource.getInputStream(), servletSource.getOutputStream());
 	}
 }

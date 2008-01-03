@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,10 +49,12 @@ import org.apache.cocoon.util.location.LocationImpl;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>
  * <code>LinkRewriterReader<code> implements <code>servlet:</code> link rewriting in
  * text resources. It should be used especially for serving JavaScript files that have
  * paths refering to other blocks (<code>servlet:</code> links).
- * 
+ * </p>
+ *
  * <p><b>Configuration</b><br>
  * <code>encoding</code> - see {@link #setEncoding}<br>
  * <code>expires</code> - see {@link #setExpires}.
@@ -64,22 +66,23 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation.caching Yes
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public class LinkRewriterReader extends AbstractReader
                                 implements CacheableProcessingComponent {
 
     protected long configuredExpires = -1;
     protected String configuredEncoding = "UTF-8";
-    
+
     protected Response response;
     protected Request request;
     protected Source inputSource;
-    
+
     protected InputModule inputModule;
-    
+
     protected long expires;
     protected String encoding;
-    
+
     /**
      * This parameter is optional. When specified it determines how long
      * in miliseconds the resources can be cached by any proxy or browser
@@ -90,7 +93,7 @@ public class LinkRewriterReader extends AbstractReader
     public void setExpires(long expires) {
         this.configuredExpires = expires;
     }
-    
+
     /**
      * This parameter is optional. When specified it determines charset encoding
      * of <b>input</b> files. This is needed for parsing working properly.
@@ -100,29 +103,29 @@ public class LinkRewriterReader extends AbstractReader
     public void setEncoding(String encoding) {
         this.configuredEncoding = encoding;
     }
-    
+
     public void setInputModule(InputModule inputModule) {
         this.inputModule = inputModule;
     }
-    
+
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
-        
+
         this.request = ObjectModelHelper.getRequest(objectModel);
         this.response = ObjectModelHelper.getResponse(objectModel);
-        
+
         this.expires = par.getParameterAsLong("expires", this.configuredExpires);
         this.encoding = par.getParameter("encoding", this.configuredEncoding);
-        
+
         try {
             this.inputSource = resolver.resolveURI(src);
         } catch (SourceException e) {
             throw SourceUtil.handle("Error during resolving of '" + src + "'.", e);
         }
-        
+
         setupHeaders();
     }
-    
+
     protected void setupHeaders() {
         response.setHeader("Accept-Ranges", "none");
         if (expires > 0) {
@@ -130,8 +133,8 @@ public class LinkRewriterReader extends AbstractReader
         } else if (expires == 0) {
             response.setDateHeader("Expires", 0);
         }
-        
-        long lastModified = inputSource.getLastModified(); 
+
+        long lastModified = inputSource.getLastModified();
         if (lastModified > 0)
             response.setDateHeader("Last-Modified", lastModified);
     }
@@ -140,9 +143,9 @@ public class LinkRewriterReader extends AbstractReader
         InputStream inputStream = this.inputSource.getInputStream();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream, encoding);
         BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(out, encoding));
-        
+
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        
+
         String line = bufferedReader.readLine();
         int lineNumber = 1;
         while (line != null) {
@@ -155,7 +158,7 @@ public class LinkRewriterReader extends AbstractReader
         bufferedReader.close();
         outputWriter.close();
     }
-    
+
     /**
      * This class is just container for regexp URI pattern. This regexp bases on RFC2396.
      * Actually it's stripped version of original definition. It suits well for the task - servlet: links rewriting.
@@ -169,41 +172,41 @@ public class LinkRewriterReader extends AbstractReader
         static final String pathSegment = "(?:"+pChar+")*(?:;(?:"+pChar+")*)*";
         static final String absPath = "(?:/"+pathSegment+")+";
         static final String reserved = ";|/|\\?|:|@|&|=|\\+|\\$|,";
-        static final String uric = reserved+"|"+unreserved+"|"+escaped; 
+        static final String uric = reserved+"|"+unreserved+"|"+escaped;
         static final String hierPath = absPath+"(?:\\?(?:"+uric+")*)*";
         static final String URIpattern = "servlet:((?:"+scheme+":)??"+hierPath+"(?:#(?:"+uric+")*)*)";
         static final Pattern compiledURIpattern = Pattern.compile(URIpattern);
     }
-    
+
     protected String proccessLine(String line, int lineNumber) throws ProcessingException {
         if (getLogger().isDebugEnabled())
             getLogger().debug("Processing line: " + line);
-        
+
         Matcher matcher = URIregexp.compiledURIpattern.matcher(line);
         StringBuffer sb = new StringBuffer(line.length());
         while (matcher.find()) {
             if (getLogger().isDebugEnabled())
                 getLogger().debug("Processing link: " + matcher.group(0));
             String link = matcher.group(1);
-            
+
             Object replacement;
             try {
                 replacement = inputModule.getAttribute(link, null, objectModel);
             } catch (ConfigurationException e) {
-                throw ProcessingException.throwLocated("Failed to obtain attribute from input module", e, 
+                throw ProcessingException.throwLocated("Failed to obtain attribute from input module", e,
                         new LocationImpl(null, inputSource.getURI(), lineNumber, matcher.start()));
             }
-            
-            if (!(replacement instanceof String)) 
+
+            if (!(replacement instanceof String))
                 throw new ProcessingException("Attribute named '" + link + "' obtained from 'servlet' input module has to be String object.",
                         new LocationImpl(null, inputSource.getURI(), lineNumber, matcher.start()));
-            
+
             matcher.appendReplacement(sb, (String)replacement);
         }
         matcher.appendTail(sb);
         return sb.toString();
     }
-    
+
     /**
      * Returns the mime-type of the resource in process.
      */
