@@ -56,19 +56,15 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
 
 /**
  * <p>
- * Create a HttpServletRequest from an URL, that is used while calling e.g. a
+ * Create a {@link HttpServletRequest} from an URL, that is used while calling e.g. a
  * servlet service. The current implementation forwards headers, attributes and
  * parameters.
- * </p>
- * <p>
- * Note: Session handling and HTTP authentication information hasn't been
- * implemented yet.
  * </p>
  *
  * @version $Id: BlockCallHttpServletRequest.java 577519 2007-09-20 03:05:26Z
  *          vgritsenko $
  */
-public class BlockCallHttpServletRequest implements HttpServletRequest {
+public class ServletSerivceRequest implements HttpServletRequest {
 
     /**
      * Protocol of block call requests.
@@ -133,7 +129,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
      * @param parentRequest
      *            reference to the request object that makes a servlet call
      */
-    public BlockCallHttpServletRequest(URI uri, HttpServletRequest parentRequest) {
+    public ServletSerivceRequest(URI uri, HttpServletRequest parentRequest) {
         this.parentRequest = parentRequest;
         this.uri = uri;
         this.headers = new Headers();
@@ -409,8 +405,8 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
         HttpServletRequest request = this.parentRequest;
         while (request != null) {
-            if (request instanceof BlockCallHttpServletRequest) {
-                request = ((BlockCallHttpServletRequest) request).parentRequest;
+            if (request instanceof ServletSerivceRequest) {
+                request = ((ServletSerivceRequest) request).parentRequest;
             } else {
                 break;
             }
@@ -521,7 +517,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             for (int i = 0; i < CallStack.size(); i++) {
                 CallFrame frame = CallStack.frameAt(i);
                 HttpServletRequest request = (HttpServletRequest) frame.getAttribute(CallFrameHelper.REQUEST_OBJECT);
-                if (request instanceof BlockCallHttpServletRequest) {
+                if (request instanceof ServletSerivceRequest) {
                     names.addAll(this.values.keySet());
                 } else {
                     for (Enumeration enumeration = this.namesOf(request); enumeration.hasMoreElements();) {
@@ -536,7 +532,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             return new EnumerationFromIterator(names.iterator());
         }
 
-        protected abstract BlockCallHttpServletRequest getRequest();
+        protected abstract ServletSerivceRequest getRequest();
 
         final class EnumerationFromIterator implements Enumeration {
 
@@ -618,7 +614,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             for (int i = 0; i < CallStack.size(); i++) {
                 CallFrame frame = CallStack.frameAt(i);
                 HttpServletRequest request = (HttpServletRequest) frame.getAttribute(CallFrameHelper.REQUEST_OBJECT);
-                if (request instanceof BlockCallHttpServletRequest) {
+                if (request instanceof ServletSerivceRequest) {
                     result.putAll(this.values);
                 } else {
                     result.putAll(request.getParameterMap());
@@ -644,8 +640,8 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             return result;
         }
 
-        protected BlockCallHttpServletRequest getRequest() {
-            return BlockCallHttpServletRequest.this;
+        protected ServletSerivceRequest getRequest() {
+            return ServletSerivceRequest.this;
         }
 
         protected Object getValueOfCaller(String name) {
@@ -683,8 +679,8 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             return new IteratorEnumeration(list.iterator());
         }
 
-        protected BlockCallHttpServletRequest getRequest() {
-            return BlockCallHttpServletRequest.this;
+        protected ServletSerivceRequest getRequest() {
+            return ServletSerivceRequest.this;
         }
 
         protected Enumeration namesOf(HttpServletRequest request) {
@@ -718,8 +714,8 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             }
         }
 
-        protected BlockCallHttpServletRequest getRequest() {
-            return BlockCallHttpServletRequest.this;
+        protected ServletSerivceRequest getRequest() {
+            return ServletSerivceRequest.this;
         }
 
         protected Enumeration namesOf(HttpServletRequest request) {
@@ -732,7 +728,7 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
 
         private ServletServiceContext context;
 
-        private transient BlockCallHttpServletRequest request;
+        private transient ServletSerivceRequest request;
 
         public Session(ServletServiceContext context) {
             this.context = context;
@@ -746,11 +742,11 @@ public class BlockCallHttpServletRequest implements HttpServletRequest {
             return this.getRequest().parentRequest.getSession().getAttributeNames();
         }
 
-        protected BlockCallHttpServletRequest getRequest() {
+        protected ServletSerivceRequest getRequest() {
             return this.request;
         }
 
-        private void setRequest(BlockCallHttpServletRequest request) {
+        private void setRequest(ServletSerivceRequest request) {
             this.request = request;
         }
 

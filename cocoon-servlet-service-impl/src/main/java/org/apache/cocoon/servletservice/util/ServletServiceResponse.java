@@ -32,11 +32,11 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Creates a HttpServletResponse object that is usable for internal block calls.
+ * Creates a {@link HttpServletResponse} object that is usable for internal block calls.
  *
  * @version $Id$
  */
-public class BlockCallHttpServletResponse implements HttpServletResponse {
+public class ServletServiceResponse implements HttpServletResponse {
 
     private OutputStream outputStream;
     private ServletOutputStream servletStream;
@@ -53,7 +53,7 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
     final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
 
 
-    public BlockCallHttpServletResponse() {
+    public ServletServiceResponse() {
         headers = new HashMap();
         statusCode = HttpServletResponse.SC_OK;
     }
@@ -168,25 +168,25 @@ public class BlockCallHttpServletResponse implements HttpServletResponse {
                  * @see java.io.OutputStream#flush()
                  */
                 public void flush() throws IOException {
-                    BlockCallHttpServletResponse.this.outputStream.flush();
+                    ServletServiceResponse.this.outputStream.flush();
                 }
 
                 /* (non-Javadoc)
                  * @see java.io.OutputStream#write(int)
                  */
                 public void write(int b) throws IOException {
-                    BlockCallHttpServletResponse.this.outputStream.write(b);
+                    ServletServiceResponse.this.outputStream.write(b);
                 }
 
                 /* (non-Javadoc)
                  * @see java.io.OutputStream#close()
-                 * 
+                 *
                  * This method is probably never called, the close will be
                  * initiated directly on this.outputStream by the one who set
                  * it via BlockCallHttpServletResponse.setOutputStream()
                  */
                 public void close() throws IOException {
-                    BlockCallHttpServletResponse.this.outputStream.close();
+                    ServletServiceResponse.this.outputStream.close();
                 }
 
 

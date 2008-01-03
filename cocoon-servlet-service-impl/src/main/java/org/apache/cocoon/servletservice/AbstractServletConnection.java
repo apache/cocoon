@@ -26,8 +26,8 @@ import java.net.URI;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.cocoon.servletservice.util.BlockCallHttpServletRequest;
-import org.apache.cocoon.servletservice.util.BlockCallHttpServletResponse;
+import org.apache.cocoon.servletservice.util.ServletSerivceRequest;
+import org.apache.cocoon.servletservice.util.ServletServiceResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -40,10 +40,10 @@ public abstract class AbstractServletConnection implements ServletConnection {
     protected final Log logger = LogFactory.getLog(this.getClass());
 
     /** Connection request */
-    protected BlockCallHttpServletRequest request;
+    protected ServletSerivceRequest request;
 
     /** Connection response */
-    protected BlockCallHttpServletResponse response;
+    protected ServletServiceResponse response;
 
     /** The current block context */
     protected ServletContext context;

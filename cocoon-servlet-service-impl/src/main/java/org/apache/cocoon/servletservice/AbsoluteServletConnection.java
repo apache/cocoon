@@ -24,8 +24,8 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import org.apache.cocoon.callstack.environment.CallFrameHelper;
-import org.apache.cocoon.servletservice.util.BlockCallHttpServletRequest;
-import org.apache.cocoon.servletservice.util.BlockCallHttpServletResponse;
+import org.apache.cocoon.servletservice.util.ServletSerivceRequest;
+import org.apache.cocoon.servletservice.util.ServletServiceResponse;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -75,8 +75,8 @@ public final class AbsoluteServletConnection extends AbstractServletConnection {
             iae.initCause(e);
             throw iae;
         }
-        this.request = new BlockCallHttpServletRequest(reqUri, CallFrameHelper.getRequest());
-        this.response = new BlockCallHttpServletResponse();
+        this.request = new ServletSerivceRequest(reqUri, CallFrameHelper.getRequest());
+        this.response = new ServletServiceResponse();
     }
 
     /**
