@@ -31,6 +31,9 @@ import org.apache.cocoon.classloader.DefaultClassLoaderFactory;
  * Used by the ShieldingServletService to obtain a shielded classloader. Supports
  * groups of servlets that use the same classloader that is still shielded from
  * the rest of the webapp.
+ *
+ * @version $Id$
+ * @since 1.0.0
  */
 public class ShieldedGroupClassLoaderManager {
 
@@ -79,7 +82,7 @@ public class ShieldedGroupClassLoaderManager {
         }
 
         ClassLoader shieldedClassLoader;
-        
+
         shieldedClassLoader = createClassLoader(
                 ShieldedGroupClassLoaderManager.class.getClassLoader(),
                 servletContext, parameters);

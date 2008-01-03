@@ -31,9 +31,10 @@ import org.apache.excalibur.source.SourceFactory;
  *
  * @see ServletServiceConsumerSource
  * @version $Id$
+ * @since 1.0.0
  */
 public class ServletServiceConsumerSourceFactory implements SourceFactory {
-	
+
     private ProcessInfoProvider processInfoProvider;
 
     public Source getSource(String location, Map parameters) throws IOException, MalformedURLException {

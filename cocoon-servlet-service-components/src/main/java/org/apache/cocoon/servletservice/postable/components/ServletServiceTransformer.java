@@ -35,25 +35,25 @@ import org.xml.sax.SAXException;
 /**
  * <p>The generator takes only <code>service</code> parameter that should contain the URL of the called service.<br>
  * Use <code>servlet:</code> source for that purpose.</p>
- * 
+ *
  * <p>FIXME: Provide a link to the documents discussing servlet (and sitemap) services.</p>
- * 
+ *
  * @cocoon.sitemap.component.documentation
  * The <code>ServletServiceTransformer</code> POSTs its input data to a called service and passes the XML data returned
  * by the service down the pipeline.
  * @cocoon.sitemap.component.name servletService
  * @cocoon.sitemap.component.documentation.caching Not Implemented
  *
- * @since 2.2
  * @version $Id$
+ * @since 1.0.0
  */
 public class ServletServiceTransformer extends AbstractSAXTransformer
                                        implements DisposableSitemapComponent {
 
 	private SAXParser saxParser;
-	
+
 	private PostableSource servletSource;
-	
+
 
     public SAXParser getSaxParser() {
         return saxParser;
@@ -66,29 +66,29 @@ public class ServletServiceTransformer extends AbstractSAXTransformer
 
 	public void setupTransforming() throws IOException, ProcessingException, SAXException {
 		super.setupTransforming();
-		
+
 		String service;
 		try {
 			service = parameters.getParameter("service");
 		} catch (ParameterException e) {
 			throw new ProcessingException(e);
 		}
-		
+
         try {
         	servletSource = (PostableSource)resolver.resolveURI(service);
         } catch (ClassCastException e) {
-        	throw new ProcessingException("Resolved '" + service + "' to source that is not postable. Use servlet: protocol for service calls.");            
+        	throw new ProcessingException("Resolved '" + service + "' to source that is not postable. Use servlet: protocol for service calls.");
         } catch (SourceException se) {
             throw SourceUtil.handle("Error during resolving of '" + service + "'.", se);
         }
-        
+
         if (getLogger().isDebugEnabled()) {
         	getLogger().debug("Source " + service + " resolved to " + servletSource.getURI());
         }
-		
+
 		startSerializedXMLRecording(null);
 	}
-	
+
 	public void endDocument() throws SAXException {
 		super.endDocument();
 
@@ -101,7 +101,7 @@ public class ServletServiceTransformer extends AbstractSAXTransformer
 			throw new SAXException("Exception occured while calling servlet service", e);
 		}
 	}
-	
+
 	public void dispose() {
 		if (servletSource != null) {
 			resolver.release(servletSource);
