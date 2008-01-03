@@ -31,7 +31,7 @@ import org.apache.cocoon.components.modules.input.InputModule;
  *
  * @version $Id$
  */
-public class BlockPropertyModule implements InputModule {
+public class PropertyModule implements InputModule {
 
     private ServletContext servletContext;
 
