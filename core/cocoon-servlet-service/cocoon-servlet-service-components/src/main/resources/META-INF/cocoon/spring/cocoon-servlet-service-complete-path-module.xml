@@ -18,7 +18,7 @@
 <!-- SVN $Id: cocoon-servlet-service-block-path-module.xml 504719 2007-02-07 22:17:36Z danielf $ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
     <bean name="org.apache.cocoon.components.modules.input.InputModule/servlet"
           class="org.apache.cocoon.servletservice.components.CompletePathModule">
