@@ -34,7 +34,7 @@ import org.apache.cocoon.servletservice.Absolutizable;
  *
  * @version $Id$
  */
-public class BlockPathModule implements InputModule {
+public class PathModule implements InputModule {
 
     private ServletContext servletContext;
 
