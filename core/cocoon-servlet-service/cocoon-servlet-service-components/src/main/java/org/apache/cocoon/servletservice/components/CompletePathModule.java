@@ -26,20 +26,20 @@ import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
- * This module provides almost exactly the same functionality as {@link BlockPathModule}. The only difference is that
+ * This module provides almost exactly the same functionality as {@link PathModule}. The only difference is that
  * this module adds prefix-path on which block/servlet is mounted.<br>
  * Use this module if you need a base path for URLs pointing resources in your block.
  *
  */
-public class BlockCompletePathModule implements InputModule {
+public class CompletePathModule implements InputModule {
 	
-	BlockPathModule blockPathModule;
+	PathModule blockPathModule;
 	
-	public BlockPathModule getBlockPathModule() {
+	public PathModule getBlockPathModule() {
 		return blockPathModule;
 	}
 
-	public void setBlockPathModule(BlockPathModule blockPathModule) {
+	public void setBlockPathModule(PathModule blockPathModule) {
 		this.blockPathModule = blockPathModule;
 	}
 
