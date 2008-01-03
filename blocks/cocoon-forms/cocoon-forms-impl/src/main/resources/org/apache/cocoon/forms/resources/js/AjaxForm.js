@@ -151,7 +151,7 @@ dojo.io.checkChildrenForFile = function(node) {
     var inputs = node.getElementsByTagName("input");
     dojo.lang.forEach(inputs, function(input){
         if(hasFile){ return; }
-        if(input.getAttribute("type")=="file" && !input.disabled){
+        if(input.getAttribute("type")=="file" && !input.disabled && input.value){
             hasFile = true;
         }
     });
