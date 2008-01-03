@@ -63,6 +63,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  *
  * @version $Id: BlockCallHttpServletRequest.java 577519 2007-09-20 03:05:26Z
  *          vgritsenko $
+ * @since 1.0.0
  */
 public class ServletSerivceRequest implements HttpServletRequest {
 

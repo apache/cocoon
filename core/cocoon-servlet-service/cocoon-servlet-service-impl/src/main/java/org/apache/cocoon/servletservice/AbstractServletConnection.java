@@ -33,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @version $Id$
+ * @since 1.0.0
  */
 public abstract class AbstractServletConnection implements ServletConnection {
 

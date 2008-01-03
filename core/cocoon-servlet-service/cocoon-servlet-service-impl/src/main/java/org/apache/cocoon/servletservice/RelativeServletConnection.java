@@ -33,6 +33,7 @@ import org.apache.cocoon.servletservice.util.ServletServiceResponse;
  * servlet context and its connections.
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public final class RelativeServletConnection extends AbstractServletConnection {
 

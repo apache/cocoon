@@ -44,8 +44,8 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- *
  * @version $Id$
+ * @since 1.0.0
  */
 public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
                                            ServletContextAware, BeanNameAware {

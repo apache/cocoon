@@ -43,7 +43,7 @@ import org.w3c.dom.Node;
  * The actual creation of the servlet service (= a bean) is done by {@link ServletFactoryBean}.</p>
  *
  * @version $Id$
- * @since 1.0
+ * @since 1.0.0
  */
 public class ServletDecorator implements BeanDefinitionDecorator {
 

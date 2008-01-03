@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
  * </p>
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public interface ServletConnection {
 
