@@ -707,7 +707,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
 
         Diff diff = compareXML(expected, actual);
 
-        assertEquals(msg + ", " + diff.toString(), true, diff.similar());
+        assertTrue(msg + ", " + diff.toString(), diff.similar());
     }
 
     /**
@@ -723,7 +723,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
 
         Diff diff = compareXML(expected, actual);
 
-        assertEquals("Test if the assertion document is equal, " + diff.toString(), true, diff.similar());
+        assertTrue("Test if the assertion document is equal, " + diff.toString(), diff.similar());
     }
 
     /**
@@ -740,7 +740,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
 
         Diff diff = compareXML(expected, actual);
 
-        assertEquals(msg + ", " + diff.toString(), true, diff.identical());
+        assertTrue(msg + ", " + diff.toString(), diff.identical());
     }
 
     /**
@@ -756,7 +756,7 @@ public abstract class SitemapComponentTestCase extends CocoonTestCase {
 
         Diff diff = compareXML(expected, actual);
 
-        assertEquals("Test if the assertion document is equal, " + diff.toString(), true, diff.identical());
+        assertTrue("Test if the assertion document is equal, " + diff.toString(), diff.identical());
     }
 
     /**
