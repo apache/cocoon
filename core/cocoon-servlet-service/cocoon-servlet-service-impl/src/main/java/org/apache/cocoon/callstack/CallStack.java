@@ -22,7 +22,7 @@ import java.util.Stack;
  * Stack used for storing objects in the current call frame.
  *
  * @version $Id$
- * @since 2.2
+ * @since 1.0.0
  */
 public class CallStack {
 
@@ -64,7 +64,7 @@ public class CallStack {
         if (stack != null && !stack.isEmpty()) {
             return (CallFrame) stack.peek();
         }
-        
+
         return null;
     }
 

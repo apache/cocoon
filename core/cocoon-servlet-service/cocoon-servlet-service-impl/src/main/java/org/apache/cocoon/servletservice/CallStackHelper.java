@@ -29,7 +29,7 @@ import org.apache.cocoon.callstack.environment.CallFrameHelper;
  * Helper class used for geting hold on the current servlet service
  *
  * @version $Id$
- * @since 2.2 
+ * @since 1.0.0
  */
 public class CallStackHelper {
 
@@ -67,7 +67,7 @@ public class CallStackHelper {
         if (null == context) throw new ServletException("The context is not set.");
         if (null == request) throw new ServletException("The request is not set.");
         if (null == response) throw new ServletException("The response is not set.");
-        
+
 
         CallStack.enter();
         CallStack.getCurrentFrame().setAttribute(SUPER_CALL, Boolean.valueOf(superCall));

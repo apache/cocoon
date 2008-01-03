@@ -25,17 +25,18 @@ import javax.servlet.http.HttpServletRequest;
  * A dynamic wrapper for servlet requests that overwrites the
  * getContextPath, getServletPath and getPathInfo methods to
  * reflect the mount path of the block servlet.
- * 
+ *
  * @version $Id$
+ * @since 1.0.0
  */
 public class DynamicProxyRequestHandler implements InvocationHandler {
     private final HttpServletRequest wrapped;
     private final String mountPath;
-	
+
     private static final Method getContextPathMethod;
     private static final Method getServletPathMethod;
     private static final Method getPathInfoMethod;
-	
+
     static {
         getContextPathMethod = getHttpServletRequestMethod("getContextPath");
         getServletPathMethod = getHttpServletRequestMethod("getServletPath");
@@ -88,4 +89,5 @@ public class DynamicProxyRequestHandler implements InvocationHandler {
             return method.invoke(wrapped, arguments);
         }
     }
+
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,31 +21,24 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
- * Factorybean that exposes the HttpServletResponse in the current call frame.
- * It will typically be used together with the call scope.
+ * {@link FactoryBean} that exposes the {@link HttpServletResponse} in the
+ * current call frame. It will typically be used together with the call scope.
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public final class HttpServletResponseFactoryBean implements FactoryBean {
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
-     */
     public Object getObject() throws Exception {
         return CallFrameHelper.getResponse();
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
-     */
     public Class getObjectType() {
         return HttpServletResponse.class;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.FactoryBean#isSingleton()
-     */
     public boolean isSingleton() {
         return true;
     }
+
 }

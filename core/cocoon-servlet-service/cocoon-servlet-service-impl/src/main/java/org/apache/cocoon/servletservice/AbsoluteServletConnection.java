@@ -34,6 +34,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * must be available.
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public final class AbsoluteServletConnection extends AbstractServletConnection {
 

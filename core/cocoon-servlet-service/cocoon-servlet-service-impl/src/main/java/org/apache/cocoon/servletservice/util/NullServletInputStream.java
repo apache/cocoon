@@ -24,6 +24,7 @@ import java.io.IOException;
  * Always empty stream.
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public class NullServletInputStream extends ServletInputStream {
 
@@ -32,4 +33,5 @@ public class NullServletInputStream extends ServletInputStream {
     public int read() throws IOException {
         return -1;
     }
+
 }
