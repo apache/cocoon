@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,17 +43,23 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * This class is only used as a base class for the {@link ShieldingServletService}. For non shielded servlet
- * services, the {@link org.apache.cocoon.servletservice.spring.ServletFactoryBean} should be used.
- * 
+ * <p>
+ * This class is only used as a base class for the
+ * {@link ShieldingServletService}. For non shielded servlet services, the
+ * {@link org.apache.cocoon.servletservice.spring.ServletFactoryBean} should be
+ * used.
+ * </p>
+ * <p>
  * TODO: Make the shielding work together with the ServletBeanFactory.
- * 
+ * </p>
+ *
  * @version $Id$
+ * @since 1.0.0
  */
 public class ServletService extends HttpServlet
     implements ApplicationContextAware, ServletContextAware, BeanNameAware,
     InitializingBean, DisposableBean {
-    
+
     private ServletServiceContext servletServiceContext;
     private String embeddedServletClass;
     private Servlet embeddedServlet;
@@ -64,7 +70,7 @@ public class ServletService extends HttpServlet
     public ServletService() {
         this.servletServiceContext = new ServletServiceContext();
     }
-    
+
     /* (non-Javadoc)
      * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
      */
@@ -97,7 +103,7 @@ public class ServletService extends HttpServlet
                     return super.getServletContext().getInitParameterNames();
                 }
             };
-            
+
         super.init(blockServletConfig);
 
         // create and initialize the embedded servlet
@@ -105,10 +111,10 @@ public class ServletService extends HttpServlet
         this.embeddedServlet.init(blockServletConfig);
         this.servletServiceContext.setServlet(this.embeddedServlet);
     }
-    
+
     /**
      * Creates and initializes the embedded servlet
-     * @param string 
+     * @param string
      * @throws ServletException
      */
     protected Servlet createEmbeddedServlet(String embeddedServletClassName, ServletConfig servletConfig)
@@ -131,10 +137,10 @@ public class ServletService extends HttpServlet
     }
 
     public void destroy() {
-        this.embeddedServlet.destroy();        
+        this.embeddedServlet.destroy();
         super.destroy();
     }
-    
+
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.parentContainer = applicationContext;
     }
@@ -148,13 +154,13 @@ public class ServletService extends HttpServlet
     }
 
     public void setMountPath(String mountPath) {
-        this.servletServiceContext.setMountPath(mountPath);        
+        this.servletServiceContext.setMountPath(mountPath);
     }
-    
+
     public String getMountPath() {
         return this.servletServiceContext.getMountPath();
     }
-    
+
     /**
      * The path to the blocks resources relative to the servlet context URL,
      * must start with an '/'.
@@ -173,7 +179,7 @@ public class ServletService extends HttpServlet
     public void setProperties(Map properties) {
         this.servletServiceContext.setInitParams(properties);
     }
-    
+
     public void setConnections(Map connections) {
         this.servletServiceContext.setConnections(connections);
     }
@@ -199,7 +205,7 @@ public class ServletService extends HttpServlet
             public String getServletName() {
                 return ServletService.this.beanName;
             }
-            
+
         };
         this.init(servletConfig);
     }

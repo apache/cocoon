@@ -45,18 +45,18 @@ import org.xml.sax.SAXException;
  * contain the URL of the called service.</p>
  *
  * <p>Use <code>servlet:</code> source for that purpose.</p>
- * 
+ *
  * <p>FIXME: Provide a link to the documents discussing servlet (and sitemap) services.</p>
- * 
+ *
  * @cocoon.sitemap.component.documentation
  * The <code>ServletServiceSerializer</code> POSTs its input data to a called
  * service. Result of the serialization is a data returned by the called
  * service.
- * @cocoon.sitemap.component.name servletService  
+ * @cocoon.sitemap.component.name servletService
  * @cocoon.sitemap.component.documentation.caching Not Implemented
  *
- * @since 2.2
  * @version $Id$
+ * @since 1.0.0
  */
 public class ServletServiceSerializer extends AbstractSerializer
                                       implements SitemapModelComponent {
@@ -90,7 +90,7 @@ public class ServletServiceSerializer extends AbstractSerializer
 
 		saxBuffer = new SaxBuffer();
 		setConsumer(saxBuffer);
-		
+
 		response = ObjectModelHelper.getResponse(objectModel);
 	}
 
@@ -106,7 +106,7 @@ public class ServletServiceSerializer extends AbstractSerializer
 
         try {
             // TODO Improve this quick fix; it is better for Postable to provide Writer instead.
-            // TODO Need to specify 
+            // TODO Need to specify
             // Convert output stream to writer to specify UTF-8 encoding.
             Writer out = new OutputStreamWriter(servletSource.getOutputStream(), "UTF-8");
             IOUtils.copy(new StringReader(serializedXML), out);
@@ -118,7 +118,7 @@ public class ServletServiceSerializer extends AbstractSerializer
         try {
 			//here real mime type is set, see Spring bean's configuration comment
 			response.setHeader("Content-Type", servletSource.getMimeType());
-			
+
 			IOUtils.copy(servletSource.getInputStream(), super.output);
 		} catch (Exception e) {
 			throw new SAXException("Exception occured while copying response from the service to the output stream", e);

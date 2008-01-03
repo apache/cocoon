@@ -33,6 +33,7 @@ import org.apache.cocoon.servletservice.Absolutizable;
  * BlockPathModule returns the absolute path of a block protocol path.
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public class PathModule implements InputModule {
 

@@ -29,14 +29,18 @@ import org.apache.excalibur.source.impl.AbstractSource;
 /**
  * The <code>ServletServiceConsumerSource</code> makes available the data that has been passed to a sitemap service.
  * In a sitemap the source should be referenced with <code>service-consumer:</code> syntax.<br>
+ *
  * FIXME: Provide a link to the documents discussing servlet (and sitemap) services.
+ *
+ * @version $Id$
+ * @since 1.0.0
  */
 public class ServletServiceConsumerSource extends AbstractSource {
-	
+
 	private Log logger = LogFactory.getLog(getClass());
-	
+
 	private InputStream requestBody;
-	
+
 	public ServletServiceConsumerSource(HttpServletRequest request) {
 		try {
 			requestBody = request.getInputStream();
@@ -48,7 +52,7 @@ public class ServletServiceConsumerSource extends AbstractSource {
 	public boolean exists() {
 		return requestBody != null;
 	}
-	
+
 	public InputStream getInputStream() throws IOException, SourceException {
 		if (!exists()) throw new SourceException("POST data does not exists for request. Make sure you are processing service call.");
 		return requestBody;
