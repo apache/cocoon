@@ -52,8 +52,8 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- *
  * @version $Id$
+ * @since 1.0.0
  */
 public class ServletServiceContext extends ServletContextWrapper implements Absolutizable {
 
@@ -71,12 +71,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     private String serviceName;
 
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
-     */
     /*
      *  TODO inheritance of attributes from the parent context is only
      *  partly implemented: removeAttribute and getAttributeNames
@@ -87,30 +81,14 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         return value != null ? value : super.getAttribute(name);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#setAttribute(java.lang.String,
-     *      java.lang.Object)
-     */
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#removeAttribute(java.lang.String)
-     */
     public void removeAttribute(String name) {
         this.attributes.remove(name);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getAttributeNames()
-     */
     public Enumeration getAttributeNames() {
         return Collections.enumeration(this.attributes.keySet());
     }
@@ -123,11 +101,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
             this.attributes = map;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getResource(java.lang.String)
-     */
     public URL getResource(String path) throws MalformedURLException {
         // hack for getting a file protocol or other protocols that can be used as context
         // path in the getResource method in the servlet context
@@ -164,21 +137,11 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         return super.getResource(this.contextPath + path);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getRealPath(java.lang.String)
-     */
     public String getRealPath(String path) {
         // We better don't assume that blocks are unpacked
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getInitParameter(java.lang.String)
-     */
     // FIXME, this should be defined in the config instead
     public String getInitParameter(String name) {
         if (this.properties == null) {
@@ -202,11 +165,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         return value;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getInitParameterNames()
-     */
     public Enumeration getInitParameterNames() {
         Vector names = new Vector();
 
@@ -233,11 +191,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         return names.elements();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
-     */
     public InputStream getResourceAsStream(String path) {
         try {
             return this.getResource(path).openStream();
@@ -248,20 +201,10 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getContext(java.lang.String)
-     */
     public ServletContext getContext(String uripath) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getMajorVersion()
-     */
     public int getMajorVersion() {
         return 2;
     }
@@ -293,11 +236,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         return filenames;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getResourcePaths(java.lang.String)
-     */
     public Set getResourcePaths(String path) {
         if (path == null) {
             return Collections.EMPTY_SET;
@@ -324,41 +262,21 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         return set;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getRequestDispatcher(java.lang.String)
-     */
     public RequestDispatcher getRequestDispatcher(String path) {
         PathDispatcher dispatcher = new PathDispatcher(path);
         return dispatcher.exists() ? dispatcher : null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getNamedDispatcher(java.lang.String)
-     */
     public RequestDispatcher getNamedDispatcher(String name) {
         NamedDispatcher dispatcher = new NamedDispatcher(name);
         return dispatcher.exists() ? dispatcher : null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getServerInfo()
-     */
     public String getServerInfo() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.ServletContext#getServletContextName()
-     */
     public String getServletContextName() {
         // TODO Auto-generated method stub
         return null;
@@ -494,15 +412,17 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     protected class NamedDispatcher implements RequestDispatcher {
 
         private String servletServiceName;
-        private boolean superCall;
-        private ServletContext context;
 
+        private boolean superCall;
+
+        private ServletContext context;
 
         public NamedDispatcher(String servletServiceName) {
             this.servletServiceName = servletServiceName;
             this.superCall = SUPER.equals(this.servletServiceName);
 
-            // Call to a named servlet service that exists in the current context
+            // Call to a named servlet service that exists in the current
+            // context
             this.context = ServletServiceContext.this.getNamedContext(this.servletServiceName);
         }
 
@@ -510,23 +430,16 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
             return this.context != null;
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest,
-         *      javax.servlet.ServletResponse)
-         */
-        public void forward(ServletRequest request, ServletResponse response)
-        throws ServletException, IOException {
+        public void forward(ServletRequest request, ServletResponse response) throws ServletException, IOException {
             // Call to named servlet service
 
             if (logger.isInfoEnabled()) {
                 logger.info("Enter processing in servlet service " + this.servletServiceName);
             }
-            RequestDispatcher dispatcher =
-                    this.context.getRequestDispatcher(((HttpServletRequest)request).getPathInfo());
+            RequestDispatcher dispatcher = this.context.getRequestDispatcher(((HttpServletRequest) request)
+                            .getPathInfo());
             if (dispatcher != null && dispatcher instanceof PathDispatcher) {
-                ((PathDispatcher)dispatcher).forward(request, response, this.superCall);
+                ((PathDispatcher) dispatcher).forward(request, response, this.superCall);
             } else {
                 // Cannot happen
                 throw new IllegalStateException();
@@ -536,20 +449,14 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
             }
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest,
-         *      javax.servlet.ServletResponse)
-         */
-        public void include(ServletRequest request, ServletResponse response)
-        throws ServletException, IOException {
+        public void include(ServletRequest request, ServletResponse response) throws ServletException, IOException {
             throw new UnsupportedOperationException();
         }
     }
 
     /**
-     *  Limited functionality, assumes that there is at most one servlet in the context
+     * Limited functionality, assumes that there is at most one servlet in the
+     * context
      */
     private class PathDispatcher implements RequestDispatcher {
 
@@ -562,38 +469,38 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
             return ServletServiceContext.this.servlet != null;
         }
 
-        /* (non-Javadoc)
-         * @see javax.servlet.RequestDispatcher#forward(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
-         */
-        public void forward(ServletRequest request, ServletResponse response)
-        throws ServletException, IOException {
+        public void forward(ServletRequest request, ServletResponse response) throws ServletException, IOException {
             forward(request, response, false);
         }
 
         protected void forward(ServletRequest request, ServletResponse response, boolean superCall)
-        throws ServletException, IOException {
+                        throws ServletException, IOException {
             try {
-                StatusRetrievableWrappedResponse wrappedResponse = new StatusRetrievableWrappedResponse((HttpServletResponse) response);
-                //FIXME: I think that Cocoon should always set status code on its own
+                StatusRetrievableWrappedResponse wrappedResponse = new StatusRetrievableWrappedResponse(
+                                (HttpServletResponse) response);
+                // FIXME: I think that Cocoon should always set status code on
+                // its own
                 wrappedResponse.setStatus(HttpServletResponse.SC_OK);
                 if (!superCall) {
                     // It is important to set the current context each time
                     // a new context is entered, this is used for the servlet
                     // protocol
-                    CallStackHelper.enterServlet(ServletServiceContext.this, (HttpServletRequest) request, wrappedResponse);
+                    CallStackHelper.enterServlet(ServletServiceContext.this, (HttpServletRequest) request,
+                                    wrappedResponse);
                 } else {
-                    // A super servlet service should be called in the context of
-                    // the called servlet service to get polymorphic calls resolved
-                    // in the right way. We still need to register the
+                    // A super servlet service should be called in the context
+                    // of the called servlet service to get polymorphic calls
+                    // resolved in the right way. We still need to register the
                     // current context for resolving super calls relative it.
-                    CallStackHelper.enterSuperServlet(ServletServiceContext.this, (HttpServletRequest) request, wrappedResponse);
+                    CallStackHelper.enterSuperServlet(ServletServiceContext.this, (HttpServletRequest) request,
+                                    wrappedResponse);
                 }
 
                 ServletException se = null;
                 try {
-                	ServletServiceContext.this.servlet.service(request, wrappedResponse);
+                    ServletServiceContext.this.servlet.service(request, wrappedResponse);
                 } catch (ServletException e) {
-                	se = e;
+                    se = e;
                 }
 
                 int status = wrappedResponse.getStatus();
@@ -614,9 +521,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
             }
         }
 
-        /* (non-Javadoc)
-         * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
-         */
         public void include(ServletRequest request, ServletResponse response) throws ServletException, IOException {
             throw new UnsupportedOperationException();
         }

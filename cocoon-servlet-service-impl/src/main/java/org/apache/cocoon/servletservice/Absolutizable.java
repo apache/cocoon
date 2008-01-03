@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
  * about a mounted servlet service.
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public interface Absolutizable {
 

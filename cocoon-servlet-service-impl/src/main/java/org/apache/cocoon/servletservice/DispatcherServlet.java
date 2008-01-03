@@ -38,29 +38,30 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * A servlet that dispatch to managed sevlets from the context Spring container.
  * It dispatch to servlets that has the property mountPath, and dispatches to the
  * servlet with the longest prefix of the request pathInfo.
- * 
+ *
  * This servlet will also initialize and destroy all the servlets that it finds
  * from the context container. This means that there must only be one dispatcher
  * servlet, otherwise the managed servlets will be initialized several times.
  *
  * @version $Id$
+ * @since 1.0.0
  */
 public class DispatcherServlet extends HttpServlet {
 
     /** By default we use the logger for this class. */
     private final Log logger = LogFactory.getLog(getClass());
-    
+
     /**
      * The startup date of the Spring application context used to setup the  {@link #blockServletCollector}.
      * TODO: Use a better way to reload {@link #blockServletCollector} when RCL is used, see COCOON-2076
      */
     private long applicationContextStartDate;
-    
+
     /** The servlet collector bean */
     private Map blockServletCollector;
-    
+
     public void init() throws ServletException {
-        this.log("Block dispatcher was initialized successfully.");        
+        this.log("Block dispatcher was initialized successfully.");
     }
 
     protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -91,17 +92,17 @@ public class DispatcherServlet extends HttpServlet {
                 req.getClass().getClassLoader(),
                 getInterfaces(req.getClass()),
                 new DynamicProxyRequestHandler(req, path));
-        
+
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("DispatcherServlet: service servlet=" + servlet +
                               " mountPath=" + path +
                               " servletPath=" + request.getServletPath() +
                               " pathInfo=" + request.getPathInfo());
         }
-        
+
         servlet.service(request, res);
     }
-    
+
     private void getInterfaces(Set interfaces, Class clazz) {
         Class[] clazzInterfaces = clazz.getInterfaces();
         for (int i = 0; i < clazzInterfaces.length; i++) {
@@ -110,8 +111,8 @@ public class DispatcherServlet extends HttpServlet {
             getInterfaces(interfaces, clazzInterfaces[i]);
         }
 
-        //the superclazz is null if class is instanceof Object, is
-        //an interface, a primitive type or void
+        // the superclazz is null if class is instanceof Object, is
+        // an interface, a primitive type or void
         Class superclazz = clazz.getSuperclass();
         if (superclazz != null) {
             //add all interfaces of the superclass to the list
@@ -135,4 +136,5 @@ public class DispatcherServlet extends HttpServlet {
         }
         return blockServletCollector;
     }
+
 }

@@ -27,11 +27,12 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  *
  * @version $Id: ServletNamespaceHandler.java 562806 2007-08-05 02:26:41Z
  *          vgritsenko $
- * @since 2.2
+ * @since 1.0.0
  */
 public class ServletNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
         registerBeanDefinitionDecorator("context", new ServletDecorator());
     }
+
 }
