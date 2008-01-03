@@ -24,8 +24,8 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 
 import org.apache.cocoon.callstack.environment.CallFrameHelper;
-import org.apache.cocoon.servletservice.util.BlockCallHttpServletRequest;
-import org.apache.cocoon.servletservice.util.BlockCallHttpServletResponse;
+import org.apache.cocoon.servletservice.util.ServletSerivceRequest;
+import org.apache.cocoon.servletservice.util.ServletServiceResponse;
 
 /**
  * Implementation of a {@link ServletConnection} that gets its content by
@@ -77,8 +77,8 @@ public final class RelativeServletConnection extends AbstractServletConnection {
         }
 
         // prepare request and response objects
-        this.request = new BlockCallHttpServletRequest(reqUri, CallFrameHelper.getRequest());
-        this.response = new BlockCallHttpServletResponse();
+        this.request = new ServletSerivceRequest(reqUri, CallFrameHelper.getRequest());
+        this.response = new ServletServiceResponse();
 
         if(this.logger.isDebugEnabled()) {
             this.logger.debug("Resolving relative servlet URI " + this.uri.toASCIIString());

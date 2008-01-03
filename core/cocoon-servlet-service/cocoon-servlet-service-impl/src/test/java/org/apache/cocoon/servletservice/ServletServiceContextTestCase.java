@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
-import org.apache.cocoon.servletservice.util.BlockCallHttpServletRequest;
-import org.apache.cocoon.servletservice.util.BlockCallHttpServletResponse;
+import org.apache.cocoon.servletservice.util.ServletSerivceRequest;
+import org.apache.cocoon.servletservice.util.ServletServiceResponse;
 
 /**
  * @version $Id$
@@ -49,8 +49,8 @@ public class ServletServiceContextTestCase extends TestCase {
     private ServletServiceContext servletBContext;
     private ServletServiceContext servletCContext;
     
-    BlockCallHttpServletRequest request;
-    BlockCallHttpServletResponse response;
+    ServletSerivceRequest request;
+    ServletServiceResponse response;
     
     
     /* (non-Javadoc)
@@ -60,8 +60,8 @@ public class ServletServiceContextTestCase extends TestCase {
         super.setUp();
         this.mainContext = new ServletServiceContext();
         
-        request = new BlockCallHttpServletRequest(new URI("dummy"), null);
-        response = new BlockCallHttpServletResponse();
+        request = new ServletSerivceRequest(new URI("dummy"), null);
+        response = new ServletServiceResponse();
         
         //creating ServletContexts
         servletAContext = new ServletServiceContext();
