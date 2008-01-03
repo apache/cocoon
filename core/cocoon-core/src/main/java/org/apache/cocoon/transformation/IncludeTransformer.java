@@ -84,6 +84,16 @@ import org.xml.sax.ext.LexicalHandler;
  * relative to the source document location. This is consistent with
  * {@link XIncludeTransformer} behavior, but differs from {@link CIncludeTransformer}.
  *
+ * <h3>Root Element Stripping</h3>
+ * <p>The root element of included content may be automatically stripped by specifying
+ * <code>strip-root="true"</code> on the <code>include</code> element. This is the same
+ * functionality as provided by {@link org.apache.cocoon.transformation.CIncludeTransformer}.
+ * 
+ * <p>Example:</p>
+ * <pre>
+ * &lt;i:include xmlns:i="http://apache.org/cocoon/include/1.0"
+ *               src="cocoon://path/to/include" strip-root="true"/&gt;
+ * </pre>
  *
  * <h3>Parameters Passing</h3>
  * <p>Parameters to be passed to the included sources can be specified in two ways:
@@ -193,6 +203,9 @@ public class IncludeTransformer extends AbstractTransformer
 
     /** <p>The name of the parse attribute indicating type of included source processing: xml or text.</p> */
     private static final String PARSE_ATTRIBUTE = "parse";
+
+    /** <p>The name of the strip-root attribute indicating that the root element of included xml source should be stripped.</p> */
+    private static final String STRIP_ROOT_ATTRIBUTE = "strip-root";
 
     /** <p>The name of the attribute indicating the parameter name.</p> */
     private static final String NAME_ATTRIBUTE = "name";
@@ -482,6 +495,9 @@ public class IncludeTransformer extends AbstractTransformer
         /** The mime type hint to the {@link org.apache.excalibur.xmlizer.XMLizer} when parsing the source content. */
         protected String mimeType;
 
+        /** The flag indicating whether to strip the root element. */
+        protected boolean stripRoot;
+
         /** The buffer collecting fallback content. */
         protected SaxBuffer fallback;
 
@@ -571,11 +587,11 @@ public class IncludeTransformer extends AbstractTransformer
                                      new IncludeXMLPipe(contentHandler, lexicalHandler,
                                                         recursive, recursiveParallel && parallel, recursiveParallel));
                 } else if (this.parse) {
-                    SourceUtil.toSAX(manager, source, this.mimeType,
-                                     new IncludeXMLConsumer(contentHandler, lexicalHandler));
+                    IncludeXMLConsumer includeXMLConsumer = new IncludeXMLConsumer(contentHandler, lexicalHandler);
+                    includeXMLConsumer.setIgnoreRootElement(stripRoot);
+                    SourceUtil.toSAX(manager, source, this.mimeType, includeXMLConsumer);
                 } else {
-                    SourceUtil.toCharacters(source, "utf-8",
-                                            contentHandler);
+                    SourceUtil.toCharacters(source, "utf-8", contentHandler);
                 }
 
                 if (getLogger().isDebugEnabled()) {
@@ -811,6 +827,10 @@ public class IncludeTransformer extends AbstractTransformer
                     } else if (element.mimeType == null) {
                         element.mimeType = "text/xml";
                     }
+
+                    /* Defaults to false */
+                    String stripRoot = atts.getValue(STRIP_ROOT_ATTRIBUTE);
+                    element.stripRoot = Boolean.valueOf(stripRoot).booleanValue();
 
                     /* Ignore nested content */
                     push(new NOPRecorder(){});
