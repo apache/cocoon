@@ -3365,6 +3365,10 @@
                     <name>cdocs-core</name>
                     <path>${docs.m.core.relPath}</path>
                   </collection>
+                  <collection>
+                    <name>cdocs-expression-language</name>
+                    <path>${docs.m.expression-language-impl.relPath}</path>
+                  </collection>
                   <!-- subprojects -->
                   <collection>
                     <name>cdocs-configuration-api</name>
