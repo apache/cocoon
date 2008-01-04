@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <!DOCTYPE status [
-<!ELEMENT status (developers, todo, changes)>
+<!ELEMENT status (developers?, todo?, changes)>
 <!ELEMENT developers (person+)>
 <!ELEMENT person EMPTY>
 <!ATTLIST person
@@ -66,13 +66,9 @@
  <!-- The following list contains the changes since the latest 2.1.x version. -->
  <changes>
   <release version="@version@" date="@date@">
-    <action dev="none">
-      The Cocoon Forms code base is shared between the 2.1 and 2.2 branches. Until this
-      changes or 2.1 also adopts a per-block status file, all changes must be reported
-      in the main status.xml file.
+    <action dev="JH" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
+      Allow Ajax submission of forms with empty upload field.
     </action>
   </release>
  </changes>
-
 </status>
-
