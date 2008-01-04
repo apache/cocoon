@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,14 +16,17 @@
  */
 package org.apache.cocoon.components.sax;
 
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.ContentHandler;
-import org.apache.cocoon.xml.dom.DOMBuilder;
-import org.apache.cocoon.xml.AbstractXMLTestCase;
-import org.apache.cocoon.xml.DefaultHandlerWrapper;
+import java.io.ByteArrayInputStream;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.ByteArrayInputStream;
+
+import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.cocoon.xml.AbstractXMLTestCase;
+import org.apache.cocoon.xml.DefaultHandlerWrapper;
+import org.apache.cocoon.xml.dom.DOMBuilder;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Testcase for XMLByteStreamCompiler and Interpreter
@@ -43,14 +46,16 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
         generateLargeSAX(in);
 
         // capture events
-        XMLByteStreamCompiler xmlc = new XMLByteStreamCompiler();
+        XMLSerializer xmlc = makeSerializer();
         generateLargeSAX(xmlc);
 
         // recall events and build a DOM from it
-        XMLByteStreamInterpreter xmli = new XMLByteStreamInterpreter();
+        XMLDeserializer xmli = makeDeserializer();
         DOMBuilder out = new DOMBuilder();
         xmli.setConsumer(out);
-        xmli.deserialize(xmlc.getSAXFragment());
+        final Object fragment = xmlc.getSAXFragment();
+        System.out.println("Fragment is bytes: " + ((byte[])fragment).length);
+		xmli.deserialize(fragment);
 
         // compare DOMs
         assertXMLEqual(in.getDocument(), out.getDocument());
@@ -58,15 +63,15 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
 
     public void testCompareByteArray() throws Exception {
         // capture events
-        XMLByteStreamCompiler sa = new XMLByteStreamCompiler();
+        XMLSerializer sa = makeSerializer();
         generateLargeSAX(sa);
 
         // serialize events
         byte[] aa = (byte[]) sa.getSAXFragment();
 
         // deserialize and capture
-        XMLByteStreamCompiler sb = new XMLByteStreamCompiler();
-        XMLByteStreamInterpreter xmli = new XMLByteStreamInterpreter();
+        XMLSerializer sb = makeSerializer();
+        XMLDeserializer xmli = makeDeserializer();
         xmli.setConsumer(sb);
         xmli.deserialize(aa);
 
@@ -81,7 +86,7 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
     }
 
     public void testStressLoop() throws Exception {
-        XMLByteStreamCompiler xmlc = new XMLByteStreamCompiler();
+        XMLSerializer xmlc = makeSerializer();
 
         long loop = 10000;
 
@@ -89,7 +94,12 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
         long start = System.currentTimeMillis();
         for(int i=0;i<loop;i++) {
             generateSmallSAX(xmlc);
-            xmlc.recycle();
+            xmlc.getSAXFragment();
+            if (xmlc instanceof Recyclable) {
+            	((Recyclable)xmlc).recycle();
+            } else {
+            	xmlc = makeSerializer();
+            }
         }
         long stop = System.currentTimeMillis();
 
@@ -104,7 +114,7 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
         SAXParserFactory pfactory = SAXParserFactory.newInstance();
         SAXParser p = pfactory.newSAXParser();
 
-        XMLByteStreamCompiler xmlc = new XMLByteStreamCompiler();
+        XMLSerializer xmlc = makeSerializer();
         DefaultHandlerWrapper wrapper = new DefaultHandlerWrapper(xmlc);
 
         ByteArrayInputStream bis = new ByteArrayInputStream(generateByteArray());
@@ -114,7 +124,11 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
         // parse documents
         long start = System.currentTimeMillis();
         for(int i=0;i<loop;i++) {
-            xmlc.recycle();
+            if (xmlc instanceof Recyclable) {
+            	((Recyclable)xmlc).recycle();
+            } else {
+            	xmlc = makeSerializer();
+            }
             bis.reset();
             p.parse(bis,wrapper);
         }
@@ -124,13 +138,13 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
         System.out.println("parsed: " + r + " documents per second");
 
 
-        XMLByteStreamInterpreter xmli = new XMLByteStreamInterpreter();
+        XMLDeserializer xmli = makeDeserializer();
         ContentHandler ch = new DefaultHandler();
 
         // recall documents
         start = System.currentTimeMillis();
         for(int i=0;i<loop;i++) {
-            xmli.setContentHandler(ch);
+            ((AbstractXMLByteStreamInterpreter)xmli).setContentHandler(ch);
             xmli.deserialize(xmlc.getSAXFragment());
         }
         stop = System.currentTimeMillis();
@@ -138,4 +152,12 @@ public final class XMLByteStreamCompilerInterpreterTestCase extends AbstractXMLT
         r = 1000*loop/(stop-start);
         System.out.println("recalling: " + r + " documents per second");
     }
+
+	protected XMLDeserializer makeDeserializer() {
+		return new XMLByteStreamInterpreter();
+	}
+
+	protected XMLSerializer makeSerializer() {
+		return new XMLByteStreamCompiler();
+	}
 }
