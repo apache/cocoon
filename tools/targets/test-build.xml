@@ -54,7 +54,7 @@
     <echo>c) Settings in build.properties can allow a subset of tests to run,</echo>
     <echo>   see the htmlunit section there.</echo>
   </target>
-  
+
   <target name="junit-tests-prepare">
     <delete dir="${build.test.output}"/>
     <delete dir="${build.test.report}"/>
@@ -73,6 +73,7 @@
     <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
       <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
       <jvmarg value="-Djunit.test.loglevel=${junit.test.loglevel}"/>
+    	<jvmarg value="-Xmx128M"/>
       <classpath>
         <path refid="test.classpath"/>
       </classpath>
