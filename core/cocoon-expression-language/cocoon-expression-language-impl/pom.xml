@@ -118,6 +118,7 @@
               <navDocId>1406</navDocId>
               <collection>cdocs-expression-language</collection>
               <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+              <createSiteXmlOnly>false</createSiteXmlOnly>
             </configuration>            
           </plugin> 
         </plugins>
