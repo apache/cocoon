@@ -55,8 +55,7 @@ public abstract class AbstractXMLTestCase extends XMLTestCase {
 
         consumer.startDocument();
         consumer.startElement("", "root", "root", atts);
-//        for (int i=0; i<0x1ffff; ++i) { // breaks current code
-        for (int i=0; i<0x0ff0; ++i) { // doesn't break current code
+        for (int i=0; i<0x10000; ++i) {
         	final String uniqueString = "f_" + i;
             consumer.startElement("", uniqueString, uniqueString, atts);
             consumer.endElement("", uniqueString, uniqueString);

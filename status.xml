@@ -182,7 +182,10 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
-    <action dev="NN" type="fix">DUMMY</action>
+    <action dev="AG" type="fix" fixes-bug="COCOON-2158">
+      Core: XMLByteStreamCompiler hard-coded limits of 0xffff Strings prevents large XML documents
+            from being handled in Cocoon. 
+    </action>
   </release>
   <release version="2.1.11" date="December 31 2007">
     <action dev="RG" type="fix" fixes-bug="COCOON-1574">
