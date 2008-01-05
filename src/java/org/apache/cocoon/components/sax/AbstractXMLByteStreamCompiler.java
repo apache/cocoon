@@ -212,14 +212,23 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
             map.put(str, new Integer(mapCount++));
             int length = str.length();
             this.writeChars(str.toCharArray(), 0, length);
-        }
-        else {
+        } else {
             int i = index.intValue();
 
-            if (i > 0xFFFF) throw new SAXException("Index too large");
-
-            this.write(((i >>> 8) & 0xFF) | 0x80);
-            this.write((i >>> 0) & 0xFF);
+            if (i <= 0x7FFF) {
+                // write index value in 16-bits
+                this.write(((i >>> 8) & 0xFF) | 0x80);
+                this.write((i >>> 0) & 0xFF);
+            } else {
+                // write escape code (Short.MAX_VALUE) to write a full 32-bit value
+                write((byte)0x7F);
+                write((byte)0xFF);
+                // write index value in 32-bit
+                write((byte) ((i >>> 24) & 0xFF) | 0x80);
+                write((byte) ((i >>> 16) & 0xFF));
+                write((byte) ((i >>>  8) & 0xFF));
+                write((byte) ((i >>>  0) & 0xFF));
+            }
         }
     }
 
