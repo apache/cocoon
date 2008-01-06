@@ -48,6 +48,7 @@
     <menu-item label="URLEncodeModule" href="url-encode" desc="URLEncode passed parameter"/>
     <menu-item label="URLDecodeModule" href="url-decode" desc="URLDecode passed parameter"/>
     <menu-item label="XMLFileModule" href="xml" desc="XML node values"/>
+    <menu-item label="XPathXMLFileModule" href="xxml?dir=a" desc="XML node values"/>
   </menu>
 
   <menu label="Documentation">

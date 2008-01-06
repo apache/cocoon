@@ -54,10 +54,10 @@ public class MockRequestAttributes
      */
     public Object getAttribute(String key, int scope) {
         if ( scope == RequestAttributes.SCOPE_REQUEST ) {
-            return this.request.getAttribute(key, Request.REQUEST_SCOPE);
+            return this.request.getLocalAttribute(key);
         }
         if ( scope == RequestAttributes.SCOPE_SESSION ) {
-            return this.request.getAttribute(key, Request.GLOBAL_SCOPE);
+            return this.request.getAttribute(key);
         }
         final HttpSession session = this.request.getSession(false);
         if ( session != null ) {
@@ -78,10 +78,10 @@ public class MockRequestAttributes
      */
     public void removeAttribute(String key, int scope) {
         if ( scope == RequestAttributes.SCOPE_REQUEST ) {
-            this.request.removeAttribute(key, Request.REQUEST_SCOPE);
+            this.request.removeLocalAttribute(key);
         }
         if ( scope == RequestAttributes.SCOPE_SESSION ) {
-            this.request.removeAttribute(key, Request.GLOBAL_SCOPE);
+            this.request.removeAttribute(key);
         }
         if ( scope == RequestAttributes.SCOPE_GLOBAL_SESSION ) {
             final HttpSession session = this.request.getSession(false);
@@ -96,10 +96,10 @@ public class MockRequestAttributes
      */
     public void setAttribute(String key, Object value, int scope) {
         if ( scope == RequestAttributes.SCOPE_REQUEST ) {
-            this.request.setAttribute(key, value, Request.REQUEST_SCOPE);
+            this.request.setLocalAttribute(key, value);
         }
         if ( scope == RequestAttributes.SCOPE_SESSION ) {
-            this.request.setAttribute(key, value, Request.GLOBAL_SCOPE);
+            this.request.setAttribute(key, value);
         }
         if ( scope == RequestAttributes.SCOPE_GLOBAL_SESSION ) {
             final HttpSession session = this.request.getSession(true);

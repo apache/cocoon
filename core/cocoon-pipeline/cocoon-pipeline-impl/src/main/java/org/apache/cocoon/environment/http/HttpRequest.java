@@ -32,7 +32,6 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.ValueHolder;
 import org.apache.cocoon.environment.impl.AbstractRequest;
@@ -67,6 +66,8 @@ public final class HttpRequest extends AbstractRequest {
 
     /**
      * Creates a HttpRequest based on a real HttpServletRequest object
+     * @param req The HttpServletReqeust
+     * @param env The HttpEnvironment
      */
     protected HttpRequest(HttpServletRequest req, HttpEnvironment env) {
         super();
@@ -324,70 +325,56 @@ public final class HttpRequest extends AbstractRequest {
      * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
-        return this.getAttribute(name, Request.GLOBAL_SCOPE);
+        return this.req.getAttribute(name);
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
-        return this.getAttributeNames(Request.GLOBAL_SCOPE);
+        return this.req.getAttributeNames();
     }
     
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
-        this.setAttribute(name, value, Request.GLOBAL_SCOPE);
+        this.req.setAttribute(name, value);
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String name) {
-        this.removeAttribute(name, Request.GLOBAL_SCOPE);
+        this.req.removeAttribute(name);
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
+     * @see org.apache.cocoon.environment.Request#getLocalAttribute(java.lang.String)
      */
-    public Object getAttribute(String name, int scope) {
-        if ( scope == Request.REQUEST_SCOPE ) {
-            return this.attributes.get(name);
-        }
-        return this.req.getAttribute(name);
+    public Object getLocalAttribute(String name) {
+        return this.attributes.get(name);
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
+     * @see org.apache.cocoon.environment.Request#getLocalAttributeNames()
      */
-    public Enumeration getAttributeNames(int scope) {
-        if ( scope == Request.REQUEST_SCOPE ) {
-            return IteratorUtils.asEnumeration(this.attributes.keySet().iterator());
-        }
-        return this.req.getAttributeNames();
+    public Enumeration getLocalAttributeNames() {
+        return IteratorUtils.asEnumeration(this.attributes.keySet().iterator());
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
+     * @see org.apache.cocoon.environment.Request#setLocalAttribute(java.lang.String, java.lang.Object)
      */
-    public void setAttribute(String name, Object value, int scope) {
-        if ( scope == Request.REQUEST_SCOPE ) {
-            this.attributes.put(name, value);
-        } else {
-            this.req.setAttribute(name, value);
-        }
+    public void setLocalAttribute(String name, Object value) {
+        this.attributes.put(name, value);
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
+     * @see org.apache.cocoon.environment.Request#removeLocalAttribute(java.lang.String)
      */
-    public void removeAttribute(String name, int scope) {
-        if ( scope == Request.REQUEST_SCOPE ) {
-            this.attributes.remove(name);
-        } else {
-            this.req.removeAttribute(name);
-        }
+    public void removeLocalAttribute(String name) {
+        this.attributes.remove(name);
     }
 
     public String getCharacterEncoding() {
@@ -404,6 +391,7 @@ public final class HttpRequest extends AbstractRequest {
 
     /**
      * Sets the default encoding of the servlet container.
+     * @param container_encoding The default form encoding of the servlet container.
      */
     public void setContainerEncoding(String container_encoding) {
         this.container_encoding = container_encoding;
@@ -518,9 +506,9 @@ public final class HttpRequest extends AbstractRequest {
      * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
      */
     public Object searchAttribute(String name) {
-        Object result = this.getAttribute(name, REQUEST_SCOPE);
+        Object result = this.getLocalAttribute(name);
         if ( result == null ) {
-            result = this.getAttribute(name, GLOBAL_SCOPE);
+            result = this.getAttribute(name);
         }
         return result;
     }

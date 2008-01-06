@@ -50,7 +50,8 @@ public class RequestAttributeModule extends AbstractInputModule implements Threa
             // preferred
             pname = modeConf.getChild("parameter").getValue(pname);
         }
-        return ObjectModelHelper.getRequest(objectModel).getAttribute( pname, scope );        
+        Request req = ObjectModelHelper.getRequest(objectModel);
+        return (scope == Request.GLOBAL_SCOPE) ? req.getAttribute(pname) : req.getLocalAttribute(pname);       
     }
     
     /* (non-Javadoc)
@@ -58,7 +59,7 @@ public class RequestAttributeModule extends AbstractInputModule implements Threa
      */
     public Object getAttribute( String name, Configuration modeConf, Map objectModel )
     throws ConfigurationException {
-        return this.getAttribute(name, modeConf, objectModel, Request.GLOBAL_SCOPE);
+        return ObjectModelHelper.getRequest(objectModel).getAttribute(name);
     }
 
 
@@ -98,7 +99,8 @@ public class RequestAttributeModule extends AbstractInputModule implements Threa
                 suffix = "";
             }
             SortedSet names = new TreeSet();
-            Enumeration allNames = request.getAttributeNames( scope );
+            Enumeration allNames = (scope == Request.GLOBAL_SCOPE) ?
+                    request.getAttributeNames() : request.getLocalAttributeNames();
 
             while (allNames.hasMoreElements()) {
                 String pname = (String) allNames.nextElement();
@@ -120,7 +122,8 @@ public class RequestAttributeModule extends AbstractInputModule implements Threa
             // no "*" in attribute name => just return all values of
             // this one attribute. Make sure, it's an array.
 
-            Object value = request.getAttribute( wildcard, scope );
+            Object value = (scope == Request.GLOBAL_SCOPE) ? request.getAttribute( wildcard) :
+                    request.getLocalAttribute( wildcard);
             if ( value != null && !value.getClass().isArray() ) {
                 Object[] values = new Object[1];
                 values[0] = value;

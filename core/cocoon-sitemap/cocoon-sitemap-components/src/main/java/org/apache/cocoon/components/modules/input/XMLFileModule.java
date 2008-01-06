@@ -419,7 +419,7 @@ public class XMLFileModule extends AbstractJXPathModule
             if (getValues){
                 result = JXPathHelper.getAttributeValues(name, modeConf, this.configuration, contextObj);
             } else {
-                result = JXPathHelper.getAttribute(name, modeConf, this.configuration, contextObj);
+                result = JXPathHelper.getAttributeValue(name, modeConf, this.configuration, contextObj);
             }
             if (this.cacheExpressions) {
                 cache.put(name, result);

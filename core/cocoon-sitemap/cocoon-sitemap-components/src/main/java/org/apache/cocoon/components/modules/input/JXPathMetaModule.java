@@ -127,7 +127,7 @@ public class JXPathMetaModule extends AbstractMetaModule implements ThreadSafe {
         if (modeConf != null) {
             name = modeConf.getChild("parameter").getValue(!this.parameter.equals("") ? this.parameter : name);
         }
-        return JXPathHelper.getAttribute(name, modeConf, this.configuration, contextObj);
+        return JXPathHelper.getAttributeValue(name, modeConf, this.configuration, contextObj);
     }
 
     /**
@@ -157,6 +157,7 @@ public class JXPathMetaModule extends AbstractMetaModule implements ThreadSafe {
      * @param modeConf a <code>Configuration</code> value
      * @param objectModel a <code>Map</code> value
      * @return an <code>Object</code> value
+     * @throws ConfigurationException from called components.
      */
     protected  Object getContextObject(Configuration modeConf, Map objectModel)
     throws ConfigurationException {

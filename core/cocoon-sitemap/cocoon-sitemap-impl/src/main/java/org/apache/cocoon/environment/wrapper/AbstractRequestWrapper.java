@@ -22,6 +22,7 @@ import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
@@ -31,6 +32,7 @@ import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.impl.AbstractRequest;
+import org.apache.commons.collections.IteratorUtils;
 
 
 /**
@@ -46,8 +48,11 @@ public abstract class AbstractRequestWrapper extends AbstractRequest {
     /** The real {@link Request} object */
     protected final Request req;
 
+    private final Map requestAttributes = new HashMap();
+
     /**
      * Constructor
+     * @param request The Request being wrapped.
      */
     public AbstractRequestWrapper(Request request) {
         this.req = request;
@@ -72,6 +77,49 @@ public abstract class AbstractRequestWrapper extends AbstractRequest {
      */
     public Enumeration getAttributeNames() {
         return this.req.getAttributeNames();
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getLocalAttribute(java.lang.String)
+     */
+    public Object getLocalAttribute(String name) {
+        return this.requestAttributes.get( name );
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getLocalAttributeNames()
+     */
+    public Enumeration getLocalAttributeNames() {
+        return IteratorUtils.asEnumeration(this.requestAttributes.keySet().iterator());
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#removeLocalAttribute(java.lang.String)
+     */
+    public void removeLocalAttribute(String name) {
+        this.requestAttributes.remove( name );
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#setLocalAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setLocalAttribute(String name, Object o) {
+        this.requestAttributes.put( name, o );
+    }
+
+    /**
+     * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
+     */
+    public Object searchAttribute(String name) {
+        Object result = this.getLocalAttribute(name);
+        if ( result == null ) {
+            result = this.getAttribute(name);
+            if ( result == null ) {
+                result = this.req.getLocalAttribute(name);
+            }
+        }
+        return result;
     }
 
     /* (non-Javadoc)
@@ -383,46 +431,11 @@ public abstract class AbstractRequestWrapper extends AbstractRequest {
         return this.req.getAuthType();
     }       
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
-     */
-    public Object getAttribute(String name, int scope) {
-        return this.req.getAttribute(name, scope);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
-     */
-    public Enumeration getAttributeNames(int scope) {
-        return this.req.getAttributeNames(scope);
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
-     */
-    public void removeAttribute(String name, int scope) {
-        this.req.removeAttribute(name,scope);
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
-     */
-    public void setAttribute(String name, Object o, int scope) {
-        this.req.setAttribute(name, o, scope);
-    }
-
     /**
      * @see org.apache.cocoon.environment.Request#getSitemapURIPrefix()
      */
     public String getSitemapURIPrefix() {
         return this.req.getSitemapURIPrefix();
-    }
-
-    /**
-     * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
-     */
-    public Object searchAttribute(String name) {
-        return this.req.searchAttribute(name);
     }
 
     /* (non-Javadoc)

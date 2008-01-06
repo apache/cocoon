@@ -29,10 +29,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.BeanDefinitionReader;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.beans.factory.support.*;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.core.io.ResourceLoader;
 
@@ -94,10 +91,12 @@ public class BridgeElementParser extends AbstractElementParser {
 
     /**
      * 
-     * @param element        Can be null
-     * @param registry
-     * @param reader         Can be null
-     * @param resourceLoader
+     * @param element        Can be null.
+     * @param info           ConfigurationInfo.
+     * @param registry       BeanDefinitionRegistry.
+     * @param reader         Can be null.
+     * @param resourceLoader ResourceLoader.
+     * @throws Exception from called components.
      */
     public void createComponents(Element                element,
                                  ConfigurationInfo      info,
@@ -140,8 +139,23 @@ public class BridgeElementParser extends AbstractElementParser {
         beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
         beanDef.getPropertyValues().addPropertyValue("resourceLoader", resourceLoader);
         beanDef.getPropertyValues().addPropertyValue("location", this.getConfigurationLocation());
-
         this.register(beanDef, AvalonBeanPostProcessor.class.getName(), registry);
+
+        // add string template parser for sitemap variable substitution
+        final ChildBeanDefinition parserDef = new ChildBeanDefinition("org.apache.cocoon.template.expression.AbstractStringTemplateParser");
+        parserDef.setBeanClassName("org.apache.cocoon.components.treeprocessor.variables.LegacySitemapStringTemplateParser");
+        parserDef.setSingleton(true);
+        parserDef.setLazyInit(false);
+        parserDef.getPropertyValues().addPropertyValue("serviceManager", new RuntimeBeanReference("org.apache.avalon.framework.service.ServiceManager"));
+        this.register(parserDef, "org.apache.cocoon.el.parsing.StringTemplateParser/legacySitemap", null, registry);
+
+        final RootBeanDefinition resolverDef = new RootBeanDefinition();
+        resolverDef.setBeanClassName("org.apache.cocoon.components.treeprocessor.variables.StringTemplateParserVariableResolver");
+        resolverDef.setLazyInit(false);
+        resolverDef.setScope("prototype");
+        resolverDef.getPropertyValues().addPropertyValue("stringTemplateParser", new RuntimeBeanReference("org.apache.cocoon.el.parsing.StringTemplateParser/legacySitemap"));
+        resolverDef.getPropertyValues().addPropertyValue("objectModel", new RuntimeBeanReference("org.apache.cocoon.el.objectmodel.ObjectModel"));
+        this.register(resolverDef, "org.apache.cocoon.components.treeprocessor.variables.StringTemplateParserVariableResolver", null, registry);
     }
 
     protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)

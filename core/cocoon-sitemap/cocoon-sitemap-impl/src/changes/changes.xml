@@ -26,6 +26,10 @@
 <document>
   <body>
     <release version="1.0.0" date="2008-??-??" description="unreleased">
+      <action dev="rgoers" type="fix">
+        Moved registration of VariableResolver to BridgeElementParser from SitemapElementParser to make it
+        available to all Avalon components (i.e. input modules).
+      </action>
       <action dev="vgritsenko" type="remove">
         Remove support for Cocoon 2.0 error handlers, &lt;map:handle-errors type="500"&gt;,
         which were deprecated since Cocoon 2.1m1.
