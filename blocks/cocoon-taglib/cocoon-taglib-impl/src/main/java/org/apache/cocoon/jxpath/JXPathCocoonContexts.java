@@ -360,17 +360,17 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
         }
 
         /**
-         * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
+         * @see org.apache.cocoon.environment.Request#getLocalAttribute(java.lang.String)
          */
-        public Object getAttribute(String name, int scope) {
-            return this.delegate.getAttribute(name, scope);
+        public Object getLocalAttribute(String name) {
+            return this.delegate.getLocalAttribute(name);
         }
 
         /**
-         * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
+         * @see org.apache.cocoon.environment.Request#getLocalAttributeNames()
          */
-        public Enumeration getAttributeNames(int scope) {
-            return this.delegate.getAttributeNames(scope);
+        public Enumeration getLocalAttributeNames() {
+            return this.delegate.getLocalAttributeNames();
         }
 
         /**
@@ -389,17 +389,17 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
         }
 
         /**
-         * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
+         * @see org.apache.cocoon.environment.Request#removeLocalAttribute(java.lang.String)
          */
-        public void removeAttribute(String name, int scope) {
-            this.delegate.removeAttribute(name, scope);
+        public void removeLocalAttribute(String name) {
+            this.delegate.removeLocalAttribute(name);
         }
 
         /**
-         * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
+         * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object)
          */
-        public void setAttribute(String name, Object o, int scope) {
-            this.delegate.setAttribute(name, o, scope);
+        public void setLocalAttribute(String name, Object o) {
+            this.delegate.setAttribute(name, o);
         }
 
         /**

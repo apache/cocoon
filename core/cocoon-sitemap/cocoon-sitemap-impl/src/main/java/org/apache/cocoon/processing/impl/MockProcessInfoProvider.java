@@ -101,8 +101,8 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
             return request.get(name);
         }
 
-        public Object getAttribute(String name, int scope) {
-            return request.getAttribute(name, scope);
+        public Object getLocalAttribute(String name) {
+            return request.getLocalAttribute(name);
         }
 
         public Object getAttribute(String name) {
@@ -113,8 +113,8 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
             return request.getAttributeNames();
         }
 
-        public Enumeration getAttributeNames(int scope) {
-            return request.getAttributeNames(scope);
+        public Enumeration getLocalAttributeNames() {
+            return request.getLocalAttributeNames();
         }
 
         public Map getAttributes() {
@@ -299,8 +299,8 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
             return request.isUserInRole(role);
         }
 
-        public void removeAttribute(String name, int scope) {
-            request.removeAttribute(name, scope);
+        public void removeLocalAttribute(String name) {
+            request.removeAttribute(name);
         }
 
         public void removeAttribute(String name) {
@@ -311,8 +311,8 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
             return request.searchAttribute(name);
         }
 
-        public void setAttribute(String name, Object o, int scope) {
-            request.setAttribute(name, o, scope);
+        public void setLocalAttribute(String name, Object o) {
+            request.setLocalAttribute(name, o);
         }
 
         public void setAttribute(String name, Object o) {

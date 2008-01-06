@@ -17,14 +17,11 @@
 package org.apache.cocoon.environment.wrapper;
 
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
-import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 
 /**
@@ -51,10 +48,12 @@ public final class RequestWrapper extends AbstractRequestWrapper {
     /** The request uri */
     private String requestURI;
 
-    private final Map requestAttributes = new HashMap();
-    
     /**
      * Constructor
+     * @param request The Request to be wrapped.
+     * @param requestURI The URI.
+     * @param queryString The query String.
+     * @param env The current Environment.
      */
     public RequestWrapper(Request request,
                           String  requestURI,
@@ -65,6 +64,11 @@ public final class RequestWrapper extends AbstractRequestWrapper {
 
     /**
      * Constructor
+     * @param request The Request to be wrapped.
+     * @param requestURI The URI.
+     * @param queryString The query String.
+     * @param env The current Environment.
+     * @param rawMode If true only parameters from the wrapper will be returned.
      */
     public RequestWrapper(Request request,
                           String  requestURI,
@@ -173,59 +177,4 @@ public final class RequestWrapper extends AbstractRequestWrapper {
         this.requestURI = buffer.toString();
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
-     */
-    public Object getAttribute(String name, int scope) {
-        if ( scope == Request.GLOBAL_SCOPE ) {
-            return super.getAttribute(name, scope);
-        }
-        return this.requestAttributes.get( name );
-    }
-        
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
-     */
-    public Enumeration getAttributeNames(int scope) {
-        if ( scope == Request.GLOBAL_SCOPE ) {
-            return super.getAttributeNames(scope);
-        }
-        return IteratorUtils.asEnumeration(this.requestAttributes.keySet().iterator());
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
-     */
-    public void removeAttribute(String name, int scope) {
-        if ( scope == Request.GLOBAL_SCOPE ) {
-            super.removeAttribute(name, scope);
-        } else {
-            this.requestAttributes.remove( name );
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
-     */
-    public void setAttribute(String name, Object o, int scope) {
-        if ( scope == Request.GLOBAL_SCOPE ) {
-            super.setAttribute(name, o, scope);
-        } else {
-            this.requestAttributes.put( name, o );
-        }
-    }
-
-    /**
-     * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
-     */
-    public Object searchAttribute(String name) {
-        Object result = this.getAttribute(name, REQUEST_SCOPE);
-        if ( result == null ) {
-            result = this.getAttribute(name, GLOBAL_SCOPE);
-            if ( result == null ) {
-                result = this.req.getAttribute(name, REQUEST_SCOPE);
-            }
-        }
-        return result;
-    }
 }

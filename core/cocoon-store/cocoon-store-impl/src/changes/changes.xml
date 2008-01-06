@@ -24,7 +24,10 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
+    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
+      <action dev="rgoers" type="add">
+        Add cache for XPathXMLFileModule.
+      </action>
       <action dev="reinhard" type="fix">
         Move all Spring configuration files into the "cocoon-store-impl" namespace.
       </action>       

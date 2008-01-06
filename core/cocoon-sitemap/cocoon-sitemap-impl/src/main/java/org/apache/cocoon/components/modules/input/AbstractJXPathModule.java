@@ -102,7 +102,7 @@ public abstract class AbstractJXPathModule extends AbstractInputModule {
         if (modeConf != null) {
             name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name);
         }
-        return JXPathHelper.getAttribute(name, modeConf, this.configuration, contextObj);
+        return JXPathHelper.getAttributeValue(name, modeConf, this.configuration, contextObj);
     }
 
 
@@ -134,6 +134,10 @@ public abstract class AbstractJXPathModule extends AbstractInputModule {
      * Descendants should override this method to return a specific object
      * that is requried by the implementing class.
      * Examples are: request, session and application context objects.
+     * @param modeConf The Configuration.
+     * @param objectModel Cocoon's object model Map.
+     * @return The context object.
+     * @throws ConfigurationException when an error occurs.
      */
     protected abstract Object getContextObject(Configuration modeConf,
                                                Map objectModel)

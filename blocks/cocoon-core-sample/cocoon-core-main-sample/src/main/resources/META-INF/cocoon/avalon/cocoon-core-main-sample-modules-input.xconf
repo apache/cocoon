@@ -20,6 +20,7 @@
   - Define five additional input modules, 'defaults', 'myxml',
   - 'slashdot' 'random-100-to-500' and 'random-5000-to-10000',
   - for the input modules sample.
+  - Define two input modules, xmyxml and varxml for XPathXMLFileModule sample.
   -
   - $Id$
   -->
@@ -35,11 +36,19 @@
     </component-instance>
     <component-instance name="myxml"
                         class="org.apache.cocoon.components.modules.input.XMLFileModule">
-      <file src="context://samples/modules/forrestconf.xml"/>
+      <file src="blockcontext:/cocoon-core-main-sample/modules/forrestconf.xml"/>
     </component-instance>
     <component-instance name="slashdot"
                         class="org.apache.cocoon.components.modules.input.XMLFileModule">
       <file src="http://slashdot.org/slashdot.rss"/>
+    </component-instance>
+    <component-instance name="xmyxml"
+                        class="org.apache.cocoon.components.modules.input.XPathXMLFileModule">
+      <file src="blockcontext:/cocoon-core-main-sample/modules/forrestconf.xml"/>
+    </component-instance>
+    <component-instance name="varxml"
+                        class="org.apache.cocoon.components.modules.input.XPathXMLFileModule">
+      <file src="blockcontext:/cocoon-core-main-sample/modules/{request-param:dir}/forrestconf.xml"/>
     </component-instance>
     <component-instance name="random-100-to-500"
                         class="org.apache.cocoon.components.modules.input.RandomNumberModule">
@@ -52,5 +61,4 @@
       <max>10000</max>
     </component-instance>
   </input-modules>
-  
 </components>

@@ -37,7 +37,6 @@ import junit.framework.AssertionFailedError;
 
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.impl.AbstractRequest;
 
@@ -168,8 +167,9 @@ public class MockRequest extends AbstractRequest {
     }
 
     /**
-     * @param name
-     * @param value
+     * Add a parameter.
+     * @param name The name of the parameter.
+     * @param value The value of the parameter.
      */
     public void addParameter(String name, String value) {
         parameters.put(name, value);
@@ -225,7 +225,7 @@ public class MockRequest extends AbstractRequest {
     }
     
     /**
-     * @param locale
+     * @param locale The Locale to set to.
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
@@ -541,70 +541,56 @@ public class MockRequest extends AbstractRequest {
      * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String)
      */
     public Object getAttribute(String name) {
-        return this.getAttribute(name, Request.GLOBAL_SCOPE);
+        return this.globalAttributes.get(name);
     }
     
     /**
      * @see org.apache.cocoon.environment.Request#getAttributeNames()
      */
     public Enumeration getAttributeNames() {
-        return this.getAttributeNames(Request.GLOBAL_SCOPE);
+        return this.globalAttributes.keys();
     }
     
     /**
      * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
-        this.setAttribute(name, value, Request.GLOBAL_SCOPE);
+            this.globalAttributes.put(name, value);
     }
     
     /**
      * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String name) {
-        this.removeAttribute(name, Request.GLOBAL_SCOPE);
+        this.globalAttributes.remove(name);
     }
 
     /**
-     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
+     * @see org.apache.cocoon.environment.Request#getLocalAttribute(java.lang.String)
      */
-    public Object getAttribute(String name, int scope) {
-        if ( scope == Request.REQUEST_SCOPE ) {
-            return this.attributes.get(name);
-        }
-        return this.globalAttributes.get(name);
+    public Object getLocalAttribute(String name) {
+        return this.attributes.get(name);
     }
     
     /**
-     * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
+     * @see org.apache.cocoon.environment.Request#getLocalAttributeNames()
      */
-    public Enumeration getAttributeNames(int scope) {
-        if ( scope == Request.REQUEST_SCOPE ) {
-            return this.attributes.keys();
-        }
-        return this.globalAttributes.keys();
+    public Enumeration getLocalAttributeNames() {
+        return this.attributes.keys();
     }
     
     /**
-     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
+     * @see org.apache.cocoon.environment.Request#setLocalAttribute(java.lang.String, java.lang.Object)
      */
-    public void setAttribute(String name, Object value, int scope) {
-        if ( scope == Request.REQUEST_SCOPE ) {
-            this.attributes.put(name, value);
-        } else {
-            this.globalAttributes.put(name, value);
-        }
+    public void setLocalAttribute(String name, Object value) {
+        this.attributes.put(name, value);
     }
     
     /**
-     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
+     * @see org.apache.cocoon.environment.Request#removeLocalAttribute(java.lang.String)
      */
-    public void removeAttribute(String name, int scope) {
-        if ( scope == Request.REQUEST_SCOPE ) {
-            this.attributes.remove(name);
-        } else {
-            this.globalAttributes.remove(name);
-        }
+    public void removeLocalAttribute(String name) {
+        this.attributes.remove(name);
     }
 
     /**
@@ -626,9 +612,9 @@ public class MockRequest extends AbstractRequest {
      * @see org.apache.cocoon.environment.Request#searchAttribute(java.lang.String)
      */
     public Object searchAttribute(String name) {
-        Object result = this.getAttribute(name, REQUEST_SCOPE);
+        Object result = this.getLocalAttribute(name);
         if ( result == null ) {
-            result = this.getAttribute(name, GLOBAL_SCOPE);
+            result = this.getAttribute(name);
         }
         return result;
     }
