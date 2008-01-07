@@ -54,14 +54,14 @@ public class PropertySettings implements Settings {
       * The property files are read in the following order:
       * 1) context://WEB-INF/properties/*.properties
       *    Default values for the core and each block - the order in which the files are read is not guaranteed.
-      * 2) context://WEB-INF/properties/[RUNNING_MODE]/*.properties
-      *    Default values for the running mode - the order in which the files are read is not guaranteed.
-      * 3) Property providers (ToBeDocumented)
-      * 4) The environment (CLI, Servlet etc.) adds own properties (e.g. from web.xml)
-      * 5) Additional property file specified by the "org.apache.cocoon.settings" system property or
+      * 2) Property providers (ToBeDocumented)
+      * 3) The environment (CLI, Servlet etc.) adds own properties (e.g. from web.xml)
+      * 4) Additional property file specified by the "org.apache.cocoon.settings" system property or
       *    if the property is not found, the file ".cocoon/settings.properties" is tried to be read from
       *    the user directory.
-      * 6) System properties
+      * 5) System properties
+      * @param resolver The SourceResolver.
+      * @param logger the Logger to use.
       *
       */
      public PropertySettings(SourceResolver resolver, Logger logger) {
@@ -109,7 +109,7 @@ public class PropertySettings implements Settings {
          }
      }
 
-     /**
+     /*
       * Read all property files from the given directory and apply them to the settings.
       */
      private void readProperties(String          directoryName,
