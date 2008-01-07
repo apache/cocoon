@@ -23,8 +23,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.cocoon.portal.deployment.DeploymentObject;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceUtil;
 
 /**
  * Default implementation of a {@link org.apache.cocoon.portal.deployment.DeploymentObject}.
@@ -34,17 +32,17 @@ import org.apache.excalibur.source.SourceUtil;
 public class DefaultDeploymentObject implements DeploymentObject {
 
     /** The deployment artifact. */
-    protected Source deploymentObject;
+    protected String deploymentObject;
 
     protected ZipFile zipFile;
 
     /**
      * @throws SourceNotDeployableException
      */
-    public DefaultDeploymentObject(Source deploymentObject)
+    public DefaultDeploymentObject(String deploymentObject)
     throws SourceNotDeployableException {
         if ( !verifyExtension(deploymentObject)) {
-            throw new SourceNotDeployableException("Artifact '" + deploymentObject.getURI()
+            throw new SourceNotDeployableException("Artifact '" + deploymentObject
                     + " is not supported by the default deployment object.");
         }
         this.deploymentObject = deploymentObject;
@@ -78,9 +76,8 @@ public class DefaultDeploymentObject implements DeploymentObject {
      * @see org.apache.cocoon.portal.deployment.DeploymentObject#getName()
      */
     public String getName() {
-        final String uri = this.deploymentObject.getURI();
-        int pos = uri.lastIndexOf('/');
-        return uri.substring(pos+1);
+        int pos = this.deploymentObject.lastIndexOf('/');
+        return this.deploymentObject.substring(pos+1);
     }
 
     /**
@@ -89,27 +86,27 @@ public class DefaultDeploymentObject implements DeploymentObject {
      */
     protected ZipFile getZipFile() throws IOException {
         if (this.zipFile == null) {
-            File file = SourceUtil.getFile(this.deploymentObject);
-            if ( file == null ) {
-                throw new IOException("Handling of sources of type '" + this.deploymentObject.getClass() + "' is currently not supported.");
+            if( !this.deploymentObject.startsWith( "file:" ) ) {
+                throw new IOException("Handling of sources of type '" + this.deploymentObject + "' is currently not supported.");
             }
+            File file = new File(this.deploymentObject.substring( 5 ));
             this.zipFile = new ZipFile(file);
         }
         return this.zipFile;
     }
 
+
     /**
-     * @see org.apache.cocoon.portal.deployment.DeploymentObject#getSource()
+     * @see org.apache.cocoon.portal.deployment.DeploymentObject#getUri()
      */
-    public Source getSource() {
+    public String getUri() {
         return this.deploymentObject;
     }
 
     /**
      * Test if the extension of the source is either "war", "jar" or "zip".
      */
-    protected boolean verifyExtension(Source source) {
-        final String uri = source.getURI();
+    protected boolean verifyExtension(String uri) {
         int dot = uri.lastIndexOf('.');
         if (dot != -1) {
             final String ext = uri.substring(dot);

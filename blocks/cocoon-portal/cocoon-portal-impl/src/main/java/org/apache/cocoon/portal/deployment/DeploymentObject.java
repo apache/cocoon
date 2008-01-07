@@ -19,8 +19,6 @@ package org.apache.cocoon.portal.deployment;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.excalibur.source.Source;
-
 /**
  * This object describes an artifact to be deployed.
  *
@@ -35,12 +33,12 @@ public interface DeploymentObject {
 	 * @throws IOException
 	 */
 	void close() throws IOException;
-	
+
 	/**
 	 * Retreives the configuration for this deployment artifact
 	 * based on the artifact-relative configuration path.
 	 * @param configPath artifact-relative path to the confiuration file
-	 * @return Configuration of this artificat or <code>null</code> if the 
+	 * @return Configuration of this artificat or <code>null</code> if the
 	 * configuration is not present in the artifact.
 	 * @throws IOException error opening the configuration
 	 */
@@ -50,9 +48,9 @@ public interface DeploymentObject {
      * Returns the name of the artifact.
 	 */
 	String getName();
-	
+
 	/**
-	 * The corresponding source object. 
+	 * The corresponding uri of the deployment unit.
 	 */
-	Source getSource();
+	String getUri();
 }

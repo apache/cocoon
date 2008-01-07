@@ -543,7 +543,7 @@ public class PortletDefinitionRegistryImpl
         if (fileName.endsWith(".war")) {
             try {
                 File toFile = new File(this.webAppDir, fileName);
-                if ( Deployer.deploy(event.getDeploymentObject().getSource(),
+                if ( Deployer.deploy(new URL(event.getDeploymentObject().getUri()).openStream(),
                                      toFile.getAbsolutePath(),
                                      this.stripLoggers,
                                      this.getLogger(), this.manager) ) {

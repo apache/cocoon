@@ -16,9 +16,6 @@
  */
 package org.apache.cocoon.portal.deployment;
 
-import org.apache.excalibur.source.Source;
-
-
 /**
  * This component scans for artifacts to be deployed and fires {@link DeploymentEvent}s
  * to deploy/undeploy an artifact.
@@ -30,7 +27,7 @@ public interface DeploymentManager {
     /**
      * Deploy a new artifact.
      */
-    DeploymentStatus deploy(Source source)
+    DeploymentStatus deploy(String uri)
     throws DeploymentException;
 
     /**
