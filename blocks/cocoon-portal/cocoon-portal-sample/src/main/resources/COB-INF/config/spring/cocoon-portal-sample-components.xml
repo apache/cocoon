@@ -109,23 +109,27 @@
         scope="singleton">
     <property name="aspectChain" ref="org.apache.cocoon.portal.profile.ProfileManager.aspects"/>
     <property name="profileStore" ref="org.apache.cocoon.portal.profile.ProfileStore"/>
-    <property name="configuration">
-      <value>
-        copletdefinition-global-load=cocoon:raw:/load-global-profile?profile=copletdefinition
-        copletdefinition-role-load=cocoon:raw:/load-role-profile?profile=copletdefinition
-        copletdefinition-user-load=cocoon:raw:/load-user-profile?profile=copletdefinition
-        copletinstance-global-load=cocoon:raw:/load-global-profile?profile=copletinstance
-        copletinstance-role-load=cocoon:raw:/load-role-profile?profile=copletinstance
-        copletinstance-user-load=cocoon:raw:/load-user-profile?profile=copletinstance
-        copletinstance-user-save=cocoon:raw:/save-user-profile?profile=copletinstance
-        layout-global-load=cocoon:raw:/load-global-profile?profile=layout
-        layout-role-load=cocoon:raw:/load-role-profile?profile=layout
-        layout-user-load=cocoon:raw:/load-user-profile?profile=layout
-        layout-user-save=cocoon:raw:/save-user-profile?profile=layout
-      </value>
-    </property>
     <property name="copletTypesMap" ref="org.apache.cocoon.portal.om.CopletTypeMap"/>
     <property name="rendererMap" ref="org.apache.cocoon.portal.layout.renderer.RendererMap"/>
+  </bean>
+
+  <!--+
+      | This is the map based profile store.
+      +-->
+  <bean name="org.apache.cocoon.portal.profile.ProfileStore"
+        class="org.apache.cocoon.portal.profile.impl.MapBasedProfileStore"
+        parent="org.apache.cocoon.portal.profile.ProfileStore/abstract"
+        scope="singleton">
+    <property name="configuration">
+      <value>
+        copletdefinition-global-load=profiles/copletdefinition/global.xml
+        copletinstance-global-load=profiles/copletinstance/global.xml
+        layout-global-load=profiles/layout/global.xml
+        copletdefinition-user-load=profiles/copletdefinition/user-{user-name}.xml
+        copletinstance-user-load=profiles/copletinstance/user-{user-name}.xml
+        layout-user-load=profiles/layout/user-{user-name}.xml
+      </value>
+    </property>
   </bean>
 
   <!--+

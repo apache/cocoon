@@ -16,8 +16,6 @@
  */
 package org.apache.cocoon.portal.pluto;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -26,9 +24,9 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
 import org.apache.cocoon.portal.profile.PersistenceType;
+import org.apache.cocoon.portal.profile.ProfileKey;
 import org.apache.cocoon.portal.profile.ProfileStore;
 import org.apache.cocoon.portal.util.AbstractComponent;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.pluto.om.common.PreferenceSet;
 
 /**
@@ -80,26 +78,13 @@ public class PortletPreferencesProviderImpl
         this.loader = (ProfileStore)this.manager.lookup(ProfileStore.class.getName());
     }
 
-    protected Map buildKey(boolean load, String copletId)
+    protected ProfileKey buildKey(String copletId)
     throws ParameterException {
-        final StringBuffer config = new StringBuffer(PERSISTENCETYPE_PREFERENCES);
-        config.append('-');
-        config.append("user");
-        config.append('-');
-        if ( load ) {
-            config.append("load");
-        } else {
-            config.append("save");
-        }
-        final String uri = this.configuration.getParameter(config.toString());
-
-        final Map key = new LinkedMap();
-        key.put("baseuri", uri);
-        key.put("separator", "?");
-        key.put("portal", this.portalService.getPortalName());
-        key.put("type", "user");
-        key.put("instance", "copletId");
-        key.put("user", this.portalService.getUserService().getUser().getUserName());
+        ProfileKey key = new ProfileKey();
+        key.setPortalName(this.portalService.getPortalName());
+        key.setUserName(this.portalService.getUserService().getUser().getUserName());
+        key.setProfileCategory("user");
+        key.setProfileName(copletId);
 
         return key;
     }
@@ -111,7 +96,7 @@ public class PortletPreferencesProviderImpl
         try {
             final PersistenceType persType = new PersistenceType(PERSISTENCETYPE_PREFERENCES);
 
-            return (PreferenceSet)this.loader.loadProfile(this.buildKey(true, cid.getId()), persType);
+            return (PreferenceSet)this.loader.loadProfile(this.buildKey(cid.getId()), persType);
         } catch (Exception ignore) {
             // we ignore all exceptions for now (TODO)
         }
@@ -125,7 +110,7 @@ public class PortletPreferencesProviderImpl
         try {
             final PersistenceType persType = new PersistenceType(PERSISTENCETYPE_PREFERENCES);
 
-            this.loader.saveProfile(this.buildKey(false, cid.getId()), persType, prefs);
+            this.loader.saveProfile(this.buildKey(cid.getId()), persType, prefs);
         } catch (Exception ignore) {
              // we ignore all exceptions for now (TODO)
         }

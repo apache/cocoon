@@ -18,12 +18,13 @@ package org.apache.cocoon.portal.profile.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Properties;
 
+import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.portal.profile.Converter;
 import org.apache.cocoon.portal.profile.PersistenceType;
+import org.apache.cocoon.portal.profile.ProfileException;
+import org.apache.cocoon.portal.profile.ProfileKey;
 import org.apache.cocoon.portal.profile.ProfileStore;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.cocoon.util.NetUtils;
@@ -48,6 +49,9 @@ public class MapBasedProfileStore
     /** The source resolver. */
     protected SourceResolver resolver;
 
+    /** The configuration for loading/saving the profile. */
+    protected Properties configuration;
+
     public void setSourceResolver(SourceResolver sr) {
         this.resolver = sr;
     }
@@ -56,53 +60,36 @@ public class MapBasedProfileStore
         this.converter = c;
     }
 
-    protected String getURI(Map keyMap)
+    public void setConfiguration(Properties configuration) {
+        this.configuration = configuration;
+    }
+
+    protected String getURI(ProfileKey key, String type, boolean load)
     throws Exception {
-        final StringBuffer buffer = new StringBuffer();
-        Iterator iter = keyMap.entrySet().iterator();
-        boolean pars = false;
-        boolean first = true;
-        while ( iter.hasNext() ) {
-            final Map.Entry entry = (Entry) iter.next();
-            final String append = entry.getValue().toString();
-            if ( pars ) {
-                if ( first ) {
-                    first = false;
-                    if ( buffer.toString().indexOf('?') == -1 ) {
-                        buffer.append('?');
-                    } else {
-                        buffer.append('&');
-                    }
-                } else {
-                    buffer.append('&');
-                }
-                buffer.append(entry.getKey().toString());
-                buffer.append('=');
-            } else {
-                if ( !first && !"?".equals(append) ) {
-                    buffer.append('/');
-                }
-                first = false;
-            }
-            if ( "?".equals(append) ) {
-                first = true;
-                pars = true;
-            } else {
-                buffer.append(append);
-            }
+        // find uri in configuration
+        final StringBuffer config = new StringBuffer(type);
+        config.append('-');
+        config.append(key.getProfileCategory());
+        config.append('-');
+        if ( load ) {
+            config.append("load");
+        } else {
+            config.append("save");
+        }
+        final String uri = this.configuration.getProperty(config.toString());
+        if ( uri == null ) {
+            throw new ProfileException("Configuration for key '" + config.toString() + "' is missing.");
         }
 
-        return buffer.toString();
+        return PropertyHelper.getProperty(uri, key, null);
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileStore#loadProfile(java.lang.Object, org.apache.cocoon.portal.profile.PersistenceType)
+     * @see org.apache.cocoon.portal.profile.ProfileStore#loadProfile(org.apache.cocoon.portal.profile.ProfileKey, org.apache.cocoon.portal.profile.PersistenceType)
      */
-    public Object loadProfile(Object key, PersistenceType type)
+    public Object loadProfile(ProfileKey key, PersistenceType type)
     throws Exception {
-		final Map keyMap = (Map) key;
-
-        final String uri = this.getURI( keyMap );
+        final String uri = this.getURI( key, type.getType(), true );
 
 		Source source = null;
 		try {
@@ -117,13 +104,11 @@ public class MapBasedProfileStore
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileStore#saveProfile(java.lang.Object, org.apache.cocoon.portal.profile.PersistenceType, java.lang.Object)
+     * @see org.apache.cocoon.portal.profile.ProfileStore#saveProfile(org.apache.cocoon.portal.profile.ProfileKey, org.apache.cocoon.portal.profile.PersistenceType, java.lang.Object)
      */
-    public void saveProfile(Object key, PersistenceType type, Object profile)
+    public void saveProfile(ProfileKey key, PersistenceType type, Object profile)
     throws Exception {
-        final Map keyMap = (Map) key;
-
-        final String uri = this.getURI( keyMap );
+        final String uri = this.getURI( key, type.getType(), false );
 
         // first test: modifiable source?
         Source source = null;
@@ -159,14 +144,12 @@ public class MapBasedProfileStore
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileStore#getValidity(java.lang.Object, java.lang.String)
+     * @see org.apache.cocoon.portal.profile.ProfileStore#getValidity(org.apache.cocoon.portal.profile.ProfileKey, java.lang.String)
      */
-    public SourceValidity getValidity(Object key, String type) {
+    public SourceValidity getValidity(ProfileKey key, String type) {
 		Source source = null;
 		try {
-            final Map keyMap = (Map) key;
-
-            final String uri = this.getURI( keyMap );
+            final String uri = this.getURI( key, type, true );
 
 			source = this.resolver.resolveURI(uri);
 			return source.getValidity();

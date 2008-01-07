@@ -43,7 +43,7 @@ public interface ProfileStore {
      * @param type The type of the profile (instances, types, layouts etc. )
      * @param objectMap Map with objects which might be references by the profile.
      */
-    Object loadProfile(Object key, PersistenceType type)
+    Object loadProfile(ProfileKey key, PersistenceType type)
     throws Exception;
 
     /**
@@ -53,7 +53,7 @@ public interface ProfileStore {
      * @param type The type of the profile (instances, types, layouts etc. )
      * @param profile The profile itself.
      */
-    void saveProfile(Object key, PersistenceType type, Object profile) throws Exception;
+    void saveProfile(ProfileKey key, PersistenceType type, Object profile) throws Exception;
 
     /**
      * Get the validity of a profile.
@@ -61,5 +61,5 @@ public interface ProfileStore {
      *            like user etc.
      * @param persistenceType The type of the profile (instances, types, layouts etc. )
      */
-    SourceValidity getValidity(Object key, String persistenceType);
+    SourceValidity getValidity(ProfileKey key, String persistenceType);
 }

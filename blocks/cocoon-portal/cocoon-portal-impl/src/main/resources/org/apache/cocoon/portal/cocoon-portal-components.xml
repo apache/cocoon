@@ -270,10 +270,9 @@
       | Profile Store
       |
       +-->
-    <bean name="org.apache.cocoon.portal.profile.ProfileStore"
-          class="org.apache.cocoon.portal.profile.impl.MapBasedProfileStore"
+    <bean name="org.apache.cocoon.portal.profile.ProfileStore/abstract"
           parent="org.apache.cocoon.portal.util.AbstractBean"
-          scope="singleton">
+          abstract="true">
         <property name="converter" ref="org.apache.cocoon.portal.profile.Converter"/>
         <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
     </bean>

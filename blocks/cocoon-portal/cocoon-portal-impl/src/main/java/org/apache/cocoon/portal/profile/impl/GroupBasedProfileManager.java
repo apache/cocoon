@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.event.Receiver;
@@ -42,8 +41,8 @@ import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.PortalUser;
 import org.apache.cocoon.portal.profile.PersistenceType;
 import org.apache.cocoon.portal.profile.ProfileException;
+import org.apache.cocoon.portal.profile.ProfileKey;
 import org.apache.cocoon.portal.profile.ProfileStore;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
@@ -91,9 +90,6 @@ public class GroupBasedProfileManager
 
     /** The profiler loader/saver. */
     protected ProfileStore loader;
-
-    /** The configuration for loading/saving the profile. */
-    protected Properties configuration;
 
     public void setProfileStore(ProfileStore loader) {
         this.loader = loader;
@@ -339,10 +335,8 @@ public class GroupBasedProfileManager
             return this.copletDefinitions.objects;
         }
 
-        final Map key = this.buildKey(CATEGORY_GLOBAL,
-                ProfileStore.PROFILETYPE_COPLETDEFINITION,
+        final ProfileKey key = this.buildKey(CATEGORY_GLOBAL,
                 info,
-                true,
                 null);
         SourceValidity newValidity = null;
         // if we have a profile, check for reloading
@@ -405,10 +399,8 @@ public class GroupBasedProfileManager
                                          final String      category,
                                          final String      layoutKey)
     throws Exception {
-        Map key = this.buildKey(category,
-                                ProfileStore.PROFILETYPE_COPLETINSTANCE,
+        ProfileKey key = this.buildKey(category,
                                 info,
-                                true,
                                 layoutKey);
         try {
             final PersistenceType persType = new PersistenceType(ProfileStore.PROFILETYPE_COPLETINSTANCE);
@@ -432,10 +424,8 @@ public class GroupBasedProfileManager
                                 final String      category,
                                 final String      layoutKey)
     throws Exception {
-        final Map key = this.buildKey(category,
-                                      ProfileStore.PROFILETYPE_LAYOUT,
+        final ProfileKey key = this.buildKey(category,
                                       info,
-                                      true,
                                       layoutKey);
         try {
             final PersistenceType persType = new PersistenceType(ProfileStore.PROFILETYPE_LAYOUT);
@@ -455,40 +445,21 @@ public class GroupBasedProfileManager
         }
     }
 
-    protected Map buildKey(String   category,
-                           String   profileType,
-                           PortalUser info,
-                           boolean  load,
-                           String   profileName)
+    protected ProfileKey buildKey(String   category,
+                                  PortalUser info,
+                                  String   profileName)
     throws LayoutException {
         if ( profileName == null ) {
             profileName = this.portalService.getUserService().getDefaultProfileName();
         }
-        final StringBuffer config = new StringBuffer(profileType);
-        config.append('-');
-        config.append(category);
-        config.append('-');
-        if ( load ) {
-            config.append("load");
-        } else {
-            config.append("save");
-        }
-        final String uri = this.configuration.getProperty(config.toString());
-        if ( uri == null ) {
-            throw new LayoutException("Configuration for key '" + config.toString() + "' is missing.");
-        }
-        final Map key = new LinkedMap();
-        key.put("baseuri", uri);
-        key.put("separator", "?");
-        key.put("portal", this.portalService.getPortalName());
-        key.put("layout", profileName);
-        key.put("type", category);
+        final ProfileKey key = new ProfileKey();
+        key.setPortalName(this.portalService.getPortalName());
+        key.setProfileName(profileName);
+        key.setProfileCategory(category);
         if ( CATEGORY_GROUP.equals(category) ) {
-            // TODO Groups is a collection!
-            key.put("group", "none");
-            //key.put("group", info.getGroups());
+            key.setUserGroups(info.getGroups());
         } else if ( CATEGORY_USER.equals(category) ) {
-            key.put("user", info.getUserName());
+            key.setUserName(info.getUserName());
         }
 
         return key;
@@ -505,10 +476,8 @@ public class GroupBasedProfileManager
     protected void saveCopletInstances() {
         try {
             final ProfileHolder profile = this.getUserProfile();
-            final Map key = this.buildKey(CATEGORY_USER,
-                                          ProfileStore.PROFILETYPE_COPLETINSTANCE,
+            final ProfileKey key = this.buildKey(CATEGORY_USER,
                                           this.portalService.getUserService().getUser(),
-                                          false,
                                           null);
             final PersistenceType persType = new PersistenceType(ProfileStore.PROFILETYPE_COPLETINSTANCE);
             persType.setReferences("copletDefinition", profile.getCopletDefinitionsMap());
@@ -523,10 +492,8 @@ public class GroupBasedProfileManager
     protected void saveLayoutInstances() {
         try {
             final ProfileHolder profile = this.getUserProfile();
-            final Map key = this.buildKey(CATEGORY_USER,
-                                          ProfileStore.PROFILETYPE_LAYOUTINSTANCE,
+            final ProfileKey key = this.buildKey(CATEGORY_USER,
                                           this.portalService.getUserService().getUser(),
-                                          false,
                                           null);
             final PersistenceType persType = new PersistenceType(ProfileStore.PROFILETYPE_LAYOUTINSTANCE);
             persType.setReferences("layout", profile.keyedLayouts);
@@ -552,9 +519,5 @@ public class GroupBasedProfileManager
 
     public void setCheckForChanges(boolean checkForChanges) {
         this.checkForChanges = checkForChanges;
-    }
-
-    public void setConfiguration(Properties configuration) {
-        this.configuration = configuration;
     }
 }
