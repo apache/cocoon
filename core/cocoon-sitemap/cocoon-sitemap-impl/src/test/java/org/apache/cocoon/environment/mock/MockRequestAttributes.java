@@ -18,8 +18,6 @@
  */
 package org.apache.cocoon.environment.mock;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -128,10 +126,4 @@ public class MockRequestAttributes
             task.run();
         }
     }
-
-    public String[] getAttributeNames(int scope) {
-        ArrayList attributeNames = Collections.list(this.request.getAttributeNames(scope));
-        return (String[]) attributeNames.toArray(new String[attributeNames.size()]);
-    }
-
 }
