@@ -26,18 +26,21 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-  <!-- This security handler uses OJB and the hsqldb for the authentication: 
   <bean name="org.apache.cocoon.auth.SecurityHandler/portal"
-        class="org.apache.cocoon.portal.security.DBSecurityHandler"
-        scope="singleton"/>
-  -->
-
-  <!-- If you want to use a pipeline for the authentication use this configuration: -->
-  <bean name="org.apache.cocoon.auth.SecurityHandler/portal"
-        class="org.apache.cocoon.auth.impl.PipelineSecurityHandler"
+        class="org.apache.cocoon.auth.impl.SimpleSecurityHandler"
         scope="singleton">
-    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
-    <property name="authenticationResource" value="cocoon:raw:/sunrise-authuser"/>
+    <property name="userProperties">
+      <value>
+        cocoon=cocoon
+        cocoon.roles=admin
+        guest=guest
+        guest.roles=guest
+        test=test
+        test.roles=guest
+        anonymous=anonymous
+        anonymous.roles=guest
+      </value>
+    </property>
   </bean>
   
   <bean name="org.apache.cocoon.auth.Application/portal"

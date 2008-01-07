@@ -60,11 +60,6 @@
                   src="org.apache.cocoon.acting.SetterAction"/>
       <map:action name="portal-set-data"
                   src="org.apache.cocoon.portal.acting.CopletSetDataAction"/>
-      <map:action name="portal-save-profile"
-                  src="org.apache.cocoon.portal.acting.SaveAction"/>
-      <map:action src="org.apache.cocoon.portal.acting.BookmarkAction" name="portal-bookmark">
-        <parameter name="src" value="resources/bookmarks.xml"/>
-      </map:action>
       <map:action name="portal-urlhelper"
                   src="org.apache.cocoon.portal.acting.URLAction"/>
     </map:actions>
@@ -84,14 +79,6 @@
   <map:pipelines>
     <!-- The internal pipelines for loading and saving -->
     <map:pipeline internal-only="true">
-      <map:match pattern="sunrise-authuser">
-        <map:generate src="resources/users.xml"/>
-        <map:transform src="styles/authenticate.xsl">
-          <map:parameter name="use-request-parameters" value="true"/>
-        </map:transform>
-        <map:serialize type="xml"/>
-      </map:match>
-
       <map:match pattern="load-global-profile">
         <map:generate src="profiles/{request-param:profile}/{request-param:portal}.xml"/>
         <map:serialize type="xml"/>
@@ -106,17 +93,6 @@
         <map:generate src="profiles/{request-param:profile}/{request-param:portal}-user-{request-param:user}.xml"/>
         <map:serialize type="xml"/>
       </map:match>
-<!--
-      <map:match pattern="save-user-profile">
-        <map:generate src="resources/save-user-profile.xml"/>
-        <map:transform src="styles/save-user-profile.xsl">
-          <map:parameter name="profiles" value="context://samples/blocks/portal-sample/profiles/"/>
-        </map:transform>
-        <map:transform type="session"/>
-        <map:transform type="write-source"/>
-        <map:serialize type="xml"/>
-      </map:match>
--->
     </map:pipeline>
 
     <map:pipeline>
@@ -236,17 +212,6 @@
               <map:serialize type="ehtml"/>
             </map:otherwise>
           </map:select>
-        </map:act>
-      </map:match>
-
-      <!-- Test pipeline for bookmark -->
-      <map:match pattern="bookmark">
-        <map:act type="cauth-is-logged-in">
-          <map:parameter name="application" value="portal"/>
-
-          <map:act type="portal-bookmark">
-            <map:redirect-to uri="portal?{uri}"/>
-          </map:act>
         </map:act>
       </map:match>
 
