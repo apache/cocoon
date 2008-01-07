@@ -18,6 +18,9 @@
  */
 package org.apache.cocoon.environment.mock;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -126,4 +129,24 @@ public class MockRequestAttributes
             task.run();
         }
     }
+
+    public String[] getAttributeNames(int scope) {
+        Enumeration names = null;
+        if ( scope == RequestAttributes.SCOPE_REQUEST ) {
+            names = this.request.getLocalAttributeNames();
+        } else if ( scope == RequestAttributes.SCOPE_SESSION ) {
+            names = this.request.getAttributeNames();
+        } else {
+            final HttpSession session = this.request.getSession(false);
+            if ( session != null ) {
+                names = session.getAttributeNames();
+            }
+        }
+        if ( names == null ) {
+            return new String[0];
+        }
+        ArrayList attributeNames = Collections.list(names);
+        return (String[]) attributeNames.toArray(new String[attributeNames.size()]);
+    }
+
 }
