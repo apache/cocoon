@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="RG" type="fix" fixes-bug="COCOON-2064">
+      Fix javadoc in PropertySettings. RunningMode is not supported in 2.1.x
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-2158">
       Core: XMLByteStreamCompiler hard-coded limits of 0xffff Strings prevents large XML documents
             from being handled in Cocoon. 
