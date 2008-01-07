@@ -77,24 +77,6 @@
   <!-- =========================== Pipelines ================================= -->
 
   <map:pipelines>
-    <!-- The internal pipelines for loading and saving -->
-    <map:pipeline internal-only="true">
-      <map:match pattern="load-global-profile">
-        <map:generate src="profiles/{request-param:profile}/{request-param:portal}.xml"/>
-        <map:serialize type="xml"/>
-      </map:match>
-
-      <map:match pattern="load-role-profile">
-        <map:generate src="profiles/{request-param:profile}/{request-param:portal}-role-{request-param:role}.xml"/>
-        <map:serialize type="xml"/>
-      </map:match>
-
-      <map:match pattern="load-user-profile">
-        <map:generate src="profiles/{request-param:profile}/{request-param:portal}-user-{request-param:user}.xml"/>
-        <map:serialize type="xml"/>
-      </map:match>
-    </map:pipeline>
-
     <map:pipeline>
       <!-- Do an auto login as anonymous -->
       <map:act type="cauth-is-logged-in">

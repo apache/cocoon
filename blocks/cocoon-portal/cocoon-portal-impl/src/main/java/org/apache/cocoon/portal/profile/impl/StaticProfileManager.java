@@ -32,8 +32,8 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.profile.PersistenceType;
 import org.apache.cocoon.portal.profile.ProfileException;
+import org.apache.cocoon.portal.profile.ProfileKey;
 import org.apache.cocoon.portal.profile.ProfileStore;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.map.StaticBucketMap;
 import org.apache.excalibur.source.SourceValidity;
 
@@ -84,11 +84,10 @@ public class StaticProfileManager
             }
 
             // load layout
-            final Map map = new LinkedMap();
-            map.put("base", this.profilesPath);
-            map.put("portalname", this.portalService.getPortalName());
-            map.put("profile", "layout");
-            map.put("groupKey", layoutKey);
+            final ProfileKey map = new ProfileKey();
+            map.setPortalName(this.portalService.getPortalName());
+            map.setProfileCategory("layout");
+            map.setProfileName(layoutKey);
 
             SourceValidity newValidity = this.loader.getValidity(map, ProfileStore.PROFILETYPE_LAYOUT);
             if (valid == SourceValidity.UNKNOWN) {
@@ -161,11 +160,11 @@ public class StaticProfileManager
         }
 
         // CopletDefinition
-        final Map map = new LinkedMap();
-        map.put("base", this.profilesPath);
-        map.put("portalname", this.portalService.getPortalName());
-        map.put("profile", "coplet");
-        map.put("name", "data");
+        ProfileKey map = new ProfileKey();
+        map.setPortalName(this.portalService.getPortalName());
+        map.setProfileCategory("coplet");
+        map.setProfileName("data");
+
         final PersistenceType cdType = new PersistenceType(ProfileStore.PROFILETYPE_COPLETDEFINITION);
         cdType.setReferences("copletType", this.copletTypesMap);
 
@@ -180,11 +179,11 @@ public class StaticProfileManager
         this.copletDefinitions.put(portalName, definitions);
 
         //CopletInstanceData
-        map.clear();
-        map.put("base", this.profilesPath);
-        map.put("portalname", this.portalService.getPortalName());
-        map.put("profile", "coplet");
-        map.put("name", "instancedata");
+        map = new ProfileKey();
+        map.setPortalName(this.portalService.getPortalName());
+        map.setProfileCategory("coplet");
+        map.setProfileName("instancedata");
+
         final PersistenceType ciType = new PersistenceType(ProfileStore.PROFILETYPE_COPLETINSTANCE);
         ciType.setReferences("copletDefinition", definitions);
 
