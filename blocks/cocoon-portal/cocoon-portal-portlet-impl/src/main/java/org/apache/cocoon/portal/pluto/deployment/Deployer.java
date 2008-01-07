@@ -7,7 +7,7 @@
  * the License.  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.deployment.DeploymentException;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.logging.Log;
-import org.apache.excalibur.source.Source;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -49,7 +48,7 @@ import org.xml.sax.SAXException;
  */
 public class Deployer {
 
-    public static boolean deploy(Source  inputSource,
+    public static boolean deploy(InputStream inputStream,
                                  String  outputName,
                                  boolean stripLoggers,
                                  Log     logger,
@@ -72,7 +71,7 @@ public class Deployer {
             tempFile = File.createTempFile(portletApplicationName, "");
             tempFile.deleteOnExit();
 
-            jin = new JarInputStream(inputSource.getInputStream());
+            jin = new JarInputStream(inputStream);
             jout = new JarOutputStream(new FileOutputStream(tempFile));
 
             // copy over all of the files in the input war to the output

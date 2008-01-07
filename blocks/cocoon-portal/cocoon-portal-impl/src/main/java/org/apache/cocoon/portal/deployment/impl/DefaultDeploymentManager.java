@@ -50,7 +50,7 @@ import org.apache.excalibur.source.TraversableSource;
  * TODO - Handling of ignored files is not really covered yet
  * TODO - Handling of sources other than files is not implemented yet.
  *
- * @see DeploymentManager 
+ * @see DeploymentManager
  * @version $Id$
  */
 public class DefaultDeploymentManager
@@ -141,7 +141,7 @@ public class DefaultDeploymentManager
             try {
                 source = this.resolver.resolveURI(this.deploymentUris[i]);
                 if (!source.exists()) {
-                    this.getLogger().warn("Deployment source '" + source.getURI() + 
+                    this.getLogger().warn("Deployment source '" + source.getURI() +
                                           "' does not exist. It will be ignored for deployment.");
                     this.deploymentUris[i] = null;
                 } else if ( !(source instanceof TraversableSource) ) {
@@ -155,7 +155,7 @@ public class DefaultDeploymentManager
             } finally {
                 this.resolver.release(source);
             }
-        }        
+        }
     }
 
     /**
@@ -198,7 +198,7 @@ public class DefaultDeploymentManager
                 }
             } else {
                 Thread.sleep(STARTUP_DELAY);
-                this.scan();                
+                this.scan();
             }
         }
     }
@@ -216,11 +216,11 @@ public class DefaultDeploymentManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.deployment.DeploymentManager#deploy(org.apache.excalibur.source.Source)
+     * @see org.apache.cocoon.portal.deployment.DeploymentManager#deploy(java.lang.String)
      */
-    public synchronized DeploymentStatus deploy(Source source)
+    public synchronized DeploymentStatus deploy(String uri)
     throws DeploymentException {
-        DeploymentObject deploymentObject = new DefaultDeploymentObject(source);
+        DeploymentObject deploymentObject = new DefaultDeploymentObject(uri);
         DeploymentEvent event = null;
         try {
             event = new DeploymentEventImpl(deploymentObject);
@@ -263,11 +263,11 @@ public class DefaultDeploymentManager
                     DeploymentStatus status = null;
                     Exception de = null;
                     try {
-                        status = this.deploy(current);
-                    } catch (Exception e) {                    
+                        status = this.deploy(current.getURI());
+                    } catch (Exception e) {
                         de = e;
                     }
-                    
+
                     if ( status != null
                          && status.getStatus() == DeploymentStatus.STATUS_OKAY ) {
                         if ( this.getLogger().isInfoEnabled() ) {
@@ -276,7 +276,7 @@ public class DefaultDeploymentManager
                         this.deployedArtifacts.add(current.getURI());
                     } else {
                         if ( de != null ) {
-                            this.getLogger().error("Failure deploying " + current.getURI(), de);                            
+                            this.getLogger().error("Failure deploying " + current.getURI(), de);
                         } else if (status == null
                                    || status.getStatus() == DeploymentStatus.STATUS_EVAL) {
                             this.getLogger().warn("Unrecognized source: " + current.getURI());
@@ -302,7 +302,7 @@ public class DefaultDeploymentManager
                 Exception de = null;
                 try {
                     status = this.undeploy(uri);
-                } catch (Exception e) {                    
+                } catch (Exception e) {
                     de = e;
                 }
                 if ( status != null
@@ -312,7 +312,7 @@ public class DefaultDeploymentManager
                     }
                 } else {
                     if ( de != null ) {
-                        this.getLogger().error("Failure undeploying " + uri, de);                            
+                        this.getLogger().error("Failure undeploying " + uri, de);
                     } else if (status == null
                                || status.getStatus() == DeploymentStatus.STATUS_EVAL) {
                         this.getLogger().warn("Unrecognized deployed source: " + uri);
@@ -338,7 +338,7 @@ public class DefaultDeploymentManager
 
     /**
      * This method scans all deployment sources and returns a list of all
-     * found artifacts. 
+     * found artifacts.
      */
     protected Collection getAllDeploymentArtifactSources() {
         final ArrayList sourceList = new ArrayList();
