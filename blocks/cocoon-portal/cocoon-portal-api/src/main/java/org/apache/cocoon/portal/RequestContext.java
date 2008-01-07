@@ -28,16 +28,18 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface RequestContext {
 
-     HttpServletRequest getRequest();
+    String getBasePath();
 
-     HttpServletResponse getResponse();
+    HttpServletRequest getRequest();
 
-     /**
-      * Is the request an Ajax request?
-      *
-      * @return true if this is an Ajax request
-      */
-     boolean isAjaxRequest();
+    HttpServletResponse getResponse();
 
-     ServletContext getServletContext();
+    /**
+     * Is the request an Ajax request?
+     *
+     * @return true if this is an Ajax request
+     */
+    boolean isAjaxRequest();
+
+    ServletContext getServletContext();
 }

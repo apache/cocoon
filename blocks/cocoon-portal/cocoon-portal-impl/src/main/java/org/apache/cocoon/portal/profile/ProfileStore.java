@@ -19,7 +19,7 @@ package org.apache.cocoon.portal.profile;
 import org.apache.excalibur.source.SourceValidity;
 
 /**
- * This component is used storing and retrieving (parts of) the portal profile.
+ * This component is used for storing and retrieving (parts of) the portal profile.
  *
  * The load/save method is able to load/save the various parts of the profile.
  * The correct profile type is specified by a {@link PersistenceType}. The persistence

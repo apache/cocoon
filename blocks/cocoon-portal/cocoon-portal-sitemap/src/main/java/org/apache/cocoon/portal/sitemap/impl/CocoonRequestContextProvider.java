@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.ajax.AjaxHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.RequestContext;
 import org.apache.cocoon.portal.spi.RequestContextProvider;
 import org.apache.cocoon.processing.ProcessInfoProvider;
@@ -53,6 +54,13 @@ public class CocoonRequestContextProvider implements RequestContextProvider {
 
         public RequestContextImpl(ProcessInfoProvider prov) {
             this.provider = prov;
+        }
+
+        /**
+         * @see org.apache.cocoon.portal.RequestContext#getBasePath()
+         */
+        public String getBasePath() {
+            return ObjectModelHelper.getRequest(provider.getObjectModel()).getSitemapURIPrefix();
         }
 
         /**

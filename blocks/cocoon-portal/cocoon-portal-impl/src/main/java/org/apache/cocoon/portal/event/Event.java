@@ -17,7 +17,7 @@
 package org.apache.cocoon.portal.event;
 
 /**
- * Marker interface for an portal event
+ * Marker interface for a portal event.
  *
  * @version $Id$
  */
