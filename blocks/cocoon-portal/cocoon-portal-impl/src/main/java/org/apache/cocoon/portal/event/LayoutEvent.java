@@ -1,9 +1,3 @@
-/**
- * This interface marks an event as targetted at a
- * {@link org.apache.cocoon.portal.om.Layout} object.
- *
- * @version $Id$
- */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
