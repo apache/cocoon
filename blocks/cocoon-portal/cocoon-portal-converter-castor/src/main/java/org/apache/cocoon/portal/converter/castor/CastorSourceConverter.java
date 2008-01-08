@@ -16,9 +16,11 @@
  */
 package org.apache.cocoon.portal.converter.castor;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,12 +28,19 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.cocoon.portal.profile.Converter;
-import org.apache.cocoon.portal.profile.ConverterException;
+import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.portal.profile.PersistenceType;
+import org.apache.cocoon.portal.profile.ProfileException;
+import org.apache.cocoon.portal.profile.ProfileKey;
 import org.apache.cocoon.portal.profile.ProfileStore;
+import org.apache.cocoon.portal.util.AbstractBean;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.excalibur.source.ModifiableSource;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.util.LocalConfiguration;
@@ -53,7 +62,8 @@ import org.xml.sax.InputSource;
  * @version $Id$
  */
 public class CastorSourceConverter
-    implements Converter {
+    extends AbstractBean
+    implements ProfileStore {
 
     /**
      * Used to pass resolvable objects to the field handler.
@@ -97,7 +107,7 @@ public class CastorSourceConverter
     public Object getObject(InputStream stream,
                             PersistenceType type,
                             Map         parameters)
-    throws ConverterException {
+    throws ProfileException {
         try {
             threadLocalMap.set(type);
             final Unmarshaller unmarshaller = (Unmarshaller)((Object[])this.mappings.get(type.getType()))[1];
@@ -105,9 +115,9 @@ public class CastorSourceConverter
             stream.close();
             return result;
         } catch (IllegalStateException ise) {
-            throw new ConverterException("Unable to unmarshal objects for mapping " + type.getType(), ise);
+            throw new ProfileException("Unable to unmarshal objects for mapping " + type.getType(), ise);
         } catch (Exception e) {
-            throw new ConverterException(e.getMessage(), e);
+            throw new ProfileException(e.getMessage(), e);
         } finally {
             threadLocalMap.set(null);
         }
@@ -120,7 +130,7 @@ public class CastorSourceConverter
 	                        Object       object,
                             PersistenceType type,
                             Map          parameters)
-    throws ConverterException {
+    throws ProfileException {
         Object references = object;
         if ( object instanceof Collection && !(object instanceof CollectionWrapper) ) {
             references = new CollectionWrapper((Collection)object);
@@ -141,9 +151,9 @@ public class CastorSourceConverter
 			marshaller.marshal(references);
 			writer.close();
 		} catch (MappingException e) {
-			throw new ConverterException("Can't create Unmarshaller", e);
+			throw new ProfileException("Can't create Unmarshaller", e);
 		} catch (Exception e) {
-			throw new ConverterException(e.getMessage(), e);
+			throw new ProfileException(e.getMessage(), e);
         } finally {
             threadLocalMap.set(null);
 		}
@@ -218,4 +228,116 @@ public class CastorSourceConverter
             return o;
         }
     }
+
+    /** The source resolver. */
+    protected SourceResolver resolver;
+
+    /** The configuration for loading/saving the profile. */
+    protected Properties configuration;
+
+    public void setSourceResolver(SourceResolver sr) {
+        this.resolver = sr;
+    }
+
+    public void setConfiguration(Properties configuration) {
+        this.configuration = configuration;
+    }
+
+    protected String getURI(ProfileKey key, String type, boolean load)
+    throws Exception {
+        // find uri in configuration
+        final StringBuffer config = new StringBuffer(type);
+        config.append('-');
+        config.append(key.getProfileCategory());
+        config.append('-');
+        if ( load ) {
+            config.append("load");
+        } else {
+            config.append("save");
+        }
+        final String uri = this.configuration.getProperty(config.toString());
+        if ( uri == null ) {
+            throw new ProfileException("Configuration for key '" + config.toString() + "' is missing.");
+        }
+
+        return PropertyHelper.getProperty(uri, key, null);
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.profile.ProfileStore#loadProfile(org.apache.cocoon.portal.profile.ProfileKey, org.apache.cocoon.portal.profile.PersistenceType)
+     */
+    public Object loadProfile(ProfileKey key, PersistenceType type)
+    throws Exception {
+        final String uri = this.getURI( key, type.getType(), true );
+
+        Source source = null;
+        try {
+            source = this.resolver.resolveURI(uri);
+
+            return this.getObject(source.getInputStream(),
+                                       type,
+                                       null);
+        } finally {
+            this.resolver.release(source);
+        }
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.profile.ProfileStore#saveProfile(org.apache.cocoon.portal.profile.ProfileKey, org.apache.cocoon.portal.profile.PersistenceType, java.lang.Object)
+     */
+    public void saveProfile(ProfileKey key, PersistenceType type, Object profile)
+    throws Exception {
+        final String uri = this.getURI( key, type.getType(), false );
+
+        // first test: modifiable source?
+        Source source = null;
+        try {
+            source = this.resolver.resolveURI(uri);
+            if ( source instanceof ModifiableSource ) {
+                this.storeObject( ((ModifiableSource)source).getOutputStream(),
+                                        profile,
+                                        type,
+                                        null);
+                return;
+            }
+        } finally {
+            resolver.release(source);
+            source = null;
+        }
+
+        final StringBuffer buffer = new StringBuffer(uri);
+        ByteArrayOutputStream writer = new ByteArrayOutputStream();
+        this.storeObject(writer,
+                              profile,
+                              type,
+                              null);
+
+        buffer.append("&content=");
+        try {
+            buffer.append(NetUtils.encode(writer.toString(), "utf-8"));
+        } catch (UnsupportedEncodingException uee) {
+            // ignore this as utf-8 is always supported
+        }
+
+        source = this.resolver.resolveURI(buffer.toString());
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.profile.ProfileStore#getValidity(org.apache.cocoon.portal.profile.ProfileKey, java.lang.String)
+     */
+    public SourceValidity getValidity(ProfileKey key, String type) {
+        Source source = null;
+        try {
+            final String uri = this.getURI( key, type, true );
+
+            source = this.resolver.resolveURI(uri);
+            return source.getValidity();
+        } catch (Exception e) {
+            getLogger().warn(e.getMessage(), e);
+            return null;
+        } finally {
+            this.resolver.release(source);
+        }
+    }
+
 }
