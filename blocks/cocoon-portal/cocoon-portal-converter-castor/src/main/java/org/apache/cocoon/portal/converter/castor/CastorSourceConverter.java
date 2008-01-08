@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.persistence.castor;
+package org.apache.cocoon.portal.converter.castor;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -162,7 +162,7 @@ public class CastorSourceConverter
         }
 
         // default configuration
-        final String prefix = "resource://org/apache/cocoon/portal/persistence/castor/";
+        final String prefix = "resource://org/apache/cocoon/portal/converter/castor/";
         final Map mappingSources = new HashMap();
         mappingSources.put(ProfileStore.PROFILETYPE_LAYOUT, prefix + ProfileStore.PROFILETYPE_LAYOUT +".xml");
         mappingSources.put(ProfileStore.PROFILETYPE_COPLETDEFINITION, prefix + ProfileStore.PROFILETYPE_COPLETDEFINITION + ".xml");

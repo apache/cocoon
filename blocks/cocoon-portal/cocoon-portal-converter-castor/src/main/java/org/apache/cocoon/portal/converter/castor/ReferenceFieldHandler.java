@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.persistence.castor;
+package org.apache.cocoon.portal.converter.castor;
 
 import java.util.Iterator;
 import java.util.Map;
