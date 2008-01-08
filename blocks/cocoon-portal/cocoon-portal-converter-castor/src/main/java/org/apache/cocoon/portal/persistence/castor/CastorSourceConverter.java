@@ -25,25 +25,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Map.Entry;
 
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.portal.profile.Converter;
 import org.apache.cocoon.portal.profile.ConverterException;
 import org.apache.cocoon.portal.profile.PersistenceType;
 import org.apache.cocoon.portal.profile.ProfileStore;
-import org.apache.cocoon.util.AbstractLogEnabled;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.util.LocalConfiguration;
@@ -65,22 +53,43 @@ import org.xml.sax.InputSource;
  * @version $Id$
  */
 public class CastorSourceConverter
-    extends AbstractLogEnabled
-    implements Serviceable, Configurable, Initializable, ThreadSafe, Converter {
+    implements Converter {
 
     /**
      * Used to pass resolvable objects to the field handler.
      */
     public static final ThreadLocal threadLocalMap = new ThreadLocal();
 
-    protected Map mappingSources = new HashMap();
-    protected ServiceManager manager;
-    protected Map mappings = new HashMap();
+    protected final Map mappings = new HashMap();
     protected boolean defaultSuppressXSIType;
     protected boolean defaultValidateUnmarshalling;
+    protected Properties castorProperties;
 
     /** This object resolves the references between the different profile files. */
     protected ReferenceResolver idResolver = new ReferenceResolver();
+
+    /** By default we use the logger for this class. */
+    private Log logger = LogFactory.getLog(getClass());
+
+    public Log getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Log l) {
+        this.logger = l;
+    }
+
+    public void setSuppressXSIType(boolean flag) {
+        this.defaultSuppressXSIType = flag;
+    }
+
+    public void setValidateUnmarshalling(boolean flag) {
+        this.defaultValidateUnmarshalling = flag;
+    }
+
+    public void setCastorProperties(Properties props) {
+        this.castorProperties = props;
+    }
 
     /**
      * @see org.apache.cocoon.portal.profile.Converter#getObject(java.io.InputStream, org.apache.cocoon.portal.profile.PersistenceType, java.util.Map)
@@ -141,90 +150,58 @@ public class CastorSourceConverter
 	}
 
     /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     * Initialize this service.
+     * Load the mappings and configure castor
      */
-    public void service(ServiceManager aManager) throws ServiceException {
-        this.manager = aManager;
-    }
-
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration config) throws ConfigurationException {
+    public void init() throws Exception {
         // configure castor - so we don't need a properties file
         final Properties castorProperties = LocalConfiguration.getInstance().getProperties();
         castorProperties.setProperty("org.exolab.castor.parser.namespaces", "true");
-        final Configuration[] properties = config.getChild("castor-properties").getChildren("property");
-        for(int i=0; i<properties.length; i++) {
-            final String propName = properties[i].getAttribute("name");
-            final String propValue = properties[i].getAttribute("value");
-            castorProperties.setProperty(propName, propValue);
+        if ( this.castorProperties != null ) {
+            castorProperties.putAll(this.castorProperties);
         }
 
         // default configuration
         final String prefix = "resource://org/apache/cocoon/portal/persistence/castor/";
-        this.mappingSources.put(ProfileStore.PROFILETYPE_LAYOUT, prefix + ProfileStore.PROFILETYPE_LAYOUT +".xml");
-        this.mappingSources.put(ProfileStore.PROFILETYPE_COPLETDEFINITION, prefix + ProfileStore.PROFILETYPE_COPLETDEFINITION + ".xml");
-        this.mappingSources.put(ProfileStore.PROFILETYPE_COPLETINSTANCE, prefix + ProfileStore.PROFILETYPE_COPLETINSTANCE + ".xml");
+        final Map mappingSources = new HashMap();
+        mappingSources.put(ProfileStore.PROFILETYPE_LAYOUT, prefix + ProfileStore.PROFILETYPE_LAYOUT +".xml");
+        mappingSources.put(ProfileStore.PROFILETYPE_COPLETDEFINITION, prefix + ProfileStore.PROFILETYPE_COPLETDEFINITION + ".xml");
+        mappingSources.put(ProfileStore.PROFILETYPE_COPLETINSTANCE, prefix + ProfileStore.PROFILETYPE_COPLETINSTANCE + ".xml");
+
         boolean plutoAvailable = false;
         try {
-            ClassUtils.loadClass("org.apache.cocoon.portal.pluto.adapter.PortletAdapter");
+            this.getClass().getClassLoader().loadClass("org.apache.cocoon.portal.pluto.adapter.PortletAdapter");
             plutoAvailable = true;
         } catch (Exception ignore) {
             this.getLogger().info("Pluto is not available - no default mapping for castor loaded.");
         }
         if ( plutoAvailable ) {
-            this.mappingSources.put("portletpreferences", prefix + "pluto.xml");
+            mappingSources.put("portletpreferences", prefix + "pluto.xml");
         }
+		final Iterator iterator = mappingSources.entrySet().iterator();
+    	while (iterator.hasNext()) {
+    		final Map.Entry entry = (Map.Entry)iterator.next();
+    		final String name = (String)entry.getKey();
+    		final String mappingSource = (String)entry.getValue();
 
-        // the custom configuration might overwrite the default config
-        Configuration[] children = config.getChildren("mapping-source");
-    	for (int i=0; i<children.length; i++) {
-    	    Configuration mappingSource = children[i];
-	        this.mappingSources.put(mappingSource.getAttribute("source"), mappingSource.getValue());
-	    }
-        this.defaultSuppressXSIType = config.getChild("suppressXSIType").getValueAsBoolean(false);
-        this.defaultValidateUnmarshalling = config.getChild("validate-on-unmarshalling").getValueAsBoolean(false);
-    }
+    		final InputStream is = this.getClass().getResourceAsStream(mappingSource.substring(10));
+			final InputSource inputSource = new InputSource();
+			inputSource.setSystemId(mappingSource);
 
-    /**
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize() throws Exception {
-        SourceResolver resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
-        Source source = null;
-        try {
-			Entry entry;
-			String name;
-			String mappingSource;
-			Mapping mapping;
-			Iterator iterator = this.mappingSources.entrySet().iterator();
-        	while (iterator.hasNext()) {
-        		entry = (Map.Entry)iterator.next();
-        		name = (String)entry.getKey();
-        		mappingSource = (String)entry.getValue();
+			final Mapping mapping = new Mapping();
+			mapping.loadMapping(inputSource);
 
-				source = resolver.resolveURI(mappingSource);
-				mapping = new Mapping();
-				mapping.loadMapping(SourceUtil.getInputSource(source));
-
-                // create unmarshaller
-                try {
-                    final Unmarshaller unmarshaller = new Unmarshaller(mapping);
-                    unmarshaller.setValidation(this.defaultValidateUnmarshalling);
-                    unmarshaller.setIDResolver(this.idResolver);
-                    this.mappings.put(name, new Object[] {mapping, unmarshaller});
-                } catch (Exception e) {
-                    this.getLogger().debug("Unable to create unmarshaller for mapping: " + name, e);
-                    throw e;
-                }
-        	}
-        } finally {
-            if (source != null) {
-                resolver.release(source);
+            // create unmarshaller
+            try {
+                final Unmarshaller unmarshaller = new Unmarshaller(mapping);
+                unmarshaller.setValidation(this.defaultValidateUnmarshalling);
+                unmarshaller.setIDResolver(this.idResolver);
+                this.mappings.put(name, new Object[] {mapping, unmarshaller});
+            } catch (Exception e) {
+                this.getLogger().debug("Unable to create unmarshaller for mapping: " + name, e);
+                throw e;
             }
-            manager.release(resolver);
-        }
+    	}
     }
 
     public final static class ReferenceResolver implements IDResolver {

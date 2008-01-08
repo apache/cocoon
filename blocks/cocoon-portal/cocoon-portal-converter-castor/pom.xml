@@ -19,32 +19,35 @@
 -->
 <!--+
     | @version $Id$
-    |
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
-    <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-  </parent>
+ 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-portal</artifactId>
-  <packaging>pom</packaging>
-  <name>Portal Block [modules]</name>
-  <version>1-SNAPSHOT</version>
-  <modules>
-    <module>cocoon-portal-api</module>
-    <module>cocoon-portal-auth-impl</module>
-    <module>cocoon-portal-impl</module>
-    <module>cocoon-portal-portlet-impl</module>
-    <!-- 
-    <module>cocoon-portal-portlet-newimpl</module>
-    <module>cocoon-portal-wsrp-impl</module>
-     -->
-    <module>cocoon-portal-bridges-impl</module>
-    <module>cocoon-portal-converter-castor</module>
-    <module>cocoon-portal-sitemap</module>
-    <module>cocoon-portal-sample</module>
-  </modules>
+  <packaging>jar</packaging>
+  
+  <parent>
+    <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon-portal</artifactId>
+    <version>1-SNAPSHOT</version>
+  </parent>
+  <artifactId>cocoon-portal-converter-castor</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>Cocoon Portal Castor Converter</name>
+  <description>Profile Converter using Castor</description>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-portal-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-portal-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.castor</groupId>
+      <artifactId>castor</artifactId>
+    </dependency>
+  </dependencies>  
+  
 </project>
