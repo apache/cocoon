@@ -5,47 +5,49 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.persistence.castor;
+package org.apache.cocoon.portal.converter.castor;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.portal.om.AbstractParameters;
-import org.apache.cocoon.portal.om.Item;
-import org.apache.cocoon.portal.om.Layout;
+import org.apache.cocoon.portal.om.CopletDefinition;
+import org.apache.cocoon.portal.om.CopletInstance;
+import org.apache.cocoon.portal.om.LayoutInstance;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 import org.exolab.castor.mapping.MapItem;
 
 /**
- * Field handler for parameters of a layout or an item.
+ * Field handler for attributes of a CopletDefinition and a CopletInstanceData object.
  *
  * @version $Id$
  */
-public class ParametersFieldHandler extends AbstractFieldHandler {
+public class AttributesFieldHandler extends AbstractFieldHandler {
 
-    protected Map getParameters(Object object) {
-        if (object instanceof Layout) {
-            return ((Layout) object).getParameters();
-        }
-        return ((Item) object).getParameters();
+    protected Iterator getAttributesIterator(Object object) {
+        if (object instanceof CopletDefinition) {
+            return ((CopletDefinition) object).getAttributes().entrySet().iterator();
+        } else if ( object instanceof LayoutInstance ) {
+            return ((LayoutInstance) object).getAttributes().entrySet().iterator();
+        } else {
+            return ((CopletInstance) object).getAttributes().entrySet().iterator();
+        }        
     }
-
     /**
      * @see org.exolab.castor.mapping.FieldHandler#getValue(java.lang.Object)
      */
     public Object getValue(Object object) {
-        final HashMap map = new HashMap();
-        final Iterator iterator = this.getParameters(object).entrySet().iterator();
+        final Map map = new HashMap();
+        final Iterator iterator = this.getAttributesIterator(object);
         while (iterator.hasNext()) {
             final Map.Entry entry = (Map.Entry) iterator.next();
             final Object key = entry.getKey();
@@ -75,7 +77,17 @@ public class ParametersFieldHandler extends AbstractFieldHandler {
      * @see org.exolab.castor.mapping.FieldHandler#resetValue(java.lang.Object)
      */
     public void resetValue(Object object) {
-        this.getParameters(object).clear();
+        final Iterator iterator = this.getAttributesIterator(object);
+        while ( iterator.hasNext() ) {
+            final String key = (String)iterator.next();
+            if ( object instanceof CopletDefinition ) {
+                ((CopletDefinition)object).removeAttribute(key);
+            } else if ( object instanceof LayoutInstance ) {
+                ((LayoutInstance)object).removeAttribute(key);
+            } else {
+                ((CopletInstance)object).removeAttribute(key);
+            }
+        }
     }
 
     /**
@@ -83,6 +95,13 @@ public class ParametersFieldHandler extends AbstractFieldHandler {
      */
     public void setValue(Object object, Object value) {
         final MapItem item = (MapItem) value;
-        ((AbstractParameters)object).setParameter(item.getKey().toString(), item.getValue().toString());
+        final String key = item.getKey().toString();
+        if (object instanceof CopletDefinition) {
+            ((CopletDefinition)object).setAttribute(key, item.getValue());
+        } else if ( object instanceof LayoutInstance ) {
+            ((LayoutInstance)object).setAttribute(key, item.getValue());
+        } else {
+            ((CopletInstance)object).setAttribute(key, item.getValue());
+        }
     }
 }
