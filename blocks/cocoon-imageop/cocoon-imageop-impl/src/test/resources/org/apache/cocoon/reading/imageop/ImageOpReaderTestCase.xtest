@@ -26,8 +26,18 @@
  </roles>
 
  <components>
+   <!-- =============== Image Operations ==================== -->
+  <image-operations>
+    <component-instance name="resize" class="org.apache.cocoon.reading.imageop.ResizeOperation" />
+  </image-operations>
+  <!-- =============== Readers ==================== -->
   <readers logger="test">
    <component-instance name="imageop-no-effects" class="org.apache.cocoon.reading.imageop.ImageOpReader"/>
+    <component-instance name="imageop-resize" class="org.apache.cocoon.reading.imageop.ImageOpReader">
+      <effects>
+        <op type="resize" prefix="resize-" />
+      </effects>
+    </component-instance>
   </readers>
  </components>
 
