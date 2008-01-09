@@ -3189,7 +3189,7 @@
     <docs.m.template.version>1.0</docs.m.template.version>
     <docs.m.template.relPath>2.2/blocks/template/${docs.m.template.version}/</docs.m.template.relPath>
     <!-- unreleased blocks -->
-    <!--docs.m.javaflow.version>1.0</docs.m.javaflow.version>
+    <docs.m.javaflow.version>1.0</docs.m.javaflow.version>
     <docs.m.javaflow.relPath>2.2/blocks/${docs.m.javaflow.version}/</docs.m.javaflow.relPath>
     <docs.m.lucene.version>1.0</docs.m.lucene.version>
     <docs.m.lucene.relPath>2.2/blocks/${docs.m.lucene.version}/</docs.m.lucene.relPath>
@@ -3200,7 +3200,7 @@
     <docs.m.portal.version>1.0</docs.m.portal.version>
     <docs.m.portal.relPath>2.2/blocks/${docs.m.portal.version}/</docs.m.portal.relPath>
     <docs.m.serializers.version>1.0</docs.m.serializers.version>
-    <docs.m.serializers.relPath>2.2/blocks/${docs.m.serializers.version}/</docs.m.serializers.relPath-->
+    <docs.m.serializers.relPath>2.2/blocks/${docs.m.serializers.version}/</docs.m.serializers.relPath>
     <!-- Path and version properties: Blocks without Daisy documentation -->
     <docs.m.hsqldb-server.version>1.0</docs.m.hsqldb-server.version>
     <docs.m.hsqldb-server.relPath>2.2/blocks/hsqldb-server/${docs.m.hsqldb-server.version}/</docs.m.hsqldb-server.relPath>
