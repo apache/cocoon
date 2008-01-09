@@ -27,7 +27,7 @@ process.
 
 To build Cocoon, use the following command:
 
-  $ mvn -Dmaven.test.skip=true -P allblocks install
+  $ mvn -P allblocks install
 
 In case of any failures, repeat command as necessary till you see
 the message:
