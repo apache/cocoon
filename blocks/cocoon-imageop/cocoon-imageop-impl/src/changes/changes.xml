@@ -29,8 +29,11 @@
             Initial creation.
           </action>
           <action dev="ltrieloff" type="add" issue="COCOON-2048">
-            Added OverlayOperation contributed by Alexander Klimetschek
-          </action>      
+            Added OverlayOperation contributed by Alexander Klimetschek.
+          </action>
+          <action dev="gkossakowski" type="add" issue="COCOON-2133" due-to="Robin Wyles" due-to-email="reb@robinwyles.com">
+            Addition of "allow-enlarge" parameter to ImageOp resize operation. Many thanks to Robin Wyles for providing test-cases covering added functionality.
+          </action>
         </release>
       </body>
     </document>
