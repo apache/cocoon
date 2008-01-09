@@ -26,7 +26,7 @@
         class="org.apache.cocoon.databases.bridge.spring.avalon.SpringToAvalonDataSourceBridge">
     <property name="springDataSources">
       <!-- FIXME: Type should be changed to javax.sql.DataSource -->
-      <configurator:bean-map type="javax.sql.DataSource"/>
+      <configurator:bean-map type="org.apache.avalon.excalibur.datasource.DataSourceComponent"/>
     </property>
     <property name="dataSourceSelector" ref="org.apache.avalon.excalibur.datasource.DataSourceComponentLegacySelector"/>
   </bean>
