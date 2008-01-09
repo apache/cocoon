@@ -132,6 +132,7 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
+        <role>ASF member</role>
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
