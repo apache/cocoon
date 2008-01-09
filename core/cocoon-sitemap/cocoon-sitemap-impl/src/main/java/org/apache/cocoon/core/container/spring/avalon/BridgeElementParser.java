@@ -141,21 +141,12 @@ public class BridgeElementParser extends AbstractElementParser {
         beanDef.getPropertyValues().addPropertyValue("location", this.getConfigurationLocation());
         this.register(beanDef, AvalonBeanPostProcessor.class.getName(), registry);
 
-        // add string template parser for sitemap variable substitution
-        final ChildBeanDefinition parserDef = new ChildBeanDefinition("org.apache.cocoon.template.expression.AbstractStringTemplateParser");
-        parserDef.setBeanClassName("org.apache.cocoon.components.treeprocessor.variables.LegacySitemapStringTemplateParser");
-        parserDef.setSingleton(true);
-        parserDef.setLazyInit(false);
-        parserDef.getPropertyValues().addPropertyValue("serviceManager", new RuntimeBeanReference("org.apache.avalon.framework.service.ServiceManager"));
-        this.register(parserDef, "org.apache.cocoon.el.parsing.StringTemplateParser/legacySitemap", null, registry);
-
         final RootBeanDefinition resolverDef = new RootBeanDefinition();
-        resolverDef.setBeanClassName("org.apache.cocoon.components.treeprocessor.variables.StringTemplateParserVariableResolver");
+        resolverDef.setBeanClassName("org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver");
         resolverDef.setLazyInit(false);
         resolverDef.setScope("prototype");
-        resolverDef.getPropertyValues().addPropertyValue("stringTemplateParser", new RuntimeBeanReference("org.apache.cocoon.el.parsing.StringTemplateParser/legacySitemap"));
-        resolverDef.getPropertyValues().addPropertyValue("objectModel", new RuntimeBeanReference("org.apache.cocoon.el.objectmodel.ObjectModel"));
-        this.register(resolverDef, "org.apache.cocoon.components.treeprocessor.variables.StringTemplateParserVariableResolver", null, registry);
+        resolverDef.getPropertyValues().addPropertyValue("manager", new RuntimeBeanReference("org.apache.avalon.framework.service.ServiceManager"));
+        this.register(resolverDef, "org.apache.cocoon.components.treeprocessor.variables.VariableResolver", null, registry);
     }
 
     protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)

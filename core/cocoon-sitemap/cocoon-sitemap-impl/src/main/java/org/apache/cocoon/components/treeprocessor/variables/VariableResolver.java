@@ -37,6 +37,8 @@ import org.apache.commons.lang.ObjectUtils;
  */
 public abstract class VariableResolver {
 
+    public final static String ROLE = VariableResolver.class.getName();
+
     protected String originalExpr;
 
 
