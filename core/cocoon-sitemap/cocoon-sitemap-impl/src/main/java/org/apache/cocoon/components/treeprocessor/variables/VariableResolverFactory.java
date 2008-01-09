@@ -104,7 +104,7 @@ public class VariableResolverFactory {
         if (needsResolve(expression)) {
             VariableResolver resolver;
             try {
-                resolver = (VariableResolver) manager.lookup(StringTemplateParserVariableResolver.ROLE);
+                resolver = (VariableResolver) manager.lookup(VariableResolver.ROLE);
                 resolver.setExpression(expression);
             } catch (ServiceException e) {
                 throw new PatternException("Couldn't obtain VariableResolver.", e);
