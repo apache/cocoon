@@ -1046,6 +1046,7 @@
         <otherArchive>http://www.mail-archive.com/users@cocoon.apache.org/</otherArchive>
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-user</otherArchive>
         <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.user</otherArchive>
+        <otherArchive>http://cocoon.markmail.org/search/list:org.apache.cocoon.users</otherArchive>        
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -1058,6 +1059,7 @@
         <otherArchive>http://www.mail-archive.com/dev@cocoon.apache.org/</otherArchive>
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-dev</otherArchive>
         <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.dev</otherArchive>
+        <otherArchive>http://cocoon.markmail.org/search/list:org.apache.cocoon.dev</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -1070,6 +1072,7 @@
         <otherArchive>http://www.mail-archive.com/dev@cocoon.apache.org/</otherArchive>
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-docs</otherArchive>
         <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.docs</otherArchive>
+        <otherArchive>http://cocoon.markmail.org/search/list:org.apache.cocoon.docs</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -1081,6 +1084,7 @@
         <otherArchive>http://www.mail-archive.com/cvs@cocoon.apache.org/</otherArchive>
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-cvs</otherArchive>
         <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.cvs</otherArchive>
+        <otherArchive>http://cocoon.markmail.org/search/list:org.apache.cocoon.cvs</otherArchive>
       </otherArchives>
     </mailingList>
   </mailingLists>
