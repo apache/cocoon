@@ -328,13 +328,6 @@
       </dependencies>
     </profile>
   </profiles>
-    
-  <pluginRepositories>
-    <pluginRepository>
-      <id>snapshots</id>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-    </pluginRepository>
-  </pluginRepositories>
 
   <properties>
     <jetty.port>8888</jetty.port>
