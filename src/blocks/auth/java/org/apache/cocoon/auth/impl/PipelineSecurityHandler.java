@@ -28,16 +28,16 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.auth.AbstractSecurityHandler;
+import org.apache.cocoon.auth.ApplicationManager;
+import org.apache.cocoon.auth.StandardUser;
+import org.apache.cocoon.auth.User;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.cocoon.auth.AbstractSecurityHandler;
-import org.apache.cocoon.auth.ApplicationManager;
-import org.apache.cocoon.auth.StandardUser;
-import org.apache.cocoon.auth.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -266,7 +266,7 @@ public class PipelineSecurityHandler
             SourceParameters parameters = new SourceParameters();
 
             // add all elements from inside the handler data
-            this.addParametersFromAuthenticationXML("/data",
+            this.addParametersFromAuthenticationXML("data",
                                                     parameters);
 
             // add all top level elements from authentication

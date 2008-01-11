@@ -182,6 +182,10 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="CZ" type="fix" fixes-bug="COCOON-2159">
+      Auth Block: Fix error in PipelineSecurityHandler which prevented additional data to be added
+      to the user properties.
+    </action>
     <action dev="RG" type="fix" fixes-bug="COCOON-2064">
       Fix javadoc in PropertySettings. RunningMode is not supported in 2.1.x
     </action>
