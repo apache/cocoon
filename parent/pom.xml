@@ -1954,7 +1954,7 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-aop</artifactId>
-        <version>2.5</version>
+        <version>2.5.1</version>
         <exclusions>
           <exclusion>
             <groupId>avalon-framework</groupId>
@@ -1969,7 +1969,7 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-beans</artifactId>
-        <version>2.5</version>
+        <version>2.5.1</version>
         <exclusions>
           <exclusion>
             <groupId>avalon-framework</groupId>
@@ -1980,7 +1980,7 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
-        <version>2.5</version>
+        <version>2.5.1</version>
         <exclusions>
           <exclusion>
             <groupId>avalon-framework</groupId>
@@ -1999,18 +1999,18 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
-        <version>2.5</version>
+        <version>2.5.1</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
-        <version>2.5</version>
+        <version>2.5.1</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-web</artifactId>
-        <version>2.5</version>
+        <version>2.5.1</version>
       </dependency>
       <dependency>
         <groupId>stax</groupId>
@@ -3052,7 +3052,7 @@
           <maxmemory>512m</maxmemory>
           <links>
             <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
-            <link>http://static.springframework.org/spring/docs/2.0.x/api/</link>
+            <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
             <link>http://excalibur.apache.org/apidocs/</link>
             <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
             <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
