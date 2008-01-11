@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -235,7 +235,7 @@ public class PipelineSecurityHandler
             final Properties parameters = new Properties();
 
             // add all elements from inside the handler data
-            this.addParametersFromAuthenticationXML("/data",
+            this.addParametersFromAuthenticationXML("data",
                                                     parameters);
 
             // add all top level elements from authentication
