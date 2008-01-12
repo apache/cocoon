@@ -59,6 +59,10 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-databases-bridge</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-datasource</artifactId>    
     </dependency>
