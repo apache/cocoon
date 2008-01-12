@@ -2300,6 +2300,11 @@
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-databases-bridge</artifactId>
+        <version>1.0.0-M1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-databases-impl</artifactId>
         <version>1.0.0-RC3-SNAPSHOT</version>
       </dependency>
