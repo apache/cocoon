@@ -37,6 +37,20 @@
   <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Main Core Sample Block</name>
 
+  <repositories>
+    <repository>
+      <id>apache.snapshot</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
