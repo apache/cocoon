@@ -46,8 +46,8 @@
         Fixed bug in DispatcherServlet that caused servlet (blocks) mounted at "/" to be handled improperly.
       </action>
     </release>
-    <release version="1.0.0-RC3-SNAPSHOT" date="2008-??-??" description="unreleased">
-      <action dev="gkossakowski" type="add" issue=COCOON-2036" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@googlemail.com">
+    <release version="1.0.0-RC2-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="add" issue="COCOON-2036" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@googlemail.com">
         Throw an exception when circular dependencies in servlet connections are detected.
       </action>
     </release>
