@@ -66,8 +66,14 @@ public class IncludeXMLConsumer implements XMLConsumer {
      * Constructor
      */
     public IncludeXMLConsumer (XMLConsumer consumer) {
-        this.contentHandler = consumer;
-        this.lexicalHandler = consumer;
+        this(consumer, consumer);
+    }
+
+    /**
+     * Constructor
+     */
+    public IncludeXMLConsumer (ContentHandler contentHandler) {
+        this(contentHandler, contentHandler instanceof LexicalHandler ? (LexicalHandler)contentHandler : null);
     }
 
     /**
@@ -76,14 +82,6 @@ public class IncludeXMLConsumer implements XMLConsumer {
     public IncludeXMLConsumer (ContentHandler contentHandler, LexicalHandler lexicalHandler) {
         this.contentHandler = contentHandler;
         this.lexicalHandler = lexicalHandler;
-    }
-
-    /**
-     * Constructor
-     */
-    public IncludeXMLConsumer (ContentHandler contentHandler) {
-        this.contentHandler = contentHandler;
-        this.lexicalHandler = contentHandler instanceof LexicalHandler ? (LexicalHandler)contentHandler : null;
     }
 
     /**
