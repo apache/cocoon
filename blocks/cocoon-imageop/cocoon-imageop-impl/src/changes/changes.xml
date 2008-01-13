@@ -25,14 +25,14 @@
     <document>
       <body>
         <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
+          <action dev="gkossakowski" type="add" issue="COCOON-2133" due-to="Robin Wyles" due-to-email="reb@robinwyles.com">
+            Add "allow-enlarge" parameter to ImageOp resize operation.
+          </action>
+          <action dev="ltrieloff" type="add" issue="COCOON-2048" due-to="Alexander Klimetschek">
+            Add overlay operation.
+          </action>
           <action dev="reinhard" type="add">
             Initial creation.
-          </action>
-          <action dev="ltrieloff" type="add" issue="COCOON-2048">
-            Added OverlayOperation contributed by Alexander Klimetschek.
-          </action>
-          <action dev="gkossakowski" type="add" issue="COCOON-2133" due-to="Robin Wyles" due-to-email="reb@robinwyles.com">
-            Addition of "allow-enlarge" parameter to ImageOp resize operation. Many thanks to Robin Wyles for providing test-cases covering added functionality.
           </action>
         </release>
       </body>
