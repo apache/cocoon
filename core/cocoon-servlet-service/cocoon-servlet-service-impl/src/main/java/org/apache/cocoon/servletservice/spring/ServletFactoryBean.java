@@ -36,6 +36,7 @@ import org.springframework.aop.support.DelegatingIntroductionInterceptor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.ServletContextAware;
@@ -194,6 +195,9 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
     }
 
     public Object getObject() throws Exception {
+        if (this.embeddedServlet == null) {
+            throw new FactoryBeanNotInitializedException("There might be a circular dependency inside the servlet connections.");
+        }
         ProxyFactory proxyFactory = new ProxyFactory(this.embeddedServlet);
         proxyFactory.addAdvice(new ServiceInterceptor());
         if (this.mountPath != null) {
@@ -203,6 +207,10 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
     }
 
     public Class getObjectType() {
+        if (this.embeddedServlet == null) {
+            return null;
+        }
+        
         return this.embeddedServlet != null ? this.embeddedServlet.getClass() : null;
     }
 
