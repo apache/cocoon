@@ -76,6 +76,7 @@ public class ServletServiceContextTestCase extends TestCase {
 
             protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
                 response.setStatus(HttpServletResponse.SC_OK);
+                response.flushBuffer();
             }
         };
         servletAContext.setServlet(servletA);
@@ -86,6 +87,7 @@ public class ServletServiceContextTestCase extends TestCase {
         dispatcher.forward(request, response);
 
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertTrue("Check if response has been committed", response.isCommitted());
     }
 
     /**
@@ -119,6 +121,7 @@ public class ServletServiceContextTestCase extends TestCase {
                 assertEquals(servletAContext, CallStackHelper.getBaseServletContext());
                 assertEquals(servletBContext, CallStackHelper.getCurrentServletContext());
                 response.setStatus(HttpServletResponse.SC_OK);
+                response.flushBuffer();
             }
         };
 
@@ -132,6 +135,7 @@ public class ServletServiceContextTestCase extends TestCase {
         RequestDispatcher dispatcher = mainContext.getNamedDispatcher("servletA");
         dispatcher.forward(request, response);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertTrue("Check if response has been committed", response.isCommitted());
     }
 
     /**
@@ -175,7 +179,8 @@ public class ServletServiceContextTestCase extends TestCase {
                 super.service(req, response);
                 assertEquals(servletCContext, CallStackHelper.getBaseServletContext());
                 assertEquals(servletCContext, CallStackHelper.getCurrentServletContext());
-                res.setStatus(200);
+                res.setStatus(HttpServletResponse.SC_OK);
+                res.flushBuffer();
             }
         };
         servletAContext.setServlet(servletA);
@@ -189,7 +194,8 @@ public class ServletServiceContextTestCase extends TestCase {
 
         RequestDispatcher dispatcher = mainContext.getNamedDispatcher("servletA");
         dispatcher.forward(request, response);
-        assertEquals(200, response.getStatus());
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertTrue("Check if response has been committed", response.isCommitted());
     }
 
     /**
@@ -212,7 +218,9 @@ public class ServletServiceContextTestCase extends TestCase {
 
             protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
                 super.service(request, response);
-                response.setStatus(500);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                //FIXME: Uncomment this line in order to see the same error as reported in COCOON-2150 issue
+                //response.flushBuffer();
             }
 
         };
@@ -234,7 +242,8 @@ public class ServletServiceContextTestCase extends TestCase {
                 super.service(req, response);
                 assertEquals(servletCContext, CallStackHelper.getBaseServletContext());
                 assertEquals(servletCContext, CallStackHelper.getCurrentServletContext());
-                res.setStatus(200);
+                res.setStatus(HttpServletResponse.SC_OK);
+                res.flushBuffer();
             }
         };
         servletAContext.setServlet(servletA);
@@ -248,7 +257,8 @@ public class ServletServiceContextTestCase extends TestCase {
 
         RequestDispatcher dispatcher = mainContext.getNamedDispatcher("servletA");
         dispatcher.forward(request, response);
-        assertEquals(200, response.getStatus());
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertTrue("Check if response has been committed", response.isCommitted());
     }
 
     /**
@@ -273,7 +283,9 @@ public class ServletServiceContextTestCase extends TestCase {
 
             protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
                 super.service(request, response);
-                response.setStatus(500);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                //FIXME: Uncomment this line in order to see the same error as reported in COCOON-2150 issue
+                //response.flushBuffer();
             }
 
         };
@@ -283,7 +295,9 @@ public class ServletServiceContextTestCase extends TestCase {
 
             protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             	super.service(request, response);
-                response.setStatus(500);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                //FIXME: Uncomment this line in order to see the same error as reported in COCOON-2150 issue
+                //response.flushBuffer();
             }
         };
 
@@ -294,7 +308,8 @@ public class ServletServiceContextTestCase extends TestCase {
                 super.service(req, response);
                 assertEquals(servletAContext, CallStackHelper.getBaseServletContext());
                 assertEquals(servletCContext, CallStackHelper.getCurrentServletContext());
-                res.setStatus(200);
+                res.setStatus(HttpServletResponse.SC_OK);
+                res.flushBuffer();
             }
         };
         servletAContext.setServlet(servletA);
@@ -308,7 +323,8 @@ public class ServletServiceContextTestCase extends TestCase {
 
         RequestDispatcher dispatcher = mainContext.getNamedDispatcher("servletA");
         dispatcher.forward(request, response);
-        assertEquals(200, response.getStatus());
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertTrue("Check if response has been committed", response.isCommitted());
     }
 
     //-----------------------------------------------------------------------------------------
