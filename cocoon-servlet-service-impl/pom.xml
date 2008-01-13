@@ -55,6 +55,11 @@
   
   <dependencies>
     <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-spring-configurator</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.excalibur.components</groupId>
       <artifactId>excalibur-sourceresolve</artifactId>
       <exclusions>
