@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="JH" type="add" fixes-bug="COCOON-2149" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
+      Add capability to IncludeTransformer to strip the root element from included XML content.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-2159">
       Auth Block: Fix error in PipelineSecurityHandler which prevented additional data to be added
       to the user properties.
