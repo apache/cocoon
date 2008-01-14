@@ -4,7 +4,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Stop all JettyContainer instances.
+ * Stop all the JettyContainer instance.
  *
  * @goal jetty-stop
  */

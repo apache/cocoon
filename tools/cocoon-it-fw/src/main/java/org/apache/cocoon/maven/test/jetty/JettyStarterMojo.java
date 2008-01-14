@@ -6,7 +6,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Start all servers to run the Cocoon integration tests.
+ * Start a Jetty container to run the Cocoon integration tests.
  *
  * @goal jetty-start
  */
