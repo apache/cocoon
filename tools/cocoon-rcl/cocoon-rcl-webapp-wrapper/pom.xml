@@ -29,7 +29,7 @@
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>5-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
@@ -37,11 +37,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.cocoon</groupId> 
-      <artifactId>cocoon-rcl-spring-reloader</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId> 
+      <groupId>org.apache.commons</groupId>
       <artifactId>commons-jci-core</artifactId>
     </dependency>
     <dependency>
@@ -57,41 +53,41 @@
           <groupId>avalon-framework</groupId>
         </exclusion>
       </exclusions>
-    </dependency>  
+    </dependency>
     <dependency>
-      <groupId>log4j</groupId> 
-      <artifactId>log4j</artifactId> 
-    </dependency>      
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
       <scope>provided</scope>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
       <scope>provided</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
       <scope>provided</scope>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
       <scope>provided</scope>
-    </dependency>      
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
       <scope>provided</scope>
-    </dependency>             
+    </dependency>
     <!--  test dependencies  -->
     <dependency>
       <groupId>xmlunit</groupId>
