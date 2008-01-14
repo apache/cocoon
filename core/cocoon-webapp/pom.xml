@@ -106,9 +106,72 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-sample</artifactId>
     </dependency>
+
+    <!-- Integration Tests -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-it-fw</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <profiles>
+    <profile>
+      <id>it</id>
+      <build>
+        <plugins>
+          <!-- Integration tests -->
+          <plugin>
+            <groupId>org.apache.cocoon</groupId>
+            <artifactId>cocoon-it-fw</artifactId>
+            <configuration>
+              <webAppDirectory>./target/cocoon-webapp</webAppDirectory>
+            </configuration>
+            <executions>
+              <execution>
+                <id>jetty-start</id>
+                <goals>
+                  <goal>jetty-start</goal>
+                </goals>
+                <phase>pre-integration-test</phase>
+              </execution>
+              <execution>
+                <id>jetty-stop</id>
+                <goals>
+                  <goal>jetty-stop</goal>
+                </goals>
+                <phase>post-integration-test</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/cocoon/it/**</exclude>
+              </excludes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>integration-test</id>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <phase>integration-test</phase>
+                <configuration>
+                  <excludes>
+                    <exclude>none</exclude>
+                  </excludes>
+                  <includes>
+                    <include>**/cocoon/it/**</include>
+                  </includes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>allblocks</id>
       <dependencies>
@@ -143,7 +206,7 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-captcha-sample</artifactId>
-        </dependency>    
+        </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-chaperon-sample</artifactId>
@@ -155,7 +218,7 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-databases-sample</artifactId>
-        </dependency>    
+        </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-deli-sample</artifactId>
@@ -252,7 +315,7 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-portal-sample</artifactId>
-        </dependency>    
+        </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-profiler-sample</artifactId>
