@@ -67,7 +67,7 @@ public final class AbsoluteServletConnection extends AbstractServletConnection {
 
         URI reqUri = null;
         try {
-            this.uri = new URI(serviceName, null, path, queryString, null);
+            this.uri = new URI(serviceName  + ABSOLUTE_SERVLET_SOURCE_POSTFIX, null, path, queryString, null);
             this.uri = new URI("servlet", this.uri.toASCIIString(), null);
             reqUri = new URI("servlet", null, path, queryString, null);
         } catch (URISyntaxException e) {
