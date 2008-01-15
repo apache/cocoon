@@ -29,10 +29,10 @@ public class AbsoluteServletConnectionTestCase extends ContainerTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        //setting up environment for AbsoluteServletConnection
         CallStack.enter();
         CallStack.getCurrentFrame().setAttribute(CallStackHelper.SUPER_CALL, new Boolean(false));
         CallFrameHelper.setContext(getContext());
-        new MockServlet();
     }
     
     protected void addComponents(ConfigurationInfo info) throws Exception {
