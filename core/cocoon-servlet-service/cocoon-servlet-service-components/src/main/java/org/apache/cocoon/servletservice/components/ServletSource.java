@@ -107,6 +107,10 @@ public class ServletSource extends AbstractSource
     private ServletConnection createServletConnection(String location) throws MalformedURLException {
         URI locationUri = null;
         try {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Trying to create a servlet connection for location " + location);
+            }
+            
             locationUri = new URI(location);
             if (!locationUri.isAbsolute()) {
                 throw new MalformedURLException("Only absolute URIs are allowed for the block protocol. "
