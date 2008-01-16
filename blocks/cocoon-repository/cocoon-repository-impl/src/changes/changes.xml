@@ -22,13 +22,18 @@
     |
     | @version $Id$
     +-->
-    <document>
-      <body>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>      
-        </release>
-      </body>
-    </document>
-    
+<document>
+  <body>
+    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
+      <action dev="vgritsenko" type="update">
+        Refactor CachingSource to remove Cron block dependency, and more.
+      </action>
+      <action dev="vgritsenko" type="add">
+        Add CachingSource source implementation (from the scratchpad block).
+      </action>
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>      
+    </release>
+  </body>
+</document>

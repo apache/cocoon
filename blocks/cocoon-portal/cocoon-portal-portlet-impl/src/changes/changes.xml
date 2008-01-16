@@ -22,13 +22,22 @@
     |
     | @version $Id$
     +-->
-    <document>
-      <body>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>      
-        </release>
-      </body>
-    </document>
-    
+<document>
+  <body>
+    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
+      <action dev="cziegler" type="add">
+        Implement (hot)deployment for JSR 168 portlets.
+      </action>
+      <action dev="cziegler" type="add">
+        Add deployment infrastructure.
+      </action>
+      <action dev="cziegler" type="add" fixes-bug="COCOON-1674">
+        Improved user support for portlets: user name, principal and role are "forwarded"
+        from the authentication mechanism to the portlet.
+      </action>
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>      
+    </release>
+  </body>
+</document>

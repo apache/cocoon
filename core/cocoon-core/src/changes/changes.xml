@@ -29,9 +29,19 @@
 
   <body>
     <release version="2.2.0" date="2007-??-??" description="unreleased">
+      <action dev="joerg" type="add" fixes-bug="COCOON-2149" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
+        Add capability to IncludeTransformer to strip the root element from included XML content.
+      </action>
       <action dev="vgritsenko" type="update">
         Cocoon Core has been switched from Avalon Logger to Jakarta Commons Logging.
         See <a href="http://cocoon.apache.org/2.2/">migration guide</a> for more details.
+      </action>
+      <action dev="cziegler" type="fix" fixes-bug="COCOON-2070" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+        Fix bug in recycling of poolable components where recycle() was not called in all cases.
+      </action>
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2055" due-to="Martin Heiden" due-to-email="martin.heiden@netcologne.de">
+        Fix MultipartFilter cleaning up the request and so disposing the uploaded files before the
+        request has been processed actually.
       </action>
     </release>
     <release version="2.2.0-M3-SNAPSHOT" date="2007-03-02" description="released">

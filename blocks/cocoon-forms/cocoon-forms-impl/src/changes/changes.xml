@@ -24,12 +24,18 @@
   -->
 <document>
   <body>
-    <release version="1.0.0" date="2007-??-??" description="unreleased">
+    <release version="1.1.0-M1" date="2007-??-??" description="unreleased">
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
+        Allow Ajax submission of forms with empty upload field.
+      </action>
+      <action dev="giacomo" type="update">
+        The Cocoon Forms springified (as much as possible).
+      </action>
     </release>
-
+    <!-- Here forms block got branched for forms 1.0 and springified form 1.1. -->
     <release version="1.0.0-RC1" date="2007-09-27" description="released">
       <action dev="gkossakowski" type="fix" issue="COCOON-2062" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
-        Added missing dojo.require("dojo.ns") statement.
+        Add missing dojo.require("dojo.ns") statement.
       </action>
       <action dev="felixk" type="add" issue="COCOON-2091">
         Add Xinha as alternative for HTMLArea as WYSIWYG online editor as HTMLArea is no longer maintained.
@@ -39,10 +45,9 @@
         Use alternatives instead (e.g. Xinha).
       </action>
     </release>
-
     <release version="1.0.0-M1" date="2006-08-03" description="released">
-      <action dev="ltrieloff" type="fix" issue="COCOON-2027">
-        Fixed AJAX form uploads with MSIE. Patch Contributed by Jan Oberst.
+      <action dev="ltrieloff" type="fix" issue="COCOON-2027" due-to="Jan Oberst">
+        Fix AJAX form uploads with MSIE.
       </action>
       <action dev="reinhard" type="add">
         Initial creation.

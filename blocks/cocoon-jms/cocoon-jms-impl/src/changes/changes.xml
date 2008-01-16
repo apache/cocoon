@@ -22,13 +22,20 @@
     |
     | @version $Id$
     +-->
-    <document>
-      <body>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>      
-        </release>
-      </body>
-    </document>
-    
+<document>
+  <body>
+    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
+      <action dev="unico" type="add" due-to="Johan Stuyts">
+        JMS block: Connection failures can now be recovered from. The default JMSConnectionManager implementation
+        detects when JMS connections are severed and schedules reconnection attempts with the cron scheduler
+        in order to re-establish the connection. As soon as reconnection was successful it notifies its listeners
+        so that they may recover as well and refresh their JMS sessions. The provided abstract MessageListener
+        and JMS publisher that users are recommended to use as base classes for their concrete JMS needs have been
+        updated to use this mechanism.
+      </action>
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>      
+    </release>
+  </body>
+</document>

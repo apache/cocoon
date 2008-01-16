@@ -45,6 +45,23 @@
       <action dev="reinhard" type="update">
         Initial release from trunk.
       </action>
+      <action dev="JHS" type="fix" fixes-bug="COCOON-1728" due-to="Paul Focke" due-to-email="paul@outerthought.org">
+        Apples can now access components declared in mounted sitemaps.
+      </action>
+      <action dev="LG" type="add">
+        Service apples:<br/>
+        in applicationContext.xml:<br/>
+        &lt;bean id="orderCreateApple" class="com.mobilebox.gemini.web.apples.OrderCreateApple"&gt;<br/>
+          &lt;property name="orderRequestParser" ref="orderRequestParserService"/&gt;<br/>
+          &lt;property name="orderService" ref="orderService"/&gt;<br/>
+        &lt;/bean&gt;<br/>
+        in sitemap.xmap
+        &lt;map:flow language="service-apples"/&gt;
+        &lt;.../&gt;
+        &lt;map:match pattern="orderCreate"&gt;
+          &lt;map:call function="orderCreateApple"/&gt;
+        &lt;/map:match&gt;
+      </action>
     </release>
   </body>
 </document>
