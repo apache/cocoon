@@ -27,14 +27,8 @@
 
   <xsl:param name="contextPath">servlet:/</xsl:param>
 
-
-  <xsl:template match="/">
-    <html>
-      <xsl:apply-templates/>
-    </html>
-  </xsl:template>
-
   <xsl:template match="page">
+   <html>
    <head>
      <title>
        <xsl:text>Apache Cocoon </xsl:text><xsl:value-of select="$version"/>
@@ -75,6 +69,7 @@
        <a href="http://www.apache.org/">The Apache Software Foundation</a>. All rights reserved.
      </p>
    </body>
+   </html>
   </xsl:template>
 
   <xsl:template name="resources">
