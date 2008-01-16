@@ -20,19 +20,13 @@
 <!--+
     | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
     |
-    | @version $Id$
+    | @version $Id: changes.xml 531004 2007-04-21 09:46:23Z reinhard $
     +-->
 <document>
   <body>
-    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-      <action dev="cziegler" type="update">
-        Moved the general charsets to own project.
-      </action>
-      <action dev="asavory" type="add" fixes-bug="COCOON-1845" due-to="Maurizio Pillitu" due-to-email="m.pillitu@thebug.it">
-        As with all the AbstractTextSerializer based serializers, the XHTMLSerializer should handle
-        the omit-xml-declaration to not put the XML declaration as first line of the serialized
-        document. This prevents many rendering problems in Internet Explorer. Default behaviour is
-        to send the xml declaration as before.
+    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">
+      <action dev="cziegler" type="add">
+        Add new layout provided by Helma van der Linden.
       </action>
       <action dev="reinhard" type="add">
         Initial creation.

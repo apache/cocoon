@@ -24,12 +24,21 @@
   -->
 <document>
   <body>
-    <release version="1.0.0" date="2007-??-??" description="unreleased">
+    <release version="1.0.0-RC3" date="2007-??-??" description="unreleased">
       <action dev="vgritsenko" type="fix" issue="COCOON-2129" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
         Fix setting of URL message body.
       </action>
     </release>
     <release version="1.0.0-M1" date="2007-03-02" description="released">  
+      <action dev="asavory" type="fix" fixes-bug="COCOON-1818" due-to="Jasha Joachimsthal">
+        Apply patch to handle malformed recipient address exception correctly.
+      </action>
+      <action dev="unico" type="add" due-to="Johan Stuyts">
+        The SendMailTransformer can now configure the smtp port.
+      </action>
+      <action dev="cziegler" type="remove">
+        Remove deprecated MailCommandSelector.
+      </action>
       <action dev="reinhard" type="add">
         Initial creation.
       </action>    

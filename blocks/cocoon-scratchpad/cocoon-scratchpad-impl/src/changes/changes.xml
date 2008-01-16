@@ -22,13 +22,18 @@
     |
     | @version $Id$
     +-->
-    <document>
-      <body>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>      
-        </release>
-      </body>
-    </document>
-    
+<document>
+  <body>
+    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
+      <action dev="vgritsenko" type="remove">
+        CachingSource: Moved into the Repository block.
+      </action>
+      <action dev="vgritsenko" type="fix" fixes-bug="COCOON-1363">
+        CookieCreatorAction: Changed default for maxAge to -1, corrected documentation.
+      </action>
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>      
+    </release>
+  </body>
+</document>

@@ -22,13 +22,12 @@
     |
     | @version $Id$
     +-->
-    <document>
-      <body>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>      
-        </release>
-      </body>
-    </document>
-    
+<document>
+  <body>
+    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
+      <action dev="JQ" type="add">
+        Add querybean block, functionality moved from the lucene block as we hope to add a dependency on OJB so querybeans can be persisted.
+      </action>
+    </release>
+  </body>
+</document>
