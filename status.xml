@@ -185,9 +185,9 @@
     <action dev="JH" type="add" fixes-bug="COCOON-2149" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
       Add capability to IncludeTransformer to strip the root element from included XML content.
     </action>
-    <action dev="CZ" type="fix" fixes-bug="COCOON-2159">
+    <action dev="CZ" type="fix" fixes-bug="COCOON-2159" due-to="Pawel Pesz" due-to-email="webmaster@insert.net.pl">
       Auth Block: Fix error in PipelineSecurityHandler which prevented additional data to be added
-      to the user properties. Applied patch fram Pawel Pesz (webmaster@insert.net.pl).
+      to the user properties.
     </action>
     <action dev="RG" type="fix" fixes-bug="COCOON-2064">
       Fix javadoc in PropertySettings. RunningMode is not supported in 2.1.x
