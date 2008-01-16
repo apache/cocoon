@@ -2,7 +2,6 @@
                   A  P  A  C  H  E     C  O  C  O  O  N
 
                                 @version@
-  
 
   What is it?
   -----------
@@ -22,9 +21,6 @@
   a web application, improving development pace and reducing the chance of
   conflicts.
 
-
-
-
   Requirements
   ------------
 
@@ -40,9 +36,6 @@
    o  A Servlet API 2.2 compatible Servlet Engine or J2EE Application Server. 
       [not required for command line operation]
 
-
-
-
   Installation Instructions and Documentation
   -------------------------------------------
 
@@ -57,9 +50,6 @@
   Look for the most updated documentation on the Apache Cocoon web site
   (http://cocoon.apache.org/).
 
-
-
-
   Licensing and legal issues
   --------------------------
 
@@ -68,9 +58,6 @@
 
   For more information, please read the LICENSE files in the /legal directory.
 
-
-
-
   Credits
   -------
 
@@ -78,12 +65,7 @@
   read the CREDITS.txt file in this directory.
 
 
-
   Thanks for using Apache Cocoon.
-
-
-
-
 
                                            The Apache Cocoon Project
                                            http://cocoon.apache.org/
