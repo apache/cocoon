@@ -53,10 +53,10 @@
   Licensing and legal issues
   --------------------------
 
-  Cocoon is licensed under the Apache Software License, a license of the BSD
-  family, and contains software which is compatible with the BSD licensing style.
-
-  For more information, please read the LICENSE files in the /legal directory.
+  Cocoon is licensed under the Apache License, version 2.0
+  See the files in the top-level of the Cocoon distribution called
+  LICENSE.txt and NOTICE.txt and see licenses for accompanying products
+  in the "legal" directory.
 
   Credits
   -------
