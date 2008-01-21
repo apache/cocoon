@@ -16,9 +16,11 @@
  */
 package org.apache.cocoon.portal.deployment.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,10 +32,8 @@ import org.apache.cocoon.portal.deployment.DeploymentManager;
 import org.apache.cocoon.portal.deployment.DeploymentObject;
 import org.apache.cocoon.portal.deployment.DeploymentStatus;
 import org.apache.cocoon.portal.deployment.UndeploymentEvent;
+import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.cocoon.thread.RunnableManager;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.TraversableSource;
 
 /**
  * This is the default deployment manager scanning a directory for artifacts to deploy.
@@ -46,14 +46,11 @@ import org.apache.excalibur.source.TraversableSource;
  * @version $Id$
  */
 public class DefaultDeploymentManager
-    extends org.apache.cocoon.portal.util.AbstractBean
+    extends AbstractBean
     implements DeploymentManager, Runnable {
 
     /** Wait ten seconds before scanning. */
     protected static final int STARTUP_DELAY = 10 * 1000;
-
-    /** Source resolver. */
-    protected SourceResolver resolver;
 
     /** Runnable manager. */
     protected RunnableManager runnableManager;
@@ -71,7 +68,7 @@ public class DefaultDeploymentManager
     protected long scanningDelay = 60 * 1000;
 
     /** All locations to look for deployable artifacts. */
-    protected String[] deploymentUris = new String[] {"conf/deploy"};
+    protected File[] deploymentSources;
 
     /** These files have been ignored during the last scan. */
     protected final Map failedArtifacts;
@@ -94,10 +91,6 @@ public class DefaultDeploymentManager
         this.stop();
     }
 
-    public void setSourceResolver(SourceResolver resolver) {
-        this.resolver = resolver;
-    }
-
     public void setRunnableManager(RunnableManager manager) {
         this.runnableManager = manager;
     }
@@ -110,8 +103,8 @@ public class DefaultDeploymentManager
         this.hotDeployment = flag;
     }
 
-    public void setDeploymentSources(String[] uris) {
-        this.deploymentUris = uris;
+    public void setDeploymentSources(File[] uris) {
+        this.deploymentSources = uris;
     }
 
     public void setThreadPoolName(String name) {
@@ -123,27 +116,20 @@ public class DefaultDeploymentManager
      */
     protected void testSources()
     throws IOException {
-        if ( this.getLogger().isInfoEnabled() ) {
-            this.getLogger().info("Testing configured deployment sources.");
-        }
-        for (int i = 0; i < this.deploymentUris.length; i++) {
-            Source source = null;
-            try {
-                source = this.resolver.resolveURI(this.deploymentUris[i]);
-                if (!source.exists()) {
-                    this.getLogger().warn("Deployment source '" + source.getURI() +
+        if ( this.deploymentSources != null ) {
+            if ( this.getLogger().isInfoEnabled() ) {
+                this.getLogger().info("Testing configured deployment sources.");
+            }
+            for (int i = 0; i < this.deploymentSources.length; i++) {
+                if (!this.deploymentSources[i].exists()) {
+                    this.getLogger().warn("Deployment source '" + this.deploymentSources[i] +
                                           "' does not exist. It will be ignored for deployment.");
-                    this.deploymentUris[i] = null;
-                } else if ( !(source instanceof TraversableSource) ) {
-                    this.getLogger().warn("Deployment source '" + source.getURI() +
+                    this.deploymentSources[i] = null;
+                } else if ( !this.deploymentSources[i].isDirectory() ) {
+                    this.getLogger().warn("Deployment source '" + this.deploymentSources[i] +
                                           "' is not a directory. It will be ignored for deployment.");
-                    this.deploymentUris[i] = null;
-                } else {
-                    // use absolute url
-                    this.deploymentUris[i] = source.getURI();
+                    this.deploymentSources[i] = null;
                 }
-            } finally {
-                this.resolver.release(source);
             }
         }
     }
@@ -173,7 +159,7 @@ public class DefaultDeploymentManager
      * Start this service in the background.
      */
     protected void start() throws Exception {
-        if ( this.scanningDelay > 0 ) {
+        if ( this.scanningDelay > 0 && this.deploymentSources != null ) {
             if ( this.hotDeployment ) {
                 this.started = true;
                 this.runnableManager.execute(this.threadPoolName, this, STARTUP_DELAY);
@@ -238,43 +224,39 @@ public class DefaultDeploymentManager
         Collection deploymentArtifacts = this.getAllDeploymentArtifactSources();
         Iterator i = deploymentArtifacts.iterator();
         final List newlyProcessedArtifacts = new ArrayList();
-        try {
-            while ( i.hasNext() ) {
-                // check for new deployment
-                final Source current = (Source)i.next();
-                newlyProcessedArtifacts.add(current.getURI());
-                if (!ignoreSource(current) && !this.deployedArtifacts.contains(current.getURI()) ) {
-                    DeploymentStatus status = null;
-                    Exception de = null;
-                    try {
-                        status = this.deploy(current.getURI());
-                    } catch (Exception e) {
-                        de = e;
-                    }
+        while ( i.hasNext() ) {
+            // check for new deployment
+            final File current = (File)i.next();
+            newlyProcessedArtifacts.add(current.getAbsolutePath());
+            if (!ignoreSource(current) && !this.deployedArtifacts.contains(current.getAbsolutePath()) ) {
+                DeploymentStatus status = null;
+                Exception de = null;
+                try {
+                    status = this.deploy(current.toURI().toASCIIString());
+                } catch (Exception e) {
+                    de = e;
+                }
 
-                    if ( status != null
-                         && status.getStatus() == DeploymentStatus.STATUS_OKAY ) {
-                        if ( this.getLogger().isInfoEnabled() ) {
-                            this.getLogger().info("Deployed source " + current.getURI());
-                        }
-                        this.deployedArtifacts.add(current.getURI());
-                    } else {
-                        if ( de != null ) {
-                            this.getLogger().error("Failure deploying " + current.getURI(), de);
-                        } else if (status == null
-                                   || status.getStatus() == DeploymentStatus.STATUS_EVAL) {
-                            this.getLogger().warn("Unrecognized source: " + current.getURI());
-                        } else {
-                            this.getLogger().error("Failure deploying " + current.getURI());
-                        }
-                        this.failedArtifacts.put(current.getURI(), new Long(current.getLastModified()));
+                if ( status != null
+                     && status.getStatus() == DeploymentStatus.STATUS_OKAY ) {
+                    if ( this.getLogger().isInfoEnabled() ) {
+                        this.getLogger().info("Deployed source " + current.getAbsolutePath());
                     }
+                    this.deployedArtifacts.add(current.getAbsolutePath());
+                } else {
+                    if ( de != null ) {
+                        this.getLogger().error("Failure deploying " + current.getAbsolutePath(), de);
+                    } else if (status == null
+                               || status.getStatus() == DeploymentStatus.STATUS_EVAL) {
+                        this.getLogger().warn("Unrecognized source: " + current.getAbsolutePath());
+                    } else {
+                        this.getLogger().error("Failure deploying " + current.getAbsolutePath());
+                    }
+                    this.failedArtifacts.put(current.getAbsolutePath(), new Long(current.lastModified()));
                 }
             }
-        } finally {
-            // release everything
-            this.releaseSources(deploymentArtifacts);
         }
+
         // now check for undeployment
         i = this.deployedArtifacts.iterator();
         while ( i.hasNext() ) {
@@ -308,11 +290,11 @@ public class DefaultDeploymentManager
         }
     }
 
-    protected boolean ignoreSource(Source source) {
-        Long previousModified = (Long)this.failedArtifacts.get(source.getURI());
+    protected boolean ignoreSource(File source) {
+        Long previousModified = (Long)this.failedArtifacts.get(source.getAbsolutePath());
         if (previousModified != null) {
-            if (previousModified.longValue() != source.getLastModified()) {
-                this.failedArtifacts.remove(source.getURI());
+            if (previousModified.longValue() != source.lastModified()) {
+                this.failedArtifacts.remove(source.getAbsolutePath());
             } else {
                 return true;
             }
@@ -326,42 +308,15 @@ public class DefaultDeploymentManager
      */
     protected Collection getAllDeploymentArtifactSources() {
         final ArrayList sourceList = new ArrayList();
-        boolean release = true;
-        try {
-            for (int i = 0; i < this.deploymentUris.length; i++) {
-                Source source = null;
-                try {
-                    if ( this.deploymentUris[i] != null ) {
-                        source = this.resolver.resolveURI(this.deploymentUris[i]);
-                        if ( source.exists() && source instanceof TraversableSource ) {
-                            final TraversableSource ts = (TraversableSource)source;
-                            sourceList.addAll(ts.getChildren());
-                        }
-                    }
-                } catch (IOException ioe) {
-                    this.getLogger().warn("Exception during scanning of " + this.deploymentUris[i], ioe);
-                } finally {
-                    this.resolver.release(source);
+        for (int i = 0; i < this.deploymentSources.length; i++) {
+            if ( this.deploymentSources[i] != null ) {
+                if ( this.deploymentSources[i].exists() && this.deploymentSources[i].isDirectory() ) {
+                    Collections.addAll(sourceList, this.deploymentSources[i].listFiles());
                 }
-            }
-            release = false;
-        } finally {
-            // release all sources in case of an error
-            if ( release ) {
-                this.releaseSources(sourceList);
             }
         }
 
         return sourceList;
-    }
-
-    protected void releaseSources(Collection c) {
-        final Iterator i = c.iterator();
-        while ( i.hasNext() ) {
-            final Source current = (Source)i.next();
-            this.resolver.release(current);
-        }
-        c.clear();
     }
 
     /**

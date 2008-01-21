@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This bean describes a persistence type. It is used by the {@link Converter} and
+ * This bean describes a persistence type. It is used by the
  * the {@link ProfileStore} to load and save parts of the portal profile.
  *
  * The correct profile type is specified by a constant. For resolving

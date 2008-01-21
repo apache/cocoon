@@ -180,7 +180,6 @@
         <!-- Turn on/off hot deployment: -->
         <property name="hotDeployment" value="true"/>
         <property name="runnableManager" ref="org.apache.cocoon.thread.RunnableManager"/>
-        <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
     </bean> 
 
 </beans>
