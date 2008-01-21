@@ -23,21 +23,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.activity.Startable;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.deployment.DeploymentEvent;
 import org.apache.cocoon.portal.deployment.DeploymentException;
 import org.apache.cocoon.portal.deployment.DeploymentManager;
 import org.apache.cocoon.portal.deployment.DeploymentObject;
 import org.apache.cocoon.portal.deployment.DeploymentStatus;
 import org.apache.cocoon.portal.deployment.UndeploymentEvent;
-import org.apache.cocoon.portal.util.AbstractComponent;
 import org.apache.cocoon.thread.RunnableManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -54,14 +46,17 @@ import org.apache.excalibur.source.TraversableSource;
  * @version $Id$
  */
 public class DefaultDeploymentManager
-    extends AbstractComponent
-    implements DeploymentManager, Parameterizable, Startable, Runnable {
+    extends org.apache.cocoon.portal.util.AbstractBean
+    implements DeploymentManager, Runnable {
 
     /** Wait ten seconds before scanning. */
     protected static final int STARTUP_DELAY = 10 * 1000;
 
     /** Source resolver. */
     protected SourceResolver resolver;
+
+    /** Runnable manager. */
+    protected RunnableManager runnableManager;
 
     /** Are we already started? */
     protected boolean started = false;
@@ -76,7 +71,7 @@ public class DefaultDeploymentManager
     protected long scanningDelay = 60 * 1000;
 
     /** All locations to look for deployable artifacts. */
-    protected String[] deploymentUris;
+    protected String[] deploymentUris = new String[] {"conf/deploy"};
 
     /** These files have been ignored during the last scan. */
     protected final Map failedArtifacts;
@@ -93,39 +88,34 @@ public class DefaultDeploymentManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.util.AbstractComponent#dispose()
+     * Dispose this object.
      */
     public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release(this.resolver);
-            this.resolver = null;
-        }
-        super.dispose();
+        this.stop();
     }
 
-    /**
-     * @see org.apache.cocoon.portal.util.AbstractComponent#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager aManager) throws ServiceException {
-        super.service(aManager);
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+    public void setSourceResolver(SourceResolver resolver) {
+        this.resolver = resolver;
     }
 
-    /**
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters parameters) throws ParameterException {
-        this.scanningDelay = parameters.getParameterAsLong("scanning-delay", this.scanningDelay);
-        this.hotDeployment = parameters.getParameterAsBoolean("hot-deployment", this.hotDeployment);
-        final String deploymentDirs = parameters.getParameter("deployment-sources", "conf/deploy");
-        final StringTokenizer st = new StringTokenizer(deploymentDirs, ",");
-        this.deploymentUris = new String[st.countTokens()];
-        int i = 0;
-        while (st.hasMoreTokens()) {
-            this.deploymentUris[i] = st.nextToken();
-            i++;
-        }
-        this.threadPoolName = parameters.getParameter("thread-pool-name", this.threadPoolName);
+    public void setRunnableManager(RunnableManager manager) {
+        this.runnableManager = manager;
+    }
+
+    public void setScanningDelay(long delay) {
+        this.scanningDelay = delay;
+    }
+
+    public void setHotDeployment(boolean flag) {
+        this.hotDeployment = flag;
+    }
+
+    public void setDeploymentSources(String[] uris) {
+        this.deploymentUris = uris;
+    }
+
+    public void setThreadPoolName(String name) {
+        this.threadPoolName = name;
     }
 
     /**
@@ -159,11 +149,10 @@ public class DefaultDeploymentManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.util.AbstractComponent#initialize()
+     * Initialize this component
      */
     public void initialize()
     throws Exception {
-        super.initialize();
         if ( this.getLogger().isInfoEnabled() ) {
             this.getLogger().info("Starting auto deployment service: " + this.getClass().getName());
             this.getLogger().info("Hot-Deployment: " + this.hotDeployment);
@@ -177,22 +166,17 @@ public class DefaultDeploymentManager
         if (this.scanningDelay > 0) {
             this.testSources();
         }
+        this.start();
     }
 
     /**
-     * @see org.apache.avalon.framework.activity.Startable#start()
+     * Start this service in the background.
      */
-    public void start() throws Exception {
+    protected void start() throws Exception {
         if ( this.scanningDelay > 0 ) {
             if ( this.hotDeployment ) {
                 this.started = true;
-                RunnableManager runnableManager = null;
-                try {
-                    runnableManager = (RunnableManager)this.manager.lookup(RunnableManager.ROLE);
-                    runnableManager.execute(this.threadPoolName, this, STARTUP_DELAY);
-                } finally {
-                    this.manager.release(runnableManager);
-                }
+                this.runnableManager.execute(this.threadPoolName, this, STARTUP_DELAY);
                 if ( this.getLogger().isInfoEnabled() ) {
                     this.getLogger().info("Deployment scanner successfuly started!");
                 }
@@ -204,9 +188,9 @@ public class DefaultDeploymentManager
     }
 
     /**
-     * @see org.apache.avalon.framework.activity.Startable#stop()
+     * Stop this service.
      */
-    public void stop() throws Exception {
+    protected void stop() {
         if ( this.started ) {
             if ( this.getLogger().isInfoEnabled() ) {
                 this.getLogger().info("Deployment scanner stopped.");
