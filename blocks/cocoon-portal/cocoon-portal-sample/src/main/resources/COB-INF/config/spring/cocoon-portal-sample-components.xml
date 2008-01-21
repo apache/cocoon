@@ -162,4 +162,25 @@
       <!-- Add your aspects here -->
     </portal:profile-manager-aspects>
 
+  <!--+
+      | Deployment Manager.
+      +-->
+    <bean name="org.apache.cocoon.portal.deployment.DeploymentManager"
+          class="org.apache.cocoon.portal.deployment.impl.DefaultDeploymentManager"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton">
+        <!-- Scan the following locations: -->
+        <property name="deploymentSources">
+            <list>
+                <value>conf/deploy</value>
+            </list>
+        </property>
+        <!-- Scan the provided directories every minute: -->
+        <property name="scanningDelay" value="60000"/>
+        <!-- Turn on/off hot deployment: -->
+        <property name="hotDeployment" value="true"/>
+        <property name="runnableManager" ref="org.apache.cocoon.thread.RunnableManager"/>
+        <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    </bean> 
+
 </beans>

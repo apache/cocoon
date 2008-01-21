@@ -44,16 +44,4 @@
   <!-- We use Castor for persisting/mapping the profiles to XML: -->
   <include src="resource://org/apache/cocoon/portal/persistence/castor/portal-castor.roles"/>
 
-  <!--+
-      | Deployment Manager.
-      +-->
-  <portal-deployment-manager>
-    <!-- Scan the provided directories every minute: -->
-    <scanning-delay>60000</scanning-delay>
-    <!-- Scan the following locations (comma-separated): -->
-    <deployment-sources>config/deploy</deployment-sources>
-    <!-- Turn on/off hot deployment: -->
-    <hot-deployment>true</hot-deployment>
-  </portal-deployment-manager>
- 
 </components>

@@ -26,11 +26,4 @@
     <role name="org.apache.excalibur.source.SourceFactory/layout"
           default-class="org.apache.cocoon.portal.source.LayoutSourceFactory"/>
 
-  <!--+
-      | Deployment Manager
-      |
-      +-->
-    <role name="org.apache.cocoon.portal.deployment.DeploymentManager"
-          shorthand="portal-deployment-manager"
-          default-class="org.apache.cocoon.portal.deployment.impl.DefaultDeploymentManager"/>
 </role-list>
