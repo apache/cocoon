@@ -21,6 +21,11 @@ public class JettyStarterMojo extends AbstractMojo {
     private File webAppDirectory;
 
     /**
+     * @parameter expression="${project.build.directory}"
+     */
+    private File builddir;
+
+    /**
      * @parameter
      */
     private boolean skip;
@@ -31,11 +36,13 @@ public class JettyStarterMojo extends AbstractMojo {
             return;
         }
         try {
+            System.setProperty("org.apache.cocoon.mode", "dev");
+            System.setProperty("net.sourceforge.cobertura.datafile", new File(this.builddir, "cobertura.ser")
+                            .getAbsolutePath());
             new JettyContainer().start("/", webAppDirectory.getAbsolutePath(), 8888);
         } catch (Exception e) {
             throw new MojoExecutionException("Can't start Jetty.", e);
         }
     }
-
 
 }
