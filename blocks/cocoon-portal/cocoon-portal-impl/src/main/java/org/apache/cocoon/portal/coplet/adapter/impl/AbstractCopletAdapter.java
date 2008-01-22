@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.environment.CocoonRunnable;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Receiver;
@@ -226,7 +225,7 @@ public abstract class AbstractCopletAdapter
                 if ( timeout != null ) {
                     final int milli = timeout.intValue() * 1000;
                     final LoaderThread loader = new LoaderThread(this, coplet, buffer);
-                    this.runnableManager.execute( new CocoonRunnable(loader) );
+                    this.runnableManager.execute( this.getLoaderRunnable(loader) );
                     try {
                         read = loader.join( milli );
                     } catch (InterruptedException ignore) {
@@ -484,6 +483,10 @@ public abstract class AbstractCopletAdapter
             }
         }
         return buffer.toString();
+    }
+
+    protected Runnable getLoaderRunnable(Runnable loader) {
+        return loader;
     }
 }
 
