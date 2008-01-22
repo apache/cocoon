@@ -25,6 +25,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.CocoonRunnable;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
@@ -160,5 +161,12 @@ public class CocoonCopletAdapter
         }
 
         return false;
+    }
+
+    /**
+     * @see org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter#getLoaderRunnable(java.lang.Runnable)
+     */
+    protected Runnable getLoaderRunnable(Runnable loader) {
+        return new CocoonRunnable(loader);
     }
 }
