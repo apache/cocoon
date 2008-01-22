@@ -65,7 +65,6 @@
     <bean name="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter"
           class="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter"
           parent="org.apache.cocoon.portal.util.AbstractBean" abstract="true">
-      <property name="cache" ref="org.apache.cocoon.caching.Cache"/>
       <property name="runnableManager" ref="org.apache.cocoon.thread.RunnableManager"/>
     </bean>
 
