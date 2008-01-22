@@ -101,10 +101,7 @@ public class CastorSourceConverter
         this.castorProperties = props;
     }
 
-    /**
-     * @see org.apache.cocoon.portal.profile.Converter#getObject(java.io.InputStream, org.apache.cocoon.portal.profile.PersistenceType, java.util.Map)
-     */
-    public Object getObject(InputStream stream,
+    protected Object getObject(InputStream stream,
                             PersistenceType type,
                             Map         parameters)
     throws ProfileException {
@@ -123,10 +120,7 @@ public class CastorSourceConverter
         }
     }
 
-	/**
-	 * @see org.apache.cocoon.portal.profile.Converter#storeObject(java.io.OutputStream, java.lang.Object, org.apache.cocoon.portal.profile.PersistenceType, java.util.Map)
-	 */
-	public void storeObject(OutputStream stream,
+	protected void storeObject(OutputStream stream,
 	                        Object       object,
                             PersistenceType type,
                             Map          parameters)
@@ -195,7 +189,7 @@ public class CastorSourceConverter
     		final String mappingSource = (String)entry.getValue();
 
     		final InputStream is = this.getClass().getResourceAsStream(mappingSource.substring(10));
-			final InputSource inputSource = new InputSource();
+			final InputSource inputSource = new InputSource(is);
 			inputSource.setSystemId(mappingSource);
 
 			final Mapping mapping = new Mapping();
