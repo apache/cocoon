@@ -17,18 +17,15 @@
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.Cache;
-import org.apache.cocoon.caching.CachedResponse;
-import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
-import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.environment.CocoonRunnable;
+import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.om.CopletAdapter;
@@ -37,13 +34,10 @@ import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.apache.cocoon.thread.RunnableManager;
-import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.SaxBuffer;
-import org.apache.cocoon.xml.XMLUtils;
-import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.AttributesImpl;
 
 import EDU.oswego.cs.dl.util.concurrent.CountDown;
 
@@ -161,15 +155,8 @@ public abstract class AbstractCopletAdapter
     /** This temporary attribute can be set on the instance to not cache the current response. */
     public static final String DO_NOT_CACHE = "doNotCache";
 
-    /** The cache to use for global caching. */
-    protected Cache cache;
-
     /** The runnable manager for starting background tasks. */
     protected RunnableManager runnableManager;
-
-    public void setCache(Cache cache) {
-        this.cache = cache;
-    }
 
     public void setRunnableManager(RunnableManager runnableManager) {
         this.runnableManager = runnableManager;
@@ -257,7 +244,7 @@ public abstract class AbstractCopletAdapter
                 error = exception;
                 this.getLogger().error("Unable to get content of coplet: " + coplet.getId(), exception);
             } catch (Throwable t ) {
-                error = new ProcessingException("Unable to get content of coplet: " + coplet.getId(), t);
+                error = new PortalException("Unable to get content of coplet: " + coplet.getId(), t);
                 this.getLogger().error("Unable to get content of coplet: " + coplet.getId(), t);
             }
 
@@ -267,9 +254,10 @@ public abstract class AbstractCopletAdapter
                 if ( !this.renderErrorContent(coplet, contentHandler, error)) {
                     // FIXME - get correct error message
                     contentHandler.startDocument();
-                    XMLUtils.startElement( contentHandler, "p");
-                    XMLUtils.data( contentHandler, "The coplet " + coplet.getId() + " is currently not available.");
-                    XMLUtils.endElement(contentHandler, "p");
+                    contentHandler.startElement("", "p", "p", new AttributesImpl());
+                    final char[] msg = ("The coplet " + coplet.getId() + " is currently not available.").toCharArray();
+                    contentHandler.characters(msg, 0, msg.length);
+                    contentHandler.endElement("", "p", "p");
                     contentHandler.endDocument();
                 }
             }
@@ -294,17 +282,13 @@ public abstract class AbstractCopletAdapter
         // do we cache globally?
         boolean cacheGlobal = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_CACHE_GLOBAL, Boolean.FALSE)).booleanValue();
 
-        Object data = null;
+        SaxBuffer data = null;
         // If caching is enabed and the cache is still valid, then use the cache
         if (cachingEnabled) {
             if ( cacheGlobal ) {
-                final String key = this.getCacheKey(coplet);
-                CachedResponse response = this.cache.get(key);
-                if (response != null ) {
-                    data = response.getResponse();
-                }
+                data = (SaxBuffer) coplet.getCopletDefinition().getTemporaryAttribute(this.getCacheKey(coplet));
             } else {
-                data = coplet.getTemporaryAttribute(CACHE);
+                data = (SaxBuffer) coplet.getTemporaryAttribute(CACHE);
             }
         }
         if (data == null) {
@@ -312,28 +296,20 @@ public abstract class AbstractCopletAdapter
             if ( !cachingEnabled || coplet.getTemporaryAttribute(DO_NOT_CACHE) != null ) {
                 coplet.removeTemporaryAttribute(DO_NOT_CACHE);
                 if ( cacheGlobal ) {
-                    final String key = this.getCacheKey(coplet);
-                    this.cache.remove(key);
+                    coplet.getCopletDefinition().removeTemporaryAttribute(this.getCacheKey(coplet));
                 } else {
                     coplet.removeTemporaryAttribute(CACHE);
                 }
                 this.streamContent(coplet, contentHandler);
             } else {
 
-                XMLByteStreamCompiler bc = new XMLByteStreamCompiler();
+                SaxBuffer buffer = new SaxBuffer();
 
-                this.streamContent(coplet, bc);
-                data = bc.getSAXFragment();
+                this.streamContent(coplet, buffer);
+                data = buffer;
                 if (coplet.removeTemporaryAttribute(DO_NOT_CACHE) == null) {
                     if ( cacheGlobal ) {
-                        CachedResponse response = new CachedResponse((SourceValidity[])null, (byte[])data);
-                        try {
-                            final String key = this.getCacheKey(coplet);
-                            this.cache.store(key, response);
-                        } catch (ProcessingException pe) {
-                            // we ignore this
-                            this.getLogger().warn("Exception during storing response into cache.", pe);
-                        }
+                        coplet.getCopletDefinition().setTemporaryAttribute(this.getCacheKey(coplet), data);
                     } else {
                         coplet.setTemporaryAttribute(CACHE, data);
                     }
@@ -342,12 +318,7 @@ public abstract class AbstractCopletAdapter
         }
         // and now stream the data
         if ( data != null ) {
-            XMLByteStreamInterpreter bi = new XMLByteStreamInterpreter();
-            bi.setContentHandler(contentHandler);
-            if ( contentHandler instanceof LexicalHandler ) {
-                bi.setLexicalHandler((LexicalHandler)contentHandler);
-            }
-            bi.deserialize(data);
+            data.toSAX(contentHandler);
         }
     }
 
@@ -443,8 +414,7 @@ public abstract class AbstractCopletAdapter
                 boolean cacheGlobalUseAttributes = ((Boolean)this.getConfiguration(coplet, CONFIGURATION_CACHE_GLOBAL_USE_ATTRIBUTES, Boolean.FALSE)).booleanValue();
                 if ( cacheGlobal ) {
                     if ( !cacheGlobalUseAttributes ) {
-                        final String key = this.getCacheKey(coplet);
-                        this.cache.remove(key);
+                        coplet.getCopletDefinition().removeAttribute(CACHE);
                     }
                 } else {
                     coplet.removeTemporaryAttribute(CACHE);
@@ -484,7 +454,7 @@ public abstract class AbstractCopletAdapter
             buffer.append('=');
             if ( value != null ) {
                 try {
-                    buffer.append(NetUtils.encode(value.toString(), "utf-8"));
+                    buffer.append(URLEncoder.encode(value.toString(), "utf-8"));
                 } catch (UnsupportedEncodingException ignore) {
                     // we ignore this
                 }
@@ -507,7 +477,7 @@ public abstract class AbstractCopletAdapter
             buffer.append('=');
             if ( value != null ) {
                 try {
-                    buffer.append(NetUtils.encode(value.toString(), "utf-8"));
+                    buffer.append(URLEncoder.encode(value.toString(), "utf-8"));
                 } catch (UnsupportedEncodingException ignore) {
                     // we ignore this
                 }

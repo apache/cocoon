@@ -52,6 +52,9 @@ public final class CopletDefinition {
 
     protected transient List allowedRolesList;
 
+    /** Temporary attributes are not persisted. */
+    protected transient Map temporaryAttributes = Collections.EMPTY_MAP;
+
     /**
      * Constructor to instantiate a new coplet data object.
      * @param id The unique id of the object.
@@ -212,6 +215,36 @@ public final class CopletDefinition {
             buffer.append(role);
         }
         this.allowedRoles = buffer.toString();
+    }
+
+    /**
+     * Return the value of an attribute.
+     * @param key The name of the attribute.
+     * @return The value of the attribute or null
+     */
+    public Object getTemporaryAttribute(String key) {
+        return this.temporaryAttributes.get(key);
+    }
+
+    /**
+     * Set the value of the attribute.
+     * @param key The attribute name.
+     * @param value The new value.
+     */
+    public void setTemporaryAttribute(String key, Object value) {
+        if ( this.temporaryAttributes.size() == 0 ) {
+            this.temporaryAttributes = new HashMap();
+        }
+        this.temporaryAttributes.put(key, value);
+    }
+
+    /**
+     * Remove a temporary attribute.
+     * @param key The attribute name.
+     * @return If there was a value associated with the attribute, the old value is returned.
+     */
+    public Object removeTemporaryAttribute(String key) {
+        return this.temporaryAttributes.remove(key);
     }
 
     /**
