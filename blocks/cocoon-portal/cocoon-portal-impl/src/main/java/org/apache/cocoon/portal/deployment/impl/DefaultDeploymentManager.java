@@ -19,8 +19,8 @@ package org.apache.cocoon.portal.deployment.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -311,7 +311,7 @@ public class DefaultDeploymentManager
         for (int i = 0; i < this.deploymentSources.length; i++) {
             if ( this.deploymentSources[i] != null ) {
                 if ( this.deploymentSources[i].exists() && this.deploymentSources[i].isDirectory() ) {
-                    Collections.addAll(sourceList, this.deploymentSources[i].listFiles());
+                    sourceList.addAll(Arrays.asList(this.deploymentSources[i].listFiles()));
                 }
             }
         }
