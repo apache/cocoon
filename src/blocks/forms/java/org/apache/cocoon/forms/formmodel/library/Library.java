@@ -57,13 +57,10 @@ public class Library extends AbstractLogEnabled {
     protected final Object shared = new Object();
 
     protected String sourceURI;
-    protected WidgetDefinitionBuilderContext context;
 
 
     public Library(LibraryManager lm, ServiceSelector builderSelector) {
         manager = lm;
-        context = new WidgetDefinitionBuilderContext();
-        context.setLocalLibrary(this);
         widgetDefinitionBuilderSelector = builderSelector;
     }
 
@@ -138,13 +135,36 @@ public class Library extends AbstractLogEnabled {
     public void buildLibrary(Element libraryElement) throws Exception {
         sourceURI = LocationAttributes.getURI(libraryElement);
         Element widgetsElement = DomHelper.getChildElement(libraryElement, FormsConstants.DEFINITION_NS, "widgets", true);
+
+        WidgetDefinitionBuilderContext context = new WidgetDefinitionBuilderContext(this);
+
         // All child elements of the widgets element are widgets
         Element[] widgetElements = DomHelper.getChildElements(widgetsElement, FormsConstants.DEFINITION_NS);
         for (int i = 0; i < widgetElements.length; i++) {
             Element widgetElement = widgetElements[i];
-            WidgetDefinition widgetDefinition = buildWidgetDefinition(widgetElement);
-            addDefinition(widgetDefinition);
+            buildWidgetDefinition(widgetElement, context);
         }
+    }
+
+    private void buildWidgetDefinition(Element widgetDefinition, WidgetDefinitionBuilderContext context)
+    throws Exception {
+        String widgetName = widgetDefinition.getLocalName();
+        WidgetDefinitionBuilder builder;
+        try {
+            builder = (WidgetDefinitionBuilder) widgetDefinitionBuilderSelector.select(widgetName);
+        } catch (ServiceException e) {
+            throw new LibraryException("Unknown kind of widget '" + widgetName + "'.",
+                                       e, DomHelper.getLocationObject(widgetDefinition));
+        }
+
+        context.setSuperDefinition(null);
+        String extend = DomHelper.getAttribute(widgetDefinition, "extends", null);
+        if (extend != null) {
+            context.setSuperDefinition(getDefinition(extend));
+        }
+
+        WidgetDefinition definition = builder.buildWidgetDefinition(widgetDefinition, context);
+        addDefinition(definition);
     }
 
     public void addDefinition(WidgetDefinition definition) throws LibraryException {
@@ -166,27 +186,7 @@ public class Library extends AbstractLogEnabled {
         }
     }
 
-    protected WidgetDefinition buildWidgetDefinition(Element widgetDefinition) throws Exception {
-        String widgetName = widgetDefinition.getLocalName();
-        WidgetDefinitionBuilder builder;
-        try {
-            builder = (WidgetDefinitionBuilder) widgetDefinitionBuilderSelector.select(widgetName);
-        } catch (ServiceException e) {
-            throw new LibraryException("Unknown kind of widget '" + widgetName + "'.",
-                                       e, DomHelper.getLocationObject(widgetDefinition));
-        }
-
-        context.setSuperDefinition(null);
-
-        String extend = DomHelper.getAttribute(widgetDefinition, "extends", null);
-        if (extend != null) {
-            context.setSuperDefinition(getDefinition(extend));
-        }
-
-        return builder.buildWidgetDefinition(widgetDefinition,context);
-    }
-
-
+    
     /**
      * Encapsulates a uri to designate an import plus a timestamp so previously reloaded
      */
@@ -205,5 +205,4 @@ public class Library extends AbstractLogEnabled {
             return lib != null && this.shared == lib.shared;
         }
     }
-
 }

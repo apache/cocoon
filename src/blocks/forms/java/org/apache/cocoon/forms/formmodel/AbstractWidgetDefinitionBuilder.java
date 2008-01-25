@@ -59,8 +59,6 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     protected ExpressionManager expressionManager;
     protected ServiceManager serviceManager;
 
-    protected WidgetDefinitionBuilderContext context;
-
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
@@ -83,31 +81,17 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         this.serviceManager = null;
     }
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
-    throws Exception {
-        // so changes don't pollute upper levels
-        this.context = new WidgetDefinitionBuilderContext(context);
-
-        WidgetDefinition def = buildWidgetDefinition(widgetElement);
-
-        // register this class with the local library, if any.
-        if (DomHelper.getAttributeAsBoolean(widgetElement, "register", false) &&
-                this.context != null &&
-                this.context.getLocalLibrary() != null) {
-            this.context.getLocalLibrary().addDefinition(def);
-        }
-
-        this.context = null;
-        return def;
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+        throw new UnsupportedOperationException("Please use the other signature with WidgetDefinitionBuilderContext!");
     }
 
-    protected void setupDefinition(Element widgetElement, AbstractWidgetDefinition definition)
+    protected void setupDefinition(Element widgetElement, AbstractWidgetDefinition definition, WidgetDefinitionBuilderContext context)
     throws Exception {
         // location
         definition.setLocation(DomHelper.getLocationObject(widgetElement));
 
-        if (this.context.getSuperDefinition() != null) {
-            definition.initializeFrom(this.context.getSuperDefinition());
+        if (context.getSuperDefinition() != null) {
+            definition.initializeFrom(context.getSuperDefinition());
         }
 
         setCommonProperties(widgetElement, definition);
@@ -164,18 +148,25 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         }
     }
 
-    protected WidgetDefinition buildAnotherWidgetDefinition(Element widgetDefinition)
+    protected WidgetDefinition buildAnotherWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
     throws Exception {
-        String widgetName = widgetDefinition.getLocalName();
+        String widgetName = widgetElement.getLocalName();
         WidgetDefinitionBuilder builder;
         try {
-            builder = (WidgetDefinitionBuilder)widgetDefinitionBuilderSelector.select(widgetName);
+            builder = (WidgetDefinitionBuilder) widgetDefinitionBuilderSelector.select(widgetName);
         } catch (ServiceException e) {
             throw new FormsException("Unknown kind of widget '" + widgetName + "'.",
-                                     e, DomHelper.getLocationObject(widgetDefinition));
+                                     e, DomHelper.getLocationObject(widgetElement));
         }
 
-        return builder.buildWidgetDefinition(widgetDefinition, this.context);
+        WidgetDefinition def = builder.buildWidgetDefinition(widgetElement, context);
+
+        // register this class with the local library, if any.
+        if (DomHelper.getAttributeAsBoolean(widgetElement, "register", false)) {
+            context.getLocalLibrary().addDefinition(def);
+        }
+
+        return def;
     }
 
     protected List buildEventListeners(Element widgetElement, String elementName, Class listenerClass)

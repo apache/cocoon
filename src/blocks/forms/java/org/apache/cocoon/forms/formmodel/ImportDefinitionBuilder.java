@@ -33,14 +33,14 @@ public class ImportDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     /**
      * Imports a new library
      */
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement)
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
     throws Exception {
-        if (this.context == null || this.context.getLocalLibrary() == null) {
+        if (context.getLocalLibrary() == null) {
             throw new FormsException("Import statement seen and context is empty.",
                                      DomHelper.getLocationObject(widgetElement));
         }
 
-        Library lib = this.context.getLocalLibrary();
+        Library lib = context.getLocalLibrary();
         String prefix = DomHelper.getAttribute(widgetElement, PREFIX_ATTRIBUTE);
         String uri = DomHelper.getAttribute(widgetElement, URI_ATTRIBUTE);
 

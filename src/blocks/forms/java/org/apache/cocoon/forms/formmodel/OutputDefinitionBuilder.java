@@ -26,9 +26,11 @@ import org.w3c.dom.Element;
  */
 public class OutputDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         OutputDefinition definition = new OutputDefinition();
-        setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
+
         definition.makeImmutable();
         return definition;
     }
