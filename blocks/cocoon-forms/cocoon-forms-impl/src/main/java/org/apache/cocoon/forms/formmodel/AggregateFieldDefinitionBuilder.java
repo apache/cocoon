@@ -35,24 +35,26 @@ import org.w3c.dom.Element;
  */
 public class AggregateFieldDefinitionBuilder extends FieldDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         AggregateFieldDefinition definition = new AggregateFieldDefinition();
-        setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
+
         definition.makeImmutable();
         return definition;
     }
 
-    protected void setupDefinition(Element widgetElement, AggregateFieldDefinition definition) throws Exception {
-
+    protected void setupDefinition(Element widgetElement, AggregateFieldDefinition definition, WidgetDefinitionBuilderContext context)
+    throws Exception {
         // parse the field definition
-        super.setupDefinition(widgetElement, definition);
+        super.setupDefinition(widgetElement, definition, context);
 
         // make children fields
         Element widgetsElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "widgets", true);
         Element[] fieldElements = DomHelper.getChildElements(widgetsElement, FormsConstants.DEFINITION_NS, "field");
         for (int i = 0; i < fieldElements.length; i++) {
-            FieldDefinition fieldDefinition = (FieldDefinition)buildAnotherWidgetDefinition(fieldElements[i]);
-            definition.addWidgetDefinition(fieldDefinition);
+            FieldDefinition fd = (FieldDefinition) buildAnotherWidgetDefinition(fieldElements[i], context);
+            definition.addWidgetDefinition(fd);
         }
 
         // compile splitpattern

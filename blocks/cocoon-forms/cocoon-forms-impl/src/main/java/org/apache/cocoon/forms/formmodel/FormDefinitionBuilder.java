@@ -43,28 +43,22 @@ public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuil
 
     public WidgetDefinition buildWidgetDefinition(Element formElement) throws Exception {
         FormDefinition formDefinition = new FormDefinition(libraryManager);
-        this.context = new WidgetDefinitionBuilderContext(formDefinition.getLocalLibrary());
+        WidgetDefinitionBuilderContext context = new WidgetDefinitionBuilderContext(formDefinition.getLocalLibrary());
 
-        try {
-            // set local URI
-            formDefinition.getLocalLibrary().setSourceURI(LocationAttributes.getURI(formElement));
+        // set local URI
+        formDefinition.getLocalLibrary().setSourceURI(LocationAttributes.getURI(formElement));
 
-            Iterator i = buildEventListeners(formElement, "on-processing-phase", ProcessingPhaseListener.class).iterator();
-            while (i.hasNext()) {
-                formDefinition.addProcessingPhaseListener((ProcessingPhaseListener) i.next());
-            }
-
-            super.setupDefinition(formElement, formDefinition);
-            setDisplayData(formElement, formDefinition);
-
-            setupContainer(formElement,"widgets",formDefinition);
-
-            formDefinition.resolve();
-
-            formDefinition.makeImmutable();
-        } finally {
-            this.context = null;
+        Iterator i = buildEventListeners(formElement, "on-processing-phase", ProcessingPhaseListener.class).iterator();
+        while (i.hasNext()) {
+            formDefinition.addProcessingPhaseListener((ProcessingPhaseListener) i.next());
         }
+
+        setupDefinition(formElement, formDefinition, context);
+        setDisplayData(formElement, formDefinition);
+        setupContainer(formElement, "widgets", formDefinition, context);
+
+        formDefinition.resolve();
+        formDefinition.makeImmutable();
 
         return formDefinition;
     }

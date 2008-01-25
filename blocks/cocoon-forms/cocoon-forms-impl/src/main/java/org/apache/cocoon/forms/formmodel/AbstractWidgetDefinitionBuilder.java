@@ -52,34 +52,19 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     protected Map widgetListenerBuilders;
     protected DatatypeManager datatypeManager;
     protected ExpressionManager expressionManager;
-    protected WidgetDefinitionBuilderContext context;
 
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
-    throws Exception {
-        // so changes don't pollute upper levels
-        this.context = new WidgetDefinitionBuilderContext(context);
-        try {
-            WidgetDefinition def = buildWidgetDefinition(widgetElement);
-
-            // register this class with the local library, if any.
-            if (DomHelper.getAttributeAsBoolean(widgetElement, "register", false)) {
-                this.context.getLocalLibrary().addDefinition(def);
-            }
-
-            return def;
-        } finally {
-            this.context = null;
-        }
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+        throw new UnsupportedOperationException("Please use the other signature with WidgetDefinitionBuilderContext!");
     }
 
-    protected void setupDefinition(Element widgetElement, AbstractWidgetDefinition definition)
+    protected void setupDefinition(Element widgetElement, AbstractWidgetDefinition definition, WidgetDefinitionBuilderContext context)
     throws Exception {
         // location
         definition.setLocation(DomHelper.getLocationObject(widgetElement));
 
-        if (this.context.getSuperDefinition() != null) {
-            definition.initializeFrom(this.context.getSuperDefinition());
+        if (context.getSuperDefinition() != null) {
+            definition.initializeFrom(context.getSuperDefinition());
         }
 
         setCommonProperties(widgetElement, definition);
@@ -136,16 +121,23 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         }
     }
 
-    protected WidgetDefinition buildAnotherWidgetDefinition(Element widgetDefinition)
+    protected WidgetDefinition buildAnotherWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
     throws Exception {
-        String widgetName = widgetDefinition.getLocalName();
+        String widgetName = widgetElement.getLocalName();
         WidgetDefinitionBuilder builder = (WidgetDefinitionBuilder) widgetDefinitionBuilders.get(widgetName);
         if (builder == null) {
             throw new FormsException("Unknown kind of widget '" + widgetName + "'.",
-                                     DomHelper.getLocationObject(widgetDefinition));
+                                     DomHelper.getLocationObject(widgetElement));
         }
 
-        return builder.buildWidgetDefinition(widgetDefinition, this.context);
+        WidgetDefinition def = builder.buildWidgetDefinition(widgetElement, context);
+
+        // register this class with the local library, if any.
+        if (DomHelper.getAttributeAsBoolean(widgetElement, "register", false)) {
+            context.getLocalLibrary().addDefinition(def);
+        }
+
+        return def;
     }
 
     protected List buildEventListeners(Element widgetElement, String elementName, Class listenerClass)

@@ -304,8 +304,7 @@
     <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
   </bean>
 
-  <bean name="org.apache.cocoon.forms.formmodel.AbstractWidgetDefinitionBuilder"
-        abstract="true" scope="prototype">
+  <bean name="org.apache.cocoon.forms.formmodel.AbstractWidgetDefinitionBuilder" abstract="true">
     <property name="widgetDefinitionBuilders">
       <configurator:bean-map type="org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder" strip-prefix="true"/>
     </property>

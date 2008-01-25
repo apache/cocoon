@@ -49,19 +49,21 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
     private ProcessInfoProvider processInfoProvider; 
 
     protected void setupDefinition(Element widgetElement,
-                                   AbstractDatatypeWidgetDefinition definition)
+                                   AbstractDatatypeWidgetDefinition definition,
+                                   WidgetDefinitionBuilderContext context)
     throws Exception {
-        setupDefinition(widgetElement, definition, false);
+        setupDefinition(widgetElement, definition, context, false);
     }
 
     protected void setupDefinition(Element widgetElement,
                                    AbstractDatatypeWidgetDefinition definition,
+                                   WidgetDefinitionBuilderContext context,
                                    boolean isArrayType)
     throws Exception {
         definition.setProcessInfoProvider( processInfoProvider );
         definition.setSourceResolver( sourceResolver );
         definition.setXmlizer( xmlizer );
-        super.setupDefinition(widgetElement, definition);
+        super.setupDefinition(widgetElement, definition, context);
         // parse "label", "hint", etc.
         setDisplayData(widgetElement, definition);
 

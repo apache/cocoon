@@ -25,9 +25,10 @@ import org.w3c.dom.Element;
  */
 public class NewDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element element, WidgetDefinitionBuilderContext context) throws Exception {
         NewDefinition definition = new NewDefinition();
-        super.setupDefinition(element, definition);
+        setupDefinition(element, definition, context);
+
         definition.makeImmutable();
         return definition;
     }
