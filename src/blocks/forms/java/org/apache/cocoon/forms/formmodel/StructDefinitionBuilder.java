@@ -27,12 +27,13 @@ import org.w3c.dom.Element;
  */
 public class StructDefinitionBuilder extends AbstractContainerDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element element, WidgetDefinitionBuilderContext context)
+    throws Exception {
         StructDefinition definition = new StructDefinition();
-        super.setupDefinition(element, definition);
-        setDisplayData(element, definition);
+        setupDefinition(element, definition, context);
 
-        setupContainer(element,"widgets",definition);
+        setDisplayData(element, definition);
+        setupContainer(element, "widgets", definition, context);
 
         definition.makeImmutable();
         Deprecation.logger.info("Use of 'fd:struct' is deprecated. Use 'fd:group' instead, at " + definition.getLocation());

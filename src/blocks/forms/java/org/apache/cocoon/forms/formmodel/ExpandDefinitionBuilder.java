@@ -28,7 +28,8 @@ import org.w3c.dom.Element;
  */
 public class ExpandDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element element, WidgetDefinitionBuilderContext context)
+    throws Exception {
         String id = DomHelper.getAttribute(element, "id");
 
         WidgetDefinition definition = context.getLocalLibrary().getDefinition(id);

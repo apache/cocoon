@@ -29,7 +29,8 @@ import org.w3c.dom.Element;
  */
 public class ButtonDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         throw new FormsException("The button widget has been renamed to action. Please update your form definition files.",
                                  DomHelper.getLocationObject(widgetElement));
     }

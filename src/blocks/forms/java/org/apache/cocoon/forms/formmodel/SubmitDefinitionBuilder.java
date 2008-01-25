@@ -38,9 +38,10 @@ import org.w3c.dom.Element;
  */
 public final class SubmitDefinitionBuilder extends ActionDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         SubmitDefinition definition = new SubmitDefinition();
-        super.setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
 
         // parse "@validate"
         if (widgetElement.hasAttribute("validate")) {
@@ -48,7 +49,6 @@ public final class SubmitDefinitionBuilder extends ActionDefinitionBuilder {
         }
 
         definition.makeImmutable();
-
         return definition;
     }
 }

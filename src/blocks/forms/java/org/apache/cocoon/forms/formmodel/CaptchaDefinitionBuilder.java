@@ -37,15 +37,18 @@ public class CaptchaDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBu
         this.avalonContext = context;
     }
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         FieldDefinition definition = new CaptchaFieldDefinition(avalonContext);
-        setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
+
         definition.makeImmutable();
         return definition;
     }
 
-    protected void setupDefinition(Element widgetElement, FieldDefinition definition) throws Exception {
-        super.setupDefinition(widgetElement, definition);
+    protected void setupDefinition(Element widgetElement, FieldDefinition definition, WidgetDefinitionBuilderContext context)
+    throws Exception {
+        super.setupDefinition(widgetElement, definition, context);
         
         // parse "@required"
         boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);

@@ -30,15 +30,18 @@ import org.w3c.dom.Element;
  */
 public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         ActionDefinition definition = new ActionDefinition();
-        setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
+
         definition.makeImmutable();
         return definition;
     }
 
-    protected void setupDefinition(Element widgetElement, ActionDefinition definition) throws Exception {
-        super.setupDefinition(widgetElement, definition);
+    protected void setupDefinition(Element widgetElement, ActionDefinition definition, WidgetDefinitionBuilderContext context)
+    throws Exception {
+        super.setupDefinition(widgetElement, definition, context);
 
         setDisplayData(widgetElement, definition);
 

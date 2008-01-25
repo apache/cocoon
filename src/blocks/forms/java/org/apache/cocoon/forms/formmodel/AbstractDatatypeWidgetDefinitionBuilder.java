@@ -41,16 +41,18 @@ import org.w3c.dom.Element;
 public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     protected void setupDefinition(Element widgetElement,
-                                   AbstractDatatypeWidgetDefinition definition)
+                                   AbstractDatatypeWidgetDefinition definition,
+                                   WidgetDefinitionBuilderContext context)
     throws Exception {
-        setupDefinition(widgetElement, definition, false);
+        setupDefinition(widgetElement, definition, context, false);
     }
 
     protected void setupDefinition(Element widgetElement,
                                    AbstractDatatypeWidgetDefinition definition,
+                                   WidgetDefinitionBuilderContext context,
                                    boolean isArrayType)
     throws Exception {
-        super.setupDefinition(widgetElement, definition);
+        super.setupDefinition(widgetElement, definition, context);
         // parse "label", "hint", etc.
         setDisplayData(widgetElement, definition);
 
