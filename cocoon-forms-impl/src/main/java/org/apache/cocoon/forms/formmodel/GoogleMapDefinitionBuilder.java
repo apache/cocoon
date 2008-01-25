@@ -27,11 +27,11 @@ import org.w3c.dom.Element;
  * Builds {@link GoogleMapDefinition}s.
  */
 public final class GoogleMapDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        
+
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         GoogleMapDefinition definition = new GoogleMapDefinition();
-        
-        setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
         setDisplayData(widgetElement, definition);
 
         // Initial value

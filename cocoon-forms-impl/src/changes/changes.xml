@@ -17,33 +17,41 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
-    |
-    | @version $Id$
-    +-->
-    <document>
-      <body>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>
-          <action dev="ltrieloff" type="fix" issue="COCOON-2027">
-            Fixed AJAX form uploads with MSIE. Patch Contributed by Jan Oberst.
-          </action>
-        </release>
-        <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">    
-          <action dev="gkossakowski" type="fix" issue="COCOON-2062" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
-          	Added missing dojo.require("dojo.ns") statement.
-          </action>
-          <action dev="felixk" type="add" issue="COCOON-2091">
-            Add Xinha as alternative for HTMLArea as WYSIWYG online editor as HTMLArea is no longer maintained.
-          </action>
-          <action dev="felixk" type="update">
-            Deprecate HTMLArea. HTMLArea editor will be removed in version 1.1 of cocoon-forms block. 
-            Use alternatives instead (e.g. Xinha).
-          </action>
-        </release>
-      </body>
-    </document>
-    
+
+<!--
+  - See http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  -
+  - $Id$
+  -->
+<document>
+  <body>
+    <release version="1.0.0" date="2008-??-??" description="unreleased">
+      <action dev="vgritsenko" type="fix">
+        Fixed concurrency issue in form definition builders code. If you have custom
+        widgets, please implement WidgetDefinitionBuilder.buildWidgetDefinition(Element, WidgetDefinitionBuilderContext)
+        method. Do not use WidgetDefinitionBuilder.buildWidgetDefinition(Element) method, it is intended to be
+        implemented only by the top level widget (Form).
+      </action>
+    </release>
+    <release version="1.0.0-RC1" date="2007-09-27" description="released">
+      <action dev="gkossakowski" type="fix" issue="COCOON-2062" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+        Added missing dojo.require("dojo.ns") statement.
+      </action>
+      <action dev="felixk" type="add" issue="COCOON-2091">
+        Add Xinha as alternative for HTMLArea as WYSIWYG online editor as HTMLArea is no longer maintained.
+      </action>
+      <action dev="felixk" type="update">
+        Deprecate HTMLArea. HTMLArea editor will be removed in version 1.1 of cocoon-forms block.
+        Use alternatives instead (e.g. Xinha).
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2006-08-03" description="released">
+      <action dev="ltrieloff" type="fix" issue="COCOON-2027" due-to="Jan Oberst">
+        Fix AJAX form uploads with MSIE.
+      </action>
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>
+    </release>
+  </body>
+</document>

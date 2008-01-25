@@ -56,7 +56,8 @@ import org.w3c.dom.Element;
  */
 public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         // Get the "command" attribute
         String actionCommand = DomHelper.getAttribute(widgetElement, "command", null);
 
@@ -76,7 +77,7 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
 
 
         RepeaterActionDefinition definition = createDefinition(widgetElement, actionCommand);
-        super.setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
         setDisplayData(widgetElement, definition);
 
         definition.setActionCommand(actionCommand);

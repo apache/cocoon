@@ -29,22 +29,22 @@ import org.w3c.dom.Element;
  */
 public final class UploadDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        String mimeTypes = DomHelper.getAttribute(widgetElement, "mime-types", null);
-        
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         UploadDefinition uploadDefinition = new UploadDefinition();
-        super.setupDefinition(widgetElement, uploadDefinition);
+        setupDefinition(widgetElement, uploadDefinition, context);
 
         setDisplayData(widgetElement, uploadDefinition);
-        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
-        while (iter.hasNext()) {
-            uploadDefinition.addValueChangedListener((ValueChangedListener)iter.next());
+        Iterator i = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
+        while (i.hasNext()) {
+            uploadDefinition.addValueChangedListener((ValueChangedListener)i.next());
         }
 
-        
-        if(widgetElement.hasAttribute("required"))
+        if (widgetElement.hasAttribute("required")) {
             uploadDefinition.setRequired(DomHelper.getAttributeAsBoolean(widgetElement, "required", false));
-        
+        }
+
+        String mimeTypes = DomHelper.getAttribute(widgetElement, "mime-types", null);
         uploadDefinition.addMimeTypes(mimeTypes);
 
         uploadDefinition.makeImmutable();

@@ -25,9 +25,11 @@ import org.w3c.dom.Element;
  */
 public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
-        setupDefinition(widgetElement, definition, true);
+        setupDefinition(widgetElement, definition, context, true);
+
         definition.makeImmutable();
         return definition;
     }

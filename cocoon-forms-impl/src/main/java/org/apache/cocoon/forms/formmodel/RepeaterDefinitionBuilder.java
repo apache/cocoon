@@ -32,7 +32,8 @@ import org.w3c.dom.Element;
  */
 public final class RepeaterDefinitionBuilder extends AbstractContainerDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element repeaterElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element repeaterElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
 
         int initialSize = DomHelper.getAttributeAsInteger(repeaterElement, "initial-size", 0);
         int minSize = DomHelper.getAttributeAsInteger(repeaterElement, "min-size", 0);
@@ -74,16 +75,16 @@ public final class RepeaterDefinitionBuilder extends AbstractContainerDefinition
         }
 
         RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize, minSize, maxSize, selectable, orderable, enhanced, initialPage, pageSize, customPageId);
-        super.setupDefinition(repeaterElement, repeaterDefinition);
+        setupDefinition(repeaterElement, repeaterDefinition, context);
         setDisplayData(repeaterElement, repeaterDefinition);
 
         // parse "on-repeater-modified"
-        Iterator iter = buildEventListeners(repeaterElement, "on-repeater-modified", RepeaterListener.class).iterator();
-        while (iter.hasNext()) {
-            repeaterDefinition.addRepeaterListener((RepeaterListener)iter.next());
+        Iterator i = buildEventListeners(repeaterElement, "on-repeater-modified", RepeaterListener.class).iterator();
+        while (i.hasNext()) {
+            repeaterDefinition.addRepeaterListener((RepeaterListener) i.next());
         }
 
-        setupContainer(repeaterElement,"widgets",repeaterDefinition);
+        setupContainer(repeaterElement, "widgets", repeaterDefinition, context);
 
         repeaterDefinition.makeImmutable();
         return repeaterDefinition;

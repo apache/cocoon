@@ -46,8 +46,7 @@ public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuil
 
     public WidgetDefinition buildWidgetDefinition(Element formElement) throws Exception {
         FormDefinition formDefinition = new FormDefinition(libraryManager);
-        this.context = new WidgetDefinitionBuilderContext();
-        this.context.setLocalLibrary(formDefinition.getLocalLibrary());
+        WidgetDefinitionBuilderContext context = new WidgetDefinitionBuilderContext(formDefinition.getLocalLibrary());
 
         // set local URI
         formDefinition.getLocalLibrary().setSourceURI(LocationAttributes.getURI(formElement));
@@ -57,16 +56,12 @@ public final class FormDefinitionBuilder extends AbstractContainerDefinitionBuil
             formDefinition.addProcessingPhaseListener((ProcessingPhaseListener) i.next());
         }
 
-        super.setupDefinition(formElement, formDefinition);
+        setupDefinition(formElement, formDefinition, context);
         setDisplayData(formElement, formDefinition);
-
-        setupContainer(formElement,"widgets",formDefinition);
+        setupContainer(formElement, "widgets", formDefinition, context);
 
         formDefinition.resolve();
-
         formDefinition.makeImmutable();
-
-        this.context = null;
         return formDefinition;
     }
 }

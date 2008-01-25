@@ -24,11 +24,14 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public final class MessagesDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        MessagesDefinition messagesDefinition = new MessagesDefinition();
-        super.setupDefinition(widgetElement, messagesDefinition);
-        setDisplayData(widgetElement, messagesDefinition);
-        messagesDefinition.makeImmutable();
-        return messagesDefinition;
+
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
+        MessagesDefinition definition = new MessagesDefinition();
+        setupDefinition(widgetElement, definition, context);
+        setDisplayData(widgetElement, definition);
+
+        definition.makeImmutable();
+        return definition;
     }
 }
