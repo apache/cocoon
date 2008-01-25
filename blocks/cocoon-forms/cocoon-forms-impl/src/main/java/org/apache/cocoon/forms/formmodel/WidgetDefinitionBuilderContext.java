@@ -25,17 +25,24 @@ import org.apache.cocoon.forms.formmodel.library.Library;
  */
 public class WidgetDefinitionBuilderContext {
 
-    protected Library localLibrary;
-    protected WidgetDefinition superDefinition;
+    private final Library library;
+    private WidgetDefinition superDefinition;
 
-
-    public WidgetDefinitionBuilderContext(Library localLibrary) {
-        this.localLibrary = localLibrary;
+    public WidgetDefinitionBuilderContext(Library library) {
+        this.library = library;
     }
 
+    /**
+     * Create context which inherits library from parent context.
+     *
+     * @param parent context to borrow library from
+     */
     public WidgetDefinitionBuilderContext(WidgetDefinitionBuilderContext parent) {
-        this.localLibrary = parent.localLibrary;
-        this.superDefinition = parent.superDefinition;
+        this.library = parent.library;
+    }
+
+    public Library getLocalLibrary() {
+        return library;
     }
 
     public WidgetDefinition getSuperDefinition() {
@@ -44,9 +51,5 @@ public class WidgetDefinitionBuilderContext {
 
     public void setSuperDefinition(WidgetDefinition def) {
         superDefinition = def;
-    }
-
-    public Library getLocalLibrary() {
-        return localLibrary;
     }
 }

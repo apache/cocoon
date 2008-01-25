@@ -56,13 +56,11 @@ public class Library {
     protected final Object shared = new Object();
 
     protected String sourceURI;
-    protected WidgetDefinitionBuilderContext context;
 
 
-    public Library(LibraryManager lm, Map builderSelector) {
+    public Library(LibraryManager lm, Map builders) {
         manager = lm;
-        context = new WidgetDefinitionBuilderContext(this);
-        widgetDefinitionBuilders = builderSelector;
+        widgetDefinitionBuilders = builders;
     }
 
     public void setSourceURI(String uri) {
@@ -136,13 +134,34 @@ public class Library {
     public void buildLibrary(Element libraryElement) throws Exception {
         sourceURI = LocationAttributes.getURI(libraryElement);
         Element widgetsElement = DomHelper.getChildElement(libraryElement, FormsConstants.DEFINITION_NS, "widgets", true);
+
+        WidgetDefinitionBuilderContext context = new WidgetDefinitionBuilderContext(this);
+
         // All child elements of the widgets element are widgets
         Element[] widgetElements = DomHelper.getChildElements(widgetsElement, FormsConstants.DEFINITION_NS);
         for (int i = 0; i < widgetElements.length; i++) {
             Element widgetElement = widgetElements[i];
-            WidgetDefinition widgetDefinition = buildWidgetDefinition(widgetElement);
-            addDefinition(widgetDefinition);
+            buildWidgetDefinition(widgetElement, context);
         }
+    }
+
+    private void buildWidgetDefinition(Element widgetDefinition, WidgetDefinitionBuilderContext context)
+    throws Exception {
+        String widgetName = widgetDefinition.getLocalName();
+        WidgetDefinitionBuilder builder = (WidgetDefinitionBuilder) widgetDefinitionBuilders.get(widgetName);
+        if (builder == null) {
+            throw new LibraryException("Unknown kind of widget '" + widgetName + "'.",
+                                       DomHelper.getLocationObject(widgetDefinition));
+        }
+
+        context.setSuperDefinition(null);
+        String extend = DomHelper.getAttribute(widgetDefinition, "extends", null);
+        if (extend != null) {
+            context.setSuperDefinition(getDefinition(extend));
+        }
+
+        WidgetDefinition definition = builder.buildWidgetDefinition(widgetDefinition, context);
+        addDefinition(definition);
     }
 
     public void addDefinition(WidgetDefinition definition) throws LibraryException {
@@ -164,25 +183,7 @@ public class Library {
         }
     }
 
-    protected WidgetDefinition buildWidgetDefinition(Element widgetDefinition) throws Exception {
-        String widgetName = widgetDefinition.getLocalName();
-        WidgetDefinitionBuilder builder = (WidgetDefinitionBuilder) widgetDefinitionBuilders.get(widgetName);
-        if (builder == null) {
-            throw new LibraryException("Unknown kind of widget '" + widgetName + "'.",
-                                       DomHelper.getLocationObject(widgetDefinition));
-        }
-
-        context.setSuperDefinition(null);
-
-        String extend = DomHelper.getAttribute(widgetDefinition, "extends", null);
-        if (extend != null) {
-            context.setSuperDefinition(getDefinition(extend));
-        }
-
-        return builder.buildWidgetDefinition(widgetDefinition, context);
-    }
-
-
+    
     /**
      * Encapsulates a uri to designate an import plus a timestamp so previously reloaded
      */
@@ -201,7 +202,6 @@ public class Library {
             return lib != null && this.shared == lib.shared;
         }
     }
-
 
     public void setWidgetDefinitionBuilderSelector( Map widgetDefinitionBuilderSelector )
     {

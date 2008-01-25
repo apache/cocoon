@@ -29,15 +29,16 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public final class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        
+
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         BooleanFieldDefinition definition = new BooleanFieldDefinition();
-        
-        setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
         setDisplayData(widgetElement, definition);
-        Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
-        while (iter.hasNext()) {
-            definition.addValueChangedListener((ValueChangedListener)iter.next());
+
+        Iterator i = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
+        while (i.hasNext()) {
+            definition.addValueChangedListener((ValueChangedListener) i.next());
         }
 
         // Initial value

@@ -26,17 +26,17 @@ import org.w3c.dom.Element;
  */
 public final class UnionDefinitionBuilder extends AbstractContainerDefinitionBuilder {
 
-    public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element element, WidgetDefinitionBuilderContext context)
+    throws Exception {
         UnionDefinition definition = new UnionDefinition();
-        super.setupDefinition(element, definition);
+        setupDefinition(element, definition, context);
+
         definition.setCaseWidgetId(DomHelper.getAttribute(element, "case"));
         setDisplayData(element, definition);
-
-        setupContainer(element,"widgets",definition);
+        setupContainer(element, "widgets", definition, context);
 
         definition.makeImmutable();
         return definition;
     }
     // TODO: Need to add code somewhere to build a selection list for the case widget.
 }
-

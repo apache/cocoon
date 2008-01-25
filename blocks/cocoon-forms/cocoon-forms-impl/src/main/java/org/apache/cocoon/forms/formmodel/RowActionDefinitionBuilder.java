@@ -32,7 +32,8 @@ import org.w3c.dom.Element;
 public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
 
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         // Get the "command" attribute
         String actionCommand = DomHelper.getAttribute(widgetElement, "command", null);
 
@@ -50,7 +51,7 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
         }
 
         RowActionDefinition definition = createDefinition(widgetElement, actionCommand);
-        super.setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
         setDisplayData(widgetElement, definition);
 
         definition.setActionCommand(actionCommand);
@@ -62,9 +63,9 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
                                      DomHelper.getLocationObject(buggyOnActivate));
         }
 
-        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionListener.class).iterator();
-        while (iter.hasNext()) {
-            definition.addActionListener((ActionListener)iter.next());
+        Iterator i = buildEventListeners(widgetElement, "on-action", ActionListener.class).iterator();
+        while (i.hasNext()) {
+            definition.addActionListener((ActionListener)i.next());
         }
 
         definition.makeImmutable();
@@ -72,7 +73,6 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
     }
 
     protected RowActionDefinition createDefinition(Element element, String actionCommand) throws Exception {
-
         if ("delete".equals(actionCommand)) {
             return new RowActionDefinition.DeleteRowDefinition();
 
@@ -91,4 +91,3 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
         }
     }
 }
-

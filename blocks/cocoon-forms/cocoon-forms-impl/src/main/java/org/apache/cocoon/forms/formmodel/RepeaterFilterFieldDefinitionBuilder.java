@@ -19,20 +19,25 @@ package org.apache.cocoon.forms.formmodel;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
 
-public class RepeaterFilterFieldDefinitionBuilder extends
-		FieldDefinitionBuilder {
+/**
+ * @version $Id$
+ */
+public class RepeaterFilterFieldDefinitionBuilder extends FieldDefinitionBuilder {
 
-	public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+	public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         RepeaterFilterFieldDefinition definition = new RepeaterFilterFieldDefinition();
-        setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
+
         definition.makeImmutable();
         return definition;
 	}
 
-	protected void setupDefinition(Element widgetElement,RepeaterFilterFieldDefinition definition) throws Exception {
-		super.setupDefinition(widgetElement, definition);
-		definition.setRepeaterName(DomHelper.getAttribute(widgetElement, "repeater"));
+	protected void setupDefinition(Element widgetElement,RepeaterFilterFieldDefinition definition, WidgetDefinitionBuilderContext context)
+    throws Exception {
+		super.setupDefinition(widgetElement, definition, context);
+
+        definition.setRepeaterName(DomHelper.getAttribute(widgetElement, "repeater"));
 		definition.setField(DomHelper.getAttribute(widgetElement, "field"));
 	}
-
 }

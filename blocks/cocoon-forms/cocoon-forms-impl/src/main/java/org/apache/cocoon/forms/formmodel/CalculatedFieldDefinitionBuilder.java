@@ -50,15 +50,18 @@ public class CalculatedFieldDefinitionBuilder extends FieldDefinitionBuilder {
     private Map calculatedFieldAlgorithmBuilders;
     private String defaultCalculatedFieldAlgorithmBuilder;
     
-    public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
+    public WidgetDefinition buildWidgetDefinition(Element widgetElement, WidgetDefinitionBuilderContext context)
+    throws Exception {
         CalculatedFieldDefinition definition = new CalculatedFieldDefinition();
-        setupDefinition(widgetElement, definition);
+        setupDefinition(widgetElement, definition, context);
+
         definition.makeImmutable();
         return definition;
     }
 
-    protected void setupDefinition(Element widgetElement, CalculatedFieldDefinition definition) throws Exception {
-        super.setupDefinition(widgetElement, definition);
+    protected void setupDefinition(Element widgetElement, CalculatedFieldDefinition definition, WidgetDefinitionBuilderContext context)
+    throws Exception {
+        super.setupDefinition(widgetElement, definition, context);
 
         Element algorithmElement = DomHelper.getChildElement(widgetElement, FormsConstants.DEFINITION_NS, "value");
         String algorithmType = algorithmElement.getAttribute("type");

@@ -19,17 +19,25 @@
 -->
 
 <!--
-  - @see http://maven.apache.org/plugins/maven-changes-plugin/usage.html
-  - @version $Id$
+  - See http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  - $Id$
   -->
 <document>
   <body>
-    <release version="1.1.0-M1" date="2007-??-??" description="unreleased">
+    <release version="1.1.0-M1" date="2008-??-??" description="unreleased">
       <action dev="joerg" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
         Allow Ajax submission of forms with empty upload field.
       </action>
       <action dev="giacomo" type="update">
         The Cocoon Forms springified (as much as possible).
+      </action>
+    </release>
+    <release version="1.0.0" date="2008-??-??" description="unreleased">
+      <action dev="vgritsenko" type="fix">
+        Fixed concurrency issue in form definition builders code. If you have custom
+        widgets, please implement WidgetDefinitionBuilder.buildWidgetDefinition(Element, WidgetDefinitionBuilderContext)
+        method. Do not use WidgetDefinitionBuilder.buildWidgetDefinition(Element) method, it is intended to be
+        implemented only by the top level widget (Form).
       </action>
     </release>
     <!-- Here forms block got branched for forms 1.0 and springified form 1.1. -->
