@@ -82,7 +82,10 @@ public class DispatcherServlet extends HttpServlet {
         //case when servlet is mounted at "/" must be handled separately
         servlet = servlet == null ? (Servlet) mountableServlets.get("/") : servlet;
         if (servlet == null) {
-            throw new ServletException("No block for " + req.getPathInfo());
+        	String message = "No block for " + req.getPathInfo();
+        	res.sendError(HttpServletResponse.SC_NOT_FOUND, message);
+        	this.logger.info(message);
+            return;
         }
 
         // Create a dynamic proxy class that overwrites the getServletPath and
