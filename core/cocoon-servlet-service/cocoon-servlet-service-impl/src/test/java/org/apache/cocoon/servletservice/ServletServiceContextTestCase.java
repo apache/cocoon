@@ -219,8 +219,8 @@ public class ServletServiceContextTestCase extends TestCase {
             protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
                 super.service(request, response);
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                //FIXME: Uncomment this line in order to see the same error as reported in COCOON-2150 issue
-                //response.flushBuffer();
+                //Testing if error reported in COCOON-2150 issue is resolved
+                response.flushBuffer();
             }
 
         };
@@ -284,8 +284,8 @@ public class ServletServiceContextTestCase extends TestCase {
             protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
                 super.service(request, response);
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                //FIXME: Uncomment this line in order to see the same error as reported in COCOON-2150 issue
-                //response.flushBuffer();
+                //Testing if error reported in COCOON-2150 issue is resolved
+                response.flushBuffer();
             }
 
         };
@@ -296,8 +296,8 @@ public class ServletServiceContextTestCase extends TestCase {
             protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             	super.service(request, response);
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                //FIXME: Uncomment this line in order to see the same error as reported in COCOON-2150 issue
-                //response.flushBuffer();
+                //Testing if error reported in COCOON-2150 issue is resolved
+                response.flushBuffer();
             }
         };
 
