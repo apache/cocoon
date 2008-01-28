@@ -82,9 +82,9 @@ public class DispatcherServlet extends HttpServlet {
         //case when servlet is mounted at "/" must be handled separately
         servlet = servlet == null ? (Servlet) mountableServlets.get("/") : servlet;
         if (servlet == null) {
-        	String message = "No block for " + req.getPathInfo();
-        	res.sendError(HttpServletResponse.SC_NOT_FOUND, message);
-        	this.logger.info(message);
+            String message = "No block for " + req.getPathInfo();
+            res.sendError(HttpServletResponse.SC_NOT_FOUND, message);
+            this.logger.info(message);
             return;
         }
 
