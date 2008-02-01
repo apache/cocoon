@@ -45,7 +45,7 @@ implements LSResourceResolver {
     /**
      * <p>Resolve a resource into a {@link LSInput} from the provided location
      * information.</p>
-     * 
+     *
      * <p>This method will obtain a {@link InputSource} instance invoking the
      * {@link ValidationResolver#resolveEntity(String, String, String)} method
      * return it wrapped in a {@link JaxpInput} instance.</p>
@@ -54,12 +54,12 @@ implements LSResourceResolver {
      * @param namespace the namespace of the resource being resolved.
      * @param systemId the system identifier of the resource being resolved.
      * @param publicId the public identifier of the resource being resolved.
-     * @param base the base uri against wich relative resolution should happen. 
+     * @param base the base uri against wich relative resolution should happen.
      * @return a <b>non null</b> {@link LSInput} instance.
      * @throws LSException wrapping another {@link Exception}.
      */
-    public LSInput resolveResource(String type, String namespace, String systemId,
-                                   String publicId, String base)
+    public LSInput resolveResource(String type, String namespace, String publicId,
+                                   String systemId, String base)
     throws LSException {
         try {
             final InputSource source = this.resolveEntity(base, publicId, systemId);
