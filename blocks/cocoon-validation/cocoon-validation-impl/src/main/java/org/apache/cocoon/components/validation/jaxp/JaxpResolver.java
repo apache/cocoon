@@ -58,8 +58,8 @@ implements LSResourceResolver {
      * @return a <b>non null</b> {@link LSInput} instance.
      * @throws LSException wrapping another {@link Exception}.
      */
-    public LSInput resolveResource(String type, String namespace, String systemId,
-                                   String publicId, String base)
+    public LSInput resolveResource(String type, String namespace, String publicId,
+                                   String systemId, String base)
     throws LSException {
         try {
             final InputSource source = this.resolveEntity(base, publicId, systemId);
