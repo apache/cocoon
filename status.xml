@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="CZ" type="fix" fixes-bug="COCOON-2164" due-to="Nico Verwer" due-to-email="nverwer@email.com">
+      Validation Block: Fix error in JaxpResolver#resolveResource(..) where publicId and systemId where swapped.
+    </action>
     <action dev="VG" type="fix">
       Forms Block: Fixed concurrency issue in form definition builders code. If you have custom
       widgets, please implement WidgetDefinitionBuilder.buildWidgetDefinition(Element, WidgetDefinitionBuilderContext)
