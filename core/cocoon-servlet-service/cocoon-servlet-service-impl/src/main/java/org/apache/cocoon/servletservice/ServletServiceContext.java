@@ -16,13 +16,9 @@
  */
 package org.apache.cocoon.servletservice;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,7 +37,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +44,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.cocoon.servletservice.util.ServletContextWrapper;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
@@ -482,7 +476,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         protected void forward(ServletRequest request, ServletResponse response, boolean superCall)
                         throws ServletException, IOException {
             try {
-                StatusRetrievableBufferedWrappedResponse wrappedResponse = new StatusRetrievableBufferedWrappedResponse(
+                StatusRetrievableWrappedResponse wrappedResponse = new StatusRetrievableWrappedResponse(
                                 (HttpServletResponse) response);
                 // FIXME: I think that Cocoon should always set status code on
                 // its own
@@ -502,24 +496,24 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                                     wrappedResponse);
                 }
 
-                //FIXME: I'm disabling catching of ServletException for now because I'm not sure if we should catch it at all (GK)
-                /*ServletException se = null;
+                ServletException se = null;
                 try {
                     ServletServiceContext.this.servlet.service(request, wrappedResponse);
                 } catch (ServletException e) {
                     se = e;
-                }*/
-                ServletServiceContext.this.servlet.service(request, wrappedResponse);
+                }
 
-                NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
-                //If servlet returned SC_NOT_FOUND and there is a super servlet we are trying to call it in order to check
-                //whether super servlet does not happen to handle currently processed request
-                if (wrappedResponse.getStatus() == HttpServletResponse.SC_NOT_FOUND && _super != null) {
-                	//Here we can pass original response object because we don't need to buffer response anymore
-                    _super.forward(request, response);
-                } else {
-                	wrappedResponse.setFlushToWrapped(true);
-                	wrappedResponse.flushBuffer();
+                int status = wrappedResponse.getStatus();
+                if (se != null || (status < 200 || status >= 400)) {
+                    wrappedResponse.reset();
+                    NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
+                    if (_super != null) {
+                        _super.forward(request, wrappedResponse);
+                    } else {
+                        wrappedResponse.getWriter().println("Resource not found");
+                        wrappedResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                        throw se;
+                    }
                 }
 
             } finally {
@@ -532,25 +526,12 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         }
     }
 
-    /**
-     * This class buffers response and lets to read status code that servlet set to it. This way it can be read later
-     * and OO machinery can decide whether to call super servlet (if servlet set NOT_FOUND status code) or to really
-     * flush the buffer to the wrapped response object.
-     */
-    public static class StatusRetrievableBufferedWrappedResponse extends HttpServletResponseWrapper {
+    public static class StatusRetrievableWrappedResponse extends HttpServletResponseWrapper {
 
        	private int status;
-       	private ServletOutputStream servletStream;
-        private PrintWriter writer;
-        private ByteArrayOutputStream bufferingStream;
-        private boolean committed;
-        private boolean flushToWrapped;
 
-       	public StatusRetrievableBufferedWrappedResponse(HttpServletResponse wrapped) {
+       	public StatusRetrievableWrappedResponse(HttpServletResponse wrapped) {
        		super(wrapped);
-       		bufferingStream = new ByteArrayOutputStream();
-       		committed = false;
-       		this.flushToWrapped = false;
        	}
 
     	public void setStatus(int sc, String sm) {
@@ -576,78 +557,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     		this.status = errorCode;
     		super.sendError(errorCode, errorMessage);
     	}
-    	
-        public ServletOutputStream getOutputStream() throws IOException {
-            if (this.writer != null) {
-                throw new IllegalStateException( "Tried to create output stream; writer already exists" );
-            }
-
-            if (this.servletStream == null) {
-                this.servletStream = new ServletOutputStream() {
-
-                    public void flush() throws IOException {
-                        StatusRetrievableBufferedWrappedResponse.this.bufferingStream.flush();
-                    }
-
-                    public void write(int b) throws IOException {
-                        StatusRetrievableBufferedWrappedResponse.this.bufferingStream.write(b);
-                    }
-
-                    /*
-                     * This method is probably never called, the close will be
-                     * initiated directly on this.outputStream by the one who set
-                     * it via BlockCallHttpServletResponse.setOutputStream()
-                     */
-                    public void close() throws IOException {
-                        StatusRetrievableBufferedWrappedResponse.this.bufferingStream.close();
-                    }
-
-
-                };
-            }
-
-            return this.servletStream;
-        }
-
-        public PrintWriter getWriter() throws IOException {
-            if (this.servletStream != null) {
-                throw new IllegalStateException( "Tried to create writer; output stream already exists" );
-            }
-
-            if (this.writer == null) {
-                this.writer =
-                        new PrintWriter(new OutputStreamWriter(this.bufferingStream, this.getCharacterEncoding()));
-            }
-
-            return this.writer;
-        }
-        
-        public void flushBuffer() throws IOException {
-        	committed = true;
-        	if (flushToWrapped) {
-        		IOUtils.copy(new ByteArrayInputStream(bufferingStream.toByteArray()), super.getOutputStream());
-        		super.flushBuffer();
-        	}
-        }
-        
-        public void reset() {
-        	resetBuffer();
-        }
-        
-        public void resetBuffer() {
-        	if (committed)
-        		throw new IllegalStateException("The response has been already committed.");
-        	
-        	servletStream = null;
-        	writer = null;
-        	bufferingStream = new ByteArrayOutputStream();
-        	super.reset();
-        }
-        
-        public void setFlushToWrapped(boolean flushToWrapped) {
-        	this.flushToWrapped = flushToWrapped;
-        }
-
     }
 
 }
