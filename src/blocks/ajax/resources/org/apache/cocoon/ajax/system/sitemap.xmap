@@ -24,19 +24,19 @@ limitations under the License.
 
 -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-    
+
     <map:flow language="javascript">
         <map:script src="System.Upload.js"/>
     </map:flow>
-    
+
     <map:pipelines>
         <map:pipeline>
-            
+
             <!-- JSON support -->
             <map:match pattern="send-json">
-                <map:read src="module:flow-attr:json" mime-type="text/javascript" />
+                <map:read src="module:flow-attr:json" mime-type="text/json-comment-filtered" />
             </map:match>
-            
+
             <!-- upload progress bar support -->
             <map:match pattern="upload/*">
                 <map:call function="System.Upload.{1}">
@@ -44,7 +44,7 @@ limitations under the License.
                     <map:parameter name="location" value="i18n"/>
                 </map:call>
             </map:match>
-        
+
         </map:pipeline>
     </map:pipelines>
 
