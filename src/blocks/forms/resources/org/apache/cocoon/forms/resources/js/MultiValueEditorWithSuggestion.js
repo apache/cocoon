@@ -31,6 +31,8 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
     },
     // properties and methods
     {
+        onchange: "",
+        name: "",
         widgetsInTemplate: true,
         cformsIdPrefix: "id-prefix-not-set",
         dataUrl: "_cocoon/forms/suggest",
@@ -57,13 +59,13 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
                 }
                 dataUrl += "filter=%{searchString}";
             }
-            this.dataUrl = dataUrl;  
+            this.dataUrl = dataUrl;
         },
 
         _addOnSubmitHandler: function(parent) {
             var form = this._getForm(this);
             if (form != null) {
-                dojo.event.connect("before", form,"onsubmit", this, "_selectAll");			
+                dojo.event.connect("before", form,"onsubmit", this, "_selectAll");
              } else {
                  dojo.debug("MultiValueEditorWithSuggestion is not being added to a form -- no onSubmitHandler then.");
              }
@@ -87,7 +89,7 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
                         var text = td.nextSibling != null ? dojo.dom.textContent(td.nextSibling) : value;
 
                         if (value && text) {
-                            this.select.addOption(value, text); 
+                            this.select.addOption(value, text);
                         }
                         tr = dojo.dom.nextElement(tr, "tr");
                     }
@@ -105,8 +107,8 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
                         this.select.addOption(this.entry.comboBoxSelectionValue.value, this.entry.comboBoxValue.value);
                     }
                     dojo.event.browser.stopEvent(event);
-                    this.entry.setValue(null);
-                    this.entry.setSelectedValue(null);
+                    this.entry.setValue("");
+                    this.entry.setSelectedValue("");
                     break;
             }
         },
@@ -129,7 +131,7 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
                 }
 
                 if (!alreadyInList) {
-                    this.options[this.options.length] = new Option(text, value, true, true);  
+                    this.options[this.options.length] = new Option(text, value, true, true);
                 }
             }
 
@@ -150,7 +152,7 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
 
             dojo.event.connect(this, "addedTo", this, "_addOnSubmitHandler");
             this._readData(this.getFragNodeRef(frag));
-        },        
+        },
 
         openPopup: function() {
             if (!this.popupWindow) {
@@ -171,7 +173,7 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
             this.popupWindow.showPopup(this.linkButton.id);
         }
     }
-);   
+);
 
 function __showPopup(anchorname) {
     this.getXYPosition(anchorname);
