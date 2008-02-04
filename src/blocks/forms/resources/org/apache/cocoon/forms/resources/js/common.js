@@ -24,7 +24,7 @@
  *
  * @version $Id$
  */
- 
+
 // Can be loaded either through "cocoon.forms" or "cocoon.forms.common"
 // or individually out of Dojo.
 if (dojo) {
@@ -35,7 +35,7 @@ if (dojo) {
     cocoon.forms = cocoon.forms || {};
 }
 
-    
+
 /**
  * Get the parent form of an element
  *
@@ -96,7 +96,7 @@ cocoon.forms.fullPageSubmit = function(form, name, params) {
     // Send the identifier of the widget that triggered the submit
     params["forms_submit_id"] = name;
     // call CForm's onSubmit handlers - allow them to stop the form by returning false
-    if (cocoon.forms.callOnSubmitHandlers(form)) {   
+    if (cocoon.forms.callOnSubmitHandlers(form)) {
         for (var param in params) { // add extra params to the form
             var input = form[param] || document.createElement("input");
             input.setAttribute("type", "hidden");
@@ -205,7 +205,3 @@ cocoon.forms.callOnSubmitHandlers = function(form) {
     cocoon.forms.onSubmitHandlers[id] = null;
     return true;
 }
-
-
-
-
