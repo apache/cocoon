@@ -17,7 +17,7 @@
 -->
 <!--
   Transforms a fi:selection-list into a JSON fragment.
-  
+
   @version $Id$
 -->
 
@@ -25,6 +25,7 @@
   version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+  <xsl:strip-space elements="*"/>
 
 <xsl:template match="fi:selection-list">
   <dummy-root>
@@ -55,3 +56,4 @@
 </xsl:template>
 
 </xsl:stylesheet>
+
