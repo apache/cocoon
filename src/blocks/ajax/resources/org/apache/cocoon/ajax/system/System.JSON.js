@@ -33,15 +33,15 @@ var System = System || {};
 System.JSON = System.JSON || {};
 
 
-/* 
+/*
     Lookup an i18n key, return a String (there will be no tags)
     This function is intended to be used for embedding the result of i18n lookups in JSON responses
-    
+
     @param key String the i18n key
     @param catalogue Bundle the i18n Catalogue Bundle to look up in
     @param params String[] optional parameters for the i18n message
     @return String the looked-up i18n key
-    
+
 */
 System.JSON.getI18nMessage = function(key, catalogue, params) {
     if (!params) params = [];
@@ -57,10 +57,10 @@ System.JSON.getI18nMessage = function(key, catalogue, params) {
     }
 };
 
-/* 
-    Serialize a Java Map to a JavaScript Object literal 
+/*
+    Serialize a Java Map to a JavaScript Object literal
     This function is intended for sending a java.util.Map in a JSON Response
-    
+
     @param map java.util.Map the Map to send
     @return String the JSON Object
 */
@@ -71,12 +71,12 @@ System.JSON.serializeMap = function(map) {
         var key = keys.next();
         value = this._serializeValue(map.get(key));
         result.push('"' + key + '":' + value);
-    }   
+    }
     return "{" + result.join(",") + "}";
 };
 
-/* 
-    Serialize a Java Collection to a JavaScript Array literal 
+/*
+    Serialize a Java Collection to a JavaScript Array literal
     This function is intended for sending a java.util.Collection in a JSON Response
 
     @param col java.util.Collection the Map to send
@@ -88,23 +88,23 @@ System.JSON.serializeCollection = function(col) {
     while (values.hasNext()) {
         value = this._serializeValue(values.next());
         result.push(value);
-    }   
+    }
     return "[" + result.join(",") + "]";
 };
 
-/* 
-    Serialize a single value 
+/*
+    Serialize a single value
     This function is intended for sending a supported java.lang.Object in a JSON Response
-    
+
     Currently supported Objects:
         java.lang.Boolean
         java.lang.Number
         java.lang.String
         java.util.Collection
         java.util.Map
-    
+
     This is limited largely to Java Objects that have an equivalent JavaScript literal
-    
+
     NB. this function is private, it should not be used as a starting point for making a JSON Response
     A JSON Response would typically be made from a Map or a Collection
 
@@ -125,4 +125,3 @@ System.JSON._serializeValue = function(obj) {
         print("System.JSON._serializeValue - could not serialize: " + obj);
     }
 }
-

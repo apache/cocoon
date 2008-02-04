@@ -32,27 +32,26 @@ dojo.widget.defineWidget(
 	// Properties
 	href: "",
 	target: "",
-	
+
 	// Widget definition
 	ns: "forms",
 	widgetType: "PartialLink",
     isContainer: false,
     preventClobber: true, // don't clobber our node
-    
+
     fillInTemplate: function(args, frag) {
 
 	    if (this.target.indexOf("#") < 0) {
 	        dojo.debug("PartialLink: wrong value for 'target' attribute: " + this.target);
 	        return;
 	    }
-	    
+
 	    dojo.event.connect(this.domNode, "onclick", this, "onClick");
     },
-    
+
     onClick: function(event) {
         event.preventDefault();
         var _this = this;
         cocoon.ajax.update(_this.href, _this.target);
     }
 });
-

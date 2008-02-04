@@ -39,14 +39,14 @@ System.Upload = System.Upload || {};
 
 /*
     Retrieve a JSON Object containg data about the current file-upload
-    
+
     This flowscript is called by the FormsUploadProgress Dojo Widget
-    
+
     Requires the following sitemap parameters :
-    
+
         catalogue : the name of the i18n Catalogue to use for lookups
         location  : the path to the Catalogue's folder
-    
+
 */
 System.Upload.status = function(){
     var json = "{}";
@@ -63,7 +63,7 @@ System.Upload.status = function(){
             catalogue = i18n.select(cocoon.parameters["location"], cocoon.parameters["catalogue"], cocoon.request.getLocale());
         } finally {
             if (i18n != null) cocoon.releaseComponent(i18n);
-        }       
+        }
         if (status.get("finished").booleanValue()) {
             tempMap.put("message", System.JSON.getI18nMessage("progress.finished", catalogue, [status.get("uploadsdone"), sent]));
             status.clear();
@@ -72,7 +72,7 @@ System.Upload.status = function(){
             if (percent == "NaN") percent = "0";
             tempMap.put("message", System.JSON.getI18nMessage("progress.sent", catalogue, [percent, sent, total, status.get("filename")]));
             tempMap.put("percent", percent);
-        }       
+        }
         json = System.JSON.serializeMap(tempMap);
     }
     cocoon.sendPage("send-json", {json: json});
@@ -81,7 +81,7 @@ System.Upload.status = function(){
 /*
     A utility function to clear the current Upload Status
     Used for debugging purposes only
-    
+
 */
 System.Upload.clear = function(){
     var success = '{"cleared":true}';
@@ -97,12 +97,3 @@ System.Upload.clear = function(){
     }
     cocoon.sendPage("send-json", {json: json});
 };
-
-
-
-
-
-
-
-
-
