@@ -124,6 +124,10 @@ public class Field extends AbstractWidget
      * Overrides selection list defined in FieldDefinition, if any.
      */
     protected SelectionList selectionList;
+    /**
+     * Overrides sugestion list defined in FieldDefinition, if any.
+     */
+    protected SelectionList suggestionList;
 
     /**
      * Additional listeners to those defined as part of the widget definition (if any).
@@ -171,6 +175,7 @@ public class Field extends AbstractWidget
             setValue(value);
         }
         this.selectionList = this.definition.getSelectionList();
+        this.suggestionList = this.definition.getSuggestionList();
         this.required = this.definition.isRequired();
         super.initialize();
     }
@@ -245,7 +250,6 @@ public class Field extends AbstractWidget
                                             "'. Expected " + getDatatype().getTypeClass() + ", got " + newValue.getClass() + ").",
                                             getLocation());
         }
-
         // Is it a new value?
         boolean changed;
         if (this.valueState == VALUE_UNPARSED) {
@@ -590,6 +594,22 @@ public class Field extends AbstractWidget
     }
 
     /**
+     * Set this field's suggestion list.
+     * @param suggestionList The new suggestion list.
+     *
+     * @since 2.1.12
+     */
+    public void setSuggestionList(SelectionList suggestionList) {
+        if (suggestionList != null &&
+            suggestionList.getDatatype() != null &&
+            suggestionList.getDatatype() != getDatatype()) {
+            throw new RuntimeException("Tried to assign a SuggestionList that is not associated with this widget's datatype.");
+        }
+        this.suggestionList = suggestionList;
+        getForm().addWidgetUpdate(this);
+    }
+
+    /**
      * Read this field's selection list from an external source.
      * All Cocoon-supported protocols can be used.
      * The format of the XML produced by the source should be the
@@ -622,8 +642,24 @@ public class Field extends AbstractWidget
         setSelectionList(getFieldDefinition().buildSelectionListFromModel(model, valuePath, labelPath));
     }
 
+    /**
+     * Read this field's selection list from an external source.
+     * All Cocoon-supported protocols can be used.
+     * The format of the XML produced by the source should be the
+     * same as in case of inline specification of the selection list,
+     * thus the root element should be a <code>fd:selection-list</code>
+     * element.
+     * @param uri The URI of the source.
+     *
+     * @since 2.1.12
+     *
+     */
+    public void setSuggestionList(String uri) {
+        setSuggestionList(getFieldDefinition().buildSelectionList(uri));
+    }
+
     public SelectionList getSuggestionList() {
-        return getFieldDefinition().getSuggestionList();
+        return this.suggestionList;
     }
 
     public Datatype getDatatype() {
