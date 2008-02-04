@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
  /*
   * Mapping of all widget short names to their full package names
   * This is used for widget autoloading - no dojo.require() is necessary.
@@ -27,8 +27,9 @@
   *
   * @version $Id$
   */
-  
+
 dojo.provide("cocoon.ajax.manifest");
+dojo.require("dojo.ns");
 
 (function(){
 	var map = {
@@ -44,13 +45,13 @@ dojo.provide("cocoon.ajax.manifest");
 		    // register vml widgets here
 		}
 	};
-	
+
 	function ajaxResolver(name, domain){
 		if(!domain){ domain="html"; }
 		if(!map[domain]){ return null; }
-		return map[domain][name];    
+		return map[domain][name];
 	}
-    
+
     dojo.registerModulePath("cocoon.ajax", "../ajax/js");
 	dojo.registerNamespace("ajax", "cocoon.ajax", ajaxResolver);
 
