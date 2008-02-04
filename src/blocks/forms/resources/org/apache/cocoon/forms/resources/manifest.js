@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
- 
+
  /*
   * Mapping of all widget short names to their full package names
   * This is used for widget autoloading - no dojo.require() is necessary.
@@ -28,8 +28,9 @@
   *
   * @version $Id$
   */
-  
+
 dojo.provide("cocoon.forms.manifest");
+dojo.require("dojo.ns");
 
 (function(){
     var map = {
@@ -62,8 +63,8 @@ dojo.provide("cocoon.forms.manifest");
 
 
     dojo.registerModulePath("cocoon.ajax", "../ajax/js"); // cocoon.forms has a dependency on the cocoon.ajax module libraries
-    
+
     dojo.registerModulePath("cocoon.forms", "../forms/js");
     dojo.registerNamespace("forms", "cocoon.forms", formsResolver);
-    
+
 })();
