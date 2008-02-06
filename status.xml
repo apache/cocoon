@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="JH" type="fix" fixes-bug="COCOON-2058" due-to="Ralph Collett" due-to-email="ralph.collett@semantico.com">
+      Forms Block: Fix ambiguous rule issue with Forms stylesheets when using Saxon.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-2164" due-to="Nico Verwer" due-to-email="nverwer@email.com">
       Validation Block: Fix error in JaxpResolver#resolveResource(..) where publicId and systemId where swapped.
     </action>
