@@ -916,7 +916,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="fi:styling/@*" mode="styling">
+  <xsl:template match="fi:styling/@*" mode="styling" priority="-1">
     <xsl:copy-of select="."/>
   </xsl:template>
 
@@ -934,7 +934,7 @@
         +-->
   </xsl:template>
 
-  <xsl:template match="fi:styling/@type" mode="styling" priority="1">
+  <xsl:template match="fi:styling/@type" mode="styling">
     <!--+
         | Do we have a duplicate semantic usage of @type?
         | @type is only a marker for the stylesheet in general, but some of the
