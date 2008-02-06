@@ -32,6 +32,9 @@
         method. Do not use WidgetDefinitionBuilder.buildWidgetDefinition(Element) method, it is intended to be
         implemented only by the top level widget (Form).
       </action>
+      <action dev="JH" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
+        Allow Ajax submission of forms with empty upload field.
+      </action>
     </release>
     <release version="1.0.0-RC1" date="2007-09-27" description="released">
       <action dev="gkossakowski" type="fix" issue="COCOON-2062" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
