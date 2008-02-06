@@ -26,6 +26,9 @@
 <document>
   <body>
     <release version="1.0.0" date="2008-??-??" description="unreleased">
+      <action dev="JH" type="fix" fixes-bug="COCOON-2058" due-to="Ralph Collett" due-to-email="ralph.collett@semantico.com">
+        Fix ambiguous rule issue with Forms stylesheets when using Saxon.
+      </action>
       <action dev="vgritsenko" type="fix">
         Fixed concurrency issue in form definition builders code. If you have custom
         widgets, please implement WidgetDefinitionBuilder.buildWidgetDefinition(Element, WidgetDefinitionBuilderContext)
