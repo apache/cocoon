@@ -5,7 +5,7 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
@@ -35,10 +35,8 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
@@ -99,6 +97,7 @@ import org.xml.sax.helpers.AttributesImpl;
   *     create="false" 
   *     directory="index" 
   *     max-field-length="10000"
+  *     optimize-frequency="1"
   *     analyzer="org.apache.lucene.analysis.standard.StandardAnalyzer"&gt;
   *     &lt;lucene:document url="a.html"&gt;
   *             &lt;documentTitle lucene:store="true"&gt;Doggerel&lt;/documentTitle&gt;
@@ -116,8 +115,9 @@ import org.xml.sax.helpers.AttributesImpl;
   *
   * @version $Id$
   */
-public class LuceneIndexTransformer extends AbstractTransformer implements CacheableProcessingComponent,
-        InitializingBean {
+public class LuceneIndexTransformer extends AbstractTransformer
+    implements CacheableProcessingComponent,
+               InitializingBean {
 
     public static final String ANALYZER_CLASSNAME_CONFIG = "analyzer-classname";
     public static final String ANALYZER_CLASSNAME_PARAMETER = "analyzer-classname";
@@ -128,11 +128,12 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
     public static final String MERGE_FACTOR_CONFIG = "merge-factor";
     public static final String MERGE_FACTOR_PARAMETER = "merge-factor";
     public static final int MERGE_FACTOR_DEFAULT = 20;
+
     public static final String OPTIMIZE_FREQUENCY_CONFIG = "optimize-frequency";
     public static final String OPTIMIZE_FREQUENCY_PARAMETER = "optimize-frequency";
-    // by default, optimizing will take place on every update (previous
-    // behaviour)
+    // by default, optimizing will take place on every update (previous behaviour)
     public static final int OPTIMIZE_FREQUENCY_DEFAULT = 1;
+
     public static final String MAX_FIELD_LENGTH_CONFIG = "max-field-length";
     public static final String MAX_FIELD_LENGTH_PARAMETER = "max-field-length";
     public static final int MAX_FIELD_LENGTH_DEFAULT = IndexWriter.DEFAULT_MAX_FIELD_LENGTH;
@@ -154,16 +155,12 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
 
     // The 3 states of the state machine
     private static final int STATE_GROUND = 0; // initial or "ground" state
-    private static final int STATE_QUERY = 1; // processing a lucene:index
-    // (Query) element
-    private static final int STATE_DOCUMENT = 2; // processing a
-    // lucene:document element
+    private static final int STATE_QUERY = 1; // processing a lucene:index (Query) element
+    private static final int STATE_DOCUMENT = 2; // processing a lucene:document element
 
-    // Declaration time parameters values (specified in sitemap component
-    // config)
+    // Declaration time parameters values (specified in sitemap component config)
     private IndexerConfiguration configureConfiguration;
-    // Invocation time parameters values (specified in sitemap transform
-    // parameters)
+    // Invocation time parameters values (specified in sitemap transform parameters)
     private IndexerConfiguration setupConfiguration;
     // Parameters specified in the input document
     private IndexerConfiguration queryConfiguration;
@@ -214,8 +211,7 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
     private int optimizeFrequency = OPTIMIZE_FREQUENCY_DEFAULT;
 
     private static String uid(String url) {
-        return url.replace('/', '\u0000'); // + "\u0000" +
-        // DateField.timeToString(urlConnection.getLastModified());
+        return url.replace('/', '\u0000');
     }
 
     /**
@@ -225,8 +221,12 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
      * element(s) in the XML input document.
      */
     public void afterPropertiesSet() throws IllegalArgumentException {
-        this.configureConfiguration = new IndexerConfiguration(getAnalyzer(), getDirectory(), getMergeFactor(),
-                getMaxFieldLength(), getOptimizeFrequency());
+        this.configureConfiguration = new IndexerConfiguration(
+                getAnalyzer(),
+                getDirectory(),
+                getMergeFactor(),
+                getMaxFieldLength(),
+                getOptimizeFrequency());
     }
 
     /**
@@ -240,12 +240,12 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
             throws ProcessingException, SAXException, IOException {
-        setupConfiguration = new IndexerConfiguration(parameters.getParameter(ANALYZER_CLASSNAME_PARAMETER,
-                configureConfiguration.analyzerClassname), parameters.getParameter(DIRECTORY_PARAMETER,
-                configureConfiguration.indexDirectory), parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER,
-                configureConfiguration.indexerMergeFactor), parameters.getParameterAsInteger(
-                MAX_FIELD_LENGTH_PARAMETER, configureConfiguration.indexerMaxFieldLength), parameters
-                .getParameterAsInteger(OPTIMIZE_FREQUENCY_PARAMETER, configureConfiguration.indexerOptimizeFrequency));
+        setupConfiguration = new IndexerConfiguration(
+                parameters.getParameter(ANALYZER_CLASSNAME_PARAMETER, configureConfiguration.analyzerClassname),
+                parameters.getParameter(DIRECTORY_PARAMETER, configureConfiguration.indexDirectory),
+                parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER, configureConfiguration.indexerMergeFactor),
+                parameters.getParameterAsInteger(MAX_FIELD_LENGTH_PARAMETER, configureConfiguration.indexerMaxFieldLength),
+                parameters.getParameterAsInteger(OPTIMIZE_FREQUENCY_PARAMETER, configureConfiguration.indexerOptimizeFrequency));
     }
 
     /**
@@ -321,7 +321,8 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
         }
     }
 
-    public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
+    public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
+        throws SAXException {
 
         if (processing == STATE_GROUND) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)) {
@@ -334,17 +335,15 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
                 String maxFieldLengthStr = atts.getValue(LUCENE_QUERY_MAX_FIELD_LENGTH_ATTRIBUTE);
                 String optimizeFrequencyStr = atts.getValue(LUCENE_QUERY_OPTIMIZE_FREQUENCY_CONFIG_ATTRIBUTE);
 
-                queryConfiguration = new IndexerConfiguration(analyzerClassname != null ? analyzerClassname
-                        : setupConfiguration.analyzerClassname, indexDirectory != null ? indexDirectory
-                        : setupConfiguration.indexDirectory, mergeFactorStr != null ? Integer.parseInt(mergeFactorStr)
-                        : setupConfiguration.indexerMergeFactor, maxFieldLengthStr != null ? Integer
-                        .parseInt(maxFieldLengthStr) : setupConfiguration.indexerMaxFieldLength,
-                        optimizeFrequencyStr != null ? Integer.parseInt(optimizeFrequencyStr)
-                                : setupConfiguration.indexerOptimizeFrequency);
+                queryConfiguration = new IndexerConfiguration(
+                        analyzerClassname != null ? analyzerClassname : setupConfiguration.analyzerClassname,
+                        indexDirectory != null ? indexDirectory : setupConfiguration.indexDirectory,
+                        mergeFactorStr != null ? Integer.parseInt(mergeFactorStr) : setupConfiguration.indexerMergeFactor,
+                        maxFieldLengthStr != null ? Integer.parseInt(maxFieldLengthStr) : setupConfiguration.indexerMaxFieldLength,
+                        optimizeFrequencyStr != null ? Integer.parseInt(optimizeFrequencyStr) : setupConfiguration.indexerOptimizeFrequency);
 
                 if (!createIndex) {
-                    // Not asked to create the index - but check if this is
-                    // necessary anyway:
+                    // Not asked to create the index - but check if this is necessary anyway:
                     try {
                         IndexReader reader = openReader();
                         reader.close();
@@ -369,8 +368,7 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
 
                 // Remember the time the document indexing began
                 this.documentStartTime = System.currentTimeMillis();
-                // remember these attributes so they can be passed on to the
-                // next stage in the pipeline,
+                // remember these attributes so they can be passed on to the next stage in the pipeline,
                 // when this document element is ended.
                 this.documentAttributes = new AttributesImpl(atts);
                 this.bodyText = new StringBuffer();
@@ -385,7 +383,8 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
         }
     }
 
-    public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+    public void endElement(String namespaceURI, String localName, String qName)
+        throws SAXException {
 
         if (processing == STATE_QUERY) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)) {
@@ -424,12 +423,14 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
                 }
                 this.bodyDocumentURL = null;
 
-                // propagate the lucene:document element to the next stage in
-                // the pipeline
+                // propagate the lucene:document element to the next stage in the pipeline
                 long elapsedTime = System.currentTimeMillis() - this.documentStartTime;
-                // documentAttributes = new AttributesImpl();
-                this.documentAttributes.addAttribute("", LUCENE_ELAPSED_TIME_ATTRIBUTE, LUCENE_ELAPSED_TIME_ATTRIBUTE,
-                        CDATA, String.valueOf(elapsedTime));
+
+                this.documentAttributes.addAttribute("",
+                                                     LUCENE_ELAPSED_TIME_ATTRIBUTE,
+                                                     LUCENE_ELAPSED_TIME_ATTRIBUTE,
+                                                     CDATA,
+                                                     String.valueOf(elapsedTime));
                 super.startElement(namespaceURI, localName, qName, this.documentAttributes);
                 super.endElement(namespaceURI, localName, qName);
                 this.processing = STATE_QUERY;
@@ -472,7 +473,8 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
         }
     }
 
-    public void characters(char[] ch, int start, int length) throws SAXException {
+    public void characters(char[] ch, int start, int length)
+        throws SAXException {
 
         if (processing == STATE_DOCUMENT && ch.length > 0 && start >= 0 && length > 1 && elementStack.size() > 0) {
             String text = new String(ch, start, length);
@@ -522,22 +524,20 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
 
     private void reindexDocument() throws IOException {
         if (this.createIndex) {
-            // The index is being created, so there's no need to delete the doc
-            // from an existing index.
-            // This means we can keep a single IndexWriter open throughout the
-            // process.
+            // The index is being created, so there's no need to delete the doc from an existing index.
+            // This means we can keep a single IndexWriter open throughout the process.
             if (this.writer == null) {
                 openWriter();
             }
             this.writer.addDocument(this.bodyDocument);
         } else {
-            // This is an incremental reindex, so the document should be removed
-            // from the index before adding it
+            // This is an incremental reindex, so the document should be removed from the index before adding it
             try {
                 IndexReader reader = openReader();
                 reader.deleteDocuments(new Term(LuceneXMLIndexer.UID_FIELD, uid(this.bodyDocumentURL)));
                 reader.close();
-            } catch (IOException e) { /* ignore */
+            } catch (IOException e) {
+                /* ignore */
             }
             openWriter();
             this.writer.addDocument(this.bodyDocument);
@@ -547,7 +547,7 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
         this.bodyDocument = null;
     }
 
-    static class IndexHelperField {
+    private static class IndexHelperField {
         String localName;
         StringBuffer text;
         Attributes attributes;
@@ -558,32 +558,35 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
             this.text = new StringBuffer();
         }
 
-        public Attributes getAttributes() {
+        Attributes getAttributes() {
             return attributes;
         }
 
-        public StringBuffer getText() {
+        StringBuffer getText() {
             return text;
         }
 
-        public void append(String text) {
+        void append(String text) {
             this.text.append(text);
         }
 
-        public void append(char[] str, int offset, int length) {
+        void append(char[] str, int offset, int length) {
             this.text.append(str, offset, length);
         }
     }
 
-    static class IndexerConfiguration {
+    private static class IndexerConfiguration {
         String analyzerClassname;
         String indexDirectory;
         int indexerMergeFactor;
         int indexerMaxFieldLength;
         int indexerOptimizeFrequency;
 
-        public IndexerConfiguration(String analyzerClassname, String indexDirectory, int indexerMergeFactor,
-                int indexerMaxFieldLength, int indexerOptimizeFrequency) {
+        IndexerConfiguration(String analyzerClassname,
+                             String indexDirectory,
+                             int indexerMergeFactor,
+                             int indexerMaxFieldLength,
+                             int indexerOptimizeFrequency) {
             this.analyzerClassname = analyzerClassname;
             this.indexDirectory = indexDirectory;
             this.indexerMergeFactor = indexerMergeFactor;
@@ -608,11 +611,10 @@ public class LuceneIndexTransformer extends AbstractTransformer implements Cache
      * optimization only once in a while to avoid the extra overhead of the
      * optimization.
      * 
-     * @return true: yes, we should optimize the index false: no, do not
-     *         optimize
+     * @return true if we should optimize the index
      */
     private boolean needToOptimize() {
-        int optimizeFrequency = this.queryConfiguration.indexerOptimizeFrequency;
+        int optimizeFrequency = queryConfiguration.indexerOptimizeFrequency;
         if (optimizeFrequency == 0) {
             return false;
         }
