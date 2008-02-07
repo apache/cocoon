@@ -55,6 +55,10 @@
       <artifactId>db-ojb</artifactId>
       <exclusions>
         <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>jdo</groupId>
           <artifactId>jdo</artifactId>
         </exclusion>
