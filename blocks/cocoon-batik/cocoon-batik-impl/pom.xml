@@ -97,6 +97,12 @@
     <dependency>
       <groupId>batik</groupId>
       <artifactId>batik-rasterizer</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>batik</groupId>
