@@ -53,6 +53,12 @@
       <groupId>groovy</groupId>
       <artifactId>groovy</artifactId>
       <version>1.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>  
 </project>
