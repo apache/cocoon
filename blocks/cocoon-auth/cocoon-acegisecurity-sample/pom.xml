@@ -105,6 +105,12 @@
     <dependency>
       <groupId>org.acegisecurity</groupId>
       <artifactId>acegi-security</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- We are affected by MNG-2339 (http://jira.codehaus.org/browse/MNG-2339) bug.
          Adding this dependency as work-around should made Cocoon compile with Java 1.4 -->
