@@ -5,7 +5,7 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
@@ -29,7 +29,6 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -39,12 +38,11 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.xml.sax.Attributes;
@@ -81,7 +79,18 @@ import org.xml.sax.helpers.AttributesImpl;
   * <dd><p>Class name of the Lucene text analyzer to use. Typically depends on the language of the text being indexed.
   * See the Lucene documentation for more information.</p></dd>
   * <dt style="font-weight: bold;">merge-factor</dt>
-  * <dd>Determines how often segment indices are merged. See the Lucene documentation for more information.</dd>
+  * <dd><p>Determines how often segment indices are merged. See the Lucene documentation for more information.</p></dd>
+  * <dt style="font-weight: bold;">optimize-frequency</dt>
+  * <dd><p>Determines how often the lucene index will be optimized. When you have 1000's of documents, optimizing the index
+  * can become quite slow (eg. 7 seconds for 9000 small docs, P4).</p>
+  *
+  * <ul>
+  * <li>1: always optimize (default)</li>
+  * <li>0: never optimize</li>
+  * <li>x: update every x times. You can use any number, it is a random generator which will determine to optimize or not. </li>   
+  * </ul>
+  * 
+  * </dd>
   * </dl>
   * <dl>
   * <dt style="font-weight: bold;">A simple example of the input:</dt>
@@ -92,6 +101,7 @@ import org.xml.sax.helpers.AttributesImpl;
   *     create="false" 
   *     directory="index" 
   *     max-field-length="10000"
+  *     optimize-frequency="1" 
   *     analyzer="org.apache.lucene.analysis.standard.StandardAnalyzer"&gt;
   *     &lt;lucene:document url="a.html"&gt;
   *             &lt;documentTitle lucene:store="true"&gt;Doggerel&lt;/documentTitle&gt;
@@ -107,12 +117,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * </dd>
  * </dl>
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
  * @version $Id$
  */
 public class LuceneIndexTransformer extends AbstractTransformer
-    implements CacheableProcessingComponent, Configurable, Contextualizable {
+    implements CacheableProcessingComponent,
+               Configurable,
+               Contextualizable {
 
     public static final String ANALYZER_CLASSNAME_CONFIG = "analyzer-classname";
     public static final String ANALYZER_CLASSNAME_PARAMETER = "analyzer-classname";
@@ -123,6 +133,12 @@ public class LuceneIndexTransformer extends AbstractTransformer
     public static final String MERGE_FACTOR_CONFIG = "merge-factor";
     public static final String MERGE_FACTOR_PARAMETER = "merge-factor";
     public static final int MERGE_FACTOR_DEFAULT = 20;
+    
+    public static final String OPTIMIZE_FREQUENCY_CONFIG = "optimize-frequency";
+    public static final String OPTIMIZE_FREQUENCY_PARAMETER = "optimize-frequency";
+    // by default, optimizing will take place on every update (previous behaviour)
+    public static final int OPTIMIZE_FREQUENCY_DEFAULT = 1;
+    
     public static final String MAX_FIELD_LENGTH_CONFIG = "max-field-length";
     public static final String MAX_FIELD_LENGTH_PARAMETER = "max-field-length";
     public static final int MAX_FIELD_LENGTH_DEFAULT = IndexWriter.DEFAULT_MAX_FIELD_LENGTH;
@@ -134,6 +150,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
     public static final String LUCENE_QUERY_CREATE_ATTRIBUTE = "create";
     public static final String LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE = "merge-factor";
     public static final String LUCENE_QUERY_MAX_FIELD_LENGTH_ATTRIBUTE = "max-field-length";
+    public static final String LUCENE_QUERY_OPTIMIZE_FREQUENCY_CONFIG_ATTRIBUTE = "optimize-frequency";
     public static final String LUCENE_DOCUMENT_ELEMENT = "document";
     public static final String LUCENE_DOCUMENT_URL_ATTRIBUTE = "url";
     public static final String LUCENE_ELEMENT_ATTR_TO_TEXT_ATTRIBUTE = "text-attr";
@@ -165,15 +182,44 @@ public class LuceneIndexTransformer extends AbstractTransformer
     private String bodyDocumentURL;
     private Stack elementStack = new Stack();
     /**
-     * Storage for the document element's attributes until the document
-     * has been indexed, so that they can be copied to the output
-     * along with a boolean <code>indexed</code> attribute.
+     * Storage for the document element's attributes until the document has been
+     * indexed, so that they can be copied to the output along with a boolean
+     * <code>indexed</code> attribute.
      */
     private AttributesImpl documentAttributes; 
     private long documentStartTime;
 
+    /**
+     * Class name of the Lucene text analyzer to use. Typically depends on the
+     * language of the text being indexed. See the Lucene documentation for more
+     * information.
+     */
+    private String analyzer = ANALYZER_CLASSNAME_DEFAULT;
+
+    /**
+     * Location of directory where index files are stored. This path is relative
+     * to the Cocoon work directory
+     */
+    private String directory = DIRECTORY_DEFAULT;
+
+    /**
+     * Determines how often segment indices are merged. See the Lucene
+     * documentation for more information.
+     */
+    private int mergeFactor = MERGE_FACTOR_DEFAULT;
+
+    /**
+     * Maximum number of terms to index in a field (as far as the index is
+     * concerned, the document will effectively be truncated at this point. The
+     * default value, 10k, may not be sufficient for large documents.
+     */
+    private int maxFieldLength = MAX_FIELD_LENGTH_DEFAULT;
+
+    /** Determines how often the lucene index will be optimized. */
+    private int optimizeFrequency = OPTIMIZE_FREQUENCY_DEFAULT;
+
     private static String uid(String url) {
-        return url.replace('/', '\u0000'); // + "\u0000" + DateField.timeToString(urlConnection.getLastModified());
+        return url.replace('/', '\u0000');
     }
 
     /**
@@ -184,32 +230,30 @@ public class LuceneIndexTransformer extends AbstractTransformer
      */
     public void configure(Configuration conf) throws ConfigurationException {
         this.configureConfiguration = new IndexerConfiguration(
-            conf.getChild(ANALYZER_CLASSNAME_CONFIG).getValue(ANALYZER_CLASSNAME_DEFAULT), 
-            conf.getChild(DIRECTORY_CONFIG).getValue(DIRECTORY_DEFAULT), 
-            conf.getChild(MERGE_FACTOR_CONFIG).getValueAsInteger(MERGE_FACTOR_DEFAULT),
-            conf.getChild(MAX_FIELD_LENGTH_CONFIG).getValueAsInteger(MAX_FIELD_LENGTH_DEFAULT)
-        );
+                conf.getChild(ANALYZER_CLASSNAME_CONFIG).getValue(ANALYZER_CLASSNAME_DEFAULT), 
+                conf.getChild(DIRECTORY_CONFIG).getValue(DIRECTORY_DEFAULT), 
+                conf.getChild(MERGE_FACTOR_CONFIG).getValueAsInteger(MERGE_FACTOR_DEFAULT),
+                conf.getChild(MAX_FIELD_LENGTH_CONFIG).getValueAsInteger(MAX_FIELD_LENGTH_DEFAULT),
+                conf.getChild(OPTIMIZE_FREQUENCY_CONFIG).getValueAsInteger(OPTIMIZE_FREQUENCY_DEFAULT));
     }
 
     /**
-     * Setup the transformer.
-     * Called when the pipeline is assembled.
-     * The parameters are those specified as child elements of the
-     * <code>&lt;map:transform&gt;</code> element in the sitemap.
-     * These parameters are optional: 
-     * If no parameters are specified here then the defaults are 
-     * supplied by the component configuration.
-     * Any parameters specified here may be over-ridden by attributes
-     * of the lucene:index element in the input document.
+     * Setup the transformer. Called when the pipeline is assembled. The
+     * parameters are those specified as child elements of the
+     * <code>&lt;map:transform&gt;</code> element in the sitemap. These
+     * parameters are optional: If no parameters are specified here then the
+     * defaults are supplied by the component configuration. Any parameters
+     * specified here may be over-ridden by attributes of the lucene:index
+     * element in the input document.
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
         setupConfiguration = new IndexerConfiguration(
             parameters.getParameter(ANALYZER_CLASSNAME_PARAMETER, configureConfiguration.analyzerClassname),
             parameters.getParameter(DIRECTORY_PARAMETER, configureConfiguration.indexDirectory),
-            parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER, configureConfiguration.mergeFactor),
-            parameters.getParameterAsInteger(MAX_FIELD_LENGTH_PARAMETER, configureConfiguration.maxFieldLength)
-        );
+            parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER, configureConfiguration.indexerMergeFactor),
+            parameters.getParameterAsInteger(MAX_FIELD_LENGTH_PARAMETER, configureConfiguration.indexerMaxFieldLength),
+            parameters.getParameterAsInteger(OPTIMIZE_FREQUENCY_PARAMETER, configureConfiguration.indexerOptimizeFrequency));
     }
 
     /**
@@ -219,10 +263,16 @@ public class LuceneIndexTransformer extends AbstractTransformer
         this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
     }
 
+    /**
+     * @see org.apache.cocoon.xml.AbstractXMLProducer#recycle()
+     */
     public void recycle() {
         this.processing = STATE_GROUND;
         if (this.writer != null) {
-            try { this.writer.close(); } catch (IOException ioe) { }
+            try {
+                this.writer.close();
+            } catch (IOException ioe) {
+            }
             this.writer = null;
         }
         this.bodyText = null;
@@ -233,8 +283,8 @@ public class LuceneIndexTransformer extends AbstractTransformer
     }
 
     /**
-     * Generate the unique key.
-     * This key must be unique inside the space of this component.
+     * Generate the unique key. This key must be unique inside the space of this
+     * component.
      *
      * @return The generated key
      */
@@ -263,19 +313,22 @@ public class LuceneIndexTransformer extends AbstractTransformer
     /**
      * Begin the scope of a prefix-URI Namespace mapping.
      *
-     * @param prefix The Namespace prefix being declared.
-     * @param uri The Namespace URI the prefix is mapped to.
+     * @param prefix
+     *            The Namespace prefix being declared.
+     * @param uri
+     *            The Namespace URI the prefix is mapped to.
      */
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
         if (processing == STATE_GROUND) {
-            super.startPrefixMapping(prefix,uri);
+            super.startPrefixMapping(prefix, uri);
         }
     }
 
     /**
      * End the scope of a prefix-URI mapping.
      *
-     * @param prefix The prefix that was being mapping.
+     * @param prefix
+     *            The prefix that was being mapping.
      */
     public void endPrefixMapping(String prefix) throws SAXException {
         if (processing == STATE_GROUND) {
@@ -287,21 +340,22 @@ public class LuceneIndexTransformer extends AbstractTransformer
         throws SAXException {
 
         if (processing == STATE_GROUND) {
-            if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)){
+            if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)) {
                 String sCreate = atts.getValue(LUCENE_QUERY_CREATE_ATTRIBUTE);
                 createIndex = BooleanUtils.toBoolean(sCreate);
 
                 String analyzerClassname = atts.getValue(LUCENE_QUERY_ANALYZER_ATTRIBUTE);
                 String indexDirectory  = atts.getValue(LUCENE_QUERY_DIRECTORY_ATTRIBUTE);
-                String mergeFactor = atts.getValue(LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE);
-                String maxFieldLength = atts.getValue(LUCENE_QUERY_MAX_FIELD_LENGTH_ATTRIBUTE);
+                String mergeFactorStr = atts.getValue(LUCENE_QUERY_MERGE_FACTOR_ATTRIBUTE);
+                String maxFieldLengthStr = atts.getValue(LUCENE_QUERY_MAX_FIELD_LENGTH_ATTRIBUTE);
+                String optimizeFrequencyStr = atts.getValue(LUCENE_QUERY_OPTIMIZE_FREQUENCY_CONFIG_ATTRIBUTE);
 
                 queryConfiguration = new IndexerConfiguration(
-                    analyzerClassname != null ? analyzerClassname : setupConfiguration.analyzerClassname,
-                    indexDirectory != null ? indexDirectory : setupConfiguration.indexDirectory,
-                    mergeFactor != null ? Integer.parseInt(mergeFactor) : setupConfiguration.mergeFactor,
-                    maxFieldLength != null ? Integer.parseInt(maxFieldLength) : setupConfiguration.maxFieldLength
-                );
+                        analyzerClassname != null ? analyzerClassname : setupConfiguration.analyzerClassname,
+                        indexDirectory != null ? indexDirectory : setupConfiguration.indexDirectory,
+                        mergeFactorStr != null ? Integer.parseInt(mergeFactorStr) : setupConfiguration.indexerMergeFactor,
+                        maxFieldLengthStr != null ? Integer.parseInt(maxFieldLengthStr) : setupConfiguration.indexerMaxFieldLength,
+                        optimizeFrequencyStr != null ? Integer.parseInt(optimizeFrequencyStr) : setupConfiguration.indexerOptimizeFrequency);
 
                 if (!createIndex) {
                     // Not asked to create the index - but check if this is necessary anyway:
@@ -321,7 +375,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
             }
         } else if (processing == STATE_QUERY) {
             // processing a lucene:index - expecting a lucene:document
-            if (LUCENE_URI.equals(namespaceURI) && LUCENE_DOCUMENT_ELEMENT.equals(localName)){
+            if (LUCENE_URI.equals(namespaceURI) && LUCENE_DOCUMENT_ELEMENT.equals(localName)) {
                 this.bodyDocumentURL = atts.getValue(LUCENE_DOCUMENT_URL_ATTRIBUTE);
                 if (this.bodyDocumentURL == null) {
                     throw new SAXException("<lucene:document> must have @url attribute");
@@ -349,16 +403,18 @@ public class LuceneIndexTransformer extends AbstractTransformer
 
         if (processing == STATE_QUERY) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)) {
-                // End query processing
-                try {
-                    if (this.writer == null) {
-                        openWriter();
+                if (needToOptimize()) {
+                    // End query processing
+                    try {
+                        if (this.writer == null) {
+                            openWriter();
+                        }
+                        this.writer.optimize();
+                        this.writer.close();
+                        this.writer = null;
+                    } catch (IOException e) {
+                        throw new SAXException(e);
                     }
-                    this.writer.optimize();
-                    this.writer.close();
-                    this.writer = null;
-                } catch (IOException e) {
-                    throw new SAXException(e);
                 }
                 // propagate the query element to the next stage in the pipeline
                 super.endElement(namespaceURI, localName, qName);
@@ -384,14 +440,12 @@ public class LuceneIndexTransformer extends AbstractTransformer
 
                 // propagate the lucene:document element to the next stage in the pipeline
                 long elapsedTime = System.currentTimeMillis() - this.documentStartTime;
-                //documentAttributes = new AttributesImpl();
-                this.documentAttributes.addAttribute(
-                    "", 
-                    LUCENE_ELAPSED_TIME_ATTRIBUTE, 
-                    LUCENE_ELAPSED_TIME_ATTRIBUTE, 
-                    CDATA, 
-                    String.valueOf(elapsedTime)
-                );
+
+                this.documentAttributes.addAttribute("", 
+                                                     LUCENE_ELAPSED_TIME_ATTRIBUTE, 
+                                                     LUCENE_ELAPSED_TIME_ATTRIBUTE, 
+                                                     CDATA, 
+                                                     String.valueOf(elapsedTime));
                 super.startElement(namespaceURI, localName, qName, this.documentAttributes);
                 super.endElement(namespaceURI, localName, qName);
                 this.processing = STATE_QUERY;
@@ -447,8 +501,8 @@ public class LuceneIndexTransformer extends AbstractTransformer
         }
     }
 
-    private void openWriter() throws IOException {		
-    		File indexDirectory = new File(queryConfiguration.indexDirectory);
+    private void openWriter() throws IOException {
+        File indexDirectory = new File(queryConfiguration.indexDirectory);
         if (!indexDirectory.isAbsolute()) {
             indexDirectory = new File(workDir, queryConfiguration.indexDirectory);
         }
@@ -463,8 +517,8 @@ public class LuceneIndexTransformer extends AbstractTransformer
         Directory directory = LuceneCocoonHelper.getDirectory(indexDirectory, createIndex);
         Analyzer analyzer = LuceneCocoonHelper.getAnalyzer(queryConfiguration.analyzerClassname);
         this.writer = new IndexWriter(directory, analyzer, createIndex);
-        this.writer.mergeFactor = queryConfiguration.mergeFactor;
-        this.writer.maxFieldLength = queryConfiguration.maxFieldLength;
+        this.writer.mergeFactor = queryConfiguration.indexerMergeFactor;
+        this.writer.maxFieldLength = queryConfiguration.indexerMaxFieldLength;
     }    
 
     private IndexReader openReader() throws IOException {
@@ -491,7 +545,9 @@ public class LuceneIndexTransformer extends AbstractTransformer
                 IndexReader reader = openReader();
                 reader.delete(new Term(LuceneXMLIndexer.UID_FIELD, uid(this.bodyDocumentURL)));
                 reader.close();
-            } catch (IOException e) { /* ignore */ }
+            } catch (IOException e) {
+                /* ignore */
+            }
             openWriter();
             this.writer.addDocument(this.bodyDocument);
             this.writer.close();
@@ -500,7 +556,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
         this.bodyDocument = null;
     }
 
-    static class IndexHelperField {
+    private static class IndexHelperField {
         String localName;
         StringBuffer text;
         Attributes attributes;
@@ -511,38 +567,151 @@ public class LuceneIndexTransformer extends AbstractTransformer
             this.text = new StringBuffer();
         }
 
-        public Attributes getAttributes() {
+        Attributes getAttributes() {
             return attributes;
         }
 
-        public StringBuffer getText() {
+        StringBuffer getText() {
             return text;
         }
 
-        public void append(String text) {
+        void append(String text) {
             this.text.append(text);
         }
 
-        public void append(char[] str, int offset, int length) {
+        void append(char[] str, int offset, int length) {
             this.text.append(str, offset, length);
         }
     }
 
-    static class IndexerConfiguration {
+    private static class IndexerConfiguration {
         String analyzerClassname;
         String indexDirectory;
-        int mergeFactor;
-        int maxFieldLength;
+        int indexerMergeFactor;
+        int indexerMaxFieldLength;
+        int indexerOptimizeFrequency;
 
-        public IndexerConfiguration(String analyzerClassname,
-                                    String indexDirectory,
-                                    int mergeFactor,
-                                    int maxFieldLength) 
-        {
+        IndexerConfiguration(String analyzerClassname,
+                             String indexDirectory,
+                             int indexerMergeFactor,
+                             int indexerMaxFieldLength,
+                             int indexerOptimizeFrequency) {
             this.analyzerClassname = analyzerClassname;
             this.indexDirectory = indexDirectory;
-            this.mergeFactor = mergeFactor;
-            this.maxFieldLength = maxFieldLength;
+            this.indexerMergeFactor = indexerMergeFactor;
+            this.indexerMaxFieldLength = indexerMaxFieldLength;
+            this.indexerOptimizeFrequency = indexerOptimizeFrequency;
         }
+    }
+    
+    /**
+     * Will check if, based on the configuration (optimize-frequency option),
+     * the lucene index should be optimized. It uses a random number generator
+     * to determine if it should optimize or not.
+     *
+     * This check was added because of large indexes, optimizing becomes quite
+     * slow.
+     *
+     * From the lucene documentation: The IndexWriter class supports an
+     * optimize() method that compacts the index database and speedup queries.
+     * You may want to use this method after performing a complete indexing of
+     * your document set or after incremental updates of the index. If your
+     * incremental update adds documents frequently, you want to perform the
+     * optimization only once in a while to avoid the extra overhead of the
+     * optimization.
+     *  
+     * @return true if we should optimize the index
+     */
+    private boolean needToOptimize() {
+        int optimizeFrequency = queryConfiguration.indexerOptimizeFrequency;
+        if (optimizeFrequency == 0) {
+            return false;
+        }
+        if (optimizeFrequency == 1) {
+            return true;
+        }
+
+        // use a random int to determine if we may execute
+        int randomInt = 1 + (int) (Math.random() * optimizeFrequency);
+        if (randomInt == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return the analyzer
+     */
+    public String getAnalyzer() {
+        return analyzer;
+    }
+
+    /**
+     * @param analyzer
+     *            the analyzer to set
+     */
+    public void setAnalyzer(String analyzer) {
+        this.analyzer = analyzer;
+    }
+
+    /**
+     * @return the directory
+     */
+    public String getDirectory() {
+        return directory;
+    }
+
+    /**
+     * @param directory
+     *            the directory to set
+     */
+    public void setDirectory(String directory) {
+        this.directory = directory;
+    }
+
+    /**
+     * @return the mergeFactor
+     */
+    public int getMergeFactor() {
+        return mergeFactor;
+    }
+
+    /**
+     * @param mergeFactor
+     *            the mergeFactor to set
+     */
+    public void setMergeFactor(int mergeFactor) {
+        this.mergeFactor = mergeFactor;
+    }
+
+    /**
+     * @return the maxFieldLength
+     */
+    public int getMaxFieldLength() {
+        return maxFieldLength;
+    }
+
+    /**
+     * @param maxFieldLength
+     *            the maxFieldLength to set
+     */
+    public void setMaxFieldLength(int maxFieldLength) {
+        this.maxFieldLength = maxFieldLength;
+    }
+
+    /**
+     * @return the optimizeFrequency
+     */
+    public int getOptimizeFrequency() {
+        return optimizeFrequency;
+    }
+
+    /**
+     * @param optimizeFrequency
+     *            the optimizeFrequency to set
+     */
+    public void setOptimizeFrequency(int optimizeFrequency) {
+        this.optimizeFrequency = optimizeFrequency;
     }
 }
