@@ -58,6 +58,10 @@
       
       <exclusions>
         <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework</artifactId>
+        </exclusion>
+        <exclusion>
           <artifactId>xmlbeans-jsr173-api</artifactId>
           <groupId>xmlbeans</groupId>
         </exclusion>
