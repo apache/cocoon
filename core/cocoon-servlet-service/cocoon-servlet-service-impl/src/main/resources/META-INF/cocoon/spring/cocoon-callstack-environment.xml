@@ -15,7 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+<!-- SVN $Id: cocoon-callstack-environment.xml 548029 2007-06-17 09:02:20Z danielf $ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
@@ -28,6 +28,11 @@
             <map>
                 <entry key="call">
                     <bean class="org.apache.cocoon.callstack.CallScope"/>
+                </entry>
+                <entry key="servlet">
+                	<bean class="org.apache.cocoon.servletscope.ServletScope">
+                		<property name="servletContext" ref="javax.servlet.ServletContext/callstack"/>
+                	</bean>
                 </entry>
             </map>
         </property>
