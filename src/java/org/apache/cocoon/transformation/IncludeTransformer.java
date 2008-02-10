@@ -89,6 +89,8 @@ import java.util.Stack;
  * <p>The root element of included content may be automatically stripped by specifying
  * <code>strip-root="true"</code> on the <code>include</code> element. This is the same
  * functionality as provided by {@link org.apache.cocoon.transformation.CIncludeTransformer}.
+ * Setting <ode>strip-root="true"</code> has no effect if recursive processing is enabled.
+ * </p>
  * 
  * <p>Example:</p>
  * <pre>
