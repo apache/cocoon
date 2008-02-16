@@ -43,8 +43,6 @@ public class ReloadingSpringFilter implements Filter {
 
     private final Log log = LogFactory.getLog(ReloadingSpringFilter.class);
 
-    private static final String WEB_INF_RCLWRAPPER_PROPERTIES = "/WEB-INF/cocoon/rclwrapper.properties";
-
     private FilterConfig config;
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException,
@@ -78,8 +76,8 @@ public class ReloadingSpringFilter implements Filter {
 
     private boolean isReloadingEnabled() throws IOException {
         Properties rclProps = new Properties();
-        rclProps.load(this.config.getServletContext().getResourceAsStream(WEB_INF_RCLWRAPPER_PROPERTIES));
-        String reloadingEnabled = rclProps.getProperty("reloading.spring.enabled", "true");
+        rclProps.load(this.config.getServletContext().getResourceAsStream(Constants.WEB_INF_RCLWRAPPER_PROPERTIES));
+        String reloadingEnabled = rclProps.getProperty(Constants.RELOADING_SPRING_ENABLED, "true");
         return reloadingEnabled.trim().toLowerCase().equals("true");
     }
 
