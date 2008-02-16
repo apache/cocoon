@@ -23,6 +23,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
@@ -34,46 +35,54 @@ public class ReloadingClassloaderManager {
 
     private static final String FILE_PROTOCOL = "file:";
 
-    private static final String WEB_INF_RCL_URLCL_CONF = "/WEB-INF/cocoon/rclwrapper.urlcl.conf";
-
-    private static final String WEB_INF_RCLWRAPPER_RCL_CONF = "/WEB-INF/cocoon/rclwrapper.rcl.conf";
-
-    private static ReloadingClassLoader reloadingClassloader = null;
+    private static ClassLoader reloadingClassloader = null;
 
     private ReloadingClassloaderManager() {
         // only allow static usage
     }
 
     public static synchronized ClassLoader getClassLoader(ServletContext context) {
-      if (ReloadingClassloaderManager.reloadingClassloader == null) {
-            final ClassLoader urlClassloader = createURLClassLoader(context);
-            final ReloadingClassLoader classloader = new ReloadingClassLoader(urlClassloader);
-            final FilesystemAlterationMonitor fam = new FilesystemAlterationMonitor();
+        
+        // if there is no classloader, create one
+        if (ReloadingClassloaderManager.reloadingClassloader == null) {
 
-            List lines = null;
-            try {
-                lines = IOUtils.readLines(context.getResourceAsStream(WEB_INF_RCLWRAPPER_RCL_CONF));
-            } catch (IOException ioe) {
-                throw new ReloadingClassloaderCreationException(
-                        "Error while creating the URLClassLoader from context:/" + WEB_INF_RCLWRAPPER_RCL_CONF, ioe);
-            }
-            for (Iterator linesIt = lines.iterator(); linesIt.hasNext();) {
-                String line = (String) linesIt.next();
-                if (!line.startsWith(FILE_PROTOCOL)) {
-                    throw new ReloadingClassloaderCreationException("Only support URLs with file: protocol.");
+            // create the URL classloader
+            final ClassLoader urlClassloader = createURLClassLoader(context);
+            // check, if the reloadking classloader should be used
+            if (isReloadingClassloaderEnabled(context)) {
+                final ReloadingClassLoader classloader = new ReloadingClassLoader(urlClassloader);
+                final FilesystemAlterationMonitor fam = new FilesystemAlterationMonitor();
+
+                List lines = null;
+                try {
+                    lines = IOUtils.readLines(context.getResourceAsStream(Constants.WEB_INF_RCLWRAPPER_RCL_CONF));
+                } catch (IOException ioe) {
+                    throw new ReloadingClassloaderCreationException(
+                                    "Error while creating the URLClassLoader from context:/"
+                                                    + Constants.WEB_INF_RCLWRAPPER_RCL_CONF, ioe);
                 }
-                String url = line.substring(FILE_PROTOCOL.length());
-                // windows paths
-                if (url.indexOf(2) == ':') {
-                    url = url.substring(1);
+                for (Iterator linesIt = lines.iterator(); linesIt.hasNext();) {
+                    String line = (String) linesIt.next();
+                    if (!line.startsWith(FILE_PROTOCOL)) {
+                        throw new ReloadingClassloaderCreationException("Only support URLs with file: protocol.");
+                    }
+                    String url = line.substring(FILE_PROTOCOL.length());
+                    // windows paths
+                    if (url.indexOf(2) == ':') {
+                        url = url.substring(1);
+                    }
+                    File directory = new File(url);
+                    org.apache.commons.jci.listeners.ReloadingListener rl = new CocoonReloadingListener();
+                    rl.addReloadNotificationListener(classloader);
+                    fam.addListener(directory, rl);
                 }
-                File directory = new File(url);
-                org.apache.commons.jci.listeners.ReloadingListener rl = new CocoonReloadingListener();
-                rl.addReloadNotificationListener(classloader);
-                fam.addListener(directory, rl);
+                fam.start();
+                ReloadingClassloaderManager.reloadingClassloader = classloader;
+            } 
+            // otherwise use the URL classloader only
+            else {
+                ReloadingClassloaderManager.reloadingClassloader = urlClassloader;
             }
-            fam.start();
-            ReloadingClassloaderManager.reloadingClassloader = classloader;
         }
         return ReloadingClassloaderManager.reloadingClassloader;
     }
@@ -81,7 +90,7 @@ public class ReloadingClassloaderManager {
     protected static ClassLoader createURLClassLoader(ServletContext context) {
         try {
             List urlsList = new ArrayList();
-            List lines = IOUtils.readLines(context.getResourceAsStream(WEB_INF_RCL_URLCL_CONF));
+            List lines = IOUtils.readLines(context.getResourceAsStream(Constants.WEB_INF_RCL_URLCL_CONF));
             for (Iterator linesIt = lines.iterator(); linesIt.hasNext();) {
                 String line = (String) linesIt.next();
                 urlsList.add(new URL(line));
@@ -90,8 +99,20 @@ public class ReloadingClassloaderManager {
             return new URLClassLoader(urls, ReloadingClassloaderManager.class.getClassLoader());
         } catch (Exception e) {
             throw new ReloadingClassloaderCreationException("Error while creating the URLClassLoader from context:/"
-                    + WEB_INF_RCL_URLCL_CONF, e);
+                    + Constants.WEB_INF_RCL_URLCL_CONF, e);
         }
+    }
+
+    protected static boolean isReloadingClassloaderEnabled(ServletContext servletContext) {
+        Properties rclProps = new Properties();
+        try {
+            rclProps.load(servletContext.getResourceAsStream(Constants.WEB_INF_RCLWRAPPER_PROPERTIES));
+        } catch (IOException e) {
+            throw new ReloadingClassloaderCreationException("Error while reading "
+                            + Constants.WEB_INF_RCLWRAPPER_PROPERTIES + " from servlet context.", e);
+        }
+        String reloadingEnabled = rclProps.getProperty(Constants.RELOADING_CLASSLOADER_ENABLED, "true");
+        return reloadingEnabled.trim().toLowerCase().equals("true");
     }
 
 }
