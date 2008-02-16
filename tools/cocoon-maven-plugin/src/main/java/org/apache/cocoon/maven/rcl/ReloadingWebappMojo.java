@@ -138,6 +138,13 @@ public class ReloadingWebappMojo extends AbstractMojo {
     private boolean reloadingSpringEnabled = true;
 
     /**
+     * Enable the reloading class loader. Default value is <code>true</code>.
+     *
+     * @parameter
+     */
+    private boolean reloadingClassLoaderEnabled = true;
+
+    /**
      * Logging: Use a custom log4j xml configuration file=
      *
      * @parameter expression="${cocoon.rcl.log4j.conf}"
@@ -196,6 +203,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
      * @required
      */
     private MavenProject project;
+
 
     public void execute() throws MojoExecutionException {
         // check if this plugin is useful at all
@@ -349,6 +357,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
         try {
             Properties props = new Properties();
             props.setProperty("reloading.spring.enabled", Boolean.toString(this.reloadingSpringEnabled));
+            props.setProperty("reloading.classloader.enabled", Boolean.toString(this.reloadingClassLoaderEnabled));
             props.save(new FileOutputStream(rclProps), "Reloading Classloader Properties");
         } catch (IOException e) {
             throw new MojoExecutionException("Can't write to  " + rclProps.getAbsolutePath(), e);
