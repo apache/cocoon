@@ -27,29 +27,35 @@ public class CocoonReloadingListener extends ReloadingListener {
     private final Log log = LogFactory.getLog(CocoonReloadingListener.class);
 
     private static boolean reload = false;
-    
+
+    private boolean consoleOutput = false;
+
     public CocoonReloadingListener() {
         super();
     }
 
     public void onFileChange(File file) {
         super.onFileChange(file);
+        // after the first change/deletion of a file is detected, log to the console
+        this.consoleOutput = true;
         changeDetected(file, "update");
     }
-    
+
     public void onFileDelete(File file) {
         super.onFileDelete(file);
+        // after the first change/deletion of a file is detected, log to the console
+        this.consoleOutput = true;
         changeDetected(file, "delete");
     }
-    
+
     public void onFileCreate(File file) {
         super.onFileCreate(file);
         changeDetected(file, "create");
-    }   
-    
+    }
+
     protected void changeDetected(File changedFile, String operation) {
         String changedFileParentPath = changedFile.getParent().replace('\\', '/');
-        String changedFilePath = changedFile.getAbsolutePath().replace('\\', '/');        
+        String changedFilePath = changedFile.getAbsolutePath().replace('\\', '/');
 
         if(changedFileParentPath.endsWith("META-INF/cocoon/spring") ||              // global Spring beans configurations
                 changedFileParentPath.endsWith("config/avalon") ||                  // global Avalon components
@@ -57,9 +63,11 @@ public class CocoonReloadingListener extends ReloadingListener {
                 changedFilePath.endsWith(".xmap.xml") ||                            // any sitemap that ends with xmap.xml (sitemaps)
                 changedFilePath.endsWith(".class") ||                               // Java class file change
                 changedFileParentPath.endsWith("config/spring")                     // local Spring bean configurations
-           ) {                
+           ) {
             log.debug("Configuration or .class file change detected [" + operation + "]: " + changedFile);
-            System.out.println("RCL [" + operation + "]: " + changedFile);
+            if (this.consoleOutput) {
+                System.out.println("RCL [" + operation + "]: " + changedFile);
+            }
             reload = true;
         } else {
             log.debug("Other file change detected, no reload [" + operation + "]: " + changedFile);  // any other file change
