@@ -19,7 +19,7 @@ package org.apache.cocoon.components.sax;
 /**
  * The common constants for SAX byte streaming
  *
- * @version CVS $Id$
+ * @version $Id$
   */
 public interface XMLByteStreamConstants {
 
