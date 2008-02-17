@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one
-  or more contributor license agreements.  See the NOTICE file
+  or more contributor license agreements. See the NOTICE file
   distributed with this work for additional information
-  regarding copyright ownership.  The ASF licenses this file
+  regarding copyright ownership. The ASF licenses this file
   to you under the Apache License, Version 2.0 (the
   "License"); you may not use this file except in compliance
-  with the License.  You may obtain a copy of the License at
+  with the License. You may obtain a copy of the License at
 
    http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing,
   software distributed under the License is distributed on an
   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  KIND, either express or implied.  See the License for the
+  KIND, either express or implied. See the License for the
   specific language governing permissions and limitations
   under the License.
 -->
 <project>
 
-  <!-- TODO clean up property settings -->
-  <property name="downloadUrl" value="http://repo1.maven.org/maven2/org/apache/cocoon/"/>
-  <property name="deploy.server" value="people.apache.org"/>
-  <property name="deploy.path" value="/home/reinhard/cocoon-staging"/>
-  <property name="deploy.user" value="reinhard"/>
+  <!-- TODO clean up properties (consistent naming, external properties file, etc.) -->
+  <property name="downloadUrl" value="http://repo1.maven.org/maven2/org/apache/cocoon/" />
+  <property name="deploy.server" value="people.apache.org" />
+  <property name="deploy.path" value="/home/reinhard/cocoon-staging" />
+  <property name="deploy.user" value="reinhard" />
 
-  <property name="docs-output-dir" value=""/>
+  <property name="docs-output-dir" value="" />
   <property name="target-dir" value="./target" />
-  <property name="release-dir" value="${target-dir}/release"/>
+  <property name="release-dir" value="${target-dir}/release" />
 
   <target name="init">
     <delete dir="${target-dir}" />
@@ -39,28 +39,28 @@
   </target>
 
   <macrodef name="block-dist">
-    <attribute name="name"/>
-    <attribute name="version"/>
+    <attribute name="name" />
+    <attribute name="version" />
     <sequential>
       <property name="jarFileName" value="@{name}-@{version}.jar" />
       <property name="sourcesFileName" value="@{name}-@{version}-sources.jar" />
       <property name="javadocFileName" value="@{name}-@{version}-javadoc.jar" />
-      <property name="distFileName" value="@{name}-@{version}-dist.zip" />
+      <property name="distFileName" value="@{name}-@{version}-dist" />
 
       <get dest="${target-dir}/${jarFileName}" src="${downloadUrl}/@{name}/@{version}/${jarFileName}" />
       <get dest="${target-dir}/${sourcesFileName}" src="${downloadUrl}/@{name}/@{version}/${sourcesFileName}" />
       <get dest="${target-dir}/${javadocFileName}" src="${downloadUrl}/@{name}/@{version}/${javadocFileName}" />
 
       <!-- copy the docs -->
-      <mkdir dir="${release-dir}/docs"/>
+      <mkdir dir="${release-dir}/docs" />
 
       <!-- unzip Javadocs -->
-      <mkdir dir="${release-dir}/docs/apidocs"/>
-      <unzip src="${target-dir}/${javadocFileName}" dest="${release-dir}/docs/apidocs"/>
+      <mkdir dir="${release-dir}/docs/apidocs" />
+      <unzip src="${target-dir}/${javadocFileName}" dest="${release-dir}/docs/apidocs" />
 
       <!-- unzip Sources -->
-      <mkdir dir="${release-dir}/src"/>
-      <unzip src="${target-dir}/${sourcesFileName}" dest="${release-dir}/src"/>
+      <mkdir dir="${release-dir}/src" />
+      <unzip src="${target-dir}/${sourcesFileName}" dest="${release-dir}/src" />
 
       <!-- copy the binaries  -->
       <copy file="${target-dir}/${jarFileName}" tofile="${release-dir}/${jarFileName}" />
@@ -68,49 +68,61 @@
       <!-- notice and license files -->
       <unzip src="${target-dir}/${jarFileName}" dest="${release-dir}">
         <patternset>
-          <include name="META-INF/license.txt"/>
-          <include name="META-INF/notice.txt"/>
+          <include name="META-INF/license.txt" />
+          <include name="META-INF/notice.txt" />
         </patternset>
-        <mapper type="flatten"/>
+        <mapper type="flatten" />
       </unzip>
 
-      <property name="dist-full-name" value="${target-dir}/${distFileName}" />
-      <!-- create the distribution -->
-      <zip destfile="${dist-full-name}" basedir="${release-dir}" />
+      <!-- package, sign and release files -->
+      <package-sign-deploy file="${target-dir}/${distFileName}" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="package-sign-deploy">
+    <attribute name="file" />
+    <sequential>
+      <!-- create packages -->
+      <zip destfile="@{file}.zip" basedir="${release-dir}" />
+      <tar tarfile="@{file}.tar" basedir="${release-dir}" />
+      <gzip zipfile="@{file}.tar.gz" src="@{file}.tar" />
+      <delete file="@{file}.tar" />
 
       <!-- checksums -->
-      <checksum algorithm="SHA" file="${dist-full-name}" fileext=".sha1" />
-      <checksum file="${dist-full-name}" fileext=".md5" />
-
-      <!-- cleanup -->
-      <delete file="${target-dir}/${jarFileName}" />
-      <delete file="${target-dir}/${sourcesFileName}" />
-      <delete file="${target-dir}/${javadocFileName}" />
+      <checksum algorithm="SHA" file="@{file}.zip" fileext=".sha1" />
+      <checksum file="@{file}.zip" fileext=".md5" />
+      <checksum algorithm="SHA" file="@{file}.tar.gz" fileext=".sha1" />
+      <checksum file="@{file}.tar.gz" fileext=".md5" />
 
       <!-- gpg -->
-      <gpg-sign-file file="${dist-full-name}"/>
-      <gpg-sign-file file="${dist-full-name}.md5"/>
-      <gpg-sign-file file="${dist-full-name}.sha1"/>
+      <gpg-sign-file file="@{file}.zip" />
+      <gpg-sign-file file="@{file}.zip.md5" />
+      <gpg-sign-file file="@{file}.zip.sha1" />
+      <gpg-sign-file file="@{file}.tar.gz" />
+      <gpg-sign-file file="@{file}.tar.gz.md5" />
+      <gpg-sign-file file="@{file}.tar.gz.sha1" />
 
       <!-- scp to staging repository -->
-      <local-scp file="${dist-full-name}"/>
-      <local-scp file="${dist-full-name}.md5"/>
-      <local-scp file="${dist-full-name}.sha1"/>
-
+      <local-scp file="@{file}.zip" />
+      <local-scp file="@{file}.zip.md5" />
+      <local-scp file="@{file}.zip.sha1" />
+      <local-scp file="@{file}.tar.gz" />
+      <local-scp file="@{file}.tar.gz.md5" />
+      <local-scp file="@{file}.tar.gz.sha1" />
     </sequential>
   </macrodef>
 
   <macrodef name="local-scp">
-    <attribute name="file"/>
+    <attribute name="file" />
     <sequential>
       <exec command="scp @{file} ${deploy.user}@${deploy.server}:${deploy.path}" />
     </sequential>
   </macrodef>
 
   <macrodef name="gpg-sign-file">
-    <attribute name="file"/>
+    <attribute name="file" />
     <sequential>
-      <exec command="gpg -sba --passphrase-file ${gpg-passphrase.file} @{file}"/>
+      <exec command="gpg -sba --passphrase-file ${gpg-passphrase.file} @{file}" />
     </sequential>
   </macrodef>
 
