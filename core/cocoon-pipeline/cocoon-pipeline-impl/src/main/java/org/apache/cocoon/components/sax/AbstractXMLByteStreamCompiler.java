@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -183,7 +183,6 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
         this.writeEvent(END_CDATA);
     }
 
-
     /**
      * SAX Event Handling: LexicalHandler
      */
@@ -212,14 +211,23 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
             map.put(str, new Integer(mapCount++));
             int length = str.length();
             this.writeChars(str.toCharArray(), 0, length);
-        }
-        else {
+        } else {
             int i = index.intValue();
 
-            if (i > 0xFFFF) throw new SAXException("Index too large");
-
-            this.write(((i >>> 8) & 0xFF) | 0x80);
-            this.write((i >>> 0) & 0xFF);
+            if (i <= 0x7FFF) {
+                // write index value in 16-bits
+                this.write(((i >>> 8) & 0xFF) | 0x80);
+                this.write((i >>> 0) & 0xFF);
+            } else {
+                // write escape code (Short.MAX_VALUE) to write a full 32-bit value
+                write((byte)0x7F);
+                write((byte)0xFF);
+                // write index value in 32-bit
+                write((byte) ((i >>> 24) & 0xFF) | 0x80);
+                write((byte) ((i >>> 16) & 0xFF));
+                write((byte) ((i >>>  8) & 0xFF));
+                write((byte) ((i >>>  0) & 0xFF));
+            }
         }
     }
 
@@ -268,70 +276,11 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
                 write((byte) (0x80 | ((c >>  0) & 0x3F)));
             }
         }
-
-
-/*
-        if (length == 0) return;
-
-        assure( (int) (buf.length + length * utfRatioAverage) );
-
-        int utflentotal = 0;
-
-        bufCount += 2;
-        int bufStart = bufCount;
-
-        for (int i = 0; i < length; i++) {
-            int c = ch[i + start];
-            int l = bufCount-bufStart;
-
-            if (l+3 >= 0x7FFF) {
-                buf[bufStart-2] = (byte) ((l >>> 8) & 0xFF);
-                buf[bufStart-1] = (byte) ((l >>> 0) & 0xFF);
-                utflentotal += l;
-                bufCount += 2;
-                bufStart = bufCount;
-            }
-
-            if ((c >= 0x0001) && (c <= 0x007F)) {
-                assure(bufCount+1);
-                buf[bufCount++] = (byte)c;
-            }
-            else if (c > 0x07FF) {
-                assure(bufCount+3);
-                buf[bufCount++] = (byte) (0xE0 | ((c >> 12) & 0x0F));
-                buf[bufCount++] = (byte) (0x80 | ((c >>  6) & 0x3F));
-                buf[bufCount++] = (byte) (0x80 | ((c >>  0) & 0x3F));
-            }
-            else {
-                assure(bufCount+2);
-                buf[bufCount++] = (byte) (0xC0 | ((c >>  6) & 0x1F));
-                buf[bufCount++] = (byte) (0x80 | ((c >>  0) & 0x3F));
-            }
-        }
-
-        int l = bufCount-bufStart;
-        buf[bufStart-2] = (byte) ((l >>> 8) & 0xFF);
-        buf[bufStart-1] = (byte) ((l >>> 0) & 0xFF);
-        utflentotal += l;
-
-        utfRatioAverage = (utfRatioAverage + (utflentotal / length) / 2);
-*/
     }
-
-/*  JH (2003-11-20): seems to be never used
-
-    private void write( final byte[] b ) {
-        int newcount = this.bufCount + b.length;
-        assure(newcount);
-        System.arraycopy(b, 0, this.buf, this.bufCount, b.length);
-        this.bufCount = newcount;
-    }
-*/
 
     abstract protected void write( final int b ) throws SAXException;
 
-    private void writeProlog() throws SAXException
-    {
+    private void writeProlog() throws SAXException {
         write((byte)'C');
         write((byte)'X');
         write((byte)'M');
@@ -341,4 +290,3 @@ public abstract class AbstractXMLByteStreamCompiler implements XMLConsumer, XMLB
         hasProlog = true;
     }
 }
-

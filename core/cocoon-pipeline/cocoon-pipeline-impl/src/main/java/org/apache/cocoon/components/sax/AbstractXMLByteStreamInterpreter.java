@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -85,7 +85,7 @@ public abstract class AbstractXMLByteStreamInterpreter implements XMLProducer, X
 
     /**
      * This method needs to be used by sub classes to start the parsing of the byte stream
-     * 
+     *
      * @throws SAXException
      */
     protected void parse() throws SAXException {
@@ -155,8 +155,8 @@ public abstract class AbstractXMLByteStreamInterpreter implements XMLProducer, X
                     }
                     break;
                 case START_DTD:
-                    lexicalHandler.startDTD(this.readString(), 
-                                            this.readString(), 
+                    lexicalHandler.startDTD(this.readString(),
+                                            this.readString(),
                                             this.readString());
                     break;
                 case END_DTD:
@@ -199,13 +199,19 @@ public abstract class AbstractXMLByteStreamInterpreter implements XMLProducer, X
 
     private String readString() throws SAXException {
         int length = this.readWord();
-        int index = length & 0x00007FFF;
+        int index;
         if (length >= 0x00008000) {
+            // index value in 16-bits format
+            index = length & 0x00007FFF;
             return (String) list.get(index);
-        }
-        else {
+        } else {
             if (length == 0x00007FFF) {
                 length = this.readLong();
+                if (length >= 0x80000000) {
+                    // index value in 32-bits format
+                    index = length & 0x7fffffff;
+                    return (String) list.get(index);
+                }
             }
             char[] chars = this.readChars(length);
             int len = chars.length;

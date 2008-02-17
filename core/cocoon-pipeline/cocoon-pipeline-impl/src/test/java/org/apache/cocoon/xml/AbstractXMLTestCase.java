@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,14 +44,19 @@ public abstract class AbstractXMLTestCase extends XMLTestCase {
     protected void generateLargeSAX( ContentHandler consumer ) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
 
-        final int size = 65000;
+        final int size = 66000;
         char[] large = new char[size];
         for(int i=0;i<size;i++) {
-            large[i] = 'x';
+            large[i] = '\uffff';
         }
 
         consumer.startDocument();
         consumer.startElement("", "root", "root", atts);
+        for (int i=0; i<0x10000; ++i) {
+            final String uniqueString = "f_" + i;
+            consumer.startElement("", uniqueString, uniqueString, atts);
+            consumer.endElement("", uniqueString, uniqueString);
+        }
         consumer.characters(large,0,size);
         consumer.endElement("", "root", "root");
         consumer.endDocument();
@@ -81,4 +86,3 @@ public abstract class AbstractXMLTestCase extends XMLTestCase {
         return bos.toByteArray();
     }
 }
-
