@@ -19,7 +19,12 @@
 -->
 <project>
 
+  <!-- TODO clean up property settings -->
   <property name="downloadUrl" value="http://repo1.maven.org/maven2/org/apache/cocoon/"/>
+  <property name="deploy.server" value="people.apache.org"/>
+  <property name="deploy.path" value="/home/reinhard/cocoon-staging"/>
+  <property name="deploy.user" value="reinhard"/>
+
   <property name="docs-output-dir" value=""/>
   <property name="target-dir" value="./target" />
   <property name="release-dir" value="${target-dir}/release"/>
@@ -30,62 +35,82 @@
   </target>
 
   <target name="fop-block" depends="init">
-	<block-dist name="cocoon-fop-impl" version="1.0.0-RC2" />
+    <block-dist name="cocoon-fop-impl" version="1.0.0-RC2" />
   </target>
 
   <macrodef name="block-dist">
     <attribute name="name"/>
     <attribute name="version"/>
     <sequential>
-	    <property name="jarFileName" value="@{name}-@{version}.jar" />
-	    <property name="sourcesFileName" value="@{name}-@{version}-sources.jar" />
-	    <property name="javadocFileName" value="@{name}-@{version}-javadoc.jar" />
-	    <property name="distFileName" value="@{name}-@{version}-dist.zip" />
+      <property name="jarFileName" value="@{name}-@{version}.jar" />
+      <property name="sourcesFileName" value="@{name}-@{version}-sources.jar" />
+      <property name="javadocFileName" value="@{name}-@{version}-javadoc.jar" />
+      <property name="distFileName" value="@{name}-@{version}-dist.zip" />
 
-	    <get dest="${target-dir}/${jarFileName}" src="${downloadUrl}/@{name}/@{version}/${jarFileName}" />
-	    <get dest="${target-dir}/${sourcesFileName}" src="${downloadUrl}/@{name}/@{version}/${sourcesFileName}" />
-	    <get dest="${target-dir}/${javadocFileName}" src="${downloadUrl}/@{name}/@{version}/${javadocFileName}" />
+      <get dest="${target-dir}/${jarFileName}" src="${downloadUrl}/@{name}/@{version}/${jarFileName}" />
+      <get dest="${target-dir}/${sourcesFileName}" src="${downloadUrl}/@{name}/@{version}/${sourcesFileName}" />
+      <get dest="${target-dir}/${javadocFileName}" src="${downloadUrl}/@{name}/@{version}/${javadocFileName}" />
 
-	    <!-- copy the docs -->
-	    <mkdir dir="${release-dir}/docs"/>
+      <!-- copy the docs -->
+      <mkdir dir="${release-dir}/docs"/>
 
-	    <!-- unzip Javadocs -->
-	    <mkdir dir="${release-dir}/docs/apidocs"/>
-	    <unzip src="${target-dir}/${javadocFileName}" dest="${release-dir}/docs/apidocs"/>
+      <!-- unzip Javadocs -->
+      <mkdir dir="${release-dir}/docs/apidocs"/>
+      <unzip src="${target-dir}/${javadocFileName}" dest="${release-dir}/docs/apidocs"/>
 
-	    <!-- unzip Sources -->
-	    <mkdir dir="${release-dir}/src"/>
-	    <unzip src="${target-dir}/${sourcesFileName}" dest="${release-dir}/src"/>
+      <!-- unzip Sources -->
+      <mkdir dir="${release-dir}/src"/>
+      <unzip src="${target-dir}/${sourcesFileName}" dest="${release-dir}/src"/>
 
-        <!-- copy the binaries  -->
-        <copy file="${target-dir}/${jarFileName}" tofile="${release-dir}/${jarFileName}" />
+      <!-- copy the binaries  -->
+      <copy file="${target-dir}/${jarFileName}" tofile="${release-dir}/${jarFileName}" />
 
-	    <!-- notice and license files -->
-	    <unzip src="${target-dir}/${jarFileName}" dest="${release-dir}">
-	      <patternset>
-	        <include name="META-INF/license.txt"/>
-	        <include name="META-INF/notice.txt"/>
-	      </patternset>
-	      <mapper type="flatten"/>
-	    </unzip>
+      <!-- notice and license files -->
+      <unzip src="${target-dir}/${jarFileName}" dest="${release-dir}">
+        <patternset>
+          <include name="META-INF/license.txt"/>
+          <include name="META-INF/notice.txt"/>
+        </patternset>
+        <mapper type="flatten"/>
+      </unzip>
 
-	    <property name="dist-full-name" value="${target-dir}/${distFileName}" />
-	    <!-- create the distribution -->
-	    <zip destfile="${dist-full-name}" basedir="${release-dir}" />
+      <property name="dist-full-name" value="${target-dir}/${distFileName}" />
+      <!-- create the distribution -->
+      <zip destfile="${dist-full-name}" basedir="${release-dir}" />
 
-	    <!-- checksums -->
-	    <checksum algorithm="SHA" file="${dist-full-name}" fileext=".sha1" />
-	    <checksum file="${dist-full-name}" fileext=".md5" />
+      <!-- checksums -->
+      <checksum algorithm="SHA" file="${dist-full-name}" fileext=".sha1" />
+      <checksum file="${dist-full-name}" fileext=".md5" />
 
-        <!-- cleanup -->
-        <delete file="${target-dir}/${jarFileName}"/>
-        <delete file="${target-dir}/${sourcesFileName}"/>
-        <delete file="${target-dir}/${javadocFileName}"/>
+      <!-- cleanup -->
+      <delete file="${target-dir}/${jarFileName}" />
+      <delete file="${target-dir}/${sourcesFileName}" />
+      <delete file="${target-dir}/${javadocFileName}" />
 
-	    <!-- gpg -->
+      <!-- gpg -->
+      <gpg-sign-file file="${dist-full-name}"/>
+      <gpg-sign-file file="${dist-full-name}.md5"/>
+      <gpg-sign-file file="${dist-full-name}.sha1"/>
 
-	    <!-- scp to staging repository -->
+      <!-- scp to staging repository -->
+      <local-scp file="${dist-full-name}"/>
+      <local-scp file="${dist-full-name}.md5"/>
+      <local-scp file="${dist-full-name}.sha1"/>
 
+    </sequential>
+  </macrodef>
+
+  <macrodef name="local-scp">
+    <attribute name="file"/>
+    <sequential>
+      <exec command="scp @{file} ${deploy.user}@${deploy.server}:${deploy.path}" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="gpg-sign-file">
+    <attribute name="file"/>
+    <sequential>
+      <exec command="gpg -sba --passphrase-file ${gpg-passphrase.file} @{file}"/>
     </sequential>
   </macrodef>
 
