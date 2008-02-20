@@ -42,6 +42,7 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -94,10 +95,10 @@ public class JXMacrosHelper {
     }
 
     public void startForm(Form form, Map attributes) throws SAXException {
-        
+
         this.updatedWidgets = form.getUpdatedWidgetIds();
         this.childUpdatedWidgets = form.getChildUpdatedWidgetIds();
-        
+
         // build attributes
         AttributesImpl attrs = new AttributesImpl();
         // top-level widget-containers like forms might have their id set to ""
@@ -111,8 +112,8 @@ public class JXMacrosHelper {
 
         // Add locale attribute, useful for client-side code which needs to do stuff that
         // corresponds to the form locale (e.g. date pickers)
-        attrs.addCDATAAttribute("locale", this.locale.toString().replaceAll("_", "-"));
-        
+        attrs.addCDATAAttribute("locale", StringUtils.replace(this.locale.toString(), "_", "-"));
+
         // Add the "listening" attribute is the value has change listeners
         if (form instanceof ValueChangedListenerEnabled &&
             ((ValueChangedListenerEnabled)form).hasValueChangedListeners()) {
@@ -128,7 +129,7 @@ public class JXMacrosHelper {
             }
             attrs.addCDATAAttribute(attrName, (String)entry.getValue());
         }
-        
+
         this.ajaxTemplate = "true".equals(attributes.get("ajax"));
 
         this.cocoonConsumer.startPrefixMapping(FormsConstants.INSTANCE_PREFIX, FormsConstants.INSTANCE_NS);
@@ -148,21 +149,21 @@ public class JXMacrosHelper {
                                        "form-template",
                                        FormsConstants.INSTANCE_PREFIX_COLON + "form-template");
         this.cocoonConsumer.endPrefixMapping(FormsConstants.INSTANCE_PREFIX);
-        
+
         this.ajaxTemplate = false;
         this.updatedWidgets = null;
     }
-    
+
     private void startBuReplace(String id) throws SAXException {
         AttributesImpl attr = new AttributesImpl();
         attr.addCDATAAttribute("id", id);
         this.cocoonConsumer.startElement(BrowserUpdateTransformer.BU_NSURI, "replace", "bu:replace", attr);
     }
-    
+
     private void endBuReplace(String id) throws SAXException {
         this.cocoonConsumer.endElement(BrowserUpdateTransformer.BU_NSURI, "replace", "bu:replace");
     }
-    
+
     protected boolean pushWidget(String path, boolean unused) throws SAXException {
         Widget parent = peekWidget();
         if (path == null || path.length() == 0) {
@@ -206,7 +207,7 @@ public class JXMacrosHelper {
             // Display the widget
             display = true;
         }
-        
+
         if (display) {
             // Widget needs to be displayed, but does it actually allows it?
             if (widget.getState().isDisplayingValues()) {
@@ -233,35 +234,34 @@ public class JXMacrosHelper {
             this.widgetStack.push(BooleanUtils.toBooleanObject(inUpdatedTemplate));
             this.widgetStack.push(widget);
         }
-        
         return display;
     }
-    
+
     public Widget peekWidget() {
         return (Widget)this.widgetStack.peek();
     }
-    
+
     public void popWidget() throws SAXException {
         Widget widget = (Widget)this.widgetStack.pop();
         boolean inUpdatedTemplate = ((Boolean)this.widgetStack.pop()).booleanValue();
-        
+
         if (inUpdatedTemplate) {
             // Close the bu:replace
             endBuReplace(widget.getFullName());
         }
     }
-    
+
     public boolean pushWidget(String path) throws SAXException {
         return pushWidget(path, false);
     }
-    
+
     public boolean pushContainer(String path) throws SAXException {
         return pushWidget(path, true);
     }
 
     /**
      * Enter a repeater
-     * 
+     *
      * @param path widget path
      * @param ajaxAware distinguishes between &lt;ft:repeater-widget&gt; and &lt;ft:repeater&gt;.
      * @return true if the repeater template is to be executed
@@ -277,7 +277,7 @@ public class JXMacrosHelper {
         }
         return result;
     }
-    
+
     /**
      * Get a child widget of a given widget, throwing an exception if no such child exists.
      *
@@ -365,7 +365,6 @@ public class JXMacrosHelper {
         if (this.classes == null) {
             this.classes = new HashMap();
         }
-
         // TODO: check if class doesn't already exist?
         this.classes.put(id, body);
     }
@@ -375,7 +374,7 @@ public class JXMacrosHelper {
 
         if (result == null) {
             throw new FormsRuntimeException("No class '" + id + "' has been defined.");
-        } 
+        }
         return result;
     }
 
@@ -387,10 +386,10 @@ public class JXMacrosHelper {
     public TreeWalker createWalker() {
         return new TreeWalker((Tree)peekWidget());
     }
-    
+
     public boolean isVisible(Widget widget) throws SAXException {
         boolean visible = widget.getCombinedState().isDisplayingValues();
-        
+
         if (!visible) {
             // Generate a placeholder it not visible
             String id = widget.getRequestParameterName();
@@ -401,14 +400,13 @@ public class JXMacrosHelper {
             this.cocoonConsumer.endElement(FormsConstants.INSTANCE_NS, "placeholder", FormsConstants.INSTANCE_PREFIX_COLON + "placeholder");
             this.cocoonConsumer.endElement(BrowserUpdateTransformer.BU_NSURI, "replace", "bu:replace");
         }
-
         return visible;
     }
-    
+
     public boolean isModified(Widget widget) {
         return this.updatedWidgets.contains(widget.getRequestParameterName());
     }
-    
+
     public boolean generateStyling(Map attributes) throws SAXException {
         return generateStyling(this.cocoonConsumer, attributes);
     }
@@ -416,7 +414,7 @@ public class JXMacrosHelper {
     /**
      * Generate a <code>&lt;fi:styling&gt;</code> element holding the attributes of a <code>ft:*</code>
      * element that are in the "fi:" namespace.
-     * 
+     *
      * @param attributes the template instruction attributes
      * @return true if a <code>&lt;fi:styling&gt;</code> was produced
      * @throws SAXException
@@ -427,15 +425,14 @@ public class JXMacrosHelper {
         while(entries.hasNext()) {
             Map.Entry entry = (Map.Entry)entries.next();
             String key = (String)entry.getKey();
-            
-            // FIXME: JXTG only gives the local name of attributes, so we can't distinguish namespaces...            
+
+            // FIXME: JXTG only gives the local name of attributes, so we can't distinguish namespaces...
             if (!"id".equals(key) && !"widget-id".equals(key)) {
                 if (attr == null)
                     attr = new AttributesImpl();
                 attr.addCDATAAttribute(key, (String)entry.getValue());
             }
         }
-        
         if (attr != null) {
             // There were some styling attributes
             handler.startElement(FormsConstants.INSTANCE_NS, "styling", FormsConstants.INSTANCE_PREFIX_COLON + "styling", attr);
@@ -454,7 +451,6 @@ public class JXMacrosHelper {
      */
     private static class RootBufferingPipe extends AbstractXMLPipe {
         private int depth = 0;
-
         private String rootUri;
         private String rootLoc;
         private String rootRaw;
@@ -478,16 +474,15 @@ public class JXMacrosHelper {
                 this.rootUri = uri;
                 this.rootLoc = loc;
                 this.rootRaw = raw;
-                
+
                 // And produce fi:styling from attributes
                 this.forbidStyling = generateStyling(this.contentHandler, arguments);
             }
-            
+
             if (depth == 1 && forbidStyling &&
                 uri.equals(FormsConstants.INSTANCE_NS) && loc.equals("styling")) {
                 throw new SAXException("Cannot use 'fi:*' attributes and <fi:styling> at the same time");
             }
-
             depth++;
         }
 
