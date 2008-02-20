@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-2020" due-to="Mark Lundquist" due-to-email="lundquist.mark@gmail.com">
+      Forms: CAPTCHA &lt;input&gt; element should have autocomplete="off"
+    </action>
     <action dev="AN" type="add" fixes-bug="COCOON-2065" due-to="Dominique De Munck" due-to-email="dominique.demunck@gmail.com">
       Lucene block: Added optimize-frequency configuration parameter to LuceneIndexTransformer.
       This gives a huge performance increase on large Lucene indexes when not optimizing after every update.
@@ -196,7 +199,7 @@
       Forms Block: Fixed concurrency issue in form definition builders code. If you have custom
       widgets, please implement WidgetDefinitionBuilder.buildWidgetDefinition(Element, WidgetDefinitionBuilderContext)
       method. Do not use WidgetDefinitionBuilder.buildWidgetDefinition(Element) method, it is intended to be
-      implemented only by the top level widget (Form). 
+      implemented only by the top level widget (Form).
     </action>
     <action dev="JH" type="add" fixes-bug="COCOON-2149" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
       Add capability to IncludeTransformer to strip the root element from included XML content.
@@ -210,13 +213,13 @@
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-2158">
       Core: XMLByteStreamCompiler hard-coded limits of 0xffff Strings prevents large XML documents
-            from being handled in Cocoon. 
+            from being handled in Cocoon.
     </action>
   </release>
   <release version="2.1.11" date="December 31 2007">
     <action dev="RG" type="fix" fixes-bug="COCOON-1574">
       Created XPathXMLFileModule to address issus with XMLFileModule. XPathXMLFileModule supports variable
-      replacement and caching of documents in ehcache and expressions as soft references. 
+      replacement and caching of documents in ehcache and expressions as soft references.
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
       Forms: Allow Ajax submission of forms with empty upload field.
@@ -231,11 +234,11 @@
       Core: Update xalan to 2.7.1.
     </action>
     <action dev="AN" type="fix" fixes-bug="COCOON-1990" due-to="Robert Hoffmann" due-to-email="roberth@mit.edu">
-      Sitemap: Redirect to cocoon:/foo did not work in sub-sitemap when it is in same directory as the root sitemap. 
+      Sitemap: Redirect to cocoon:/foo did not work in sub-sitemap when it is in same directory as the root sitemap.
     </action>
     <action dev="AG" type="update">
       Core: Update xercesImpl to 2.9.1.
-    </action> 
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-2146" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
       Event Cache Block: Restore serializability of persistent cache when using event-aware cache.
     </action>
@@ -415,10 +418,10 @@
       The new version should be compatible with the previous version, though it does
       not support the constructs "catch (continue|break|return)" which were available
       in Cocoon's Rhino fork.
-    </action> 
+    </action>
     <action dev="AG" type="update">
       Updated xercesImpl to 2.9.0 and xml-apis to 1.3.04.
-    </action> 
+    </action>
     <action dev="JQ" type="add">
       Ajax: upload progress bar widget.<br/>
       <ul>
@@ -651,7 +654,7 @@
     </action>
     <action dev="AG" type="add" due-to="Carlos Chávez &amp; Eric Meyer" due-to-email="cchavez@agssa.net &amp; emeyer@quoininc.com">
       CForms Block: Add multiple repeater drag &amp; drop dojo sample.
-    </action> 
+    </action>
     <action dev="CZ" type="fix" fixes-bug="COCOON-1857" due-to="Brian Vargas" due-to-email="ardvaark-apachebugs@procrastinators.org">
       Set instrumentation manager on child component managers to enable
       instrumentation of all components including sitemap components.
@@ -758,7 +761,7 @@
       Updated axis to 1.4 and commons-collections to 3.2.
     </action>
     <action dev="SG" type="add" fixes-bug="COCOON-1804">
-      Added a lightweight FOM_SimpleCocoon class, and placed it in the javascript scope when there isn't 
+      Added a lightweight FOM_SimpleCocoon class, and placed it in the javascript scope when there isn't
       already a scope defined. This way, even when using javaflow, you have access to the cocoon
       object (with request etc..) from javascript snippets in definition.
     </action>
@@ -1315,7 +1318,7 @@
        groovy to 1.0-jsr-03.
     </action>
     <action dev="JHS" type="fix" fixes-bug="35538" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
-      Deli block updated to use the latest revision of DELI. This uses a more robust method of loading configuration 
+      Deli block updated to use the latest revision of DELI. This uses a more robust method of loading configuration
       files that should ensure DELI works on different apps servers or deployed as a WAR.
     </action>
     <action dev="JHS" type="fix" fixes-bug="29712" due-to="Gunnar Brand" due-to-email="g.brand@interface-business.de">
@@ -1505,13 +1508,13 @@
     <action dev="CZ" type="add">
       CForms block: Make all WidgetValidatorBuilders ThreadSafe. Reset validation errors
                     before validating a field.
-    </action>     
+    </action>
     <action dev="CZ" type="add">
       Portal block: Add portal manager aspects for more flexible portal processing.
     </action>
     <action dev="CZ" type="add">
       CForms block: Add isValid() method to a Widget.
-    </action>     
+    </action>
     <action dev="VG" type="add" fixes-bug="29817" due-to="Patrick Herber" due-to-email="patrick@arpage.ch">
       POI Block: Added HSSFGenerator.
     </action>
@@ -1546,7 +1549,7 @@
       CForms block: The default HTML stylesheets have been moved into the jar packages. If they should
       be extended in custom stylesheets, import or include them using the resource protocol:
       <code>&lt;xsl:include href="resource://org/apache/cocoon/forms/resources/forms-advanced-field-styling.xsl"/&gt;</code>.
-    </action>   
+    </action>
     <action dev="RP" type="add">
       CForms block: The form and container widgets can take up <code>ValidationError</code>s. As those widgets
       don't have a natural place where the error message should appear, the <code>&lt;ft:validation-error id="[widget-id]"/&gt;</code>
@@ -1731,7 +1734,7 @@
       Updated groovy to 1.0-jsr-01, jdtcore to 3.0.2.
     </action>
     <action dev="BD" type="add" fixes-bug="34294" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
-      New set of automated tests based on HtmlUnit 
+      New set of automated tests based on HtmlUnit
     </action>
     <action dev="VG" type="update">
       Add support for namespaced XML elements to the JXPath based input
@@ -1966,7 +1969,7 @@
            1.4 = Java version 1.4
            1.5 = Java version 1.5
            auto = The version of the JVM where cocoon is running. (Default value).
-          
+
      NOTE: The parameter is optional to keep backward compatibility.
            The parameter currently works only with Sun Javac compiler.
            The eclipse compiler version 3.0.1 currently does not support java 1.5.
@@ -1987,7 +1990,7 @@
      Updated jakarta-slide-webdavlib to 2.1, jdom to 1.0, slide-kernel to 2.1, slide-stores to 2.1, slide-webdavservlet to 2.1.
    </action>
    <action dev="RG" type="add">
-     Portal now allows Cocoon to be deployed as a war (only supports local JSR-168 portlets) and 
+     Portal now allows Cocoon to be deployed as a war (only supports local JSR-168 portlets) and
      allows external portlets to be in a war.
    </action>
    <action dev="SW" type="fix" fixes-bug="31668">
@@ -2000,9 +2003,9 @@
      Modified PortletURLProviderImpl.toString() to create a copy of itself and register that with the event.
    </action>
    <action dev="LG" type="add">
-     ContinuationsManager default implementation can now store continuations in user session. 
-     Continuations are not available outside user session and invalidated automatically 
-     when session gets invalidated by servlet container. This is a good security option for web applications. 
+     ContinuationsManager default implementation can now store continuations in user session.
+     Continuations are not available outside user session and invalidated automatically
+     when session gets invalidated by servlet container. This is a good security option for web applications.
    </action>
    <action dev="AG" type="fix" fixes-bug="32083" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
      Update Deli to x031104 (include over 300 vendor, operator and third party profiles)
