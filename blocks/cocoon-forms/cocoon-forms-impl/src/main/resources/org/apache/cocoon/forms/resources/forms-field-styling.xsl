@@ -50,7 +50,7 @@
       | CForms can run in two different modes, in each mode different form widgets get instantiated.
       | The @ajax attribute in your ft:form-template controls the mode.
       |
-      | 1. non-ajax mode (@ajax="false", this is the default) : 
+      | 1. non-ajax mode (@ajax="false", this is the default) :
       |     All form submits happen via full page loads.
       |     Form submission is handled by cocoon.forms.SimpleForm (dojoType="forms:SimpleForm")
       |     either directly (submit buttons) or via cocoon.forms.submitForm (scripts, onChange handlers etc.).
@@ -59,8 +59,8 @@
       |     All form submits happen via AJAX (XHR or IframeIO) resulting in partial page updates.
       |     Form submission is handled by cocoon.forms.AjaxForm (dojoType="forms:AjaxForm")
       |     either directly (buttons) or via cocoon.forms.submitForm (scripts).
-      | 
-      | NOTES: 
+      |
+      | NOTES:
       |    Dojo is always loaded by this XSLT. You can use dojo widgets regardless of whether you want ajax-type behaviour.
       |    Since 2.1.11, cocoon widgets no longer need to be explicitly 'dojo.require'd in the page, they load automatically using a namespace manifest.
       |    You may use this same mechanism for your own namespace widgets.
@@ -69,7 +69,7 @@
       |
       |    If you are overiding this xslt to avoid the use of dojo (untested, but cocoon.forms.common should still work)
       |    you should add a call to run CForms OnLoadHandlers into the body's @onload attribute
-      |     
+      |
       |      eg.
       |       <xsl:attribute name="onload">cocoon.forms.callOnLoadHandlers(); <xsl:value-of select="@onload"/></xsl:attribute>
       +-->
@@ -97,14 +97,14 @@
     dojo.require("cocoon.forms.common");                                           <!-- tell dojo we require the commons library -->
     dojo.require("cocoon.forms.manifest");                                         <!-- tell dojo we require cocoon.forms.manifest registering namespace handler -->
     dojo.addOnLoad(cocoon.forms.callOnLoadHandlers);                               <!-- ask dojo to run our onLoad handlers -->
-    </script>    
-    <xsl:copy-of select="fi:init/node()"/>                                         <!-- copy optional initialisation from form template -->    
+    </script>
+    <xsl:copy-of select="fi:init/node()"/>                                         <!-- copy optional initialisation from form template -->
     <xsl:if test="/*/fi:googlemap">                                                <!-- googlemap-key TODO: This looks broken to me (JQ) -->
       <script src="/*/fi:googlemap/fi:key" type="text/javascript"/>
     </xsl:if>
     <link rel="stylesheet" type="text/css" href="{$forms-resources}/css/forms.css"/>
   </xsl:template>
-  
+
   <xsl:template match="fi:init"/>                                                  <!-- ignore, was handled above -->
 
   <xsl:template match="body" mode="forms-field">
@@ -130,6 +130,9 @@
       </xsl:if>
       <!--  @id:input is what labels point to -->
       <input name="{@id}" id="{@id}:input" value="{fi:value}" title="{fi:hint}" type="text">
+        <xsl:if test="fi:captcha-image">
+          <xsl:attribute name="autocomplete">off</xsl:attribute>
+        </xsl:if>
         <xsl:apply-templates select="." mode="styling"/>
       </input>
       <xsl:apply-templates select="." mode="common"/>
@@ -517,7 +520,7 @@
       |
       |      NB. If you are overiding this xslt to avoid the use of Dojo
       |      You should add a call to run CForms OnSubmitHandlers into the form's @onsubmit attribute
-      |      
+      |
       |      eg.
       |        <xsl:attribute name="onsubmit">cocoon.forms.callOnSubmitHandlers(this); <xsl:value-of select="@onsubmit"/></xsl:attribute>
       +-->
@@ -693,7 +696,7 @@
       | fi:group - has no visual representation by default
       | If the fi:group contains an id and has only one child that is not in the fi: namespace,
       | then copy the id to the child. This is needed for ajax when grouping is just used to group
-      | widgets. 
+      | widgets.
       +-->
   <xsl:template match="fi:group[@id and count(*) = 1 and not(fi:*)]">
     <xsl:apply-templates mode="copy-parent-id"/>
@@ -722,16 +725,16 @@
     </xsl:variable>
     <xsl:attribute name="class"><xsl:value-of select="normalize-space($class)"/></xsl:attribute>
   </xsl:template>
-  
+
   <!--+
       | fi:googlemap - generate div and hidden fields for value
       +-->
   <xsl:template match="fi:googlemap">
-    
+
     <!-- we need a unique id without . as js variable-->
     <xsl:variable name="jsid" select="generate-id(@id)"/>
     <xsl:variable name="doubleQuote">&#34;</xsl:variable>
-    
+
     <!-- the map-div and (optional), the geocoding input field -->
     <div>
       <xsl:apply-templates select="fi:value/fi:usermarker" mode="geo"/>
@@ -739,7 +742,7 @@
         <xsl:copy-of select="fi:styling/@*"/>
       </div>
     </div>
-    
+
     <!-- map creation -->
     <script type="text/javascript">
         <xsl:value-of select="concat('var map_', $jsid, ' = new GMap2(document.getElementById(', $doubleQuote, @id, $doubleQuote, '),[G_HYBRID_MAP]);')"/>
@@ -747,7 +750,7 @@
         <xsl:value-of select="concat('map_', $jsid, '.addControl(new GScaleControl());')"/>
         <xsl:value-of select="concat('map_', $jsid, '.addControl(new GMapTypeControl());')"/>
         <xsl:value-of select="concat('map_', $jsid, '.setCenter(new GLatLng(', fi:value/@lat, ', ', fi:value/@lng, '), ', fi:value/@zoom, ');')"/>
-        
+
         <xsl:value-of select="concat('GEvent.addListener(map_', $jsid, ', ', $doubleQuote, 'dragend', $doubleQuote, ', function()')"/> {
           <xsl:value-of select="concat('document.getElementById(', $doubleQuote, @id, '_lng', $doubleQuote, ').setAttribute(', $doubleQuote, 'value', $doubleQuote, ',map_', $jsid, '.getCenter().x);')"/>
           <xsl:value-of select="concat('document.getElementById(', $doubleQuote, @id, '_lat', $doubleQuote, ').setAttribute(', $doubleQuote, 'value', $doubleQuote, ',map_', $jsid, '.getCenter().y);')"/>
@@ -755,12 +758,12 @@
         <xsl:value-of select="concat('GEvent.addListener(map_', $jsid, ', ', $doubleQuote, 'zoomend', $doubleQuote, ', function(oldLevel,newLevel)')"/> {
           <xsl:value-of select="concat('document.getElementById(', $doubleQuote, @id, '_zoom', $doubleQuote, ').value=newLevel;')"/>
         });
-        
+
         <xsl:apply-templates select="fi:value/fi:markers/fi:marker"/>
         <xsl:apply-templates select="fi:value/fi:usermarker" mode="script"/>
-        
+
     </script>
-    
+
     <!-- hidden fields to store widget values -->
     <input name="{@id}_lng" id="{@id}_lng" value="{fi:value/@lng}" type="hidden"/>
     <input name="{@id}_lat" id="{@id}_lat" value="{fi:value/@lat}" type="hidden"/>
@@ -772,11 +775,11 @@
 
   <!-- list of markers, the last selected is stored in hidden field "current" -->
   <xsl:template match="fi:value/fi:markers/fi:marker">
-    
+
     <!-- we need a unique id without . as js variable-->
     <xsl:variable name="jsid" select="generate-id(../../../@id)"/>
     <xsl:variable name="doubleQuote">&#34;</xsl:variable>
-    
+
     <xsl:value-of select="concat('var marker = new GMarker(new GLatLng(', @lat, ', ', @lng, '));')"/>
     GEvent.addListener(marker, "click", function() {
       <xsl:value-of select="concat('marker.openInfoWindowHtml(', $doubleQuote, fi:text, $doubleQuote, ');')"/>
@@ -784,14 +787,14 @@
     });
     <xsl:value-of select="concat('map_', $jsid, '.addOverlay(marker);')"/>
   </xsl:template>
-  
+
   <!-- usermarker: user-click on map places this marker -->
   <xsl:template match="fi:value/fi:usermarker" mode="script">
-    
+
     <!-- we need a unique id without . as js variable-->
     <xsl:variable name="jsid" select="generate-id(../../@id)"/>
     <xsl:variable name="doubleQuote">&#34;</xsl:variable>
-    
+
     <xsl:value-of select="concat('var usermarker_', $jsid, ' = new GMarker(new GLatLng(', @lat, ', ', @lng, '));')"/>
     <xsl:value-of select="concat('map_', $jsid, '.addOverlay(usermarker_', $jsid, ');')"/>
     <xsl:value-of select="concat('GEvent.addListener(map_', $jsid, ', ', $doubleQuote, 'click', $doubleQuote, ', function(overlay,point)')"/> {
@@ -821,7 +824,7 @@
     <xsl:variable name="jsid" select="generate-id(../../@id)"/>
     <input name="{../../@id}_geo" id="{../../@id}_geo"/>
     <input name="{../../@id}_geo_go" id="{../../@id}_geo_go" value="Go!" onclick="usermarker_{$jsid}.showAddress(this.form['{../../@id}_geo'].value)" type="button"/>
-  </xsl:template>   
+  </xsl:template>
 
 
   <!--+
