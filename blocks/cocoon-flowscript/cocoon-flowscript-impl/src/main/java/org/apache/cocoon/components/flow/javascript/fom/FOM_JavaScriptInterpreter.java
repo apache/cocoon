@@ -100,7 +100,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * When was the last time we checked for script modifications. Used
      * only if {@link #reloadScripts} is true.
      */
-    private long lastTimeCheck;
+    private long lastReloadCheckTime;
 
     /**
      * Shared global scope for scripts and other immutable objects
@@ -401,10 +401,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         boolean needsRefresh = false;
         if (reloadScripts) {
             long now = System.currentTimeMillis();
-            if (now >= lastTimeCheck + checkTime) {
+            if (now >= lastReloadCheckTime + checkTime) {
                 needsRefresh = true;
+                lastReloadCheckTime = now;
             }
-            lastTimeCheck = now;
         }
 
         // We need to setup the FOM_Cocoon object according to the current

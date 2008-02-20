@@ -17,17 +17,24 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    +-->
+
+<!--
+  - $Id$
+  -->
 <document>
   <properties>
     <title>Changes Cocoon FlowScript Implementation</title>
   </properties>
   <body>
-    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
- 
-    </release>        
+    <release version="1.0.0" date="2008-??-??" description="unreleased">
+      <action dev="vgritsenko" type="fix">
+        Fix flow scripts reload check logic.
+      </action>
+    </release>
+    <release version="1.0.0-RC2" date="2007-09-26" description="released">
+    </release>
+    <release version="1.0.0-RC1" date="2007-05-18" description="released">
+    </release>
     <release version="1.0.0-M2" date="2007-03-02" description="released">
       <action dev="cziegeler" type="add">
         Make settings bean and web application context available via the cocoon object in
@@ -44,3 +51,4 @@
     </release>    
   </body>
 </document>
+
