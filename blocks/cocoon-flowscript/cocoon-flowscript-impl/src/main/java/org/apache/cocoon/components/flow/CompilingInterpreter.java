@@ -33,8 +33,7 @@ import org.mozilla.javascript.Scriptable;
  *
  * @version $Id$
  */
-public abstract class CompilingInterpreter
-        extends AbstractInterpreter {
+public abstract class CompilingInterpreter extends AbstractInterpreter {
 
     /**
      * A source resolver
@@ -44,10 +43,11 @@ public abstract class CompilingInterpreter
     /**
      * Mapping of String objects (source uri's) to ScriptSourceEntry's
      */
-    protected Map compiledScripts = new HashMap();
+    protected final Map compiledScripts = new HashMap();
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+    
+    /**
+     * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
@@ -58,33 +58,32 @@ public abstract class CompilingInterpreter
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if (this.compiledScripts != null) {
-            Iterator i = this.compiledScripts.values().iterator();
-            while (i.hasNext()) {
-                ScriptSourceEntry current = (ScriptSourceEntry)i.next();
-                this.sourceresolver.release(current.getSource());
-            }
-            this.compiledScripts = null;
+        for (Iterator i = this.compiledScripts.values().iterator(); i.hasNext(); ) {
+            ScriptSourceEntry entry = (ScriptSourceEntry) i.next();
+            this.sourceresolver.release(entry.getSource());
         }
+        this.compiledScripts.clear();
+
         if (this.manager != null) {
             this.manager.release(this.sourceresolver);
             this.sourceresolver = null;
         }
+
         super.dispose();
     }
 
     /**
      * TODO - This is a little bit strange, the interpreter calls
-     * get Script on the ScriptSourceEntry which in turn
-     * calls compileScript on the interpreter. I think we
-     * need more refactoring here.
+     * {@link ScriptSourceEntry#compile} which in turn calls this
+     * compileScript mthod on the interpreter. I think we need
+     * more refactoring here.
      */
     protected abstract Script compileScript(Context context,
                                             Scriptable scope,
                                             Source source) throws Exception;
 
     protected class ScriptSourceEntry {
-        final private Source source;
+        private final Source source;
         private Script script;
         private long compileTime;
 
@@ -92,31 +91,29 @@ public abstract class CompilingInterpreter
             this.source = source;
         }
 
-        public ScriptSourceEntry(Source source, Script script, long t) {
-            this.source = source;
-            this.script = script;
-            this.compileTime = t;
-        }
-
         public Source getSource() {
             return source;
+        }
+
+        public Script getScript() {
+            return script;
         }
 
         public long getCompileTime() {
             return compileTime;
         }
 
-        public Script getScript(Context context, Scriptable scope,
-                                boolean refresh, CompilingInterpreter interpreter)
+        public void compile(Context context, Scriptable scope)
         throws Exception {
-            if (refresh) {
+            // If not first compile() call, refresh the source.
+            if (script != null) {
                 source.refresh();
             }
-            if (script == null || (refresh && compileTime < source.getLastModified())) {
-                script = interpreter.compileScript(context, scope, source);
+            // Compile script if this is first compile() call or source was modified.
+            if (script == null || compileTime < source.getLastModified()) {
+                script = CompilingInterpreter.this.compileScript(context, scope, source);
                 compileTime = source.getLastModified();
             }
-            return script;
         }
     }
 }
