@@ -341,13 +341,13 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return an <code>Object</code> value
      * @exception JavaScriptException if an error occurs
      */
-    public Object jsFunction_load( String filename )
-        throws Exception {
+    public Object jsFunction_load(String filename) throws Exception {
         org.mozilla.javascript.Context cx =
-            org.mozilla.javascript.Context.getCurrentContext();
+                org.mozilla.javascript.Context.getCurrentContext();
         Scriptable scope = getParentScope();
+
         Script script = getInterpreter().compileScript(cx, filename);
-        return script.exec( cx, scope );
+        return script.exec(cx, scope);
     }
 
     /**

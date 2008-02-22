@@ -27,6 +27,11 @@
   </properties>
   <body>
     <release version="1.0.0" date="2008-??-??" description="unreleased">
+      <action dev="vgritsenko" type="update">
+        Reduce thred contention in flowscript interpreter. Do not synchronize
+        execution of scripts within current thread scope on global map of
+        compiled scripts.
+      </action>
       <action dev="vgritsenko" type="fix">
         Fix flow scripts reload check logic.
       </action>
