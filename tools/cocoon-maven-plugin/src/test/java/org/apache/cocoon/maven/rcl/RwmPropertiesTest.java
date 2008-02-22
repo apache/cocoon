@@ -95,7 +95,7 @@ public class RwmPropertiesTest extends TestCase {
     
     protected InputStream readResourceFromClassloader(String fileName) {
         String resource = RwmPropertiesTest.class.getPackage().getName().replace('.', '/') + "/" + fileName;
-        return ReloadingWebappMojo.class.getClassLoader().getResourceAsStream(resource);
+        return PrepareWebappMojo.class.getClassLoader().getResourceAsStream(resource);
     }    
     
 }

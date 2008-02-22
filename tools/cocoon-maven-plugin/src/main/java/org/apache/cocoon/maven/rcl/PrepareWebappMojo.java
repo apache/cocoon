@@ -67,13 +67,13 @@ import org.xml.sax.SAXException;
 /**
  * The ReloadingWebappMojo creates a web application environment for a Cocoon block.
  *
- * @goal rcl
+ * @goal prepare
  * @requiresProject true
  * @requiresDependencyResolution runtime
  * @execute phase="process-classes"
  * @version $Id$
  */
-public class ReloadingWebappMojo extends AbstractMojo {
+public class PrepareWebappMojo extends AbstractMojo {
 
     private static final String LIB_VERSION_WRAPPER = "1.0.0-RC1-SNAPSHOT";
 
@@ -115,14 +115,14 @@ public class ReloadingWebappMojo extends AbstractMojo {
     /**
      * Logging: Use socket appender?
      *
-     * @parameter expression="${cocoon.rcl.log4j.useSocketAppender}"
+     * @parameter
      */
     private boolean useSocketAppender = false;
 
     /**
      * Logging: Use console appender?
      *
-     * @parameter expression="${cocoon.rcl.log4j.useConsoleAppender}"
+     * @parameter
      */
     private boolean useConsoleAppender = false;
 
@@ -130,7 +130,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
      * Enable reloading of the Spring application context. Note: The reload of the
      * application context doesn't work properly if it contains beans which are based
      * on proxies with interfaces which are loaded by the reloading class loader. As a
-     * workaround you can put all those interfaces into a seperate module which is NOT
+     * workaround you can put all those interfaces into a separate module which is NOT
      * loaded by the reloading class loader.
      *
      * @parameter
@@ -145,11 +145,28 @@ public class ReloadingWebappMojo extends AbstractMojo {
     private boolean reloadingClassLoaderEnabled = true;
 
     /**
-     * Logging: Use a custom log4j xml configuration file=
+     * Logging: Use a custom log4j xml configuration file.
      *
-     * @parameter expression="${cocoon.rcl.log4j.conf}"
+     * @parameter
      */
     private String customLog4jXconf;
+
+    /**
+     * Use a custom web application directory.
+     *
+     * @parameter
+     */
+    private File customWebappDirectory;
+
+    /**
+     * This goal prepares a minimal Cocoon web application using the default
+     * profile 'cocoon-22' that can be used to run a block. Alternatively a
+     * 'ssf' (servlet-service framework) profile is supported, which creates a
+     * web application that want to use the servlet-service framework only.
+     *
+     * @parameter
+     */
+    private String webappProfile = "cocoon-22";
 
     /**
      * Artifact factory, needed to download source jars for inclusion in classpath.
@@ -207,16 +224,21 @@ public class ReloadingWebappMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException {
         // check if this plugin is useful at all
-        if(!project.getPackaging().equals("jar") ||
-                !(new File(project.getBasedir(), "src/main/resources/COB-INF").exists()) ||
-                !rclPropertiesFile.exists()) {
-            getLog().info("Don't execute the Cocoon RCL plugin becaues either its packaging " +
-                    "type is not 'jar' or it doesn't have a directory 'src/main/resources/COB-INF' or " +
-                    "there is no rcl.properties file in the block's base directory.");
+        if (!project.getPackaging().equals("jar") || !rclPropertiesFile.exists()) {
+            getLog().info("Don't execute the Cocoon RCL plugin becaues either its packaging "
+                            + "type is not 'jar' or "
+                            + "there is no rcl.properties file in the block's base directory.");
             return;
         }
 
-        getLog().info("Creating a reloading Cocoon web application.");
+        // check profile
+        if ("cocoon-22".equals(this.webappProfile)) {
+            getLog().info("Preparing a Cocoon web application.");
+        } else if ("ssf".equals(this.webappProfile)) {
+            getLog().info("Preparing a Servlet-Service web application.");
+        } else {
+            throw new MojoExecutionException("Only the profiles 'cocoon-22' and 'ssf' are supported.");
+        }
 
         // create web application containing all necessary files (web.xml, applicationContext.xml, log4j.xconf)
         File webAppBaseDir = new File(target, "webapp");
@@ -225,6 +247,9 @@ public class ReloadingWebappMojo extends AbstractMojo {
         writeInputStreamToFile(readResourceFromClassloader(WEB_INF_APP_CONTEXT),
                 createPath(new File(webAppBaseDir, WEB_INF_APP_CONTEXT)));
         writeLog4jXml(webAppBaseDir);
+
+        // copy the content of a custom webapp context directory to the prepared web application.
+        copyCustomWebappDirectory(webAppBaseDir);
 
         // copy rcl webapp wrapper and all its dependencies to WEB-INF/lib
         copyRclWrapperLibs(webAppBaseDir);
@@ -295,7 +320,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
             Set artifacts = project.getArtifacts();
             ScopeArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
 
-            // add the Spring reloader lib
+            // add the Spring reloader libraries
             Set springReloaderArtifacts = getDependencies("org.apache.cocoon", "cocoon-rcl-spring-reloader",
                             LIB_VERSION_SPRING_RELOADER, "jar");
             artifacts.addAll(springReloaderArtifacts);
@@ -339,7 +364,7 @@ public class ReloadingWebappMojo extends AbstractMojo {
     }
 
     protected void copyRclWrapperLibs(File webAppBaseDir) throws MojoExecutionException {
-        Set rclWebappDependencies = getDependencies("org.apache.cocoon",  "cocoon-rcl-webapp-wrapper", LIB_VERSION_WRAPPER, "jar");
+        Set rclWebappDependencies = getDependencies("org.apache.cocoon", "cocoon-rcl-webapp-wrapper", LIB_VERSION_WRAPPER, "jar");
         for (Iterator rclIt = rclWebappDependencies.iterator(); rclIt.hasNext();) {
             Artifact artifact = (Artifact) rclIt.next();
             try {
@@ -371,8 +396,27 @@ public class ReloadingWebappMojo extends AbstractMojo {
         writeStringTemplateToFile(webAppBaseDir, WEB_INF_LOG4J, customLog4jXconf, log4jTemplateMap);
     }
 
+    protected void copyCustomWebappDirectory(File webAppBaseDir) throws MojoExecutionException {
+        if (this.customWebappDirectory == null) {
+            return;
+        }
+        if (!this.customWebappDirectory.exists()) {
+            throw new MojoExecutionException("The custom web application directory does not exist.");
+        }
+        if (!this.customWebappDirectory.isDirectory()) {
+            throw new MojoExecutionException(
+                            "The value of the parameter 'customWebappDirectory' doesn't point to a directory.");
+        }
 
-    private void applyXpatchFiles(File webAppBaseDir, RwmProperties props) throws MojoExecutionException {
+        try {
+            FileUtils.copyDirectory(this.customWebappDirectory, webAppBaseDir);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Can't copy custom webapp files (directory: '" + this.customWebappDirectory
+                            + ") to the web application in preparation.");
+        }
+    }
+
+    protected void applyXpatchFiles(File webAppBaseDir, RwmProperties props) throws MojoExecutionException {
         // find all xpatch files in all configured blocks
         Set classesDirs = props.getClassesDirs();
         File[] allXPatchFiles = new File[0];
@@ -412,12 +456,11 @@ public class ReloadingWebappMojo extends AbstractMojo {
         WebXmlRewriter webXmlRewriter = new WebXmlRewriter(
                         "org.apache.cocoon.tools.rcl.wrapper.servlet.ReloadingServlet",
                         "org.apache.cocoon.tools.rcl.wrapper.servlet.ReloadingListener",
-                        "org.apache.cocoon.tools.rcl.wrapper.servlet.ReloadingServletFilter",
-                        false);
-        if ( webXmlRewriter.rewrite(webXmlDocument) ) {
+                        "org.apache.cocoon.tools.rcl.wrapper.servlet.ReloadingServletFilter", false);
+        if (webXmlRewriter.rewrite(webXmlDocument)) {
             // save web.xml
             try {
-                if ( this.getLog().isDebugEnabled() ) {
+                if (this.getLog().isDebugEnabled()) {
                     this.getLog().debug("Rewriting web.xml: " + webXml);
                 }
                 XMLUtils.write(webXmlDocument, new FileOutputStream(webXml));
@@ -508,8 +551,9 @@ public class ReloadingWebappMojo extends AbstractMojo {
     }
 
     protected InputStream readResourceFromClassloader(String fileName) {
-        String resource = ReloadingWebappMojo.class.getPackage().getName().replace('.', '/') + "/" + fileName;
-        return ReloadingWebappMojo.class.getClassLoader().getResourceAsStream(resource);
+        String resource = PrepareWebappMojo.class.getPackage().getName().replace('.', '/') + "/profiles/"
+                        + this.webappProfile + "/" + fileName;
+        return PrepareWebappMojo.class.getClassLoader().getResourceAsStream(resource);
     }
 
     protected static File createPath(File file) {
