@@ -30,6 +30,10 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 
+/**
+ *
+ * @version $Id$
+ */
 public class JavaScriptExpression extends AbstractExpression {
 
     private Script script;
@@ -55,6 +59,7 @@ public class JavaScriptExpression extends AbstractExpression {
         Context ctx = Context.enter();
         try {
             Scriptable scope = ctx.newObject(getScope(rootScope));
+
             // Populate the scope
             Iterator iter = objectModel.entrySet().iterator();
             while (iter.hasNext()) {
@@ -66,14 +71,6 @@ public class JavaScriptExpression extends AbstractExpression {
 
             Object result = this.script.exec(ctx, scope);
             return unwrap(result);
-        } catch (Exception e) {
-            // Note: this catch block is only needed for the Rhino in C2.1 where the older
-            //       Rhino does not throw RuntimeExceptions
-            if (e instanceof RuntimeException) {
-                throw (RuntimeException)e;
-            } else {
-                throw new RuntimeException("Runtime exception", e);
-            }
         } finally {
             Context.exit();
         }
@@ -81,21 +78,25 @@ public class JavaScriptExpression extends AbstractExpression {
 
     public Iterator iterate(ObjectModel objectModel) throws ExpressionException {
         Object result = evaluate(objectModel);
-        if (result == null)
+        if (result == null) {
             return EMPTY_ITER;
+        }
 
-        if (this.introspector == null)
+        if (this.introspector == null) {
             introspector = new JSIntrospector();
+        }
 
-        Iterator iter = null;
+        Iterator iter;
         try {
             iter = introspector.getIterator(result, new Info("Unknown", 0, 0));
         } catch (Exception e) {
             throw new ExpressionException("Couldn't get an iterator from expression " + getExpression(), e);
         }
 
-        if (iter == null)
+        if (iter == null) {
             iter = EMPTY_ITER;
+        }
+
         return iter;
     }
 
