@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
@@ -55,6 +54,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
@@ -92,12 +92,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     private static final String USER_GLOBAL_SCOPE = "FOM JavaScript GLOBAL SCOPE/";
 
     /**
-     * This is the only optimization level that supports continuations
-     * in the Christoper Oliver's Rhino JavaScript implementation
-     */
-    private static final int OPTIMIZATION_LEVEL = -2;
-
-    /**
      * When was the last time we checked for script modifications. Used
      * only if {@link #reloadScripts} is true. Access is synchronized by
      * {@link #compiledScripts}.
@@ -131,16 +125,15 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
             size.width *= 0.75;
             size.height *= 0.75;
-            db.setSize(size);
+            db.setSize(size.width, size.height);
             db.setExitAction(new Runnable() {
                 public void run() {
                     db.setVisible(false);
                 }
             });
-            db.setOptimizationLevel(OPTIMIZATION_LEVEL);
             db.setVisible(true);
             debugger = db;
-            Context.addContextListener(debugger);
+            ContextFactory.getGlobal().addListener(debugger);
         }
         return debugger;
     }
@@ -166,7 +159,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             getDebugger().doBreak();
         }
         Context context = Context.enter();
-        context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setCompileFunctionsWithDynamicScope(true);
         context.setGeneratingDebug(true);
         // add support for Rhino objects to JXPath
@@ -553,7 +545,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     public void callFunction(String funName, List params, Redirector redirector)
     throws Exception {
         Context context = Context.enter();
-        context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(new JSErrorReporter());
@@ -650,7 +641,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
 
         Context context = Context.enter();
-        context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         LocationTrackingDebugger locationTracker = new LocationTrackingDebugger();
