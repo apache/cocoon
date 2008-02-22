@@ -199,7 +199,7 @@ public class JSIntrospector extends UberspectImpl {
         }
 
         public boolean hasNext() {
-            return index < (int)arr.jsGet_length();
+            return index < (int) arr.getLength();
         }
 
         public Object next() {
