@@ -438,7 +438,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             // then collect all top level scripts for execution.
             if (lastExecuted == 0) {
                 for (int i = 0, size = topLevelScripts.size(); i < size; i++) {
-                    String sourceURI = (String) resolveList.get(i);
+                    String sourceURI = (String) topLevelScripts.get(i);
                     ScriptSourceEntry entry =
                             (ScriptSourceEntry) compiledScripts.get(sourceURI);
                     if (entry != null) {
