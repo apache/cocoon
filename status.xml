@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="CZ" type="fix">
+      Portal: Remove user management tools.
+    </action>
     <action dev="VG" type="fix">
       Core: Fix flow scripts reload check logic.
     </action>
