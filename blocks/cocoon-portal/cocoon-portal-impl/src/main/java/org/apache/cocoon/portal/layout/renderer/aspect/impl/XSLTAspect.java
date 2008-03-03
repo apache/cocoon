@@ -26,14 +26,11 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.services.VariableResolver;
-import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
@@ -87,10 +84,10 @@ public class XSLTAspect
     /** Source resolver for resolving the stylesheets. */
     protected SourceResolver resolver;
 
-    protected ServiceManager serviceManager;
+    protected XSLTProcessor xsltProcessor;
 
-    public void setServiceManager(ServiceManager sm) {
-        this.serviceManager = sm;
+    public void setXsltProcessor(XSLTProcessor xsltProcessor) {
+        this.xsltProcessor = xsltProcessor;
     }
 
     public void setSourceResolver(SourceResolver resolver) {
@@ -110,12 +107,10 @@ public class XSLTAspect
     throws SAXException, LayoutException {
         PreparedConfiguration config = (PreparedConfiguration)rendererContext.getAspectConfiguration();
 
-        XSLTProcessor processor = null;
         Source stylesheet = null;
         try {
             stylesheet = this.resolver.resolveURI(this.getStylesheetURI(config, layout));
-            processor = (XSLTProcessor) this.serviceManager.lookup(config.xsltRole);
-            TransformerHandler transformer = processor.getTransformerHandler(stylesheet);
+            TransformerHandler transformer = this.xsltProcessor.getTransformerHandler(stylesheet);
             // Pass configured parameters to the stylesheet.
             if (config.parameters.size() > 0) {
                 Transformer theTransformer = transformer.getTransformer();
@@ -135,7 +130,7 @@ public class XSLTAspect
                     theTransformer.setParameter((String)entry.getKey(), entry.getValue());
                 }
             }
-            SAXResult result = new SAXResult(new IncludeXMLConsumer((handler)));
+            SAXResult result = new SAXResult(handler);
             if (handler instanceof LexicalHandler) {
                 result.setLexicalHandler((LexicalHandler) handler);
             }
@@ -148,11 +143,8 @@ public class XSLTAspect
             throw new SAXException("XSLT Exception.", xpe);
         } catch (IOException io) {
             throw new SAXException("Error in resolving.", io);
-        } catch (ServiceException ce) {
-            throw new SAXException("Unable to lookup component.", ce);
         } finally {
             this.resolver.release(stylesheet);
-            this.serviceManager.release(processor);
         }
 	}
 

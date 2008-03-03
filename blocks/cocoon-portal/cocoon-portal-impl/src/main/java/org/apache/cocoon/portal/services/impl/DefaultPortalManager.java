@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.cocoon.ajax.BrowserUpdateTransformer;
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalRuntimeException;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
@@ -40,11 +39,11 @@ import org.apache.cocoon.portal.services.aspects.impl.support.RequestProcessorAs
 import org.apache.cocoon.portal.services.aspects.impl.support.ResponseProcessorAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
 import org.apache.cocoon.portal.util.AbstractBean;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.portal.util.XMLUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  *
@@ -53,6 +52,8 @@ import org.xml.sax.SAXException;
 public class DefaultPortalManager
 	extends AbstractBean
 	implements PortalManager, RequestProcessorAspect, ResponseProcessorAspect {
+
+    public static final String BU_NSURI = "http://apache.org/cocoon/browser-update/1.0";
 
     /** The aspect chain for additional request processing. */
     protected AspectChainImpl requestChain;
@@ -161,15 +162,15 @@ public class DefaultPortalManager
         // only render the changed coplets
         if ( portalLayout == null && portalService.getRequestContext().isAjaxRequest() ) {
             Layout rootLayout = profileManager.getLayout(null);
-            ch.startPrefixMapping("bu", BrowserUpdateTransformer.BU_NSURI);
-            ch.startElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
+            ch.startPrefixMapping("bu", BU_NSURI);
+            ch.startElement(BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
 
             final List changed = CopletInstanceFeatures.getChangedCopletInstanceDataObjects(this.portalService);
             final Iterator i = changed.iterator();
             while ( i.hasNext() ) {
                 final CopletInstance current = (CopletInstance)i.next();
                 final AttributesImpl a = new AttributesImpl();
-                a.addCDATAAttribute("id", current.getId());
+                XMLUtils.addCDATAAttribute(a, "id", current.getId());
                 XMLUtils.startElement(ch, "coplet", a);
                 final Layout l = LayoutFeatures.searchLayout(this.portalService, current.getId(), rootLayout);
                 Renderer portalLayoutRenderer = l.getRenderer();
@@ -180,22 +181,22 @@ public class DefaultPortalManager
                 }
                 XMLUtils.endElement(ch, "coplet");
             }
-            ch.endElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document");
+            ch.endElement(BU_NSURI, "document", "bu:document");
             ch.endPrefixMapping("bu");
         } else {
             if ( StringUtils.isNotEmpty(copletId) ) {
-                ch.startPrefixMapping("bu", BrowserUpdateTransformer.BU_NSURI);
-                ch.startElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
+                ch.startPrefixMapping("bu", BU_NSURI);
+                ch.startElement(BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
 
                 final AttributesImpl a = new AttributesImpl();
-                a.addCDATAAttribute("id", copletId);
+                XMLUtils.addCDATAAttribute(a, "id", copletId);
                 XMLUtils.startElement(ch, "coplet", a);
             } else if ( StringUtils.isNotEmpty(layoutId) ) {
-                ch.startPrefixMapping("bu", BrowserUpdateTransformer.BU_NSURI);
-                ch.startElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
+                ch.startPrefixMapping("bu", BU_NSURI);
+                ch.startElement(BU_NSURI, "document", "bu:document", XMLUtils.EMPTY_ATTRIBUTES);
 
                 final AttributesImpl a = new AttributesImpl();
-                a.addCDATAAttribute("id", layoutId);
+                XMLUtils.addCDATAAttribute(a, "id", layoutId);
                 XMLUtils.startElement(ch, "layout", a);
             }
 
@@ -217,11 +218,11 @@ public class DefaultPortalManager
             }
             if ( StringUtils.isNotEmpty(copletId) ) {
                 XMLUtils.endElement(ch, "coplet");
-                ch.endElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document");
+                ch.endElement(BU_NSURI, "document", "bu:document");
                 ch.endPrefixMapping("bu");
             } else if ( StringUtils.isNotEmpty(layoutId) ) {
                 XMLUtils.endElement(ch, "layout");
-                ch.endElement(BrowserUpdateTransformer.BU_NSURI, "document", "bu:document");
+                ch.endElement(BU_NSURI, "document", "bu:document");
                 ch.endPrefixMapping("bu");
             }
         }

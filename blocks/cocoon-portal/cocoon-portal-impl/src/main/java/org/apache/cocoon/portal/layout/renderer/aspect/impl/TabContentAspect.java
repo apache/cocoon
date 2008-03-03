@@ -16,10 +16,10 @@
  */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.cocoon.portal.PortalException;
@@ -35,11 +35,11 @@ import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.NamedItem;
 import org.apache.cocoon.portal.om.LayoutFeatures.RenderInfo;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.portal.util.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * <h2>Example XML:</h2>
@@ -109,7 +109,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class TabContentAspect 
+public class TabContentAspect
     extends CompositeContentAspect {
 
     /**
@@ -147,7 +147,7 @@ public class TabContentAspect
             // open named-item tag
             attributes.clear();
             if ( tab instanceof NamedItem ) {
-                attributes.addCDATAAttribute("name", ((NamedItem)tab).getName());
+                XMLUtils.addCDATAAttribute(attributes, "name", ((NamedItem)tab).getName());
             }
             boolean selected = false;
             if ( config.useNames ) {
@@ -162,17 +162,17 @@ public class TabContentAspect
                 selected = (j == selectedTabIndex);
             }
             if ( selected ) {
-                attributes.addCDATAAttribute("selected", "true");
+                XMLUtils.addCDATAAttribute(attributes, "selected", "true");
             }
             final LayoutInstanceChangeAttributeEvent event;
             event = new ChangeTabEvent(layoutInstance, tab, config.useNames);
-            attributes.addCDATAAttribute("parameter", rendererContext.getPortalService().getLinkService().getLinkURI(event)); 
+            XMLUtils.addCDATAAttribute(attributes, "parameter", rendererContext.getPortalService().getLinkService().getLinkURI(event));
 
             // add parameters
             final Iterator iter = tab.getParameters().entrySet().iterator();
             while ( iter.hasNext() ) {
                 final Map.Entry entry = (Map.Entry) iter.next();
-                attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+                XMLUtils.addCDATAAttribute(attributes, (String)entry.getKey(), (String)entry.getValue());
             }
 
             XMLUtils.startElement(handler, "named-item", attributes);
@@ -237,20 +237,20 @@ public class TabContentAspect
                     XMLUtils.startElement(handler, config.childTagName);
                     subNav = true;
                 }
-                attributes.addCDATAAttribute("name", ((NamedItem) tab).getName());
+                XMLUtils.addCDATAAttribute(attributes, "name", ((NamedItem) tab).getName());
                 final LayoutInstanceChangeAttributeEvent event;
                 event = new ChangeTabEvent(layoutInstance, tab, config.useNames);
                 List events = new ArrayList(parentEvents);
                 events.add(event);
 
-                attributes.addCDATAAttribute("parameter",
+                XMLUtils.addCDATAAttribute(attributes, "parameter",
                     service.getLinkService().getLinkURI(events));
 
                 // add parameters
                 final Iterator iter = tab.getParameters().entrySet().iterator();
                 while (iter.hasNext()) {
                     final Map.Entry entry = (Map.Entry) iter.next();
-                    attributes.addCDATAAttribute((String) entry.getKey(),
+                    XMLUtils.addCDATAAttribute(attributes, (String) entry.getKey(),
                         (String) entry.getValue());
                 }
 
@@ -287,7 +287,7 @@ public class TabContentAspect
      * @see org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect#prepareConfiguration(java.util.Properties)
      */
     public Object prepareConfiguration(Properties configuration)
-    throws PortalException { 
+    throws PortalException {
         TabPreparedConfiguration pc = new TabPreparedConfiguration();
         pc.takeValues((PreparedConfiguration)super.prepareConfiguration(configuration));
         pc.childTagName = configuration.getProperty("child-tag-name", "");

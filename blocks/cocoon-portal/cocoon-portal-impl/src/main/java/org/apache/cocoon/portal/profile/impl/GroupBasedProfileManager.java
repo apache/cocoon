@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.event.Receiver;
 import org.apache.cocoon.portal.event.coplet.CopletDefinitionAddedEvent;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceAddedEvent;
@@ -307,7 +306,7 @@ public class GroupBasedProfileManager
             if ( !this.getCopletInstances(profile, user, CATEGORY_USER, profileName) ) {
                 if ( user.getGroups().size() == 0 || !this.getCopletInstances(profile, user, CATEGORY_GROUP, profileName)) {
                     if ( !this.getCopletInstances(profile, user, CATEGORY_GLOBAL, profileName) ) {
-                        throw new ProcessingException("No profile for copletinstancedatas found.");
+                        throw new ProfileException("No profile for copletinstancedatas found.");
                     }
                 }
             }
@@ -315,7 +314,7 @@ public class GroupBasedProfileManager
             if ( !this.getLayout(profile, user, CATEGORY_USER, profileName) ) {
                 if ( user.getGroups().size() == 0 || !this.getLayout(profile, user, CATEGORY_GROUP, profileName)) {
                     if ( !this.getLayout(profile, user, CATEGORY_GLOBAL, profileName) ) {
-                        throw new ProcessingException("No profile for layout found.");
+                        throw new ProfileException("No profile for layout found.");
                     }
                 }
             }

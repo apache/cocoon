@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.cocoon.portal.layout.renderer.Renderer;
-import org.apache.cocoon.util.ClassUtils;
 
 
 /**
@@ -142,7 +141,7 @@ public class LayoutType {
             return new Item();
         }
         try {
-            return (Item) ClassUtils.newInstance( this.itemClassName );
+            return (Item) Thread.currentThread().getContextClassLoader().loadClass(this.itemClassName).newInstance();
         } catch (Exception e ) {
             throw new LayoutException("Unable to create new item for layout type " + this + " of class" + this.itemClassName, e);
         }
