@@ -115,11 +115,12 @@
 
   <!--+
       | This is the map based profile store.
+      | TODO : Create abstract def in castor module
       +-->
   <bean name="org.apache.cocoon.portal.profile.ProfileStore"
-        class="org.apache.cocoon.portal.profile.impl.MapBasedProfileStore"
-        parent="org.apache.cocoon.portal.profile.ProfileStore/abstract"
-        scope="singleton">
+        class="org.apache.cocoon.portal.converter.castor.CastorSourceConverter"
+        scope="singleton" init-method="init">
+    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
     <property name="configuration">
       <value>
         copletdefinition-global-load=profiles/copletdefinition/global.xml

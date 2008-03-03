@@ -28,6 +28,7 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.services.PortalManager;
+import org.apache.cocoon.portal.util.IncludeXMLConsumer;
 import org.apache.cocoon.portal.util.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
@@ -90,7 +91,7 @@ public class DefaultCopletAspect extends AbstractAspect {
             XMLUtils.endElement(handler, "script");
         } else {
             final CopletAdapter copletAdapter = cid.getCopletDefinition().getCopletType().getCopletAdapter();
-            copletAdapter.toSAX(cid, handler);
+            copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
         }
 
         if ( config.rootTag ) {

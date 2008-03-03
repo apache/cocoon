@@ -81,6 +81,20 @@ public class CastorSourceConverter
     /** By default we use the logger for this class. */
     private Log logger = LogFactory.getLog(getClass());
 
+    /** The source resolver. */
+    protected SourceResolver resolver;
+
+    /** The configuration for loading/saving the profile. */
+    protected Properties configuration;
+
+    public void setSourceResolver(SourceResolver sr) {
+        this.resolver = sr;
+    }
+
+    public void setConfiguration(Properties configuration) {
+        this.configuration = configuration;
+    }
+
     public Log getLogger() {
         return this.logger;
     }
@@ -102,8 +116,7 @@ public class CastorSourceConverter
     }
 
     protected Object getObject(InputStream stream,
-                            PersistenceType type,
-                            Map         parameters)
+                            PersistenceType type)
     throws ProfileException {
         try {
             threadLocalMap.set(type);
@@ -122,8 +135,7 @@ public class CastorSourceConverter
 
 	protected void storeObject(OutputStream stream,
 	                        Object       object,
-                            PersistenceType type,
-                            Map          parameters)
+                            PersistenceType type)
     throws ProfileException {
         Object references = object;
         if ( object instanceof Collection && !(object instanceof CollectionWrapper) ) {
@@ -134,14 +146,7 @@ public class CastorSourceConverter
             threadLocalMap.set(type);
 			Marshaller marshaller = new Marshaller( writer );
 			marshaller.setMapping((Mapping)((Object[])this.mappings.get(type.getType()))[0]);
-            boolean suppressXSIType = this.defaultSuppressXSIType;
-            if ( parameters != null ) {
-                Boolean value = (Boolean)parameters.get("suppressXSIType");
-                if (value != null) {
-                    suppressXSIType = value.booleanValue();
-                }
-            }
-            marshaller.setSuppressXSIType(suppressXSIType);
+            marshaller.setSuppressXSIType(this.defaultSuppressXSIType);
 			marshaller.marshal(references);
 			writer.close();
 		} catch (MappingException e) {
@@ -223,20 +228,6 @@ public class CastorSourceConverter
         }
     }
 
-    /** The source resolver. */
-    protected SourceResolver resolver;
-
-    /** The configuration for loading/saving the profile. */
-    protected Properties configuration;
-
-    public void setSourceResolver(SourceResolver sr) {
-        this.resolver = sr;
-    }
-
-    public void setConfiguration(Properties configuration) {
-        this.configuration = configuration;
-    }
-
     protected String getURI(ProfileKey key, String type, boolean load)
     throws Exception {
         // find uri in configuration
@@ -254,7 +245,7 @@ public class CastorSourceConverter
             throw new ProfileException("Configuration for key '" + config.toString() + "' is missing.");
         }
 
-        return PropertyHelper.getProperty(uri, key, null);
+        return PropertyHelper.replace(uri, key, null);
     }
 
     /**
@@ -263,14 +254,12 @@ public class CastorSourceConverter
     public Object loadProfile(ProfileKey key, PersistenceType type)
     throws Exception {
         final String uri = this.getURI( key, type.getType(), true );
-
         Source source = null;
         try {
             source = this.resolver.resolveURI(uri);
 
             return this.getObject(source.getInputStream(),
-                                       type,
-                                       null);
+                                       type);
         } finally {
             this.resolver.release(source);
         }
@@ -290,8 +279,7 @@ public class CastorSourceConverter
             if ( source instanceof ModifiableSource ) {
                 this.storeObject( ((ModifiableSource)source).getOutputStream(),
                                         profile,
-                                        type,
-                                        null);
+                                        type);
                 return;
             }
         } finally {
@@ -302,9 +290,8 @@ public class CastorSourceConverter
         final StringBuffer buffer = new StringBuffer(uri);
         ByteArrayOutputStream writer = new ByteArrayOutputStream();
         this.storeObject(writer,
-                              profile,
-                              type,
-                              null);
+                          profile,
+                          type);
 
         buffer.append("&content=");
         try {
