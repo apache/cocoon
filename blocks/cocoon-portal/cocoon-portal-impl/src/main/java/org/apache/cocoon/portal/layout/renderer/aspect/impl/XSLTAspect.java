@@ -31,6 +31,7 @@ import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.services.VariableResolver;
+import org.apache.cocoon.portal.util.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
@@ -130,6 +131,7 @@ public class XSLTAspect
                     theTransformer.setParameter((String)entry.getKey(), entry.getValue());
                 }
             }
+            handler = new IncludeXMLConsumer(handler);
             SAXResult result = new SAXResult(handler);
             if (handler instanceof LexicalHandler) {
                 result.setLexicalHandler((LexicalHandler) handler);

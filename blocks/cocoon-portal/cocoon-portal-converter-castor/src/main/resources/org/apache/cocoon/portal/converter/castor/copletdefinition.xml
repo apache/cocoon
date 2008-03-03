@@ -19,7 +19,7 @@
 <mapping>
   <description>Coplet definition mapping file</description>
 
-  <class name="org.apache.cocoon.portal.persistence.castor.CollectionWrapper">
+  <class name="org.apache.cocoon.portal.converter.castor.CollectionWrapper">
     <map-to xml="coplets" />
 
     <field name="objects"
@@ -47,13 +47,13 @@
     <field name="attributes"
            type="org.exolab.castor.mapping.MapItem"
            collection="map"
-           handler="org.apache.cocoon.portal.persistence.castor.AttributesFieldHandler">
+           handler="org.apache.cocoon.portal.converter.castor.AttributesFieldHandler">
       <bind-xml name="attribute"/>
     </field>
 
     <field name="copletType"
            type="java.lang.String"
-           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
+           handler="org.apache.cocoon.portal.converter.castor.ReferenceFieldHandler">
       <bind-xml name="coplet-type"/>
     </field>
   </class>

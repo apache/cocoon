@@ -23,7 +23,7 @@
     <field name="parameters"
            type="org.exolab.castor.mapping.MapItem"
            collection="map"
-           handler="org.apache.cocoon.portal.persistence.castor.ParametersFieldHandler">
+           handler="org.apache.cocoon.portal.converter.castor.ParametersFieldHandler">
       <bind-xml name="parameter" node="element"/>
     </field>
   </class>
@@ -33,7 +33,7 @@
          verify-constructable="false">
 
     <field name="rendererName" type="java.lang.String"
-           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
+           handler="org.apache.cocoon.portal.converter.castor.ReferenceFieldHandler">
       <bind-xml name="renderer" node="attribute"/>
     </field>
 
@@ -43,7 +43,7 @@
 
     <field name="layoutType"
            type="java.lang.String"
-           handler="org.apache.cocoon.portal.persistence.castor.ReferenceFieldHandler">
+           handler="org.apache.cocoon.portal.converter.castor.ReferenceFieldHandler">
       <bind-xml name="type" node="attribute"/>
     </field>
   </class>
