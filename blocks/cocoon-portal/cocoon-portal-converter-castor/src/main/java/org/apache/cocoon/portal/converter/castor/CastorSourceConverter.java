@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,7 +35,6 @@ import org.apache.cocoon.portal.profile.ProfileException;
 import org.apache.cocoon.portal.profile.ProfileKey;
 import org.apache.cocoon.portal.profile.ProfileStore;
 import org.apache.cocoon.portal.util.AbstractBean;
-import org.apache.cocoon.util.NetUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.ModifiableSource;
@@ -308,7 +308,7 @@ public class CastorSourceConverter
 
         buffer.append("&content=");
         try {
-            buffer.append(NetUtils.encode(writer.toString(), "utf-8"));
+            buffer.append(URLEncoder.encode(writer.toString(), "utf-8"));
         } catch (UnsupportedEncodingException uee) {
             // ignore this as utf-8 is always supported
         }

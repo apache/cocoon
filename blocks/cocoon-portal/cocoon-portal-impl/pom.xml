@@ -49,19 +49,27 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-portal-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-ajax-impl</artifactId>
+      <artifactId>cocoon-spring-configurator</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-forms-impl</artifactId>
+      <artifactId>cocoon-thread-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-jxpath</groupId>
+      <artifactId>commons-jxpath</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
@@ -81,38 +89,25 @@
       <artifactId>nekodtd</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-serializers-charsets</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-     <!--  
-          Test dependencies
-          TODO remove these when MNG-1378 is fixed, these are inherited from the root pom normally
-     -->
-    <dependency>
-      <groupId>xmlunit</groupId>
-      <artifactId>xmlunit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>jmock</groupId>
-      <artifactId>jmock</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <scope>test</scope>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-serializers-charsets</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.excalibur.components</groupId>
+      <artifactId>excalibur-sourceresolve</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.excalibur.components</groupId>
+      <artifactId>excalibur-xmlutil</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-xml-api</artifactId>
     </dependency>
   </dependencies>
   

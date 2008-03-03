@@ -36,7 +36,7 @@ import org.apache.cocoon.portal.om.DecorationAction;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.portal.util.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -145,7 +145,9 @@ public final class WindowAspect extends AbstractAspect {
                                                  Layout             layout,
                                                  ContentHandler     contenthandler)
     throws SAXException {
-        XMLUtils.createElement(contenthandler, WindowAspect.INSTANCE_ID_TAG, cid.getId());
+        XMLUtils.startElement(contenthandler, WindowAspect.INSTANCE_ID_TAG);
+        XMLUtils.data(contenthandler, cid.getId());
+        XMLUtils.endElement(contenthandler, WindowAspect.INSTANCE_ID_TAG);
     }
 
     protected void streamTitle(CopletInstance cid,
@@ -160,7 +162,9 @@ public final class WindowAspect extends AbstractAspect {
         if ( title == null ) {
             title = cid.getTitle();
         }
-        XMLUtils.createElement(contenthandler, WindowAspect.TITLE_TAG, title);
+        XMLUtils.startElement(contenthandler, WindowAspect.TITLE_TAG);
+        XMLUtils.data(contenthandler, title);
+        XMLUtils.endElement(contenthandler, WindowAspect.TITLE_TAG);
     }
 
     protected void streamCopletModes(CopletInstance cid,
@@ -174,7 +178,9 @@ public final class WindowAspect extends AbstractAspect {
             final Iterator i = windowStates.iterator();
             while ( i.hasNext() ) {
                 final DecorationAction action = (DecorationAction)i.next();
-                XMLUtils.createElement(contenthandler, action.getName(), action.getUrl());
+                XMLUtils.startElement(contenthandler, action.getName());
+                XMLUtils.data(contenthandler, action.getUrl());
+                XMLUtils.endElement(contenthandler, action.getName());
             }
         }
     }
@@ -187,7 +193,9 @@ public final class WindowAspect extends AbstractAspect {
         boolean mandatory = CopletDefinitionFeatures.isMandatory(cid.getCopletDefinition());
         if ( !mandatory ) {
             RemoveLayoutEvent lre = new RemoveLayoutEvent(layout);
-            XMLUtils.createElement(contenthandler, "remove-uri", this.portalService.getLinkService().getLinkURI(lre));
+            XMLUtils.startElement(contenthandler, "remove-uri");
+            XMLUtils.data(contenthandler, this.portalService.getLinkService().getLinkURI(lre));
+            XMLUtils.endElement(contenthandler, "remove-uri");
         }
     }
 
@@ -203,7 +211,9 @@ public final class WindowAspect extends AbstractAspect {
             final int size = cid.getSize();
 
             // stream out the current size
-            XMLUtils.createElement(contenthandler, WindowAspect.SIZE_TAG, CopletInstanceFeatures.sizeToString(size));
+            XMLUtils.startElement(contenthandler, WindowAspect.SIZE_TAG);
+            XMLUtils.data(contenthandler, CopletInstanceFeatures.sizeToString(size));
+            XMLUtils.endElement(contenthandler, WindowAspect.SIZE_TAG);
 
             // Does the coplet type provide the window states for us?
             if ( adapter instanceof CopletDecorationProvider ) {
@@ -211,23 +221,31 @@ public final class WindowAspect extends AbstractAspect {
                 final Iterator i = windowStates.iterator();
                 while ( i.hasNext() ) {
                     final DecorationAction action = (DecorationAction)i.next();
-                    XMLUtils.createElement(contenthandler, action.getName(), action.getUrl());
+                    XMLUtils.startElement(contenthandler, action.getName());
+                    XMLUtils.data(contenthandler, action.getUrl());
+                    XMLUtils.endElement(contenthandler, action.getName());
                 }
             } else {
                 Event event;
 
                 if ( size != CopletInstance.SIZE_MINIMIZED ) {
                     event = new CopletInstanceSizingEvent(cid, CopletInstance.SIZE_MINIMIZED);
-                    XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_MINIMIZED, this.portalService.getLinkService().getLinkURI(event));
+                    XMLUtils.startElement(contenthandler, DecorationAction.WINDOW_STATE_MINIMIZED);
+                    XMLUtils.data(contenthandler, this.portalService.getLinkService().getLinkURI(event));
+                    XMLUtils.endElement(contenthandler, DecorationAction.WINDOW_STATE_MINIMIZED);
                 }
                 if ( size != CopletInstance.SIZE_NORMAL) {
                     event = new CopletInstanceSizingEvent(cid, CopletInstance.SIZE_NORMAL);
-                    XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_NORMAL, this.portalService.getLinkService().getLinkURI(event));
+                    XMLUtils.startElement(contenthandler, DecorationAction.WINDOW_STATE_NORMAL);
+                    XMLUtils.data(contenthandler, this.portalService.getLinkService().getLinkURI(event));
+                    XMLUtils.endElement(contenthandler, DecorationAction.WINDOW_STATE_NORMAL);
                 }
                 if ( this.enableMaximized ) {
                     if ( size != CopletInstance.SIZE_MAXIMIZED ) {
                         event = new CopletInstanceSizingEvent(cid, CopletInstance.SIZE_MAXIMIZED);
-                        XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_MAXIMIZED, this.portalService.getLinkService().getLinkURI(event));
+                        XMLUtils.startElement(contenthandler, DecorationAction.WINDOW_STATE_MAXIMIZED);
+                        XMLUtils.data(contenthandler, this.portalService.getLinkService().getLinkURI(event));
+                        XMLUtils.endElement(contenthandler, DecorationAction.WINDOW_STATE_MAXIMIZED);
                     }
                 }
 
@@ -237,10 +255,14 @@ public final class WindowAspect extends AbstractAspect {
                         final Layout fullScreenLayout = LayoutFeatures.getFullScreenInfo(this.portalService);
                         if ( fullScreenLayout != null && fullScreenLayout.equals( layout )) {
                             event = new CopletInstanceSizingEvent( cid, CopletInstance.SIZE_NORMAL );
-                            XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_NORMAL, this.portalService.getLinkService().getLinkURI(event));
+                            XMLUtils.startElement(contenthandler, DecorationAction.WINDOW_STATE_NORMAL);
+                            XMLUtils.data(contenthandler, this.portalService.getLinkService().getLinkURI(event));
+                            XMLUtils.endElement(contenthandler, DecorationAction.WINDOW_STATE_NORMAL);
                         } else {
                             event = new CopletInstanceSizingEvent( cid, CopletInstance.SIZE_FULLSCREEN );
-                            XMLUtils.createElement(contenthandler, DecorationAction.WINDOW_STATE_FULLSCREEN, this.portalService.getLinkService().getLinkURI(event));
+                            XMLUtils.startElement(contenthandler, DecorationAction.WINDOW_STATE_FULLSCREEN);
+                            XMLUtils.data(contenthandler, this.portalService.getLinkService().getLinkURI(event));
+                            XMLUtils.endElement(contenthandler, DecorationAction.WINDOW_STATE_FULLSCREEN);
                         }
                     }
                 }

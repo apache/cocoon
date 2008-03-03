@@ -18,8 +18,8 @@ package org.apache.cocoon.portal.pluto;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.cocoon.portal.avalon.AbstractComponent;
 import org.apache.cocoon.portal.pluto.om.PortletDefinitionRegistry;
-import org.apache.cocoon.portal.util.AbstractComponent;
 import org.apache.pluto.services.PortletContainerEnvironment;
 import org.apache.pluto.services.information.DynamicInformationProvider;
 import org.apache.pluto.services.information.InformationProviderService;

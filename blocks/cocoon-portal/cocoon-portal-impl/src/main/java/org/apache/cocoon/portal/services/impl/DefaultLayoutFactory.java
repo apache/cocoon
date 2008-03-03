@@ -38,7 +38,6 @@ import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.util.AbstractBean;
-import org.apache.cocoon.util.ClassUtils;
 
 /**
  * Default implementation of the layout factory.
@@ -90,7 +89,7 @@ public class DefaultLayoutFactory
         }
         Layout layout = null;
         try {
-            Class clazz = ClassUtils.loadClass( layoutType.getLayoutClassName() );
+            Class clazz = Thread.currentThread().getContextClassLoader().loadClass( layoutType.getLayoutClassName() );
             Constructor constructor = clazz.getConstructor(new Class[] {String.class});
             layout = (Layout)constructor.newInstance(new Object[] {layoutId});
             layout.setLayoutType(layoutType);

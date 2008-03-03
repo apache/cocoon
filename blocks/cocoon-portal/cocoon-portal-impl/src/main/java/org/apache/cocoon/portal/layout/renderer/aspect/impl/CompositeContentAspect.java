@@ -25,11 +25,11 @@ import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.portal.util.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Add several contents.
@@ -81,10 +81,10 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
         if ( config.rootTag) {
             final AttributesImpl ai = new AttributesImpl();
             if ( config.rootTagClass != null ) {
-                ai.addCDATAAttribute("class", config.rootTagClass);
+                XMLUtils.addCDATAAttribute(ai, "class", config.rootTagClass);
             }
             if ( config.rootTagId != null ) {
-                ai.addCDATAAttribute("id", config.rootTagId);
+                XMLUtils.addCDATAAttribute(ai, "id", config.rootTagId);
             }
             XMLUtils.startElement(handler, config.tagName, ai);
         }
@@ -110,11 +110,11 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
                 XMLUtils.startElement(handler, config.itemTagName);
             } else {
                 AttributesImpl attributes = new AttributesImpl();
-    
+
     			Map.Entry entry;
     			for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
     				entry = (Map.Entry) iter.next();
-    				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+    				XMLUtils.addCDATAAttribute(attributes, (String)entry.getKey(), (String)entry.getValue());
     			}
                 XMLUtils.startElement(handler, config.itemTagName, attributes);
             }
@@ -140,11 +140,11 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
                 XMLUtils.startElement(handler, config.itemTagName);
             } else {
                 AttributesImpl attributes = new AttributesImpl();
-    
+
     			Map.Entry entry;
     			for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();) {
     				entry = (Map.Entry) iter.next();
-    				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+    				XMLUtils.addCDATAAttribute(attributes, (String)entry.getKey(), (String)entry.getValue());
     			}
                 XMLUtils.startElement(handler, config.itemTagName, attributes);
             }

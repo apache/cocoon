@@ -5,7 +5,7 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -23,7 +23,7 @@ import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletLayout;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.portal.util.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class RemovableAspect 
+public class RemovableAspect
     extends AbstractAspect {
 
 	/**
@@ -57,17 +57,20 @@ public class RemovableAspect
 	throws SAXException, LayoutException {
         if ( layout instanceof CopletLayout ) {
             final CopletInstance cid = this.getCopletInstance(((CopletLayout)layout).getCopletInstanceId());
-    
+
             boolean mandatory = CopletDefinitionFeatures.isMandatory(cid.getCopletDefinition());
             if ( !mandatory ) {
                 RemoveLayoutEvent lre = new RemoveLayoutEvent(layout);
-                XMLUtils.createElement(handler, "remove-uri", rendererContext.getPortalService().getLinkService().getLinkURI(lre));
+                XMLUtils.startElement(handler, "remove-uri");
+                XMLUtils.data(handler, rendererContext.getPortalService().getLinkService().getLinkURI(lre));
+                XMLUtils.endElement(handler, "remove-uri");
             }
         } else {
             // for any other layout just create the event
             RemoveLayoutEvent lre = new RemoveLayoutEvent(layout);
-            XMLUtils.createElement(handler, "remove-uri", 
-                                   rendererContext.getPortalService().getLinkService().getLinkURI(lre));
+            XMLUtils.startElement(handler, "remove-uri");
+            XMLUtils.data(handler, rendererContext.getPortalService().getLinkService().getLinkURI(lre));
+            XMLUtils.endElement(handler, "remove-uri");
         }
         rendererContext.invokeNext(layout, handler);
 	}

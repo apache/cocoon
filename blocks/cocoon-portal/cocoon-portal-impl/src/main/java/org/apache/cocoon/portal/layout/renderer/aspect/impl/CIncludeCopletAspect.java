@@ -27,11 +27,11 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.services.PortalManager;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.portal.util.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This aspect streams a cinclude statement into the stream that
@@ -93,8 +93,10 @@ public class CIncludeCopletAspect
             buffer.append(cid.getId());
             buffer.append("\");");
             final AttributesImpl a = new AttributesImpl();
-            a.addCDATAAttribute("type", "text/javascript");
-            XMLUtils.createElement(handler, "script", a, buffer.toString());
+            XMLUtils.addCDATAAttribute(a, "type", "text/javascript");
+            XMLUtils.startElement(handler,  "script", a);
+            XMLUtils.data(handler, buffer.toString());
+            XMLUtils.endElement(handler, "script");
         } else {
             this.createCInclude("coplet://" + cid.getId(), handler);
         }

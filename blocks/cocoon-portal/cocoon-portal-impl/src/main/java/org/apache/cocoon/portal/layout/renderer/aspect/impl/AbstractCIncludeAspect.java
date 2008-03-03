@@ -16,10 +16,10 @@
  */
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
-import org.apache.cocoon.transformation.CIncludeTransformer;
-import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.cocoon.portal.util.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Base class for aspect renderers that generate cinclude statements. Provides a single
@@ -27,18 +27,18 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public abstract class AbstractCIncludeAspect 
+public abstract class AbstractCIncludeAspect
     extends AbstractAspect {
 
     protected static final String PREFIX = "cinclude";
-    protected static final String NAMESPACE = CIncludeTransformer.CINCLUDE_NAMESPACE_URI;
-    protected static final String ELEMENT = CIncludeTransformer.CINCLUDE_INCLUDE_ELEMENT;
+    protected static final String NAMESPACE = "http://apache.org/cocoon/include/1.0";
+    protected static final String ELEMENT = "include";
     protected static final String QELEMENT= PREFIX + ":" + ELEMENT;
-    protected static final String ATTRIBUTE = CIncludeTransformer.CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE; 
+    protected static final String ATTRIBUTE = "src";
 
     /**
      * Create the cinclude statement.
-     * 
+     *
      * @param source attribute value for the cinclude tag
      * @param handler SAX event handler
      */
@@ -46,7 +46,7 @@ public abstract class AbstractCIncludeAspect
     throws SAXException {
         handler.startPrefixMapping(PREFIX, NAMESPACE);
         final AttributesImpl attributes = new AttributesImpl();
-        attributes.addCDATAAttribute(ATTRIBUTE, source);
+        XMLUtils.addCDATAAttribute(attributes, ATTRIBUTE, source);
         handler.startElement(NAMESPACE, ELEMENT, QELEMENT, attributes);
         handler.endElement(NAMESPACE, ELEMENT, QELEMENT);
         handler.endPrefixMapping(PREFIX);

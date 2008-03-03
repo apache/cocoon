@@ -28,12 +28,11 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.services.PortalManager;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.cocoon.xml.IncludeXMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.portal.util.XMLUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This aspect directly invokes the coplet adapter to stream out the coplet content.
@@ -85,11 +84,13 @@ public class DefaultCopletAspect extends AbstractAspect {
             buffer.append(cid.getId());
             buffer.append("\");");
             final AttributesImpl a = new AttributesImpl();
-            a.addCDATAAttribute("type", "text/javascript");
-            XMLUtils.createElement(handler, "script", a, buffer.toString());
+            XMLUtils.addCDATAAttribute(a, "type", "text/javascript");
+            XMLUtils.startElement(handler, "script", a);
+            XMLUtils.data(handler, buffer.toString());
+            XMLUtils.endElement(handler, "script");
         } else {
             final CopletAdapter copletAdapter = cid.getCopletDefinition().getCopletType().getCopletAdapter();
-            copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
+            copletAdapter.toSAX(cid, handler);
         }
 
         if ( config.rootTag ) {

@@ -24,10 +24,10 @@ import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.cocoon.xml.XMLUtils;
+import org.apache.cocoon.portal.util.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Add layout parameter to resulting XML stream so that they can be picked
@@ -45,13 +45,13 @@ import org.xml.sax.SAXException;
  * <h2>Applicable to:</h2>
  * <ul>
  *  <li>{@link org.apache.cocoon.portal.om.Layout}</li>
- * </ul> 
+ * </ul>
  *
  * <h2>Parameters</h2>
  * <table><tbody>
  * <tr><th>tag-name</th><td>Name of tag holding key-value pairs as attributes.</td>
  *  <td></td><td>String</td><td><code>"parameter"</code></td></tr>
- * </tbody></table> 
+ * </tbody></table>
  *
  * @version $Id$
  */
@@ -72,7 +72,7 @@ public final class ParameterAspect extends AbstractAspect {
             Map.Entry entry;
             for (Iterator iter = parameter.entrySet().iterator(); iter.hasNext();) {
                 entry = (Map.Entry) iter.next();
-                attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
+                XMLUtils.addCDATAAttribute(attributes, (String)entry.getKey(), (String)entry.getValue());
             }
             XMLUtils.startElement(contenthandler, config.tagName, attributes);
         } else {

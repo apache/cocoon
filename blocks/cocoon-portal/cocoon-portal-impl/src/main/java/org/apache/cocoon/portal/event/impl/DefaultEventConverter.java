@@ -30,7 +30,6 @@ import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.util.AbstractBean;
-import org.apache.cocoon.util.HashUtil;
 
 /**
  * This implementation stores the events that can't be converted to strings (which don't
@@ -86,7 +85,7 @@ public class DefaultEventConverter
             while ( i.hasNext() ) {
                 final Map.Entry current = (Map.Entry)i.next();
                 final Constructor c = this.getConstructor(current.getValue().toString());
-                final long hash = HashUtil.hash(current.getValue().toString());
+                final long hash = current.getValue().hashCode();
                 final String hashKey = Long.toString(hash);
                 // check for duplicate hash code
                 if ( this.factories.containsKey(hashKey) ) {
@@ -131,7 +130,7 @@ public class DefaultEventConverter
         // check if *this* event is convertable
         if ( data != null ) {
             final String eventClassName = event.getClass().getName();
-            final long hash = HashUtil.hash(eventClassName);
+            final long hash = eventClassName.hashCode();
             final String hashKey = Long.toString(hash);
             Object o = this.factories.get(hashKey);
             if ( o == null ) {
@@ -188,9 +187,9 @@ public class DefaultEventConverter
                     } catch (InstantiationException ie) {
                         // we ignore this
                     } catch (InvocationTargetException ite) {
-                        // we ignore this                    
+                        // we ignore this
                     } catch (IllegalAccessException iae) {
-                        // we ignore this                    
+                        // we ignore this
                     }
                 }
             }
