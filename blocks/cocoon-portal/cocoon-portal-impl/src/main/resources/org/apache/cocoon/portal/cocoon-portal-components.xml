@@ -121,8 +121,8 @@
 
     <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.xslt"
           class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"
-          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton" destroy-method="destroy">
-      <property name="serviceManager" ref="org.apache.avalon.framework.service.ServiceManager"/>
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton">
+      <property name="xsltProcessor" ref="org.apache.excalibur.xml.xslt.XSLTProcessor"/>
       <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
     </bean>
 
