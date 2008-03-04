@@ -1740,13 +1740,7 @@
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>
-        <version>1.0.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>jsr170</groupId>
-            <artifactId>jcr</artifactId>
-          </exclusion>
-        </exclusions>
+        <version>1.4.1</version>
       </dependency>
       <dependency>
         <groupId>jakarta-regexp</groupId>
@@ -1756,7 +1750,7 @@
       <dependency>
         <groupId>javax.jcr</groupId>
         <artifactId>jcr</artifactId>
-        <version>1.0.1</version>
+        <version>1.0</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -1821,6 +1815,11 @@
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
         <version>1.2.14</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.4.3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>

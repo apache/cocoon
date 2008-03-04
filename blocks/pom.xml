@@ -168,7 +168,7 @@
         <module>cocoon-itext/cocoon-itext-sample</module>
         <module>cocoon-javaflow/cocoon-javaflow-impl</module>
         <module>cocoon-javaflow/cocoon-javaflow-sample</module>
-        <!-- module>cocoon-jcr</module -->
+        <module>cocoon-jcr</module>
         <module>cocoon-jfor/cocoon-jfor-impl</module>
         <module>cocoon-jfor/cocoon-jfor-sample</module>
         <module>cocoon-jms/cocoon-jms-impl</module>

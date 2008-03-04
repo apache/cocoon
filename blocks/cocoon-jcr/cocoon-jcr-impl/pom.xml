@@ -36,19 +36,28 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-      
+      <artifactId>cocoon-sitemap-impl</artifactId>  
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>  
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
       <groupId>javax.jcr</groupId>
-      <artifactId>jcr</artifactId>
-      
+      <artifactId>jcr</artifactId>      
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>      
     </dependency>
     <dependency>
       <groupId>slide</groupId>
@@ -58,18 +67,16 @@
     <dependency>
       <groupId>slide</groupId>
       <artifactId>slide-stores</artifactId>
-      
     </dependency>
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-core</artifactId>
-      
-      <exclusions>
-        <exclusion>
-          <groupId>jsr170</groupId>
-          <artifactId>jcr</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
   </dependencies>
 </project>
