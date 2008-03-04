@@ -29,12 +29,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.portal.profile.PersistenceType;
 import org.apache.cocoon.portal.profile.ProfileException;
 import org.apache.cocoon.portal.profile.ProfileKey;
 import org.apache.cocoon.portal.profile.ProfileStore;
 import org.apache.cocoon.portal.util.AbstractBean;
+import org.apache.cocoon.portal.util.PropertyHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.ModifiableSource;
@@ -245,7 +245,7 @@ public class CastorSourceConverter
             throw new ProfileException("Configuration for key '" + config.toString() + "' is missing.");
         }
 
-        return PropertyHelper.replace(uri, key, null);
+        return PropertyHelper.replace(uri, key);
     }
 
     /**
