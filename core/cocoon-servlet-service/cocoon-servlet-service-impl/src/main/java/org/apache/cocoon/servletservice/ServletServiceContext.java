@@ -102,34 +102,9 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     }
 
     public URL getResource(String path) throws MalformedURLException {
-        // hack for getting a file protocol or other protocols that can be used as context
-        // path in the getResource method in the servlet context
-        if (!(contextPath.startsWith("file:") || contextPath.startsWith("/")
-              || contextPath.indexOf(':') == -1)) {
-            SourceResolver resolver = null;
-            Source source = null;
-            try {
-                BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(this);
-                resolver = (SourceResolver) factory.getBean(SourceResolver.ROLE);
-                source = resolver.resolveURI(contextPath);
-                contextPath = source.getURI();
-            } catch (IOException e) {
-                throw new MalformedURLException("Could not resolve " + contextPath + " due to " + e);
-            } finally {
-                if (resolver != null) {
-                    resolver.release(source);
-                }
-            }
-        }
-
         // HACK: allow file:/ URLs for reloading of sitemaps during development
         if (this.contextPath.startsWith("file:")) {
             return new URL("file", null, this.contextPath.substring("file:".length()) + path);
-        }
-
-        if (this.contextPath.length() != 0 && this.contextPath.charAt(0) != '/') {
-            throw new MalformedURLException("The contextPath must be empty or start with '/' " +
-                                            this.contextPath);
         }
 
         // prefix the path with the servlet context resolve and resolve in the embedding
