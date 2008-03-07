@@ -286,26 +286,26 @@
       <ft:class id="view-selector-class">
         <ft:choose path="view-selector">
           <ft:when value="fold">
-            <ft:widget id="view-view"><fi:styling type="image" src="resources/forms/img/view.gif"/></ft:widget>
-            <ft:widget id="edit-view"><fi:styling type="image" src="resources/forms/img/edit.gif"/></ft:widget>
+            <ft:widget id="view-view"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/view.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/edit.gif"/></ft:widget>
           </ft:when>
           <ft:when value="view">
-            <ft:widget id="fold-view"><fi:styling type="image" src="resources/forms/img/fold.gif"/></ft:widget>
-            <ft:widget id="edit-view"><fi:styling type="image" src="resources/forms/img/edit.gif"/></ft:widget>
+            <ft:widget id="fold-view"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/fold.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/edit.gif"/></ft:widget>
           </ft:when>
           <ft:when value="edit">
-            <ft:widget id="fold-view"><fi:styling type="image" src="resources/forms/img/fold.gif"/></ft:widget>
-            <ft:widget id="view-view"><fi:styling type="image" src="resources/forms/img/view.gif"/></ft:widget>
+            <ft:widget id="fold-view"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/fold.gif"/></ft:widget>
+            <ft:widget id="view-view"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/view.gif"/></ft:widget>
           </ft:when>
         </ft:choose>
       </ft:class>
 
       <ft:class id="item-row-class">
         <span class="actions">
-          <ft:widget id="up"><fi:styling type="image" src="resources/forms/img/move_up.gif"/></ft:widget>
-          <ft:widget id="down"><fi:styling type="image" src="resources/forms/img/move_down.gif"/></ft:widget>
-          <ft:widget id="add"><fi:styling type="image" src="resources/forms/img/new.gif"/></ft:widget>
-          &#160;<ft:widget id="delete"><fi:styling type="image" src="resources/forms/img/delete.gif"/></ft:widget>
+          <ft:widget id="up"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_up.gif"/></ft:widget>
+          <ft:widget id="down"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_down.gif"/></ft:widget>
+          <ft:widget id="add"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/new.gif"/></ft:widget>
+          &#160;<ft:widget id="delete"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/delete.gif"/></ft:widget>
         </span>
         <ft:new id="view-selector-class"/>
         <ft:new id="type-selector-class"/>
@@ -313,7 +313,7 @@
       </ft:class>
 
       <ft:class id="items-class">
-        <ft:widget id="addItem"><fi:styling type="image" src="resources/forms/img/new_child.gif"/></ft:widget>
+        <ft:widget id="addItem"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/new_child.gif"/></ft:widget>
         <ft:repeater-size id="items"/>
         <ft:repeater-widget id="items">
           <div class="section"><ft:new id="item-row-class"/></div>

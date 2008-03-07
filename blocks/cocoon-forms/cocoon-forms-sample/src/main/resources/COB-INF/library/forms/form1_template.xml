@@ -98,10 +98,10 @@
                 </tr>
                 <td>
                   <span class="actions">
-                    <ft:widget id="down"><fi:styling type="image" src="resources/forms/img/move_down.gif"/></ft:widget>
-                    <ft:widget id="up"><fi:styling type="image" src="resources/forms/img/move_up.gif"/></ft:widget>
-                    <ft:widget id="delete"><fi:styling type="image" src="resources/forms/img/delete.gif"/></ft:widget>
-                    <ft:widget id="add"><fi:styling type="image" src="resources/forms/img/new.gif"/></ft:widget>
+                    <ft:widget id="down"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_down.gif"/></ft:widget>
+                    <ft:widget id="up"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_up.gif"/></ft:widget>
+                    <ft:widget id="delete"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/delete.gif"/></ft:widget>
+                    <ft:widget id="add"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/new.gif"/></ft:widget>
                   </span>
                 </td>
                 <tr>
@@ -136,10 +136,10 @@
                 <tr>
                   <td>
                     <span class="actions">
-                      <ft:widget id="down"><fi:styling type="image" src="resources/forms/img/move_down.gif"/></ft:widget>
-                      <ft:widget id="up"><fi:styling type="image" src="resources/forms/img/move_up.gif"/></ft:widget>
-                      <ft:widget id="delete"><fi:styling type="image" src="resources/forms/img/delete.gif"/></ft:widget>
-                      <ft:widget id="add"><fi:styling type="image" src="resources/forms/img/new.gif"/></ft:widget>
+                      <ft:widget id="down"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_down.gif"/></ft:widget>
+                      <ft:widget id="up"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_up.gif"/></ft:widget>
+                      <ft:widget id="delete"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/delete.gif"/></ft:widget>
+                      <ft:widget id="add"><fi:styling type="image" src="servlet:forms:/resource/external/forms/img/new.gif"/></ft:widget>
                     </span>
                   </td>
                 </tr>

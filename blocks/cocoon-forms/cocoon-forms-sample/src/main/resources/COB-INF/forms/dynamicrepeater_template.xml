@@ -79,22 +79,22 @@
                         <!-- Don't display the "move up" button on the first row -->
                         <jx:choose>
                           <jx:when test="${repeaterLoop.first}">
-                            <img src="resources/forms/img/blank_btn.gif"/>
+                            <img src="servlet:forms:/resource/external/forms/img/blank_btn.gif"/>
                           </jx:when>
                           <jx:otherwise>
                             <ft:widget id="up">
-                              <fi:styling type="image" src="resources/forms/img/move_up.gif"/>
+                              <fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_up.gif"/>
                             </ft:widget>
                           </jx:otherwise>
                         </jx:choose>
                         <!-- Don't display the "move down" button on the first row -->
                         <jx:choose>
                           <jx:when test="${repeaterLoop.last}">
-                            <img src="resources/forms/img/blank_btn.gif"/>
+                            <img src="servlet:forms:/resource/external/forms/img/blank_btn.gif"/>
                           </jx:when>
                           <jx:otherwise>
                             <ft:widget id="down">
-                              <fi:styling type="image" src="resources/forms/img/move_down.gif"/>
+                              <fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_down.gif"/>
                             </ft:widget>
                           </jx:otherwise>
                         </jx:choose>

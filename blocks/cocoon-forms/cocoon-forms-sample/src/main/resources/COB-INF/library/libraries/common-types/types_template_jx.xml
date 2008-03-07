@@ -81,26 +81,26 @@
                             <td>
                                 <jx:choose>
                                     <jx:when test="${repeaterLoop.first}">
-                                        <img src="resources/forms/img/blank_btn.gif"/>
+                                        <img src="servlet:forms:/resource/external/forms/img/blank_btn.gif"/>
                                     </jx:when>
                                     <jx:otherwise>
                                         <ft:widget id="moveUp">
-                                            <fi:styling type="image" src="resources/forms/img/move_up.gif"/>
+                                            <fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_up.gif"/>
                                         </ft:widget>
                                     </jx:otherwise>
                                 </jx:choose>
                                 <jx:choose>
                                     <jx:when test="${repeaterLoop.last}">
-                                        <img src="resources/forms/img/blank_btn.gif"/>
+                                        <img src="servlet:forms:/resource/external/forms/img/blank_btn.gif"/>
                                     </jx:when>
                                     <jx:otherwise>
                                         <ft:widget id="moveDown">
-                                            <fi:styling type="image" src="resources/forms/img/move_down.gif"/>
+                                            <fi:styling type="image" src="servlet:forms:/resource/external/forms/img/move_down.gif"/>
                                         </ft:widget>
                                     </jx:otherwise>
                                 </jx:choose>
                                 <ft:widget id="deleteRow">
-                                    <fi:styling type="image" src="resources/forms/img/delete.gif"/>
+                                    <fi:styling type="image" src="servlet:forms:/resource/external/forms/img/delete.gif"/>
                                 </ft:widget>
                             </td>
                         </tr>

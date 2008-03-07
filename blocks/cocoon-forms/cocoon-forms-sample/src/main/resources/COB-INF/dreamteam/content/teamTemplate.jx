@@ -35,25 +35,25 @@
           </tr>
           <tr>
             <td>
-              <img src="resources/forms/img/move_up.gif"/>
+              <img src="servlet:forms:/resource/external/formsimg/move_up.gif"/>
             </td>
             <td>Move this row 1 up</td>
           </tr>
           <tr>
             <td>
-              <img src="resources/forms/img/move_down.gif"/>
+              <img src="servlet:forms:/resource/external/formsimg/move_down.gif"/>
             </td>
             <td>Move this row 1 down</td>
           </tr>
           <tr>
             <td>
-              <img src="resources/forms/img/delete.gif"/>
+              <img src="servlet:forms:/resource/external/formsimg/delete.gif"/>
             </td>
             <td>Delete this row</td>
           </tr>
           <tr>
             <td>
-              <img src="resources/forms/img/new.gif"/>
+              <img src="servlet:forms:/resource/external/formsimg/new.gif"/>
             </td>
             <td>Add a new row below this row</td>
           </tr>
@@ -115,11 +115,11 @@
                       -->
                       <jx:choose>
                         <jx:when test="${repeaterLoop.first}">
-                          <img src="resources/forms/img/blank_btn.gif"/>
+                          <img src="servlet:forms:/resource/external/formsimg/blank_btn.gif"/>
                         </jx:when>
                         <jx:otherwise>
                           <ft:widget id="up">
-                            <fi:styling type="image" src="resources/forms/img/move_up.gif"/>
+                            <fi:styling type="image" src="servlet:forms:/resource/external/formsimg/move_up.gif"/>
                           </ft:widget>
                         </jx:otherwise>
                       </jx:choose>
@@ -128,19 +128,19 @@
                       -->
                       <jx:choose>
                         <jx:when test="${repeaterLoop.last}">
-                          <img src="resources/forms/img/blank_btn.gif"/>
+                          <img src="servlet:forms:/resource/external/formsimg/blank_btn.gif"/>
                         </jx:when>
                         <jx:otherwise>
                           <ft:widget id="down">
-                            <fi:styling type="image" src="resources/forms/img/move_down.gif"/>
+                            <fi:styling type="image" src="servlet:forms:/resource/external/formsimg/move_down.gif"/>
                           </ft:widget>
                         </jx:otherwise>
                       </jx:choose>
                       <ft:widget id="delete">
-                        <fi:styling type="image" src="resources/forms/img/delete.gif"/>
+                        <fi:styling type="image" src="servlet:forms:/resource/external/formsimg/delete.gif"/>
                       </ft:widget>
                       <ft:widget id="add">
-                        <fi:styling type="image" src="resources/forms/img/new.gif"/>
+                        <fi:styling type="image" src="servlet:forms:/resource/external/formsimg/new.gif"/>
                       </ft:widget>
                       <!--ft:widget id="select"/-->
                     </td>
