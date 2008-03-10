@@ -92,6 +92,13 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     private static final String USER_GLOBAL_SCOPE = "FOM JavaScript GLOBAL SCOPE/";
 
     /**
+     * Rhino supports Debuggers only in interpreting mode, and we are using
+     * LocationTrackerDebugger. Hence need to force rhino into interpreted
+     * mode by setting optimization level on a context.
+     */
+    private static final int OPTIMIZATION_LEVEL = -1;
+    
+    /**
      * When was the last time we checked for script modifications. Used
      * only if {@link #reloadScripts} is true. Access is synchronized by
      * {@link #compiledScripts}.
@@ -131,6 +138,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     db.setVisible(false);
                 }
             });
+            db.setOptimizationLevel(OPTIMIZATION_LEVEL);
             db.setVisible(true);
             debugger = db;
             ContextFactory.getGlobal().addListener(debugger);
@@ -159,6 +167,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             getDebugger().doBreak();
         }
         Context context = Context.enter();
+        context.setOptimizationLevel(OPTIMIZATION_LEVEL); 
         context.setCompileFunctionsWithDynamicScope(true);
         context.setGeneratingDebug(true);
         // add support for Rhino objects to JXPath
@@ -545,6 +554,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     public void callFunction(String funName, List params, Redirector redirector)
     throws Exception {
         Context context = Context.enter();
+        context.setOptimizationLevel(OPTIMIZATION_LEVEL); 
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(new JSErrorReporter());
@@ -641,6 +651,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
 
         Context context = Context.enter();
+        context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         LocationTrackingDebugger locationTracker = new LocationTrackingDebugger();
