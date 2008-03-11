@@ -819,6 +819,17 @@ public class ServletSerivceRequest implements HttpServletRequest {
             this.getRequest().parentRequest.getSession().setMaxInactiveInterval(interval);
         }
 
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // Override the setValue and getValue methods because session attributes
+        // are not arrays
+        protected void setValue(String name, Object value) {
+            this.values.put(name, value);
+        }
+
+        public Object getValue(String name) {
+            return this.values.get(name);
+        }
+
     }
 
 }
