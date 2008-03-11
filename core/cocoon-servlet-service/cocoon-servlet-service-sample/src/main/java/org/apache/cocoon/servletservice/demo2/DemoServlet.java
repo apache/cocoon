@@ -17,12 +17,14 @@
 package org.apache.cocoon.servletservice.demo2;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.cocoon.servletservice.demo1.RequestDumb;
 
 /**
  * @version $Id$
@@ -30,17 +32,36 @@ import javax.servlet.http.HttpServletResponse;
 public class DemoServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/plain");
-        PrintWriter writer = response.getWriter();
-        writer.println("Content From: " + this.getClass().getName());
-        writer.println("******************************************************************");
-        writer.println("request.getAttribute(\"foo\"): " + request.getAttribute("foo"));
-        writer.println("request.getParameter(\"xyz\"): " + request.getParameter("xyz"));
-        writer.println("request.getHeader(\"User-Agent\"): " + request.getHeader("User-Agent"));
-        // set a request attribute
-        request.setAttribute("foo1", "bar1");
-        writer.println("request.getAttribute(\"foo1\") [from sub request]: " + request.getAttribute("foo1"));
-        writer.close();
+        response.setContentType("text/xml");
+
+        String path = request.getPathInfo();
+
+        request.setAttribute("foo", "bar");
+
+        if ("/test1".equals(path)) {
+
+            // set a request attribute
+            request.setAttribute("foo1", "bar1");
+
+            // set a session attribute
+            request.getSession().setAttribute("attribute-from-called-request", "84");
+
+            OutputStream os = response.getOutputStream();
+            os.write("<page>".getBytes());
+            RequestDumb.dumb(request, os);
+            os.write("</page>".getBytes());
+
+            os.close();
+
+        } else if("/test2".equals(path)) {
+            OutputStream os = response.getOutputStream();
+            os.write("<page>".getBytes());
+            RequestDumb.dumb(request, os);
+            os.write("</page>".getBytes());
+            os.close();
+        } else {
+            throw new ServletException("Unknown path " + path);
+        }
     }
 
 }

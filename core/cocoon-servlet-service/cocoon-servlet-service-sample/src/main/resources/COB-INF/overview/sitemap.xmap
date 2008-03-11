@@ -15,4 +15,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<test>some-text</test>
+<!-- SVN $Id$ -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:pipelines>
+
+    <map:pipeline>
+      <map:match pattern="">
+        <map:generate src="overview.html"/>
+        <map:serialize type="xhtml"/>
+      </map:match>
+    </map:pipeline>
+
+  </map:pipelines>
+</map:sitemap>
