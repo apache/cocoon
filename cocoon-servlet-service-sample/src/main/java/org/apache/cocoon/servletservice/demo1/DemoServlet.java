@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -42,9 +41,6 @@ public class DemoServlet extends HttpServlet {
     BeanFactory beanFactory;
     SourceResolver resolver;
 
-    /* (non-Javadoc)
-     * @see javax.servlet.GenericServlet#init()
-     */
     public void init() throws ServletException {
         this.beanFactory =
             WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
@@ -62,9 +58,11 @@ public class DemoServlet extends HttpServlet {
             PrintWriter writer = response.getWriter();
             writer.println("Demo1.1 " + attr);
             writer.close();
+
         } else if ("/test2".equals(path)) {
             RequestDispatcher demo2 = this.getServletContext().getNamedDispatcher("demo2");
             demo2.forward(request, response);
+
         } else if ("/test3".equals(path)) {
             Source source = this.resolver.resolveURI("servlet:/test1");
             InputStream is = source.getInputStream();
@@ -75,46 +73,55 @@ public class DemoServlet extends HttpServlet {
             copy(is, os);
             is.close();
             os.close();
+
         } else if ("/test4".equals(path)) {
-            response.setContentType("text/plain");
+            response.setContentType("text/xml");
             OutputStream os = response.getOutputStream();
-            os.write(("\nRequest-Parameters:").getBytes());
-            os.write(("\n******************************************************************").getBytes());
-            Enumeration requestParamNames = request.getParameterNames();
-            while(requestParamNames.hasMoreElements()) {
-                String name = (String) requestParamNames.nextElement();
-                os.write(("\n  " + name  + "=" + request.getParameter(name)).getBytes());;
-            }
-            os.write(("\n\nHeaders:").getBytes());
-            os.write(("\n******************************************************************").getBytes());
-            Enumeration headers = request.getHeaderNames();
-            while(headers.hasMoreElements()) {
-                String name = (String) headers.nextElement();
-                os.write(("\n  " + name  + "=" + request.getHeader(name)).getBytes());;
-            }
-            os.write(("\n\nRequest-Attributes:").getBytes());
-            os.write(("\n******************************************************************").getBytes());
-            Enumeration requestAttributes = request.getAttributeNames();
-            while(requestAttributes.hasMoreElements()) {
-                String name = (String) requestAttributes.nextElement();
-                os.write(("\n  " + name  + "=" + request.getAttribute(name)).getBytes());;
-            }
-            os.write(("\n\nContent From: " + this.getClass().getName() ).getBytes());
-            os.write(("\n******************************************************************").getBytes());
-            os.write(("\nrequest.getAttribute(\"foo1\") [from main request]: " + request.getAttribute("foo1")).getBytes());
-            os.write("\n\n".getBytes());
-            Source source = this.resolver.resolveURI("servlet:demo2:/any?xyz=5");
+
+            // write a session attribute
+            request.getSession().setAttribute("attribute-from-calling-request", "42");
+
+            os.write("<page>".getBytes());
+            RequestDumb.dumb(request, os);
+
+            // calling another resource
+            os.write(("\n<sub-request name=\"demo2-test1\">").getBytes());
+            Source source = this.resolver.resolveURI("servlet:demo2:/test1?xyz=5");
             InputStream is = source.getInputStream();
             copy(is, os);
+            os.write(("</sub-request>").getBytes());
             is.close();
+
+            os.write(("\n<sub-request name=\"demo2-test2\">").getBytes());
+            source = this.resolver.resolveURI("servlet:demo2:/test2?xyz=5");
+            is = source.getInputStream();
+            copy(is, os);
+            os.write(("</sub-request>").getBytes());
+            is.close();
+
+            // check if sub calls are hidden
+            os.write(("\n<check-sub name=\"" + this.getClass().getName() + "\">").getBytes());
+            String foo1 = "\n  <request-attribute name=\"foo1\"><value>"
+                            + request.getAttribute("foo1") + "</value></request-attribute>";
+            os.write(foo1.getBytes());
+            String sessionAttribute = "\n  <session-attribute name=\"attribute-from-called-request\"><value>"
+                            + request.getSession().getAttribute("attribute-from-called-request")
+                            + "</value></session-attribute>";
+            os.write(sessionAttribute.getBytes());
+            os.write(("</check-sub>").getBytes());
+
+            os.write("</page>".getBytes());
+
             os.close();
+
         } else if ("/test5".equals(path)) {
-            RelativeServletConnection con = new RelativeServletConnection("demo2", "/", null);
+            RelativeServletConnection con = new RelativeServletConnection("demo2", "/test1", null);
             InputStream is = con.getInputStream();
             OutputStream os = response.getOutputStream();
             copy(is, os);
             is.close();
             os.close();
+
         } else if ("/test6".equals(path)) {
             RelativeServletConnection con = new RelativeServletConnection(null, "/test1", null);
             response.setContentType("text/plain");
@@ -123,6 +130,7 @@ public class DemoServlet extends HttpServlet {
             copy(is, os);
             is.close();
             os.close();
+
         } else if ("/test7".equals(path)) {
             Source source = this.resolver.resolveURI("servlet:org.apache.cocoon.servletservice.demo1.servlet+:/test4");
             InputStream is = source.getInputStream();
@@ -132,12 +140,14 @@ public class DemoServlet extends HttpServlet {
             copy(is, os);
             is.close();
             os.close();
+
         } else if ("/test8".equals(path)) {
             response.setContentType("text/plain");
             OutputStream os = response.getOutputStream();
             os.write(("\nForbidden").getBytes());
             response.setStatus(403);
             os.close();
+
         } else if ("/test9".equals(path)) {
             // FIXME Doesn't work currently!
             RelativeServletConnection con = new RelativeServletConnection(null, "/test8", null);
@@ -147,6 +157,7 @@ public class DemoServlet extends HttpServlet {
             copy(is, os);
             is.close();
             os.close();
+
         } else {
             throw new ServletException("Unknown path " + path);
         }
