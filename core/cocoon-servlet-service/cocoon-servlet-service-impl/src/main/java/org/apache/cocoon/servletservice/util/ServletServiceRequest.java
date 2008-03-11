@@ -65,7 +65,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  *          vgritsenko $
  * @since 1.0.0
  */
-public class ServletSerivceRequest implements HttpServletRequest {
+public class ServletServiceRequest implements HttpServletRequest {
 
     /**
      * Protocol of block call requests.
@@ -130,7 +130,7 @@ public class ServletSerivceRequest implements HttpServletRequest {
      * @param parentRequest
      *            reference to the request object that makes a servlet call
      */
-    public ServletSerivceRequest(URI uri, HttpServletRequest parentRequest) {
+    public ServletServiceRequest(URI uri, HttpServletRequest parentRequest) {
         this.parentRequest = parentRequest;
         this.uri = uri;
         this.headers = new Headers();
@@ -406,8 +406,8 @@ public class ServletSerivceRequest implements HttpServletRequest {
 
         HttpServletRequest request = this.parentRequest;
         while (request != null) {
-            if (request instanceof ServletSerivceRequest) {
-                request = ((ServletSerivceRequest) request).parentRequest;
+            if (request instanceof ServletServiceRequest) {
+                request = ((ServletServiceRequest) request).parentRequest;
             } else {
                 break;
             }
@@ -518,7 +518,7 @@ public class ServletSerivceRequest implements HttpServletRequest {
             for (int i = 0; i < CallStack.size(); i++) {
                 CallFrame frame = CallStack.frameAt(i);
                 HttpServletRequest request = (HttpServletRequest) frame.getAttribute(CallFrameHelper.REQUEST_OBJECT);
-                if (request instanceof ServletSerivceRequest) {
+                if (request instanceof ServletServiceRequest) {
                     names.addAll(this.values.keySet());
                 } else {
                     for (Enumeration enumeration = this.namesOf(request); enumeration.hasMoreElements();) {
@@ -533,7 +533,7 @@ public class ServletSerivceRequest implements HttpServletRequest {
             return new EnumerationFromIterator(names.iterator());
         }
 
-        protected abstract ServletSerivceRequest getRequest();
+        protected abstract ServletServiceRequest getRequest();
 
         final class EnumerationFromIterator implements Enumeration {
 
@@ -615,7 +615,7 @@ public class ServletSerivceRequest implements HttpServletRequest {
             for (int i = 0; i < CallStack.size(); i++) {
                 CallFrame frame = CallStack.frameAt(i);
                 HttpServletRequest request = (HttpServletRequest) frame.getAttribute(CallFrameHelper.REQUEST_OBJECT);
-                if (request instanceof ServletSerivceRequest) {
+                if (request instanceof ServletServiceRequest) {
                     result.putAll(this.values);
                 } else {
                     result.putAll(request.getParameterMap());
@@ -641,8 +641,8 @@ public class ServletSerivceRequest implements HttpServletRequest {
             return result;
         }
 
-        protected ServletSerivceRequest getRequest() {
-            return ServletSerivceRequest.this;
+        protected ServletServiceRequest getRequest() {
+            return ServletServiceRequest.this;
         }
 
         protected Object getValueOfCaller(String name) {
@@ -680,8 +680,8 @@ public class ServletSerivceRequest implements HttpServletRequest {
             return new IteratorEnumeration(list.iterator());
         }
 
-        protected ServletSerivceRequest getRequest() {
-            return ServletSerivceRequest.this;
+        protected ServletServiceRequest getRequest() {
+            return ServletServiceRequest.this;
         }
 
         protected Enumeration namesOf(HttpServletRequest request) {
@@ -715,8 +715,8 @@ public class ServletSerivceRequest implements HttpServletRequest {
             }
         }
 
-        protected ServletSerivceRequest getRequest() {
-            return ServletSerivceRequest.this;
+        protected ServletServiceRequest getRequest() {
+            return ServletServiceRequest.this;
         }
 
         protected Enumeration namesOf(HttpServletRequest request) {
@@ -729,7 +729,7 @@ public class ServletSerivceRequest implements HttpServletRequest {
 
         private ServletServiceContext context;
 
-        private transient ServletSerivceRequest request;
+        private transient ServletServiceRequest request;
 
         public Session(ServletServiceContext context) {
             this.context = context;
@@ -743,11 +743,11 @@ public class ServletSerivceRequest implements HttpServletRequest {
             return this.getRequest().parentRequest.getSession().getAttributeNames();
         }
 
-        protected ServletSerivceRequest getRequest() {
+        protected ServletServiceRequest getRequest() {
             return this.request;
         }
 
-        private void setRequest(ServletSerivceRequest request) {
+        private void setRequest(ServletServiceRequest request) {
             this.request = request;
         }
 
