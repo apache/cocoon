@@ -417,14 +417,14 @@ public class ServletServiceRequest implements HttpServletRequest {
         // each block's session object is stored in the outest session as an
         // attribute
         if (this != request) {
-            session = (Session) outestSession.getAttribute(this.context.getMountPath());
+            session = (Session) outestSession.getAttribute(HttpSession.class + "_" + this.context.getMountPath());
         } else {
             session = (Session) outestSession;
         }
 
         if (session == null && create) {
             session = new Session(this.context);
-            outestSession.setAttribute(this.context.getMountPath(), session);
+            outestSession.setAttribute(HttpSession.class + "_" + this.context.getMountPath(), session);
         }
 
         if (session != null) {
