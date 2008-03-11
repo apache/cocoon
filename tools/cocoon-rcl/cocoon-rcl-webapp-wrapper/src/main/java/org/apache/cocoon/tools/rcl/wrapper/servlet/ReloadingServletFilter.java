@@ -47,10 +47,11 @@ public class ReloadingServletFilter implements Filter {
             try {
                 Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.context));
 
+                CocoonReloadingListener.enableConsoleOutput();
                 this.filter.doFilter(request, response, chain);
             } finally {
                 Thread.currentThread().setContextClassLoader(old);
-            }            
+            }
         }
     }
 

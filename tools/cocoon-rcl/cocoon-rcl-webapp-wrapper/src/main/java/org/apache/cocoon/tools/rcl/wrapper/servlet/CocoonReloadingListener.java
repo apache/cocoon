@@ -28,7 +28,7 @@ public class CocoonReloadingListener extends ReloadingListener {
 
     private static boolean reload = false;
 
-    private boolean consoleOutput = false;
+    private static boolean consoleOutput = false;
 
     public CocoonReloadingListener() {
         super();
@@ -37,14 +37,12 @@ public class CocoonReloadingListener extends ReloadingListener {
     public void onFileChange(File file) {
         super.onFileChange(file);
         // after the first change/deletion of a file is detected, log to the console
-        this.consoleOutput = true;
         changeDetected(file, "update");
     }
 
     public void onFileDelete(File file) {
         super.onFileDelete(file);
         // after the first change/deletion of a file is detected, log to the console
-        this.consoleOutput = true;
         changeDetected(file, "delete");
     }
 
@@ -65,13 +63,17 @@ public class CocoonReloadingListener extends ReloadingListener {
                 changedFileParentPath.endsWith("config/spring")                     // local Spring bean configurations
            ) {
             log.debug("Configuration or .class file change detected [" + operation + "]: " + changedFile);
-            if (this.consoleOutput) {
+            if (CocoonReloadingListener.consoleOutput) {
                 System.out.println("RCL [" + operation + "]: " + changedFile);
             }
             reload = true;
         } else {
             log.debug("Other file change detected, no reload [" + operation + "]: " + changedFile);  // any other file change
         }
+    }
+
+    public static void enableConsoleOutput() {
+        CocoonReloadingListener.consoleOutput = true;
     }
 
     public static synchronized boolean isReload() {

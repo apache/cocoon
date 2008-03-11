@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServlet;
 /**
  * This servlet builds a classloading sandbox and runs another servlet inside
  * that sandbox. The purpose is to use the reloading classloader to load the
- * 
+ *
  * <p>
  * This servlet propagates all initialisation parameters to the sandboxed
  * servlet, and requires the parameter <code>servlet-class</code>.
@@ -49,7 +49,7 @@ public class ReloadingServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         this.config = config;
-        
+
         String servletName = config.getInitParameter("servlet-class");
         if (servletName == null) {
             throw new ServletException("ReloadingServlet: Init-Parameter 'servlet-class' is missing.");
@@ -86,6 +86,8 @@ public class ReloadingServlet extends HttpServlet {
         final ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.config.getServletContext()));
+
+            CocoonReloadingListener.enableConsoleOutput();
             this.servlet.service(request, response);
         } catch(Throwable t) {
             t.printStackTrace();
