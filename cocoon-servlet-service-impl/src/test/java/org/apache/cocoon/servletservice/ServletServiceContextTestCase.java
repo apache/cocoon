@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
-import org.apache.cocoon.servletservice.util.ServletSerivceRequest;
+import org.apache.cocoon.servletservice.util.ServletServiceRequest;
 import org.apache.cocoon.servletservice.util.ServletServiceResponse;
 
 /**
@@ -49,14 +49,14 @@ public class ServletServiceContextTestCase extends TestCase {
     private ServletServiceContext servletBContext;
     private ServletServiceContext servletCContext;
 
-    ServletSerivceRequest request;
+    ServletServiceRequest request;
     ServletServiceResponse response;
 
     protected void setUp() throws Exception {
         super.setUp();
         this.mainContext = new ServletServiceContext();
 
-        request = new ServletSerivceRequest(new URI("dummy"), null);
+        request = new ServletServiceRequest(new URI("dummy"), null);
         response = new ServletServiceResponse();
 
         //creating ServletContexts
