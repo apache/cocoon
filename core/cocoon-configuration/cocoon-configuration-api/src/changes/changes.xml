@@ -25,15 +25,18 @@
   -->
 <document>
   <body>
+    <release version="1.0.2" date="2008-00-00" description="unreleased"/>
+
     <release version="1.0.1" date="2007-09-20" description="released">
       <action dev="reinhard" type="fix">
-        Setting the creation time in org.apache.cocoon.configuration.MutableSettings.        
-      </action>   
-    </release>    
-    <release version="1.0.0" date="2007-03-02" description="released">    
+        Setting the creation time in org.apache.cocoon.configuration.MutableSettings.
+      </action>
+    </release>
+
+    <release version="1.0.0" date="2007-03-02" description="released">
       <action dev="cziegeler" type="add">
         Initial creation.
-      </action>   
+      </action>
     </release>
   </body>
 </document>
