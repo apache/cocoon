@@ -39,7 +39,7 @@
       </map:match>
 
       <map:match pattern="test4">
-        <map:generate src="resource://META-INF/classes/test.xml"/>
+        <map:generate src="resource://COB-INF/test1/test-resource.xml"/>
         <map:serialize type="xml"/>
       </map:match>
 
