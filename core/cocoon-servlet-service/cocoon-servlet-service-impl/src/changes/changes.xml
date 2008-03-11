@@ -30,8 +30,19 @@
         Cocoon will fail hard with a RuntimeException if this rule is broken. See
         org.apache.cocoon.servletservice.spring.ServletDecorator.
       </action>
-      <action dev="reinhard" type="add">
+      <action dev="reinhard" type="add" issue="COCOON-2154">
         Add support for absolute ServetConnections.
+      </action>
+      <action dev="reinhard" type="add" issue="COCOON-1831">
+        The ServletServiceResponse inherits the request attributes, request parameters and the session
+        from the caller.
+      </action>
+      <action dev="gkossakowski" type="add" issue="COCOON-2036" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@googlemail.com">
+        Throw an exception when circular dependencies in servlet connections are detected.
+      </action>
+      <action dev="gkossakowski" type="fix">
+      	DispatcherServlet does not throw an exception if it fails to find suitable servlet for processing incomming request.
+      	It returns 404 error and puts information to log about the failure, instead.
       </action>
     </release>
     <release version="1.0.0-RC1" date="2007-10-29" description="released">
@@ -44,15 +55,6 @@
       </action>
       <action dev="gkossakowski" type="fix" issue="COCOON-2121">
         Fixed bug in DispatcherServlet that caused servlet (blocks) mounted at "/" to be handled improperly.
-      </action>
-    </release>
-    <release version="1.0.0-RC2-SNAPSHOT" date="2008-??-??" description="unreleased">
-      <action dev="gkossakowski" type="add" issue="COCOON-2036" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@googlemail.com">
-        Throw an exception when circular dependencies in servlet connections are detected.
-      </action>
-      <action dev="gkossakowski" type="fix">
-      	DispatcherServlet does not throw an exception if it fails to find suitable servlet for processing incomming request. 
-      	It returns 404 error and puts information to log about the failure, instead.
       </action>
     </release>
   </body>
