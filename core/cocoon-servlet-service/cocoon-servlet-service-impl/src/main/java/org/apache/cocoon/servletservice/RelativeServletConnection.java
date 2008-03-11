@@ -24,7 +24,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 
 import org.apache.cocoon.callstack.environment.CallFrameHelper;
-import org.apache.cocoon.servletservice.util.ServletSerivceRequest;
+import org.apache.cocoon.servletservice.util.ServletServiceRequest;
 import org.apache.cocoon.servletservice.util.ServletServiceResponse;
 
 /**
@@ -78,7 +78,7 @@ public final class RelativeServletConnection extends AbstractServletConnection {
         }
 
         // prepare request and response objects
-        this.request = new ServletSerivceRequest(reqUri, CallFrameHelper.getRequest());
+        this.request = new ServletServiceRequest(reqUri, CallFrameHelper.getRequest());
         this.response = new ServletServiceResponse();
 
         if(this.logger.isDebugEnabled()) {
