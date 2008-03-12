@@ -25,6 +25,9 @@
 <document>
   <body>
     <release version="1.0.0" date="2008-00-00" description="unreleased">
+      <action dev="gkossakowski" type="update">
+        Made attributes 'mount-path' and 'context-path' of servlet-context tag required.
+      </action>
       <action dev="reinhard" type="add">
         The "+" character is not allowed at the end of connection names anymore. Starting
         Cocoon will fail hard with a RuntimeException if this rule is broken. See

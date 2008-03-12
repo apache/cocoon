@@ -45,7 +45,7 @@
 				<xsd:element ref="context-params" minOccurs="0" maxOccurs="1" />
 				<xsd:element ref="connections" minOccurs="0" maxOccurs="1" />
 			</xsd:sequence>
-			<xsd:attribute name="mount-path" type="xsd:string" use="optional">
+			<xsd:attribute name="mount-path" type="xsd:string" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						Where the servlet should be mounted relative to
@@ -60,7 +60,7 @@
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="context-path" type="xsd:string" use="optional">
+			<xsd:attribute name="context-path" type="xsd:string" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						The root path for the servlet context.
