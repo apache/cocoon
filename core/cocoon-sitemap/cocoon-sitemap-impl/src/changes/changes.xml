@@ -34,6 +34,9 @@
         Remove support for Cocoon 2.0 error handlers, &lt;map:handle-errors type="500"&gt;,
         which were deprecated since Cocoon 2.1m1.
       </action>
+      <action dev="gkossakowski" type="fix" due-to="Luca Morandini" due-to-email="lmorandini@ieee.org">
+      	The settings object is not available in Object Model (it can't be obtained using expressions).
+      </action>
     </release>
     <release version="1.0.0-RC2" date="2007-10-12" description="released">
       <action dev="gkossakowski" type="fix" issue="COCOON-2108" due-to="Hugh Sparks" due-to-email="hugh@csparks.com">

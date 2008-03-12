@@ -73,6 +73,7 @@ public class CocoonEntryObjectModelProvider implements ObjectModelProvider {
         org.apache.cocoon.environment.Context context = ObjectModelHelper.getContext(objectModel);
         cocoonMap.put("context", context);
         
+        cocoonMap.put("settings", this.settings);
         
         return cocoonMap;
     }
