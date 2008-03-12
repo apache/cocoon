@@ -101,8 +101,6 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
         // hack for getting a file protocol or other protocols that can be used as context
         // path in the getResource method in the servlet context
         if(contextPath != null) {
-            int tmp = contextPath.indexOf(':');
-            boolean tmp2 = !(contextPath.startsWith("file:") || contextPath.startsWith("/") || contextPath.indexOf(':') == -1);
             if (!(contextPath.startsWith("file:") || contextPath.startsWith("/") || contextPath.indexOf(':') == -1)) {
                 SourceResolver resolver = null;
                 Source source = null;
