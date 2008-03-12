@@ -64,8 +64,12 @@ public class ServletDecorator implements BeanDefinitionDecorator {
     private BeanDefinitionHolder createServletFactoryBeanDefinition(Element source, BeanDefinitionHolder holder,
                     ParserContext ctx, String embeddedServletBeanName) {
         String ns = source.getNamespaceURI();
-        String mountPath = source.hasAttribute("mount-path") ? source.getAttribute("mount-path") : null;
-        String contextPath = source.hasAttribute("context-path") ? source.getAttribute("context-path") : null;
+        if (!source.hasAttribute("mount-path"))
+            throw new RuntimeException("The mount-path attribute is required.");
+        String mountPath = source.getAttribute("mount-path");
+        if (!source.hasAttribute("context-path"))
+            throw new RuntimeException("The context-path attribute is required.");
+        String contextPath = source.getAttribute("context-path");
 
         Element initParamsElem = (Element) source.getElementsByTagNameNS(ns, "init-params").item(0);
         Element contextParamsElem = (Element) source.getElementsByTagNameNS(ns, "context-params").item(0);
@@ -79,12 +83,8 @@ public class ServletDecorator implements BeanDefinitionDecorator {
         servletFactoryDefBuilder.setDestroyMethodName("destroy");
         servletFactoryDefBuilder.addPropertyValue("serviceName", holder.getBeanName());
 
-        if (mountPath != null) {
-            servletFactoryDefBuilder.addPropertyValue("mountPath", mountPath);
-        }
-        if (contextPath != null) {
-            servletFactoryDefBuilder.addPropertyValue("contextPath", contextPath);
-        }
+        servletFactoryDefBuilder.addPropertyValue("mountPath", mountPath);
+        servletFactoryDefBuilder.addPropertyValue("contextPath", contextPath);
         if (initParamsElem != null) {
             Map initParams = ctx.getDelegate().parseMapElement(initParamsElem, null);
             servletFactoryDefBuilder.addPropertyValue("initParams", initParams);

@@ -100,32 +100,30 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
         //-----------------------------------------------------
         // hack for getting a file protocol or other protocols that can be used as context
         // path in the getResource method in the servlet context
-        if(contextPath != null) {
-            if (!(contextPath.startsWith("file:") || contextPath.startsWith("/") || contextPath.indexOf(':') == -1)) {
-                SourceResolver resolver = null;
-                Source source = null;
-                try {
-                    resolver = (SourceResolver) parentContainer.getBean(SourceResolver.ROLE);
-                    source = resolver.resolveURI(contextPath);
-                    contextPath = source.getURI();
-                } catch (IOException e) {
-                    throw new MalformedURLException("Could not resolve " + contextPath + " due to " + e);
-                } finally {
-                    if (resolver != null) {
-                        resolver.release(source);
-                    }
+        if (!(contextPath.startsWith("file:") || contextPath.startsWith("/") || contextPath.indexOf(':') == -1)) {
+            SourceResolver resolver = null;
+            Source source = null;
+            try {
+                resolver = (SourceResolver) parentContainer.getBean(SourceResolver.ROLE);
+                source = resolver.resolveURI(contextPath);
+                contextPath = source.getURI();
+            } catch (IOException e) {
+                throw new MalformedURLException("Could not resolve " + contextPath + " due to " + e);
+            } finally {
+                if (resolver != null) {
+                    resolver.release(source);
                 }
             }
-            //----------------------------------------------------
-
-
-            if (contextPath.length() != 0 && contextPath.charAt(0) != '/' && !contextPath.startsWith("file:")) {
-                throw new MalformedURLException("The contextPath must be empty or start with '/' " +
-                                                contextPath);
-            }
-
-            this.servletServiceContext.setContextPath(contextPath);
         }
+        //----------------------------------------------------
+
+
+        if (contextPath.length() != 0 && contextPath.charAt(0) != '/' && !contextPath.startsWith("file:")) {
+            throw new MalformedURLException("The contextPath must be empty or start with '/' " +
+                                            contextPath);
+        }
+
+        this.servletServiceContext.setContextPath(contextPath);
 
         GenericWebApplicationContext container = new GenericWebApplicationContext();
         container.setParent(this.parentContainer);
