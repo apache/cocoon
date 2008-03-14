@@ -19,22 +19,49 @@
 -->
 <project xmlns:artifact="urn:maven-artifact-ant">
 
+  <!--
+
+    USAGE
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    In order to use this Ant script to produce releases for
+
+      . Cocoon Core
+      . several Cocoon blocks
+      . the Cocoon Servlet-Service framework
+      . the Cocoon Configuration sub-project
+      . a Getting-Started application
+
+    make sure that all the user specific properties are set correctly. Also ensure
+    that you can login to the 'deploy.server' via SSH keys because the script
+    doesn't allow passing credentials.
+
+    When one of the 'externally available targets' is executed, the release artifacts
+    are created in the ./target directory and then uploaded to the configured server
+    location.
+
+  -->
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~ external tasks ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
   <path id="maven-ant-tasks.classpath" path="maven-ant-tasks-2.0.8.jar" />
   <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant" classpathref="maven-ant-tasks.classpath" />
 
-  <!-- TODO clean up properties (consistent naming, external properties file, etc.) -->
-  <property name="download.url" value="http://repo1.maven.org/maven2/org/apache/cocoon/" />
-  <property name="deploy.server" value="people.apache.org" />
-  <property name="deploy.path" value="/home/reinhard/cocoon-staging" />
-  <property name="deploy.user" value="reinhard" />
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~ properties ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
+  <!-- general properties -->
   <property name="target.dir" value="./target" />
   <property name="release.dir" value="${target.dir}/release" />
 
-  <target name="init">
-    <delete dir="${target.dir}" />
-    <mkdir dir="${release.dir}" />
-  </target>
+  <!-- user specific properties -->
+  <property name="download.url.base" value="http://repo1.maven.org/maven2/" />
+  <property name="download.url.cocoon" value="${download.url.base}/org/apache/cocoon/" />
+  <property name="deploy.server" value="people.apache.org" />
+  <property name="deploy.path" value="/home/reinhard/public_html/cocoon-staging" />
+  <property name="deploy.user" value="reinhard" />
+  <property name="gpg-passphrase.file" value="" />
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~ externally available targets ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
   <target name="core" depends="init">
     <add-module name="cocoon-core" version="2.2.0-RC2" type="core" />
@@ -57,8 +84,29 @@
     <dist file="${target.dir}/cocoon-2.2.0-dist" deploy-group-name="" />
   </target>
 
-  <target name="fop-block" depends="init">
+  <target name="fop-block" depends="init" description="Release the Cocoon Forms block">
     <create-block-dist-impl name-impl="cocoon-fop-impl" version="1.0.0-RC2" name="cocoon-fop-block" />
+  </target>
+
+  <target name="ssf" depends="init" description="Release the Servlet-Service Framework">
+    <add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.0/servlet-service-impl/1.0/" type="impl"/>
+    <add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.0/servlet-service-components/1.0/" type="cocoon-components"/>
+
+    <add-module name="cocoon-servlet-service-impl" version="1.0.0-RC1" type="impl" />
+    <add-module name="cocoon-servlet-service-components" version="1.0.0-RC1" type="cocoon-components" />
+
+    <dist file="${target.dir}/cocoon-ssf-1.0.0-RC1" deploy-group-name="ssf" />
+  </target>
+
+  <target name="getting-started-dist" depends="getting-started-create">
+    <dist file="${target.dir}/cocoon-getting-started-2.2.0-dist" deploy-group-name="getting-started" />
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~ internal targets ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="init">
+    <delete dir="${target.dir}" />
+    <mkdir dir="${release.dir}" />
   </target>
 
   <macrodef name="create-block-dist-api-impl">
@@ -91,7 +139,7 @@
       <create-package file="@{file}" />
       <create-checksum file="@{file}" />
       <gpg-sign file="@{file}" />
-      <!--deploy-staging file="@{file}" deploy-group-name="@{deploy-group-name}" /-->
+      <deploy-staging file="@{file}" deploy-group-name="@{deploy-group-name}" />
     </sequential>
   </macrodef>
 
@@ -105,12 +153,9 @@
     <attribute name="distFileName" default="@{name}-@{version}-dist" />
 
     <sequential>
-      <get dest="${target.dir}/@{jarFileName}" src="${download.url}/@{name}/@{version}/@{jarFileName}" />
-      <get dest="${target.dir}/@{sourcesFileName}" src="${download.url}/@{name}/@{version}/@{sourcesFileName}" />
-      <get dest="${target.dir}/@{javadocFileName}" src="${download.url}/@{name}/@{version}/@{javadocFileName}" />
-
-      <!-- copy the docs -->
-      <mkdir dir="${release.dir}/@{type}/docs" />
+      <get dest="${target.dir}/@{jarFileName}" src="${download.url.cocoon}/@{name}/@{version}/@{jarFileName}" />
+      <get dest="${target.dir}/@{sourcesFileName}" src="${download.url.cocoon}/@{name}/@{version}/@{sourcesFileName}" />
+      <get dest="${target.dir}/@{javadocFileName}" src="${download.url.cocoon}/@{name}/@{version}/@{javadocFileName}" />
 
       <!-- unzip Javadocs -->
       <unzip src="${target.dir}/@{javadocFileName}" dest="${release.dir}/@{type}/docs/apidocs" />
@@ -124,11 +169,23 @@
       <!-- notice and license files -->
       <unzip src="${target.dir}/@{jarFileName}" dest="${release.dir}">
         <patternset>
-          <include name="META-INF/license.txt" />
-          <include name="META-INF/notice.txt" />
+          <include name="META-INF/LICENSE.txt" />
+          <include name="META-INF/NOTICE.txt" />
         </patternset>
         <mapper type="flatten" />
       </unzip>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="add-docs">
+    <attribute name="dir" />
+    <attribute name="type" />
+    <sequential>
+      <copy todir="${release.dir}/@{type}/docs">
+        <fileset dir="@{dir}">
+          <exclude name="**/.svn/**"/>
+        </fileset>
+      </copy>
     </sequential>
   </macrodef>
 
@@ -175,9 +232,18 @@
       <deploy-via-scp file="@{file}.zip" deploy-group-name="@{deploy-group-name}" />
       <deploy-via-scp file="@{file}.zip.md5" deploy-group-name="@{deploy-group-name}" />
       <deploy-via-scp file="@{file}.zip.sha1" deploy-group-name="@{deploy-group-name}" />
+
+      <deploy-via-scp file="@{file}.zip.asc" deploy-group-name="@{deploy-group-name}" />
+      <deploy-via-scp file="@{file}.zip.md5.asc" deploy-group-name="@{deploy-group-name}" />
+      <deploy-via-scp file="@{file}.zip.sha1.asc" deploy-group-name="@{deploy-group-name}" />
+
       <deploy-via-scp file="@{file}.tar.gz" deploy-group-name="@{deploy-group-name}" />
       <deploy-via-scp file="@{file}.tar.gz.md5" deploy-group-name="@{deploy-group-name}" />
       <deploy-via-scp file="@{file}.tar.gz.sha1" deploy-group-name="@{deploy-group-name}" />
+
+      <deploy-via-scp file="@{file}.tar.gz.asc" deploy-group-name="@{deploy-group-name}" />
+      <deploy-via-scp file="@{file}.tar.gz.md5.asc" deploy-group-name="@{deploy-group-name}" />
+      <deploy-via-scp file="@{file}.tar.gz.sha1.asc" deploy-group-name="@{deploy-group-name}" />
     </sequential>
   </macrodef>
 
@@ -185,10 +251,10 @@
     <attribute name="file" />
     <attribute name="deploy-group-name" />
     <sequential>
+      <exec command="ssh ${deploy.user}@${deploy.server} 'mkdir ${deploy.path}/@{deploy-group-name}'" />
       <exec command="scp @{file} ${deploy.user}@${deploy.server}:${deploy.path}/@{deploy-group-name}" />
     </sequential>
   </macrodef>
-
   <macrodef name="gpg-sign-file">
     <attribute name="file" />
     <sequential>
@@ -196,8 +262,71 @@
     </sequential>
   </macrodef>
 
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~ getting-started targets ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-  <!--target name="test" depends="init">
+  <target name="getting-started-create" depends="init">
+    <property name="getting-started.app.dir" value="${release.dir}/app" />
+    <mkdir dir="${getting-started.app.dir}" />
+    <property name="getting-started.orig.dir" value="./getting-started" />
+    <!-- Copy Jetty files -->
+    <!--get dest="${release.dir}/jetty/jetty-6.1.7.jar" src="${download.url.base}/org/mortbay/jetty/jetty/6.1.7/jetty-6.1.7.jar" />
+    <get dest="${release.dir}/jetty/jetty-util-6.1.7.jar" src="${download.url.base}/org/mortbay/jetty/jetty-util/6.1.7/jetty-util-6.1.7.jar" />
+    <get dest="${release.dir}/jetty/jetty-start-6.1.7.jar" src="${download.url.base}/org/mortbay/jetty/start/6.1.7/start-6.1.7.jar" />
+    <get dest="${release.dir}/jetty/servlet-api-2.5-6.1.7.jar" src="${download.url.base}/org/mortbay/jetty/servlet-api-2.5/6.1.7/servlet-api-2.5-6.1.7.jar" /-->
+
+    <!-- Create a block -->
+    <exec dir="${getting-started.app.dir}" executable="mvn.bat" logError="true">
+      <arg line="archetype:create -DarchetypeGroupId=org.apache.cocoon -DarchetypeArtifactId=cocoon-22-archetype-block -DarchetypeVersion=1.0.0-RC2 -DgroupId=org.apache.cocoon.getting-started -DartifactId=custom-block" />
+    </exec>
+    <exec dir="${getting-started.app.dir}/custom-block" executable="mvn.bat" logError="true">
+      <arg line="install" />
+    </exec>
+    <!-- Create the web application -->
+    <exec dir="${getting-started.app.dir}" executable="mvn.bat" logError="true">
+      <arg line="archetype:create -DarchetypeGroupId=org.apache.cocoon -DarchetypeArtifactId=cocoon-22-archetype-webapp -DarchetypeVersion=1.0.0-RC2 -DgroupId=org.apache.cocoon.getting-started -DartifactId=webapp" />
+    </exec>
+    <replace file="${getting-started.app.dir}/webapp/pom.xml">
+      <replacetoken><![CDATA[</dependencies>]]></replacetoken>
+      <replacevalue>
+        <![CDATA[
+          <dependency>
+            <groupId>org.apache.cocoon.getting-started</groupId>
+            <artifactId>custom-block</artifactId>
+            <version>1.0-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
+        ]]>
+      </replacevalue>
+    </replace>
+    <exec dir="${getting-started.app.dir}/webapp" executable="mvn.bat" logError="true">
+      <arg line="package" />
+    </exec>
+  <move todir="${getting-started.app.dir}/lib">
+    <fileset dir="${getting-started.app.dir}/webapp/target/webapp-1.0-SNAPSHOT/WEB-INF/lib"/>
+    </move>
+
+    <!-- Remove Maven specific files -->
+    <delete includeemptydirs="true">
+      <fileset dir="${getting-started.app.dir}">
+        <include name="**/pom.xml"/>
+        <include name="**/rcl.properties"/>
+        <include name="**/target/**"/>
+      </fileset>
+    </delete>
+
+    <!-- Copy static files -->
+    <antcall target="copy-static-files" />
+  </target>
+
+  <target name="copy-static-files">
+    <copy todir="${release.dir}">
+      <fileset dir="${getting-started.orig.dir}" />
+    </copy>
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~ Maven Ant tasks experiments ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name="test" depends="init">
     <artifact:dependencies filesetId="dependency.fileset">
       <dependency groupId="org.apache.cocoon" artifactId="cocoon-fop-impl" version="1.0.0-RC2">
         <exclusion groupId="org.apache.cocoon" artifactId="cocoon-core"/>
@@ -207,6 +336,6 @@
       <fileset refid="dependency.fileset" />
       <mapper type="flatten" />
     </copy>
-  </target-->
+  </target>
 
 </project>
