@@ -97,7 +97,10 @@ public class HttpServlerResponseBufferingWrapperTestCase extends TestCase {
                 outputStream.write(b);
             } catch (RuntimeException e) {
                 //here we check whether we caught right exception. Is there any better method?
-                catchedException = e.getMessage().contains("limit");
+                if (e.getMessage().indexOf("limit") != -1)
+                    catchedException = true;
+                else
+                    throw e;
             }
         }
         control.verify();
