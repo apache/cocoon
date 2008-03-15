@@ -25,6 +25,11 @@
 <document>
   <body>
     <release version="1.0.0" date="2008-00-00" description="unreleased">
+      <action dev="gkossakowski" type="fix" issue="COCOON-2150">
+        Fixed bug in ServletServiceContext that was responsible for errors on resetting response that was already committed.
+        Now Servlet Service Framework buffers response but only if 404 status code has been set.
+        This allows to reset the response safely.
+      </action>
       <action dev="gkossakowski" type="update">
         Made attributes 'mount-path' and 'context-path' of servlet-context tag required.
       </action>
