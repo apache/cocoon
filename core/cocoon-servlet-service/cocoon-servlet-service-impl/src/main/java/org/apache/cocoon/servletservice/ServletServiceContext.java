@@ -41,15 +41,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.cocoon.servletservice.util.ServletContextWrapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * @version $Id$
@@ -451,8 +446,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         protected void forward(ServletRequest request, ServletResponse response, boolean superCall)
                         throws ServletException, IOException {
             try {
-                StatusRetrievableWrappedResponse wrappedResponse = new StatusRetrievableWrappedResponse(
-                                (HttpServletResponse) response);
+                HttpServletResponseBufferingWrapper wrappedResponse = new HttpServletResponseBufferingWrapper((HttpServletResponse)response);
                 // FIXME: I think that Cocoon should always set status code on
                 // its own
                 wrappedResponse.setStatus(HttpServletResponse.SC_OK);
@@ -471,26 +465,17 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                                     wrappedResponse);
                 }
 
-                ServletException se = null;
-                try {
-                    ServletServiceContext.this.servlet.service(request, wrappedResponse);
-                } catch (ServletException e) {
-                    se = e;
-                }
+                ServletServiceContext.this.servlet.service(request, wrappedResponse);
 
-                int status = wrappedResponse.getStatus();
-                if (se != null || (status < 200 || status >= 400)) {
-                    wrappedResponse.reset();
-                    NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
-                    if (_super != null) {
-                        _super.forward(request, wrappedResponse);
-                    } else {
-                        wrappedResponse.getWriter().println("Resource not found");
-                        wrappedResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        throw se;
-                    }
+                int status = wrappedResponse.getStatusCode();
+                NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
+                if (status == HttpServletResponse.SC_NOT_FOUND && _super != null) {
+                    //if servlet returned NOT_FOUND (404) and has super servlet declared let's reset everything and ask the super servlet
+                    wrappedResponse.resetBufferedResponse();
+                    _super.forward(request, response);
+                } else {
+                    wrappedResponse.flushBufferedResponse();
                 }
-
             } finally {
                 CallStackHelper.leaveServlet();
             }
@@ -499,39 +484,6 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         public void include(ServletRequest request, ServletResponse response) throws ServletException, IOException {
             throw new UnsupportedOperationException();
         }
-    }
-
-    public static class StatusRetrievableWrappedResponse extends HttpServletResponseWrapper {
-
-       	private int status;
-
-       	public StatusRetrievableWrappedResponse(HttpServletResponse wrapped) {
-       		super(wrapped);
-       	}
-
-    	public void setStatus(int sc, String sm) {
-    		this.status = sc;
-    		super.setStatus(sc, sm);
-    	}
-
-    	public void setStatus(int sc) {
-    		this.status = sc;
-    		super.setStatus(sc);
-    	}
-
-    	public int getStatus() {
-    		return this.status;
-    	}
-
-    	public void sendError(int errorCode) throws IOException {
-    		this.status = errorCode;
-    		super.sendError(errorCode);
-    	}
-
-    	public void sendError(int errorCode, String errorMessage) throws IOException {
-    		this.status = errorCode;
-    		super.sendError(errorCode, errorMessage);
-    	}
     }
 
 }
