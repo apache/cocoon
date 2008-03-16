@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-public class HttpServlerResponseBufferingWrapperTestCase extends TestCase {
+public class HttpServletResponseBufferingWrapperTestCase extends TestCase {
     
     public void testHeadersPassing() {
         MockControl control = MockControl.createControl(HttpServletResponse.class);
