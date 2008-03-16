@@ -471,7 +471,11 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                 NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
                 if (status == HttpServletResponse.SC_NOT_FOUND && _super != null) {
                     //if servlet returned NOT_FOUND (404) and has super servlet declared let's reset everything and ask the super servlet
+                    
+                    //wrapping object resets underlying response as well 
                     wrappedResponse.resetBufferedResponse();
+                    //here we don't need to pass wrappedResponse object because it's not our concern to buffer response anymore
+                    //this avoids many overlapping buffers
                     _super.forward(request, response);
                 } else {
                     wrappedResponse.flushBufferedResponse();
