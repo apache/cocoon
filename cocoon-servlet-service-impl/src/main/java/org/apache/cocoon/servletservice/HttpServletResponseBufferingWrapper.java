@@ -27,7 +27,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>THIS IS INTERNAL CLASS OF SERVLET SERVICE FRAMEWORK AND SHOULDN'T BE USED ELSEWHERE!</p>
@@ -53,8 +54,6 @@ class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
      */
     static private int BUFFER_LIMIT = 1024 * 1024; //= 1MB
     static private String ALREADY_COMMITTED_EXCEPTION = "The response has been already committed.";
-    
-    public Logger log = Logger.getLogger(getClass());
     
     private boolean bufferResponse;
     private boolean committed;
@@ -267,6 +266,8 @@ class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
      * stream.
      */
     private class LimitingServletOutputStream extends ServletOutputStream {
+        
+        private Log log = LogFactory.getLog(getClass());
 
         private int writeLimit;
         private ByteArrayOutputStream outputStream;
@@ -284,7 +285,7 @@ class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
                         "The buffering limit (" + writeLimit+ ") has been reached. If you encounter this exception it means that you to "
                         + "write a big response body for response that has error code set as status code. This is always a bad "
                         + "idea and in such case you should reconsider your design.");
-                HttpServletResponseBufferingWrapper.this.log.fatal("Fatal error occured in writing to response", e);
+                log.fatal("Fatal error occured in writing to response", e);
                 throw e;
             }
         }
