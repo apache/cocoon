@@ -27,10 +27,35 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.apache.log4j.Logger;
+
+/**
+ * <p>THIS IS INTERNAL CLASS OF SERVLET SERVICE FRAMEWORK AND SHOULDN'T BE USED ELSEWHERE!</p>
+ * 
+ * <p>This class works in two modes:</p>
+ * <ol>
+ * <li>If status code has been set to value different than <code>404</code> (<code>SC_NOT_FOUND</code>) then this class 
+ *     acts completely transparently by forwarding all method calls to wrapped response object.</li>
+ * <li>If status code has been set to <code>404</code> then this class acts like a buffer. It buffers all method calls 
+ *     that would commit wrapped response. Buffering of such calls is being performed in order to assure that wrapped 
+ *     response can be always reseted if needed. It's worth mentioning the fact that buffer for {@link OutputStream}
+ *     returned by {@link #getOutputStream()} is limited to the size specified in
+ *     {@link #BUFFER_LIMIT} field.</li>
+ *
+ *  <p>Additionally, this class lets the access to statusCode code that has been set through the 
+ *     {@link #getStatusCode()} method.</p> 
+ */
 class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
 
-    static private int BUFFER_LIMIT = 1024 * 1024;
+    /**
+     * Limit for a buffer for output stream returned by {@link #getOutputStream()} method.
+     * This is a hard limit, if exceeded an exception is thrown.
+     */
+    static private int BUFFER_LIMIT = 1024 * 1024; //= 1MB
     static private String ALREADY_COMMITTED_EXCEPTION = "The response has been already committed.";
+    
+    public Logger log = Logger.getLogger(getClass());
+    
     private boolean bufferResponse;
     private boolean committed;
     private String message;
@@ -237,6 +262,10 @@ class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
         return statusCode;
     }
 
+    /**
+     * Simple class acting like a {@link ServletOutputStream} but limiting number of bytes that can be written to the 
+     * stream.
+     */
     private class LimitingServletOutputStream extends ServletOutputStream {
 
         private int writeLimit;
@@ -250,11 +279,14 @@ class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
         public void write(int b) throws IOException {
             if (this.outputStream.size() < this.writeLimit)
                 this.outputStream.write(b);
-            else
-                throw new RuntimeException(
+            else {
+                RuntimeException e = new RuntimeException(
                         "The buffering limit (" + writeLimit+ ") has been reached. If you encounter this exception it means that you to "
-                                + "write a big response body for response that has error code set as status code. This is always a bad "
-                                + "idea and in such case you should reconsider your design.");
+                        + "write a big response body for response that has error code set as status code. This is always a bad "
+                        + "idea and in such case you should reconsider your design.");
+                HttpServletResponseBufferingWrapper.this.log.fatal("Fatal error occured in writing to response", e);
+                throw e;
+            }
         }
 
         public void reset() {
