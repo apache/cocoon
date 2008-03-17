@@ -51,7 +51,8 @@
 
   <!-- general properties -->
   <property name="target.dir" value="./target" />
-  <property name="release.dir" value="${target.dir}/release" />
+  <property name="release.base.dir" value="${target.dir}/release"/>
+  <property name="release.dir" value="${release.base.dir}/module" />
 
   <!-- user specific properties -->
   <property name="download.url.base" value="http://repo1.maven.org/maven2/" />
@@ -81,11 +82,12 @@
     <add-module name="cocoon-xml-impl" version="1.0.0-RC2" type="xml-impl" />
     <add-module name="cocoon-xml-resolver" version="1.0.0-RC2" type="xml-resolver" />
     <add-module name="cocoon-xml-util" version="1.0.0-RC2" type="xml-util" />
-    <dist file="${target.dir}/cocoon-2.2.0-dist" deploy-group-name="" />
+
+    <dist name="cocoon-2.2.0" deploy-group-name="" />
   </target>
 
   <target name="fop-block" depends="init" description="Release the Cocoon Forms block">
-    <create-block-dist-impl name-impl="cocoon-fop-impl" version="1.0.0-RC2" name="cocoon-fop-block" />
+    <create-block-dist-impl name-impl="cocoon-fop-impl" version="1.0.0-RC2" name="cocoon-fop-block" docs="../../../site-svn/site/2.2/blocks/forms/1.0/"/>
   </target>
 
   <target name="ssf" depends="init" description="Release the Servlet-Service Framework">
@@ -95,11 +97,13 @@
     <add-module name="cocoon-servlet-service-impl" version="1.0.0-RC1" type="impl" />
     <add-module name="cocoon-servlet-service-components" version="1.0.0-RC1" type="cocoon-components" />
 
-    <dist file="${target.dir}/cocoon-ssf-1.0.0-RC1" deploy-group-name="ssf" />
+    <add-files dir="legal/default" />
+
+    <dist name="cocoon-servlet-serivce-1.0.0-RC1" deploy-group-name="cocoon-servlet-service" />
   </target>
 
   <target name="getting-started-dist" depends="getting-started-create">
-    <dist file="${target.dir}/cocoon-getting-started-2.2.0-dist" deploy-group-name="getting-started" />
+    <dist name="cocoon-getting-started-2.2.0" deploy-group-name="getting-started" />
   </target>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~ internal targets ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -115,10 +119,16 @@
     <attribute name="name-impl" />
     <attribute name="version" />
     <attribute name="type" />
+    <attribute name="docs" />
     <sequential>
+      <add-docs dir="@{docs}" type="impl"/>
+
       <add-module name="@{name-api}" version="@{version}" type="api" />
       <add-module name="@{name-impl}" version="@{version}" type="impl" />
-      <dist file="@{name}-@{version}-dist" deploy-group-name="@{name}" />
+
+      <add-files dir="legal/default" />
+
+      <dist name="@{name}-@{version}" deploy-group-name="@{name}" />
     </sequential>
   </macrodef>
 
@@ -126,20 +136,24 @@
     <attribute name="name" />
     <attribute name="name-impl" />
     <attribute name="version" />
+    <attribute name="docs" />
     <sequential>
+      <add-docs dir="@{docs}" type="impl"/>
       <add-module name="@{name-impl}" version="@{version}" type="impl" />
-      <dist file="${target.dir}/@{name}-@{version}-dist" deploy-group-name="@{deploy-group-name}" />
+      <add-files dir="legal/default" />
+      <dist name="@{name}-@{version}" deploy-group-name="@{deploy-group-name}" />
     </sequential>
   </macrodef>
 
   <macrodef name="dist">
-    <attribute name="file" />
+    <attribute name="name" />
     <attribute name="deploy-group-name" />
     <sequential>
-      <create-package file="@{file}" />
-      <create-checksum file="@{file}" />
-      <gpg-sign file="@{file}" />
-      <deploy-staging file="@{file}" deploy-group-name="@{deploy-group-name}" />
+      <property name="file" value="${target.dir}/@{name}" />
+      <create-package file="${file}" name="@{name}" />
+      <create-checksum file="${file}" />
+      <gpg-sign file="${file}" />
+      <deploy-staging file="${file}" deploy-group-name="@{deploy-group-name}" />
     </sequential>
   </macrodef>
 
@@ -165,15 +179,6 @@
 
       <!-- copy the binaries  -->
       <copy file="${target.dir}/@{jarFileName}" tofile="${release.dir}/@{jarFileName}" />
-
-      <!-- notice and license files -->
-      <unzip src="${target.dir}/@{jarFileName}" dest="${release.dir}">
-        <patternset>
-          <include name="META-INF/LICENSE.txt" />
-          <include name="META-INF/NOTICE.txt" />
-        </patternset>
-        <mapper type="flatten" />
-      </unzip>
     </sequential>
   </macrodef>
 
@@ -184,17 +189,37 @@
       <copy todir="${release.dir}/@{type}/docs">
         <fileset dir="@{dir}">
           <exclude name="**/.svn/**"/>
+          <exclude name="**/LICENSE.txt"/>
+          <exclude name="**/NOTICE.txt"/>
+          <exclude name="**/license.txt"/>
+          <exclude name="**/notice.txt"/>
         </fileset>
+      </copy>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="add-files">
+    <attribute name="dir" />
+    <sequential>
+      <copy todir="${release.dir}">
+        <fileset dir="@{dir}" />
       </copy>
     </sequential>
   </macrodef>
 
   <macrodef name="create-package">
     <attribute name="file" />
+    <attribute name="name" />
     <sequential>
+      <!-- rename base directory -->
+      <property name="release.dir.new" value="${release.base.dir}/@{name}" />
+      <mkdir dir="${release.dir.new}"/>
+      <move todir="${release.dir.new}">
+        <fileset dir="${release.dir}"/>
+      </move>
       <!-- create packages -->
-      <zip destfile="@{file}.zip" basedir="${release.dir}" />
-      <tar tarfile="@{file}.tar" basedir="${release.dir}" />
+      <zip destfile="@{file}.zip" basedir="${release.base.dir}" level="9" />
+      <tar tarfile="@{file}.tar" basedir="${release.base.dir}" />
       <gzip zipfile="@{file}.tar.gz" src="@{file}.tar" />
       <delete file="@{file}.tar" />
     </sequential>
@@ -255,6 +280,7 @@
       <exec command="scp @{file} ${deploy.user}@${deploy.server}:${deploy.path}/@{deploy-group-name}" />
     </sequential>
   </macrodef>
+
   <macrodef name="gpg-sign-file">
     <attribute name="file" />
     <sequential>
