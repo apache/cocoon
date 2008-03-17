@@ -38,21 +38,21 @@
     It also contains functionality so that a servlet service can call other servlet
     services that it is connected to in the Spring configuration.
   </description>
-  <url>http://cocoon.apache.org/${docs.m.servlet-service-impl.relPath}</url>    
-  
+  <url>http://cocoon.apache.org/${docs.m.servlet-service-impl.relPath}</url>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.servlet-service-impl.version}</docs.version>
-    <docs.urlRelativizer>../../../../../</docs.urlRelativizer>    
-  </properties>  
-  
+    <docs.urlRelativizer>../../../../../</docs.urlRelativizer>
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.servlet-service-impl.relPath}</url>
     </site>
-  </distributionManagement>  
-  
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -95,11 +95,11 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
@@ -127,7 +127,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -135,22 +135,30 @@
         <configuration>
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/${project.artifactId}</tagBase>
         </configuration>
-      </plugin>   
+      </plugin>
     </plugins>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
       </resource>
+      <resource>
+        <directory>.</directory>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>LICENSE.txt</include>
+          <include>NOTICE.txt</include>
+        </includes>
+      </resource>
     </resources>
   </build>
-  
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-impl/</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-impl/</developerConnection>
-    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-impl/</url>    
-  </scm>  
-  
+    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-impl/</url>
+  </scm>
+
   <reporting>
     <plugins>
       <plugin>
@@ -166,7 +174,7 @@
             </reports>
           </reportSet>
         </reportSets>
-      </plugin>    
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
@@ -179,8 +187,8 @@
         </reportSets>
       </plugin>
     </plugins>
-  </reporting>   
-  
+  </reporting>
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -193,11 +201,11 @@
               <navDocId>1413</navDocId>
               <collection>cdocs-servlet-service-impl</collection>
               <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
-            </configuration>            
-          </plugin> 
+            </configuration>
+          </plugin>
         </plugins>
-      </build>      
-    </profile>   
-  </profiles>     
-  
+      </build>
+    </profile>
+  </profiles>
+
 </project>
