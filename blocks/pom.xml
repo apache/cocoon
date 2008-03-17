@@ -50,20 +50,11 @@
           </archive>
         </configuration>
       </plugin>
-      <!-- Commented, until commons-jci is available at Maven central -->
-      <!--plugin>
+      <plugin>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-maven-plugin</artifactId>
-        <version>1.0.0-M1-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <goals>
-              <goal>rcl</goal>
-            </goals>
-          </execution>
-        </executions>        
-      </plugin-->
+        <version>1.0.0-M1</version>      
+      </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
