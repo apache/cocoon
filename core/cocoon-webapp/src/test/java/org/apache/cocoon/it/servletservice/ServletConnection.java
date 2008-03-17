@@ -42,4 +42,10 @@ public class ServletConnection extends HtmlUnitTestCase {
         Assert.assertTrue(this.response.getStatusCode() == 200);
     }
 
+    public void testRelativeServletConnectionErrorStatusCode() throws Exception {
+        this.loadResponse("test1/test9");
+        assertTrue(this.response.getContentAsString().indexOf("Forbidden") > 0);
+        Assert.assertTrue(this.response.getStatusCode() == 403);
+    }
+
 }
