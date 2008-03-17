@@ -22,32 +22,22 @@
 import java.io.File
 import org.apache.commons.io.FileUtils
 
-new File("../../core").eachFileRecurse({file->
+new File("../../tools").eachFileRecurse({file->
     if(file.name == "pom.xml") {
         println "checking module: $file.parentFile.canonicalPath"
-        File lf = new File(file.parent, "src/main/resources/META-INF/license.txt")
+        File lf = new File(file.parent, "LICENSE.txt")
         if(!lf.exists()) {
-            lf.parentFile.mkdirs()
-            FileUtils.copyFile(new File("license.txt"), lf);
-            // add to SVN
-            addToSVN(new File(file.parent, "src/main/resources"))
-            addToSVN(new File(file.parent, "src/main/resources/META-INF"))
+            FileUtils.copyFile(new File("LICENSE.txt"), lf);
             addToSVN(lf)
         }
         
-        File nf = new File(file.parent, "src/main/resources/META-INF/notice.txt")        
+        File nf = new File(file.parent, "NOTICE.txt")        
         if(!nf.exists()) {
-            FileUtils.copyFile(new File("notice.txt"), nf)    
+            FileUtils.copyFile(new File("NOTICE.txt"), nf)    
             addToSVN(nf)   
-        }    
+        }   
         
-        File cf = new File(file.parent, "src/changes/changes.xml")        
-        if(!cf.exists()) {
-            cf.parentFile.mkdirs()        
-            FileUtils.copyFile(new File("changes.xml"), cf)
-            addToSVN(new File(file.parent, "src/changes"))   
-            addToSVN(cf)   
-        }          
+        println "----------------------------------------------------"            
     }
 })
 
@@ -55,5 +45,4 @@ def addToSVN(file) {
     String cmd = "svn add $file.canonicalPath"
     Process p = "cmd /c $cmd".execute()
     p.err.eachLine { line -> println line }   
-    println "----------------------------------------------------"
 }
