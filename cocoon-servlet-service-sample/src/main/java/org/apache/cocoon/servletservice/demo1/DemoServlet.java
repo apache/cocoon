@@ -149,11 +149,11 @@ public class DemoServlet extends HttpServlet {
             os.close();
 
         } else if ("/test9".equals(path)) {
-            // FIXME Doesn't work currently!
             RelativeServletConnection con = new RelativeServletConnection(null, "/test8", null);
             response.setContentType("text/plain");
             InputStream is = con.getInputStream();
             OutputStream os = response.getOutputStream();
+            response.setStatus(con.getResponseCode());
             copy(is, os);
             is.close();
             os.close();
