@@ -100,12 +100,12 @@ public interface SitemapOutputComponent {
      * Internet Explorer has a bug that wasn't fixed until version 7.  The bug
      * prevents the PDF document from displaying correctly.  It will look like
      * an empty document or something similar.  So the general rule of thumb
-     * for explicitly seting the content length is:
+     * for explicitly setting the content length is:
      * </p>
      * <ul>
      * <li>If it is a PDF document, always set content length (might require
      *     the document to be cached to get the number of bytes)</li>
-     * <li>If you are writing a Reader and you have the content lenght, set
+     * <li>If you are writing a Reader and you have the content length, set
      *     it.</li>
      * <li>Otherwise it is safe to return false here.</li>
      * </ul>
