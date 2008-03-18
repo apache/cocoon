@@ -29,6 +29,10 @@
 
   <body>
     <release version="2.2.0" date="2007-??-??" description="unreleased">
+      <action dev="joerg" type="fix">
+        Close streams properly after copying Parts (MultipartParser). Allow to access InputStream of PartInMemory
+        multiple times.
+      </action>
       <action dev="joerg" type="add" fixes-bug="COCOON-2149" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
         Add capability to IncludeTransformer to strip the root element from included XML content.
       </action>

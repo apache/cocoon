@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.servlet.multipart;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -27,21 +28,16 @@ import java.util.Map;
  */
 public class PartInMemory extends Part {
 
-    private InputStream in;
-
+    private byte[] bytes;
     private int size;
 
     /**
      * Constructor PartInMemory
-     *
-     * @param headers
-     * @param in
-     * @param size
      */
-    public PartInMemory(Map headers, InputStream in, int size) {
+    public PartInMemory(Map headers, byte[] bytes) {
         super(headers);
-        this.in = in;
-        this.size = size;
+        this.bytes = bytes;
+        this.size = bytes.length;
     }
 
     /**
@@ -64,17 +60,18 @@ public class PartInMemory extends Part {
      * @throws IOException
      */
     public InputStream getInputStream() throws IOException {
-        if (this.in != null) {
-            return this.in;
+        if (this.bytes != null) {
+            return new ByteArrayInputStream(this.bytes);
         } else {
             throw new IllegalStateException("This part has already been disposed.");
         }
     }
-    
+
     /**
      * Clean the byte array content buffer holding part data
      */
     public void dispose() {
-        this.in = null;
+        this.bytes = null;
     }
+
 }

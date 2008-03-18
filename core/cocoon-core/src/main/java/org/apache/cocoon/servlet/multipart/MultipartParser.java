@@ -17,7 +17,6 @@
 package org.apache.cocoon.servlet.multipart;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -115,7 +114,6 @@ public class MultipartParser {
         TokenStream stream = new TokenStream(pushbackStream);
 
         parseMultiPart(stream, getBoundary(contentType));
-
     }
 
     public Hashtable getParts(int contentLength, String contentType, InputStream requestStream)
@@ -252,7 +250,6 @@ public class MultipartParser {
         byte[] buf = new byte[FILE_BUFFER_SIZE];
         OutputStream out;
         File file = null;
-        boolean canceled = false;
 
         if (oversized) {
             out = new NullOutputStream();
@@ -327,11 +324,11 @@ public class MultipartParser {
         }
 
         String name = (String)headers.get("name");
-        if (oversized || canceled) {
+        if (oversized) {
             this.parts.put(name, new RejectedPart(headers, length, this.contentLength, this.maxUploadSize));
         } else if (file == null) {
             byte[] bytes = ((ByteArrayOutputStream) out).toByteArray();
-            this.parts.put(name, new PartInMemory(headers, new ByteArrayInputStream(bytes), bytes.length));
+            this.parts.put(name, new PartInMemory(headers, bytes));
         } else {
             this.parts.put(name, new PartOnDisk(headers, file));
         }
@@ -401,9 +398,6 @@ public class MultipartParser {
 
     /**
      * Get boundary from contentheader
-     *
-     * @param hdr
-     *
      */
     private String getBoundary(String hdr) {
 
@@ -438,4 +432,5 @@ public class MultipartParser {
 
         return new String(bos.toByteArray(), this.characterEncoding);
     }
+
 }

@@ -124,10 +124,16 @@ public abstract class Part implements Disposable {
      */
     public void copyToSource(ModifiableSource source) throws IOException {
         InputStream is = getInputStream();
-        OutputStream os = source.getOutputStream();
-        IOUtils.copy(is, os);
-        is.close();
-        os.close();
+        try {
+            OutputStream os = source.getOutputStream();
+            try {
+                IOUtils.copy(is, os);
+            } finally {
+                os.close();
+            }
+        } finally {
+            is.close();
+        }
     }
     
     /**
@@ -139,10 +145,16 @@ public abstract class Part implements Disposable {
      */
     public void copyToFile(String filename) throws IOException {
         InputStream is = getInputStream();
-        OutputStream os = new FileOutputStream(filename);
-        IOUtils.copy(is, os);
-        is.close();
-        os.close();
+        try {
+            OutputStream os = new FileOutputStream(filename);
+            try {
+                IOUtils.copy(is, os);
+            } finally {
+                os.close();
+            }
+        } finally {
+            is.close();
+        }
     }
     
     /**
