@@ -36,9 +36,14 @@
     that you can login to the 'deploy.server' via SSH keys because the script
     doesn't allow passing credentials.
 
+    This scripts also relys on having Maven 2.0.6 (or greater) installed correctly and
+    that 'gpg' is available.
+
     When one of the 'externally available targets' is executed, the release artifacts
     are created in the ./target directory and then uploaded to the configured server
     location.
+
+    This script has only been tested on Linux so far.
 
   -->
 
@@ -102,7 +107,8 @@
     <dist name="cocoon-servlet-serivce-1.0.0-RC1" deploy-group-name="cocoon-servlet-service" />
   </target>
 
-  <target name="getting-started-dist" depends="getting-started-create">
+  <target name="getting-started" depends="getting-started-create">
+    <add-files dir="legal/getting-started" />
     <dist name="cocoon-getting-started-2.2.0" deploy-group-name="getting-started" />
   </target>
 
@@ -293,22 +299,24 @@
   <target name="getting-started-create" depends="init">
     <property name="getting-started.app.dir" value="${release.dir}/app" />
     <mkdir dir="${getting-started.app.dir}" />
+    <mkdir dir="${release.dir}/jetty/lib/" />
     <property name="getting-started.orig.dir" value="./getting-started" />
     <!-- Copy Jetty files -->
-    <!--get dest="${release.dir}/jetty/jetty-6.1.7.jar" src="${download.url.base}/org/mortbay/jetty/jetty/6.1.7/jetty-6.1.7.jar" />
-    <get dest="${release.dir}/jetty/jetty-util-6.1.7.jar" src="${download.url.base}/org/mortbay/jetty/jetty-util/6.1.7/jetty-util-6.1.7.jar" />
-    <get dest="${release.dir}/jetty/jetty-start-6.1.7.jar" src="${download.url.base}/org/mortbay/jetty/start/6.1.7/start-6.1.7.jar" />
-    <get dest="${release.dir}/jetty/servlet-api-2.5-6.1.7.jar" src="${download.url.base}/org/mortbay/jetty/servlet-api-2.5/6.1.7/servlet-api-2.5-6.1.7.jar" /-->
+    <property name="jetty.download.url.base" value="http://repo1.maven.org/maven2/" />
+    <get dest="${release.dir}/jetty/lib/jetty-6.1.7.jar" src="${jetty.download.url.base}/org/mortbay/jetty/jetty/6.1.7/jetty-6.1.7.jar" />
+    <get dest="${release.dir}/jetty/lib/jetty-util-6.1.7.jar" src="${jetty.download.url.base}/org/mortbay/jetty/jetty-util/6.1.7/jetty-util-6.1.7.jar" />
+    <get dest="${release.dir}/jetty/jetty-start-6.1.7.jar" src="${jetty.download.url.base}/org/mortbay/jetty/start/6.1.7/start-6.1.7.jar" />
+    <get dest="${release.dir}/jetty/lib/servlet-api-2.5-6.1.7.jar" src="${jetty.download.url.base}/org/mortbay/jetty/servlet-api-2.5/6.1.7/servlet-api-2.5-6.1.7.jar" />
 
     <!-- Create a block -->
-    <exec dir="${getting-started.app.dir}" executable="mvn.bat" logError="true">
+    <exec dir="${getting-started.app.dir}" executable="mvn" logError="true">
       <arg line="archetype:create -DarchetypeGroupId=org.apache.cocoon -DarchetypeArtifactId=cocoon-22-archetype-block -DarchetypeVersion=1.0.0-RC2 -DgroupId=org.apache.cocoon.getting-started -DartifactId=custom-block" />
     </exec>
-    <exec dir="${getting-started.app.dir}/custom-block" executable="mvn.bat" logError="true">
+    <exec dir="${getting-started.app.dir}/custom-block" executable="mvn" logError="true">
       <arg line="install" />
     </exec>
     <!-- Create the web application -->
-    <exec dir="${getting-started.app.dir}" executable="mvn.bat" logError="true">
+    <exec dir="${getting-started.app.dir}" executable="mvn" logError="true">
       <arg line="archetype:create -DarchetypeGroupId=org.apache.cocoon -DarchetypeArtifactId=cocoon-22-archetype-webapp -DarchetypeVersion=1.0.0-RC2 -DgroupId=org.apache.cocoon.getting-started -DartifactId=webapp" />
     </exec>
     <replace file="${getting-started.app.dir}/webapp/pom.xml">
@@ -324,10 +332,10 @@
         ]]>
       </replacevalue>
     </replace>
-    <exec dir="${getting-started.app.dir}/webapp" executable="mvn.bat" logError="true">
+    <exec dir="${getting-started.app.dir}/webapp" executable="mvn" logError="true">
       <arg line="package" />
     </exec>
-  <move todir="${getting-started.app.dir}/lib">
+    <move todir="${getting-started.app.dir}/lib">
     <fileset dir="${getting-started.app.dir}/webapp/target/webapp-1.0-SNAPSHOT/WEB-INF/lib"/>
     </move>
 
