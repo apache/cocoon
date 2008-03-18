@@ -16,8 +16,9 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <page xmlns:i="http://apache.org/cocoon/include/1.0">
   <slashdot>
     <i:include src="cocoon:/slashdot"/>
