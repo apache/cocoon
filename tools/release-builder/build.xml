@@ -225,21 +225,21 @@
       </move>
       <!-- create packages -->
       <fixcrlf srcdir="${release.base.dir}" eol="dos">
-        <include name="*.txt"/>
-        <include name="*.xml"/>
-        <include name="*.xslt"/>
-        <include name="*.js"/>
-        <include name="*.xslt"/>
-        <include name="*.java"/>
+        <include name="**/*.txt"/>
+        <include name="**/*.xml"/>
+        <include name="**/*.xslt"/>
+        <include name="**/*.js"/>
+        <include name="**/*.xslt"/>
+        <include name="**/*.java"/>
       </fixcrlf>
       <zip destfile="@{file}.zip" basedir="${release.base.dir}" level="9" />
       <fixcrlf srcdir="${release.base.dir}" eol="unix">
-        <include name="*.txt"/>
-        <include name="*.xml"/>
-        <include name="*.xslt"/>
-        <include name="*.js"/>
-        <include name="*.xslt"/>
-        <include name="*.java"/>
+        <include name="**/*.txt"/>
+        <include name="**/*.xml"/>
+        <include name="**/*.xslt"/>
+        <include name="**/*.js"/>
+        <include name="**/*.xslt"/>
+        <include name="**/*.java"/>
       </fixcrlf>
       <tar tarfile="@{file}.tar" basedir="${release.base.dir}" />
       <gzip zipfile="@{file}.tar.gz" src="@{file}.tar" />
