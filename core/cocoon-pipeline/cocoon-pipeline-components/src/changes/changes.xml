@@ -24,21 +24,27 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-RC3-SNAPSHOT" date="TBA" description="Unreleased">
+    <release version="1.0.0" date="TBA" description="released">
       <action dev="thorsten" type="fix">
         The paginator when used with spring has thrown errors since the service()
         method never got called. Adding workaround to use the paginator with spring.
       </action>
     </release>
-    <release version="1.0.0-RC1-SNAPSHOT" date="TBA" description="Unreleased">
+
+    <release version="1.0.0-RC2" date="2007-10-29" description="released">
+    </release>
+
+    <release version="1.0.0-RC1" date="2007-07-02" description="released">
       <action dev="vgritsenko" type="add">
         Implement support of XMLizable exceptions in the ExceptionGenerator
       </action>
     </release>
-    <release version="1.0.0-M1" date="2007-02-12" description="Milestone release">
+
+    <release version="1.0.0-M1" date="2007-03-02" description="released">
       <action dev="joerg" type="fix" issue="COCOON-1977" due-to="Ellis Pritchard">
         Fix threading issue with internal cache in ResourceReader.
       </action>
     </release>
+
   </body>
 </document>

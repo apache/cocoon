@@ -24,13 +24,13 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-RC3" date="2007-??-??" description="unreleased">
+    <release version="1.0.0" date="TBA" description="released">
       <action dev="rgoers" type="fix" issue="COCOON-1574">
         Created XPathXMLFileModule to fix problems with XMLFileModule. Added getAttributeValue to JXPathHelper
         and changed all references to getAttribute to use it instead.
       </action>
     </release>
-    <release version="1.0.0-RC2" date="2007-??-??" description="unreleased">
+    <release version="1.0.0-RC2" date="2007-10-29" description="released">
       <action dev="TS" type="fix" fixes-bug="COCOON-2144">
         Fixed getAttributeNames(...) in SettingsInputModule:
         The getAttributeNames(...) method returns an iterator of all properties instead an empty one.
@@ -46,15 +46,15 @@
         Set up XMLSerializer in a component way, i.e. retrieve it from ServiceManager.
       </action>
     </release>
-    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
+    <release version="1.0.0-RC1" date="2007-07-02" description="released">
       <action dev="reinhard" type="add" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com" issue="COCOON-2047">
         StatusGenerator: Show a list of all Spring beans
-      </action>  
-    </release> 
-    <release version="1.0.0-M1" date="2007-03-02" description="released">  
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2007-03-02" description="released">
       <action dev="reinhard" type="add">
         Initial creation.
-      </action>    
+      </action>
     </release>
   </body>
 </document>

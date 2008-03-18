@@ -28,7 +28,7 @@
   </properties>
 
   <body>
-    <release version="2.2.0" date="2007-??-??" description="unreleased">
+    <release version="2.2.0" date="TBA" description="released">
       <action dev="joerg" type="fix">
         Close streams properly after copying Parts (MultipartParser). Allow to access InputStream of PartInMemory
         multiple times.
@@ -48,7 +48,14 @@
         request has been processed actually.
       </action>
     </release>
-    <release version="2.2.0-M3-SNAPSHOT" date="2007-03-02" description="released">
+
+    <release version="2.2.0-RC2" date="2007-10-29" description="released">
+    </release>
+
+    <release version="2.2.0-RC1" date="2007-07-02" description="released">
+    </release>
+
+    <release version="2.2.0-M3" date="2007-03-02" description="released">
       <action dev="dfagerstrom" type="update">
         Refactoring to make the pipelines usable outside the tree processor:
         <ul>
@@ -64,17 +71,19 @@
               the release method is a noop.</li>
         </ul>
       </action>
-    </release>    
+    </release>
+
     <release version="2.2.0-M2" date="2007-02-11" description="released">
       <action dev="cziegeler" type="update">
         Cocoon becomes a normal Spring application which means that it is initialized by
         Spring and not the other way around.
-      </action>      
-    </release> 
+      </action>
+    </release>
+
     <release version="2.2.0-M1" date="2006-08-01" description="released">
       <action dev="cziegeler" type="update">
         Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
-      </action>      
+      </action>
     </release>
   </body>
 </document>
