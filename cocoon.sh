@@ -72,6 +72,7 @@ usage()
     exit 1
 }
 
+
 # ----- Handle action parameter ------------------------------------------------
 DEFAULT_ACTION="servlet"
 ACTION="$1"
@@ -83,6 +84,21 @@ else
   echo "$0: executing default action '$ACTION', use -h to see other actions"
 fi
 ARGS="$*"
+
+
+# ----- OS specific support ----------------------------------------------------
+
+cygwin=false;
+darwin=false;
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+  Darwin*) darwin=true
+           if [ -z "$JAVA_HOME" ] ; then
+             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
+           fi
+           ;;
+esac
+
 
 # ----- Verify and Set Required Environment Variables -------------------------
 
@@ -135,10 +151,10 @@ fi
 # ----- Set platform specific variables
 
 PATHSEP=":";
-case "`uname`" in
-   CYGWIN*) PATHSEP=";"
-            JAVA_HOME=`cygpath --unix "$JAVA_HOME"`;;
-esac
+if $cygwin; then
+  PATHSEP=";"
+  JAVA_HOME=`cygpath --unix "$JAVA_HOME"`;
+fi
 
 # ----- Set Local Variables ( used to minimize cut/paste) ---------------------
 
