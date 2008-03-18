@@ -24,7 +24,17 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-M1-SNAPSHOT" date="2007-00-00" description="unreleased">  
+
+    <release version="1.0.0" date="TBA" description="released">
+    </release>
+
+    <release version="1.0.0-RC2" date="2007-10-29" description="released">
+    </release>
+
+    <release version="1.0.0-RC1" date="2007-07-02" description="released">
+    </release>
+
+    <release version="1.0.0-M1" date="2007-03-02" description="released">
       <action dev="felixk" type="update">
          Refactored ThreadPool. Break out the ThreadPool into a bean. This will
          make it easier to configure custom thread pools for the RunnableManager.
@@ -32,3 +42,4 @@
     </release>
   </body>
 </document>
+

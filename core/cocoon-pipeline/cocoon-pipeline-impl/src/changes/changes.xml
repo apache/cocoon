@@ -24,7 +24,7 @@
   -->
 <document>
   <body>
-    <release version="1.0.0" date="2008-00-00" description="unreleased">
+    <release version="1.0.0" date="TBA" description="released">
       <action dev="vgritsenko" type="fix" fixes-bug="COCOON-1985">
         Use Spring's current request attributes as a pipeline lock object
         instead of current thread. Resolves deadlock when request is processed
@@ -32,13 +32,13 @@
       </action>
     </release>
 
-    <release version="1.0.0-RC2" date="2007-10-12" description="released">
+    <release version="1.0.0-RC2" date="2007-10-29" description="released">
     </release>
 
-    <release version="1.0.0-RC1" date="2007-06-27" description="released">
+    <release version="1.0.0-RC1" date="2007-07-02" description="released">
     </release>
 
-    <release version="1.0.0-M1" date="2007-02-13" description="released">
+    <release version="1.0.0-M1" date="2007-03-02" description="released">
     </release>
   </body>
 </document>

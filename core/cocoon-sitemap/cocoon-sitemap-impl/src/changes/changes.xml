@@ -25,7 +25,7 @@
   -->
 <document>
   <body>
-    <release version="1.0.0" date="2008-??-??" description="unreleased">
+    <release version="1.0.0" date="TBA" description="released">
       <action dev="rgoers" type="fix">
         Moved registration of VariableResolver to BridgeElementParser from SitemapElementParser to make it
         available to all Avalon components (i.e. input modules).
@@ -38,7 +38,7 @@
       	The settings object is not available in Object Model (it can't be obtained using expressions).
       </action>
     </release>
-    <release version="1.0.0-RC2" date="2007-10-12" description="released">
+    <release version="1.0.0-RC2" date="2007-10-29" description="released">
       <action dev="gkossakowski" type="fix" issue="COCOON-2108" due-to="Hugh Sparks" due-to-email="hugh@csparks.com">
         Construct xmodule:flow-attr does not accept document object. Fixes problem that caused
         "The object type: class java.lang.String could not be serialized to XML" exception.
@@ -48,7 +48,7 @@
         it was not set on serialize element.
       </action>
     </release>
-    <release version="1.0.0-RC1" date="2007-05-16" description="released">
+    <release version="1.0.0-RC1" date="2007-07-02" description="released">
       <action dev="reinhard" type="add" due-to="Jochen Seifarth" due-to-email="jochen.seifarth@web.de" issue="COCOON-1354">
         &lt;map:serialize status-code=&quot;{}&quot;/&gt; supports variable resolution.
       </action>

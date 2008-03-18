@@ -24,17 +24,23 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
+    <release version="1.0.0" date="TBA" description="released">
+    </release>
+
+    <release version="1.0.0-RC2" date="2007-10-29" description="released">
+    </release>
+
+    <release version="1.0.0-RC1" date="2007-07-02" description="released">
       <action dev="rgoers" type="add">
         Add cache for XPathXMLFileModule.
       </action>
       <action dev="reinhard" type="fix">
         Move all Spring configuration files into the "cocoon-store-impl" namespace.
-      </action>       
+      </action>
       <action dev="reinhard" type="fix">
         MRUMemoryStore registers at StoreJanitor only in that case, if StoreJanitor
         is set as dependency. By default it is set.
-      </action>  
+      </action>
       <action dev="reinhard" type="fix">
         The usage of  StoreJanitor to remove elements from EHDefaultStore was contra-productive,
         because EHCache provides its own invalidation mechanisms which are more
@@ -42,26 +48,26 @@
         at http://marc.info/?t=117563247800004&amp;r=1&amp;w=2. In order to use EHDefaultStore
         again, we would need access to EHCache internals so that we don't remove the
         wrong items.
-      </action>            
+      </action>
       <action dev="reinhard" type="add">
         Expose all configuration properties that EHCache provides via setter methods.
         Using them, EHDefaultStore can be completly configured in the Spring bean
-        definition. This allows setting maxElementsInMemory, memoryStoreEvictionPolicy, 
-        overflowToDisk, diskStorePath, eternal, timeToLiveSeconds, timeToIdleSeconds, 
-        diskPersistent, diskExpiryThreadIntervalSeconds, registeredEventListeners, 
-        bootstrapCacheLoader, maxElementsOnDisk. See the 1.2.4 constructor at 
+        definition. This allows setting maxElementsInMemory, memoryStoreEvictionPolicy,
+        overflowToDisk, diskStorePath, eternal, timeToLiveSeconds, timeToIdleSeconds,
+        diskPersistent, diskExpiryThreadIntervalSeconds, registeredEventListeners,
+        bootstrapCacheLoader, maxElementsOnDisk. See the 1.2.4 constructor at
         http://ehcache.sourceforge.net/javadoc/net/sf/ehcache/Cache.html for
         details.
       </action>
       <action dev="reinhard" type="update">
         Make the maximum number of disk objects configureable. The default value
         is 50000.
-      </action>    
-    </release>    
-    <release version="1.0.0-M1" date="2007-03-02" description="released">  
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2007-03-02" description="released">
       <action dev="reinhard" type="add">
         Initial creation.
-      </action>    
+      </action>
     </release>
   </body>
 </document>
