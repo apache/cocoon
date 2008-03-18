@@ -146,7 +146,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
      * Add a transformer.
      */
     public void addTransformer (String role, String source, Parameters param,
-            Parameters hintParam) throws ProcessingException {
+                                Parameters hintParam)
+    throws ProcessingException {
         super.addTransformer(role, source, param, hintParam);
         this.transformerRoles.add(role);
     }
@@ -155,7 +156,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
      * Set the serializer.
      */
     public void setSerializer (String role, String source, Parameters param,
-            Parameters hintParam, String mimeType) throws ProcessingException {
+                               Parameters hintParam, String mimeType)
+    throws ProcessingException {
         super.setSerializer(role, source, param, hintParam, mimeType);
         this.serializerRole = role;
     }
@@ -164,36 +166,37 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
      * Set the Reader.
      */
     public void setReader (String role, String source, Parameters param,
-            String mimeType)
-        throws ProcessingException {
+                           String mimeType)
+    throws ProcessingException {
         super.setReader(role, source, param, mimeType);
         this.readerRole = role;
     }
 
     protected boolean waitForLock(Object key) {
-        if(transientStore != null) {
+        if (transientStore != null) {
             Object lock = null;
-            synchronized(transientStore) {
-                String lockKey = PIPELOCK_PREFIX+key;
-                if(transientStore.containsKey(lockKey)) {
+            synchronized (transientStore) {
+                String lockKey = PIPELOCK_PREFIX + key;
+                if (transientStore.containsKey(lockKey)) {
                     // cache content is currently being generated, wait for other thread
                     lock = transientStore.get(lockKey);
                 }
             }
+
             // Avoid deadlock with self (see JIRA COCOON-1985).
-            if(lock != null && lock != Thread.currentThread()) {
+            if (lock != null && lock != Thread.currentThread()) {
                 try {
                     // become owner of monitor
-                    synchronized(lock) {
+                    synchronized (lock) {
                         lock.wait();
                     }
                 } catch (InterruptedException e) {
-                    if(getLogger().isDebugEnabled()) {
-                        getLogger().debug("Got interrupted waiting for other pipeline to finish processing, retrying...",e);
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("Got interrupted waiting for other pipeline to finish processing, retrying...", e);
                     }
                     return false;
                 }
-                if(getLogger().isDebugEnabled()) {
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Other pipeline finished processing, retrying to get cached response.");
                 }
                 return false;
@@ -208,12 +211,12 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
     protected boolean generateLock(Object key) {
         boolean succeeded = true;
 
-        if( transientStore != null && key != null ) {
-            String lockKey = PIPELOCK_PREFIX+key;
-            synchronized(transientStore) {
-                if(transientStore.containsKey(lockKey)) {
+        if (transientStore != null && key != null) {
+            String lockKey = PIPELOCK_PREFIX + key;
+            synchronized (transientStore) {
+                if (transientStore.containsKey(lockKey)) {
                     succeeded = false;
-                    if(getLogger().isDebugEnabled()) {
+                    if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Lock already present in the store!");
                     }
                 } else {
@@ -221,12 +224,12 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     try {
                         transientStore.store(lockKey, lock);
                     } catch (IOException e) {
-                        if(getLogger().isDebugEnabled()) {
-                            getLogger().debug("Could not put lock in the store!",e);
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Could not put lock in the store!", e);
                         }
                         succeeded = false;
                     }
-                }	
+                }
             }
         }
 
@@ -239,13 +242,13 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
     protected boolean releaseLock(Object key) {
         boolean succeeded = true;
 
-        if( transientStore != null && key != null ) {
-            String lockKey = PIPELOCK_PREFIX+key;
+        if (transientStore != null && key != null) {
+            String lockKey = PIPELOCK_PREFIX + key;
             Object lock = null;
-            synchronized(transientStore) {
-                if(!transientStore.containsKey(lockKey)) {
+            synchronized (transientStore) {
+                if (!transientStore.containsKey(lockKey)) {
                     succeeded = false;
-                    if(getLogger().isDebugEnabled()) {
+                    if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Lock not present in the store!");
                     }
                 } else {
@@ -253,16 +256,16 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                         lock = transientStore.get(lockKey);
                         transientStore.remove(lockKey);
                     } catch (Exception e) {
-                        if(getLogger().isDebugEnabled()) {
-                            getLogger().debug("Could not get lock from the store!",e);
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Could not get lock from the store!", e);
                         }
                         succeeded = false;
                     }
                 }
             }
-            if(succeeded && lock != null) {
+            if (succeeded && lock != null) {
                 // become monitor owner
-                synchronized(lock) {
+                synchronized (lock) {
                     lock.notifyAll();
                 }
             }
