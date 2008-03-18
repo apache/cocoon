@@ -182,6 +182,11 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="VG" type="fix" fixes-bug="COCOON-1985">
+      Use current HTTP request as a pipeline lock object instead of
+      current thread. Resolves deadlock when request is processed
+      in multiple threads.
+    </action>
     <action dev="JH" type="fix">
       Core: Close streams properly after copying Parts (MultipartParser). Allow to access InputStream of PartInMemory
       multiple times. 

@@ -36,6 +36,7 @@ import org.apache.cocoon.caching.CachingOutputStream;
 import org.apache.cocoon.caching.ComponentCacheKey;
 import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
@@ -172,106 +173,98 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
         this.readerRole = role;
     }
 
-    protected boolean waitForLock(Object key) {
+    protected boolean waitForLock(Environment env, Object key) {
         if (transientStore != null) {
-            Object lock = null;
+            final String lockKey = PIPELOCK_PREFIX + key;
+
+            // Get a lock object from the store
+            Object lock;
             synchronized (transientStore) {
-                String lockKey = PIPELOCK_PREFIX + key;
-                if (transientStore.containsKey(lockKey)) {
-                    // cache content is currently being generated, wait for other thread
-                    lock = transientStore.get(lockKey);
-                }
+                lock = transientStore.get(lockKey);
             }
 
             // Avoid deadlock with self (see JIRA COCOON-1985).
-            if (lock != null && lock != Thread.currentThread()) {
+            Object current = env.getObjectModel().get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+            if (lock != null && lock != current) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Waiting on Lock '" + lockKey + "'");
+                }
+
                 try {
-                    // become owner of monitor
                     synchronized (lock) {
                         lock.wait();
                     }
-                } catch (InterruptedException e) {
+
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Got interrupted waiting for other pipeline to finish processing, retrying...", e);
+                        getLogger().debug("Notified on Lock '" + lockKey + "'");
                     }
-                    return false;
+                } catch (InterruptedException e) {
+                    /* ignored */
                 }
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Other pipeline finished processing, retrying to get cached response.");
-                }
+
                 return false;
             }
         }
+        
         return true;
     }
 
     /**
      * makes the lock (instantiates a new object and puts it into the store)
      */
-    protected boolean generateLock(Object key) {
-        boolean succeeded = true;
-
+    protected void generateLock(Environment env, Object key) {
         if (transientStore != null && key != null) {
-            String lockKey = PIPELOCK_PREFIX + key;
+            final String lockKey = PIPELOCK_PREFIX + key;
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Adding Lock '" + lockKey + "'");
+            }
+
             synchronized (transientStore) {
                 if (transientStore.containsKey(lockKey)) {
-                    succeeded = false;
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Lock already present in the store!");
+                        getLogger().debug("Lock EXISTS: '" + lockKey + "'");
                     }
                 } else {
-                    Object lock = Thread.currentThread();
+                    Object lock = env.getObjectModel().get(HttpEnvironment.HTTP_REQUEST_OBJECT);
                     try {
                         transientStore.store(lockKey, lock);
                     } catch (IOException e) {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("Could not put lock in the store!", e);
-                        }
-                        succeeded = false;
+                        /* should not happen */
                     }
                 }
             }
         }
-
-        return succeeded;
     }
 
     /**
      * releases the lock (notifies it and removes it from the store)
      */
-    protected boolean releaseLock(Object key) {
-        boolean succeeded = true;
-
+    protected void releaseLock(Object key) {
         if (transientStore != null && key != null) {
-            String lockKey = PIPELOCK_PREFIX + key;
+            final String lockKey = PIPELOCK_PREFIX + key;
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Releasing Lock '" + lockKey + "'");
+            }
+
             Object lock = null;
             synchronized (transientStore) {
                 if (!transientStore.containsKey(lockKey)) {
-                    succeeded = false;
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Lock not present in the store!");
+                        getLogger().debug("Lock MISSING: '" + lockKey + "'");
                     }
                 } else {
-                    try {
-                        lock = transientStore.get(lockKey);
-                        transientStore.remove(lockKey);
-                    } catch (Exception e) {
-                        if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("Could not get lock from the store!", e);
-                        }
-                        succeeded = false;
-                    }
+                    lock = transientStore.get(lockKey);
+                    transientStore.remove(lockKey);
                 }
             }
-            if (succeeded && lock != null) {
-                // become monitor owner
+
+            if (lock != null) {
+                // Notify everybody who's waiting
                 synchronized (lock) {
                     lock.notifyAll();
                 }
             }
         }
-
-        return succeeded;
     }
 
     /**
@@ -316,7 +309,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                         "' using key " + this.toCacheKey);
             }
 
-            generateLock(this.toCacheKey);
+            generateLock(environment, this.toCacheKey);
 
             try {
                 OutputStream os = null;
@@ -683,9 +676,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     this.completeResponseIsCached = false;
                 }
             } else {
-
                 // check if there might be one being generated
-                if(!waitForLock(this.fromCacheKey)) {
+                if (!waitForLock(environment, this.fromCacheKey)) {
                     finished = false;
                     continue;
                 }
@@ -851,7 +843,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                         }
                     } else {
                         // check if something is being generated right now
-                        if(!waitForLock(pcKey)) {
+                        if (!waitForLock(environment, pcKey)) {
                             finished = false;
                             continue;
                         }
@@ -867,7 +859,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                             getLogger().debug("processReader: caching content for further requests of '" +
                                     environment.getURI() + "'.");
                         }
-                        generateLock(pcKey);
+                        generateLock(environment, pcKey);
 
                         if (readerValidity == null) {
                             if (isCacheableProcessingComponent) {
