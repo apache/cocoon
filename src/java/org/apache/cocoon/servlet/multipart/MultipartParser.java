@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,6 @@
 package org.apache.cocoon.servlet.multipart;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -53,7 +52,7 @@ public class MultipartParser {
     private final static int FILE_BUFFER_SIZE = 4096;
 
     private static final int MAX_BOUNDARY_SIZE = 128;
-    
+
     private boolean saveUploadedFilesToDisk;
 
     private File uploadDirectory = null;
@@ -61,23 +60,23 @@ public class MultipartParser {
     private boolean allowOverwrite;
 
     private boolean silentlyRename;
-    
+
     private int maxUploadSize;
 
     private String characterEncoding;
-    
+
     private Hashtable parts;
-    
+
     private boolean oversized = false;
-    
+
     private int contentLength;
-    
+
     private HttpSession session;
-    
+
     private boolean hasSession;
-    
+
     private Hashtable uploadStatus;
-    
+
     /**
      * Constructor, parses given request
      *
@@ -116,19 +115,18 @@ public class MultipartParser {
         TokenStream stream = new TokenStream(pushbackStream);
 
         parseMultiPart(stream, getBoundary(contentType));
-
     }
-    
+
     public Hashtable getParts(int contentLength, String contentType, InputStream requestStream)
     throws IOException, MultipartException {
         this.parts = new Hashtable();
         parseParts(contentLength, contentType, requestStream);
         return this.parts;
     }
-    
+
     public Hashtable getParts(HttpServletRequest request) throws IOException, MultipartException {
         this.parts = new Hashtable();
-        
+
         // Copy all parameters coming from the request URI to the parts table.
         // This happens when a form's action attribute has some parameters
         Enumeration names = request.getParameterNames();
@@ -151,21 +149,21 @@ public class MultipartParser {
             this.uploadStatus.put("finished", Boolean.FALSE);
             this.uploadStatus.put("sent", new Integer(0));
             this.uploadStatus.put("total", new Integer(request.getContentLength()));
-            this.uploadStatus.put("filename",  "");
+            this.uploadStatus.put("filename", "");
             this.uploadStatus.put("error", Boolean.FALSE);
             this.uploadStatus.put("uploadsdone", new Integer(0));
             this.session.setAttribute(UPLOAD_STATUS_SESSION_ATTR, this.uploadStatus);
         }
 
-        parseParts(request.getContentLength(), request.getContentType(), request.getInputStream());    
+        parseParts(request.getContentLength(), request.getContentType(), request.getInputStream());
 
         if (this.hasSession) {
             this.uploadStatus.put("finished", Boolean.TRUE);
         }
 
-        return this.parts;    
+        return this.parts;
     }
-    
+
     /**
      * Parse a multipart block
      *
@@ -214,7 +212,7 @@ public class MultipartParser {
                     // empty upload fields. Just parse away the part
                     byte[] buf = new byte[32];
                     while(ts.getState() == TokenStream.STATE_READING)
-                        ts.read(buf);  
+                        ts.read(buf);
                 }
             } else if (((String) headers.get("content-disposition"))
                     .toLowerCase().equals("form-data")) {
@@ -283,30 +281,31 @@ public class MultipartParser {
 
             out = new FileOutputStream(file);
         }
-        
+
         if (hasSession) { // upload widget support
             this.uploadStatus.put("finished", Boolean.FALSE);
             this.uploadStatus.put("started", Boolean.TRUE);
             this.uploadStatus.put("widget", headers.get("name"));
             this.uploadStatus.put("filename", headers.get("filename"));
         }
-        
+
         int length = 0; // Track length for OversizedPart
         try {
             int read = 0;
-            while (in.getState() == TokenStream.STATE_READING) {    // read data
+            while (in.getState() == TokenStream.STATE_READING) {
+                // read data
                 read = in.read(buf);
                 length += read;
                 out.write(buf, 0, read);
-                
+
                 if (this.hasSession) {
-                    this.uploadStatus.put("sent", 
+                    this.uploadStatus.put("sent",
                         new Integer(((Integer)this.uploadStatus.get("sent")).intValue() + read)
                     );
                 }
             }
             if (this.hasSession) { // upload widget support
-                this.uploadStatus.put("uploadsdone", 
+                this.uploadStatus.put("uploadsdone",
                     new Integer(((Integer)this.uploadStatus.get("uploadsdone")).intValue() + 1)
                 );
                 this.uploadStatus.put("error", Boolean.FALSE);
@@ -324,13 +323,13 @@ public class MultipartParser {
         } finally {
             if ( out!=null ) out.close();
         }
-        
+
         String name = (String)headers.get("name");
         if (oversized) {
             this.parts.put(name, new RejectedPart(headers, length, this.contentLength, this.maxUploadSize));
         } else if (file == null) {
             byte[] bytes = ((ByteArrayOutputStream) out).toByteArray();
-            this.parts.put(name, new PartInMemory(headers, new ByteArrayInputStream(bytes), bytes.length));
+            this.parts.put(name, new PartInMemory(headers, bytes));
         } else {
             this.parts.put(name, new PartOnDisk(headers, file));
         }
@@ -347,14 +346,14 @@ public class MultipartParser {
     private void parseInlinePart(TokenStream in, Hashtable headers)
             throws IOException {
 
-		// Buffer incoming bytes for proper string decoding (there can be multibyte chars)
+        // Buffer incoming bytes for proper string decoding (there can be multibyte chars)
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         while (in.getState() == TokenStream.STATE_READING) {
-        	int c = in.read();
-        	if (c != -1) bos.write(c);
+            int c = in.read();
+            if (c != -1) bos.write(c);
         }
-        
+
         String field = (String) headers.get("name");
         Vector v = (Vector) this.parts.get(field);
 
@@ -384,9 +383,9 @@ public class MultipartParser {
             headers.put(tokenizer.nextToken(" :").toLowerCase(),
                     tokenizer.nextToken(" :;"));
 
-	        // The extra tokenizer.hasMoreTokens() in headers.put
-	        // handles the filename="" case IE6 submits for an empty
-	        // upload field.
+            // The extra tokenizer.hasMoreTokens() in headers.put
+            // handles the filename="" case IE6 submits for an empty
+            // upload field.
             while (tokenizer.hasMoreTokens()) {
                 headers.put(tokenizer.nextToken(" ;=\""),
                         tokenizer.hasMoreTokens()?tokenizer.nextToken("=\""):"");
@@ -400,17 +399,14 @@ public class MultipartParser {
 
     /**
      * Get boundary from contentheader
-     *
-     * @param hdr
      */
     private String getBoundary(String hdr) {
 
         int start = hdr.toLowerCase().indexOf("boundary=");
         if (start > -1) {
             return "--" + hdr.substring(start + 9);
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -421,9 +417,9 @@ public class MultipartParser {
      * @throws IOException
      */
     private String readln(TokenStream in) throws IOException {
-    	
-    	ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    	
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
         int b = in.read();
 
         while ((b != -1) && (b != '\r')) {
@@ -437,4 +433,5 @@ public class MultipartParser {
 
         return new String(bos.toByteArray(), this.characterEncoding);
     }
+
 }
