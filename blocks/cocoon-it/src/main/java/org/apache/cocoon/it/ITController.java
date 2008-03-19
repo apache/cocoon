@@ -1,4 +1,4 @@
-package org.apache.cocoon.micro.it;
+package org.apache.cocoon.it;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more

@@ -190,6 +190,11 @@
         <map:generate src="sax-pipeline/simple.xml"/>
         <map:serialize type="xml"/>
       </map:match>
+      <map:match pattern="error-handling/another-custom-error">
+        <map:act type="another-error-throwing"/>
+        <map:generate src="sax-pipeline/simple.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
     </map:pipeline>
     <!-- doesn't work: when this per pipeline error handler is active, it catches ALL error and
          the per-sitemap error handler will never be reached. -->
@@ -215,8 +220,12 @@
           <map:generate src="error-handling/500.xml"/>
           <map:serialize type="xhtml" status-code="500"/>
         </map:when>
+        <map:when test="another-custom-exception">
+          <map:generate type="exception" />
+          <map:serialize type="xml" status-code="506"/>
+        </map:when>
         <map:otherwise>
-          <map:generate type="exception" src="error-handling/503.xml"/>
+          <map:generate src="error-handling/503.xml"/>
           <map:serialize type="xhtml" status-code="503"/>
         </map:otherwise>
       </map:select>

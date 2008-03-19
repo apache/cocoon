@@ -1,3 +1,5 @@
+package org.apache.cocoon.it;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -14,24 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.micro.it;
 
-import java.util.HashMap;
-import java.util.Map;
+public class AnotherCustomException extends Exception {
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.matching.Matcher;
-import org.apache.cocoon.sitemap.PatternException;
-
-public class ParameterPassingMatcher implements Matcher {
-
-    public Map match(String pattern, Map objectModel, Parameters parameters) throws PatternException {
-        if ("empty".equals(pattern)) {
-            return null;
-        }
-        Map returnMap = new HashMap();
-        returnMap.put("param1", "simple");
-        return returnMap;
+    public AnotherCustomException() {
+        super("Another Custom Exception");
     }
 
 }

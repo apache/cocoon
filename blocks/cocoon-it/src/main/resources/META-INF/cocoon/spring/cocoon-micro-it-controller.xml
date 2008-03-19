@@ -28,8 +28,8 @@
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
   ">
 
-  <!-- The REST controller -->
-  <bean name="org.apache.cocoon.components.flow.Interpreter/it-controller" class="org.apache.cocoon.micro.it.ITController"/>
+  <!-- The IT controller -->
+  <bean name="org.apache.cocoon.components.flow.Interpreter/it-controller" class="org.apache.cocoon.it.ITController"/>
 
 
 </beans>

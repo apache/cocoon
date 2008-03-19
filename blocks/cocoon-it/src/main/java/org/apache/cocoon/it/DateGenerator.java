@@ -1,4 +1,4 @@
-package org.apache.cocoon.micro.it;
+package org.apache.cocoon.it;
 
 import java.io.IOException;
 import java.io.Serializable;
