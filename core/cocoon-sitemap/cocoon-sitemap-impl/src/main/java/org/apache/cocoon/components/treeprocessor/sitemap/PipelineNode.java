@@ -146,6 +146,9 @@ public class PipelineNode extends AbstractParentProcessingNode
                 return false;
             }
 
+            throw new ResourceNotFoundException("No pipeline matched request: " +
+                            env.getURIPrefix() + env.getURI());
+
 
         } catch (ConnectionResetException e) {
             // Will be reported by CocoonServlet, rethrowing
@@ -155,9 +158,5 @@ public class PipelineNode extends AbstractParentProcessingNode
             return this.errorHandlerHelper.invokeErrorHandler(e, env, context);
         }
 
-        // if nothing has matched and it is the last pipeline, then it's the right time
-        // to throw an ResourceNotFoundException
-        throw new ResourceNotFoundException("No pipeline matched request: " +
-                        env.getURIPrefix() + env.getURI());
     }
 }
