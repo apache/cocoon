@@ -1,4 +1,4 @@
-package org.apache.cocoon.micro.it;
+package org.apache.cocoon.it;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -24,11 +24,11 @@ import org.apache.cocoon.acting.AbstractAction;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 
-public class ExceptionThrowingAction extends AbstractAction {
+public class AnotherExceptionThrowingAction extends AbstractAction {
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
             throws Exception {
-        throw new CustomException();
+        throw new AnotherCustomException();
     }
 
 }

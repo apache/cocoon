@@ -21,7 +21,8 @@
     <map:selector logger="sitemap.selector.exception" name="custom-exception"
       src="org.apache.cocoon.selection.ExceptionSelector">
       <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
-      <exception name="custom-exception" class="org.apache.cocoon.micro.it.CustomException"/>
+      <exception name="custom-exception" class="org.apache.cocoon.it.CustomException"/>
+      <exception name="another-custom-exception" class="org.apache.cocoon.it.AnotherCustomException"/>
       <exception class="java.lang.Throwable" unroll="true"/>
     </map:selector>
   </map:selectors>

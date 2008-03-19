@@ -22,14 +22,16 @@
   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-  <bean name="org.apache.cocoon.acting.Action/error-throwing" class="org.apache.cocoon.micro.it.ExceptionThrowingAction"/>
+  <bean name="org.apache.cocoon.acting.Action/error-throwing" class="org.apache.cocoon.it.ExceptionThrowingAction"/>
 
-  <bean name="org.apache.cocoon.generation.Generator/date" class="org.apache.cocoon.micro.it.DateGenerator"/>
+  <bean name="org.apache.cocoon.acting.Action/another-error-throwing" class="org.apache.cocoon.it.AnotherExceptionThrowingAction"/>
+
+  <bean name="org.apache.cocoon.generation.Generator/date" class="org.apache.cocoon.it.DateGenerator"/>
 
   <bean name="org.apache.cocoon.generation.Generator/request-parameters"
-    class="org.apache.cocoon.micro.it.RequestParametersGenerator"/>
+    class="org.apache.cocoon.it.RequestParametersGenerator"/>
 
   <bean name="org.apache.cocoon.matching.Matcher/parameter-passing"
-    class="org.apache.cocoon.micro.it.ParameterPassingMatcher"/>
+    class="org.apache.cocoon.it.ParameterPassingMatcher"/>
 
 </beans>
