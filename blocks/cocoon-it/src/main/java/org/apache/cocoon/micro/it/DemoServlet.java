@@ -25,21 +25,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class DemoServlet extends HttpServlet {
-    
-    private Map<String, String> storage;
-    
-    public void setStorage(Map<String, String> storage) {
+
+    private Map storage;
+
+    public void setStorage(Map storage) {
         this.storage = storage;
     }
-    
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String requestURI = req.getPathInfo();
         if ("/setCode".equals(requestURI)) {
             storage.put("code", req.getParameter("code"));
             resp.setStatus(HttpServletResponse.SC_OK);
         } else if ("/getCode".equals(requestURI)) {
-            resp.setStatus(Integer.valueOf((String)storage.get("code")));
+            resp.setStatus(Integer.parseInt(((String) storage.get("code"))));
         }
     }
 }
