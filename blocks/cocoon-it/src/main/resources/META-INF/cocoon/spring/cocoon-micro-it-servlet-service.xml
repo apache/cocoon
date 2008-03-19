@@ -26,21 +26,21 @@
   http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd
   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-  <bean id="org.apache.cocoon.micro.cocoon-micro-it.service" class="org.apache.cocoon.sitemap.SitemapServlet">
-    <servlet:context mount-path="" context-path="blockcontext:/cocoon-micro-it-block/"/>
+  <bean id="org.apache.cocoon.cocoon-it.service" class="org.apache.cocoon.sitemap.SitemapServlet">
+    <servlet:context mount-path="/cocoon-it" context-path="blockcontext:/cocoon-it/"/>
   </bean>
-  
+
   <bean name="demoStorage" class="java.util.HashMap" scope="servlet" lazy-init="true">
     <aop:scoped-proxy proxy-target-class="false"/>
   </bean>
 
-  <bean id="org.apache.cocoon.micro.cocoon-micro-it.Demo1" class="org.apache.cocoon.micro.it.DemoServlet" lazy-init="true">
-    <servlet:context mount-path="/demo1" context-path="blockcontext:/cocoon-micro-it-block/"/>
+  <bean id="org.apache.cocoon.cocoon-it.Demo1" class="org.apache.cocoon.it.DemoServlet" lazy-init="true">
+    <servlet:context mount-path="/cocoon-it/demo1" context-path="blockcontext:/cocoon-it/"/>
     <property name="storage" ref="demoStorage"/>
   </bean>
-  
-  <bean id="org.apache.cocoon.micro.cocoon-micro-it.Demo2" class="org.apache.cocoon.micro.it.DemoServlet" lazy-init="true">
-    <servlet:context mount-path="/demo2" context-path="blockcontext:/cocoon-micro-it-block/"/>
+
+  <bean id="org.apache.cocoon.cocoon-it.Demo2" class="org.apache.cocoon.it.DemoServlet" lazy-init="true">
+    <servlet:context mount-path="/cocoon-it/demo2" context-path="blockcontext:/cocoon-it/"/>
     <property name="storage" ref="demoStorage"/>
   </bean>
 </beans>
