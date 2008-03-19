@@ -172,17 +172,6 @@
       </map:match>
     </map:pipeline>
 
-    <!-- ~~~~~~~~~~~~~~~~ redirect ~~~~~~~~~~~~~~~ -->
-    <map:pipeline>
-      <map:match pattern="redirect/www.orf.at">
-        <map:redirect-to uri="http://www.orf.at"/>
-      </map:match>
-      <!-- Redirecting to a servlet service doesn't work -->
-      <!--map:match pattern="redirect/sax-pipeline/simple-xml">
-        <map:redirect-to uri="servlet:/sax-pipeline/simple-xml"/>
-      </map:match-->
-    </map:pipeline>
-
     <!-- ~~~~~~~~~~~~~~~~ error handling ~~~~~~~~~~~~~~~ -->
     <map:pipeline>
       <map:match pattern="error-handling/custom-error">
@@ -210,6 +199,17 @@
       </map:handle-errors>
     </map:pipeline>
 
+    <!-- ~~~~~~~~~~~~~~~~ redirect ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="redirect/www.orf.at">
+        <map:redirect-to uri="http://www.orf.at"/>
+      </map:match>
+      <!-- Redirecting to a servlet service doesn't work -->
+      <!--map:match pattern="redirect/sax-pipeline/simple-xml">
+        <map:redirect-to uri="servlet:/sax-pipeline/simple-xml"/>
+      </map:match-->
+    </map:pipeline>
+
     <map:handle-errors>
       <map:select type="custom-exception">
         <map:when test="not-found">
@@ -230,6 +230,7 @@
         </map:otherwise>
       </map:select>
     </map:handle-errors>
+
   </map:pipelines>
 
 </map:sitemap>
