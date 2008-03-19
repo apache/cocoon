@@ -91,21 +91,21 @@
     <!-- ~~~~~~~~~~~~~~~~ expression language ~~~~~~~~~~~~~~~ -->
     <map:pipeline>
       <map:match pattern="expression-language/jexl">
-        <map:generate src="sax-pipeline/{jexl:cocoon.request.fileName}.xml"/>
+        <map:generate src="sax-pipeline/{request-param:fileName}.xml"/>
         <map:serialize type="xml"/>
       </map:match>
       <map:match pattern="expression-language/jxpath">
-        <map:generate src="sax-pipeline/{$cocoon/request/parameters/fileName}.xml"/>
+        <map:generate src="sax-pipeline/{request-param:fileName}.xml"/>
         <map:serialize type="xml"/>
       </map:match>
       <map:match pattern="expression-language/map/*">
-        <map:generate src="sax-pipeline/{map:1}.xml"/>
+        <map:generate src="sax-pipeline/{1}.xml"/>
         <map:serialize type="xml"/>
       </map:match>
       <map:match pattern="**">
         <map:match pattern="expression-language/*/*">
           <map:match pattern="expression-language/nested/*">
-            <map:generate src="sax-pipeline/{map:../2}.xml"/>
+            <map:generate src="sax-pipeline/{../2}.xml"/>
             <map:serialize type="xml"/>
           </map:match>
         </map:match>
