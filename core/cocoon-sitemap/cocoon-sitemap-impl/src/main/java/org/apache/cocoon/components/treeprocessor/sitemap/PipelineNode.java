@@ -60,7 +60,6 @@ public class PipelineNode extends AbstractParentProcessingNode
     /** Optional sitemap parameters */
     protected Map parameters;
 
-
     /**
      * A constructor to receive the optional expires parameter
      * and optional parameters for the processing pipeline
@@ -130,7 +129,7 @@ public class PipelineNode extends AbstractParentProcessingNode
         desc = this.executor.enteringPipeline(this, env.getObjectModel(), desc);
 
         context.inform(desc.type, desc.parameters);
-        
+
         try {
             if (this.errorHandlerHelper.isInternal()) {
                 // Set internal error handler in the pipeline
@@ -147,8 +146,6 @@ public class PipelineNode extends AbstractParentProcessingNode
                 return false;
             }
 
-            throw new ResourceNotFoundException("No pipeline matched request: " +
-                                                env.getURIPrefix() + env.getURI());
 
         } catch (ConnectionResetException e) {
             // Will be reported by CocoonServlet, rethrowing
@@ -157,5 +154,10 @@ public class PipelineNode extends AbstractParentProcessingNode
             // Invoke error handler
             return this.errorHandlerHelper.invokeErrorHandler(e, env, context);
         }
+
+        // if nothing has matched and it is the last pipeline, then it's the right time
+        // to throw an ResourceNotFoundException
+        throw new ResourceNotFoundException("No pipeline matched request: " +
+                        env.getURIPrefix() + env.getURI());
     }
 }
