@@ -110,6 +110,12 @@
     <!-- Integration Tests -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-it</artifactId>
+    </dependency>
+
+    <!-- Integration Test Framework -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-it-fw</artifactId>
       <scope>test</scope>
     </dependency>
