@@ -24,26 +24,25 @@
   <packaging>jar</packaging>
 
   <parent>
-    <artifactId>cocoon-micro</artifactId>
-    <groupId>org.apache.cocoon.micro</groupId>
-    <version>1-SNAPSHOT</version>
-    <relativePath>../../parent/pom.xml</relativePath>
+    <artifactId>cocoon-blocks-modules</artifactId>
+    <groupId>org.apache.cocoon</groupId>
+    <version>6-SNAPSHOT</version>
   </parent>
-  <name>Cocoon Micro: Integration Tests Block [jar]</name>
-  <artifactId>cocoon-micro-it-block</artifactId>
+  <name>Cocoon: Integration Tests Block</name>
+  <artifactId>cocoon-it</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <description>
-    Integration test suite for Micro Cocoon.
+    Integration test suite for Cocoon.
   </description>
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.cocoon.micro</groupId>
-      <artifactId>cocoon-micro-core</artifactId>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.cocoon.micro</groupId>
-      <artifactId>cocoon-micro-servlet-service-components</artifactId>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-components</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

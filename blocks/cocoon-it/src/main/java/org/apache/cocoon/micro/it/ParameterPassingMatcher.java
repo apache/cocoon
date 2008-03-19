@@ -26,10 +26,10 @@ import org.apache.cocoon.sitemap.PatternException;
 public class ParameterPassingMatcher implements Matcher {
 
     public Map match(String pattern, Map objectModel, Parameters parameters) throws PatternException {
-        if("empty".equals(pattern)) {
+        if ("empty".equals(pattern)) {
             return null;
         }
-        Map<String, Object> returnMap = new HashMap<String, Object>();
+        Map returnMap = new HashMap();
         returnMap.put("param1", "simple");
         return returnMap;
     }
