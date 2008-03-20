@@ -53,6 +53,14 @@
           <contextPath>${jetty.context}</contextPath>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/cocoon/it/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>      
     </plugins>
     <finalName>cocoon-webapp</finalName>
   </build>
@@ -152,11 +160,6 @@
           </plugin>
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <excludes>
-                <exclude>**/cocoon/it/**</exclude>
-              </excludes>
-            </configuration>
             <executions>
               <execution>
                 <id>integration-test</id>
