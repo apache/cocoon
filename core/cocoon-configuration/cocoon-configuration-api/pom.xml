@@ -17,9 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    +-->
+<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -28,11 +26,11 @@
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
+    <version>6</version>
     <relativePath>../../../parent</relativePath>
   </parent>
   <artifactId>cocoon-configuration-api</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
   <name>Cocoon Configuration API</name>
   <description>
     The Cocoon Configuration API is a library providing beans for various configuration issues.
@@ -112,4 +110,10 @@
       </build>
     </profile>
   </profiles>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-configuration-api/cocoon-configuration-api-1.0.2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-configuration-api/cocoon-configuration-api-1.0.2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-configuration/cocoon-configuration-api/cocoon-configuration-api-1.0.2</url>
+  </scm>
 </project>
