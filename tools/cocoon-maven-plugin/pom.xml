@@ -24,10 +24,10 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>6</version>
   </parent>
   <artifactId>cocoon-maven-plugin</artifactId>
-  <version>1.0.0-RC1-SNAPSHOT</version>
+  <version>1.0.0-M2</version>
   <packaging>maven-plugin</packaging>
   <name>Cocoon Maven 2 Plugin</name>
 
@@ -152,4 +152,10 @@
       </build>
     </profile>
   </profiles>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-maven-plugin/cocoon-maven-plugin-1.0.0-M2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-maven-plugin/cocoon-maven-plugin-1.0.0-M2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-maven-plugin/cocoon-maven-plugin-1.0.0-M2</url>
+  </scm>
 </project>
