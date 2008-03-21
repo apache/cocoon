@@ -146,6 +146,9 @@
    <sample name="Other Ajax samples" href="../ajax/">
      (Ajax) Don't forget to look at the samples in the Ajax block!
    </sample>
+   <sample name="States Switch on AJAX form" href="do-widgetstates.flow">
+     (Ajax) Demostrate how it works the change of the widget state on a ajax request
+   </sample>
  </group>
  
  <group name="Dynamic repeater template and event handling">

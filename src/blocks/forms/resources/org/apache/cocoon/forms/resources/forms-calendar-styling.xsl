@@ -70,6 +70,7 @@
 	    </xsl:otherwise>
 	  </xsl:choose>
     </span>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
 </xsl:stylesheet>

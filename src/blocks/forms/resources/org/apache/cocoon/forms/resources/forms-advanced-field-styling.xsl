@@ -200,6 +200,7 @@
         </tr>
       </table>
     </div>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
@@ -226,6 +227,7 @@
         </tbody>
       </table>
     </div>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
@@ -284,6 +286,7 @@
       </input>
       <xsl:apply-templates select="." mode="common"/>
     </span>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
 </xsl:stylesheet>

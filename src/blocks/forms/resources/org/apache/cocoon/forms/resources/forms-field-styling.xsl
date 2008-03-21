@@ -126,6 +126,7 @@
       </input>
       <xsl:apply-templates select="." mode="common"/>
     </span>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
@@ -313,6 +314,7 @@
         </span>
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
@@ -340,6 +342,7 @@
       </select>
       <xsl:apply-templates select="." mode="common"/>
     </span>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
@@ -354,6 +357,7 @@
       </textarea>
       <xsl:apply-templates select="." mode="common"/>
     </span>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
@@ -386,6 +390,7 @@
       +-->
   <xsl:template match="fi:*" mode="label">
     <xsl:param name="id"/>
+    <xsl:param name="idLabel"/>
 
     <xsl:variable name="resolvedId">
       <xsl:choose>
@@ -394,7 +399,26 @@
       </xsl:choose>
     </xsl:variable>
 
-    <label for="{$resolvedId}" title="{fi:hint}">
+    <!-- Setting the id, we need on an AJAX Update when we change the state -->
+    <xsl:variable name="labelId">
+      <xsl:choose>
+        <xsl:when test="$idLabel != ''"><xsl:value-of select="$idLabel"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="concat(@id, ':label')"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <label id="{$labelId}" for="{$resolvedId}" title="{fi:hint}">
+      <xsl:apply-templates select="." mode="css"/>
+      <xsl:copy-of select="fi:label/node()"/>
+    </label>
+  </xsl:template>
+
+  <!-- Generate label using <widget-label /> jx template macro -->
+  <xsl:template match="fi:field-label">
+    <xsl:variable name="resolvedId"><xsl:value-of select="concat(@id, ':input')"/></xsl:variable>
+    <xsl:variable name="labelId"><xsl:value-of select="concat(@id, ':label')"/></xsl:variable>
+
+    <label id="{$labelId}" for="{$resolvedId}" title="{fi:hint}">
       <xsl:apply-templates select="." mode="css"/>
       <xsl:copy-of select="fi:label/node()"/>
     </label>
@@ -403,8 +427,28 @@
   <!--+
       | Labels for pure outputs must not contain <label/> as there is no element to point to.
       +-->
-  <xsl:template match="fi:output | fi:messages | fi:field[fi:selection-list][fi:styling/@list-type='radio']" mode="label">
+  <xsl:template match="fi:output | fi:messages" mode="label">
     <span><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:label/node()"/></span>
+  </xsl:template>
+
+  <!--+
+      |  Use span tag for widgets which does not contains a element to point to.
+      +-->
+  <xsl:template match="fi:field[fi:selection-list][fi:styling/@list-type='radio'] |
+                       fi:placeholder[fi:selection-list][fi:styling/@list-type='radio']"
+                       mode="label">
+    <xsl:variable name="labelId"><xsl:value-of select="concat(@id, ':label')"/></xsl:variable>
+    <span id="{$labelId}"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:label/node()"/></span>
+  </xsl:template>
+
+  <!--+
+      | Manage the label element when the widget is on an AJAX update
+      | for example when we change the state of the widget.
+      +-->
+  <xsl:template match="fi:*" mode="label-ajax-request">
+    <xsl:if test="fi:styling[@update-label='true']">
+      <xsl:apply-templates select="." mode="label"/>
+    </xsl:if>
   </xsl:template>
 
   <!--+
@@ -431,6 +475,7 @@
       </input>
       <xsl:apply-templates select="." mode="common"/>
     </span>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
@@ -507,6 +552,7 @@
       </xsl:for-each>
       <xsl:apply-templates select="." mode="common"/>
     </span>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
@@ -531,6 +577,7 @@
       </select>
       <xsl:apply-templates select="." mode="common"/>
     </span>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
@@ -706,6 +753,7 @@
       </input>
       <xsl:apply-templates select="." mode="common"/>
     </span>
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <xsl:template match="fi:messages">
@@ -783,6 +831,8 @@
       +-->
   <xsl:template match="fi:placeholder">
     <span id="{@id}"/>
+    <!-- Set the label widget placeholder -->
+    <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
   <!--+
