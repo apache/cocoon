@@ -59,6 +59,7 @@ public class JXMacrosHelper {
     private Locale locale;
     private ArrayStack widgetStack = new ArrayStack();
     private ArrayStack pipeStack = new ArrayStack();
+    private ArrayStack labelStack = new ArrayStack();
     private Map classes; // lazily created
     private boolean ajaxRequest;
     private boolean ajaxTemplate;
@@ -85,10 +86,10 @@ public class JXMacrosHelper {
     public Form getForm(Form form, String attributeName) {
         Form returnForm = form;
         // if there hasn't been passed a form object, try to find it in the request
-        if(returnForm == null) {
+        if (returnForm == null) {
             returnForm = (Form) this.request.getAttribute(attributeName);
         }
-        if(returnForm != null) {
+        if (returnForm != null) {
             return returnForm;
         }
         throw new FormsRuntimeException("The template cannot find a form object");
@@ -98,6 +99,7 @@ public class JXMacrosHelper {
 
         this.updatedWidgets = form.getUpdatedWidgetIds();
         this.childUpdatedWidgets = form.getChildUpdatedWidgetIds();
+        this.ajaxTemplate = "true".equals(attributes.get("ajax"));
 
         // build attributes
         AttributesImpl attrs = new AttributesImpl();
@@ -124,14 +126,14 @@ public class JXMacrosHelper {
             Map.Entry entry = (Map.Entry)iter.next();
             final String attrName = (String)entry.getKey();
             // check if the attribute has already been defined
-            if ( attrs.getValue(attrName) != null ) {
+            if (attrs.getValue(attrName) != null) {
                 attrs.removeAttribute(attrName);
             }
             attrs.addCDATAAttribute(attrName, (String)entry.getValue());
         }
 
-        this.ajaxTemplate = "true".equals(attributes.get("ajax"));
-
+        // The child widgets of the form should update the label
+        this.labelStack.push(BooleanUtils.toBooleanObject(this.ajaxTemplate && this.ajaxRequest));
         this.cocoonConsumer.startPrefixMapping(FormsConstants.INSTANCE_PREFIX, FormsConstants.INSTANCE_NS);
         this.cocoonConsumer.startElement(FormsConstants.INSTANCE_NS,
                                          "form-template",
@@ -145,6 +147,7 @@ public class JXMacrosHelper {
     public void endForm() throws SAXException {
         this.widgetStack.pop();
         this.widgetStack.pop();
+        this.labelStack.pop();
         this.cocoonConsumer.endElement(FormsConstants.INSTANCE_NS,
                                        "form-template",
                                        FormsConstants.INSTANCE_PREFIX_COLON + "form-template");
@@ -220,8 +223,15 @@ public class JXMacrosHelper {
                     // Generate a placeholder, so that the page can be updated later
                     startBuReplace(id);
                     AttributesImpl attrs = new AttributesImpl();
-                    attrs.addCDATAAttribute("id", id);
+                    attrs.addCDATAAttribute("id", widget.getRequestParameterName());
+                    attrs.addCDATAAttribute("state", widget.getCombinedState().getName());
                     this.cocoonConsumer.startElement(FormsConstants.INSTANCE_NS, "placeholder", FormsConstants.INSTANCE_PREFIX_COLON + "placeholder", attrs);
+                    // check if the parent wants to update the label of the child widget
+                    if (ajaxRequest && ((Boolean)this.labelStack.peek()).booleanValue()) {
+                        Map style = new HashMap(1);
+                        style.put("update-label", "true");
+                        generateStyling(style);
+                    }
                     this.cocoonConsumer.endElement(FormsConstants.INSTANCE_NS, "placeholder", FormsConstants.INSTANCE_PREFIX_COLON + "placeholder");
                     endBuReplace(id);
                 }
@@ -249,6 +259,9 @@ public class JXMacrosHelper {
             // Close the bu:replace
             endBuReplace(widget.getFullName());
         }
+        if (widget instanceof Repeater) {
+            this.labelStack.pop();
+        }
     }
 
     public boolean pushWidget(String path) throws SAXException {
@@ -275,6 +288,8 @@ public class JXMacrosHelper {
         if (result && !(peekWidget() instanceof Repeater)) {
             throw new IllegalArgumentException("Widget " + peekWidget() + " is not a repeater");
         }
+        // the child widgets of the repeater never update the label
+        this.labelStack.push(Boolean.FALSE);
         return result;
     }
 
@@ -310,8 +325,13 @@ public class JXMacrosHelper {
      * @throws SAXException
      */
     public void generateWidget(Widget widget, Map arguments) throws SAXException {
+        Map args = new HashMap(arguments);
+        // check if the parent wants to update the label of the child widget
+        if (((Boolean)this.labelStack.peek()).booleanValue()) {
+            args.put("update-label", "true");
+        }
         // Needs to be buffered
-        RootBufferingPipe pipe = new RootBufferingPipe(this.cocoonConsumer, arguments);
+        RootBufferingPipe pipe = new RootBufferingPipe(this.cocoonConsumer, args);
         this.pipeStack.push(pipe);
         widget.generateSaxFragment(pipe, this.locale);
     }
@@ -332,7 +352,19 @@ public class JXMacrosHelper {
     }
 
     public void generateWidgetLabel(Widget widget, String id) throws SAXException {
-        getWidget(widget, id).generateLabel(this.cocoonConsumer);
+        Widget widgetInst = getWidget(widget, id);
+        if (widget instanceof Repeater) {
+            widgetInst.generateLabel(this.cocoonConsumer);
+        } else {
+            AttributesImpl attrs = new AttributesImpl();
+            attrs.addCDATAAttribute("id", widgetInst.getRequestParameterName());
+            attrs.addCDATAAttribute("state", widgetInst.getCombinedState().getName());
+            this.cocoonConsumer.startElement(FormsConstants.INSTANCE_NS, "field-label", FormsConstants.INSTANCE_PREFIX_COLON + "field-label", attrs);
+            if (widgetInst.getCombinedState().isDisplayingValues()) {
+                widgetInst.getDefinition().generateDisplayData(this.cocoonConsumer);
+            }
+            this.cocoonConsumer.endElement(FormsConstants.INSTANCE_NS, "field-label", FormsConstants.INSTANCE_PREFIX_COLON + "field-label");
+        }
     }
 
     public void generateRepeaterWidgetLabel(Widget widget, String id, String widgetId) throws SAXException {
@@ -422,7 +454,7 @@ public class JXMacrosHelper {
     public static boolean generateStyling(ContentHandler handler, Map attributes) throws SAXException {
         AttributesImpl attr = null;
         Iterator entries = attributes.entrySet().iterator();
-        while(entries.hasNext()) {
+        while (entries.hasNext()) {
             Map.Entry entry = (Map.Entry)entries.next();
             String key = (String)entry.getKey();
 

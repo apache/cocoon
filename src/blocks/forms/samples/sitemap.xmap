@@ -25,7 +25,7 @@
     <map:generator name="suggestion-list" src="org.apache.cocoon.forms.generation.SuggestionListGenerator"/>
   </map:generators>
 
-  <map:transformers default="xslt">    
+  <map:transformers default="xslt">
     <map:transformer name="browser-update" src="org.apache.cocoon.ajax.BrowserUpdateTransformer"/>
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
       <catalogues default="other">
@@ -47,7 +47,7 @@
     <map:action name="init-form" src="org.apache.cocoon.forms.samples.InitForm1Action" logger="forms"/>
     <map:action name="handle-form-submit" src="org.apache.cocoon.forms.acting.HandleFormSubmitAction" logger="forms"/>
   </map:actions>
-  
+
   <map:selectors>
     <map:selector name="ajax-request" src="org.apache.cocoon.ajax.AjaxRequestSelector"/>
   </map:selectors>
@@ -57,10 +57,10 @@
   <map:view name="content" from-label="content">
    <map:serialize type="xml"/>
   </map:view>
-  
+
   <map:view name="content1" from-label="content1">
    <map:serialize type="xml"/>
-  </map:view>  
+  </map:view>
 
   <map:view from-label="content" name="pretty-content">
    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
@@ -71,7 +71,7 @@
    <map:serialize type="links"/>
   </map:view>
  </map:views>
- 
+
  <map:resources>
    <!-- this will later become a virtual transformer -->
    <map:resource name="simple-page2html">
@@ -81,7 +81,7 @@
        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
        <map:parameter name="file" value="{file}"/>
        <map:parameter name="remove" value="{../0}"/>
-     </map:transform> 
+     </map:transform>
    </map:resource>
  </map:resources>
 
@@ -146,13 +146,13 @@
 
        <!-- pipeline to show the form -->
        <map:generate src="forms/form1_template_action.xml">
-         <map:parameter name="attribute-name" value="form1"/>           
+         <map:parameter name="attribute-name" value="form1"/>
        </map:generate>
 <!-- <map:serialize type="xml"/> -->
        <map:transform type="forms" label="content1">
          <map:parameter name="attribute-name" value="form1"/>
        </map:transform>
-       
+
        <map:transform type="i18n">
        </map:transform>
        <map:call resource="simple-page2html">
@@ -167,7 +167,7 @@
        </map:transform>
        <map:serialize/>
      </map:match>
-        
+
     <!-- Flowscript Sample -->
 
      <map:match pattern="form1.flow">
@@ -196,7 +196,7 @@
      </map:match>
 
      <!--
-        | Show a suggestion list 
+        | Show a suggestion list
          -->
      <map:match pattern="_cocoon/forms/suggest">
         <map:generate type="suggestion-list"/>
@@ -212,7 +212,7 @@
         <map:generate type="jx" src="forms/{1}json.xml"/>
         <map:transform src="resource://org/apache/cocoon/forms/resources/selection-list2json.xsl"/>
         <map:serialize type="json"/>
-     </map:match>      
+     </map:match>
 
      <!--
         | Show a form, using the forms transformer
@@ -242,6 +242,10 @@
        <map:generate type="jx" src="forms/{1}_template.xml" label="content1">
          <map:parameter name="locale" value="{flow-attribute:locale}"/>
        </map:generate>
+       <map:transform type="log">
+          <map:parameter name="logfile" value="logfile.log"/>
+          <map:parameter name="append" value="no"/>
+       </map:transform>
        <map:transform type="browser-update"/><!-- AJAX-style form update -->
        <map:transform type="i18n">
          <map:parameter name="locale" value="{flow-attribute:locale}"/>
@@ -299,7 +303,6 @@
      <map:match pattern="*.continue">
        <map:call continuation="{1}"/>
      </map:match>
-
 
      <map:match pattern="*-success-pipeline.jx">
        <map:generate type="jx" src="forms/{1}_success_jx.xml"/>
@@ -366,7 +369,7 @@
      <map:match pattern="registration">
        <map:call function="registration"/>
      </map:match>
-     
+
      <!--
         | ImageMap form example
         -->
@@ -374,7 +377,7 @@
      <map:match pattern="imagemap">
        <map:call function="imagemap"/>
      </map:match>
-    
+
      <!--
          | Car selector sample.
          -->
@@ -395,7 +398,7 @@
        </map:transform>
        <map:serialize type="xml"/>
      </map:match>
-     
+
      <map:match pattern="cars/*/*">
        <map:generate src="forms/car-db.xml"/>
        <map:transform src="xsl/carfilter.xsl">
@@ -455,7 +458,7 @@
        </map:transform>
        <map:serialize type="xml"/>
      </map:match>
-     
+
      <!--
          | Country selector sample.
          -->
@@ -473,7 +476,7 @@
          </map:otherwise>
        </map:select>
      </map:match>
-     
+
      <!--
         | HTMLArea example
         -->
@@ -517,7 +520,7 @@
      <map:match pattern="resources/*/**">
        <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
      </map:match>
-     
+
      <!--
         | Sample building a forms-form-gui editor in forms
         | Doubles as a showcase for class, new, struct, union widgets
@@ -532,23 +535,23 @@
          <map:parameter name="bindingURI" value="forms/form_model_gui_binding.xml"/>
        </map:call>
      </map:match>
-     
-     
+
+
      <!--
         | Group of Binding feature samples...
         -->
-     
+
      <map:match pattern="binding-*-*.flow">
        <map:call function="bindingSample">
          <map:parameter name="sample-code" value="{1}" />
          <map:parameter name="backend-type" value="{2}" />
        </map:call>
      </map:match>
-     
+
      <map:match pattern="binding-*.flow">
        <map:redirect-to uri="binding-{1}-JS.flow" />
      </map:match>
-     
+
      <map:match pattern="binding.form.*">
        <map:select type="resource-exists" >
          <map:when test="forms/binding/{1}-template.xml">
@@ -558,7 +561,7 @@
              <map:parameter name="form-method" value="POST" />
            </map:transform>
          </map:when>
-         <!-- 
+         <!--
             | If the template file does not exist, the code below generates the
             | form, but results in a document fragment rather than a correct HTML
             | tagged page (i.e. it lacks the HTML, HEAD and BODY tags).
@@ -566,7 +569,7 @@
             | To simplify the samples, all template files exist and the code
             | below is not executed.
             -->
-         <map:otherwise>       
+         <map:otherwise>
            <map:generate type="forms">
              <map:parameter name="form-action" value="{flow-continuation:id}.continue" />
              <map:parameter name="form-method" value="POST" />
@@ -589,31 +592,31 @@
        </map:call>
        <map:serialize />
      </map:match>
-     
+
      <!-- **************************** profiling **************************** -->
      <map:match pattern="form1-cforms-transformer">
        <map:act type="init-form">
          <map:parameter name="form-definition" value="forms/form1.xml"/>
          <map:parameter name="attribute-name" value="form1"/>
-       </map:act>       
+       </map:act>
        <map:generate src="forms/form1_template_action.xml"/>
        <map:transform type="forms" label="content1">
          <map:parameter name="attribute-name" value="form1"/>
        </map:transform>
        <map:serialize type="xml"/>
-     </map:match>  
+     </map:match>
      <map:match pattern="form1-jx-macro">
        <map:act type="init-form">
          <map:parameter name="form-definition" value="forms/form1.xml"/>
          <map:parameter name="attribute-name" value="form1"/>
-       </map:act>       
+       </map:act>
        <map:generate src="forms/form1_template_action_jx-macro.xml" type="jx">
-         <map:parameter name="attribute-name" value="form1"/>           
+         <map:parameter name="attribute-name" value="form1"/>
        </map:generate>
        <map:serialize type="xml"/>
-     </map:match>     
-     
-     <!-- **************************** mounts **************************** -->     
+     </map:match>
+
+     <!-- **************************** mounts **************************** -->
 
     <map:match pattern="*">
         <map:redirect-to uri="{1}/"/>

@@ -108,6 +108,26 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 			if (typeof(cocoon.ajax.BUHandler.highlight) == "function") {
 				cocoon.ajax.BUHandler.highlight(newElement);
 			}
+
+			/* update the label */
+      var nextChild = dojo.dom.getNextSiblingElement(firstChild);
+      if (nextChild) {
+          cocoon.ajax.BUHandler.Helper.replaceLabel(nextChild);
+      }
 		}
 	}
+});
+
+cocoon.ajax.BUHandler.Helper = function() { };
+
+dojo.lang.mixin(cocoon.ajax.BUHandler.Helper, {
+    replaceLabel: function(element) {
+          var oldElement = document.getElementById(element.getAttribute("id"));
+          if (oldElement) {
+             var newElement = cocoon.ajax.insertion.replace(oldElement, element);
+             if (typeof(cocoon.ajax.BUHandler.highlight) == "function") {
+                cocoon.ajax.BUHandler.highlight(newElement);
+             }
+          }
+       }
 });

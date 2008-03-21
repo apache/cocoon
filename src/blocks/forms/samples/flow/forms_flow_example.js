@@ -243,13 +243,15 @@ function do_suggest() {
 
     var path = form.getChild("path");
     var person = form.getChild("personId");
+    var repeater = form.getChild("contacts");
 
     cocoon.sendPage("textresult-display-pipeline.jx",
         {title: "Suggest results", text: "path value = " + path.value +
              "\npath suggested label = " +  
              (path.suggested ? path.suggestionLabel : "(none)") +
              "\n\n\npersonId = " + person.value + 
-             "\npersonName = " + (person.suggested ? person.suggestionLabel : "(none)")});
+             "\npersonName = " + (person.suggested ? person.suggestionLabel : "(none)") +
+             "\n\n\nrepeater size = " + repeater.size });
 }
 
 function do_multivalueWithSuggestion() {
@@ -286,3 +288,7 @@ function do_calculatedfields(form) {
         {title: "Calculated results", text: "Grand total of your order: " + form.getChild("grandtotal").value});
 }
 
+function do_widgetstates() {
+    var form = new Form("forms/widgetstates.xml");
+    form.showForm("widgetstates-display-pipeline.jx");
+}
