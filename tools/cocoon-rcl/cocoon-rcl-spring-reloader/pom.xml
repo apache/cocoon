@@ -26,11 +26,11 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6</version>
+    <version>6-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-rcl-spring-reloader</artifactId>
-  <version>1.0.0-M2</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Reloading ClassLoader - Spring reloader</name>
   <description>
    This module provides a single class "SpringReloader" that is used by the
