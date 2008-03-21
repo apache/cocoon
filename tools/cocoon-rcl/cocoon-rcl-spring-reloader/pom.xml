@@ -17,9 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    +-->
+<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -28,11 +26,11 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>5</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-rcl-spring-reloader</artifactId>
-  <version>1.0.0-RC1-SNAPSHOT</version>
+  <version>1.0.0-M2</version>
   <name>Cocoon Reloading ClassLoader - Spring reloader</name>
   <description>
    This module provides a single class "SpringReloader" that is used by the
@@ -99,4 +97,10 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-spring-reloader/cocoon-rcl-spring-reloader-1.0.0-M2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-spring-reloader/cocoon-rcl-spring-reloader-1.0.0-M2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-rcl-spring-reloader/cocoon-rcl-spring-reloader-1.0.0-M2</url>
+  </scm>
 </project>
