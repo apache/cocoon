@@ -26,6 +26,10 @@
 <document>
   <body>
     <release version="1.0.0" date="TBA" description="released">
+      <action dev="gkossakowski" type="fix" issue="COCOON-2070" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@googlemail.com">
+        Fixed bug in PoolableProxyHandler class that is responsible for putting components back to the pool. This bug could lead to the situation
+        when components that were not properly recycled landed in the pool. 
+      </action>
       <action dev="rgoers" type="fix">
         Moved registration of VariableResolver to BridgeElementParser from SitemapElementParser to make it
         available to all Avalon components (i.e. input modules).

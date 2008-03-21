@@ -58,7 +58,6 @@ public class PoolableProxyHandler implements InvocationHandler, Runnable {
                 // removing the attribute removes the call back handler!
                 attributes.removeAttribute(this.attributeName, RequestAttributes.SCOPE_REQUEST);
             }
-            RequestContextHolder.currentRequestAttributes().removeAttribute(this.attributeName, RequestAttributes.SCOPE_REQUEST);
             return null;
         }
         if ( method.getName().equals("hashCode") && args == null ) {
