@@ -144,21 +144,25 @@ public class SourceURLConnection extends URLConnection {
         if ( !this.connected ) {
             this.connect();
         }
-        if ( this.source instanceof XMLizable && classes != null) {
-            boolean found = false;
-            int index = 0;
-            while ( !found && index < classes.length ) {
-                if ( classes[index].getName().equals(SAXResult.class.getName())) {
-                    found = true;
-                } else {
-                    index++;
-                }
-            }
-            if ( found ) {
-                return new SourceSAXResult(this.factory, this.source, (XMLizable)this.source);
-            }
+        if (this.source instanceof XMLizable && classes != null && containsClass(classes, SAXResult.class)) {
+            return new SourceSAXResult(this.factory, this.source, (XMLizable)this.source);
+        } else if (containsClass(classes, Source.class)) {
+            return this.source;
         }
         return super.getContent(classes);
+    }
+    
+    private boolean containsClass(Class[] classes, Class classToBeFound) {
+        boolean found = false;
+        int index = 0;
+        while ( !found && index < classes.length ) {
+            if ( classes[index].getName().equals(classToBeFound.getName())) {
+                found = true;
+            } else {
+                index++;
+            }
+        }
+        return found;
     }
 
 }
