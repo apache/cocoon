@@ -18,6 +18,7 @@ package org.apache.cocoon.servletservice.spring;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.cocoon.servletservice.Mountable;
 import org.apache.cocoon.servletservice.ServletServiceContext;
+import org.apache.cocoon.servletservice.URLStreamFactoryInstaller;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.springframework.aop.framework.ProxyFactory;
@@ -101,18 +103,14 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
         // hack for getting a file protocol or other protocols that can be used as context
         // path in the getResource method in the servlet context
         if (!(contextPath.startsWith("file:") || contextPath.startsWith("/") || contextPath.indexOf(':') == -1)) {
-            SourceResolver resolver = null;
             Source source = null;
             try {
-                resolver = (SourceResolver) parentContainer.getBean(SourceResolver.ROLE);
-                source = resolver.resolveURI(contextPath);
+                URL url = new URL(contextPath);
+                source = (Source)url.getContent(new Class[] {Source.class});
                 contextPath = source.getURI();
+                //FIXME: obtained source is *NOT* released!!!
             } catch (IOException e) {
                 throw new MalformedURLException("Could not resolve " + contextPath + " due to " + e);
-            } finally {
-                if (resolver != null) {
-                    resolver.release(source);
-                }
             }
         }
         //----------------------------------------------------
@@ -226,6 +224,10 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
 
     public void setServiceName(String name) {
         this.serviceName = name;
+    }
+    
+    public void setURLHandlerFactoryInstaller(URLStreamFactoryInstaller installer ) {
+        //we don't need this dependency
     }
 
     public Object getObject() throws Exception {
