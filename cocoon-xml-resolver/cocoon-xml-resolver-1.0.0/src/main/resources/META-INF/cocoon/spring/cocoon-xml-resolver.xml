@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- @version $Id$ -->
+<beans>
+
+  <!--+
+      | Entity resolution catalogs
+      |
+      | The default catalog is distributed at the cocoon-xml-resolver jar file
+      | and automatically extracted to a temporary directoy at runtime.
+      | The property "catalog" is automatically set to this temporary directory,
+      | therefore changing this value in the configuration has no effect!
+      |
+      | However, it is probably desirable to leave this default catalog config
+      | and declare your own local catalogs, which are loaded in addition to
+      | the system catalog.
+      |
+      | There are various ways to do local configuration (see "Entity Catalogs"
+      | documentation). You can specify the "localCatalog" property here:
+      |
+      | localCatalog:
+      |   The full filesystem pathname to a single local catalog file.
+      |
+      |  <property name="localCatalog" value="/usr/local/sgml/mycatalog"/>
+      |
+      | verbosity:
+      | The level of messages for status/debug (messages go to standard output)
+      | The following messages are provided ...
+      |  0 = none
+      |  1 = ? (... not sure yet)
+      |  2 = 1+, Loading catalog, Resolved public, Resolved system
+      |  3 = 2+, Catalog does not exist, resolvePublic, resolveSystem
+      |  10 = 3+, List all catalog entries when loading a catalog
+      |    (Cocoon also logs the "Resolved public" messages.)
+      |
+      |     <property name="verbosity" value="2"/>
+      |
+      | workingDirectory:
+      |   The path to the working directory.
+      |
+      +-->
+  <bean name="org.xml.sax.EntityResolver"
+        class="org.apache.cocoon.core.xml.resolver.CocoonSystemResolver"
+        init-method="init" scope="singleton">
+    <property name="settings" ref="org.apache.cocoon.configuration.Settings"></property>
+    <property name="verbosity" value="2"/>
+  </bean>
+</beans>
