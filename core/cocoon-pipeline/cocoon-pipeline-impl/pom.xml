@@ -23,13 +23,13 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
+    <version>6</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>cocoon-pipeline-impl</artifactId>
-  <version>1.0.0-RC3-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
   <name>Cocoon Pipeline Implementation</name>
   <description>

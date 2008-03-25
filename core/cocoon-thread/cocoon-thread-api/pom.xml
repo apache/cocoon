@@ -28,11 +28,11 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
+    <version>6</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-thread-api</artifactId>
-  <version>1.0.0-RC3-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Cocoon Thread API</name>
   <description>
     Interfaces for thread factories and pools and for execution of background tasks.
