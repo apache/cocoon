@@ -30,8 +30,6 @@ import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * RepeaterJXPathBinding provides an implementation of a {@link Binding}
@@ -42,8 +40,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
-    private static Log LOG = LogFactory.getLog( RepeaterJXPathBinding.class );
-    
     private final String repeaterId;
     private final String repeaterPath;
     private final String rowPath;
@@ -155,8 +151,10 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                 this.rowBinding.loadFormFromModel(thisRow, rowContext);
             }
         }
-        if (LOG.isDebugEnabled())
-            LOG.debug("done loading rows " + this);
+
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("done loading rows " + this);
+        }
     }
 
     /**
@@ -262,13 +260,13 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                             this.rowPathForInsert + "[" + indexCount + "]");
                     JXPathContext newRowContext =
                         repeaterContext.getRelativeContext(newRowContextPointer);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("inserted row at " + newRowContextPointer.asPath());
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("inserted row at " + newRowContextPointer.asPath());
                     }
                     //    + rebind to children for update
                     this.rowBinding.saveFormToModel(thisRow, newRowContext);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("bound new row");
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("bound new row");
                     }
                     indexCount++;
                 }
@@ -279,8 +277,9 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 //                }
 //            }
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("done saving rows " + this);
+
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("done saving rows " + this);
         }
     }
 
@@ -343,9 +342,9 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                         else
                             value = null;
                     } else {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("Convertor ignored on backend-value " +
-                            "which isn't of type String.");
+                        if (getLogger().isWarnEnabled()) {
+                            getLogger().warn("Convertor ignored on backend-value " +
+                                             "which isn't of type String.");
                         }
                     }
                 }

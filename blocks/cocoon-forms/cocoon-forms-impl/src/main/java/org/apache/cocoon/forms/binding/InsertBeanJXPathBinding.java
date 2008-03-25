@@ -21,8 +21,6 @@ import java.lang.reflect.Method;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * InsertBeanJXPathBinding provides an implementation of a {@link Binding}
@@ -38,8 +36,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class InsertBeanJXPathBinding extends JXPathBindingBase {
 
-    private static Log LOG = LogFactory.getLog( InsertBeanJXPathBinding.class );
-    
     private final String className;
     private final String addMethodName;
 
@@ -95,8 +91,8 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
             // invoke this method with this new beast.
             addMethod.invoke(parent, args);
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("InsertBean performed.");
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("InsertBean performed.");
             }
         } catch (Exception e) {
             throw new RuntimeException("InsertBean failed.", e);

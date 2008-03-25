@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.cocoon.forms.binding.library.Library;
 import org.apache.cocoon.forms.formmodel.Widget;
+import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.jxpath.DOMFactory;
 
 import org.apache.commons.jxpath.AbstractFactory;
@@ -30,8 +31,6 @@ import org.apache.commons.jxpath.Pointer;
 import org.apache.commons.jxpath.ri.model.beans.BeanPropertyPointer;
 import org.apache.commons.jxpath.util.TypeUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Provides a base class for hooking up Binding implementations that use the
@@ -40,9 +39,9 @@ import org.apache.commons.logging.LogFactory;
  *
  * @version $Id$
  */
-public abstract class JXPathBindingBase implements Binding {
+public abstract class JXPathBindingBase extends AbstractLogEnabled
+                                        implements Binding {
 
-    private static Log LOG = LogFactory.getLog( JXPathBindingBase.class );
     /**
      * the local library, if this is the top binding
      */
@@ -100,7 +99,7 @@ public abstract class JXPathBindingBase implements Binding {
         try {
             return !this.enclosingLibrary.dependenciesHaveChanged();
         } catch (Exception e) {
-            LOG.error("Error checking dependencies!", e);
+            getLogger().error("Error checking dependencies!", e);
             throw new NestableRuntimeException("Error checking dependencies!", e);
         }
     }
