@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>6</version>
+    <version>6-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -46,7 +46,7 @@
     <module>cocoon-thread/cocoon-thread-api</module>
     <module>cocoon-thread/cocoon-thread-impl</module>
     <module>cocoon-util</module>
-    <!--module>cocoon-webapp</module-->
+    <module>cocoon-webapp</module>
     <module>cocoon-xml/cocoon-xml-api</module>
     <module>cocoon-xml/cocoon-xml-impl</module>
     <module>cocoon-xml/cocoon-xml-resolver</module>
@@ -82,7 +82,7 @@
   </scm>
 
   <!--  Only uncomment this section when doing the release -->
-  <dependencyManagement>
+  <!--dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -201,7 +201,7 @@
         <version>1.1.0-SNAPSHOT</version>
       </dependency>
     </dependencies>        
-  </dependencyManagement>
+  </dependencyManagement-->
     
   <profiles>
     <profile>
