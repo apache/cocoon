@@ -19,8 +19,6 @@ package org.apache.cocoon.forms.binding;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
@@ -39,8 +37,6 @@ import org.w3c.dom.Node;
  */
 public class InsertNodeJXPathBinding extends JXPathBindingBase {
 
-    private static Log LOG = LogFactory.getLog( InsertNodeJXPathBinding.class );
-    
     private final DocumentFragment template;
 
     /**
@@ -74,8 +70,8 @@ public class InsertNodeJXPathBinding extends JXPathBindingBase {
         Node toInsert = targetDoc.importNode(this.template, true);
         parentNode.appendChild(toInsert);
 
-        if (LOG.isDebugEnabled())
-            LOG.debug("InsertNode executed.");
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("InsertNode executed.");
 
         // jxpc.setFactory(new AbstractFactory() {
         //     public boolean createObject(JXPathContext context, Pointer pointer,

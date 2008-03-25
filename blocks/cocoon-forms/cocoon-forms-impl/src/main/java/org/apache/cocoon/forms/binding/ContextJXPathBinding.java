@@ -22,8 +22,6 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * ContextJXPathBinding provides an implementation of a {@link Binding}
@@ -34,8 +32,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ContextJXPathBinding extends ComposedJXPathBindingBase {
 
-    private static Log LOG = LogFactory.getLog( ContextJXPathBinding.class );
-    
     /**
      * the relative contextPath for the sub-bindings of this context
      */
@@ -88,12 +84,12 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
         if (ptr.getNode() != null) {
             JXPathContext subContext = jxpc.getRelativeContext(ptr);
             super.doLoad(frmModel, subContext);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("done loading " + this);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("done loading " + this);
             }
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("non-existent path: skipping " + this);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("non-existent path: skipping " + this);
             }
         }
     }
@@ -114,8 +110,8 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
         }
         JXPathContext subContext = jxpc.getRelativeContext(ptr);
         super.doSave(frmModel, subContext);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("done saving " + this);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("done saving " + this);
         }
     }
 

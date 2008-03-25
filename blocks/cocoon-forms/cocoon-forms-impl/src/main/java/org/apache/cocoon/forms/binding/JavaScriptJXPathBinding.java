@@ -26,8 +26,6 @@ import org.apache.cocoon.processing.ProcessInfoProvider;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
@@ -40,8 +38,6 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
     final static String[] LOAD_PARAMS = { "widget", "jxpathPointer", "jxpathContext", "childBindings" };
     final static String[] SAVE_PARAMS = { "widget", "jxpathPointer", "jxpathContext", "childBindings" };
 
-    private static Log LOG = LogFactory.getLog( JavaScriptJXPathBinding.class );
-    
     private final String id;
     private final String path;
     private final Function loadScript;
@@ -103,8 +99,8 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
                 throw new RuntimeException("Error invoking JavaScript event handler", e);
             }
         } else {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("[Javascript Binding] - loadForm: No javascript code available. Widget id=" + this.getId());
+            if (getLogger().isInfoEnabled()) {
+                getLogger().info("[Javascript Binding] - loadForm: No javascript code available. Widget id=" + this.getId());
             }
         }
     }
@@ -129,8 +125,8 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
                 throw new RuntimeException("Error invoking JavaScript event handler", e);
             }
         } else {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("[Javascript Binding] - saveForm: No code available on the javascript binding with id '" + getId() + "'");
+            if (getLogger().isInfoEnabled()) {
+                getLogger().info("[Javascript Binding] - saveForm: No code available on the javascript binding with id '" + getId() + "'");
             }
         }
     }

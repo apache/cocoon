@@ -26,8 +26,6 @@ import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Simple binding for multi fields: on save, first deletes the target data
@@ -37,7 +35,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MultiValueJXPathBinding extends JXPathBindingBase {
 
-    private static Log LOG = LogFactory.getLog( MultiValueJXPathBinding.class );
     private final String multiValueId;
     private final String multiValuePath;
     private final String rowPath;
@@ -98,7 +95,7 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
                         else
                             value = null;
                     } else {
-                        LOG.warn("Convertor ignored on backend-value which isn't of type String.");
+                        getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
                     }
                 }
 
@@ -108,8 +105,8 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
             widget.setValue(list.toArray());
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("done loading values " + this);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("done loading values " + this);
         }
     }
 
@@ -162,17 +159,12 @@ public class MultiValueJXPathBinding extends JXPathBindingBase {
             update = true;
         }
 
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("done saving " + this + " -- on-update == " + update);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("done saving " + this + " -- on-update == " + update);
         }
-
-
-
     }
 
     public String toString() {
         return "MultiValueJXPathBinding [widget=" + this.multiValueId + ", xpath=" + this.multiValuePath + "]";
     }
-
 }

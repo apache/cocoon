@@ -20,8 +20,6 @@ import org.apache.cocoon.forms.formmodel.AggregateField;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * AggregateJXPathBinding provides an implementation of a {@link Binding}
@@ -36,7 +34,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
 
-    private static Log LOG = LogFactory.getLog( AggregateJXPathBinding.class );
     private final String xpath;
 
     private final String widgetId;
@@ -72,8 +69,8 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
                 jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doLoad(aggregate, subContext);
         aggregate.combineFields();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Done loading " + this);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Done loading " + this);
         }
     }
 
@@ -89,8 +86,8 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
         JXPathContext subContext =
                 jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doSave(aggregate, subContext);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Done saving " + this);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Done saving " + this);
         }
     }
 
