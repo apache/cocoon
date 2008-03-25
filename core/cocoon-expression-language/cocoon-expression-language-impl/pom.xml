@@ -74,40 +74,40 @@
       <groupId>commons-jexl</groupId>
       <artifactId>commons-jexl</artifactId>
     </dependency>
-     <dependency>
-        <groupId>commons-jxpath</groupId>
-        <artifactId>commons-jxpath</artifactId>
-        <exclusions>
-          <exclusion>
-            <artifactId>ant-optional</artifactId>
-            <groupId>ant-optional</groupId>
-          </exclusion>
-          <exclusion>
-            <artifactId>commons-beanutils</artifactId>
-            <groupId>commons-beanutils</groupId>
-          </exclusion>
-          <exclusion>
-            <artifactId>jdom</artifactId>
-            <groupId>jdom</groupId>
-          </exclusion>
-          <exclusion>
-            <artifactId>servlet</artifactId>
-            <groupId>javax.servlet</groupId>
-          </exclusion>
-          <exclusion>
-            <artifactId>servletapi</artifactId>
-            <groupId>servletapi</groupId>
-          </exclusion>
-          <exclusion>
-            <artifactId>xerces</artifactId>
-            <groupId>xerces</groupId>
-          </exclusion>
-          <exclusion>
-            <artifactId>ant-optional</artifactId>
-            <groupId>ant</groupId>
-          </exclusion>
-        </exclusions>
-      </dependency>
+    <dependency>
+      <groupId>commons-jxpath</groupId>
+      <artifactId>commons-jxpath</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>ant-optional</artifactId>
+          <groupId>ant-optional</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-beanutils</artifactId>
+          <groupId>commons-beanutils</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jdom</artifactId>
+          <groupId>jdom</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>servlet</artifactId>
+          <groupId>javax.servlet</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>servletapi</artifactId>
+          <groupId>servletapi</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>xerces</artifactId>
+          <groupId>xerces</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>ant-optional</artifactId>
+          <groupId>ant</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <dependency>
       <groupId>rhino</groupId>
       <artifactId>js</artifactId>
