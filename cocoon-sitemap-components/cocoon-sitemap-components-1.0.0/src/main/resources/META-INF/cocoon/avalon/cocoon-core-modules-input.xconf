@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<components>
+
+  <!--+
+      | InputModules are a replacement to reading values directly
+      | e.g. from request parameters. By using this abstraction and
+      | indirection, other components can be more generic and changes
+      | to the application logic are easier.
+      |
+      | A number of components already use InputModules: the sitemap processor,
+      | flow, some matchers, the linkrewriting transformer, database actions
+      | and more.
+      |
+      | For example the sitemap processor allows to obtain a value
+      | named "foo" from an the InputModule for request parameters by
+      | writing {request-param:foo} wherever a sitemap variable is
+      | allowed.
+      |
+      | Some InputModules need the help of other InputModules to
+      | obtain values and only apply a function to the obtained value
+      | or change the name of the attribute. These modules usually
+      | carry "Meta" in their name. An example is the ChainMetaModule
+      | which tries several other modules in turn until a non-null
+      | value is obtained or all modules are tied.
+      |
+      | For details and optional configuration parameters refer to the
+      | accompanying javadocs.
+      +-->
+  <input-modules>
+    <component-instance logger="core.modules.input" name="url-encode"       class="org.apache.cocoon.components.modules.input.URLEncodeModule">
+      <encoding>UTF-8</encoding>
+    </component-instance>
+    <component-instance logger="core.modules.input" name="url-decode"       class="org.apache.cocoon.components.modules.input.URLDecodeModule">
+      <encoding>UTF-8</encoding>
+    </component-instance>
+    <component-instance logger="core.modules.input" name="global"           class="org.apache.cocoon.components.modules.input.SettingsInputModule"/>
+    <component-instance logger="core.modules.input" name="request"          class="org.apache.cocoon.components.modules.input.RequestModule"/>
+    <component-instance logger="core.modules.input" name="baselink"         class="org.apache.cocoon.components.modules.input.BaseLinkModule" />
+    <component-instance logger="core.modules.input" name="session"          class="org.apache.cocoon.components.modules.input.SessionModule"/>
+    <component-instance logger="core.modules.input" name="environment-attr" class="org.apache.cocoon.components.modules.input.EnvironmentAttributeModule"/>
+    <component-instance logger="core.modules.input" name="request-param"    class="org.apache.cocoon.components.modules.input.RequestParameterModule"/>
+    <component-instance logger="core.modules.input" name="raw-request-param" class="org.apache.cocoon.components.modules.input.RawRequestParameterModule"/>
+    <component-instance logger="core.modules.input" name="request-attr"     class="org.apache.cocoon.components.modules.input.RequestAttributeModule"/>
+    <component-instance logger="core.modules.input" name="request-scoped-attr"     class="org.apache.cocoon.components.modules.input.RequestScopedAttributeModule"/>
+    <component-instance logger="core.modules.input" name="request-header"   class="org.apache.cocoon.components.modules.input.HeaderAttributeModule"/>
+    <component-instance logger="core.modules.input" name="session-attr"     class="org.apache.cocoon.components.modules.input.SessionAttributeModule"/>
+    <component-instance logger="core.modules.input" name="cookie"           class="org.apache.cocoon.components.modules.input.CookieModule"/>
+    <component-instance logger="core.modules.input" name="system-property"  class="org.apache.cocoon.components.modules.input.SystemPropertyModule"/>
+    <component-instance logger="core.modules.input" name="constant"         class="org.apache.cocoon.components.modules.input.StringConstantModule"/>
+    <component-instance logger="core.modules.input" name="concat"           class="org.apache.cocoon.components.modules.input.StringConcatMetaModule"/>
+    <component-instance logger="core.modules.input" name="random"           class="org.apache.cocoon.components.modules.input.RandomNumberModule"/>
+    <component-instance logger="core.modules.input" name="digest"       class="org.apache.cocoon.components.modules.input.DigestMetaModule"/>
+    <component-instance logger="core.modules.input" name="date"         class="org.apache.cocoon.components.modules.input.DateInputModule">
+      <!-- <format>EEE, d MMM yyyy HH:mm:ss Z</format> -->
+      <!--Eg: Mon, 28 Oct 2002 03:08:49 +1100 -->
+    </component-instance>
+    <component-instance logger="core.modules.input" name="nullinput"    class="org.apache.cocoon.components.modules.input.NullInputModule"/>
+    <component-instance logger="core.modules.input" name="realpath"     class="org.apache.cocoon.components.modules.input.RealPathModule"/>
+    <component-instance logger="core.modules.input" name="contextpath"  class="org.apache.cocoon.components.modules.input.ContextPathModule"/>
+    <component-instance logger="core.modules.input" name="naming"       class="org.apache.cocoon.components.modules.input.NamingInputModule">
+    </component-instance>
+    <component-instance logger="core.modules.input" name="cocoon-properties" class="org.apache.cocoon.components.modules.input.PropertiesFileModule">
+      <file src="resource://org/apache/cocoon/cocoon.properties" />
+    </component-instance>
+
+    <component-instance logger="core.modules.input" name="xmlmeta"      class="org.apache.cocoon.components.modules.input.XMLMetaModule"/>
+    <component-instance logger="core.modules.input" name="mapmeta"      class="org.apache.cocoon.components.modules.input.MapMetaModule"/>
+    <component-instance logger="core.modules.input" name="datemeta"     class="org.apache.cocoon.components.modules.input.DateMetaInputModule"/>
+    <component-instance logger="core.modules.input" name="jxpath"       class="org.apache.cocoon.components.modules.input.JXPathMetaModule"/>
+    <component-instance logger="core.modules.input" name="simplemap"    class="org.apache.cocoon.components.modules.input.SimpleMappingMetaModule"/>
+    <component-instance logger="core.modules.input" name="locate"       class="org.apache.cocoon.components.modules.input.LocateResource"/>
+    <component-instance logger="core.modules.input" name="chain"        class="org.apache.cocoon.components.modules.input.ChainMetaModule">
+      <input-module name="request-param"/>
+      <input-module name="request-attr"/>
+      <input-module name="session-attr"/>
+      <input-module name="defaults"/>
+    </component-instance>
+  </input-modules>
+
+</components>
