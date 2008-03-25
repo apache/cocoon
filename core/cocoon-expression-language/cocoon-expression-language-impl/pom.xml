@@ -17,9 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id: pom.xml 538625 2007-05-16 15:06:56Z reinhard $
-    +-->
+<!-- $Id: pom.xml 538625 2007-05-16 15:06:56Z reinhard $ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -42,7 +40,7 @@
   <properties>
     <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.expression-language-impl.version}</docs.version>
-  </properties>  
+  </properties>
 
   <distributionManagement>
     <site>
@@ -76,16 +74,40 @@
       <groupId>commons-jexl</groupId>
       <artifactId>commons-jexl</artifactId>
     </dependency>
-    <dependency>
-      <groupId>commons-jxpath</groupId>
-      <artifactId>commons-jxpath</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>avalon-framework</groupId>
-          <artifactId>avalon-framework</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
+     <dependency>
+        <groupId>commons-jxpath</groupId>
+        <artifactId>commons-jxpath</artifactId>
+        <exclusions>
+          <exclusion>
+            <artifactId>ant-optional</artifactId>
+            <groupId>ant-optional</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>commons-beanutils</artifactId>
+            <groupId>commons-beanutils</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>jdom</artifactId>
+            <groupId>jdom</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>servlet</artifactId>
+            <groupId>javax.servlet</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>servletapi</artifactId>
+            <groupId>servletapi</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>xerces</artifactId>
+            <groupId>xerces</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>ant-optional</artifactId>
+            <groupId>ant</groupId>
+          </exclusion>
+        </exclusions>
+      </dependency>
     <dependency>
       <groupId>rhino</groupId>
       <artifactId>js</artifactId>
@@ -111,7 +133,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -125,10 +147,10 @@
               <collection>cdocs-expression-language</collection>
               <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
               <createSiteXmlOnly>false</createSiteXmlOnly>
-            </configuration>            
-          </plugin> 
+            </configuration>
+          </plugin>
         </plugins>
-      </build>      
-    </profile>   
-  </profiles>     
+      </build>
+    </profile>
+  </profiles>
 </project>
