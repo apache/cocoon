@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - $Id$
+  -->
+<components>
+
+  <source-resolver/>
+
+  <!--+
+      | Source Factories
+      |
+      | Each source factory adds a special uri scheme to the system.
+      +-->
+  <source-factories>
+    <component-instance name="resource"
+                        class="org.apache.excalibur.source.impl.ResourceSourceFactory"/>
+    <component-instance name="context"
+                        class="org.apache.cocoon.components.source.impl.ContextSourceFactory"/>
+    <component-instance name="cocoon"
+                        class="org.apache.cocoon.components.source.impl.SitemapSourceFactory"/>
+    <component-instance name="blockcontext"
+                        class="org.apache.cocoon.components.source.impl.BlockContextSourceFactory"/>
+    <!--
+    <component-instance name="block"
+                        class="org.apache.cocoon.components.source.impl.BlockSourceFactory"/>
+    -->
+
+    <!--+
+        | The "file:" source protocol is modifiable (can be written to) and
+        | traversable (directory structures can be crawled).
+        +-->
+    <component-instance name="file"
+                        class="org.apache.excalibur.source.impl.FileSourceFactory"/>
+
+    <component-instance name="upload"
+                        class="org.apache.cocoon.components.source.impl.PartSourceFactory"/>
+    <component-instance name="module"
+                        class="org.apache.cocoon.components.source.impl.ModuleSourceFactory"/>
+    <component-instance name="xmodule"
+                        class="org.apache.cocoon.components.source.impl.XModuleSourceFactory"/>
+    <component-instance name="zip"
+                        class="org.apache.cocoon.components.source.impl.ZipSourceFactory"/>
+    <component-instance name="empty"
+                        class="org.apache.cocoon.components.source.impl.EmptySourceFactory"/>
+
+    <!--+
+        | The "*" protocol handles all uri schemes that are not explicitely
+        | specified. This includes all JDK standard protocols.
+        +-->
+    <component-instance name="*"
+                        class="org.apache.excalibur.source.impl.URLSourceFactory"/>
+  </source-factories>
+
+</components>
