@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - $Id$
+  -->
+<components>
+
+  <!--+
+      | I18n Bundle Factory
+      |
+      | BundleFactory loads Bundles with i18n resources for the given locale.
+      | Default location for bundles specified with the 'catalogue-location'.
+      +-->
+  <i18n-bundles>
+    <!--+
+        | Role of the store component to be used for caching loaded bundles.
+        +-->
+    <store-role>org.apache.excalibur.store.Store/TransientStore</store-role>
+    <!--+
+        | Reload check delay. Default 60000 (1 minute), 0 means no delay
+        | (check always), -1 means no reload.
+        +-->
+    <reload-interval>60000</reload-interval>
+    <!--+
+        | Location of the default message catalogue. Optional.
+        +-->
+    <catalogue-location>context://samples/i18n/translations</catalogue-location>
+  </i18n-bundles>
+
+</components>
