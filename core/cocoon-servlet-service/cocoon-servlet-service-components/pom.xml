@@ -17,21 +17,19 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    +-->
+<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
+    <version>6</version>
     <relativePath>../../../parent/pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-servlet-service-components</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Cocoon Servlet Service Components</name>
   <description>Components for the servlet service framework that depends on pipeline and sitemap APIs.</description>
   <url>http://cocoon.apache.org/${docs.m.servlet-service-components.relPath}</url>    
@@ -53,14 +51,17 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-impl</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-linkrewriter-impl</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -80,12 +81,14 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.0</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
+      <version>1.0.0</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -109,9 +112,9 @@
   </build>
   
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</developerConnection>
-    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</url>    
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-components/cocoon-servlet-service-components-1.0.0</url>    
   </scm>     
   
   <reporting>
