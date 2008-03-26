@@ -78,5 +78,43 @@
       <scope>compile</scope>
     </dependency>
   </dependencies>
+  
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>  
+  <properties>
+    <docs.name>${project.name}</docs.name>
+    <docs.version>${docs.m.it-fw.version}</docs.version>
+  </properties>
 
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.it-fw.relPath}</url>
+    </site>
+  </distributionManagement>
+
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>1433</navDocId>
+              <collection>cdocs-it-fw</collection>
+      	      <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+      	    </configuration>
+      	  </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
