@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Core Samples : System Samples
+  -
+  - $Id$
+  -->
+
+<samples name="System Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
+
+  <group name="Back">
+    <sample name="Back" href="../">
+      Back to the samples home page.
+    </sample>
+  </group>
+
+  <group name="System Tools And Pages">
+    <sample name="Status Page" href="status.html">
+      This page shows the current internal status of cocoon, along with
+      information on the cache and the object stores.
+    </sample>
+    <sample name="Status Page (with continuations)" href="status-with-continuations.html">
+      This page shows the current internal status of cocoon, along with
+      information on the cache and the object stores and the continuations.
+    </sample>
+    <sample name="Status Page (with continuations - XML)" href="status-with-continuations.xml">
+      This page shows the current internal status of cocoon, along with
+      information on the cache and the object stores and the continuations.
+    </sample>
+    <sample name="Clear Cache" href="clearcache.html">
+      Empties the Cocoon in-memory cache.
+    </sample>
+    <sample name="Clear Store" href="clearpersistentstore.html">
+      Empties the Cocoon persistent store.
+    </sample>
+  </group>
+
+</samples>

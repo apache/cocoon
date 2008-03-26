@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Polish message catalogue file for Cocoon 2 i18n sample
+  -
+  - $Id$
+  -->
+<catalogue xml:lang="pl">
+  <message key="count_title">Ta strona była pobierana {0} razy. Ostatnio {1}</message>
+  <message key="a_key">To jest klucz.</message>
+  <message key="language">Polski</message>
+  <message key="titletext">Witam, oto przykład wielojęzycznej strony!</message>
+  <message key="doclink">Widzą i18n dokumentacja dla szczegółów: {0}</message>
+  <message key="first">Pierwszy</message>
+  <message key="second">Drugi</message>
+  <message key="third">Trzeci</message>
+  <message key="forth">Czwarty</message>
+  <message key="article">Artykuł</message>
+  <message key="article_text1">To jest paragraf w i18n.</message>
+  <message key="article_text2">To jest następny paragraf w i18n i jest takze fajny.</message>
+  <message key="Hello">Witam, {0}! Miło Cię widzieć!</message>
+  <message key="Kot">Tomcat</message>
+  <message key="none">Nic</message>
+  <message key="one">raz</message>
+  <message key="two">dwa</message>
+</catalogue>

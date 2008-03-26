@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html"/>
+      </map:serialize>
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline>
+
+      <map:match pattern="">
+        <map:redirect-to uri="welcome"/>
+      </map:match>
+
+      <map:match pattern="welcome">
+        <map:generate src="samples.xml"/>
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService" mime-type="text/html">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="hello.xls">
+        <map:generate src="servlet:main-sample:/hello-world/hello.xml"/>
+        <map:transform src="servlet:main-sample:/hello-world/style/xsl/page2xls.xsl"/>
+        <map:serialize type="xls"/>
+      </map:match>
+
+      <map:match pattern="*.xls">
+        <map:generate src="content/{1}.xml"/>
+        <map:serialize type="xls"/>
+      </map:match>
+
+      <!--
+        <map:match pattern="statetax-sql.xml">
+        <map:generate src="content/dynamic/statetax.xml"/>
+        <map:transform type="sql">
+        <map:parameter name="use-connection" value="personnel"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+        </map:match>
+        
+        <map:match pattern="statetax.xml">
+        <map:generate src="content/dynamic/statetax.xml"/>
+        <map:transform type="sql">
+        <map:parameter name="use-connection" value="personnel"/>
+        </map:transform>
+        <map:transform src="stylesheets/statetax-sql2xls.xsl"/> 
+        <map:serialize type="xml"/>
+        </map:match>
+        
+        <map:match pattern="statetax.xls">
+        <map:generate src="content/dynamic/statetax.xml"/>
+        <map:transform type="sql">
+        <map:parameter name="use-connection" value="personnel"/>
+        </map:transform>
+        <map:transform src="stylesheets/statetax-sql2xls.xsl"/>
+        <map:serialize type="xls"/>
+        </map:match>
+        
+        <map:match pattern="statetax2.xls">
+        <map:generate src="content/dynamic/statetax2.xsp" type="serverpages"/>
+        <map:transform src="stylesheets/statetax-esql2xls.xsl"/>
+        <map:serialize type="xls"/>
+        </map:match>
+        
+        <map:match pattern="sql-xls/*.xls">
+        <map:generate src="context://samples/docs/samples/sql/{1}.xml"/>
+        <map:transform type="sql">
+        <map:parameter name="use-connecton" value="personnel"/>
+        </map:transform>
+        
+        <map:transform src="stylesheets/simple-sql2xls.xsl"/>
+        <map:serialize type="xls"/>
+        </map:match>
+        
+        <map:match pattern="xsp/*">
+        <map:generate src="content/dynamic/{1}.xsp" type="serverpages"/>
+        <map:transform src="context://samples/blocks/dynamic-page2html.xsl">
+        <map:parameter name="servletPath" value="{request:servletPath}"/>
+        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:parameter name="file" value=".xsp"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+        </map:match>
+        
+        <map:match pattern="xspxml/*">
+        <map:generate src="content/dynamic/{1}.xsp" type="serverpages"/>
+        <map:transform src="stylesheets/statetax-esql2xls.xsl"/>
+        <map:serialize type="html"/>
+        </map:match>
+      -->
+
+    </map:pipeline>
+
+  </map:pipelines>
+
+</map:sitemap>

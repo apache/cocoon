@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - $Id$
+  -->
+<components>
+  <input-modules>
+    <!-- For the sitedemo sample -->
+    <component-instance name="linkmap"
+                        class="org.apache.cocoon.components.modules.input.XMLFileModule">
+      <file src="cocoon://samples/linkrewriter/sitedemo/linkmap"/>
+      <!-- Shouldn't this be the default? -->
+      <reloadable>true</reloadable>
+    </component-instance>
+    <component-instance name="site"
+                        class="org.apache.cocoon.components.modules.input.SimpleMappingMetaModule">
+      <input-module name="linkmap"/>
+      <prefix>/site/</prefix>
+      <suffix>/@href</suffix>
+    </component-instance>
+
+    <!-- For the bookdemo sample -->
+    <component-instance name="book-raw"
+                        class="org.apache.cocoon.components.modules.input.XMLFileModule">
+      <!-- Shouldn't this be the default? -->
+      <file src="cocoon://samples/linkrewriter/bookdemo/linkmap"/>
+      <reloadable>true</reloadable>
+    </component-instance>
+    <component-instance name="book"
+                        class="org.apache.cocoon.components.modules.input.SimpleMappingMetaModule">
+      <input-module name="book-raw"/>
+    </component-instance>
+  </input-modules>
+</components>

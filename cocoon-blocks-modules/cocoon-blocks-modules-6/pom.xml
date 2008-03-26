@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!--
+  - $Id$
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon</artifactId>
+    <version>6</version>
+    <relativePath>../parent</relativePath>
+  </parent>
+  <artifactId>cocoon-blocks-modules</artifactId>
+  <version>6</version>
+  <name>Cocoon Blocks [modules]</name>     
+  <packaging>pom</packaging>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Cocoon-Block-Name>${pom.artifactId}</Cocoon-Block-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-maven-plugin</artifactId>
+        <version>1.0.0-M1</version>      
+      </plugin>
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+        <version>6.1.7</version>
+        <configuration>
+          <connectors>
+            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              <port>8888</port>
+              <maxIdleTime>30000</maxIdleTime>
+            </connector>
+          </connectors>
+          <webAppSourceDirectory>target/rcl/webapp</webAppSourceDirectory>
+          <contextPath>/</contextPath>
+          <systemProperties>
+            <systemProperty>
+              <name>org.apache.cocoon.log4j.loglevel</name>
+              <value>ERROR</value>
+            </systemProperty>
+          </systemProperties>
+          <systemProperties>
+            <systemProperty>
+              <name>org.apache.cocoon.mode</name>
+              <value>dev</value>
+            </systemProperty>
+          </systemProperties>          
+        </configuration>
+      </plugin>             
+    </plugins>
+  </build>
+  
+  <modules>
+    <module>cocoon-ajax/cocoon-ajax-impl</module>
+    <module>cocoon-ajax/cocoon-ajax-sample</module>    
+    <module>cocoon-apples/cocoon-apples-impl</module>
+    <module>cocoon-apples/cocoon-apples-sample</module>    
+    <module>cocoon-core-sample/cocoon-core-additional-sample</module>
+    <module>cocoon-core-sample/cocoon-core-main-sample</module>    
+    <module>cocoon-flowscript/cocoon-flowscript-impl</module>
+    <module>cocoon-forms/cocoon-forms-impl</module>
+    <module>cocoon-forms/cocoon-forms-sample</module>    
+    <module>cocoon-it</module>    
+    <module>cocoon-linkrewriter/cocoon-linkrewriter-impl</module>
+    <module>cocoon-linkrewriter/cocoon-linkrewriter-sample</module>
+    <module>cocoon-template/cocoon-template-impl</module>
+    <module>cocoon-template/cocoon-template-sample</module>    
+    <module>cocoon-samples-style/cocoon-samples-style-default</module>
+    <module>cocoon-batik/cocoon-batik-impl</module>
+    <module>cocoon-batik/cocoon-batik-sample</module>
+    <module>cocoon-welcome</module>
+  </modules>
+  
+  <profiles>
+    <profile>
+      <id>allblocks</id>
+      <activation>
+        <property>
+          <name>allblocks</name>
+        </property>
+      </activation>
+      <modules>
+        <module>cocoon-asciiart/cocoon-asciiart-impl</module>
+        <module>cocoon-asciiart/cocoon-asciiart-sample</module>
+        <module>cocoon-auth/cocoon-acegisecurity-sample</module>
+        <module>cocoon-auth/cocoon-auth-api</module>
+        <module>cocoon-auth/cocoon-auth-impl</module>
+        <module>cocoon-auth/cocoon-auth-sample</module>        
+        <module>cocoon-authentication-fw/cocoon-authentication-fw-impl</module>
+        <module>cocoon-authentication-fw/cocoon-authentication-fw-sample</module>
+        <module>cocoon-axis/cocoon-axis-impl</module>
+        <module>cocoon-axis/cocoon-axis-sample</module>
+        <module>cocoon-bsf/cocoon-bsf-impl</module>
+        <module>cocoon-bsf/cocoon-bsf-sample</module>
+        <module>cocoon-captcha/cocoon-captcha-impl</module>
+        <module>cocoon-captcha/cocoon-captcha-sample</module>        
+        <module>cocoon-chaperon/cocoon-chaperon-impl</module>
+        <module>cocoon-chaperon/cocoon-chaperon-sample</module>
+        <module>cocoon-cron/cocoon-cron-impl</module>
+        <module>cocoon-cron/cocoon-cron-sample</module>
+        <module>cocoon-databases/cocoon-databases-impl</module>
+        <module>cocoon-databases/cocoon-databases-mocks</module>
+        <module>cocoon-databases/cocoon-databases-bridge</module>
+        <module>cocoon-databases/cocoon-databases-sample</module>
+        <module>cocoon-databases/cocoon-databases-hsqldb-client</module>
+        <module>cocoon-databases/cocoon-databases-hsqldb-server</module>
+        <module>cocoon-databases/cocoon-databases-odbc-client</module>
+        <module>cocoon-databases/cocoon-databases-oracle-client</module>
+        <module>cocoon-databases/cocoon-databases-postgresql-client</module>
+        <module>cocoon-deli/cocoon-deli-impl</module>
+        <module>cocoon-deli/cocoon-deli-sample</module>
+        <module>cocoon-eventcache/cocoon-eventcache-impl</module>
+        <module>cocoon-eventcache/cocoon-eventcache-sample</module>
+        <module>cocoon-faces/cocoon-faces-impl</module>
+        <module>cocoon-faces/cocoon-faces-sample</module>
+        <module>cocoon-fop/cocoon-fop-impl</module>
+        <module>cocoon-fop/cocoon-fop-sample</module>  
+        <module>cocoon-fop/cocoon-fop-ng-impl</module>
+        <module>cocoon-fop/cocoon-fop-ng-sample</module>
+        <module>cocoon-html/cocoon-html-impl</module>
+        <module>cocoon-html/cocoon-html-sample</module>        
+        <module>cocoon-imageop/cocoon-imageop-impl</module>
+        <module>cocoon-imageop/cocoon-imageop-sample</module>
+        <module>cocoon-itext/cocoon-itext-impl</module>
+        <module>cocoon-itext/cocoon-itext-sample</module>
+        <module>cocoon-javaflow/cocoon-javaflow-impl</module>
+        <module>cocoon-javaflow/cocoon-javaflow-sample</module>
+        <module>cocoon-jcr</module>
+        <module>cocoon-jfor/cocoon-jfor-impl</module>
+        <module>cocoon-jfor/cocoon-jfor-sample</module>
+        <module>cocoon-jms/cocoon-jms-impl</module>
+        <module>cocoon-jms/cocoon-jms-sample</module>
+        <module>cocoon-jsp/cocoon-jsp-impl</module>
+        <module>cocoon-jsp/cocoon-jsp-mocks</module>
+        <module>cocoon-jsp/cocoon-jsp-sample</module>
+        <module>cocoon-lucene/cocoon-lucene-impl</module>
+        <module>cocoon-lucene/cocoon-lucene-sample</module>
+        <module>cocoon-mail/cocoon-mail-impl</module>
+        <module>cocoon-mail/cocoon-mail-sample</module>        
+        <module>cocoon-midi/cocoon-midi-impl</module>
+        <module>cocoon-midi/cocoon-midi-sample</module>
+        <module>cocoon-naming/cocoon-naming-impl</module>
+        <module>cocoon-naming/cocoon-naming-sample</module>
+        <module>cocoon-ojb/cocoon-ojb-impl</module>
+        <module>cocoon-ojb/cocoon-ojb-mocks</module>
+        <module>cocoon-ojb/cocoon-ojb-sample</module>
+        <module>cocoon-petstore/cocoon-petstore-impl</module>
+        <module>cocoon-petstore/cocoon-petstore-sample</module>
+        <module>cocoon-poi/cocoon-poi-impl</module>
+        <module>cocoon-poi/cocoon-poi-sample</module>
+        <module>cocoon-portal</module>
+        <module>cocoon-profiler/cocoon-profiler-impl</module>
+        <module>cocoon-profiler/cocoon-profiler-sample</module>
+        <module>cocoon-proxy/cocoon-proxy-impl</module>
+        <module>cocoon-proxy/cocoon-proxy-sample</module>
+        <module>cocoon-python/cocoon-python-impl</module>
+        <module>cocoon-python/cocoon-python-mocks</module>
+        <module>cocoon-qdox/cocoon-qdox-impl</module>
+        <module>cocoon-qdox/cocoon-qdox-sample</module>
+        <module>cocoon-querybean/cocoon-querybean-impl</module>
+        <module>cocoon-querybean/cocoon-querybean-sample</module>
+        <module>cocoon-repository/cocoon-repository-impl</module>
+        <module>cocoon-scratchpad/cocoon-scratchpad-impl</module>
+        <module>cocoon-scratchpad/cocoon-scratchpad-sample</module>
+        <module>cocoon-serializers/cocoon-serializers-charsets</module>
+        <module>cocoon-serializers/cocoon-serializers-impl</module>
+        <module>cocoon-session-fw/cocoon-session-fw-impl</module>
+        <module>cocoon-session-fw/cocoon-session-fw-sample</module>
+        <module>cocoon-slide/cocoon-slide-impl</module>
+        <module>cocoon-slide/cocoon-slide-sample</module>
+        <module>cocoon-slop/cocoon-slop-impl</module>
+        <module>cocoon-slop/cocoon-slop-sample</module>
+        <module>cocoon-stx/cocoon-stx-impl</module>
+        <module>cocoon-stx/cocoon-stx-sample</module>
+        <module>cocoon-taglib/cocoon-taglib-impl</module>
+        <module>cocoon-taglib/cocoon-taglib-sample</module>
+        <module>cocoon-tour</module>
+        <module>cocoon-validation</module>
+        <module>cocoon-velocity</module>
+        <module>cocoon-web3</module>
+        <module>cocoon-webdav</module>
+        <module>cocoon-xmldb/cocoon-xmldb-impl</module>
+        <module>cocoon-xmldb/cocoon-xmldb-sample</module>
+        <module>cocoon-xsp/cocoon-xsp-impl</module>
+        <module>cocoon-xsp/cocoon-xsp-sample</module>
+      </modules>
+    </profile>
+  </profiles>
+  
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-6</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-6</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-6</url>
+  </scm>
+  
+</project>
