@@ -26,12 +26,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>6-SNAPSHOT</version>
+    <version>6</version>
     <relativePath>../parent</relativePath>
   </parent>
-
   <artifactId>cocoon-blocks-modules</artifactId>
-  <version>6-SNAPSHOT</version>
+  <version>6</version>
   <name>Cocoon Blocks [modules]</name>     
   <packaging>pom</packaging>
 
@@ -222,9 +221,9 @@
   </profiles>
   
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/blocks</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-6</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-6</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-6</url>
   </scm>
   
 </project>
