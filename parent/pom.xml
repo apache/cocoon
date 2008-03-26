@@ -3270,6 +3270,8 @@
     <!-- Path and version properties: Maven plugins-->
     <docs.m.maven-plugin.version>1.0</docs.m.maven-plugin.version>
     <docs.m.maven-plugin.relPath>2.2/maven-plugins/maven-plugin/${docs.m.maven-plugin.version}/</docs.m.maven-plugin.relPath>
+    <docs.m.it-fw.version>1.0</docs.m.it-fw.version>
+    <docs.m.it-fw.relPath>2.2/maven-plugins/it-fw/${docs.m.it-fw.version}/</docs.m.it-fw.relPath>    
   </properties>
 
   <profiles>
@@ -3530,6 +3532,10 @@
                     <name>cdocs-maven-plugin</name>
                     <path>${docs.m.maven-plugin.relPath}</path>
                   </collection>
+                  <collection>
+                    <name>cdocs-it-fw</name>
+                    <path>${docs.m.it-fw.relPath}</path>
+                  </collection>                  
                 </collections>
                 <siteXmlContent> &lt;project&gt; &lt;skin&gt;
                   &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
