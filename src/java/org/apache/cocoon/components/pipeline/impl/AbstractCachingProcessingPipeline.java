@@ -99,36 +99,44 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
     protected boolean   serializerIsCacheableProcessingComponent;
     protected boolean[] transformerIsCacheableProcessingComponent;
 
-    protected Store transientStore = null;
+    /** Store for pipeline locks (optional) */
+    protected Store transientStore;
+
+    /** Maximum wait time on a pipeline lock */
+    protected long lockTimeout;
+
 
     /** Abstract method defined in subclasses */
     protected abstract void cacheResults(Environment environment,
-            OutputStream os)
-        throws Exception;
+                                         OutputStream os)
+    throws Exception;
 
     /** Abstract method defined in subclasses */
     protected abstract ComponentCacheKey newComponentCacheKey(int type,
-            String role,
-            Serializable key);
+                                                              String role,
+                                                              Serializable key);
 
     /** Abstract method defined in subclasses */
     protected abstract void connectCachingPipeline(Environment environment)
-        throws ProcessingException;
+    throws ProcessingException;
 
     /**
      * Parameterizable Interface - Configuration
      */
     public void parameterize(Parameters params)
-        throws ParameterException {
+    throws ParameterException {
         super.parameterize(params);
 
-        String storeRole = params.getParameter("store-role",Store.TRANSIENT_STORE); 
-
-        try {
-            transientStore = (Store) manager.lookup(storeRole);
-        } catch (ComponentException e) {
-            if(getLogger().isDebugEnabled()) {
-                getLogger().debug("Could not look up transient store, synchronizing requests will not work!",e);
+        // Is pipeline locking enabled?
+        if (params.getParameterAsBoolean("locking", true)) {
+            lockTimeout = params.getParameterAsLong("locking-timeout", 7000);
+            final String storeRole = params.getParameter("store-role", Store.TRANSIENT_STORE);
+            try {
+                transientStore = (Store) manager.lookup(storeRole);
+            } catch (ComponentException e) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Transient store '" + storeRole + "' not available. Pipeline locking will not work.", e);
+                }
             }
         }
     }
@@ -137,8 +145,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
      * Set the generator.
      */
     public void setGenerator (String role, String source, Parameters param,
-            Parameters hintParam)
-        throws ProcessingException {
+                              Parameters hintParam)
+    throws ProcessingException {
         super.setGenerator(role, source, param, hintParam);
         this.generatorRole = role;
     }
@@ -192,7 +200,16 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
                 try {
                     synchronized (lock) {
-                        lock.wait();
+                        // Close synchronization gap between retrieving the lock and
+                        // waiting on it. If lock is not in store anymore, don't wait
+                        // on it.
+                        synchronized (transientStore) {
+                            if (!transientStore.containsKey(lockKey)) {
+                                return false;
+                            }
+                        }
+
+                        lock.wait(lockTimeout);
                     }
 
                     if (getLogger().isDebugEnabled()) {
