@@ -97,13 +97,18 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
     /** Store for pipeline locks (optional) */
     protected Store transientStore;
 
+    /** Maximum wait time on a pipeline lock */
+    protected long lockTimeout;
 
-    /** Abstract method defined in subclasses
-     * @return <u>complete</u> cached response or <code>null</code><br>
-     *         See issue COCOON-2009 for discussion*/
+
+    /**
+     * Abstract method defined in subclasses.
+     * See issue COCOON-2009 for discussion.
+     * @return <u>complete</u> cached response or <code>null</code>.
+     */
     protected abstract CachedResponse cacheResults(Environment environment,
                                                    OutputStream os)
-        throws Exception;
+    throws Exception;
 
     /** Abstract method defined in subclasses */
     protected abstract ComponentCacheKey newComponentCacheKey(int type,
@@ -112,7 +117,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
     /** Abstract method defined in subclasses */
     protected abstract void connectCachingPipeline(Environment environment)
-        throws ProcessingException;
+    throws ProcessingException;
 
     /**
      * Parameterizable Interface - Configuration
@@ -120,21 +125,26 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
     public void parameterize(Parameters params) throws ParameterException {
         super.parameterize(params);
 
-        String storeRole = params.getParameter("store-role", Store.TRANSIENT_STORE);
-        try {
-            transientStore = (Store) manager.lookup(storeRole);
-        } catch (ServiceException e) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Could not look up transient store, synchronizing requests will not work!", e);
-            }
-        }
+        // Is pipeline locking enabled?
+        if (params.getParameterAsBoolean("locking", true)) {
+            lockTimeout = params.getParameterAsLong("locking-timeout", 7000);
+            final String storeRole = params.getParameter("store-role", Store.TRANSIENT_STORE);
+            try {
+                transientStore = (Store) manager.lookup(storeRole);
+            } catch (ServiceException e) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Transient store '" + storeRole + "' not available. Pipeline locking will not work.", e);
+                }
+             }
+         }
     }
 
     /**
      * Set the generator.
      */
     public void setGenerator(String role, String source, Parameters param,
-                             Parameters hintParam) throws ProcessingException {
+                             Parameters hintParam)
+    throws ProcessingException {
         super.setGenerator(role, source, param, hintParam);
         this.generatorRole = role;
     }
@@ -143,7 +153,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
      * Add a transformer.
      */
     public void addTransformer(String role, String source, Parameters param,
-                               Parameters hintParam) throws ProcessingException {
+                               Parameters hintParam)
+    throws ProcessingException {
         super.addTransformer(role, source, param, hintParam);
         this.transformerRoles.add(role);
     }
@@ -152,7 +163,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
      * Set the serializer.
      */
     public void setSerializer(String role, String source, Parameters param,
-                              Parameters hintParam, String mimeType) throws ProcessingException {
+                              Parameters hintParam, String mimeType)
+    throws ProcessingException {
         super.setSerializer(role, source, param, hintParam, mimeType);
         this.serializerRole = role;
     }
@@ -161,7 +173,8 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
      * Set the Reader.
      */
     public void setReader(String role, String source, Parameters param,
-                          String mimeType) throws ProcessingException {
+                          String mimeType)
+    throws ProcessingException {
         super.setReader(role, source, param, mimeType);
         this.readerRole = role;
     }
@@ -190,7 +203,16 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
                 try {
                     synchronized (lock) {
-                        lock.wait();
+                        // Close synchronization gap between retrieving the lock and
+                        // waiting on it. If lock is not in store anymore, don't wait
+                        // on it.
+                        synchronized (transientStore) {
+                            if (!transientStore.containsKey(lockKey)) {
+                                return false;
+                            }
+                        }
+
+                        lock.wait(lockTimeout);
                     }
 
                     if (getLogger().isDebugEnabled()) {
