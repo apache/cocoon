@@ -117,4 +117,11 @@ public class SourceResource implements Resource {
         }
     }
 
+    /**
+     * @see org.springframework.core.io.Resource#isReadable()
+     */
+    public boolean isReadable() {
+        return this.source.exists();
+    }
+
 }
