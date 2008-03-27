@@ -273,4 +273,12 @@ public class SynchronizedConfigureableWebApplicationContext implements Configura
     public synchronized void stop() {
         appContext.stop();
     }
+
+    public void setConfigLocation(String configLocation) {
+        appContext.setConfigLocation(configLocation);
+    }
+
+    public String getId() {
+        return appContext.getId();
+    }
 }
