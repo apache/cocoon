@@ -15,22 +15,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
+<!--
+  - $Id$
+  -->
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
-    <fd:widgets>
-        <fd:field id="stringfield">
-            <fd:datatype base="string"/>
-        </fd:field>
-        
-        <fd:field id="intfield">
-            <fd:datatype base="integer">
-                <fd:convertor type="plain"/>
-            </fd:datatype>
-            <fd:validation>
-                <fd:range min="10"/>
-            </fd:validation>
-        </fd:field>
-        
-        <fd:action id="action" action-command="blah"/>
-        
-    </fd:widgets>
+  <fd:widgets>
+    <fd:field id="stringfield">
+      <fd:datatype base="string"/>
+    </fd:field>
+
+    <fd:field id="intfield">
+      <fd:datatype base="integer">
+        <fd:convertor type="plain"/>
+      </fd:datatype>
+      <fd:validation>
+        <fd:range min="10"/>
+      </fd:validation>
+    </fd:field>
+
+    <fd:action id="action" command="blah"/>
+  </fd:widgets>
 </fd:form>
