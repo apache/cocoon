@@ -15,11 +15,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- $Id$ -->
 <archetype>
   <id>cocoon-archetype-block</id>
   <resources>
     <resource>rcl.properties</resource>
-    <resource>src/main/java/demo/MyBean.java</resource>
     <resource>src/main/resources/COB-INF/sitemap.xmap</resource>
     <resource>src/main/resources/COB-INF/flow/spring-bean.js</resource>
     <resource>src/main/resources/COB-INF/demo/spring-bean.jx.xml</resource>
@@ -30,4 +30,7 @@
     <resource>src/main/resources/META-INF/cocoon/spring/demo-application-context.xml</resource>
     <resource>src/main/resources/META-INF/cocoon/spring/blockServlet.xml</resource>
   </resources>
+  <sources>
+    <source>src/main/java/MyBean.java</source>
+  </sources>
 </archetype>
