@@ -67,7 +67,7 @@
     <!-- Specify transitive dependencies to avoid MNG-2782 with JDK1.4.2. -->
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-dao</artifactId>
+      <artifactId>spring-tx</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
