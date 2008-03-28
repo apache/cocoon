@@ -30,7 +30,7 @@
   </parent>
   <artifactId>cocoon-it-fw</artifactId>
 
-  <version>1.0.0-M1</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <name>Cocoon Integration Test Framework [maven-plugin]</name>
   <dependencies>
     <!-- The Maven 2 plugin -->
@@ -117,10 +117,4 @@
       </build>
     </profile>
   </profiles>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-it-fw/cocoon-it-fw-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-it-fw/cocoon-it-fw-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-it-fw/cocoon-it-fw-1.0.0-M1</url>
-  </scm>
 </project>
