@@ -17,9 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    +-->
+<!-- $Id: pom.xml 579836 2007-09-26 22:26:35Z reinhard $ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -28,7 +26,7 @@
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
     <version>5-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-22-archetype-webapp</artifactId>
   <version>1.0.0-RC3-SNAPSHOT</version>
