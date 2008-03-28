@@ -25,10 +25,16 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>6</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-22-archetype-webapp</artifactId>
-  <version>1.0.0-RC3-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Cocoon 2.2 Archetype: Web Application</name>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-22-archetype-webapp/cocoon-22-archetype-webapp-1.0.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-22-archetype-webapp/cocoon-22-archetype-webapp-1.0.0</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-22-archetype-webapp/cocoon-22-archetype-webapp-1.0.0</url>
+  </scm>
 </project>
