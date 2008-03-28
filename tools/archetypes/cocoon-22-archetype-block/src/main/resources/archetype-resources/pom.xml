@@ -49,6 +49,12 @@
       <artifactId>cocoon-flowscript-impl</artifactId>
       <version>1.0.0</version>
     </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

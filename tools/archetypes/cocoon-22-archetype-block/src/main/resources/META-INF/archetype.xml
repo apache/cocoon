@@ -28,7 +28,7 @@
     <resource>src/main/resources/COB-INF/resource/internal/README.txt</resource>
     <resource>src/main/resources/COB-INF/resource/external/README.txt</resource>
     <resource>src/main/resources/META-INF/cocoon/spring/demo-application-context.xml</resource>
-    <resource>src/main/resources/META-INF/cocoon/spring/blockServlet.xml</resource>
+    <resource>src/main/resources/META-INF/cocoon/spring/block-servlet-service.xml</resource>
   </resources>
   <sources>
     <source>src/main/java/MyBean.java</source>
