@@ -17,9 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    +-->
+<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -27,11 +25,17 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>6</version>
     <relativePath>../../pom.xml</relativePath>    
   </parent>  
 
   <artifactId>cocoon-22-archetype-block-plain</artifactId>
-  <version>1.0.0-RC3-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Cocoon 2.2 Archetype: Block (plain)</name>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-22-archetype-block-plain/cocoon-22-archetype-block-plain-1.0.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-22-archetype-block-plain/cocoon-22-archetype-block-plain-1.0.0</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-22-archetype-block-plain/cocoon-22-archetype-block-plain-1.0.0</url>
+  </scm>
 </project>
