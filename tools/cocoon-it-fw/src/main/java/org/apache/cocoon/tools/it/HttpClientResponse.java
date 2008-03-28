@@ -27,8 +27,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-
 class HttpClientResponse implements WebResponse {
+
     private URL url;
 
     private HttpMethodBase method;
@@ -43,8 +43,7 @@ class HttpClientResponse implements WebResponse {
         this.method = method;
         HttpClient client = new HttpClient();
         statusCode = client.executeMethod(method);
-        long t1 = System.currentTimeMillis();
-        this.loadTime = t1 - t0;
+        this.loadTime = System.currentTimeMillis() - t0;
     }
 
     public int getStatusCode() {
