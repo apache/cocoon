@@ -65,7 +65,7 @@ public abstract class AbstractContinuable extends AbstractLogEnabled {
         releaseComponent(newObjectModel);
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
-            if (getContext().getRedirector().hasRedirected()) {
+            if (context.getRedirector().hasRedirected()) {
                 throw new IllegalStateException(
                         "Pipeline has already been processed for this request");
             }
@@ -104,7 +104,7 @@ public abstract class AbstractContinuable extends AbstractLogEnabled {
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
 
-            if (getContext().getRedirector().hasRedirected()) {
+            if (context.getRedirector().hasRedirected()) {
                 throw new IllegalStateException(
                         "Pipeline has already been processed for this request");
             }
