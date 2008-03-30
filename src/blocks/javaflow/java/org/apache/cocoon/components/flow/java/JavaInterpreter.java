@@ -154,7 +154,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         }
         context.setParameters(parameters);
 
-        Continuation continuation = new Continuation(context);
+        Continuation continuation = new Continuation(function, context);
 
         WebContinuation wk = continuationsMgr.createWebContinuation(
                 continuation, null, timeToLive, getInterpreterID(), null);
@@ -174,24 +174,23 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
 
         } catch (InvocationTargetException ite) {
             if (ite.getTargetException() != null) {
-                if (ite.getTargetException() instanceof Exception) 
+                if (ite.getTargetException() instanceof Exception)
                     throw (Exception) ite.getTargetException();
                 else if (ite.getTargetException() instanceof Error)
                     throw new ProcessingException("An internal error occured", ite.getTargetException());
-                else if (ite.getTargetException() instanceof RuntimeException)
-                    throw (RuntimeException) ite.getTargetException();
                 else
                     throw ite;
             } else {
                 throw ite;
             }
         } finally {
-            // remove last object reference, which is not needed to
-            // reconstruct the invocation path
+            // remove last object reference, which is not needed to reconstruct
+            // the invocation path
             if (continuation.isCapturing())
                 continuation.getStack().popReference();
             continuation.deregisterThread();
         }
+
         userScopes.put(method.getDeclaringClass(), flow);
         session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
     }
@@ -212,10 +211,17 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         }
 
         Continuation parentContinuation = (Continuation) parentwk.getContinuation();
-        ContinuationContext parentContext = (ContinuationContext) parentContinuation.getContext();
+        Method method = (Method) methods.get(parentContinuation.getFunctionName());
+        
+        Request request = ContextHelper.getRequest(this.avalonContext);
+        Session session = request.getSession(true);
+        HashMap userScopes = (HashMap) session.getAttribute(USER_GLOBAL_SCOPE);
+
+        Continuable flow = (Continuable) userScopes.get(method.getDeclaringClass());
+
         ContinuationContext context = new ContinuationContext();
-        context.setObject(parentContext.getObject());
-        context.setMethod(parentContext.getMethod());
+        context.setObject(flow);
+        context.setMethod(method);
         context.setAvalonContext(avalonContext);
         context.setLogger(getLogger());
         context.setServiceManager(manager);
@@ -228,13 +234,6 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         context.setParameters(parameters);
 
         Continuation continuation = new Continuation(parentContinuation, context);
-
-        Request request = ContextHelper.getRequest(this.avalonContext);
-        Session session = request.getSession(true);
-        HashMap userScopes = (HashMap) session.getAttribute(USER_GLOBAL_SCOPE);
-
-        Continuable flow = (Continuable) context.getObject();
-        Method method = context.getMethod();
 
         WebContinuation wk = continuationsMgr.createWebContinuation(
                 continuation, parentwk, timeToLive, getInterpreterID(), null);
@@ -251,8 +250,6 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
                     throw (Exception) ite.getTargetException();
                 else if (ite.getTargetException() instanceof Error)
                     throw new ProcessingException("An internal error occured", ite.getTargetException());
-                else if (ite.getTargetException() instanceof RuntimeException)
-                    throw (RuntimeException) ite.getTargetException();
                 else
                     throw ite;
             } else {
@@ -262,7 +259,7 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             // remove last object reference, which is not needed to reconstruct
             // the invocation path
             if (continuation.isCapturing())
-              continuation.getStack().popReference();
+                continuation.getStack().popReference();
             continuation.deregisterThread();
         }
 

@@ -32,6 +32,7 @@ public class Continuation {
     
     private static final Map continuations = Collections.synchronizedMap(new HashMap());
 
+    private final String functionName;
     private final ContinuationStack stack;
     private Object context;
 
@@ -41,21 +42,27 @@ public class Continuation {
     /**
      * Create new continuation.
      */
-    public Continuation(Object context) {
-        stack = new ContinuationStack();
+    public Continuation(final String functionName, final Object context) {
+        this.functionName = functionName;
+        this.stack = new ContinuationStack();
         this.context = context;
     }
 
     /**
      * Create a new continuation, which continue a previous continuation.
      */
-    public Continuation(Continuation parent, Object context) {
+    public Continuation(final Continuation parent, final Object context) {
         if (parent == null)
             throw new NullPointerException("Parent continuation is null");
 
-        stack = new ContinuationStack(parent.stack);
+        this.functionName = parent.functionName;
+        this.stack = new ContinuationStack(parent.stack);
         this.context = context;
-        restoring = true;
+        this.restoring = true;
+    }
+
+    public String getFunctionName() {
+        return functionName;
     }
 
     /**
@@ -73,7 +80,11 @@ public class Continuation {
     }
 
     /**
-     * Stop the running continuation.
+     * Suspend the running continuation or restore the suspended continuation.
+     * 
+     * With the help of byte code manipulation this method is run twice, once at
+     * the end of request 1 to suspend the continuation and a second time at the
+     * beginning of the request 2.
      */
     public static void suspend() {
         Continuation continuation = Continuation.currentContinuation();
@@ -82,8 +93,11 @@ public class Continuation {
             throw new IllegalStateException("No continuation is running");
 
         if (continuation.restoring) {
+            // restoring
             continuation.capturing = false;
         } else {
+            // suspending
+            continuation.context = null;
             continuation.capturing = true;
         }
         continuation.restoring = false;
@@ -126,4 +140,5 @@ public class Continuation {
         Thread t = Thread.currentThread();
         return (Continuation) continuations.get(t);
     }
+
 }
