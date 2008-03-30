@@ -16,10 +16,12 @@
  */
 package org.apache.cocoon.components.flow.java;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Continations object to store the current execution. The contiunation
+ * Continuation object to store the current execution. The continuation
  * object can only used once. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
@@ -27,10 +29,11 @@ import java.util.HashMap;
  * @version CVS $Id$
  */
 public class Continuation {
-    private ContinuationStack stack;
-    private Object context;
+    
+    private static final Map continuations = Collections.synchronizedMap(new HashMap());
 
-    private static HashMap continuationsmap = new HashMap();
+    private final ContinuationStack stack;
+    private Object context;
 
     public boolean restoring = false;
     public boolean capturing = false;
@@ -73,7 +76,6 @@ public class Continuation {
      * Stop the running continuation.
      */
     public static void suspend() {
-
         Continuation continuation = Continuation.currentContinuation();
 
         if (continuation == null)
@@ -96,7 +98,7 @@ public class Continuation {
     }
 
     /**
-     * True, is the continuation freeze the strack trace, and stops the continuation.
+     * True, if the continuation freezes the stack trace, and stops the continuation.
      */
     public boolean isCapturing() {
         return capturing;
@@ -106,18 +108,14 @@ public class Continuation {
      * Bind the continuation to running thread.
      */
     public void registerThread() {
-        synchronized (continuationsmap) {
-            continuationsmap.put(Thread.currentThread(), this);
-        }
+        continuations.put(Thread.currentThread(), this);
     }
 
     /**
      * Unbind the continuation to running thread.
      */
     public void deregisterThread() {
-        synchronized (continuationsmap) {
-            continuationsmap.remove(Thread.currentThread());
-        }
+        continuations.remove(Thread.currentThread());
     }
 
     /**
@@ -125,9 +123,7 @@ public class Continuation {
      * current thread.
      */
     public static Continuation currentContinuation() {
-        synchronized (continuationsmap) {
-            Thread t = Thread.currentThread();
-            return (Continuation) continuationsmap.get(t);
-        }
+        Thread t = Thread.currentThread();
+        return (Continuation) continuations.get(t);
     }
 }

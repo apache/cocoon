@@ -38,9 +38,11 @@ import java.util.Map;
 public abstract class AbstractContinuable implements Continuable {
 
     private ContinuationContext getContext() {
-        if (Continuation.currentContinuation()==null)
+        Continuation currentContinuation = Continuation.currentContinuation();
+        if (currentContinuation == null) {
             throw new IllegalStateException("No continuation is running");
-        return (ContinuationContext) Continuation.currentContinuation().getContext();
+        }
+        return (ContinuationContext) currentContinuation.getContext();
     }
   
     public Logger getLogger() {
@@ -55,14 +57,14 @@ public abstract class AbstractContinuable implements Continuable {
 
         ContinuationContext context = getContext();
 
-				if (context.getLogger()!=null)
+        if (context.getLogger()!=null)
             context.getLogger().debug("send page and wait '" + uri + "'");
 
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
 
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
-            if (getContext().getRedirector().hasRedirected()) {
+            if (context.getRedirector().hasRedirected()) {
                 throw new IllegalStateException("Pipeline has already been processed for this request");
             }
             try {
@@ -74,6 +76,7 @@ public abstract class AbstractContinuable implements Continuable {
             throw new IllegalArgumentException("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
         }
 
+        context.onSuspend();
         Continuation.suspend();
     }
 
@@ -85,14 +88,14 @@ public abstract class AbstractContinuable implements Continuable {
 
         ContinuationContext context = getContext();
 
-				if (context.getLogger()!=null)
+        if (context.getLogger()!=null)
             context.getLogger().debug("send page '" + uri + "'");
 
         FlowHelper.setContextObject(ContextHelper.getObjectModel(context.getAvalonContext()), bizdata);
 
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
-            if (getContext().getRedirector().hasRedirected()) {
+            if (context.getRedirector().hasRedirected()) {
                 throw new IllegalStateException("Pipeline has already been processed for this request");
             }
             try {
