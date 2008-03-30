@@ -46,19 +46,6 @@ public class ContinuationContext {
     public ContinuationContext() {
     }
 
-    /**
-     * The Continuation has been suspended, now clean up the context.
-     * Only {@link #object} and {@link #method} should be carried over.
-     * See {@link JavaInterpreter#handleContinuation(String, java.util.List, Redirector)}
-     */
-    public void onSuspend() {
-        this.logger = null;
-        this.avalonContext = null;
-        this.manager = null;
-        this.redirector = null;
-        this.parameters = null;
-    }
-    
     public void setObject(Object object) {
         this.object = object;
     }

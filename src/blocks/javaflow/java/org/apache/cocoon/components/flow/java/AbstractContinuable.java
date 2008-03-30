@@ -76,7 +76,6 @@ public abstract class AbstractContinuable implements Continuable {
             throw new IllegalArgumentException("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
         }
 
-        context.onSuspend();
         Continuation.suspend();
     }
 
