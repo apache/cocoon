@@ -90,13 +90,13 @@ public class ContinuationsManagerImpl
 
     /**
      * How long does a continuation exist in memory since the last
-     * access? The time is in miliseconds, and the default is 1 hour.
+     * access? The time is in milliseconds, and the default is 1 hour.
      */
     protected int defaultTimeToLive;
 
     /**
      * Maintains the forest of <code>WebContinuation</code> trees.
-     * This set is used only for debugging puroses by
+     * This set is used only for debugging purposes by
      * {@link #displayAllContinuations()} method.
      */
     protected Set forest = Collections.synchronizedSet(new HashSet());
@@ -144,6 +144,13 @@ public class ContinuationsManagerImpl
         expirationsSize = new ValueInstrument("expirations-size");
         continuationsCreated = new CounterInstrument("creates");
         continuationsInvalidated = new CounterInstrument("invalidates");
+    }
+
+    /**
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;        
     }
 
     /**
@@ -266,31 +273,46 @@ public class ContinuationsManagerImpl
             expirations.remove(parent);
         }
     }
-    
 
     /**
      * @see org.apache.cocoon.components.flow.ContinuationsManager#lookupWebContinuation(java.lang.String, java.lang.String)
      */
     public WebContinuation lookupWebContinuation(String id, String interpreterId) {
-        // REVISIT: Is the following check needed to avoid threading issues:
-        // return wk only if !(wk.hasExpired) ?
         WebContinuationsHolder continuationsHolder = lookupWebContinuationsHolder(false);
         if (continuationsHolder == null) {
             return null;
         }
         
         WebContinuation kont = continuationsHolder.get(id);
-        if(kont != null) {
-            boolean interpreterMatches = kont.interpreterMatches(interpreterId);
-            if (!interpreterMatches && getLogger().isWarnEnabled()) {
+        if (kont == null) {
+            return null;            
+        }
+        
+        if (kont.hasExpired()) {
+            removeContinuation(continuationsHolder, kont);
+            return null;
+        }
+            
+        if (!kont.interpreterMatches(interpreterId)) {
+            if (getLogger().isWarnEnabled()) {
                 getLogger().warn("WK: Continuation (" + kont.getId() 
                                  + ") lookup for wrong interpreter. Bound to: " 
                                  + kont.getInterpreterId() + ", looked up for: " 
                                  + interpreterId);
             }
-            return interpreterMatches || isContinuationSharingBugCompatible ? kont : null;
+
+            if (!isContinuationSharingBugCompatible) {
+                return null;
+            }
         }
-        return null;
+
+        // COCOON-2109: Sorting in the TreeSet happens on insert. So in order to re-sort the
+        //              continuation has to be re-added.
+        expirations.remove(kont);
+        kont.updateLastAccessTime();
+        expirations.add(kont);
+        
+        return kont;
     }
 
     /**
@@ -623,6 +645,7 @@ public class ContinuationsManagerImpl
      * continuation's expiration time.
      */
     protected static class HolderAwareWebContinuation extends WebContinuation {
+
         private WebContinuationsHolder continuationsHolder;
 
         public HolderAwareWebContinuation(String id, Object continuation,
@@ -638,17 +661,6 @@ public class ContinuationsManagerImpl
             return continuationsHolder;
         }
 
-        //retain comparation logic from parent
-        public int compareTo(Object other) {
-            return super.compareTo(other);
-        }
-    }
-
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;        
     }
 
     /**

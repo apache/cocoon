@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="JH" type="fix" fixes-bug="COCOON-2109" due-to="Miguel Cuervo" due-to-email="miguel.cuervo@cgi.com">
+      Core: Fix clean up of continuations.
+    </action>
     <action dev="JH" type="fix">
       Javaflow: Minimize the data that's stored with ContinuationContext to limit the Continuation's memory footprint.
     </action>
@@ -189,9 +192,8 @@
       Forms: Widget Label is not Show/Hide when we change the widget state in ajax mode.
     </action>
     <action dev="VG" type="fix" fixes-bug="COCOON-1985">
-      Use current HTTP request as a pipeline lock object instead of
-      current thread. Resolves deadlock when request is processed
-      in multiple threads.
+      Use current HTTP request as a pipeline lock object instead of current
+      thread. Resolves deadlock when request is processed in multiple threads.
     </action>
     <action dev="JH" type="fix">
       Core: Close streams properly after copying Parts (MultipartParser). Allow to access InputStream of PartInMemory
