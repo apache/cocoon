@@ -201,7 +201,6 @@ public class WebContinuation extends AbstractLogEnabled
      * @return an <code>Object</code> value
      */
     public Object getContinuation() {
-        updateLastAccessTime();
         return continuation;
     }
 
@@ -218,7 +217,6 @@ public class WebContinuation extends AbstractLogEnabled
      */
     public WebContinuation getContinuation(int level) {
         if (level <= 0) {
-            updateLastAccessTime();
             return this;
         } else if (parentContinuation == null) {
             return this;
