@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  *
  * <p>The syntax is as follows:
  * <pre>
- *   &lt;wd:submit id="sub-id" command="cmd" validate="false"/&gt;
+ *   &lt;fd:submit id="sub-id" command="cmd" validate="false"/&gt;
  * </pre>
  *
  * The "validate" attribute can have the value <code>true</code> or
