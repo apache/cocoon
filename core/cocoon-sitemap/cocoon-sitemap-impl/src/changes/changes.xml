@@ -25,6 +25,11 @@
   -->
 <document>
   <body>
+    <release version="1.0.1" date="TBA" description="unreleased">
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2109" due-to="Miguel Cuervo" due-to-email="miguel.cuervo@cgi.com">
+        Fix clean up of continuations.
+      </action>
+    </release>
     <release version="1.0.0" date="TBA" description="released">
       <action dev="gkossakowski" type="fix" issue="COCOON-2070" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@googlemail.com">
         Fixed bug in PoolableProxyHandler class that is responsible for putting components back to the pool. This bug could lead to the situation
