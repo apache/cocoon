@@ -26,7 +26,10 @@
 <document>
   <body>
     <release version="1.0.0" date="2008-??-??" description="unreleased">
-      <action dev="JH" type="fix" fixes-bug="COCOON-2058" due-to="Ralph Collett" due-to-email="ralph.collett@semantico.com">
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2178" due-to="Harald Entner" due-to-email="harald.entner@workflow.at">
+        Dispatch only one TreeSelectionEvent on multiple selection rather than one event for each selected tree item.
+      </action>
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2058" due-to="Ralph Collett" due-to-email="ralph.collett@semantico.com">
         Fix ambiguous rule issue with Forms stylesheets when using Saxon.
       </action>
       <action dev="vgritsenko" type="fix">
@@ -35,7 +38,7 @@
         method. Do not use WidgetDefinitionBuilder.buildWidgetDefinition(Element) method, it is intended to be
         implemented only by the top level widget (Form).
       </action>
-      <action dev="JH" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
         Allow Ajax submission of forms with empty upload field.
       </action>
     </release>
