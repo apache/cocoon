@@ -82,13 +82,13 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
 
     /**
      * How long does a continuation exist in memory since the last
-     * access? The time is in miliseconds, and the default is 1 hour.
+     * access? The time is in milliseconds, and the default is 1 hour.
      */
     protected int defaultTimeToLive;
 
     /**
      * Maintains the forest of <code>WebContinuation</code> trees.
-     * This set is used only for debugging puroses by
+     * This set is used only for debugging purposes by
      * {@link #displayAllContinuations()} method.
      */
     protected Set forest = Collections.synchronizedSet(new HashSet());
@@ -123,6 +123,10 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
         }
         random.setSeed(System.currentTimeMillis());
         bytes = new byte[CONTINUATION_ID_LENGTH];
+    }
+
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;        
     }
 
     public void service(ServiceManager manager) throws ServiceException {
@@ -211,15 +215,20 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
     }
 
     public WebContinuation lookupWebContinuation(String id, String interpreterId) {
-        // REVISIT: Is the following check needed to avoid threading issues:
-        // return wk only if !(wk.hasExpired) ?
         WebContinuationsHolder continuationsHolder = lookupWebContinuationsHolder(false);
-        if (continuationsHolder == null)
+        if (continuationsHolder == null) {
             return null;
+        }
         
         WebContinuation kont = continuationsHolder.get(id);
-        if (kont == null)
+        if (kont == null) {
+            return null;            
+        }
+        
+        if (kont.hasExpired()) {
+            removeContinuation(continuationsHolder, kont);
             return null;
+        }
             
         if (!kont.interpreterMatches(interpreterId)) {
             getLogger().error(
@@ -229,6 +238,13 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
                             + interpreterId);
             return null;
         }
+        
+        // COCOON-2109: Sorting in the TreeSet happens on insert. So in order to re-sort the
+        //              continuation has to be re-added.
+        expirations.remove(kont);
+        kont.updateLastAccessTime();
+        expirations.add(kont);
+        
         return kont;
     }
 
@@ -579,7 +595,4 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
         }
     }
 
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;        
-    }
 }
