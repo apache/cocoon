@@ -33,17 +33,18 @@
       . a Getting-Started application
 
     make sure that all the user specific properties are set correctly. Also ensure
-    that you can login to the 'deploy.server' via SSH keys because the script
+    that you can login to the 'deploy.server' via SSH keys, because the script
     doesn't allow passing credentials.
 
     This scripts also relys on having Maven 2.0.6 (or greater) installed correctly and
-    that 'gpg' is available.
+    that 'gpg' is available as commandline tool.
 
     When one of the 'externally available targets' is executed, the release artifacts
     are created in the ./target directory and then uploaded to the configured server
     location.
 
-    This script has only been tested on Linux so far.
+    This script has only been tested on Linux so far. In order to make it run in
+    other environements, some modifications are necessary (see all <cmd> calls).
 
   -->
 
