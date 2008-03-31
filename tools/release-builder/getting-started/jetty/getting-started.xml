@@ -30,7 +30,7 @@
     <Arg>
       <New class="org.mortbay.jetty.nio.SelectChannelConnector">
         <Set name="port">
-          <SystemProperty name="jetty.port" default="8080"/>
+          <SystemProperty name="jetty.port" default="8888"/>
         </Set>
         <Set name="maxIdleTime">30000</Set>
         <Set name="Acceptors">2</Set>
