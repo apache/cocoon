@@ -60,7 +60,7 @@
   <property name="release.dir" value="${release.base.dir}/module" />
 
   <!-- user specific properties -->
-  <property name="download.url.base" value="http://repo1.maven.org/maven2/" />
+  <property name="download.url.base" value="http://people.apache.org/builds/cocoon/" />
   <property name="download.url.cocoon" value="${download.url.base}/org/apache/cocoon/" />
   <property name="deploy.server" value="people.apache.org" />
   <property name="deploy.path" value="/home/reinhard/public_html/cocoon-staging" />
@@ -92,7 +92,7 @@
   </target>
 
   <target name="fop-block" depends="init" description="Release the Cocoon Forms block">
-    <create-block-dist-impl name-impl="cocoon-fop-impl" version="1.0.0-RC2" name="cocoon-fop-block" docs="../../../site-svn/site/2.2/blocks/forms/1.0/"/>
+    <create-block-dist-impl name-impl="cocoon-fop-impl" version="1.0.0" name="cocoon-fop-block" docs="../../../site-svn/site/2.2/blocks/fop/1.0/"/>
   </target>
 
   <target name="ssf" depends="init" description="Release the Servlet-Service Framework">
@@ -147,7 +147,7 @@
       <add-docs dir="@{docs}" type="impl"/>
       <add-module name="@{name-impl}" version="@{version}" type="impl" />
       <add-files dir="legal/default" />
-      <dist name="@{name}-@{version}" deploy-group-name="@{deploy-group-name}" />
+      <dist name="@{name}-@{version}" deploy-group-name="@{name}" />
     </sequential>
   </macrodef>
 
