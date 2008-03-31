@@ -30,7 +30,10 @@
       </action>
     </release>
     <release version="1.0.0" date="2008-??-??" description="unreleased">
-      <action dev="JH" type="fix" fixes-bug="COCOON-2058" due-to="Ralph Collett" due-to-email="ralph.collett@semantico.com">
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2178" due-to="Harald Entner" due-to-email="harald.entner@workflow.at">
+        Dispatch only one TreeSelectionEvent on multiple selection rather than one event for each selected tree item.
+      </action>
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2058" due-to="Ralph Collett" due-to-email="ralph.collett@semantico.com">
         Fix ambiguous rule issue with Forms stylesheets when using Saxon.
       </action>
       <action dev="vgritsenko" type="fix">
