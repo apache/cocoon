@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="JH" type="fix" fixes-bug="COCOON-2178" due-to="Harald Entner" due-to-email="harald.entner@workflow.at">
+      Forms: Dispatch only one TreeSelectionEvent on multiple selection rather than one event for each selected tree item.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-2109" due-to="Miguel Cuervo" due-to-email="miguel.cuervo@cgi.com">
       Core: Fix clean up of continuations.
     </action>
@@ -241,7 +244,7 @@
   </release>
   <release version="2.1.11" date="December 31 2007">
     <action dev="RG" type="fix" fixes-bug="COCOON-1574">
-      Created XPathXMLFileModule to address issus with XMLFileModule. XPathXMLFileModule supports variable
+      Created XPathXMLFileModule to address issues with XMLFileModule. XPathXMLFileModule supports variable
       replacement and caching of documents in ehcache and expressions as soft references.
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">

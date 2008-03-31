@@ -16,9 +16,11 @@
  */
 package org.apache.cocoon.forms.formmodel.tree;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -198,6 +200,11 @@ public class Tree extends AbstractWidget {
         getForm().addWidgetUpdate(this);
     }
 
+    private void markForRefresh(List paths) {
+        this.changedPaths.addAll(paths);
+        getForm().addWidgetUpdate(this);
+    }
+
     //---------------------------------------------------------------------------------------------
     // Selection
     //---------------------------------------------------------------------------------------------
@@ -269,11 +276,15 @@ public class Tree extends AbstractWidget {
         if (this.selectionModel == SINGLE_SELECTION) {
             setSelectionPath(paths[0]);
         } else {
-            for (int i = 0; i < paths.length; i++) {
-                addSelectionPath(paths[i]);
-                // FIXME: use array-based constructors of TreeSelectionEvent
+            List pathsList = Arrays.asList(paths);
+            if (this.selectedPaths.addAll(pathsList)) {
+                markForRefresh(pathsList);
+                if (this.expandSelectedPath) {
+                    this.expandedPaths.addAll(pathsList);
+                }
+                this.getForm().addWidgetEvent(new TreeSelectionEvent(this, paths, true));
             }
-        }
+        }       
     }
 
     public void removeSelectionPath(TreePath path) {
@@ -285,9 +296,10 @@ public class Tree extends AbstractWidget {
     }
 
     public void removeSelectionPaths(TreePath paths[]) {
-        for (int i = 0; i < paths.length; i++) {
-            removeSelectionPath(paths[i]);
-            // FIXME: use array-based constructors of TreeSelectionEvent
+        List pathsList = Arrays.asList(paths);
+        if (this.selectedPaths.removeAll(pathsList)) {
+            markForRefresh(pathsList);
+            this.getForm().addWidgetEvent(new TreeSelectionEvent(this, paths, false));
         }
     }
 
