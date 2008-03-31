@@ -70,41 +70,128 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~ externally available targets ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
   <target name="core" depends="init">
-    <add-module name="cocoon-core" version="2.2.0-RC2" type="core" />
-    <add-module name="cocoon-pipeline-api" version="1.0.0-RC2" type="pipeline-api" />
-    <add-module name="cocoon-pipeline-impl" version="1.0.0-RC2" type="pipeline-impl" />
-    <add-module name="cocoon-pipeline-components" version="1.0.0-RC2" type="pipeline-components" />
-    <add-module name="cocoon-expression-language-api" version="1.0.0-RC2" type="expression-language-api" />
-    <add-module name="cocoon-expression-language-impl" version="1.0.0-RC2" type="expression-language-impl" />
-    <add-module name="cocoon-sitemap-api" version="1.0.0-RC2" type="sitemap-api" />
-    <add-module name="cocoon-sitemap-components" version="1.0.0-RC2" type="sitemap-components" />
-    <add-module name="cocoon-sitemap-impl" version="1.0.0-RC2" type="sitemap-impl" />
-    <add-module name="cocoon-store-impl" version="1.0.0-RC2" type="store-impl" />
-    <add-module name="cocoon-thread-api" version="1.0.0-RC2" type="thread-api" />
-    <add-module name="cocoon-thread-impl" version="1.0.0-RC2" type="thread-impl" />
-    <add-module name="cocoon-util" version="1.0.0-RC2" type="util" />
-    <add-module name="cocoon-xml-api" version="1.0.0-RC2" type="xml-api" />
-    <add-module name="cocoon-xml-impl" version="1.0.0-RC2" type="xml-impl" />
-    <add-module name="cocoon-xml-resolver" version="1.0.0-RC2" type="xml-resolver" />
-    <add-module name="cocoon-xml-util" version="1.0.0-RC2" type="xml-util" />
+    <add-module name="cocoon-core" version="2.2.0" type="core" />
+    <add-module name="cocoon-pipeline-api" version="1.0.0" type="pipeline-api" />
+    <add-module name="cocoon-pipeline-impl" version="1.0.0" type="pipeline-impl" />
+    <add-module name="cocoon-pipeline-components" version="1.0.0" type="pipeline-components" />
+    <add-module name="cocoon-expression-language-api" version="1.0.0" type="expression-language-api" />
+    <add-module name="cocoon-expression-language-impl" version="1.0.0" type="expression-language-impl" />
+    <add-module name="cocoon-sitemap-api" version="1.0.0" type="sitemap-api" />
+    <add-module name="cocoon-sitemap-components" version="1.0.0" type="sitemap-components" />
+    <add-module name="cocoon-sitemap-impl" version="1.0.0" type="sitemap-impl" />
+    <add-module name="cocoon-store-impl" version="1.0.0" type="store-impl" />
+    <add-module name="cocoon-thread-api" version="1.0.0" type="thread-api" />
+    <add-module name="cocoon-thread-impl" version="1.0.0" type="thread-impl" />
+    <add-module name="cocoon-util" version="1.0.0" type="util" />
+    <add-module name="cocoon-xml-api" version="1.0.0" type="xml-api" />
+    <add-module name="cocoon-xml-impl" version="1.0.0" type="xml-impl" />
+    <add-module name="cocoon-xml-resolver" version="1.0.0" type="xml-resolver" />
+    <add-module name="cocoon-xml-util" version="1.0.0" type="xml-util" />
 
     <dist name="cocoon-2.2.0" deploy-group-name="" />
   </target>
 
-  <target name="fop-block" depends="init" description="Release the Cocoon Forms block">
-    <create-block-dist-impl name-impl="cocoon-fop-impl" version="1.0.0" name="cocoon-fop-block" docs="../../../site-svn/site/2.2/blocks/fop/1.0/"/>
+  <target name="ajax-block" depends="init" description="Release the Cocoon Ajax block">
+    <create-block-dist-impl name-impl="cocoon-ajax-impl" version="1.0.0" name="cocoon-ajax-block"
+      docs="../../../site-svn/site/2.2/blocks/ajax/1.0/"/>
+  </target>
+
+  <target name="apples-block" depends="init" description="Release the Cocoon Apples block">
+    <create-block-dist-impl name-impl="cocoon-apples-impl" version="1.0.0" name="cocoon-apples-block"
+      docs="../../../site-svn/site/2.2/blocks/apples/1.0/"/>
+  </target>
+
+  <target name="auth-block" depends="init" description="Release the Cocoon Auth block">
+    <create-block-dist-api-impl name-impl="cocoon-auth-impl" name-api="cocoon-auth-api" version="1.0.0" name="cocoon-auth-block"
+      docs="../../../site-svn/site/2.2/blocks/auth/1.0/"/>
+  </target>
+
+  <target name="batik-block" depends="init" description="Release the Cocoon Batik block">
+    <create-block-dist-impl name-impl="cocoon-batik-impl" version="1.0.0" name="cocoon-batik-block"
+      docs="../../../site-svn/site/2.2/blocks/batik/1.0/"/>
+  </target>
+
+  <target name="captcha-block" depends="init" description="Release the Cocoon Captcha block">
+    <create-block-dist-impl name-impl="cocoon-captha-impl" version="1.0.0" name="cocoon-captcha-block"
+      docs="../../../site-svn/site/2.2/blocks/captcha/1.0/"/>
+  </target>
+
+  <target name="databases-bridge" depends="init" description="Release the Cocoon Databases Bridge block">
+    <create-block-dist-impl name-impl="cocoon-databases-bridge" version="1.0.0" name="cocoon-databases-bridge-block"
+      docs="../../../site-svn/site/2.2/blocks/databases-bridge/1.0/"/>
+  </target>
+
+  <target name="databases-hsqldb-client" depends="init" description="Release the Cocoon Databases HsqlDb Client block">
+    <create-block-dist-impl name-impl="cocoon-databases-hsqldb-client" version="1.0.0" name="cocoon-databases-hsqldb-client-block"
+      docs="../../../site-svn/site/2.2/blocks/databases-hsqldb-client/1.0/"/>
+  </target>
+
+  <target name="databases-hsqldb-server" depends="init" description="Release the Cocoon Databases HsqlDb Server block">
+    <create-block-dist-impl name-impl="cocoon-databases-hsqldb-server" version="1.0.0" name="cocoon-databases-hsqldb-server-block"
+      docs="../../../site-svn/site/2.2/blocks/databases-hsqldb-server/1.0/"/>
+  </target>
+
+  <target name="databases-impl" depends="init" description="Release the Cocoon Databases Implementation block">
+	<create-block-dist-impl name-impl="cocoon-databases-impl" version="1.0.0" name="cocoon-databases-impl-block"
+	  docs="../../../site-svn/site/2.2/blocks/databases-impl/1.0/"/>
+  </target>
+
+  <target name="flowscript-block" depends="init" description="Release the Cocoon Flowscript block">
+    <create-block-dist-impl name-impl="cocoon-flowscript-impl" version="1.0.0" name="cocoon-flowscript-block"
+      docs="../../../site-svn/site/2.2/blocks/flowscript/1.0/"/>
+  </target>
+
+  <target name="fop-block" depends="init" description="Release the Cocoon FOP block">
+    <create-block-dist-impl name-impl="cocoon-fop-impl" version="1.0.0" name="cocoon-fop-block"
+      docs="../../../site-svn/site/2.2/blocks/fop/1.0/"/>
+  </target>
+
+  <target name="forms-block" depends="init" description="Release the Cocoon Forms block">
+    <create-block-dist-impl name-impl="cocoon-fop-impl" version="1.1.0" name="cocoon-forms-block"
+      docs="../../../site-svn/site/2.2/blocks/forms/1.0/"/>
+  </target>
+
+  <target name="html-block" depends="init" description="Release the Cocoon HTML block">
+    <create-block-dist-impl name-impl="cocoon-html-impl" version="1.0.0" name="cocoon-html-block"
+      docs="../../../site-svn/site/2.2/blocks/html/1.0/"/>
+  </target>
+
+  <target name="linkrewriter-block" depends="init" description="Release the Cocoon Linkrewriter block">
+    <create-block-dist-impl name-impl="cocoon-linkrewriter-impl" version="1.0.0" name="cocoon-linkrewriter-block"
+      docs="../../../site-svn/site/2.2/blocks/linkrewriter/1.0/"/>
+  </target>
+
+  <target name="mail-block" depends="init" description="Release the Cocoon Mail block">
+    <create-block-dist-impl name-impl="cocoon-mail-impl" version="1.0.0" name="cocoon-mail-block" docs="../../../site-svn/site/2.2/blocks/mail/1.0/"/>
+  </target>
+
+  <target name="template-block" depends="init" description="Release the Cocoon Template block">
+    <create-block-dist-impl name-impl="cocoon-template-impl" version="1.1.0" name="cocoon-template-block"
+      docs="../../../site-svn/site/2.2/blocks/template/1.0/"/>
   </target>
 
   <target name="ssf" depends="init" description="Release the Servlet-Service Framework">
     <add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.0/servlet-service-impl/1.0/" type="impl"/>
     <add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.0/servlet-service-components/1.0/" type="cocoon-components"/>
 
-    <add-module name="cocoon-servlet-service-impl" version="1.0.0-RC1" type="impl" />
-    <add-module name="cocoon-servlet-service-components" version="1.0.0-RC1" type="cocoon-components" />
+    <add-module name="cocoon-servlet-service-impl" version="1.0.0" type="impl" />
+    <add-module name="cocoon-servlet-service-components" version="1.0.0" type="cocoon-components" />
 
     <add-files dir="legal/default" />
 
-    <dist name="cocoon-servlet-serivce-1.0.0-RC1" deploy-group-name="cocoon-servlet-service" />
+    <dist name="cocoon-servlet-serivce-framework-1.0.0" deploy-group-name="cocoon-servlet-service-framework" />
+  </target>
+
+  <target name="conf" depends="init" description="Release the Cocoon Configuration subproject">
+    <add-docs dir="../../../site-svn/site/subprojects/configuration/1.0/configuration-api/1.0/" type="configuration-api"/>
+    <add-docs dir="../../../site-svn/site/subprojects/configuration/1.0/spring-configurator/1.0/" type="spring-configurator"/>
+
+    <add-module name="cocoon-configuration-api" version="1.0.2" type="configuration-api" />
+    <add-module name="cocoon-spring-configurator" version="1.0.2" type="components" />
+
+    <add-files dir="legal/default" />
+
+    <dist name="cocoon-configuration-1.0.2" deploy-group-name="cocoon-configuration" />
   </target>
 
   <target name="getting-started" depends="getting-started-create">
