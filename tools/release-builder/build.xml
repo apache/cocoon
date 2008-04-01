@@ -70,7 +70,7 @@
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~ externally available targets ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-  <target name="core" depends="init">
+  <target name="core" depends="init" description="Release Cocoon Core">
     <add-module name="cocoon-core" version="2.2.0" type="core" />
     <add-module name="cocoon-pipeline-api" version="1.0.0" type="pipeline-api" />
     <add-module name="cocoon-pipeline-impl" version="1.0.0" type="pipeline-impl" />
@@ -113,7 +113,7 @@
   </target>
 
   <target name="captcha-block" depends="init" description="Release the Cocoon Captcha block">
-    <create-block-dist-impl name-impl="cocoon-captha-impl" version="1.0.0" name="cocoon-captcha-block"
+    <create-block-dist-impl name-impl="cocoon-captcha-impl" version="1.0.0" name="cocoon-captcha-block"
       docs="../../../site-svn/site/2.2/blocks/captcha/1.0/"/>
   </target>
 
@@ -122,19 +122,19 @@
       docs="../../../site-svn/site/2.2/blocks/databases-bridge/1.0/"/>
   </target>
 
-  <target name="databases-hsqldb-client" depends="init" description="Release the Cocoon Databases HsqlDb Client block">
+  <target name="databases-hsqldb-client" depends="init" description="Release the Cocoon HsqlDb Client block">
     <create-block-dist-impl name-impl="cocoon-databases-hsqldb-client" version="1.0.0" name="cocoon-databases-hsqldb-client-block"
-      docs="../../../site-svn/site/2.2/blocks/databases-hsqldb-client/1.0/"/>
+      docs="../../../site-svn/site/2.2/blocks/hsqldb-client/1.0/"/>
   </target>
 
-  <target name="databases-hsqldb-server" depends="init" description="Release the Cocoon Databases HsqlDb Server block">
+  <target name="databases-hsqldb-server" depends="init" description="Release the Cocoon HsqlDb Server block">
     <create-block-dist-impl name-impl="cocoon-databases-hsqldb-server" version="1.0.0" name="cocoon-databases-hsqldb-server-block"
-      docs="../../../site-svn/site/2.2/blocks/databases-hsqldb-server/1.0/"/>
+      docs="../../../site-svn/site/2.2/blocks/hsqldb-server/1.0/"/>
   </target>
 
   <target name="databases-impl" depends="init" description="Release the Cocoon Databases Implementation block">
-	<create-block-dist-impl name-impl="cocoon-databases-impl" version="1.0.0" name="cocoon-databases-impl-block"
-	  docs="../../../site-svn/site/2.2/blocks/databases-impl/1.0/"/>
+     <create-block-dist-impl name-impl="cocoon-databases-impl" version="1.0.0" name="cocoon-databases-impl-block"
+       docs="../../../site-svn/site/2.2/blocks/databases/1.0/"/>
   </target>
 
   <target name="flowscript-block" depends="init" description="Release the Cocoon Flowscript block">
@@ -148,7 +148,7 @@
   </target>
 
   <target name="forms-block" depends="init" description="Release the Cocoon Forms block">
-    <create-block-dist-impl name-impl="cocoon-fop-impl" version="1.1.0" name="cocoon-forms-block"
+    <create-block-dist-impl name-impl="cocoon-forms-impl" version="1.1.0" name="cocoon-forms-block"
       docs="../../../site-svn/site/2.2/blocks/forms/1.0/"/>
   </target>
 
@@ -195,7 +195,7 @@
     <dist name="cocoon-configuration-1.0.2" deploy-group-name="cocoon-configuration" />
   </target>
 
-  <target name="getting-started" depends="getting-started-create">
+  <target name="getting-started" depends="getting-started-create" description="Release the Getting-Started application">
     <add-files dir="legal/getting-started" />
     <dist name="cocoon-getting-started-2.2.0" deploy-group-name="getting-started" />
   </target>
@@ -212,7 +212,6 @@
     <attribute name="name-api" />
     <attribute name="name-impl" />
     <attribute name="version" />
-    <attribute name="type" />
     <attribute name="docs" />
     <sequential>
       <add-docs dir="@{docs}" type="impl"/>
@@ -414,21 +413,21 @@
 
     <!-- Create a block -->
     <exec dir="${getting-started.app.dir}" executable="mvn" logError="true">
-      <arg line="archetype:create -DarchetypeGroupId=org.apache.cocoon -DarchetypeArtifactId=cocoon-22-archetype-block -DarchetypeVersion=1.0.0-RC2 -DgroupId=org.apache.cocoon.getting-started -DartifactId=custom-block" />
+      <arg line="org.apache.maven.plugins:maven-archetype-plugin:1.0-alpha-7:create -DarchetypeGroupId=org.apache.cocoon -DarchetypeArtifactId=cocoon-22-archetype-block -DarchetypeVersion=1.0.0 -DgroupId=org.apache.cocoon.gettingstarted -DartifactId=custom-block" />
     </exec>
     <exec dir="${getting-started.app.dir}/custom-block" executable="mvn" logError="true">
       <arg line="install" />
     </exec>
     <!-- Create the web application -->
     <exec dir="${getting-started.app.dir}" executable="mvn" logError="true">
-      <arg line="archetype:create -DarchetypeGroupId=org.apache.cocoon -DarchetypeArtifactId=cocoon-22-archetype-webapp -DarchetypeVersion=1.0.0-RC2 -DgroupId=org.apache.cocoon.getting-started -DartifactId=webapp" />
+      <arg line="org.apache.maven.plugins:maven-archetype-plugin:1.0-alpha-7:create -DarchetypeGroupId=org.apache.cocoon -DarchetypeArtifactId=cocoon-22-archetype-webapp -DarchetypeVersion=1.0.0 -DgroupId=org.apache.cocoon.gettingstarted -DartifactId=webapp" />
     </exec>
     <replace file="${getting-started.app.dir}/webapp/pom.xml">
       <replacetoken><![CDATA[</dependencies>]]></replacetoken>
       <replacevalue>
         <![CDATA[
           <dependency>
-            <groupId>org.apache.cocoon.getting-started</groupId>
+            <groupId>org.apache.cocoon.gettingstarted</groupId>
             <artifactId>custom-block</artifactId>
             <version>1.0-SNAPSHOT</version>
           </dependency>
@@ -466,7 +465,7 @@
 
   <target name="test" depends="init">
     <artifact:dependencies filesetId="dependency.fileset">
-      <dependency groupId="org.apache.cocoon" artifactId="cocoon-fop-impl" version="1.0.0-RC2">
+      <dependency groupId="org.apache.cocoon" artifactId="cocoon-fop-impl" version="1.0.0">
         <exclusion groupId="org.apache.cocoon" artifactId="cocoon-core"/>
       </dependency>
     </artifact:dependencies>
