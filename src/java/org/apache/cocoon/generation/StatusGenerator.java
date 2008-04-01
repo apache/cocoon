@@ -29,6 +29,9 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.flow.ContinuationsManager;
+import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.flow.WebContinuationDataBean;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.AttributesImpl;
@@ -134,6 +137,16 @@ public class StatusGenerator extends ServiceableGenerator
     protected Store storePersistent;
 
     /**
+     * Show continuations information
+     */
+    private boolean showContinuations;
+
+    /**
+     * The ContinuationManager
+     */
+    private ContinuationsManager continuationsManager;
+
+    /**
      * List & show the contents of WEB/lib
      */
     private boolean showLibrary;
@@ -149,6 +162,7 @@ public class StatusGenerator extends ServiceableGenerator
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
+        this.showContinuations = configuration.getChild("show-continuations").getValueAsBoolean(true);
         this.showLibrary = configuration.getChild("show-libraries").getValueAsBoolean(true);
     }
 
@@ -170,6 +184,12 @@ public class StatusGenerator extends ServiceableGenerator
             this.storePersistent = (Store) this.manager.lookup(Store.PERSISTENT_STORE);
         } else {
             getLogger().info("Persistent Store is not available. Sorry no cache statistics about it.");
+        }
+
+        if(this.manager.hasService(ContinuationsManager.ROLE)) {
+            continuationsManager = (ContinuationsManager) this.manager.lookup(ContinuationsManager.ROLE);
+        } else {
+            getLogger().info("ContinuationsManager is not available. Sorry no overview of created continuations");
         }
     }
 
@@ -252,6 +272,9 @@ public class StatusGenerator extends ServiceableGenerator
         atts.addCDATAAttribute(NAMESPACE, "cocoon-version", Constants.VERSION);
         super.contentHandler.startElement(NAMESPACE, "statusinfo", "statusinfo", atts);
 
+        if (this.showContinuations) {
+            genContinuationsTree();
+        }
         genVMStatus();
         genProperties();
         if (this.showLibrary) {
@@ -260,6 +283,31 @@ public class StatusGenerator extends ServiceableGenerator
 
         // End root element.
         super.contentHandler.endElement(NAMESPACE, "statusinfo", "statusinfo");
+    }
+
+    private void genContinuationsTree() throws SAXException {
+        startGroup("Continuations");
+        Set continuations = this.continuationsManager.getForest();
+        for (Iterator i = continuations.iterator(); i.hasNext();) {
+            displayContinuation(new WebContinuationDataBean((WebContinuation) i.next()));
+        }
+        endGroup();
+    }
+
+    private void displayContinuation(WebContinuationDataBean wc) throws SAXException {
+        AttributesImpl ai = new AttributesImpl();
+        ai.addAttribute(NAMESPACE, "id", "id", "CDATA", wc.getId());
+        ai.addAttribute(NAMESPACE, "interpreter", "interpreter", "CDATA", wc.getInterpreterId());
+        ai.addAttribute(NAMESPACE, "expire-time", "expire-time", "CDATA", wc.getExpireTime());
+        ai.addAttribute(NAMESPACE, "time-to-live", "time-to-live", "CDATA", wc.getTimeToLive() + "ms");
+        ai.addAttribute(NAMESPACE, "last-access-time", "last-access-time", "CDATA", wc.getLastAccessTime());
+
+        super.contentHandler.startElement(NAMESPACE, "cont", "cont", ai);
+        List children = wc.get_children();
+        for (int i = 0; i < children.size(); i++) {
+            displayContinuation((WebContinuationDataBean) children.get(i));
+        }
+        super.contentHandler.endElement(NAMESPACE, "cont", "cont");
     }
 
     private void genVMStatus() throws SAXException {

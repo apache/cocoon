@@ -78,6 +78,25 @@
     <h2><xsl:value-of select="@status:name"/></h2>
     <ul><xsl:apply-templates select="status:value"/></ul>
     <xsl:apply-templates select="status:group"/>
+    <xsl:if test="status:cont">
+        <ul>
+            <xsl:apply-templates select="status:cont"/>     
+        </ul>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="status:cont">
+    <li>
+        <xsl:for-each select="@*">
+            <span class="description"><xsl:value-of select="name()"/>:<xsl:text> </xsl:text> </span><xsl:value-of select="."/>
+            <xsl:if test="position() != last()">, </xsl:if>
+        </xsl:for-each>
+    </li>
+    <xsl:if test="status:cont">
+        <ul>
+            <xsl:apply-templates select="status:cont"/>     
+        </ul>   
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="status:value">
