@@ -50,7 +50,9 @@ public class WebContinuationDataBean {
     }
 
     public String getLastAccessTime() {
-        return formatter.format(new Date(wc.getLastAccessTime()));
+        synchronized (this.formatter) {
+            return formatter.format(new Date(wc.getLastAccessTime()));
+        }
     }
 
     public String getInterpreterId() {
@@ -66,17 +68,17 @@ public class WebContinuationDataBean {
     }
 
     public String getExpireTime() {
-        return formatter.format(new Date(wc.getLastAccessTime()
-                + wc.getTimeToLive()));
+        Date date = new Date(wc.getLastAccessTime() + wc.getTimeToLive());
+        synchronized (this.formatter) {
+            return formatter.format(date);
+        }
     }
 
     public String hasExpired() {
-        if ((wc.getLastAccessTime() + wc.getTimeToLive()) < System
-                .currentTimeMillis()) {
+        if (wc.hasExpired()) {
             return HAS_EXPIRED_YES;
         }
         return HAS_EXPIRED_NO;
-
     }
 
     public String getType() {
