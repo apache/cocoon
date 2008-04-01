@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="JH" type="fix">
+      Core: Fix synchronization issues in ContinuationsManager implementation.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-2178" due-to="Harald Entner" due-to-email="harald.entner@workflow.at">
       Forms: Dispatch only one TreeSelectionEvent on multiple selection rather than one event for each selected tree item.
     </action>
