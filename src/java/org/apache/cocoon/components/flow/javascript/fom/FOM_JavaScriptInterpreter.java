@@ -833,6 +833,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 }
                 cocoon.setParameters(parameters);
                 FOM_WebContinuation fom_wk = new FOM_WebContinuation(wk);
+                fom_wk.enableLogging(getLogger());
                 fom_wk.setParentScope(kScope);
                 fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope,
                                                                        fom_wk.getClassName()));

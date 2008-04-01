@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
 
@@ -43,8 +43,7 @@ import org.apache.commons.lang.StringUtils;
  * @since March 19, 2002
  * @version CVS $Id$
  */
-public class WebContinuation extends AbstractLogEnabled
-                             implements Comparable {
+public class WebContinuation implements Comparable, Cloneable {
 
     /**
      * The continuation this object represents.
@@ -355,56 +354,6 @@ public class WebContinuation extends AbstractLogEnabled
     }
 
     /**
-     * Debugging method.
-     *
-     * <p>Assumes the receiving instance as the root of a tree and
-     * displays the tree of continuations.
-     */
-    public void display() {
-        getLogger().debug("\nWK: Tree" + display(0));
-    }
-
-    /**
-     * Debugging method.
-     *
-     * <p>Displays the receiving instance as if it is at the
-     * <code>indent</code> depth in the tree of continuations. Each
-     * level is indented 2 spaces.
-     *
-     * @param depth an <code>int</code> value
-     */
-    protected String display(int depth) {
-        StringBuffer tree = new StringBuffer("\n");
-        for (int i = 0; i < depth; i++) {
-            tree.append("  ");
-        }
-
-        tree.append("WK: WebContinuation ")
-                .append(id)
-                .append(" ExpireTime [");
-
-        if ((lastAccessTime + timeToLive) < System.currentTimeMillis()) {
-            tree.append("Expired");
-        } else {
-            tree.append(lastAccessTime + timeToLive);
-        }
-
-        tree.append("]");
-
-        // REVISIT: is this needed for some reason?
-        // System.out.print(spaces); System.out.println("WebContinuation " + id);
-
-        int size = children.size();
-        depth++;
-
-        for (int i = 0; i < size; i++) {
-            tree.append(((WebContinuation) children.get(i)).display(depth));
-        }
-
-        return tree.toString();
-    }
-
-    /**
      * Update the continuation in the
      */
     protected void updateLastAccessTime() {
@@ -450,4 +399,78 @@ public class WebContinuation extends AbstractLogEnabled
         if (getParentContinuation() != null)
             getParentContinuation().getChildren().remove(this);
     }
+    
+    /**
+     * Creates a clone of this WebContinuation without trying to clone the actual continuation, the
+     * user object or the disposer.
+     * 
+     * TODO: Check continuation, user object, disposer for implementing {@link Cloneable} or
+     *       {@link java.io.Serializable}.
+     */
+    public Object clone() {
+        
+        WebContinuation clone = new WebContinuation(id, continuation, null, timeToLive, interpreterId, disposer);
+        // reset last access time
+        clone.lastAccessTime = this.lastAccessTime;
+        // recreate hierarchy recursively
+        for (Iterator iter = this.children.iterator(); iter.hasNext();) {
+            WebContinuation child = (WebContinuation) iter.next();
+            WebContinuation childClone = (WebContinuation) child.clone();
+            // relationships must be fixed manually
+            childClone.parentContinuation = clone;
+            clone.children.add(childClone);
+        }
+        return clone;
+    }
+    
+    /**
+     * Debugging method.
+     *
+     * <p>Assumes the receiving instance as the root of a tree and
+     * displays the tree of continuations.
+     */
+    public String toString() {
+        return "\nWK: Tree" + display(0);
+    }
+
+    /**
+     * Debugging method.
+     *
+     * <p>Displays the receiving instance as if it is at the
+     * <code>indent</code> depth in the tree of continuations. Each
+     * level is indented 2 spaces.
+     *
+     * @param depth an <code>int</code> value
+     */
+    protected String display(int depth) {
+        StringBuffer tree = new StringBuffer("\n");
+        for (int i = 0; i < depth; i++) {
+            tree.append("  ");
+        }
+
+        tree.append("WK: WebContinuation ")
+                .append(id)
+                .append(" ExpireTime [");
+
+        if ((lastAccessTime + timeToLive) < System.currentTimeMillis()) {
+            tree.append("Expired");
+        } else {
+            tree.append(lastAccessTime + timeToLive);
+        }
+
+        tree.append("]");
+
+        // REVISIT: is this needed for some reason?
+        // System.out.print(spaces); System.out.println("WebContinuation " + id);
+
+        int size = children.size();
+        depth++;
+
+        for (int i = 0; i < size; i++) {
+            tree.append(((WebContinuation) children.get(i)).display(depth));
+        }
+
+        return tree.toString();
+    }
+
 }
