@@ -100,6 +100,7 @@ public class FOM_Cocoon extends ScriptableObject {
             this.lastContinuation = lastContinuation;
             if (lastContinuation != null) {
                 fwk = new FOM_WebContinuation(lastContinuation);
+                fwk.enableLogging(this.logger);
                 Scriptable scope = FOM_Cocoon.this.getParentScope();
                 fwk.setParentScope(scope);
                 fwk.setPrototype(getClassPrototype(scope, fwk.getClassName()));
@@ -667,7 +668,7 @@ public class FOM_Cocoon extends ScriptableObject {
         return currentCall.avalonContext;
     }
 
-    private Logger getLogger() {
+    protected Logger getLogger() {
         return currentCall.logger;
     }
 
@@ -735,14 +736,16 @@ public class FOM_Cocoon extends ScriptableObject {
     /**
      * Return this continuation if it is valid, or first valid parent
      */
-    private FOM_WebContinuation findValidParent(FOM_WebContinuation wk) {
+    private FOM_WebContinuation findValidParent(final FOM_WebContinuation wk) {
         if (wk != null) {
             WebContinuation wc = wk.getWebContinuation();
             while (wc != null && wc.disposed()) {
                 wc = wc.getParentContinuation();
             }
             if (wc != null) {
-                return new FOM_WebContinuation(wc);
+                FOM_WebContinuation parentWk = new FOM_WebContinuation(wc);
+                parentWk.enableLogging(getLogger());
+                return wk;
             }
         }
 
@@ -793,6 +796,7 @@ public class FOM_Cocoon extends ScriptableObject {
                                            getInterpreter().getInterpreterID(),
                                            null);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);
+        result.enableLogging(getLogger());
         result.setParentScope(getParentScope());
         result.setPrototype(getClassPrototype(getParentScope(),
                                               result.getClassName()));

@@ -19,6 +19,8 @@ package org.apache.cocoon.components.flow.javascript.fom;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
@@ -35,10 +37,11 @@ import org.mozilla.javascript.continuations.Continuation;
  *
  * @version CVS $Id$
  */
-public class FOM_WebContinuation extends ScriptableObject {
+public class FOM_WebContinuation extends ScriptableObject implements LogEnabled {
 
     WebContinuation wk;
-
+    
+    private Logger logger;
 
     static class UserObject {
         boolean isBookmark;
@@ -60,6 +63,10 @@ public class FOM_WebContinuation extends ScriptableObject {
 
     public FOM_WebContinuation(WebContinuation wk) {
         this.wk = wk;
+    }
+
+    public void enableLogging(Logger logger) {
+        this.logger = logger;
     }
 
     // new FOM_WebContinuation([Continuation] continuation,
@@ -95,6 +102,7 @@ public class FOM_WebContinuation extends ScriptableObject {
                                            cocoon.getInterpreterId(), 
                                            null);
         result = new FOM_WebContinuation(wk);
+        result.enableLogging(cocoon.getLogger());
         result.setParentScope(getTopLevelScope(scope));
         result.setPrototype(getClassPrototype(scope, result.getClassName()));
         return result;
@@ -140,6 +148,7 @@ public class FOM_WebContinuation extends ScriptableObject {
         }
 
         FOM_WebContinuation pwk = new FOM_WebContinuation(parent);
+        pwk.enableLogging(logger);
         pwk.setParentScope(getParentScope());
         pwk.setPrototype(getClassPrototype(getParentScope(),
                                            pwk.getClassName()));
@@ -156,6 +165,7 @@ public class FOM_WebContinuation extends ScriptableObject {
         for (int i = 0; iter.hasNext(); i++) {
             WebContinuation child = (WebContinuation)iter.next();
             FOM_WebContinuation cwk = new FOM_WebContinuation(child);
+            cwk.enableLogging(logger);
             cwk.setParentScope(getParentScope());
             cwk.setPrototype(getClassPrototype(getParentScope(),
                                                cwk.getClassName()));
@@ -175,7 +185,9 @@ public class FOM_WebContinuation extends ScriptableObject {
     }
 
     public void jsFunction_display() {
-        wk.display();
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug(wk.toString());
+        }
     }
 
     public WebContinuation getWebContinuation() {
@@ -243,6 +255,7 @@ public class FOM_WebContinuation extends ScriptableObject {
         }
 
         FOM_WebContinuation pwk = new FOM_WebContinuation(c);
+        pwk.enableLogging(logger);
         pwk.setParentScope(getParentScope());
         pwk.setPrototype(getClassPrototype(getParentScope(), pwk.getClassName()));
         return pwk;
@@ -254,4 +267,5 @@ public class FOM_WebContinuation extends ScriptableObject {
     public String toString() {
         return "WC" + wk.getId();
     }
+
 }
