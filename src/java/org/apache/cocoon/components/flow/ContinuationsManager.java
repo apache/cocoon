@@ -17,11 +17,12 @@
 package org.apache.cocoon.components.flow;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * The interface of the Continuations manager.
  *
- * The continuation manager maintains a forrest of {@link
+ * The continuation manager maintains a forest of {@link
  * WebContinuation} trees. Each tree defines the flow of control for a
  * user within the application.
  *
@@ -43,7 +44,7 @@ public interface ContinuationsManager {
      * Create a <code>WebContinuation</code> object given a native
      * continuation object and its parent. If the parent continuation is
      * null, the <code>WebContinuation</code> returned becomes the root
-     * of a tree in the forrest.
+     * of a tree in the forest.
      *
      * @param kont an <code>Object</code> value
      * @param parentKont a <code>WebContinuation</code> value
@@ -83,18 +84,36 @@ public interface ContinuationsManager {
      * @return a <code>WebContinuation</code> object, null if no such
      * <code>WebContinuation</code> could be found. Also null if 
      * <code>WebContinuation</code> was found but interpreter id does 
-     * not match the one that the continuation was initialy created for.
+     * not match the one that the continuation was initially created for.
      */
     public WebContinuation lookupWebContinuation(String id, String interpreterId);
 
     /**
      * Prints debug information about all web continuations into the log file.
-     * @see WebContinuation#display()
+     * 
+     * @deprecated Use {@link #getForest()}. This method will be removed from
+     * the interface.
      */
     public void displayAllContinuations();
     
     /**
      * Get a list of all continuations as <code>WebContinuationDataBean</code> objects. 
+     * 
+     * @deprecated Use {@link #getForest()}. This method will be removed.
      */
-    public List getWebContinuationsDataBeanList();    
+    public List getWebContinuationsDataBeanList();
+    
+    /**
+     * Get a set of all web continuations. The set itself will only contain the
+     * root continuations. Those will provide access to their children.
+     * 
+     * Since it should not be possible to mess up the actual managed
+     * continuations the returned list will contain clones of them.
+     * 
+     * The purpose of this method is clearly monitoring or for debugging the
+     * application. It has no direct relationship to functionality of the
+     * ContinuationsManager.
+     */
+    public Set getForest();
+    
 }
