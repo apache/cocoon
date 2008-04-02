@@ -149,8 +149,9 @@ public class WebContinuation implements Comparable, Cloneable {
      * @param name the attribute name.
      */
     public Object getAttribute(String name) {
-        if (this.attributes == null)
+        if (this.attributes == null) {
             return null;
+        }
         
         return this.attributes.get(name);
     }
@@ -368,7 +369,7 @@ public class WebContinuation implements Comparable, Cloneable {
     public boolean hasExpired() {
         long currentTime = System.currentTimeMillis();
         long expireTime = this.getLastAccessTime() + this.timeToLive;
-        
+
         return (currentTime > expireTime);
     }
 
@@ -392,14 +393,15 @@ public class WebContinuation implements Comparable, Cloneable {
     }
     
     public boolean interpreterMatches( String interpreterId ) {
-        return StringUtils.equals( this.interpreterId, interpreterId );
+        return StringUtils.equals(this.interpreterId, interpreterId);
     }
 
     public void detachFromParent() {
-        if (getParentContinuation() != null)
+        if (getParentContinuation() != null) {
             getParentContinuation().getChildren().remove(this);
+        }
     }
-    
+
     /**
      * Creates a clone of this WebContinuation without trying to clone the actual continuation, the
      * user object or the disposer.
@@ -422,7 +424,7 @@ public class WebContinuation implements Comparable, Cloneable {
         }
         return clone;
     }
-    
+
     /**
      * Debugging method.
      *
@@ -452,7 +454,7 @@ public class WebContinuation implements Comparable, Cloneable {
                 .append(id)
                 .append(" ExpireTime [");
 
-        if ((lastAccessTime + timeToLive) < System.currentTimeMillis()) {
+        if (hasExpired()) {
             tree.append("Expired");
         } else {
             tree.append(lastAccessTime + timeToLive);
