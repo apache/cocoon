@@ -93,7 +93,7 @@ dojo.widget.defineWidget(
                 // numeric value
                 widget.setSelectedValue(node.value);
             }),
-            mimetype: "text/json-comment-filtered"
+            mimetype: "text/json"
         });
     }
 });
