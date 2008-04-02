@@ -28,19 +28,20 @@ import java.util.Map;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
-import org.apache.cocoon.components.flow.Interpreter.Argument;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.flow.Interpreter.Argument;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Script;
@@ -132,6 +133,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
         
         FOM_WebContinuation fom_wk =
             new FOM_WebContinuation(wk);
+        fom_wk.setLogger(logger);
         fom_wk.setParentScope(getParentScope());
         fom_wk.setPrototype(getClassPrototype(getParentScope(), 
                                               fom_wk.getClassName()));
@@ -141,6 +143,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
         FOM_WebContinuation result = null;
         if (wk != null) {
             result = new FOM_WebContinuation(wk);
+            result.setLogger(logger);
             result.setParentScope(getParentScope());
             result.setPrototype(getClassPrototype(getParentScope(),
                                                   result.getClassName()));
@@ -930,6 +933,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
                                            interpreter.getInterpreterID(),
                                            null);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);
+        result.setLogger(logger);
         result.setParentScope(getParentScope());
         result.setPrototype(getClassPrototype(getParentScope(), 
                                               result.getClassName()));

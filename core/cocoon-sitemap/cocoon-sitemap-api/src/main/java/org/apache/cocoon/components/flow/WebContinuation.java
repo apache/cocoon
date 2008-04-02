@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
 
 /**
  * Representation of continuations in a Web environment.
@@ -43,15 +42,6 @@ import org.apache.commons.logging.Log;
  * @version $Id$
  */
 public class WebContinuation implements Comparable {
-
-    /**
-     * Logger to be used in {@link #display()}.
-     *
-     * <p>Not using here <code>org.apache.cocoon.util.AbstractLogEnabled</code>
-     * because there is no dependency on cocoon-util, and want to avoid
-     * calling LogFactory for each continuation.
-     */
-    private Log logger;
 
     /**
      * The continuation this object represents.
@@ -149,14 +139,6 @@ public class WebContinuation implements Comparable {
         if (parentContinuation != null) {
             this.parentContinuation.children.add(this);
         }
-    }
-
-    public final Log getLogger() {
-        return this.logger;
-    }
-
-    public void setLogger(Log logger) {
-        this.logger = logger;
     }
 
     /**
@@ -371,56 +353,6 @@ public class WebContinuation implements Comparable {
     }
 
     /**
-     * Debugging method.
-     *
-     * <p>Assumes the receiving instance as the root of a tree and
-     * displays the tree of continuations.
-     */
-    public void display() {
-        getLogger().debug("\nWK: Tree" + display(0));
-    }
-
-    /**
-     * Debugging method.
-     *
-     * <p>Displays the receiving instance as if it is at the
-     * <code>indent</code> depth in the tree of continuations. Each
-     * level is indented 2 spaces.
-     *
-     * @param depth an <code>int</code> value
-     */
-    protected String display(int depth) {
-        StringBuffer tree = new StringBuffer("\n");
-        for (int i = 0; i < depth; i++) {
-            tree.append("  ");
-        }
-
-        tree.append("WK: WebContinuation ")
-                .append(id)
-                .append(" ExpireTime [");
-
-        if ((lastAccessTime + timeToLive) < System.currentTimeMillis()) {
-            tree.append("Expired");
-        } else {
-            tree.append(lastAccessTime + timeToLive);
-        }
-
-        tree.append("]");
-
-        // REVISIT: is this needed for some reason?
-        // System.out.print(spaces); System.out.println("WebContinuation " + id);
-
-        int size = children.size();
-        depth++;
-
-        for (int i = 0; i < size; i++) {
-            tree.append(((WebContinuation) children.get(i)).display(depth));
-        }
-
-        return tree.toString();
-    }
-
-    /**
      * Update the continuation in the
      */
     protected void updateLastAccessTime() {
@@ -467,4 +399,55 @@ public class WebContinuation implements Comparable {
             getParentContinuation().getChildren().remove(this);
         }
     }
+    
+    /**
+     * Debugging method.
+     *
+     * <p>Assumes the receiving instance as the root of a tree and
+     * displays the tree of continuations.
+     */
+    public String toString() {
+        return "\nWK: Tree" + display(0);
+    }
+
+    /**
+     * Debugging method.
+     *
+     * <p>Displays the receiving instance as if it is at the
+     * <code>indent</code> depth in the tree of continuations. Each
+     * level is indented 2 spaces.
+     *
+     * @param depth an <code>int</code> value
+     */
+    protected String display(int depth) {
+        StringBuffer tree = new StringBuffer("\n");
+        for (int i = 0; i < depth; i++) {
+            tree.append("  ");
+        }
+
+        tree.append("WK: WebContinuation ")
+                .append(id)
+                .append(" ExpireTime [");
+
+        if (hasExpired()) {
+            tree.append("Expired");
+        } else {
+            tree.append(lastAccessTime + timeToLive);
+        }
+
+        tree.append("]");
+
+        // REVISIT: is this needed for some reason?
+        // System.out.print(spaces); System.out.println("WebContinuation " + id);
+
+        int size = children.size();
+        depth++;
+
+        for (int i = 0; i < size; i++) {
+            tree.append(((WebContinuation) children.get(i)).display(depth));
+        }
+
+        return tree.toString();
+    }
+
 }
