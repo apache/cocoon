@@ -16,31 +16,6 @@
  */
 package org.apache.cocoon.components.flow;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.components.thread.RunnableManager;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.util.Deprecation;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.iterators.FilterIterator;
-
-import org.apache.excalibur.instrument.CounterInstrument;
-import org.apache.excalibur.instrument.Instrument;
-import org.apache.excalibur.instrument.Instrumentable;
-import org.apache.excalibur.instrument.ValueInstrument;
-
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,6 +30,33 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
+
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
+
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.util.Deprecation;
+
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
+
+import org.apache.excalibur.instrument.CounterInstrument;
+import org.apache.excalibur.instrument.Instrument;
+import org.apache.excalibur.instrument.Instrumentable;
+import org.apache.excalibur.instrument.ValueInstrument;
 
 /**
  * The default implementation of {@link ContinuationsManager}. <br/>There are
@@ -123,7 +125,6 @@ public class ContinuationsManagerImpl
     protected CounterInstrument continuationsInvalidated;
 
     public ContinuationsManagerImpl() throws Exception {
-        
         try {
             random = SecureRandom.getInstance("SHA1PRNG");
         } catch(java.security.NoSuchAlgorithmException nsae) {
@@ -139,32 +140,23 @@ public class ContinuationsManagerImpl
         continuationsInvalidated = new CounterInstrument("invalidates");
     }
 
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;        
     }
 
-    /**
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(final ServiceManager manager) throws ServiceException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
     }
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
     public void configure(Configuration config) {
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
         this.isContinuationSharingBugCompatible = config.getAttributeAsBoolean("continuation-sharing-bug-compatible", false);
         this.bindContinuationsToSession = config.getAttributeAsBoolean( "session-bound-continuations", false );
         
         // create a global ContinuationsHolder if this the "session-bound-continuations" parameter is set to false
-        if(!this.bindContinuationsToSession) {
+        if (!this.bindContinuationsToSession) {
             this.continuationsHolder = new WebContinuationsHolder();
-        }        
+        }
         
         // create a thread that invalidates the continuations
         final Configuration expireConf = config.getChild("expirations-check");
@@ -185,23 +177,14 @@ public class ContinuationsManagerImpl
         }
     }
 
-    /**
-     * @see org.apache.excalibur.instrument.Instrumentable#setInstrumentableName(java.lang.String)
-     */
     public void setInstrumentableName(String instrumentableName) {
         this.instrumentableName = instrumentableName;
     }
 
-    /**
-     * @see org.apache.excalibur.instrument.Instrumentable#getInstrumentableName()
-     */
     public String getInstrumentableName() {
         return instrumentableName;
     }
 
-    /**
-     * @see org.apache.excalibur.instrument.Instrumentable#getInstruments()
-     */
     public Instrument[] getInstruments() {
         return new Instrument[]{
             continuationsCount,
@@ -210,16 +193,10 @@ public class ContinuationsManagerImpl
         };
     }
 
-    /**
-     * @see org.apache.excalibur.instrument.Instrumentable#getChildInstrumentables()
-     */
     public Instrumentable[] getChildInstrumentables() {
         return Instrumentable.EMPTY_INSTRUMENTABLE_ARRAY;
     }
 
-    /**
-     * @see org.apache.cocoon.components.flow.ContinuationsManager#createWebContinuation(java.lang.Object, org.apache.cocoon.components.flow.WebContinuation, int, java.lang.String, org.apache.cocoon.components.flow.ContinuationsDisposer)
-     */
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int timeToLive,
@@ -236,7 +213,7 @@ public class ContinuationsManagerImpl
             expirations.add(wk);
             expirationsSize.setValue(expirations.size());
         }
-        
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: Created continuation " + wk.getId());
         }
@@ -244,9 +221,6 @@ public class ContinuationsManagerImpl
         return wk;
     }
 
-    /**
-     * @see org.apache.cocoon.components.flow.ContinuationsManager#lookupWebContinuation(java.lang.String, java.lang.String)
-     */
     public WebContinuation lookupWebContinuation(String id, String interpreterId) {
         WebContinuationsHolder continuationsHolder = lookupWebContinuationsHolder(false);
         if (continuationsHolder == null) {
@@ -283,6 +257,7 @@ public class ContinuationsManagerImpl
             kont.updateLastAccessTime();
             this.expirations.add(kont);
         }
+
         return kont;
     }
 
@@ -304,9 +279,8 @@ public class ContinuationsManagerImpl
                                                    int ttl,
                                                    String interpreterId,
                                                    ContinuationsDisposer disposer) {
-
         char[] result = new char[bytes.length * 2];
-        WebContinuation wk = null;
+        WebContinuation wk;
         WebContinuationsHolder continuationsHolder = lookupWebContinuationsHolder(true);
         while (true) {
             random.nextBytes(bytes);
@@ -322,12 +296,11 @@ public class ContinuationsManagerImpl
                 if (!continuationsHolder.contains(id)) {
                     if (this.bindContinuationsToSession) {
                         wk = new HolderAwareWebContinuation(id, kont, parent,
-                                ttl, interpreterId, disposer,
-                                continuationsHolder);
-                    }
-                    else {
+                                                            ttl, interpreterId, disposer,
+                                                            continuationsHolder);
+                    } else {
                         wk = new WebContinuation(id, kont, parent, ttl,
-                                interpreterId, disposer);
+                                                 interpreterId, disposer);
                     }
                     continuationsHolder.addContinuation(wk);
                     synchronized (continuationsCount) {
@@ -353,7 +326,7 @@ public class ContinuationsManagerImpl
         _invalidate(continuationsHolder, wk);
     }
 
-    protected void _invalidate(WebContinuationsHolder continuationsHolder, WebContinuation wk) {
+    private void _invalidate(WebContinuationsHolder continuationsHolder, WebContinuation wk) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: Manual expire of continuation " + wk.getId());
         }
@@ -362,6 +335,7 @@ public class ContinuationsManagerImpl
             expirations.remove(wk);
             expirationsSize.setValue(expirations.size());
         }
+
         // Invalidate all the children continuations as well
         List children = wk.getChildren();
         int size = children.size();
@@ -439,7 +413,6 @@ public class ContinuationsManagerImpl
             /* Continuations before clean up: */
             displayAllContinuations();
             displayExpireSet();
-
         }
 
         // Clean up expired continuations
@@ -452,10 +425,9 @@ public class ContinuationsManagerImpl
             while (expirationIterator.hasNext()) {
                 WebContinuation wk = (WebContinuation) expirationIterator.next();
                 expirationIterator.remove();
-                WebContinuationsHolder continuationsHolder = null;
+                WebContinuationsHolder continuationsHolder;
                 if (wk instanceof HolderAwareWebContinuation) {
-                    continuationsHolder = 
-                        ((HolderAwareWebContinuation) wk).getContinuationsHolder();
+                    continuationsHolder = ((HolderAwareWebContinuation) wk).getContinuationsHolder();
                 } else {
                     continuationsHolder = this.continuationsHolder;
                 }
@@ -464,7 +436,7 @@ public class ContinuationsManagerImpl
             }
             expirationsSize.setValue(expirations.size());
         }
-        
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK Cleaned up " + count + " continuations in " +
                               (System.currentTimeMillis() - now) + " ms");
@@ -551,12 +523,12 @@ public class ContinuationsManagerImpl
                     + " is deprecated and should be replaced with getForest().");
         }
         List beanList = new ArrayList();
-        for(Iterator it = getForest().iterator(); it.hasNext();) {
+        for (Iterator it = getForest().iterator(); it.hasNext();) {
             beanList.add(new WebContinuationDataBean((WebContinuation) it.next()));
         }
         return beanList;
     }
-    
+
     /**
      * Dump to Log file the current contents of
      * the expirations <code>SortedSet</code>
@@ -651,12 +623,14 @@ public class ContinuationsManagerImpl
 
         private WebContinuationsHolder continuationsHolder;
 
-        public HolderAwareWebContinuation(String id, Object continuation,
-                WebContinuation parentContinuation, int timeToLive,
-                String interpreterId, ContinuationsDisposer disposer,
-                WebContinuationsHolder continuationsHolder) {
-            super(id, continuation, parentContinuation, timeToLive,
-                    interpreterId, disposer);
+        public HolderAwareWebContinuation(String id,
+                                          Object continuation,
+                                          WebContinuation parentContinuation,
+                                          int timeToLive,
+                                          String interpreterId,
+                                          ContinuationsDisposer disposer,
+                                          WebContinuationsHolder continuationsHolder) {
+            super(id, continuation, parentContinuation, timeToLive, interpreterId, disposer);
             this.continuationsHolder = continuationsHolder;
         }
 
