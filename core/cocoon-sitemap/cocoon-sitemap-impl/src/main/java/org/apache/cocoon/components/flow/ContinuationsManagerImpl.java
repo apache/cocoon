@@ -310,7 +310,6 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
             }
         }
 
-        wk.setLogger(getLogger());
         return wk;
     }
 
@@ -431,7 +430,7 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
         synchronized (this) {
             final Iterator i = forest.iterator();
             while (i.hasNext()) {
-                ((WebContinuation) i.next()).display();
+                getLogger().debug(i.next().toString());
             }
         }
     }

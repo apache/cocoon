@@ -32,15 +32,12 @@ import java.util.Set;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.web.context.WebApplicationContext;
 
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
-import org.apache.cocoon.components.flow.Interpreter.Argument;
 import org.apache.cocoon.components.flow.WebContinuation;
+import org.apache.cocoon.components.flow.Interpreter.Argument;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.container.spring.avalon.AvalonUtils;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -51,6 +48,9 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.util.ClassUtils;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaObject;
@@ -60,6 +60,8 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
+
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Implementation of FOM (Flow Object Model).
@@ -99,6 +101,7 @@ public class FOM_Cocoon extends ScriptableObject {
             this.lastContinuation = lastContinuation;
             if (lastContinuation != null) {
                 fwk = new FOM_WebContinuation(lastContinuation);
+                fwk.setLogger(getLogger());
                 Scriptable scope = FOM_Cocoon.this.getParentScope();
                 fwk.setParentScope(scope);
                 fwk.setPrototype(getClassPrototype(scope, fwk.getClassName()));
@@ -687,7 +690,7 @@ public class FOM_Cocoon extends ScriptableObject {
         return currentCall.avalonContext;
     }
 
-    private Log getLogger() {
+    protected Log getLogger() {
         return logger;
     }
 
@@ -751,14 +754,16 @@ public class FOM_Cocoon extends ScriptableObject {
     /**
      * Return this continuation if it is valid, or first valid parent
      */
-    private FOM_WebContinuation findValidParent(FOM_WebContinuation wk) {
+    private FOM_WebContinuation findValidParent(final FOM_WebContinuation wk) {
         if (wk != null) {
             WebContinuation wc = wk.getWebContinuation();
             while (wc != null && wc.disposed()) {
                 wc = wc.getParentContinuation();
             }
             if (wc != null) {
-                return new FOM_WebContinuation(wc);
+                FOM_WebContinuation parentWk = new FOM_WebContinuation(wc);
+                parentWk.setLogger(getLogger());
+                return parentWk;
             }
         }
 
@@ -808,6 +813,7 @@ public class FOM_Cocoon extends ScriptableObject {
                                            getInterpreter().getInterpreterID(),
                                            null);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);
+        result.setLogger(getLogger());
         result.setParentScope(getParentScope());
         result.setPrototype(getClassPrototype(getParentScope(),
                                               result.getClassName()));

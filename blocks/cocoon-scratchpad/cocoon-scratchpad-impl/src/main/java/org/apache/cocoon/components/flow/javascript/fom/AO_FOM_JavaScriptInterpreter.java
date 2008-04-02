@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -35,10 +36,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.commons.jxpath.JXPathIntrospector;
-import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -54,6 +51,12 @@ import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
+
+import org.apache.commons.jxpath.JXPathIntrospector;
+import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
+
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
@@ -685,6 +688,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
             cocoon.setParameters(parameters);
             FOM_WebContinuation fom_wk = 
                 new FOM_WebContinuation(wk);
+            fom_wk.setLogger(getLogger());
             fom_wk.setParentScope(kScope);
             fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope, 
                                                                    fom_wk.getClassName()));
