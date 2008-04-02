@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-2186">
+      Forms: Suggest list .. initial value not being displayed.
+    </action>
     <action dev="JH" type="fix">
       Core: Fix synchronization issues in ContinuationsManager implementation.
     </action>
