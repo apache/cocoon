@@ -26,7 +26,7 @@ function form1(form) {
     model.number1 = 1;
     model.number2 = 3;
     model.birthdate = new java.util.Date();
-    
+
     model.contacts[0].firstname = "Jules";
     model.contacts[1].firstname =  "Lucien";
     model.contacts[2].firstname = "Chris";
@@ -39,7 +39,7 @@ function form1(form) {
 
     print("submitId = " + form.submitId);
     if (form.isValid) {
-      print("visa=" + model.visa);  
+      print("visa=" + model.visa);
     } else {
       print("Form is not valid");
     }
@@ -121,11 +121,11 @@ function do_dynaRepeater() {
     var form = new Form("forms/dynamicrepeater.xml");
     form.setAttribute("counter", new java.lang.Integer(0));
     form.showForm("dynamicrepeater-display-pipeline.jx");
-    
+
     var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
     doc.appendChild(doc.createElement("contacts"));
     form.createBinding("forms/dynamicrepeater_binding.xml");
-    
+
     form.save(doc);
     cocoon.sendPage("xmlresult-display-pipeline.jx",
         {title: "Contact list", document: doc}
@@ -137,11 +137,11 @@ function do_dojoRepeater() {
     form.setAttribute("counter", new java.lang.Integer(0));
     form.getChild("addcontact").performAction(); // to increment the counter
     form.showForm("dynamicrepeater_dojo-display-pipeline.jx");
-    
+
     var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
     doc.appendChild(doc.createElement("contacts"));
     form.createBinding("forms/dynamicrepeater_binding.xml");
-    
+
     form.save(doc);
     cocoon.sendPage("xmlresult-display-pipeline.jx",
         {title: "Contact list", document: doc}
@@ -157,7 +157,7 @@ function do_dojoRepeaters() {
     form.getChild("addcontact2").performAction(); // to increment the counter
     form.getChild("addcontact3").performAction(); // to increment the counter
     form.showForm("dynamicrepeaters_dojo-display-pipeline.jx");
-    
+
     var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
     var rootElement = doc.createElement("contact_root");
     rootElement.appendChild(doc.createElement("contacts1"));
@@ -165,7 +165,7 @@ function do_dojoRepeaters() {
     rootElement.appendChild(doc.createElement("contacts3"));
     doc.appendChild(rootElement);
     form.createBinding("forms/dynamicrepeaters_binding.xml");
-    
+
     form.save(doc);
     cocoon.sendPage("xmlresult-display-pipeline.jx",
         {title: "Contact list", document: doc}
@@ -175,12 +175,12 @@ function do_dojoRepeaters() {
 function do_datasourceChooser() {
     var form = new Form("forms/datasource_chooser.xml");
     form.showForm("datasource_chooser-display-pipeline.jx");
-    
+
     var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
     doc.appendChild(doc.createElement("config"));
     form.createBinding("forms/datasource_chooser_binding.xml");
     form.save(doc);
-    
+
     cocoon.sendPage("xmlresult-display-pipeline.jx",
         {title: "Here's the datasource definition", document: doc}
     );
@@ -189,12 +189,12 @@ function do_datasourceChooser() {
 function do_taskTree() {
     var form = new Form("forms/tasktree.xml");
     form.showForm("tasktree-display-pipeline.jx");
-    
+
     var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
     doc.appendChild(doc.createElement("project"));
     form.createBinding("forms/tasktree_binding.xml");
     form.save(doc);
-    
+
     cocoon.sendPage("xmlresult-display-pipeline.jx",
         {title: "Here's the resulting project definition", document: doc}
     );
@@ -207,12 +207,12 @@ importClass(org.apache.cocoon.forms.formmodel.WidgetState);
 function do_multipage() {
     var form = new Form("forms/multipage_model.xml");
     form.showForm("multipage-display-pipeline.jx");
-    
+
     var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
     doc.appendChild(doc.createElement("result"));
     form.createBinding("forms/multipage_binding.xml");
     form.save(doc);
-    
+
     cocoon.sendPage("xmlresult-display-pipeline.jx",
         {title: "Here's the resulting document", document: doc}
     );
@@ -243,15 +243,13 @@ function do_suggest() {
 
     var path = form.getChild("path");
     var person = form.getChild("personId");
-    var repeater = form.getChild("contacts");
 
     cocoon.sendPage("textresult-display-pipeline.jx",
         {title: "Suggest results", text: "path value = " + path.value +
-             "\npath suggested label = " +  
+             "\npath suggested label = " +
              (path.suggested ? path.suggestionLabel : "(none)") +
-             "\n\n\npersonId = " + person.value + 
-             "\npersonName = " + (person.suggested ? person.suggestionLabel : "(none)") +
-             "\n\n\nrepeater size = " + repeater.size });
+             "\n\n\npersonId = " + person.value +
+             "\npersonName = " + (person.suggested ? person.suggestionLabel : "(none)")});
 }
 
 function do_multivalueWithSuggestion() {
@@ -262,7 +260,7 @@ function do_multivalueWithSuggestion() {
     var _contacts = form.getChild("contacts").getValue();
     var _string = "";
     for (var i = 0; i < _contacts.length; i++) {
-        _string += " " + _contacts[i] + ","; 
+        _string += " " + _contacts[i] + ",";
     }
 
     cocoon.sendPage("textresult-display-pipeline.jx",
@@ -274,7 +272,7 @@ function do_inplace() {
     var path = form.getChild("path");
 
     form.showForm("inplace_edit-display-pipeline.jx");
-    
+
     cocoon.sendPage("textresult-display-pipeline.jx",
         {title: "Inplace results", text: "name: " + form.getChild("name").value +
             "\noccupation: " + form.getChild("occupation").value +
