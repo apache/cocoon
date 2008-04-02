@@ -14,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 //
 // @version $Id$
 //
+
 cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
 // This function is invoked by every coplet to check if the basket is already full
@@ -25,8 +27,13 @@ function add() {
     var type = cocoon.parameters["type"];
     var storage = "basket";
 
+    var dom;
     var pu = cocoon.createObject(Packages.org.apache.cocoon.components.flow.util.PipelineUtil);
-    var dom = pu.processToDOM("fetch-quota", { "storage": storage, "type": type});
+    try {
+        dom = pu.processToDOM("fetch-quota", { "storage": storage, "type": type});
+    } finally {
+        cocoon.disposeObject(pu);
+    }
 
     var node = org.apache.excalibur.xml.xpath.XPathUtil.getFirstNodeFromPath(dom,
                         org.apache.excalibur.xml.xpath.XPathUtil.buildPathArray("result/attribute/item"), false);
@@ -55,8 +62,13 @@ function getQuota() {
     var type = cocoon.parameters["type"];
     var storage = "basket";
 
+    var dom;
     var pu = cocoon.createObject(Packages.org.apache.cocoon.components.flow.util.PipelineUtil);
-    var dom = pu.processToDOM("fetch-quota", { "storage": storage, "type": type});
+    try {
+        dom = pu.processToDOM("fetch-quota", { "storage": storage, "type": type});
+    } finally {
+        cocoon.disposeObject(pu);
+    }
 
     var node = org.apache.excalibur.xml.xpath.XPathUtil.getFirstNodeFromPath(dom,
                         org.apache.excalibur.xml.xpath.XPathUtil.buildPathArray("result/attribute/item"), false);
