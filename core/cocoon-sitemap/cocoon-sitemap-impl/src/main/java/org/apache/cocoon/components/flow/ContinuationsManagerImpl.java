@@ -18,6 +18,7 @@ package org.apache.cocoon.components.flow;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -40,6 +40,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -90,7 +91,7 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
      * This set is used only for debugging purposes by
      * {@link #displayAllContinuations()} method.
      */
-    protected Set forest = new HashSet();
+    protected Set forest = Collections.synchronizedSet(new HashSet());
 
     /**
      * Main continuations holder. Used unless continuations are stored in user
@@ -103,7 +104,7 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
      * their expiration time. This is used by the background thread to
      * invalidate continuations.
      */
-    protected SortedSet expirations = new TreeSet();
+    protected SortedSet expirations = Collections.synchronizedSortedSet(new TreeSet());
 
     protected boolean bindContinuationsToSession;
 
@@ -168,15 +169,13 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
 
         WebContinuation wk = generateContinuation(kont, parent, ttl, interpreterId, disposer);
 
-        synchronized (this) {
-            if (parent == null) {
-                forest.add(wk);
-            } else {
-                handleParentContinuationExpiration(parent);
-            }
-
-            handleLeafContinuationExpiration(wk);
+        if (parent == null) {
+            forest.add(wk);
+        } else {
+            handleParentContinuationExpiration(parent);
         }
+
+        handleLeafContinuationExpiration(wk);
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK: Created continuation " + wk.getId());
@@ -209,10 +208,8 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
      */
     public List getWebContinuationsDataBeanList() {
         List beanList = new ArrayList();
-        synchronized (this) {
-            for(Iterator it = this.forest.iterator(); it.hasNext();) {
-                beanList.add(new WebContinuationDataBean((WebContinuation) it.next()));
-            }
+        for(Iterator it = this.forest.iterator(); it.hasNext();) {
+            beanList.add(new WebContinuationDataBean((WebContinuation) it.next()));
         }
         return beanList;
     }
@@ -242,14 +239,12 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
             return null;
         }
         
-        synchronized (this) {
-            // COCOON-2109: Sorting in the TreeSet happens on insert. So in order to re-sort the
-            //              continuation has to be re-added.
-            expirations.remove(kont);
-            kont.updateLastAccessTime();
-            expirations.add(kont);
-        }
-
+        // COCOON-2109: Sorting in the TreeSet happens on insert. So in order to re-sort the
+        //              continuation has to be re-added.
+        expirations.remove(kont);
+        kont.updateLastAccessTime();
+        expirations.add(kont);
+        
         return kont;
     }
 
@@ -328,9 +323,8 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
             getLogger().debug("WK: Manual expire of continuation " + wk.getId());
         }
         disposeContinuation(continuationsHolder, wk);
-        synchronized (this) {
-            expirations.remove(wk);
-        }
+        expirations.remove(wk);
+
         // Invalidate all the children continuations as well
         List children = wk.getChildren();
         int size = children.size();
@@ -349,9 +343,7 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
     protected void _detach(WebContinuation wk) {
         WebContinuation parent = wk.getParentContinuation();
         if (parent == null) {
-            synchronized (this) {
-                forest.remove(wk);
-            }
+            forest.remove(wk);
         } else 
             wk.detachFromParent();
     }
@@ -382,7 +374,7 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
             return;
         }
 
-        // remove access to this continuation
+        // remove access to this contination
         disposeContinuation(continuationsHolder, wk);
         _detach(wk);
 
@@ -404,21 +396,22 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
      */
     protected void displayExpireSet() {
         StringBuffer wkSet = new StringBuffer("\nWK; Expire set size: " + expirations.size());
-        synchronized (this) {
-            Iterator i = expirations.iterator();
-            while (i.hasNext()) {
-                final WebContinuation wk = (WebContinuation) i.next();
-                final long lat = wk.getLastAccessTime() + wk.getTimeToLive();
-                wkSet.append("\nWK: ").append(wk.getId()).append(" ExpireTime [");
+        Iterator i = expirations.iterator();
+        while (i.hasNext()) {
+            final WebContinuation wk = (WebContinuation) i.next();
+            final long lat = wk.getLastAccessTime() + wk.getTimeToLive();
+            wkSet.append("\nWK: ")
+                    .append(wk.getId())
+                    .append(" ExpireTime [");
 
-                if (lat < System.currentTimeMillis()) {
-                    wkSet.append("Expired");
-                } else {
-                    wkSet.append(lat);
-                }
-                wkSet.append("]");
+            if (lat < System.currentTimeMillis()) {
+                wkSet.append("Expired");
+            } else {
+                wkSet.append(lat);
             }
+            wkSet.append("]");
         }
+
         getLogger().debug(wkSet.toString());
     }
 
@@ -427,11 +420,9 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
      * in the system
      */
     public void displayAllContinuations() {
-        synchronized (this) {
-            final Iterator i = forest.iterator();
-            while (i.hasNext()) {
-                getLogger().debug(i.next().toString());
-            }
+        final Iterator i = forest.iterator();
+        while (i.hasNext()) {
+            getLogger().debug(i.next().toString());
         }
     }
 
@@ -453,21 +444,18 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
         // Clean up expired continuations
         int count = 0;
         WebContinuation wk;
-        synchronized (this) {
-            Iterator i = expirations.iterator();
-            while (i.hasNext()
-                    && ((wk = (WebContinuation) i.next()).hasExpired())) {
-                i.remove();
-                WebContinuationsHolder continuationsHolder;
-                if (wk instanceof HolderAwareWebContinuation)
-                    continuationsHolder =
-                        ((HolderAwareWebContinuation) wk).getContinuationsHolder();
-                else
-                    continuationsHolder = this.continuationsHolder;
-                removeContinuation(continuationsHolder, wk);
-                count++;
-            }
+        Iterator i = expirations.iterator();
+        while (i.hasNext() && ((wk = (WebContinuation) i.next()).hasExpired())) {
+            i.remove();
+            WebContinuationsHolder continuationsHolder;
+            if (wk instanceof HolderAwareWebContinuation)
+                continuationsHolder = ((HolderAwareWebContinuation) wk).getContinuationsHolder();
+            else
+                continuationsHolder = this.continuationsHolder;
+            removeContinuation(continuationsHolder, wk);
+            count++;
         }
+
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("WK Cleaned up " + count + " continuations in " +
                               (System.currentTimeMillis() - now));
@@ -485,15 +473,18 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
      * about session invalidation. Invalidates all continuations held by passed
      * continuationsHolder.
      */
-    protected void invalidateContinuations(WebContinuationsHolder continuationsHolder) {
-        synchronized (continuationsHolder) {
-            Set continuationIds = continuationsHolder.getContinuationIds();
-            for (Iterator iter = continuationIds.iterator(); iter.hasNext();) {
-                WebContinuation wk = continuationsHolder.get((Object)iter.next());
-                if (wk != null) {
-                    _detach(wk);
-                    _invalidate(continuationsHolder, wk);
-                }
+    protected void invalidateContinuations(
+            WebContinuationsHolder continuationsHolder) {
+        // TODO: this avoids ConcurrentModificationException, still this is not
+        // the best solution and should be changed
+        Object[] continuationIds = continuationsHolder.getContinuationIds()
+                .toArray();
+        
+        for (int i = 0; i < continuationIds.length; i++) {
+            WebContinuation wk = continuationsHolder.get(continuationIds[i]);
+            if (wk != null) {
+                _detach(wk);
+                _invalidate(continuationsHolder, wk);
             }
         }
     }
@@ -540,36 +531,26 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
         private final static String CONTINUATIONS_HOLDER = 
                                        "o.a.c.c.f.SCMI.WebContinuationsHolder";
 
-        private Map holder = new HashMap();
+        private Map holder = Collections.synchronizedMap(new HashMap());
 
         public WebContinuation get(Object id) {
-            synchronized (this) {
-                return (WebContinuation) this.holder.get(id);
-            }
+            return (WebContinuation) this.holder.get(id);
         }
 
         public void addContinuation(WebContinuation wk) {
-            synchronized (this) {
-                this.holder.put(wk.getId(), wk);
-            }
+            this.holder.put(wk.getId(), wk);
         }
 
         public void removeContinuation(WebContinuation wk) {
-            synchronized (this) {
-                this.holder.remove(wk.getId());
-            }
+            this.holder.remove(wk.getId());
         }
 
         public Set getContinuationIds() {
-            synchronized (this) {
-                return holder.keySet();
-            }
+            return holder.keySet();
         }
         
         public boolean contains(String continuationId) {
-            synchronized (this) {
-                return this.holder.containsKey(continuationId);
-            }
+            return this.holder.containsKey(continuationId);
         }
         
         public boolean contains(WebContinuation wk) {
@@ -607,6 +588,10 @@ public class ContinuationsManagerImpl extends AbstractLogEnabled
             return continuationsHolder;
         }
 
+        //retain comparation logic from parent
+        public int compareTo(Object other) {
+            return super.compareTo(other);
+        }
     }
 
 }
