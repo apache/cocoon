@@ -14,17 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 //
 // @version $Id$
 //
+
 function create() {
-    var create;
     var createParam = cocoon.request.getParameter("create");
-    if (createParam == null) {
-        create = false;
-    } else {
-        create = true;
-    }
+    var create = createParam != null;
       
     var baseURL = cocoon.request.getParameter("baseURL");
     if (baseURL != null && baseURL.length() > 0) {
@@ -41,13 +38,8 @@ function create() {
 }
 
 function create2() {
-    var create;
     var createParam = cocoon.request.getParameter("create");
-    if (createParam == null) {
-        create = false;
-    } else {
-        create = true;
-    }
+    var create = createParam != null;
       
     var baseURL = cocoon.request.getParameter("baseURL");
     if (baseURL != null && baseURL.length() > 0) {
