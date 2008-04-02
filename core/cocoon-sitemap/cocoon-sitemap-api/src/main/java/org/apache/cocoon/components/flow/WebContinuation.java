@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ import org.apache.commons.lang.StringUtils;
  * @since March 19, 2002
  * @version $Id$
  */
-public class WebContinuation implements Comparable {
+public class WebContinuation implements Comparable, Cloneable {
 
     /**
      * The continuation this object represents.
@@ -399,7 +400,30 @@ public class WebContinuation implements Comparable {
             getParentContinuation().getChildren().remove(this);
         }
     }
-    
+
+    /**
+     * Creates a clone of this WebContinuation without trying to clone the actual continuation, the
+     * user object or the disposer.
+     * 
+     * TODO: Check continuation, user object, disposer for implementing {@link Cloneable} or
+     *       {@link java.io.Serializable}.
+     */
+    public Object clone() {
+        
+        WebContinuation clone = new WebContinuation(id, continuation, null, timeToLive, interpreterId, disposer);
+        // reset last access time
+        clone.lastAccessTime = this.lastAccessTime;
+        // recreate hierarchy recursively
+        for (Iterator iter = this.children.iterator(); iter.hasNext();) {
+            WebContinuation child = (WebContinuation) iter.next();
+            WebContinuation childClone = (WebContinuation) child.clone();
+            // relationships must be fixed manually
+            childClone.parentContinuation = clone;
+            clone.children.add(childClone);
+        }
+        return clone;
+    }
+
     /**
      * Debugging method.
      *

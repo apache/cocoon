@@ -26,6 +26,9 @@
 <document>
   <body>
     <release version="1.0.1" date="TBA" description="unreleased">
+      <action dev="joerg" type="fix">
+        Fix synchronization issues in ContinuationsManager implementation.
+      </action>
       <action dev="joerg" type="fix" fixes-bug="COCOON-2109" due-to="Miguel Cuervo" due-to-email="miguel.cuervo@cgi.com">
         Fix clean up of continuations.
       </action>
