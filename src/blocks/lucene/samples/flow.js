@@ -14,16 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 //
 // @version $Id$
 //
+
 function create() {
     var create = cocoon.request.getParameter("create") ? true : false;
     var baseURL = cocoon.request.getParameter("baseURL");
     
     if (baseURL != null && baseURL.length() > 0) {
         var util = cocoon.createObject("org.apache.cocoon.samples.LuceneUtil");
-        util.createIndex(baseURL, create);
+        try {
+            util.createIndex(baseURL, create);
+        } finally {
+            cocoon.disposeObject(util);
+        }
     }
     if (baseURL == null || baseURL.length() < 1) {
         baseURL = "http://" + cocoon.request.getServerName()
