@@ -30,6 +30,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.ContinuationsManager;
+import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.WebContinuationDataBean;
 import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.configuration.Settings;
@@ -164,16 +165,10 @@ public class StatusGenerator extends ServiceableGenerator
      */
     private Source libDirectory;
 
-    /**
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
     public void contextualize(Context avalonContext) throws ContextException {
         this.context = avalonContext;
     }
 
-    /**
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
     public void configure(Configuration configuration) throws ConfigurationException {
         this.showContinuations = configuration.getChild("show-continuations").getValueAsBoolean(true);
         this.showLibrary = configuration.getChild("show-libraries").getValueAsBoolean(true);
@@ -368,9 +363,9 @@ public class StatusGenerator extends ServiceableGenerator
 
     private void genContinuationsTree() throws SAXException {
         startGroup("Continuations");
-        List continuationsAsDataBeansList = this.continuationsManager.getWebContinuationsDataBeanList();
-        for (Iterator i = continuationsAsDataBeansList.iterator(); i.hasNext();) {
-            displayContinuation((WebContinuationDataBean) i.next());
+        Set continuations = this.continuationsManager.getForest();
+        for (Iterator i = continuations.iterator(); i.hasNext();) {
+            displayContinuation(new WebContinuationDataBean((WebContinuation) i.next()));
         }
         endGroup();
     }
@@ -380,7 +375,7 @@ public class StatusGenerator extends ServiceableGenerator
         ai.addAttribute(NAMESPACE, "id", "id", "CDATA", wc.getId());
         ai.addAttribute(NAMESPACE, "interpreter", "interpreter", "CDATA", wc.getInterpreterId());
         ai.addAttribute(NAMESPACE, "expire-time", "expire-time", "CDATA", wc.getExpireTime());
-        ai.addAttribute(NAMESPACE, "time-to-live", "time-to-live", "CDATA", wc.getTimeToLive());
+        ai.addAttribute(NAMESPACE, "time-to-live", "time-to-live", "CDATA", wc.getTimeToLive() + "ms");
         ai.addAttribute(NAMESPACE, "last-access-time", "last-access-time", "CDATA", wc.getLastAccessTime());
 
         super.contentHandler.startElement(NAMESPACE, "cont", "cont", ai);
