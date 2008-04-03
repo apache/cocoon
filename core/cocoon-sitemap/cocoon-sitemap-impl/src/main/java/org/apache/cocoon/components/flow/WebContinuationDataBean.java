@@ -16,11 +16,13 @@
  */
 package org.apache.cocoon.components.flow;
 
-import java.text.SimpleDateFormat;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.lang.time.FastDateFormat;
 
 /**
  * Access to continuation data for monitoring applications
@@ -33,7 +35,7 @@ public class WebContinuationDataBean {
     private static final String HAS_EXPIRED_YES = "yes";
 
     private WebContinuation wc;
-    private SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+    private Format formatter = FastDateFormat.getInstance("HH:mm:ss");
     private List _children = new ArrayList();
 
     public WebContinuationDataBean(WebContinuation wc) {
@@ -66,17 +68,14 @@ public class WebContinuationDataBean {
     }
 
     public String getExpireTime() {
-        return formatter.format(new Date(wc.getLastAccessTime()
-                + wc.getTimeToLive()));
+        return formatter.format(new Date(wc.getLastAccessTime() + wc.getTimeToLive()));
     }
 
     public String hasExpired() {
-        if ((wc.getLastAccessTime() + wc.getTimeToLive()) < System
-                .currentTimeMillis()) {
+        if (wc.hasExpired()) {
             return HAS_EXPIRED_YES;
         }
         return HAS_EXPIRED_NO;
-
     }
 
     public String getType() {
