@@ -25,9 +25,7 @@
 <document>
   <body>
     <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
-      <action dev="joerg" type="fix" fixes-bug="COCOON-2063" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@googlemail.com">
-        Set system's default encoding on NekoHTMLGenerator and NekoHTMLTransformer configuration to make them work with UTF-8.
-      </action>
+      
     </release>     
     <release version="1.0.0-M1" date="2007-03-02" description="released">    
       <action dev="crossley" type="add" fixes-bug="COCOON-1206" due-to="Miles Elam" due-to-email="miles@geekspeak.org">
