@@ -891,7 +891,7 @@
       on base classes of the JDK, such as unrolling exceptions.
     </description>
     <used-by>Cocoon, OJB</used-by>
-    <lib>core/commons-lang-2.3.jar</lib>
+    <lib>core/commons-lang-2.4.jar</lib>
     <homepage>http://jakarta.apache.org/commons/lang/</homepage>
   </file>
 
