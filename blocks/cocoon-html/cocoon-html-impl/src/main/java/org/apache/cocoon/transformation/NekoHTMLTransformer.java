@@ -19,7 +19,6 @@ package org.apache.cocoon.transformation;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -29,12 +28,11 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.NekoHtmlSaxParser;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
-import org.apache.xerces.parsers.AbstractSAXParser;
-import org.cyberneko.html.HTMLConfiguration;
 import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -147,7 +145,7 @@ public class NekoHTMLTransformer extends AbstractSAXTransformer
      */
     private void normalize(String text) throws ProcessingException {
         try {
-            HtmlSaxParser parser = new HtmlSaxParser(this.properties);
+            NekoHtmlSaxParser parser = new NekoHtmlSaxParser(this.properties);
 
             ByteArrayInputStream bais =
                 new ByteArrayInputStream(text.getBytes());
@@ -184,29 +182,6 @@ public class NekoHTMLTransformer extends AbstractSAXTransformer
         while (tokenizer.hasMoreElements()) {
             String tok = tokenizer.nextToken().trim();
             this.tags.put(tok, tok);
-        }
-    }
-
-    public static class HtmlSaxParser extends AbstractSAXParser {
-
-        public HtmlSaxParser(Properties properties) {
-            super(getConfig(properties));
-        }
-
-        private static HTMLConfiguration getConfig(Properties properties) {
-            HTMLConfiguration config = new HTMLConfiguration();
-            config.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
-            if (properties != null) {
-                for (Iterator i = properties.keySet().iterator();i.hasNext();) {
-                    String name = (String) i.next();
-                    if (name.indexOf("/features/") > -1) {
-                        config.setFeature(name, Boolean.getBoolean(properties.getProperty(name)));
-                    } else if (name.indexOf("/properties/") > -1) {
-                        config.setProperty(name, properties.getProperty(name));
-                    }
-                }
-            }
-            return config;
         }
     }
 }
