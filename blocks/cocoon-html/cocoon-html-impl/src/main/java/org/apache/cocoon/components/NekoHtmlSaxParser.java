@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.components;
 
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -34,6 +35,7 @@ public class NekoHtmlSaxParser extends AbstractSAXParser {
     private static HTMLConfiguration getConfig(Properties properties) {
         HTMLConfiguration config = new HTMLConfiguration();
         config.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
+        config.setProperty("http://cyberneko.org/html/properties/default-encoding", Charset.defaultCharset().name());
         if (properties != null) {
             for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
                 String name = (String) i.next();
