@@ -25,6 +25,13 @@
   -->
 <document>
   <body>
+    <release version="1.0.1" date="TBA" description="unreleased">
+      <action dev="vgritsenko" type="update">
+        Set default encoding for all text based serializers (such as XML,
+        XHTML, text, etc) to UTF-8.
+      </action>
+    </release>
+
     <release version="1.0.0" date="2008-03-25" description="released">
       <action dev="thorsten" type="fix">
         The paginator when used with spring has thrown errors since the service()
