@@ -17,14 +17,15 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
-    |
-    | @version $Id$
-    +-->
+
+<!--
+  - See http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  -
+  - $Id$
+  -->
 <document>
   <body>
-    <release version="1.0.0" date="TBA" description="released">
+    <release version="1.0.0" date="2008-03-25" description="released">
       <action dev="thorsten" type="fix">
         The paginator when used with spring has thrown errors since the service()
         method never got called. Adding workaround to use the paginator with spring.
