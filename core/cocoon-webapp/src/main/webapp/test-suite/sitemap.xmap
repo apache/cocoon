@@ -16,50 +16,41 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id$ -->
-
+<!--
+  - $Id$
+  -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-<!-- =========================== Components ================================ -->
+  <!-- =========================== Views =================================== -->
 
- <map:components>
-  <map:generators default="file"/>
-  <map:transformers default="xslt"/>
-  <map:readers default="resource"/>
-  <map:serializers default="html"/>
-  <map:matchers default="wildcard"/>
-  <map:selectors default="browser"/>
- </map:components>
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
 
-<!-- =========================== Views =================================== -->
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
 
- <map:views>
-  <map:view name="content" from-label="content">
-   <map:serialize type="xml"/>
-  </map:view>
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
 
-  <map:view from-label="content" name="pretty-content">
-    <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-    <map:serialize type="html"/>
-  </map:view>
+  <!-- =========================== Pipelines ================================= -->
 
-  <map:view name="links" from-position="last">
-   <map:serialize type="links"/>
-  </map:view>
- </map:views>
+  <map:pipelines>
+    <map:pipeline>
 
-<!-- =========================== Pipelines ================================= -->
-
- <map:pipelines>
-  <map:pipeline>
-
-   <map:match pattern="static-site/**.html">
-     <map:generate src="xdocs/{1}.xml"/>
-     <map:transform src="stylesheets/xdoc2html.xslt">
-      <map:parameter name="contextPath" value="{request:contextPath}"/>
-     </map:transform>
-     <map:serialize type="html"/>
-   </map:match>
-   </map:pipeline>
- </map:pipelines>
+      <map:match pattern="static-site/**.html">
+        <map:generate src="xdocs/{1}.xml"/>
+        <map:transform src="stylesheets/xdoc2html.xslt">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize type="html"/>
+      </map:match>
+      
+    </map:pipeline>
+  </map:pipelines>
 </map:sitemap>
