@@ -53,7 +53,7 @@ public class BeanMap
     implements Map, BeanFactoryAware {
 
     /** The real map. */
-    protected Map beanMap = new HashMap();
+    protected final Map beanMap = new HashMap();
 
     /** Is the map initialized? */
     protected boolean initialized = false;

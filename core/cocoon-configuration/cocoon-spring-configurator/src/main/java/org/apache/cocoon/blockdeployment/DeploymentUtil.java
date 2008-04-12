@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.spring.configurator.impl;
+package org.apache.cocoon.blockdeployment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,6 +25,7 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -46,23 +47,25 @@ public abstract class DeploymentUtil {
     protected static final String BLOCK_RESOURCES_PATH = "COB-INF";
 
     /**
-     * Deploy all files with a given prefix from a jar file to a directory
-     * in the file system.
-     * @param jarFile      The jar file containing the resources.
-     * @param prefix       The common prefix for the files.
-     * @param destination  The destination directory.
+     * Deploy all files with a given prefix from a jar file to a directory in the file system.
+     *
+     * @param jarFile
+     *            The jar file containing the resources.
+     * @param prefix
+     *            The common prefix for the files.
+     * @param destination
+     *            The destination directory.
      * @throws IOException
      */
-    public static void deploy(JarFile jarFile, String prefix, String destination)
-    throws IOException {
-        if ( logger.isDebugEnabled() ) {
+    public static void deploy(JarFile jarFile, String prefix, String destination) throws IOException {
+        if (logger.isDebugEnabled()) {
             logger.debug("Deploying jar " + jarFile + " to " + destination);
         }
-        // FIXME - We should check if a deploy is required
+        // FIXME - We should check if a deployment is required
         final Enumeration entries = jarFile.entries();
         while (entries.hasMoreElements()) {
-            final ZipEntry entry = (ZipEntry)entries.nextElement();
-            if ( !entry.isDirectory() && entry.getName().startsWith(prefix) ) {
+            final ZipEntry entry = (ZipEntry) entries.nextElement();
+            if (!entry.isDirectory() && entry.getName().startsWith(prefix)) {
                 final String fileName = destination + entry.getName().substring(prefix.length());
                 final File out = new File(fileName);
                 // create directory
@@ -86,12 +89,10 @@ public abstract class DeploymentUtil {
         }
     }
 
-    protected static void deployBlockResources(String relativeDirectory,
-                                               String destinationDirectory,
-                                               Map    blockContexts)
-    throws IOException {
+    protected static void deployBlockResources(String relativeDirectory, String destinationDirectory, Map blockContexts)
+            throws IOException {
         final Enumeration jarUrls = DeploymentUtil.class.getClassLoader().getResources(BLOCK_RESOURCES_PATH);
-        while ( jarUrls.hasMoreElements() ) {
+        while (jarUrls.hasMoreElements()) {
             final URL resourceUrl = (URL) jarUrls.nextElement();
 
             String url = resourceUrl.toExternalForm();
@@ -113,7 +114,7 @@ public abstract class DeploymentUtil {
                 int pos = url.indexOf('!');
                 url = url.substring(0, pos + 2); // +2 as we include "!/"
 
-                //Included because of Weblogic 9.2 classloader behaviour
+                // Included because of Weblogic 9.2 classloader behaviour
                 if ("zip".equals(resourceUrl.getProtocol())) {
                     url = url.replaceAll("zip:", "jar:file:");
                 }
@@ -146,32 +147,35 @@ public abstract class DeploymentUtil {
         }
     }
 
-    public static Map deployBlockArtifacts(String destinationDirectory)
-    throws IOException {
-        if ( destinationDirectory == null ) {
-            throw new IllegalArgumentException("Destination must not be null.");
+    public static Map deployBlockArtifacts(String destinationDirectory) throws IOException {
+        if (destinationDirectory == null) {
+            throw new IllegalArgumentException("Destination directory must not be null.");
         }
         final Map blockContexts = new HashMap();
         // deploy all artifacts containing block resources
         deployBlockResources("blocks", destinationDirectory, blockContexts);
+
+        for (Iterator it = blockContexts.keySet().iterator(); it.hasNext();) {
+            String name = (String) it.next();
+        }
+
         return blockContexts;
     }
 
-    public static void deployJarResources(String pattern, String destinationDirectory)
-    throws IOException {
+    public static void deployJarResources(String pattern, String destinationDirectory) throws IOException {
         final Enumeration jarUrls = DeploymentUtil.class.getClassLoader().getResources(pattern);
-        while ( jarUrls.hasMoreElements() ) {
-            final URL resourceUrl = (URL)jarUrls.nextElement();
+        while (jarUrls.hasMoreElements()) {
+            final URL resourceUrl = (URL) jarUrls.nextElement();
 
             String url = resourceUrl.toExternalForm();
             // we only handle jars!
-            if ( "jar".equals(resourceUrl.getProtocol()) ) {
+            if ("jar".equals(resourceUrl.getProtocol())) {
                 // if this is a jar url, it has this form: "jar:{url-to-jar}!/{resource-path}"
                 // to open the jar, we can simply remove everything after "!/"
                 int pos = url.indexOf('!');
-                url = url.substring(0, pos+2); // +2 as we include "!/"
+                url = url.substring(0, pos + 2); // +2 as we include "!/"
                 final URL jarUrl = new URL(url);
-                final JarURLConnection connection = (JarURLConnection)jarUrl.openConnection();
+                final JarURLConnection connection = (JarURLConnection) jarUrl.openConnection();
                 final JarFile jarFile = connection.getJarFile();
                 deploy(jarFile, pattern, destinationDirectory);
             }
