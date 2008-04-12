@@ -45,6 +45,9 @@ public class DynamicURLStreamHandlerFactory extends ParentAwareURLStreamHandlerF
      */
     protected URLStreamHandler create(String protocol) {
         ParentAwareURLStreamHandlerFactory factory = (ParentAwareURLStreamHandlerFactory)FACTORY.get();
+        if (factory == null) {
+            return null;
+        }
         return factory.createURLStreamHandler(protocol);
     }
 }

@@ -16,9 +16,6 @@
  */
 package org.apache.cocoon.servletservice.spring;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -33,9 +30,6 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.cocoon.servletservice.Mountable;
 import org.apache.cocoon.servletservice.ServletServiceContext;
-import org.apache.cocoon.servletservice.URLStreamFactoryInstaller;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.DefaultIntroductionAdvisor;
 import org.springframework.aop.support.DelegatingIntroductionInterceptor;
@@ -96,33 +90,10 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
             this.parentContainer = WebApplicationContextUtils.getRequiredWebApplicationContext(this.servletContext);
         }
 
-        String contextPath = this.contextPath;
+        // set the context path
+        this.servletServiceContext.setContextPath(this.contextPath);
 
-        //FIXME: I'm not sure if there is any better place for this code (GK)
-        //-----------------------------------------------------
-        // hack for getting a file protocol or other protocols that can be used as context
-        // path in the getResource method in the servlet context
-        if (!(contextPath.startsWith("file:") || contextPath.startsWith("/") || contextPath.indexOf(':') == -1)) {
-            Source source = null;
-            try {
-                URL url = new URL(contextPath);
-                source = (Source)url.getContent(new Class[] {Source.class});
-                contextPath = source.getURI();
-                //FIXME: obtained source is *NOT* released!!!
-            } catch (IOException e) {
-                throw new MalformedURLException("Could not resolve " + contextPath + " due to " + e);
-            }
-        }
-        //----------------------------------------------------
-
-
-        if (contextPath.length() != 0 && contextPath.charAt(0) != '/' && !contextPath.startsWith("file:")) {
-            throw new MalformedURLException("The contextPath must be empty or start with '/' " +
-                                            contextPath);
-        }
-
-        this.servletServiceContext.setContextPath(contextPath);
-
+        // create servlet-service specific Spring web application context
         GenericWebApplicationContext container = new GenericWebApplicationContext();
         container.setParent(this.parentContainer);
         container.setServletContext(this.servletServiceContext);
@@ -150,7 +121,7 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
                     }
                 };
 
-        // create and initialize the embeded servlet
+        // create and initialize the embedded servlet
         this.embeddedServlet.init(blockServletConfig);
         this.servletServiceContext.setServlet(this.embeddedServlet);
     }
@@ -224,10 +195,6 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
 
     public void setServiceName(String name) {
         this.serviceName = name;
-    }
-    
-    public void setURLHandlerFactoryInstaller(URLStreamFactoryInstaller installer ) {
-        //we don't need this dependency
     }
 
     public Object getObject() throws Exception {

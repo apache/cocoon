@@ -60,10 +60,10 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     private Servlet servlet;
     private String mountPath;
     private String contextPath;
+    private URL contextPathURL;
     private Map properties;
     private Map connections;
     private Map connectionServiceNames;
-
     private String serviceName;
 
     /*
@@ -97,14 +97,19 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     }
 
     public URL getResource(String path) throws MalformedURLException {
-        // HACK: allow file:/ URLs for reloading of sitemaps during development
-        if (this.contextPath.startsWith("file:")) {
-            return new URL("file", null, this.contextPath.substring("file:".length()) + path);
+        if (path == null || !path.startsWith("/")) {
+            throw new MalformedURLException("The path must begin with a '/' and is interpreted "
+                    + "as relative to the current context root.");
         }
 
-        // prefix the path with the servlet context resolve and resolve in the embedding
-        // servlet context
-        return super.getResource(this.contextPath + path);
+        // lazy initialization of the base URL
+        synchronized (this) {
+            if (this.contextPathURL == null) {
+                this.contextPathURL = new URL(this.contextPath);
+            }
+        }
+
+        return new URL(this.contextPathURL, path.substring(1));
     }
 
     public String getRealPath(String path) {
@@ -348,7 +353,15 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
      * @param contextPath
      */
     public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
+        if (contextPath == null) {
+            throw new IllegalArgumentException("Context path must not be null.");
+        }
+
+        if (contextPath.endsWith("/")) {
+            this.contextPath = contextPath;
+        } else {
+            this.contextPath = contextPath + "/";
+        }
     }
 
     /**
@@ -471,8 +484,8 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                 NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
                 if (status == HttpServletResponse.SC_NOT_FOUND && _super != null) {
                     //if servlet returned NOT_FOUND (404) and has super servlet declared let's reset everything and ask the super servlet
-                    
-                    //wrapping object resets underlying response as well 
+
+                    //wrapping object resets underlying response as well
                     wrappedResponse.resetBufferedResponse();
                     //here we don't need to pass wrappedResponse object because it's not our concern to buffer response anymore
                     //this avoids many overlapping buffers
