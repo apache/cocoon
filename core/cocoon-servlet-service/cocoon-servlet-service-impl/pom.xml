@@ -55,6 +55,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
+      <version>1.0.3-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
