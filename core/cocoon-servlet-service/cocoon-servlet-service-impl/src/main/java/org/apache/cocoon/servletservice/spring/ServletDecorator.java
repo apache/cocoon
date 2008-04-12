@@ -79,9 +79,6 @@ public class ServletDecorator implements BeanDefinitionDecorator {
                         .rootBeanDefinition(ServletFactoryBean.class);
         servletFactoryDefBuilder.setSource(ctx.extractSource(source));
         servletFactoryDefBuilder.addPropertyReference("embeddedServlet", embeddedServletBeanName);
-        //FIXME: it's a dirty hack here, this dependency is added in order to assure that URLHandlerFactory is installed before
-        //ServletFactoryBean is used.
-        servletFactoryDefBuilder.addPropertyReference("URLHandlerFactoryInstaller", "org.apache.cocoon.servletservice.URLStreamFactoryInstaller");
         servletFactoryDefBuilder.setInitMethodName("init");
         servletFactoryDefBuilder.setDestroyMethodName("destroy");
         servletFactoryDefBuilder.addPropertyValue("serviceName", holder.getBeanName());

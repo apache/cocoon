@@ -29,15 +29,5 @@
                            type="javax.servlet.Servlet"
                            has-properties="mountPath"
                            key-property="mountPath"/>
-                           
-    <bean id="org.apache.cocoon.servletservice.URLStreamFactoryInstaller" class="org.apache.cocoon.servletservice.URLStreamFactoryInstaller"
-          scope="singleton" init-method="init">
-      <property name="globalSourceFactories">
-        <!-- only blockcontext and file protocols are supported by SSF -->
-        <map>
-            <entry key="file" value-ref="org.apache.excalibur.source.SourceFactory/file"/>
-            <entry key="blockcontext" value-ref="org.apache.excalibur.source.SourceFactory/blockcontext"/>
-        </map>
-      </property>
-    </bean>
+
 </beans>
