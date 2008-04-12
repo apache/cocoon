@@ -1964,6 +1964,16 @@
           </exclusion>
         </exclusions>
       </dependency>
+	    <dependency>
+	      <groupId>org.aspectj</groupId>
+	      <artifactId>aspectjrt</artifactId>
+	      <version>1.5.4</version>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.aspectj</groupId>
+	      <artifactId>aspectjweaver</artifactId>
+	      <version>1.5.4</version>
+	    </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-beans</artifactId>
@@ -2014,7 +2024,7 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-tx</artifactId>
         <version>2.5.2</version>
-      </dependency>      
+      </dependency>
       <dependency>
         <groupId>stax</groupId>
         <artifactId>stax-api</artifactId>
@@ -2290,7 +2300,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-configuration-api</artifactId>
-        <version>1.0.3-SNAPSHOT</version>
+        <version>1.0.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2770,12 +2780,12 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-servlet-service-components</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-servlet-service-impl</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2837,7 +2847,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-spring-configurator</artifactId>
-        <version>1.0.3-SNAPSHOT</version>
+        <version>1.0.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -3276,7 +3286,7 @@
     <docs.m.maven-plugin.version>1.0</docs.m.maven-plugin.version>
     <docs.m.maven-plugin.relPath>2.2/maven-plugins/maven-plugin/${docs.m.maven-plugin.version}/</docs.m.maven-plugin.relPath>
     <docs.m.it-fw.version>1.0</docs.m.it-fw.version>
-    <docs.m.it-fw.relPath>2.2/maven-plugins/it-fw/${docs.m.it-fw.version}/</docs.m.it-fw.relPath>    
+    <docs.m.it-fw.relPath>2.2/maven-plugins/it-fw/${docs.m.it-fw.version}/</docs.m.it-fw.relPath>
   </properties>
 
   <profiles>
@@ -3540,7 +3550,7 @@
                   <collection>
                     <name>cdocs-it-fw</name>
                     <path>${docs.m.it-fw.relPath}</path>
-                  </collection>                  
+                  </collection>
                 </collections>
                 <siteXmlContent> &lt;project&gt; &lt;skin&gt;
                   &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
