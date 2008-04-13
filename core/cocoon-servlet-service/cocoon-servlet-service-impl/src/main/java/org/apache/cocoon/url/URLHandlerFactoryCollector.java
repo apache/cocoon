@@ -47,7 +47,7 @@ public class URLHandlerFactoryCollector {
 
             return proceedingJoinPoint.proceed();
         } finally {
-            for (Iterator i = this.urlHandlerFactories.values().iterator(); i.hasNext();) {
+            for (Iterator i = this.urlHandlerFactories.values().iterator(); i.hasNext(); i.next()) {
                 DynamicURLStreamHandlerFactory.pop();
             }
         }
