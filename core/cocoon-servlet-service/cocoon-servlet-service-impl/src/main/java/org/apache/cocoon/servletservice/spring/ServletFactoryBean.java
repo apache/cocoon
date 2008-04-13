@@ -211,7 +211,9 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
 
     public Class getObjectType() {
         if (this.embeddedServlet == null) {
-            return null;
+            //if embeddedServlet is null we don't know exactly what ObjectType this Factory will return but at least
+            //we are sure it is a class implementing Servlet interface so it's better to return it instead of null
+            return Servlet.class;
         }
 
         return this.embeddedServlet != null ? this.embeddedServlet.getClass() : null;
