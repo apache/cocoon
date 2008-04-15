@@ -24,7 +24,8 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.spring.configurator.BlockResourcesHolder;
+import org.apache.cocoon.blockdeployment.BlockDeploymentServletContextListener;
+import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -34,45 +35,46 @@ import org.apache.excalibur.source.SourceResolver;
 /**
  * Create a <code>BlockContextSource</code> that makes the resources of a block available.
  * The form of the URL is blockcontext:/blockname/path.
- * 
+ *
  * @version $Id$
  */
 public class BlockContextSourceFactory extends AbstractLogEnabled
                                        implements SourceFactory, Serviceable, ThreadSafe {
-    
+
     private ServiceManager serviceManager;
 
-    private BlockResourcesHolder blockResourcesHolder;
+    private Map blockContexts;
 
     /**
      * @see Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aServiceManager) throws ServiceException {
         this.serviceManager = aServiceManager;
-        this.blockResourcesHolder = (BlockResourcesHolder) this.serviceManager.lookup(BlockResourcesHolder.class.getName());
     }
 
     /**
      * @see SourceFactory#getSource(java.lang.String, java.util.Map)
      */
     public Source getSource(String location, Map parameters) throws IOException {
-        Map blockContexts = this.blockResourcesHolder.getBlockContexts();
-
+        if(this.blockContexts == null) {
+            this.blockContexts = (Map) WebAppContextUtils.getCurrentWebApplicationContext().getServletContext()
+            .getAttribute(BlockDeploymentServletContextListener.BLOCK_CONTEXT_MAP);
+        }
         // the root "directory" of the blocks
         if (location.endsWith(":/")) {
-            return new BlockContextSource(location, blockContexts, this.serviceManager);
+            return new BlockContextSource(location, this.blockContexts, this.serviceManager);
         }
-        
+
         // Remove the protocol and the first '/'
         int pos = location.indexOf(":/");
         String path = location.substring(pos+2);
-        
+
         pos = path.indexOf('/');
         if (pos != -1) {
             // extract the block name and get the block context path
             String blockName = path.substring(0, pos);
             path = path.substring(pos);
-            String blockContext = (String) blockContexts.get(blockName);
+            String blockContext = (String) this.blockContexts.get(blockName);
             if (blockContext == null) {
                 throw new MalformedURLException("Unknown block name " + blockName +
                                                 " in block context uri " + location);
