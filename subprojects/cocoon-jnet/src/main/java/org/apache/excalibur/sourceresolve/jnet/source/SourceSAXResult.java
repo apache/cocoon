@@ -40,7 +40,6 @@ public class SourceSAXResult extends SAXResult {
         this.xmlizable = x;
     }
 
-    @Override
     public void setHandler(ContentHandler handler) {
         if (!this.closed) {
             try {

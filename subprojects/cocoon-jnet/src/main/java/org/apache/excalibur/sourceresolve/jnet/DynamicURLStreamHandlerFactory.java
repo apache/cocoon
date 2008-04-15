@@ -18,12 +18,13 @@ package org.apache.excalibur.sourceresolve.jnet;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class DynamicURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
-    private static final ThreadLocal<List<URLStreamHandlerFactory>> FACTORIES = new InheritableThreadLocal<List<URLStreamHandlerFactory>>();
+    private static final ThreadLocal FACTORIES = new InheritableThreadLocal();
 
     public static void pop() {
         getList().remove(0);
@@ -33,11 +34,11 @@ public class DynamicURLStreamHandlerFactory implements URLStreamHandlerFactory {
         getList().add(0, factory);
     }
 
-    private static List<URLStreamHandlerFactory> getList() {
-        List<URLStreamHandlerFactory> list = FACTORIES.get();
+    private static List getList() {
+        List list = (List) FACTORIES.get();
 
         if (list == null) {
-            list = new LinkedList<URLStreamHandlerFactory>();
+            list = new LinkedList();
             FACTORIES.set(list);
         }
 
@@ -46,16 +47,14 @@ public class DynamicURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)
      */
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        System.out.println("DynamicURLStreamHandlerFactory.createURLStreamHandler(" + protocol + ")");
-        List<URLStreamHandlerFactory> list = getList();
+        List list = getList();
 
-        for (URLStreamHandlerFactory urlStreamHandlerFactory : list) {
-            System.out.println("DynamicURLStreamHandlerFactory calling " + urlStreamHandlerFactory);
-            URLStreamHandler handler = urlStreamHandlerFactory.createURLStreamHandler(protocol);
+        for (Iterator i = list.iterator(); i.hasNext();) {
+            URLStreamHandler handler = ((URLStreamHandlerFactory)i.next()).createURLStreamHandler(protocol);
 
             if (handler != null) {
                 return handler;

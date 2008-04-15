@@ -21,7 +21,7 @@ import java.util.Map;
 
 public abstract class SourceFactoriesManager {
 
-    protected static final ThreadLocal<CompositeMap> FACTORIES = new InheritableThreadLocal<CompositeMap>();
+    protected static final ThreadLocal FACTORIES = new InheritableThreadLocal();
 
     protected static Map GLOBAL_FACTORIES;
 
@@ -31,7 +31,7 @@ public abstract class SourceFactoriesManager {
 
     public static void pushFactories(Map factories) {
         // no need to synchronize as we use a thread local
-        CompositeMap factoryMap = FACTORIES.get();
+        CompositeMap factoryMap = (CompositeMap) FACTORIES.get();
         if (factoryMap == null) {
             factoryMap = new CompositeMap();
             FACTORIES.set(factoryMap);
@@ -41,7 +41,7 @@ public abstract class SourceFactoriesManager {
 
     public static void popFactories() {
         // no need to synchronize as we use a thread local
-        CompositeMap factoryMap = FACTORIES.get();
+        CompositeMap factoryMap = (CompositeMap) FACTORIES.get();
         if (factoryMap != null) {
             factoryMap.popMap();
             if (factoryMap.getMapCount() == 0) {
@@ -53,7 +53,7 @@ public abstract class SourceFactoriesManager {
     }
 
     public static synchronized Map getCurrentFactories() {
-        Map factories = FACTORIES.get();
+        Map factories = (Map) FACTORIES.get();
         if (factories == null) {
             factories = GLOBAL_FACTORIES;
             if (factories == null) {

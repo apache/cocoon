@@ -52,7 +52,8 @@ public class URLStreamHandlerFactoryInstaller {
         // let's use reflection to get the field holding the factory
         final Field[] fields = URL.class.getDeclaredFields();
 
-        for (Field current : fields) {
+        for (int i = 0; i < fields.length; i++) {
+            Field current = fields[i];
             if (Modifier.isStatic(current.getModifiers()) && current.getType().equals(URLStreamHandlerFactory.class)) {
                 current.setAccessible(true);
                 return current;
