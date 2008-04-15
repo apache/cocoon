@@ -51,7 +51,6 @@ public class SourceURLConnection extends URLConnection {
     /**
      * @see java.net.URLConnection#connect()
      */
-    @Override
     public void connect() throws IOException {
         if (this.source != null) {
             this.factory.release(this.source);
@@ -69,7 +68,6 @@ public class SourceURLConnection extends URLConnection {
     /**
      * @see java.net.URLConnection#getInputStream()
      */
-    @Override
     public InputStream getInputStream() throws IOException {
         if (!this.connected) {
             this.connect();
@@ -83,7 +81,6 @@ public class SourceURLConnection extends URLConnection {
      * @see java.net.URLConnection#addRequestProperty(java.lang.String,
      *      java.lang.String)
      */
-    @Override
     public void addRequestProperty(String arg0, String arg1) {
         this.setRequestProperty(arg0, arg1);
     }
@@ -91,7 +88,6 @@ public class SourceURLConnection extends URLConnection {
     /**
      * @see java.net.URLConnection#getRequestProperties()
      */
-    @Override
     public Map getRequestProperties() {
         if (this.connected) {
             throw new IllegalStateException("Already connected");
@@ -105,7 +101,6 @@ public class SourceURLConnection extends URLConnection {
     /**
      * @see java.net.URLConnection#getRequestProperty(java.lang.String)
      */
-    @Override
     public String getRequestProperty(String key) {
         if (this.connected) {
             throw new IllegalStateException("Already connected");
@@ -123,7 +118,6 @@ public class SourceURLConnection extends URLConnection {
      * @see java.net.URLConnection#setRequestProperty(java.lang.String,
      *      java.lang.String)
      */
-    @Override
     public void setRequestProperty(String key, String value) {
         if (this.connected) {
             throw new IllegalStateException("Already connected");
@@ -144,12 +138,10 @@ public class SourceURLConnection extends URLConnection {
     /**
      * @see java.net.URLConnection#getContentType()
      */
-    @Override
     public String getContentType() {
         return this.contentType;
     }
 
-    @Override
     public Object getContent(Class[] classes) throws IOException {
         if (!this.connected) {
             this.connect();

@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.excalibur.source.SourceFactory;
+import org.apache.excalibur.source.impl.FileSourceFactory;
 import org.apache.excalibur.sourceresolve.jnet.URLStreamHandlerFactoryInstaller;
 import org.apache.excalibur.sourceresolve.jnet.source.SourceFactoriesManager;
 import org.apache.excalibur.sourceresolve.jnet.source.SourceURLStreamHandlerFactory;
@@ -32,7 +32,7 @@ public class Test {
         try {
             URLStreamHandlerFactoryInstaller.setURLStreamHandlerFactory(new SourceURLStreamHandlerFactory());
             URLStreamHandlerFactoryInstaller.setURLStreamHandlerFactory(new SourceURLStreamHandlerFactory());
-            final Map<String, SourceFactory> factories = new HashMap<String, SourceFactory>();
+            final Map factories = new HashMap();
             factories.put("test", new FileSourceFactory());
             SourceFactoriesManager.setGlobalFactories(factories);
             final URL url = new URL("test:///F:/os/cocoon/trunk/pom.xml");
