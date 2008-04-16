@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.cocoon.url;
+package org.apache.cocoon.jnet;
 
 import java.net.URLStreamHandlerFactory;
 import java.util.Collections;
@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.excalibur.sourceresolve.jnet.DynamicURLStreamHandlerFactory;
-import org.apache.excalibur.sourceresolve.jnet.Installer;
+import org.apache.excalibur.sourceresolve.jnet.URLStreamHandlerFactoryInstaller;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 public class URLHandlerFactoryCollector {
@@ -36,7 +36,7 @@ public class URLHandlerFactoryCollector {
     public Object installURLHandlers(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         try {
             if (!this.urlStreamHandlerInstalled) {
-                Installer.setURLStreamHandlerFactory(new DynamicURLStreamHandlerFactory());
+                URLStreamHandlerFactoryInstaller.setURLStreamHandlerFactory(new DynamicURLStreamHandlerFactory());
                 this.urlStreamHandlerInstalled = true;
             }
 

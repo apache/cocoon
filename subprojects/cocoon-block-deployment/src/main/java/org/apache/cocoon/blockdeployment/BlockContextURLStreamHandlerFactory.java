@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.cocoon.url;
+package org.apache.cocoon.blockdeployment;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.apache.cocoon.blockdeployment.BlockDeploymentServletContextListener;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

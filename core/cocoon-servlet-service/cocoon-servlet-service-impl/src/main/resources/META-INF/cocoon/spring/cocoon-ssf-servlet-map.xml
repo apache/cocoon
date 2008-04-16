@@ -15,18 +15,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id$ -->
+<!-- $Id$ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:configurator="http://cocoon.apache.org/schema/configurator"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+                           http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
 
-    <!-- The context object of the current base call frame -->
-    <bean name="javax.servlet.ServletContext/baseframe"
-          class="org.apache.cocoon.servletservice.spring.BaseServletContextFactoryBean"
-          scope="call">
-        <aop:scoped-proxy proxy-target-class="false"/>
-    </bean>
+    <configurator:bean-map id="org.apache.cocoon.servletservice.spring.BlockServletMap" type="javax.servlet.Servlet"
+      has-properties="mountPath" key-property="mountPath" />
 
 </beans>

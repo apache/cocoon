@@ -21,27 +21,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:aop="http://www.springframework.org/schema/aop"
-  xmlns:configurator="http://cocoon.apache.org/schema/configurator"
   xsi:schemaLocation="
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-    http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd
     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-  <bean id="org.apache.cocoon.url.URLHandlerFactoryCollector" class="org.apache.cocoon.url.URLHandlerFactoryCollector">
-    <property name="urlHandlerFactories">
-      <configurator:bean-map type="java.net.URLStreamHandlerFactory" strip-prefix="true" />
-    </property>
-  </bean>
-
   <aop:config>
-    <aop:aspect id="installURL" ref="org.apache.cocoon.url.URLHandlerFactoryCollector">
+    <aop:aspect id="installURL" ref="org.apache.cocoon.jnet.URLHandlerFactoryCollector">
       <aop:pointcut id="servletServiceInvocation"
         expression="execution(* javax.servlet.Servlet.service(..)) and bean(*/embedded)" />
-      <aop:pointcut id="servletInitialization"
-        expression="execution(* javax.servlet.Servlet.init(..)) and bean(*/embedded)" />
 
       <aop:around pointcut-ref="servletServiceInvocation" method="installURLHandlers" />
-      <aop:around pointcut-ref="servletInitialization" method="installURLHandlers" />
     </aop:aspect>
   </aop:config>
 
