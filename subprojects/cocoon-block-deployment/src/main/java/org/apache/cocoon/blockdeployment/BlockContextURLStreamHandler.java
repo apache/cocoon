@@ -16,13 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.cocoon.url;
+package org.apache.cocoon.blockdeployment;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.Map;
+
 
 public class BlockContextURLStreamHandler extends URLStreamHandler {
 

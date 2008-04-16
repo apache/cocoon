@@ -20,8 +20,15 @@
 <!-- $Id$ -->
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+  xmlns:configurator="http://cocoon.apache.org/schema/configurator"
+  xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
 
-  <bean id="org.apache.cocoon.url.BlockContextURLStreamHandlerFactory" class="org.apache.cocoon.url.BlockContextURLStreamHandlerFactory" />
+  <bean id="org.apache.cocoon.jnet.URLHandlerFactoryCollector" class="org.apache.cocoon.jnet.URLHandlerFactoryCollector">
+    <property name="urlHandlerFactories">
+      <configurator:bean-map type="java.net.URLStreamHandlerFactory" strip-prefix="true" />
+    </property>
+  </bean>
 
 </beans>
