@@ -91,15 +91,20 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
      */
     protected ServiceManager manager = null;
 
+    /** The used lucene analyzer */
     protected Analyzer analyzer;
-//    private String analyzerClassnameDefault = ANALYZER_CLASSNAME_DEFAULT;
+
+    // private String analyzerClassnameDefault = ANALYZER_CLASSNAME_DEFAULT;
+
+    /** The Lucene Merge Factor */
     private int mergeFactor = MERGE_FACTOR_DEFAULT;
 
 
     /**
-     *Sets the analyzer attribute of the SimpleLuceneCocoonIndexerImpl object
+     * Sets the analyzer attribute of the SimpleLuceneCocoonIndexerImpl object
      *
-     * @param  analyzer  The new analyzer value
+     * @param analyzer
+     *            The new analyzer value
      */
     public void setAnalyzer(Analyzer analyzer) {
         this.analyzer = analyzer;
@@ -155,15 +160,18 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
     /**
      * index content of base_url, index content of links from base_url.
      *
-     * @param  index                    the lucene store to write the index to
-     * @param  create                   if true create, or overwrite existing index, else
-     *   update existing index.
-     * @param  base_url                 index content of base_url, and crawl through all its
-     *   links recursivly.
-     * @exception  ProcessingException  is thrown if indexing fails
+     * @param index
+     *            the lucene store to write the index to
+     * @param create
+     *            if true create, or overwrite existing index, else update
+     *            existing index.
+     * @param base_url
+     *            index content of base_url, and crawl through all its links
+     *            recursivly.
+     * @exception ProcessingException
+     *                is thrown if indexing fails
      */
-    public void index(Directory index, boolean create, URL base_url)
-             throws ProcessingException {
+    public void index(Directory index, boolean create, URL base_url) throws ProcessingException {
 
         IndexWriter writer = null;
         LuceneXMLIndexer lxi = null;
@@ -231,7 +239,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
         }
     }
 
-
     /**
      * A document iterator deleting "old" documents form the index.
      * 
@@ -244,12 +251,13 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
 
         // document id iterator
 
-
         /**
-         *Constructor for the DocumentDeletableIterator object
+         * Constructor for the DocumentDeletableIterator object
          *
-         * @param  directory        Description of Parameter
-         * @exception  IOException  Description of Exception
+         * @param directory
+         *            Description of Parameter
+         * @exception IOException
+         *                Description of Exception
          */
         public DocumentDeletableIterator(Directory directory) throws IOException {
             reader = IndexReader.open(directory);
@@ -258,11 +266,11 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
             // init uid iterator
         }
 
-
         /**
-         *Description of the Method
+         * Description of the Method
          *
-         * @exception  IOException  Description of Exception
+         * @exception IOException
+         *                Description of Exception
          */
         public void deleteAllStaleDocuments() throws IOException {
             while (uidIter.term() != null && uidIter.term().field().equals("uid")) {
@@ -271,12 +279,13 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
             }
         }
 
-
         /**
-         *Description of the Method
+         * Description of the Method
          *
-         * @param  uid              Description of Parameter
-         * @exception  IOException  Description of Exception
+         * @param uid
+         *            Description of Parameter
+         * @exception IOException
+         *                Description of Exception
          */
         public void deleteModifiedDocuments(String uid) throws IOException {
             while (documentHasBeenModified(uidIter.term(), uid)) {
@@ -288,11 +297,11 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
             }
         }
 
-
         /**
-         *Description of the Method
-         *
-         * @exception  Throwable  Description of Exception
+         * Description of the Method
+         * 
+         * @exception Throwable
+         *                Description of Exception
          */
         protected void finalize() throws Throwable {
             super.finalize();
@@ -308,42 +317,41 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
             }
         }
 
-
         /**
-         *Description of the Method
+         * Description of the Method
          *
-         * @param  term  Description of Parameter
-         * @return       Description of the Returned Value
+         * @param term
+         *            Description of Parameter
+         * @return Description of the Returned Value
          */
         boolean documentIsDeletable(Term term) {
-            return term != null && term.field() == "uid";
+            return term != null && term.field().equals("uid");
         }
 
-
         /**
-         *Description of the Method
-         *
-         * @param  term  Description of Parameter
-         * @param  uid   Description of Parameter
-         * @return       Description of the Returned Value
+         * Description of the Method
+         * 
+         * @param term
+         *            Description of Parameter
+         * @param uid
+         *            Description of Parameter
+         * @return Description of the Returned Value
          */
         boolean documentHasBeenModified(Term term, String uid) {
-            return documentIsDeletable(term) &&
-                    term.text().compareTo(uid) < 0;
+            return documentIsDeletable(term) && term.text().compareTo(uid) < 0;
         }
 
-
         /**
-         *Description of the Method
-         *
-         * @param  term  Description of Parameter
-         * @param  uid   Description of Parameter
-         * @return       Description of the Returned Value
+         * Description of the Method
+         * 
+         * @param term
+         *            Description of Parameter
+         * @param uid
+         *            Description of Parameter
+         * @return Description of the Returned Value
          */
         boolean documentHasNotBeenModified(Term term, String uid) {
-            return documentIsDeletable(term) &&
-                    term.text().compareTo(uid) == 0;
+            return documentIsDeletable(term) && term.text().compareTo(uid) == 0;
         }
     }
 }
-
