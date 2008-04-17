@@ -71,23 +71,23 @@ public class MultipartHttpServletRequest extends HttpServletRequestWrapper imple
             result = values.get(name);
 
             if (result instanceof Vector) {
-                if (((Vector) result).size() == 1) {
-                    return ((Vector) result).elementAt(0);
+                Vector v = (Vector) result;
+				if (v.size() == 1) {
+                    return v.elementAt(0);
                 }
                 return result;
             }
         } else {
             String[] array = this.getRequest().getParameterValues(name);
-            Vector vec = new Vector();
 
             if (array != null) {
-                for (int i = 0; i < array.length; i++) {
-                    vec.addElement(array[i]);
-                }
-
-                if (vec.size() == 1) {
-                    result = vec.elementAt(0);
-                } else {
+            	if (array.length == 1) {
+            		result = array[0];
+            	} else {
+	                Vector vec = new Vector();
+	                for (int i = 0; i < array.length; i++) {
+	                    vec.addElement(array[i]);
+	                }
                     result = vec;
                 }
             }
@@ -98,7 +98,6 @@ public class MultipartHttpServletRequest extends HttpServletRequestWrapper imple
 
     /**
      * Method getParameterNames
-     *
      */
     public Enumeration getParameterNames() {
         if (values != null) {
@@ -111,49 +110,43 @@ public class MultipartHttpServletRequest extends HttpServletRequestWrapper imple
      * Method getParameter
      *
      * @param name
-     *
      */
     public String getParameter(String name) {
-        if (values != null) {
-            Object value = get(name);
-            String result = null;
-    
-            if (value != null) {
-                if (value instanceof Vector) {
-                    value = ((Vector) value).elementAt(0);
-                }
-    
-                result = value.toString();
-            }
-            return result;
-        } else {
-            return super.getParameter(name);
+        String result = null;
+
+        Object value = get(name);
+        if (value instanceof Vector && !((Vector)value).isEmpty()) {
+            value = ((Vector) value).elementAt(0);
         }
+
+        if (value != null) {
+            result = value.toString();
+        }
+
+        return result;
     }
 
     /**
      * Method getParameterValues
      *
      * @param name
-     *
      */
     public String[] getParameterValues(String name) {
+    	// null check and so else path are just optimizations
         if (values != null) {
             Object value = get(name);
 
-            if (value != null) {
-                if (value instanceof Vector) {
-                    String[] results = new String[((Vector)value).size()];
-                    for (int i=0;i<((Vector)value).size();i++) {
-                        results[i] = ((Vector)value).elementAt(i).toString();
-                    }
-                    return results;
-
+            if (value == null) {
+            	return null;
+            } else if (value instanceof Vector) {
+                Vector v = (Vector)value;
+				String[] results = new String[v.size()];
+                for (int i = 0; i < v.size(); i++) {
+                    results[i] = v.elementAt(i).toString();
                 }
-                return new String[]{value.toString()};
+                return results;
             }
-
-            return null;
+            return new String[]{value.toString()};
         }
         return this.getRequest().getParameterValues(name);
     }
