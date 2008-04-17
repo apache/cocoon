@@ -76,7 +76,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method get
      *
      * @param name
-     *
      */
     public Object get(String name) {
         Object result = null;
@@ -85,24 +84,23 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
             result = values.get(name);
 
             if (result instanceof Vector) {
-                if (((Vector) result).size() == 1) {
-                    return ((Vector) result).elementAt(0);
-                } else {
-                    return result;
+                Vector v = (Vector) result;
+				if (v.size() == 1) {
+                    return v.elementAt(0);
                 }
+				return result;
             }
         } else {
             String[] array = request.getParameterValues(name);
-            Vector vec = new Vector();
 
             if (array != null) {
-                for (int i = 0; i < array.length; i++) {
-                    vec.addElement(array[i]);
-                }
-
-                if (vec.size() == 1) {
-                    result = vec.elementAt(0);
-                } else {
+            	if (array.length == 1) {
+            		result = array[0];
+            	} else {
+	                Vector vec = new Vector();
+	                for (int i = 0; i < array.length; i++) {
+	                    vec.addElement(array[i]);
+	                }
                     result = vec;
                 }
             }
@@ -113,7 +111,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getParameterNames
-     *
      */
     public Enumeration getParameterNames() {
         if (values != null) {
@@ -127,50 +124,44 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method getParameter
      *
      * @param name
-     *
      */
     public String getParameter(String name) {
-        if (values != null) {
-            Object value = get(name);
-            String result = null;
-    
-            if (value != null) {
-                if (value instanceof Vector) {
-                    value = ((Vector) value).elementAt(0);
-                }
-    
-                result = value.toString();
-            }
-            return result;
-        } else {
-            return this.request.getParameter(name);
+        String result = null;
+
+        Object value = get(name);
+        if (value instanceof Vector && !((Vector)value).isEmpty()) {
+            value = ((Vector) value).elementAt(0);
         }
+
+        if (value != null) {
+            result = value.toString();
+        }
+
+        return result;
     }
 
     /**
      * Method getParameterValues
      *
      * @param name
-     *
      */
     public String[] getParameterValues(String name) {
+    	// null check and so else path are just optimizations
         if (values != null) {
             Object value = get(name);
 
-            if (value != null) {
-                if (value instanceof Vector) {
-                    String[] results = new String[((Vector)value).size()];
-                    for (int i=0;i<((Vector)value).size();i++) {
-                        results[i] = ((Vector)value).elementAt(i).toString();
-                    }
-                    return results;
-
-                } else {
-                    return new String[]{value.toString()};
+            if (value == null) {
+                return null;
+            } else if (value instanceof Vector) {
+                Vector v = (Vector)value;
+				String[] results = new String[v.size()];
+                for (int i = 0; i < v.size(); i++) {
+                    results[i] = v.elementAt(i).toString();
                 }
+                return results;
+            } else {
+                return new String[]{value.toString()};
             }
-
-            return null;
         } else {
             return request.getParameterValues(name);
         }
@@ -180,7 +171,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method getAttribute
      *
      * @param name
-     *
      */
     public Object getAttribute(String name) {
         return request.getAttribute(name);
@@ -188,7 +178,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getAttributeNames
-     *
      */
     public Enumeration getAttributeNames() {
         return request.getAttributeNames();
@@ -196,7 +185,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getCharacterEncoding
-     *
      */
     public String getCharacterEncoding() {
         return request.getCharacterEncoding();
@@ -204,7 +192,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getContentLength
-     *
      */
     public int getContentLength() {
         return request.getContentLength();
@@ -212,7 +199,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getContentType
-     *
      */
     public String getContentType() {
         return request.getContentType();
@@ -220,7 +206,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getInputStream
-     *
      *
      * @throws IOException
      */
@@ -230,7 +215,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getProtocol
-     *
      */
     public String getProtocol() {
         return request.getProtocol();
@@ -238,7 +222,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getScheme
-     *
      */
     public String getScheme() {
         return request.getScheme();
@@ -246,7 +229,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getServerName
-     *
      */
     public String getServerName() {
         return request.getServerName();
@@ -254,7 +236,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getServerPort
-     *
      */
     public int getServerPort() {
         return request.getServerPort();
@@ -262,7 +243,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getReader
-     *
      *
      * @throws IOException
      */
@@ -272,7 +252,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getRemoteAddr
-     *
      */
     public String getRemoteAddr() {
         return request.getRemoteAddr();
@@ -280,7 +259,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getRemoteHost
-     *
      */
     public String getRemoteHost() {
         return request.getRemoteHost();
@@ -307,7 +285,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getLocale
-     *
      */
     public Locale getLocale() {
         return request.getLocale();
@@ -315,7 +292,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getLocales
-     *
      */
     public Enumeration getLocales() {
         return request.getLocales();
@@ -323,7 +299,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method isSecure
-     *
      */
     public boolean isSecure() {
         return request.isSecure();
@@ -333,7 +308,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method getRequestDispatcher
      *
      * @param path
-     *
      */
     public RequestDispatcher getRequestDispatcher(String path) {
         return request.getRequestDispatcher(path);
@@ -343,7 +317,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method getRealPath
      *
      * @param path
-     *
      */
     public String getRealPath(String path) {
         return request.getRealPath(path);
@@ -351,7 +324,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getAuthType
-     *
      */
     public String getAuthType() {
         return request.getAuthType();
@@ -359,7 +331,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getCookies
-     *
      */
     public Cookie[] getCookies() {
         return request.getCookies();
@@ -369,7 +340,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method getDateHeader
      *
      * @param name
-     *
      */
     public long getDateHeader(String name) {
         return request.getDateHeader(name);
@@ -379,7 +349,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method getHeader
      *
      * @param name
-     *
      */
     public String getHeader(String name) {
         return request.getHeader(name);
@@ -389,7 +358,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method getHeaders
      *
      * @param name
-     *
      */
     public Enumeration getHeaders(String name) {
         return request.getHeaders(name);
@@ -397,7 +365,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getHeaderNames
-     *
      */
     public Enumeration getHeaderNames() {
         return request.getHeaderNames();
@@ -407,7 +374,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method getIntHeader
      *
      * @param name
-     *
      */
     public int getIntHeader(String name) {
         return request.getIntHeader(name);
@@ -415,7 +381,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getMethod
-     *
      */
     public String getMethod() {
         return request.getMethod();
@@ -423,7 +388,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getPathInfo
-     *
      */
     public String getPathInfo() {
         return request.getPathInfo();
@@ -431,7 +395,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getPathTranslated
-     *
      */
     public String getPathTranslated() {
         return request.getPathTranslated();
@@ -439,7 +402,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getContextPath
-     *
      */
     public String getContextPath() {
         return request.getContextPath();
@@ -447,7 +409,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getQueryString
-     *
      */
     public String getQueryString() {
         return request.getQueryString();
@@ -455,7 +416,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getRemoteUser
-     *
      */
     public String getRemoteUser() {
         return request.getRemoteUser();
@@ -465,7 +425,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method isUserInRole
      *
      * @param role
-     *
      */
     public boolean isUserInRole(String role) {
         return request.isUserInRole(role);
@@ -473,7 +432,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getUserPrincipal
-     *
      */
     public Principal getUserPrincipal() {
         return request.getUserPrincipal();
@@ -481,7 +439,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getRequestedSessionId
-     *
      */
     public String getRequestedSessionId() {
         return request.getRequestedSessionId();
@@ -489,7 +446,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getRequestURI
-     *
      */
     public String getRequestURI() {
         return request.getRequestURI();
@@ -497,7 +453,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getServletPath
-     *
      */
     public String getServletPath() {
         return request.getServletPath();
@@ -507,7 +462,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * Method getSession
      *
      * @param create
-     *
      */
     public HttpSession getSession(boolean create) {
         return request.getSession(create);
@@ -515,7 +469,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method getSession
-     *
      */
     public HttpSession getSession() {
         return request.getSession();
@@ -523,7 +476,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method isRequestedSessionIdValid
-     *
      */
     public boolean isRequestedSessionIdValid() {
         return request.isRequestedSessionIdValid();
@@ -531,7 +483,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method isRequestedSessionIdFromCookie
-     *
      */
     public boolean isRequestedSessionIdFromCookie() {
         return request.isRequestedSessionIdFromCookie();
@@ -539,7 +490,6 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
     /**
      * Method isRequestedSessionIdFromURL
-     *
      */
     public boolean isRequestedSessionIdFromURL() {
         return request.isRequestedSessionIdFromURL();
