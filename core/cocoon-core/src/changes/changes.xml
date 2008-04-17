@@ -29,6 +29,11 @@
 
   <body>
     <release version="2.2.0" date="TBA" description="released">
+      <action dev="joerg" type="add">
+        Allow multiple file uploads of the same field name. If there are multiple file uploads Request.get(String) will
+        return a Vector. If there is only one file upload it will return the Part as it did before. This is now the same
+        behavior as for inline parts.
+      </action>
       <action dev="joerg" type="fix">
         Close streams properly after copying Parts (MultipartParser). Allow to access InputStream of PartInMemory
         multiple times.
