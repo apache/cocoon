@@ -324,14 +324,21 @@ public class MultipartParser {
             if ( out!=null ) out.close();
         }
 
-        String name = (String)headers.get("name");
+        String field = (String)headers.get("name");
+        Vector v = (Vector) this.parts.get(field);
+
+        if (v == null) {
+            v = new Vector();
+            this.parts.put(field, v);
+        }
+
         if (oversized) {
-            this.parts.put(name, new RejectedPart(headers, length, this.contentLength, this.maxUploadSize));
+            v.add(new RejectedPart(headers, length, this.contentLength, this.maxUploadSize));
         } else if (file == null) {
             byte[] bytes = ((ByteArrayOutputStream) out).toByteArray();
-            this.parts.put(name, new PartInMemory(headers, bytes));
+            v.add(new PartInMemory(headers, bytes));
         } else {
-            this.parts.put(name, new PartOnDisk(headers, file));
+            v.add(new PartOnDisk(headers, file));
         }
     }
 
