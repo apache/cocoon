@@ -177,7 +177,7 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled implements
          *                Description of Exception
          */
         public void deleteAllStaleDocuments() throws IOException {
-            while (uidIter.term() != null && uidIter.term().field() == "uid") {
+            while (uidIter.term() != null && uidIter.term().field().equals("uid")) {
                 reader.deleteDocuments(uidIter.term());
                 uidIter.next();
             }
@@ -229,7 +229,7 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled implements
          * @return Description of the Returned Value
          */
         boolean documentIsDeletable(Term term) {
-            return term != null && term.field() == "uid";
+            return term != null && term.field().equals("uid");
         }
 
         /**
