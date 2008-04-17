@@ -85,22 +85,22 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
 
             if (result instanceof Vector) {
                 Vector v = (Vector) result;
-				if (v.size() == 1) {
+                if (v.size() == 1) {
                     return v.elementAt(0);
                 }
-				return result;
+                return v;
             }
         } else {
             String[] array = request.getParameterValues(name);
 
             if (array != null) {
-            	if (array.length == 1) {
-            		result = array[0];
-            	} else {
-	                Vector vec = new Vector();
-	                for (int i = 0; i < array.length; i++) {
-	                    vec.addElement(array[i]);
-	                }
+                if (array.length == 1) {
+                    result = array[0];
+                } else {
+                    Vector vec = new Vector();
+                    for (int i = 0; i < array.length; i++) {
+                        vec.addElement(array[i]);
+                    }
                     result = vec;
                 }
             }
@@ -146,7 +146,7 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
      * @param name
      */
     public String[] getParameterValues(String name) {
-    	// null check and so else path are just optimizations
+        // null check and so else path are just optimizations
         if (values != null) {
             Object value = get(name);
 
@@ -154,7 +154,7 @@ public class MultipartHttpServletRequest implements HttpServletRequest {
                 return null;
             } else if (value instanceof Vector) {
                 Vector v = (Vector)value;
-				String[] results = new String[v.size()];
+                String[] results = new String[v.size()];
                 for (int i = 0; i < v.size(); i++) {
                     results[i] = v.elementAt(i).toString();
                 }
