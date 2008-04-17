@@ -182,11 +182,16 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="JH" type="add">
+      Core: Allow multiple file uploads of the same field name. If there are multiple file uploads Request.get(String)
+      will return a Vector. If there is only one file upload it will return the Part as it did before. This is now the
+      same behavior as for inline parts.
+    </action>
     <action dev="AG" type="update">
       Core: Update commons-lang to 2.4.
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-2186">
-      Forms: Suggest list .. initial value not being displayed.
+      Forms: Fix suggest list for which the initial value was not displayed.
     </action>
     <action dev="JH" type="fix">
       Core: Fix synchronization issues in ContinuationsManager implementation.
