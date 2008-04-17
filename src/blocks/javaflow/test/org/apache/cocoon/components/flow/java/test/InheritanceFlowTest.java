@@ -43,7 +43,7 @@ public class InheritanceFlowTest extends TestCase {
     public static void testSimpleContinuable() throws Exception {
         ContinuationClassLoader cl = new ContinuationClassLoader(Thread
                 .currentThread().getContextClassLoader());
-        Continuation continuation = new Continuation(null);
+        Continuation continuation = new Continuation("suspend", null);
         continuation.registerThread();
         Class clazz = cl.loadClass("org.apache.cocoon.components.flow.java.test.SimpleContinuable");
         Object object = clazz.newInstance();
@@ -58,7 +58,7 @@ public class InheritanceFlowTest extends TestCase {
     public static void testWrapperContinuable() throws Exception {
         ContinuationClassLoader cl = new ContinuationClassLoader(Thread
                 .currentThread().getContextClassLoader());
-        Continuation continuation = new Continuation(null);
+        Continuation continuation = new Continuation("test", null);
         continuation.registerThread();
         Class clazz = cl.loadClass("org.apache.cocoon.components.flow.java.test.WrapperContinuable");
         Object object = clazz.newInstance();
@@ -73,7 +73,7 @@ public class InheritanceFlowTest extends TestCase {
     public static void testExtendedContinuable() throws Exception {
         ContinuationClassLoader cl = new ContinuationClassLoader(Thread
                 .currentThread().getContextClassLoader());
-        Continuation continuation = new Continuation(null);
+        Continuation continuation = new Continuation("test", null);
         continuation.registerThread();
         Class clazz = cl.loadClass("org.apache.cocoon.components.flow.java.test.ExtendedContinuable");
         Object object = clazz.newInstance();

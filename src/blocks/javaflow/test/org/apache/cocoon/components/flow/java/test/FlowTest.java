@@ -91,7 +91,7 @@ public class FlowTest extends TestCase {
 
         Method method = clazz.getMethod("run", new Class[0]);
 
-        Continuation c = new Continuation(context);
+        Continuation c = new Continuation(method.getName(), context);
         assertTrue(!c.isRestoring());
         assertTrue(!c.isCapturing());
 
@@ -142,7 +142,7 @@ public class FlowTest extends TestCase {
 
         Method method = clazz.getMethod("testCatch", new Class[0]);
 
-        Continuation c = new Continuation(context);
+        Continuation c = new Continuation(method.getName(), context);
         assertTrue(!c.isRestoring());
         assertTrue(!c.isCapturing());
 
@@ -281,7 +281,7 @@ public class FlowTest extends TestCase {
 
         Method method = clazz.getMethod("testAbstract", new Class[0]);
 
-        Continuation c = new Continuation(context);
+        Continuation c = new Continuation(method.getName(), context);
         assertTrue(!c.isRestoring());
         assertTrue(!c.isCapturing());
 
@@ -307,7 +307,7 @@ public class FlowTest extends TestCase {
 
         Method method = clazz.getMethod("testDelegate", new Class[0]);
 
-        Continuation c = new Continuation(context);
+        Continuation c = new Continuation(method.getName(), context);
         assertTrue(!c.isRestoring());
         assertTrue(!c.isCapturing());
 
