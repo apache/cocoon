@@ -295,6 +295,14 @@ public abstract class PortletRequest implements Request {
         return this.getSession(true);
     }
 
+    public Session getCocoonSession(boolean create) {
+        return this.getSession(create);
+    }
+
+    public Session getCocoonSession() {
+        return this.getSession(true);
+    }
+
     public boolean isRequestedSessionIdValid() {
         return this.request.isRequestedSessionIdValid();
     }

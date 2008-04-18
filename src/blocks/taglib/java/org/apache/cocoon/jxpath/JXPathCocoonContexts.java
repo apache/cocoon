@@ -330,6 +330,14 @@ public final class JXPathCocoonContexts implements Component, Contextualizable, 
             return this.delegate.getSession();
         }
 
+        public Session getCocoonSession(boolean create) {
+            return this.getSession(create);
+        }
+
+        public Session getCocoonSession() {
+            return this.getSession(true);
+        }
+
         public boolean isRequestedSessionIdValid() {
             return this.delegate.isRequestedSessionIdValid();
         }
