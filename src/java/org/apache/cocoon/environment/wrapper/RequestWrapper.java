@@ -294,6 +294,14 @@ public final class RequestWrapper implements Request {
         return this.req.getSession();
     }
 
+    public Session getCocoonSession(boolean create) {
+        return this.getSession(create);
+    }
+
+    public Session getCocoonSession() {
+        return this.getSession(true);
+    }
+
     public boolean isRequestedSessionIdValid() {
         return this.req.isRequestedSessionIdValid();
     }

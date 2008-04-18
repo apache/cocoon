@@ -767,6 +767,26 @@ public interface Request {
 
      Session getSession();
 
+     /**
+      * In Cocoon 2.2 the org.apache.cocoon.environment.Session interface
+      * is deprecated, and the return type of getSession() changes to
+      * vanilla javax.servlet.HttpRequest.
+      * <p>
+      * For migrating from Cocoon 2.1 to 2.2, replace in your custom code
+      * all calls to getSession() by getCocoonSession().  That allows for
+      * a common codebase usable on both version.
+      *
+      * @see        #getSession()
+      */
+
+     Session getCocoonSession(boolean create);
+
+     /**
+      * @see        #getSession(boolean)
+      */
+
+     Session getCocoonSession();
+
     /**
      *
      * Checks whether the requested session ID is still valid.

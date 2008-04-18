@@ -182,6 +182,14 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="AN" type="add">
+      Core: In Cocoon 2.2 the org.apache.cocoon.environment.Session interface
+      is deprecated, and the return type of getSession() changes to
+      vanilla javax.servlet.HttpRequest.
+      For migrating from Cocoon 2.1 to 2.2, replace in your custom code
+      all calls to getSession() by getCocoonSession().  That allows for
+      a common codebase usable on both version.
+    </action>
     <action dev="JH" type="add">
       Core: Allow multiple file uploads of the same field name. If there are multiple file uploads Request.get(String)
       will return a Vector. If there is only one file upload it will return the Part as it did before. This is now the

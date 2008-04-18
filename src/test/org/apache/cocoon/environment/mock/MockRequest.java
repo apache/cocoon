@@ -296,6 +296,14 @@ public class MockRequest implements Request {
         return getSession(true);
     }
 
+    public Session getCocoonSession(boolean create) {
+        return this.getSession(create);
+    }
+
+    public Session getCocoonSession() {
+        return this.getSession(true);
+    }
+
     public boolean isRequestedSessionIdValid() {
         if (session != null) {
             try {

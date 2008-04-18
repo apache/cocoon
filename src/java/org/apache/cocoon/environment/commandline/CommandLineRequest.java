@@ -273,6 +273,14 @@ public class CommandLineRequest implements Request {
         return CommandLineSession.getSession(create);
     }
 
+    public Session getCocoonSession(boolean create) {
+        return this.getSession(create);
+    }
+
+    public Session getCocoonSession() {
+        return this.getSession(true);
+    }
+
     /**
      * Returns the session ID specified by the client. This may
      * not be the same as the ID of the actual session in use.
