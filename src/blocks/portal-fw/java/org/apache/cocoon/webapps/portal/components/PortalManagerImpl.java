@@ -180,7 +180,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         if ( this.manager != null ) {
             this.manager.release( (Component)this.xpathProcessor );
             this.xpathProcessor = null;
-            this.manager.release( this.resolver );
+            this.manager.release( (Component)this.resolver );
             this.resolver = null;
         }
     }
