@@ -17,7 +17,6 @@
 package org.apache.excalibur.sourceresolve.jnet.source;
 
 import java.io.IOException;
-import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
@@ -35,13 +34,5 @@ public class SourceURLStreamHandler extends URLStreamHandler {
     protected URLConnection openConnection(URL url) throws IOException {
         return new SourceURLConnection(this.sourceFactory, url);
     }
-
-    /**
-     * @see java.net.URLStreamHandler#openConnection(java.net.URL, java.net.Proxy)
-     */
-    protected URLConnection openConnection(URL url, Proxy proxy) throws IOException {
-        return this.openConnection(url);
-    }
-
 
 }
