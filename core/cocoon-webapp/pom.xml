@@ -98,9 +98,17 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-servlet-service-sample</artifactId>
+      <artifactId>cocoon-servlet-service-impl-sample</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-impl-sample</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-components-sample</artifactId>
+    </dependency>
+	
     <!-- Cocoon Sample Blocks -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>

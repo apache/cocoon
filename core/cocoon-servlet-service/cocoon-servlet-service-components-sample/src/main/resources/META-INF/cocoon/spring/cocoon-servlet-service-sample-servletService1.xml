@@ -26,7 +26,7 @@
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
 	<bean name="org.apache.cocoon.servletservice.sample.servlet1" class="org.apache.cocoon.sitemap.SitemapServlet">
-    <servlet:context mount-path="/cocoon-servlet-service-sample1" context-path="blockcontext:/cocoon-servlet-service-sample/test1">
+    <servlet:context mount-path="/cocoon-servlet-service-components-sample/1" context-path="blockcontext:/cocoon-servlet-service-components-sample/test1">
       <servlet:init-params>
         <entry key="foo" value="bar"/>
       </servlet:init-params>

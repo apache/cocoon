@@ -23,27 +23,27 @@ import org.apache.cocoon.tools.it.HtmlUnitTestCase;
 public class ServletConnection extends HtmlUnitTestCase {
 
     public void testRequestDispatcher() throws Exception {
-        this.loadResponse("test1/test3");
+        this.loadResponse("cocoon-servlet-service-impl-sample/test1/test3");
         Assert.assertTrue(this.response.getStatusCode() == 200);
     }
 
     public void testSourceResolver() throws Exception {
-        this.loadResponse("test1/test2");
+        this.loadResponse("cocoon-servlet-service-impl-sample/test1/test2");
         Assert.assertTrue(this.response.getStatusCode() == 200);
     }
 
     public void testRelativeServletConnection1() throws Exception {
-        this.loadResponse("test1/test5");
+        this.loadResponse("cocoon-servlet-service-impl-sample/test1/test5");
         Assert.assertTrue(this.response.getStatusCode() == 200);
     }
 
     public void testRelativeServletConnection2() throws Exception {
-        this.loadResponse("test1/test6");
+        this.loadResponse("cocoon-servlet-service-impl-sample/test1/test6");
         Assert.assertTrue(this.response.getStatusCode() == 200);
     }
 
     public void testRelativeServletConnectionErrorStatusCode() throws Exception {
-        this.loadResponse("test1/test9");
+        this.loadResponse("cocoon-servlet-service-impl-sample/test1/test9");
         assertTrue(this.response.getContentAsString().indexOf("Forbidden") > 0);
         Assert.assertTrue(this.response.getStatusCode() == 403);
     }

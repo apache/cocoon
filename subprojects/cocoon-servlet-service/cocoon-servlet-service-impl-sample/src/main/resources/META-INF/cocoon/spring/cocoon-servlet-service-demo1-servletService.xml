@@ -26,7 +26,7 @@
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
   <bean name="org.apache.cocoon.servletservice.demo1.servlet" class="org.apache.cocoon.servletservice.demo1.DemoServlet">
-    <servlet:context mount-path="/test1" context-path="blockcontext:/cocoon-servlet-service-sample/">
+    <servlet:context mount-path="/cocoon-servlet-service-impl-sample/test1" context-path="blockcontext:/cocoon-servlet-service-impl-sample/">
       <servlet:init-params>
         <entry key="foo" value="baz"/>
       </servlet:init-params>
