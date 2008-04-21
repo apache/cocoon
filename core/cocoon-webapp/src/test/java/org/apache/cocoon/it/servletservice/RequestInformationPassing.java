@@ -24,7 +24,7 @@ public class RequestInformationPassing extends HtmlUnitTestCase {
 
     public void testAttributes() throws Exception {
         this.webClient.addRequestHeader("my-header-param", "6");
-        this.loadXmlPage("test1/test4?foo=5");
+        this.loadXmlPage("cocoon-servlet-service-impl-sample/test1/test4?foo=5");
         Assert.assertTrue(this.response.getStatusCode() == 200);
 
         // external request

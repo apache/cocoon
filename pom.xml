@@ -43,11 +43,8 @@
     <module>dists</module>
     <!-- sub projects -->
     <module>subprojects</module>
-    <module>core/cocoon-configuration/cocoon-configuration-api</module>
-    <module>core/cocoon-configuration/cocoon-spring-configurator</module>
     <module>core/cocoon-servlet-service/cocoon-servlet-service-components</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-impl</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-sample</module>
+    <module>core/cocoon-servlet-service/cocoon-servlet-service-components-sample</module>
   </modules>
 
   <organization>

@@ -23,10 +23,10 @@ import org.apache.cocoon.tools.it.HtmlUnitTestCase;
 public class BlockPathModule extends HtmlUnitTestCase {
 
     public void testSimplePipelineFromSubSitemap() throws Exception {
-        this.loadXmlPage("cocoon-servlet-service-sample1/sub/abs");
+        this.loadXmlPage("cocoon-servlet-service-components-sample/1/sub/abs");
         Assert.assertTrue(this.response.getStatusCode() == 200);
-        assertXPath("/properties/@other", "/cocoon-servlet-service-sample2/test");
-        assertXPath("/properties/@abs", "/cocoon-servlet-service-sample1/test");
+        assertXPath("/properties/@other", "/cocoon-servlet-service-components-sample/2/test");
+        assertXPath("/properties/@abs", "/cocoon-servlet-service-components-sample/1/test");
     }
 
 }

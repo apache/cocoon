@@ -23,13 +23,13 @@ import org.apache.cocoon.tools.it.HtmlUnitTestCase;
 public class SubSitemaps extends HtmlUnitTestCase {
 
     public void testSimplePipelineFromSubSitemap() throws Exception {
-        this.loadXmlPage("cocoon-servlet-service-sample1/sub/test");
+        this.loadXmlPage("cocoon-servlet-service-components-sample/1/sub/test");
         Assert.assertTrue(this.response.getStatusCode() == 200);
         assertXPath("/sub/text()", "");
     }
 
     public void testServletProtocolFromSubSitemap() throws Exception {
-        this.loadXmlPage("cocoon-servlet-service-sample1/sub/test3");
+        this.loadXmlPage("cocoon-servlet-service-components-sample/1/sub/test3");
         Assert.assertTrue(this.response.getStatusCode() == 200);
         assertXPath("/test", "some-text");
     }
