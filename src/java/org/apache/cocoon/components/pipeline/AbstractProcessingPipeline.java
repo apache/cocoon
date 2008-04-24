@@ -64,6 +64,8 @@ public abstract class AbstractProcessingPipeline
         extends AbstractLogEnabled
         implements ProcessingPipeline, Parameterizable, Recyclable {
 
+    private static final int DEFAULT_OUTPUT_BUFFER_SIZE = 1024 * 1024; // 1MB
+
     // Generator stuff
     protected Generator generator;
     protected Parameters generatorParam;
@@ -156,7 +158,7 @@ public abstract class AbstractProcessingPipeline
         if (expiresValue != null) {
             this.configuredExpires = parseExpires(expiresValue);
         }
-        this.configuredOutputBufferSize = params.getParameterAsInteger("outputBufferSize", -1);
+        this.configuredOutputBufferSize = params.getParameterAsInteger("outputBufferSize", DEFAULT_OUTPUT_BUFFER_SIZE);
     }
 
     /**
