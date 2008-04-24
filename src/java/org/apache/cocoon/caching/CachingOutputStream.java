@@ -27,7 +27,6 @@ import java.io.OutputStream;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
  */
-
 public final class CachingOutputStream
 extends OutputStream {
 
@@ -55,7 +54,7 @@ extends OutputStream {
         this.receiver.write(b);
         int newcount = this.bufCount + 1;
         if (newcount > this.buf.length) {
-            byte newbuf[] = new byte[Math.max(this.buf.length << 1, newcount)];
+            byte newbuf[] = new byte[this.buf.length << 1];
             System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
             this.buf = newbuf;
         }
@@ -70,7 +69,7 @@ extends OutputStream {
     public void write(byte b[], int off, int len) throws IOException {
         this.receiver.write(b, off, len);
         if (len == 0) return;
-        int newcount = this.bufCount + (len-off);
+        int newcount = this.bufCount + len;
         if (newcount > this.buf.length) {
             byte newbuf[] = new byte[Math.max(this.buf.length << 1, newcount)];
             System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);

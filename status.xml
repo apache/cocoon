@@ -182,6 +182,10 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="JH" type="fix" fixes-bug="COCOON-2192" due-to="Steven Dolg" due-to-email="steven.dolg@indoqa.com">
+        Core: Fix CachingOutputStream not caching all content or leading to ArrayIndexOutOfBoundsException when using
+        write(byte[], int, int).
+    </action>
     <action dev="JH" type="update" fixes-bug="COCOON-2168">
       Core: Set the default output buffer size of the pipeline to 1,048,576 (1 MB) rather than -1 (complete buffering)
       to avoid potential OutOfMemoryErrors on too large output.
