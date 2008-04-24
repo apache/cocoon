@@ -24,6 +24,12 @@
   -->
 <document>
   <body>
+    <release version="1.0.1" date="TBA" description="unreleased">
+      <action dev="joerg" type="update" fixes-bug="COCOON-2168">
+        Set the default output buffer size of the pipeline to 1,048,576 (1 MB) rather than -1 (complete buffering) to
+        avoid potential OutOfMemoryErrors on too large output.
+      </action>
+    </release>
     <release version="1.0.0" date="TBA" description="released">
       <action dev="vgritsenko" type="fix" fixes-bug="COCOON-1985">
         Use Spring's current request attributes as a pipeline lock object

@@ -325,26 +325,28 @@
   <map:pipes default="caching">
     <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
       <!--+
-          | If not specified, the value of the outputBufferSize parameter is -1.
-          | This will cause Cocoon to buffer all output until processing has finished
-          | before sending it to the client. This has the advantage that in case
-          | an error occurs during the processing of the SAX-pipeline, Cocoon is still
-          | able to reset the response and send an error page instead. Otherwise the
-          | error page will be appended to the output already send to the client.
-          | If you are generating larger pages, it might be benificial to enable
-          | this parameter, so that output is gradually send to the client as it
-          | is being generated.
+          | Configures the size of the output buffer, i.e. the size of the output before it is
+          | (partly) send to the client. In case an error occurs during the processing of the
+          | SAX-pipeline, Cocoon is able to reset the response and send an error page instead.
+          | If the buffer size is too small the response can not be reset completely and the error
+          | page will be appended to the output already send to the client.
+          |
+          | If not specified, the value of the outputBufferSize parameter is 1048576 (1 MB).
+          | Setting it to -1 causes Cocoon to buffer all output until processing has finished
+          | before sending it to client, but might result potentially in OutOfMemoryErrors on too
+          | large outputs.
+          |
           | For more granularity, you can also supply this parameter to
           | individual map:pipeline elements (using map:parameter syntax).
           +-->
-      <!-- parameter name="outputBufferSize" value="8192"/ -->
+      <!-- parameter name="outputBufferSize" value="1048576"/ -->
     </map:pipe>
     <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline">
       <parameter name="autoCachingPoint" value="On"/>
-      <!-- parameter name="outputBufferSize" value="8192"/ -->
+      <!-- parameter name="outputBufferSize" value="1048576"/ -->
     </map:pipe>
     <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
-      <!-- parameter name="outputBufferSize" value="8192"/ -->
+      <!-- parameter name="outputBufferSize" value="1048576"/ -->
     </map:pipe>
     <!--+
         | This pipeline implementation caches the complete content for a defined
@@ -352,6 +354,7 @@
         +-->
     <map:pipe name="expires" src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline">
       <parameter name="cache-expires" value="180"/> <!-- Expires in secondes -->
+      <!-- parameter name="outputBufferSize" value="1048576"/ -->
     </map:pipe>
   </map:pipes>
   
