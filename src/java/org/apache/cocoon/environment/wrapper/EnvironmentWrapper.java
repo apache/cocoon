@@ -32,8 +32,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.util.BufferedOutputStream;
-import org.apache.cocoon.util.Deprecation;
-
 
 /**
  * This is a wrapper class for the <code>Environment</code> object.
@@ -289,18 +287,6 @@ public class EnvironmentWrapper extends AbstractEnvironment {
         } else {
             environment.redirect(sessionmode,newURL);
         }
-    }
-
-    /**
-     * Get the output stream
-     * @deprecated use {@link #getOutputStream(int)} instead.
-     */
-    public OutputStream getOutputStream()
-    throws IOException {
-        Deprecation.logger.warn("The method Environment.getOutputStream() " +
-        "is deprecated. Use getOutputStream(-1) instead.");
-        // by default we use the complete buffering output stream
-        return getOutputStream(-1);
     }
 
     /**
