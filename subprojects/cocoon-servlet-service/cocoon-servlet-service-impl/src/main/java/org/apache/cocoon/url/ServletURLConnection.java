@@ -42,7 +42,7 @@ public class ServletURLConnection extends URLConnection{
 
         this.url = url;
 
-        URI locationUri = new URI(url.getPath());
+        URI locationUri = new URI(url.getPath() + "?" + url.getQuery());
         // new URI(locationUri.getRawSchemeSpecificPart());
 
         final String servletReference = locationUri.getScheme();
