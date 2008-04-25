@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.cocoon.url;
+package org.apache.cocoon.servletservice.url;
 
 import java.io.IOException;
 import java.net.URL;
