@@ -46,6 +46,10 @@ public class BlockPathPropertyPlaceholderConfigurer extends PropertyPlaceholderC
     protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)
                     throws BeansException {
         Map blockContexts = (Map) this.servletContext.getAttribute(BlockDeploymentServletContextListener.BLOCK_CONTEXT_MAP);
+        if (blockContexts == null) {
+            throw new RuntimeException("Failed to obtain blockContexts Map. The most probable cause is that " +
+            		"BlockDeploymentServletContextListener has not been executed. Check your web.xml or upgrade your Cocoon Maven plug-in.");
+        }
         final BeanDefinitionVisitor visitor = new ResolvingBeanDefinitionVisitor(blockContexts);
         String[] beanNames = beanFactoryToProcess.getBeanDefinitionNames();
         for (int i = 0; i < beanNames.length; i++) {
