@@ -58,42 +58,6 @@
       <version>1.0.3-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.excalibur.components</groupId>
-      <artifactId>excalibur-sourceresolve</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.avalon.framework</groupId>
-          <artifactId>avalon-framework-impl</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.avalon.logkit</groupId>
-          <artifactId>avalon-logkit</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.excalibur.components</groupId>
-      <artifactId>excalibur-xmlutil</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.excalibur.components</groupId>
-          <artifactId>excalibur-pool-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.excalibur.components</groupId>
-          <artifactId>excalibur-pool-impl</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.excalibur.components</groupId>
-          <artifactId>excalibur-store</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.excalibur.containerkit</groupId>
-          <artifactId>excalibur-instrument-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <!-- Spring Framework -->
     <dependency>
       <groupId>org.springframework</groupId>
