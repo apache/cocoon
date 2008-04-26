@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -28,24 +29,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.servletservice.RelativeServletConnection;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * @version $Id$
  */
 public class DemoServlet extends HttpServlet {
-
-    BeanFactory beanFactory;
-    SourceResolver resolver;
-
-    public void init() throws ServletException {
-        this.beanFactory =
-            WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-        this.resolver = (SourceResolver) this.beanFactory.getBean(SourceResolver.ROLE);
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getPathInfo();
@@ -64,8 +52,8 @@ public class DemoServlet extends HttpServlet {
             demo2.forward(request, response);
 
         } else if ("/test3".equals(path)) {
-            Source source = this.resolver.resolveURI("servlet:/test1");
-            InputStream is = source.getInputStream();
+            URL source = new URL("servlet:/test1");
+            InputStream is = source.openStream();
 
             response.setContentType("text/plain");
             OutputStream os = response.getOutputStream();
@@ -86,15 +74,15 @@ public class DemoServlet extends HttpServlet {
 
             // calling another resource
             os.write(("\n<sub-request name=\"demo2-test1\">").getBytes());
-            Source source = this.resolver.resolveURI("servlet:demo2:/test1?xyz=5");
-            InputStream is = source.getInputStream();
+            URL url = new URL("servlet:demo2:/test1?xyz=5");
+            InputStream is = url.openStream();
             copy(is, os);
             os.write(("</sub-request>").getBytes());
             is.close();
 
             os.write(("\n<sub-request name=\"demo2-test2\">").getBytes());
-            source = this.resolver.resolveURI("servlet:demo2:/test2?xyz=5");
-            is = source.getInputStream();
+            url = new URL("servlet:demo2:/test2?xyz=5");
+            is = url.openStream();
             copy(is, os);
             os.write(("</sub-request>").getBytes());
             is.close();
@@ -132,8 +120,8 @@ public class DemoServlet extends HttpServlet {
             os.close();
 
         } else if ("/test7".equals(path)) {
-            Source source = this.resolver.resolveURI("servlet:org.apache.cocoon.servletservice.demo1.servlet+:/test4");
-            InputStream is = source.getInputStream();
+            URL url = new URL("servlet:org.apache.cocoon.servletservice.demo1.servlet+:/test4");
+            InputStream is = url.openStream();
             OutputStream os = response.getOutputStream();
             response.setContentType("text/plain");
 
