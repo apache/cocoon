@@ -51,7 +51,10 @@
       <plugin>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-maven-plugin</artifactId>
-        <version>1.0.0-M1</version>
+        <version>1.0.0-RC1-SNAPSHOT</version>
+        <configuration>
+          <webappProfile>ssf</webappProfile>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
