@@ -688,15 +688,15 @@
       | then copy the id to the child. This is needed for ajax when grouping is just used to group
       | widgets. 
       +-->
-  <xsl:template match="fi:group[@id and count(*) = 1 and not(fi:*)]">
-    <xsl:apply-templates mode="copy-parent-id"/>
-  </xsl:template>
-
   <xsl:template match="fi:group">
     <xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="fi:group" mode="copy-parent-id">
+  <xsl:template match="fi:group[@id and count(*) = 1 and not(fi:*)]">
+    <xsl:apply-templates mode="copy-parent-id"/>
+  </xsl:template>
+
+  <xsl:template match="*" mode="copy-parent-id">
     <xsl:copy>
       <xsl:attribute name="id"><xsl:value-of select="../@id"/></xsl:attribute>
       <xsl:copy-of select="@*"/>

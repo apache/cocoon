@@ -25,7 +25,10 @@
   -->
 <document>
   <body>
-    <release version="1.0.0" date="2008-??-??" description="unreleased">
+    <release version="1.0.0" date="TBD" description="unreleased">
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2204" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+        Fix @id handling on ft:group element in conjunction with AJAX requests.
+      </action>
       <action dev="joerg" type="fix" fixes-bug="COCOON-2178" due-to="Harald Entner" due-to-email="harald.entner@workflow.at">
         Dispatch only one TreeSelectionEvent on multiple selection rather than one event for each selected tree item.
       </action>
