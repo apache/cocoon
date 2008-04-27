@@ -24,7 +24,12 @@
   -->
 <document>
   <body>
-    <release version="1.1.0-M1" date="2008-??-??" description="unreleased">
+    <release version="1.1.1" date="TBD" description="unreleased">
+      <action dev="joerg" type="fix" fixes-bug="COCOON-2204" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+        Fix @id handling on ft:group element in conjunction with AJAX requests.
+      </action>
+    </release>
+    <release version="1.1.0" date="2008-??-??" description="released">
       <action dev="giacomo" type="update">
         The Cocoon Forms springified (as much as possible).
       </action>
