@@ -677,9 +677,16 @@
 
   <!--+
       | fi:struct - has no visual representation by default
+      | If the fi:struct contains an id and has only one child that is not in the fi: namespace,
+      | then copy the id to the child. This is needed for ajax when grouping is just used to group
+      | widgets.
       +-->
   <xsl:template match="fi:struct">
     <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="fi:struct[@id and count(*) = 1 and not(fi:*)]">
+    <xsl:apply-templates mode="copy-parent-id"/>
   </xsl:template>
 
   <!--+
