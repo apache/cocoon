@@ -19,7 +19,6 @@ package org.apache.cocoon.generation;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -35,6 +34,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.components.NekoHtmlSaxParser;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -47,8 +47,6 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
-import org.apache.xerces.parsers.AbstractSAXParser;
-import org.cyberneko.html.HTMLConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -56,14 +54,14 @@ import org.xml.sax.SAXException;
 
 /**
  * @cocoon.sitemap.component.documentation
- * The neko html generator reads HTML from a source, converts it to XHTML
+ * The Neko HTML generator reads HTML from a source, converts it to XHTML
  * and generates SAX Events. It uses the NekoHTML library to do this.
  * 
  * @cocoon.sitemap.component.name   nekohtml
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.nekohtml
- * @cocoon.sitemap.component.documentation.caching
- *               Uses the last modification date of the xml document for validation
+ * @cocoon.sitemap.component.documentation.caching Yes.
+ * Uses the last modification date of the xml document for validation
  * 
  * @cocoon.sitemap.component.pooling.max  32
  *
@@ -75,7 +73,7 @@ import org.xml.sax.SAXException;
  * @version CVS $Id$
  */
 public class NekoHTMLGenerator extends ServiceableGenerator
-implements Configurable, CacheableProcessingComponent, Disposable {
+                               implements Configurable, CacheableProcessingComponent, Disposable {
 
     /** The parameter that specifies what request attribute to use, if any */
     public static final String FORM_NAME = "form-name";
@@ -87,25 +85,24 @@ implements Configurable, CacheableProcessingComponent, Disposable {
     private InputStream requestStream;
 
     /** XPATH expression */
-    private String xpath = null;
+    private String xpath;
 
     /** XPath Processor */
-    private XPathProcessor processor = null;
+    private XPathProcessor processor;
 
     /** Neko properties */
     private Properties properties;
 
     public void service(ServiceManager manager)
     throws ServiceException {
-        super.service( manager );
-        this.processor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
+        super.service(manager);
+        this.processor = (XPathProcessor) this.manager.lookup(XPathProcessor.ROLE);
     }
 
     public void configure(Configuration config) throws ConfigurationException {
 
         String configUrl = config.getChild("neko-config").getValue(null);
-
-        if(configUrl != null) {
+        if (configUrl != null) {
             org.apache.excalibur.source.SourceResolver resolver = null;
             Source configSource = null;
             try {
@@ -136,7 +133,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
      */
     public void recycle() {
         if (this.inputSource != null) {
-            this.resolver.release( this.inputSource );
+            this.resolver.release(this.inputSource);
             this.inputSource = null;
             this.requestStream = null;
         }
@@ -260,12 +257,12 @@ implements Configurable, CacheableProcessingComponent, Disposable {
     public void generate()
     throws IOException, SAXException, ProcessingException {
         try {
-            HtmlSaxParser parser = new HtmlSaxParser(this.properties);
+            NekoHtmlSaxParser parser = new NekoHtmlSaxParser(this.properties);
             
             if (inputSource != null)
                 requestStream = this.inputSource.getInputStream();
 
-            if(xpath != null) {
+            if (xpath != null) {
                 DOMBuilder builder = new DOMBuilder();
                 parser.setContentHandler(builder);
                 parser.parse(new InputSource(requestStream));
@@ -295,7 +292,6 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         }
     }
 
-
     public void dispose() {
         if (this.manager != null) {
             this.manager.release(this.processor);
@@ -305,26 +301,4 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         super.dispose();
     }
 
-    public static class HtmlSaxParser extends AbstractSAXParser {
-
-        public HtmlSaxParser(Properties properties) {
-            super(getConfig(properties));
-        }
-    
-        private static HTMLConfiguration getConfig(Properties properties) {
-            HTMLConfiguration config = new HTMLConfiguration();
-            config.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
-            if (properties != null) {
-                for (Iterator i = properties.keySet().iterator();i.hasNext();) {
-                    String name = (String) i.next();
-                    if (name.indexOf("/features/") > -1) {
-                        config.setFeature(name, Boolean.getBoolean(properties.getProperty(name)));
-                    } else if (name.indexOf("/properties/") > -1) {
-                        config.setProperty(name, properties.getProperty(name));
-                    }
-                }
-            }
-            return config;
-        }
-    }
 }

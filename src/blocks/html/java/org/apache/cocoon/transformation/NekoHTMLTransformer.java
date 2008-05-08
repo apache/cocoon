@@ -19,7 +19,6 @@ package org.apache.cocoon.transformation;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -29,12 +28,11 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.NekoHtmlSaxParser;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.excalibur.source.Source;
-import org.apache.xerces.parsers.AbstractSAXParser;
-import org.cyberneko.html.HTMLConfiguration;
 import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -48,9 +46,8 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class NekoHTMLTransformer
-    extends AbstractSAXTransformer
-    implements Configurable {
+public class NekoHTMLTransformer extends AbstractSAXTransformer
+                                 implements Configurable {
 
     /**
      * Properties for Neko format
@@ -69,7 +66,7 @@ public class NekoHTMLTransformer
      * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
      */
     public void endElement(String uri, String name, String raw)
-        throws SAXException {
+    throws SAXException {
         if (this.tags.containsKey(name)) {
             String toBeNormalized = this.endTextRecording();
             try {
@@ -87,14 +84,12 @@ public class NekoHTMLTransformer
      *
      * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
-    public void startElement(
-        String uri,
-        String name,
-        String raw,
-        Attributes attr)
-        throws SAXException {
+    public void startElement(String uri,
+                             String name,
+                             String raw,
+                             Attributes attr) throws SAXException {
         super.startElement(uri, name, raw, attr);
-		if (this.tags.containsKey(name)) {
+        if (this.tags.containsKey(name)) {
             this.startTextRecording();
         }
     }
@@ -143,7 +138,7 @@ public class NekoHTMLTransformer
      */
     private void normalize(String text) throws ProcessingException {
         try {
-            HtmlSaxParser parser = new HtmlSaxParser(this.properties);
+            NekoHtmlSaxParser parser = new NekoHtmlSaxParser(this.properties);
 
             ByteArrayInputStream bais =
                 new ByteArrayInputStream(text.getBytes());
@@ -164,46 +159,21 @@ public class NekoHTMLTransformer
     /**
      * Setup this component, passing the tag names to be tidied.
      */
-
-    public void setup(
-        SourceResolver resolver,
-        Map objectModel,
-        String src,
-        Parameters par)
-        throws ProcessingException, SAXException, IOException {
+    public void setup(SourceResolver resolver,
+                      Map objectModel,
+                      String src,
+                      Parameters par)
+    throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         String tagsParam = par.getParameter("tags", "");        
         if (getLogger().isDebugEnabled()) {
-        	getLogger().debug("tags: " + tagsParam);
+            getLogger().debug("tags: " + tagsParam);
         }        
         this.tags = new HashMap();
         StringTokenizer tokenizer = new StringTokenizer(tagsParam, ",");
         while (tokenizer.hasMoreElements()) {
             String tok = tokenizer.nextToken().trim();
             this.tags.put(tok, tok);
-        }
-    }
-
-    public static class HtmlSaxParser extends AbstractSAXParser {
-
-        public HtmlSaxParser(Properties properties) {
-            super(getConfig(properties));
-        }
-
-        private static HTMLConfiguration getConfig(Properties properties) {
-            HTMLConfiguration config = new HTMLConfiguration();
-            config.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
-            if (properties != null) {
-                for (Iterator i = properties.keySet().iterator();i.hasNext();) {
-                    String name = (String) i.next();
-                    if (name.indexOf("/features/") > -1) {
-                        config.setFeature(name, Boolean.getBoolean(properties.getProperty(name)));
-                    } else if (name.indexOf("/properties/") > -1) {
-                        config.setProperty(name, properties.getProperty(name));
-                    }
-                }
-            }
-            return config;
         }
     }
 }
