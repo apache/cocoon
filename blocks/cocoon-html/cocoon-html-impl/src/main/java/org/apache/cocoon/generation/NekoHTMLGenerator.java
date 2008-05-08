@@ -88,7 +88,6 @@ public class NekoHTMLGenerator extends ServiceableGenerator
     /** Neko properties */
     private Properties properties;
 
-    
     public void service(ServiceManager manager)
     throws ServiceException {
         super.service(manager);
@@ -253,7 +252,7 @@ public class NekoHTMLGenerator extends ServiceableGenerator
     public void generate()
     throws IOException, SAXException, ProcessingException {
         try {
-        	NekoHtmlSaxParser parser = new NekoHtmlSaxParser(this.properties);
+            NekoHtmlSaxParser parser = new NekoHtmlSaxParser(this.properties);
             
             if (inputSource != null)
                 requestStream = this.inputSource.getInputStream();
