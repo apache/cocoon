@@ -25,8 +25,9 @@
 <document>
   <body>
     <release version="1.0.1" date="TBD" description="unreleased">
-      <action dev="vgritsenko" type="fix" fixes-bug="COCOON-2063">
-        Fix encoding issue in NekoHTMLTransformer.
+      <action dev="vgritsenko, joerg" type="fix" fixes-bug="COCOON-2063">
+        Fix encoding issue in NekoHTMLTransformer. Fix similar issue in NekoHTMLGenerator when reading a request
+        parameter value.
       </action>
     </release>     
     <release version="1.0.0" date="2008-03-25" description="released">

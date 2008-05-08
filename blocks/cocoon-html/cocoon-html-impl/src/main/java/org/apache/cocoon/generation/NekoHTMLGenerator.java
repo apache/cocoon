@@ -16,9 +16,9 @@
  */
 package org.apache.cocoon.generation;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Map;
 import java.util.Properties;
 
@@ -70,10 +70,13 @@ import org.xml.sax.SAXException;
 public class NekoHTMLGenerator extends ServiceableGenerator
                                implements Configurable, CacheableProcessingComponent, Disposable {
 
-    /** The parameter that specifies what request attribute to use, if any */
+    /** The parameter that specifies what request parameter to use, if any */
     public static final String FORM_NAME = "form-name";
 
-    /** The  source, if coming from a file */
+    /** The request parameter value, if coming from a request parameter */
+    private String requestParameterValue;
+
+    /** The source, if coming from a file */
     private Source inputSource;
 
     /** The source, if coming from the request */
@@ -127,11 +130,19 @@ public class NekoHTMLGenerator extends ServiceableGenerator
      * All instance variables are set to <code>null</code>.
      */
     public void recycle() {
+        if (this.requestStream != null) {
+            try {
+                this.requestStream.close();
+            } catch (IOException e) {
+                // ignore
+            }
+            this.requestStream = null;
+        }
         if (this.inputSource != null) {
             this.resolver.release(this.inputSource);
             this.inputSource = null;
-            this.requestStream = null;
         }
+        this.requestParameterValue = null;
         this.xpath = null;
         super.recycle();
     }
@@ -146,7 +157,7 @@ public class NekoHTMLGenerator extends ServiceableGenerator
 
         Request request = ObjectModelHelper.getRequest(objectModel);
         
-        if (src == null) {
+        if (this.source == null) {
             // Handle this request as the StreamGenerator does (from the POST
             // request or from a request parameter), but try to make sure
             // that the output will be well-formed
@@ -155,8 +166,8 @@ public class NekoHTMLGenerator extends ServiceableGenerator
 
             if (contentType == null ) {
                 throw new IOException("Content-type was not specified for this request");
-            } else if (contentType.startsWith("application/x-www-form-urlencoded") ||
-                contentType.startsWith("multipart/form-data")) {
+            } else if (contentType.startsWith("application/x-www-form-urlencoded")
+                       || contentType.startsWith("multipart/form-data")) {
                 String requested = parameters.getParameter(FORM_NAME, null);
                 if (requested == null) {
                     throw new ProcessingException(
@@ -165,13 +176,10 @@ public class NekoHTMLGenerator extends ServiceableGenerator
                     );
                 }
 
-                String sXml = request.getParameter(requested);
-
-                requestStream = new ByteArrayInputStream(sXml.getBytes());
-
-            } else if (contentType.startsWith("text/plain") ||
-                contentType.startsWith("text/xml") ||
-                contentType.startsWith("application/xml")) {
+                requestParameterValue = request.getParameter(requested);
+            } else if (contentType.startsWith("text/plain")
+                       || contentType.startsWith("text/xml")
+                       || contentType.startsWith("application/xml")) {
 
                 HttpServletRequest httpRequest = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
                 if ( httpRequest == null ) {
@@ -186,28 +194,26 @@ public class NekoHTMLGenerator extends ServiceableGenerator
             } else {
                 throw new IOException("Unexpected getContentType(): " + request.getContentType());
             }
+        } else {
+            // append the request parameter to the URL if necessary
+            if (parameters.getParameterAsBoolean("copy-parameters", false)
+                    && request.getQueryString() != null) {
+                StringBuffer query = new StringBuffer(this.source);
+                query.append(this.source.indexOf("?") == -1 ? '?' : '&');
+                query.append(request.getQueryString());
+                this.source = query.toString();
+            }
 
-
+            try {
+                this.inputSource = resolver.resolveURI(this.source);
+            } catch (SourceException se) {
+                throw SourceUtil.handle("Unable to resolve " + this.source, se);
+            }
         }
 
         xpath = request.getParameter("xpath");
-        if(xpath == null)
+        if (xpath == null) {
             xpath = par.getParameter("xpath",null);
-
-        // append the request parameter to the URL if necessary
-        if (par.getParameterAsBoolean("copy-parameters", false)
-                && request.getQueryString() != null) {
-            StringBuffer query = new StringBuffer(super.source);
-            query.append(super.source.indexOf("?") == -1 ? '?' : '&');
-            query.append(request.getQueryString());
-            super.source = query.toString();
-        }
-
-        try {
-            if (source != null)
-                this.inputSource = resolver.resolveURI(super.source);
-        } catch (SourceException se) {
-            throw SourceUtil.handle("Unable to resolve " + super.source, se);
         }
     }
 
@@ -254,13 +260,21 @@ public class NekoHTMLGenerator extends ServiceableGenerator
         try {
             NekoHtmlSaxParser parser = new NekoHtmlSaxParser(this.properties);
             
-            if (inputSource != null)
-                requestStream = this.inputSource.getInputStream();
-
+            InputSource saxSource;
+            if (this.requestParameterValue != null) {
+                saxSource = new InputSource(new StringReader(this.requestParameterValue));
+            }
+            else {
+                if (inputSource != null) {
+                    requestStream = this.inputSource.getInputStream();
+                }
+                saxSource = new InputSource(requestStream);
+            }
+            
             if (xpath != null) {
                 DOMBuilder builder = new DOMBuilder();
                 parser.setContentHandler(builder);
-                parser.parse(new InputSource(requestStream));
+                parser.parse(saxSource);
                 Document doc = builder.getDocument();
 
                 DOMStreamer domStreamer = new DOMStreamer(this.contentHandler,
@@ -274,9 +288,8 @@ public class NekoHTMLGenerator extends ServiceableGenerator
                 this.contentHandler.endDocument();
             } else {
                 parser.setContentHandler(this.contentHandler);
-                parser.parse(new InputSource(requestStream));
+                parser.parse(saxSource);
             }
-            requestStream.close();
         } catch (IOException e){
             throw new ResourceNotFoundException("Could not get resource "
                 + this.inputSource.getURI(), e);
