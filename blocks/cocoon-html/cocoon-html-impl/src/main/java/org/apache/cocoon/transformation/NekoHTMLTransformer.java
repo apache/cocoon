@@ -16,8 +16,9 @@
  */
 package org.apache.cocoon.transformation;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -30,8 +31,8 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.NekoHtmlSaxParser;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.excalibur.source.Source;
 import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
@@ -96,7 +97,7 @@ public class NekoHTMLTransformer extends AbstractSAXTransformer
                              Attributes attr)
     throws SAXException {
         super.startElement(uri, name, raw, attr);
-		if (this.tags.containsKey(name)) {
+        if (this.tags.containsKey(name)) {
             this.startTextRecording();
         }
     }
@@ -144,15 +145,13 @@ public class NekoHTMLTransformer extends AbstractSAXTransformer
      * @param text the string to be tidied
      */
     private void normalize(String text) throws ProcessingException {
+        Reader reader = new StringReader(text);
         try {
             NekoHtmlSaxParser parser = new NekoHtmlSaxParser(this.properties);
 
-            ByteArrayInputStream bais =
-                new ByteArrayInputStream(text.getBytes());
-
             DOMBuilder builder = new DOMBuilder();
             parser.setContentHandler(builder);
-            parser.parse(new InputSource(bais));
+            parser.parse(new InputSource(reader));
             Document doc = builder.getDocument();
 
             IncludeXMLConsumer.includeNode(doc, this.contentHandler, this.lexicalHandler);
@@ -160,13 +159,18 @@ public class NekoHTMLTransformer extends AbstractSAXTransformer
             throw new ProcessingException(
                 "Exception in NekoHTMLTransformer.normalize()",
                 e);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ProcessingException(e);
+            }
         }
     }
 
     /**
      * Setup this component, passing the tag names to be tidied.
      */
-
     public void setup(SourceResolver resolver,
                       Map objectModel,
                       String src,
@@ -175,7 +179,7 @@ public class NekoHTMLTransformer extends AbstractSAXTransformer
         super.setup(resolver, objectModel, src, par);
         String tagsParam = par.getParameter("tags", "");        
         if (getLogger().isDebugEnabled()) {
-        	getLogger().debug("tags: " + tagsParam);
+            getLogger().debug("tags: " + tagsParam);
         }        
         this.tags = new HashMap();
         StringTokenizer tokenizer = new StringTokenizer(tagsParam, ",");

@@ -24,8 +24,12 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
-      
+    <release version="1.0.1" date="TBD" description="unreleased">
+      <action dev="vgritsenko" type="fix" fixes-bug="COCOON-2063">
+        Fix encoding issue in NekoHTMLTransformer.
+      </action>
+    </release>     
+    <release version="1.0.0" date="2008-03-25" description="released">
     </release>     
     <release version="1.0.0-M1" date="2007-03-02" description="released">    
       <action dev="crossley" type="add" fixes-bug="COCOON-1206" due-to="Miles Elam" due-to-email="miles@geekspeak.org">
