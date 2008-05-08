@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="VG" type="fix" fixes-bug="COCOON-2063">
+      HTML: Fix encoding issue in NekoHTMLTransformer.
+    </action>
     <action dev="JH" type="fix" fixes-bug="COCOON-1825" due-to="Vincent Demay" due-to-email="vincent@demay-fr.net">
       Forms: Fix @id handling on fi:group/fi:struct element in conjunction with AJAX requests.
     </action>

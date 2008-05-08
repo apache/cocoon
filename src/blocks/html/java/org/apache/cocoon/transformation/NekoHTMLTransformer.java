@@ -16,8 +16,9 @@
  */
 package org.apache.cocoon.transformation;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -137,15 +138,13 @@ public class NekoHTMLTransformer extends AbstractSAXTransformer
      * @param text the string to be tidied
      */
     private void normalize(String text) throws ProcessingException {
+        Reader reader = new StringReader(text);
         try {
             NekoHtmlSaxParser parser = new NekoHtmlSaxParser(this.properties);
 
-            ByteArrayInputStream bais =
-                new ByteArrayInputStream(text.getBytes());
-
             DOMBuilder builder = new DOMBuilder();
             parser.setContentHandler(builder);
-            parser.parse(new InputSource(bais));
+            parser.parse(new InputSource(reader));
             Document doc = builder.getDocument();
 
             IncludeXMLConsumer.includeNode(doc, this.contentHandler, this.lexicalHandler);
@@ -153,6 +152,12 @@ public class NekoHTMLTransformer extends AbstractSAXTransformer
             throw new ProcessingException(
                 "Exception in NekoHTMLTransformer.normalize()",
                 e);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new ProcessingException(e);
+            }
         }
     }
 
