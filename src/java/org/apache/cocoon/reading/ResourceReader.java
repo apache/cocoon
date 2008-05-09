@@ -159,7 +159,7 @@ public class ResourceReader extends AbstractReader
     }
 
     /**
-     * Setup the response headers: Accept-Ranges, Expires, Last-Modified
+     * Setup the response headers: Accept-Ranges, Expires
      */
     protected void setupHeaders() {
         // Tell the client whether we support byte range requests or not
@@ -173,11 +173,6 @@ public class ResourceReader extends AbstractReader
             response.setDateHeader("Expires", System.currentTimeMillis() + expires);
         } else if (expires == 0) {
             response.setDateHeader("Expires", 0);
-        }
-
-        long lastModified = getLastModified(); 
-        if (lastModified > 0) { 
-            response.setDateHeader("Last-Modified", lastModified); 
         }
     }
 
