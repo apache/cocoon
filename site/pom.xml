@@ -100,9 +100,9 @@
         <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>
     
         <!-- Subprojects -->
-        <module>../core/cocoon-configuration/cocoon-configuration-api</module>
-        <module>../core/cocoon-configuration/cocoon-spring-configurator</module>
-        <module>../core/cocoon-servlet-service/cocoon-servlet-service-impl</module>
+        <module>../subprojects/cocoon-configuration/cocoon-configuration-api</module>
+        <module>../subprojects/cocoon-configuration/cocoon-spring-configurator</module>
+        <module>../subprojects/cocoon-servlet-service/cocoon-servlet-service-impl</module>
         <module>../core/cocoon-servlet-service/cocoon-servlet-service-components</module>
     
         <!-- Maven plugins -->
