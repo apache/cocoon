@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public abstract class AbstractContinuable implements Continuable {
 
-    private ContinuationContext getContext() {
+    protected ContinuationContext getContext() {
         Continuation currentContinuation = Continuation.currentContinuation();
         if (currentContinuation == null) {
             throw new IllegalStateException("No continuation is running");
