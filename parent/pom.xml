@@ -375,6 +375,7 @@
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
         <role>ASF member</role>
+        <role>PMC chair</role>        
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
@@ -756,7 +757,6 @@
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
         <role>ASF member</role>
-        <role>PMC chair</role>
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
