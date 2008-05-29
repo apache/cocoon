@@ -42,8 +42,9 @@
       <artifactId>cocoon-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>poi</groupId>
+      <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>
+      <version>3.0.2-FINAL</version>
     </dependency>
   </dependencies>
 </project>
