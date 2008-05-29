@@ -25,6 +25,9 @@
 <document>
   <body>
     <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
+      <action dev="anathaniel" type="update">
+        Update to poi-3.0.2.
+      </action> 
       <action dev="antonio" type="fix" fixes-bug="COCOON-1440" due-to="Krystian Nowak" due-to-email="krystian@man.poznan.pl">
         Color string normalization.
       </action> 
