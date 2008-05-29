@@ -466,11 +466,14 @@
   <file>
     <title>Create proprietary file formats</title>
     <description>
-      The POI project consists of APIs for manipulating various file formats
-      based upon Microsoft's OLE 2 Compound Document format using pure Java.
+      The POI project is the master project for developing pure Java ports
+      of file formats based on Microsoft's OLE 2 Compound Document Format.
+      OLE 2 Compound Document Format is used by Microsoft Office Documents,
+      as well as by programs using MFC property sets to serialize their
+      document objects.
     </description>
     <used-by>MS Excel serializer (poi block)</used-by>
-    <lib>optional/poi-2.5.1-final-20040804.jar</lib>
+    <lib>optional/poi-3.0.2-FINAL-20080204.jar</lib>
     <homepage>http://jakarta.apache.org/poi/</homepage>
   </file>
 

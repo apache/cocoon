@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="AN" type="update">
+      POI Block: Update to poi-3.0.2.
+    </action>
     <action dev="VG, JH" type="fix" fixes-bug="COCOON-2063">
       HTML: Fix encoding issue in NekoHTMLTransformer. Fix similar issue in NekoHTMLGenerator when reading a request
       parameter value.
