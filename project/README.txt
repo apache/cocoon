@@ -11,7 +11,7 @@ PREREQUISITES
 You need a JDK, 1.4.x, 1.5.x, 1.6.x, or 1.7.x.
 When experimenting with trunk, 1.5.x is probably the best bet.
 
-Maven 2 must be installed (at least 2.0.6).
+Maven 2 must be installed (at least 2.0.9).
 
 
 MAVEN REPOSITORY MIRRORS
@@ -27,7 +27,7 @@ process.
 
 To build Cocoon, use the following command:
 
-  $ mvn -P allblocks install
+  $ build.sh install
 
 In case of any failures, repeat command as necessary till you see
 the message:
@@ -37,22 +37,21 @@ the message:
 If you have consistent build failures due to a missing cocoon-rcl
 artefact, then run first
 
-  $ cd tools
+  $ cd ../tools
   $ mvn clean install
 
 If you have build failures due to out-of-memory conditions, increase
-the JVM maximum memory limit:
+the JVM maximum memory limit in build.sh:
  
-  $ MAVEN_OPTS="-Xmx200m"
-  $ export MAVEN_OPTS
+  $ MAVEN_OPTS="-Xmx256m"
 
 
 HOW TO MOUNT THE PROJECTS IN ECLIPSE
 ------------------------------------
 
-from /trunk, run
+from /trunk/project, run
 
-  $ mvn -P allblocks eclipse:clean eclipse:eclipse
+  $ build.sh eclipse:clean eclipse:eclipse
 
 Next go to eclipse, and make sure you haven't got trunk mounted as a
 project already.  Also remove .classpath and .project files possibly
@@ -78,13 +77,13 @@ HOW TO MOUNT THE PROJECTS IN INTELLIJ
 ------------------------------------
 
 First, build all the projects as described above.
-Next, from /trunk, run
+Next, from /trunk/project, run
 
   $ mvn -P allblocks idea:idea
 
 In IntelliJ select File - Open Project...  Navigate to the trunk directory and select cocoon.ipr.
 
-For further information about hte maven idea plugin visit
+For further information about the maven idea plugin visit
 
   http://maven.apache.org/plugins/maven-idea-plugin/
   
@@ -95,15 +94,26 @@ HOW TO START THE COCOON WEBAPP
 Checkout complete trunk and build it. If clean rebuild is desired,
 use command:
 
-  $ mvn -P allblocks clean install
+  $ build.sh clean install
 
 Call this until you get "BUILD SUCCESSFUL" - sometimes downloads from maven
 repositories are temporarily unaccessible and cause the build to fail.
 
-Go to core/cocoon-webapp:
-  $ mvn jetty:run
+To start Cocoon within Jetty, use command:
+
+  $ cocoon.sh
 
 Point your browser to http://localhost:8888/
 
 (Don't use jetty:run-exploded as in this case the jetty6 plugin will
  alter the webapp build by the Cocoon deployer again!)
+
+
+HOW TO DEBUG THE COCOON WEBAPP
+------------------------------
+
+To start Cocoon with JVM debug enabled, use command:
+
+  $ cocoon.sh debug
+
+Then tell your IDE to connect to JVM debug on port localhost:5005.

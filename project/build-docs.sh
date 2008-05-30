@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/bash
 
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,24 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CWD=`pwd`
-MAVEN_OPTS="$MAVEN_OPTS -Djava.awt.headless=true -Dorg.apache.cocoon.mode=dev"
-
-ARGS=""
-while [ "$#" -gt "0" ]
-do
-  case "$1" in
-    debug)
-      MAVEN_OPTS="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=n $MAVEN_OPTS -Djava.compiler=NONE"
-      ;;
-    *)
-      ARGS="$ARGS $1"
-  esac
-
-  shift
-done
-
+mvn install -N
+cd ../site
+MAVEN_OPTS=-Xmx512M
 export MAVEN_OPTS
-cd core/cocoon-webapp && echo "Starting in `pwd`" && mvn jetty:run
-
-cd $CWD
+mvn site-deploy -P localDocs -Ddocs.repoUrl=http://localhost:9263
+mvn site-deploy -P localDocs-all-reports,all-reports,simian-report -Ddocs.repoUrl=http://localhost:9263
