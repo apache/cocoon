@@ -49,7 +49,7 @@ the JVM maximum memory limit in build.sh:
 HOW TO MOUNT THE PROJECTS IN ECLIPSE
 ------------------------------------
 
-from /trunk/project, run
+from /trunk, run
 
   $ build.sh eclipse:clean eclipse:eclipse
 
@@ -77,7 +77,7 @@ HOW TO MOUNT THE PROJECTS IN INTELLIJ
 ------------------------------------
 
 First, build all the projects as described above.
-Next, from /trunk/project, run
+Next, from /trunk, run
 
   $ mvn -P allblocks idea:idea
 
