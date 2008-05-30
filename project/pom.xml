@@ -28,23 +28,23 @@
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-parent</artifactId>
+  <artifactId>cocoon-project</artifactId>
   <version>1</version>
   <name>Apache Cocoon [build root]</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
 
   <modules>
-    <module>parent</module>
-    <module>tools</module>
-    <module>blocks</module>
-    <module>commons</module>
-    <module>core</module>
-    <module>dists</module>
+    <module>../parent</module>
+    <module>../tools</module>
+    <module>../blocks</module>
+    <module>../commons</module>
+    <module>../core</module>
+    <module>../dists</module>
     <!-- sub projects -->
-    <module>subprojects</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-components</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-components-sample</module>
+    <module>../subprojects</module>
+    <module>../core/cocoon-servlet-service/cocoon-servlet-service-components</module>
+    <module>../core/cocoon-servlet-service/cocoon-servlet-service-components-sample</module>
   </modules>
 
   <organization>
