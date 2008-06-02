@@ -1201,6 +1201,7 @@
     
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-jms"/>
+    <depend project="cocoon-block-template" type="samples"/>
     <depend project="jms"/>
     
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/dest"/>

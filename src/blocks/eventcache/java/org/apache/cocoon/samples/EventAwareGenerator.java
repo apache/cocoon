@@ -24,7 +24,7 @@ import org.apache.cocoon.caching.validity.EventValidity;
 import org.apache.cocoon.caching.validity.NamedEvent;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.generation.JXTemplateGenerator;
+import org.apache.cocoon.template.JXTemplateGenerator;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 

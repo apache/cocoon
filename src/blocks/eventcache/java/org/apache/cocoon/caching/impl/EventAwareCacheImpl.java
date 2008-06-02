@@ -18,8 +18,13 @@ package org.apache.cocoon.caching.impl;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Startable;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
@@ -34,72 +39,83 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 
 /**
  * This implementation holds all mappings between Events and PipelineCacheKeys 
- * in two MultiHashMap to facilitate efficient lookup by either as Key.
+ * in two MultiValueMaps to facilitate efficient lookup by either as Key.
  * 
- * @author Geoff Howard (ghoward@apache.org)
  * @version $Id$
  */
-public class EventAwareCacheImpl extends CacheImpl implements Initializable,
-                                                              EventAware {
-    
+public class EventAwareCacheImpl
+    extends CacheImpl
+    implements Initializable, Startable, EventAware {
+
     private ServiceManager m_manager;
 
-	private EventRegistry m_eventRegistry;
+    private EventRegistry m_eventRegistry;
 
-	/** 
+    // clean-up thread
+    private static final Timer timer = new Timer("event-cache-checker",true);
+    private TimerTask timerTask;
+    private long interval;
+
+    public void parameterize(Parameters parameters) throws ParameterException {
+
+        super.parameterize(parameters);
+        this.interval = parameters.getParameterAsInteger("cleanupthreadinterval",1000*60*60); // 1 hour
+        if(this.interval < 1) {
+            throw new ParameterException("EventAwareCacheImpl cleanupthreadinterval parameter has to be greater then 1");
+        }
+
+        String eventRegistryName = parameters.getParameter("registry", EventRegistry.ROLE);
+        try {
+            this.m_eventRegistry = (EventRegistry)m_manager.lookup(eventRegistryName);
+        } catch (ServiceException e) {
+            throw new ParameterException("Unable to lookup registry: " + eventRegistryName, e);
+        }
+    }
+
+    /** 
      * Clears the entire Cache, including all registered event-pipeline key 
      * mappings..
-	 */
-	public void clear() {
-		super.clear();
+     */
+    public void clear() {
+        super.clear();
         m_eventRegistry.clear();
-	}
+    }
     
-	/** 
-     * When a new Pipeline key is stored, it needs to be have its 
+    /** 
+     * When a new Pipeline key is stored, it needs to have it's 
      * <code>SourceValidity</code> objects examined.  For every 
-     * <code>EventValidity</code> found, its <code>Event</code> will be 
+     * <code>EventValidity</code> found, it's <code>Event</code> will be 
      * registered with this key in the <code>EventRegistry</code>.
      * 
      * <code>AggregatedValidity</code> is handled recursively.
-	 */
-	public void store(Serializable key,
-                		CachedResponse response)
-                		throws ProcessingException {
+     */
+    public void store(Serializable key,
+                        CachedResponse response)
+                        throws ProcessingException {
         SourceValidity[] validities = response.getValidityObjects();
         for (int i=0; i< validities.length;i++) {
             SourceValidity val = validities[i];
             examineValidity(val, key);
         }
         super.store(key, response);
-	}
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.caching.Cache#store(java.io.Serializable, org.apache.cocoon.caching.CachedResponse)
-     
-    public void store(Serializable key, CachedResponse response)
-        throws ProcessingException {
-        // TODO Auto-generated method stub
-        super.store(key, response);
-    }*/
+    }
 
     /**
      * Look up the EventRegistry 
      */
-	public void service(ServiceManager manager) throws ServiceException {
-		this.m_manager = manager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.m_manager = manager;
         super.service(manager);
-        this.m_eventRegistry = (EventRegistry)manager.lookup(EventRegistry.ROLE);
-	}
+    }
 
-	/**
+    /**
      * Un-register this key in the EventRegistry in addition to 
      * removing it from the Store
-	 */
-	public void remove(Serializable key) {
-		super.remove(key);
+     */
+    public void remove(Serializable key) {
+        super.remove(key);
         m_eventRegistry.removeKey(key);
-	}
+    }
     
     /**
      * Receive notification about the occurrence of an Event.
@@ -130,14 +146,14 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
      * Get the EventRegistry ready, and make sure it does not contain 
      * orphaned Event/PipelineKey mappings.
      */
-	public void initialize() throws Exception {
-		if (!m_eventRegistry.wasRecoverySuccessful()) {
+    public void initialize() throws Exception {
+        if (!m_eventRegistry.wasRecoverySuccessful()) {
             super.clear();
         } else {
             // Not sure if we want this overhead here, but where else?
-            veryifyEventCache();
+            verifyEventCache();
         }
-	}
+    }
     
     /**
      * Ensure that all PipelineCacheKeys registered to events still 
@@ -147,7 +163,7 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
      * stray events could hang around indefinitely if the cache is 
      * removed abnormally or is not configured with persistence.
      */
-    public void veryifyEventCache() {
+    public void verifyEventCache() {
         Serializable[] keys = m_eventRegistry.allKeys();
         if (keys == null) return;
         for (int i=0; i<keys.length; i++) {
@@ -164,12 +180,12 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
     /**
      * Release resources
      */
-	public void dispose() {
+    public void dispose() {
         m_manager.release(m_eventRegistry);
-		super.dispose();
+        super.dispose();
         m_manager = null;
         m_eventRegistry = null;
-	}
+    }
 
     private void examineValidity(SourceValidity val, Serializable key) {
         if (val instanceof AbstractAggregatedValidity) {
@@ -199,5 +215,20 @@ public class EventAwareCacheImpl extends CacheImpl implements Initializable,
         }
         m_eventRegistry.register(val.getEvent(),key); 
     }
+    
+    /**
+     * starts cache-cleaner timer task scheduling
+     */
+    public void start() throws Exception {
+        getLogger().debug("Intializing event-cache checker thread");
+        timerTask = new TimerTask() { public void run() {verifyEventCache();}; };
+        timer.schedule(timerTask, interval, interval);
+    }
 
+    /**
+     * stops cache-cleaner timer task scheduling
+     */
+    public void stop() {
+        timerTask.cancel();
+    }
 }

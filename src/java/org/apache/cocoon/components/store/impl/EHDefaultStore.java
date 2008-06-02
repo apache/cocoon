@@ -420,12 +420,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      * @see org.apache.excalibur.store.Store#containsKey(java.lang.Object)
      */
     public boolean containsKey(Object key) {
-        try {
-            return this.cache.get((Serializable) key) != null;
-        } catch (CacheException e) {
-            getLogger().error("Failure retrieving object from store",e);
-        }
-        return false;
+        return this.cache.isKeyInCache((Serializable) key);
     }
 
     /* (non-Javadoc)
