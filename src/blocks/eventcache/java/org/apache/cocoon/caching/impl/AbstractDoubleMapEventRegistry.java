@@ -18,7 +18,10 @@ package org.apache.cocoon.caching.impl;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -27,7 +30,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.EventRegistry;
 import org.apache.cocoon.caching.validity.Event;
-import org.apache.commons.collections.MultiHashMap;
+import org.apache.commons.collections.map.MultiValueMap;
 
 /**
  * This abstract base implementation of <code>EventRegistry</code> stores 
@@ -41,8 +44,7 @@ import org.apache.commons.collections.MultiHashMap;
  * simplicity favors inheritance.
  * 
  * @since 2.1
- * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 
 public abstract class AbstractDoubleMapEventRegistry
@@ -50,9 +52,14 @@ public abstract class AbstractDoubleMapEventRegistry
     implements Initializable, EventRegistry, Disposable, ThreadSafe {
 
     private boolean m_init_success = false;
-    private MultiHashMap m_keyMMap;
-    private MultiHashMap m_eventMMap;
-    
+    // maps to store keys and events: always accessed through MultiValue decorators
+    private Map m_keyMap;
+    private Map m_eventMap;
+
+    // maps which decorate the maps above to give the MultiMap behavior
+    private MultiValueMap m_keyMultiMap; 
+    private MultiValueMap m_eventMultiMap;
+
     /**
      * Registers (stores) a two-way mapping between this Event and this 
      * PipelineCacheKey for later retrieval.
@@ -62,8 +69,8 @@ public abstract class AbstractDoubleMapEventRegistry
      */
     public void register(Event e, Serializable key) {
         synchronized(this) {
-            m_keyMMap.put(key,e);
-            m_eventMMap.put(e,key);
+            m_keyMultiMap.put(key,e);
+            m_eventMultiMap.put(e,key);
         }
     }
 
@@ -72,8 +79,8 @@ public abstract class AbstractDoubleMapEventRegistry
      */
     public void clear() {
         synchronized(this) {
-            m_keyMMap.clear();
-            m_eventMMap.clear();
+            m_keyMultiMap.clear();
+            m_eventMultiMap.clear();
         }
     }
 
@@ -81,14 +88,16 @@ public abstract class AbstractDoubleMapEventRegistry
      * Retrieve all pipeline keys mapped to this event.
      */
     public Serializable[] keysForEvent(Event e) {
-        Collection coll = (Collection)m_eventMMap.get(e);
-        if (coll==null || coll.isEmpty()) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("The event map returned empty");
+        synchronized(this) {
+            Collection coll = (Collection)m_eventMultiMap.get(e);
+            if (coll==null || coll.isEmpty()) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("The event map returned empty");
+                }
+                return null;
+            } else {
+                return (Serializable[])coll.toArray(new Serializable[coll.size()]);
             }
-            return null;
-        } else {
-            return (Serializable[])coll.toArray(new Serializable[coll.size()]);
         }
     }
 
@@ -96,9 +105,11 @@ public abstract class AbstractDoubleMapEventRegistry
      * Return all pipeline keys mapped to any event
      */
     public Serializable[] allKeys() {
-        Set keys = this.m_keyMMap.keySet();
-        return (Serializable[])keys.toArray(
-                new Serializable[keys.size()]);
+        synchronized(this) {
+            Set keys = this.m_keyMultiMap.keySet();
+            return (Serializable[])keys.toArray(
+                    new Serializable[keys.size()]);
+        }
     }
 
     /**
@@ -106,13 +117,13 @@ public abstract class AbstractDoubleMapEventRegistry
      * in the event mapping must be cleaned up.
      */
     public void removeKey(Serializable key) {
-        Collection coll = (Collection)m_keyMMap.get(key);
-        if (coll==null || coll.isEmpty()) {
-            return;
-        } 
-        // get the iterator over all matching PCK keyed 
-        // entries in the key-indexed MMap.
         synchronized(this) {
+            Collection coll = (Collection)m_keyMultiMap.get(key);
+            if (coll==null) {
+                return;
+            } 
+            // get the iterator over all matching PCK keyed 
+            // entries in the key-indexed MMap.
             Iterator it = coll.iterator();
             while (it.hasNext()) {
                 /* remove all entries in the event-indexed map where this
@@ -123,13 +134,13 @@ public abstract class AbstractDoubleMapEventRegistry
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Removing from event mapping: " + o.toString());
                     }
-                    m_eventMMap.remove(o,key);            
+                    m_eventMultiMap.remove(o,key);
                 }
             }
             
             // remove all entries in the key-indexed map where this PCK key 
             // is the key -- confused yet?
-            m_keyMMap.remove(key);
+            m_keyMultiMap.remove(key);
         }
     }
     
@@ -150,10 +161,10 @@ public abstract class AbstractDoubleMapEventRegistry
     public void dispose() {
         EventRegistryDataWrapper ecdw = wrapRegistry();
         persist(ecdw);
-        m_keyMMap.clear();
-        m_keyMMap = null;
-        m_eventMMap.clear();
-        m_eventMMap = null;
+        m_keyMultiMap = null;
+        m_eventMultiMap = null;
+        m_keyMap = null;
+        m_eventMap = null;
     }
 
     /**
@@ -165,18 +176,26 @@ public abstract class AbstractDoubleMapEventRegistry
     
     protected EventRegistryDataWrapper wrapRegistry() {
         EventRegistryDataWrapper ecdw = new EventRegistryDataWrapper();
-        ecdw.setupMaps(this.m_keyMMap, this.m_eventMMap);
+        ecdw.setupMaps(this.m_keyMap, this.m_eventMap);
         return ecdw;
     }
     
     protected void unwrapRegistry(EventRegistryDataWrapper ecdw) {
-        this.m_eventMMap = ecdw.get_eventMap();
-        this.m_keyMMap = ecdw.get_keyMap();
+        this.m_eventMap = ecdw.get_eventMap();
+        this.m_keyMap = ecdw.get_keyMap();
+        createMultiMaps();
     }
 
     protected final void createBlankCache() {
-        this.m_eventMMap = new MultiHashMap(); 
-        this.m_keyMMap = new MultiHashMap(); 
+        // TODO: don't hardcode initial size
+        this.m_eventMap = new HashMap(1000);
+        this.m_keyMap = new HashMap(1000);
+        createMultiMaps();
+    }
+    
+    protected void createMultiMaps() {
+        this.m_eventMultiMap = MultiValueMap.decorate(m_eventMap,HashSet.class); 
+        this.m_keyMultiMap = MultiValueMap.decorate(m_keyMap,HashSet.class); 
     }
     
     /** 
