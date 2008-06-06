@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,8 +56,7 @@ public class EPStyleRegion extends BaseElementProcessor {
 
     //kludge constant to fix gnumeric's love of declaring large stlye regions
     //for the blank sections of the sheet w/no apparent purpose that we can
-    //
-    private int MAX_AREA = 2001;
+    private int MAX_AREA = 65537;  // Use max row (2^16 + 1), see: http://markmail.org/message/j5svscx3dxo4zyej
 
     /**
      * constructor
@@ -84,10 +83,6 @@ public class EPStyleRegion extends BaseElementProcessor {
         Region region = new Region(getStartRow(), (short)getStartCol(),
                 getEndRow(), (short)getEndCol());
 
-        //        if (region.getRowFrom() == 0 &&
-        //            region.getColumnFrom() ==0)
-        //            getLogger().debug("got 0,0");
-
         getLogger().debug("region area is " + region.getArea());
         if (region.getArea() < MAX_AREA) {
             //protect against stupid mega regions
@@ -96,6 +91,7 @@ public class EPStyleRegion extends BaseElementProcessor {
             getLogger().debug("region added");
             _style = getSheet().addStyleRegion(region); //test
         } else {
+            getLogger().debug("Region NOT added!. Reason: region.getArea() = " + region.getArea() + " > " + MAX_AREA);
             invalid = true;
         }
         colorhash = ((EPStyles)parent).getColorHash();

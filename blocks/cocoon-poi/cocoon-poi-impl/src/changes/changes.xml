@@ -24,15 +24,18 @@
     +-->
 <document>
   <body>
-    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
+    <release version="1.0.0-M1" date="2008-??-??" description="unreleased">
+      <action dev="antonio" type="fix" fixes-bug="COCOON-2209" due-to="Reynaldo Porras" due-to-email="rporras@agssa.net">
+        Formatted style regions stop creating style at 2000 rows.
+      </action>
       <action dev="anathaniel" type="update">
         Update to poi-3.0.2.
-      </action> 
+      </action>
       <action dev="antonio" type="fix" fixes-bug="COCOON-1440" due-to="Krystian Nowak" due-to-email="krystian@man.poznan.pl">
         Color string normalization.
-      </action> 
+      </action>
       <action dev="felixk" type="update">
-        Cocoon-Poi-Block becomes a normal Spring application which means that it is 
+        Cocoon-Poi-Block becomes a normal Spring application which means that it is
         initialized by Spring and not the other way around.
       </action>
       <action dev="joerg" type="fix" fixes-bug="COCOON-1976" due-to="Rob Berens">
@@ -40,7 +43,7 @@
       </action>
       <action dev="reinhard" type="add">
         Initial creation.
-      </action>      
+      </action>
     </release>
   </body>
 </document>
