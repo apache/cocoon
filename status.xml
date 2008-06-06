@@ -182,6 +182,9 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <action dev="AG" type="fix" fixes-bug="COCOON-2209" due-to="Reynaldo Porras" due-to-email="rporras@agssa.net">
+      POI Block: formatted style regions stop creating style at 2000 rows.
+    </action>
     <action dev="AS" type="fix" fixes-bug="COCOON-2152" due-to="Ellis Pritchard" due-to-email="epritcha@wiley.com">
       Eventcache: Events are persisted and restored and sample works
     </action>
