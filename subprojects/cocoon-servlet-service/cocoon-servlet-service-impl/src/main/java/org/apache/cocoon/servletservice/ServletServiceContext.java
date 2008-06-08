@@ -67,9 +67,8 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     private String serviceName;
 
     /*
-     *  TODO inheritance of attributes from the parent context is only
-     *  partly implemented: removeAttribute and getAttributeNames
-     *  doesn't respect inheritance yet.
+     * TODO inheritance of attributes from the parent context is only partly implemented: removeAttribute and
+     * getAttributeNames doesn't respect inheritance yet.
      */
     public Object getAttribute(String name) {
         Object value = this.attributes.get(name);
@@ -92,8 +91,9 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
      * @param map the attributes to set
      */
     public void setAttributes(Map map) {
-        if (map != null)
+        if (map != null) {
             this.attributes = map;
+        }
     }
 
     public URL getResource(String path) throws MalformedURLException {
@@ -170,8 +170,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         try {
             return this.getResource(path).openStream();
         } catch (IOException e) {
-            // FIXME Error handling
-            e.printStackTrace();
+            this.logger.error("Can't open stream on " + path, e);
             return null;
         }
     }
@@ -186,7 +185,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.servlet.ServletContext#getMinorVersion()
      */
     public int getMinorVersion() {
@@ -197,7 +196,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         ArrayList filenames = new ArrayList();
 
         if (!file.isDirectory()) {
-            filenames.add("/" + file.toString().substring(pathPrefix.length()-1));
+            filenames.add("/" + file.toString().substring(pathPrefix.length() - 1));
             return filenames;
         }
 
@@ -205,7 +204,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
         for (int i = 0; i < files.length; i++) {
             File subfile = files[i];
-            filenames.addAll(getDirectoryList(subfile, pathPrefix));
+            filenames.addAll(this.getDirectoryList(subfile, pathPrefix));
         }
 
         return filenames;
@@ -232,7 +231,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         }
 
         HashSet set = new HashSet();
-        set.addAll(getDirectoryList(file, pathPrefix));
+        set.addAll(this.getDirectoryList(file, pathPrefix));
 
         return set;
     }
@@ -261,6 +260,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     /**
      * Set the servlet of the context
+     * 
      * @param servlet
      */
     public void setServlet(Servlet servlet) {
@@ -268,9 +268,8 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     }
 
     /**
-     * Takes the scheme specific part of a servlet service URI (the scheme is the
-     * responsibilty of the ServletSource) and resolve it with respect to the
-     * servlets mount point.
+     * Takes the scheme specific part of a servlet service URI (the scheme is the responsibilty of the ServletSource)
+     * and resolve it with respect to the servlets mount point.
      */
     public URI absolutizeURI(URI uri) throws URISyntaxException {
         String servletServiceName = uri.getScheme();
@@ -288,16 +287,15 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
         String mountPath = servletServiceContext.getMountPath();
         if (mountPath == null) {
-            throw new URISyntaxException(uri.toString(),
-                                         "No mount point for this URI");
+            throw new URISyntaxException(uri.toString(), "No mount point for this URI");
         }
         if (mountPath.endsWith("/")) {
             mountPath = mountPath.substring(0, mountPath.length() - 1);
         }
 
         String absoluteURI = mountPath + uri.getSchemeSpecificPart();
-        if (logger.isInfoEnabled()) {
-            logger.info("Resolving " + uri.toString() + " to " + absoluteURI);
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info("Resolving " + uri.toString() + " to " + absoluteURI);
         }
 
         return new URI(absoluteURI);
@@ -320,17 +318,17 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
             return null;
         }
 
-        Servlet servlet =
-            (Servlet) this.connections.get(name);
+        Servlet servlet = (Servlet) this.connections.get(name);
         if (servlet == null && !name.equals(SUPER)) {
-        	Servlet _super = ((Servlet)this.connections.get(SUPER));
-        	if (_super != null) {
-        		ServletContext c = _super.getServletConfig().getServletContext();
-        		if (c instanceof ServletServiceContext)
-        			return ((ServletServiceContext)c).getNamedContext(name);
+            Servlet _super = (Servlet) this.connections.get(SUPER);
+            if (_super != null) {
+                ServletContext c = _super.getServletConfig().getServletContext();
+                if (c instanceof ServletServiceContext) {
+                    return ((ServletServiceContext) c).getNamedContext(name);
+                }
 
-        		return null;
-        	}
+                return null;
+            }
         }
         return servlet != null ? servlet.getServletConfig().getServletContext() : null;
     }
@@ -394,11 +392,11 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
 
     protected class NamedDispatcher implements RequestDispatcher {
 
-        private String servletServiceName;
+        private final String servletServiceName;
 
-        private boolean superCall;
+        private final boolean superCall;
 
-        private ServletContext context;
+        private final ServletContext context;
 
         public NamedDispatcher(String servletServiceName) {
             this.servletServiceName = servletServiceName;
@@ -416,19 +414,21 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         public void forward(ServletRequest request, ServletResponse response) throws ServletException, IOException {
             // Call to named servlet service
 
-            if (logger.isInfoEnabled()) {
-                logger.info("Enter processing in servlet service " + this.servletServiceName);
+            if (ServletServiceContext.this.logger.isInfoEnabled()) {
+                ServletServiceContext.this.logger
+                        .info("Enter processing in servlet service " + this.servletServiceName);
             }
             RequestDispatcher dispatcher = this.context.getRequestDispatcher(((HttpServletRequest) request)
-                            .getPathInfo());
+                    .getPathInfo());
             if (dispatcher != null && dispatcher instanceof PathDispatcher) {
                 ((PathDispatcher) dispatcher).forward(request, response, this.superCall);
             } else {
                 // Cannot happen
                 throw new IllegalStateException();
             }
-            if (logger.isInfoEnabled()) {
-                logger.info("Leaving processing in servlet service " + this.servletServiceName);
+            if (ServletServiceContext.this.logger.isInfoEnabled()) {
+                ServletServiceContext.this.logger.info("Leaving processing in servlet service "
+                        + this.servletServiceName);
             }
         }
 
@@ -438,8 +438,7 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
     }
 
     /**
-     * Limited functionality, assumes that there is at most one servlet in the
-     * context
+     * Limited functionality, assumes that there is at most one servlet in the context
      */
     private class PathDispatcher implements RequestDispatcher {
 
@@ -453,13 +452,14 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
         }
 
         public void forward(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-            forward(request, response, false);
+            this.forward(request, response, false);
         }
 
         protected void forward(ServletRequest request, ServletResponse response, boolean superCall)
-                        throws ServletException, IOException {
+                throws ServletException, IOException {
             try {
-                HttpServletResponseBufferingWrapper wrappedResponse = new HttpServletResponseBufferingWrapper((HttpServletResponse)response);
+                HttpServletResponseBufferingWrapper wrappedResponse = new HttpServletResponseBufferingWrapper(
+                        (HttpServletResponse) response);
                 // FIXME: I think that Cocoon should always set status code on
                 // its own
                 wrappedResponse.setStatus(HttpServletResponse.SC_OK);
@@ -468,14 +468,14 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                     // a new context is entered, this is used for the servlet
                     // protocol
                     CallStackHelper.enterServlet(ServletServiceContext.this, (HttpServletRequest) request,
-                                    wrappedResponse);
+                            wrappedResponse);
                 } else {
                     // A super servlet service should be called in the context
                     // of the called servlet service to get polymorphic calls
                     // resolved in the right way. We still need to register the
                     // current context for resolving super calls relative it.
                     CallStackHelper.enterSuperServlet(ServletServiceContext.this, (HttpServletRequest) request,
-                                    wrappedResponse);
+                            wrappedResponse);
                 }
 
                 ServletServiceContext.this.servlet.service(request, wrappedResponse);
@@ -483,12 +483,14 @@ public class ServletServiceContext extends ServletContextWrapper implements Abso
                 int status = wrappedResponse.getStatusCode();
                 NamedDispatcher _super = (NamedDispatcher) ServletServiceContext.this.getNamedDispatcher(SUPER);
                 if (status == HttpServletResponse.SC_NOT_FOUND && _super != null) {
-                    //if servlet returned NOT_FOUND (404) and has super servlet declared let's reset everything and ask the super servlet
+                    // if servlet returned NOT_FOUND (404) and has super servlet declared let's reset everything and ask
+                    // the super servlet
 
-                    //wrapping object resets underlying response as well
+                    // wrapping object resets underlying response as well
                     wrappedResponse.resetBufferedResponse();
-                    //here we don't need to pass wrappedResponse object because it's not our concern to buffer response anymore
-                    //this avoids many overlapping buffers
+                    // here we don't need to pass wrappedResponse object because it's not our concern to buffer response
+                    // anymore
+                    // this avoids many overlapping buffers
                     _super.forward(request, response);
                 } else {
                     wrappedResponse.flushBufferedResponse();

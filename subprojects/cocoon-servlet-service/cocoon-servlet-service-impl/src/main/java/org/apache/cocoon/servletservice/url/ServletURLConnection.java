@@ -32,18 +32,23 @@ import org.apache.cocoon.servletservice.Absolutizable;
 import org.apache.cocoon.servletservice.CallStackHelper;
 import org.apache.cocoon.servletservice.ServletConnection;
 
-public class ServletURLConnection extends URLConnection{
+public class ServletURLConnection extends URLConnection {
 
-    private ServletConnection servletConnection;
-    private URL url;
+    private final ServletConnection servletConnection;
+    private final URL url;
 
     protected ServletURLConnection(URL url) throws URISyntaxException {
         super(url);
 
         this.url = url;
 
-        URI locationUri = new URI(url.getPath() + "?" + url.getQuery());
-        // new URI(locationUri.getRawSchemeSpecificPart());
+        URI locationUri = null;
+        String query = url.getQuery();
+        if (query != null) {
+            locationUri = new URI(url.getPath() + "?" + url.getQuery());
+        } else {
+            locationUri = new URI(url.getPath());
+        }
 
         final String servletReference = locationUri.getScheme();
         final Absolutizable absolutizable = (Absolutizable) CallStackHelper.getCurrentServletContext();
@@ -62,12 +67,19 @@ public class ServletURLConnection extends URLConnection{
         }
 
         this.servletConnection = new AbsoluteServletConnection(servletName, locationUri.getRawPath(), locationUri
-                        .getRawQuery());
+                .getRawQuery());
+        this.servletConnection.setIfModifiedSince(0);
     }
 
     public void connect() throws IOException {
         try {
+            if (this.connected) {
+                return;
+            }
+
             this.servletConnection.connect();
+
+            this.connected = true;
         } catch (ServletException e) {
             IOException ioException = new IOException("Can't connect to servlet URL " + this.url + ".");
             ioException.initCause(e);
@@ -77,12 +89,22 @@ public class ServletURLConnection extends URLConnection{
 
     public InputStream getInputStream() throws IOException {
         try {
+            this.connect();
             return this.servletConnection.getInputStream();
         } catch (ServletException e) {
             IOException ioException = new IOException("Can't read from servlet URL " + this.url + ".");
             ioException.initCause(e);
             throw ioException;
         }
+    }
+
+    public long getLastModified() {
+        try {
+            this.connect();
+        } catch (IOException e) {
+            return 0;
+        }
+        return this.servletConnection.getLastModified();
     }
 
 }

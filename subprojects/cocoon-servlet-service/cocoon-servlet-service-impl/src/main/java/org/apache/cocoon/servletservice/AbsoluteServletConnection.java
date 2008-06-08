@@ -30,9 +30,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * Create a connection to a servlet service. In order to use it, the fully qualified service name
- * must be available.
- *
+ * Create a connection to a servlet service. In order to use it, the fully qualified service name must be available.
+ * 
  * @version $Id$
  * @since 1.0.0
  */
@@ -44,22 +43,23 @@ public final class AbsoluteServletConnection extends AbstractServletConnection {
 
     /**
      * Create an absolute connection to a servlet service.
-     *
+     * 
      * @param serviceName The fully qualified service name (= the name of the Spring bean).
      * @param path The requested path of the service.
      * @param queryString The query parameters formatted as HTTP request query string.
      */
     public AbsoluteServletConnection(String serviceName, String path, String queryString) {
-        if(serviceName == null) {
+        if (serviceName == null) {
             throw new IllegalArgumentException("The serviceName parameter must be passed.");
         }
         this.context = CallStackHelper.getBaseServletContext();
         final ApplicationContext applicationContext = WebApplicationContextUtils
-                        .getRequiredWebApplicationContext(this.context);
+                .getRequiredWebApplicationContext(this.context);
         try {
             this.servlet = (Servlet) applicationContext.getBean(serviceName);
-        } catch(ClassCastException cce) {
-            throw new IllegalArgumentException("The service '" + serviceName + "' is not of type " + Servlet.class.getName() + ".");
+        } catch (ClassCastException cce) {
+            throw new IllegalArgumentException("The service '" + serviceName + "' is not of type "
+                    + Servlet.class.getName() + ".");
         }
         if (this.servlet == null) {
             throw new IllegalArgumentException("The service '" + serviceName + "' does not exist.");
@@ -67,12 +67,12 @@ public final class AbsoluteServletConnection extends AbstractServletConnection {
 
         URI reqUri = null;
         try {
-            this.uri = new URI(serviceName  + ABSOLUTE_SERVLET_SOURCE_POSTFIX, null, path, queryString, null);
+            this.uri = new URI(serviceName + ABSOLUTE_SERVLET_SOURCE_POSTFIX, null, path, queryString, null);
             this.uri = new URI("servlet", this.uri.toASCIIString(), null);
             reqUri = new URI("servlet", null, path, queryString, null);
         } catch (URISyntaxException e) {
             IllegalArgumentException iae = new IllegalArgumentException("Can't create a URI using the passed path '"
-                            + path + "' and query string '" + queryString + "' values.");
+                    + path + "' and query string '" + queryString + "' values.");
             iae.initCause(e);
             throw iae;
         }
