@@ -75,7 +75,7 @@ public abstract class AbstractServletConnection implements ServletConnection {
         this.response.setOutputStream(os);
 
         try {
-            performConnect();
+            this.performConnect();
             this.response.flushBuffer();
             this.responseBody = new ByteArrayInputStream(os.toByteArray());
         } finally {
@@ -87,7 +87,7 @@ public abstract class AbstractServletConnection implements ServletConnection {
 
     /**
      * Access the servlet and fill the response object.
-     *
+     * 
      * @throws ServletException
      * @throws IOException
      */
@@ -95,7 +95,7 @@ public abstract class AbstractServletConnection implements ServletConnection {
 
     /**
      * Return an <code>InputStream</code> object to read from the source.
-     *
+     * 
      * @throws IOException
      * @throws ServletException
      */
@@ -113,28 +113,37 @@ public abstract class AbstractServletConnection implements ServletConnection {
     }
 
     public long getLastModified() {
-        return this.getHeaderFieldDate("Last-Modified", 0);
+        if (!this.connected) {
+            try {
+                this.connect();
+            } catch (Exception e) {
+                this.logger.warn("Exception while reading the getLastModified data.");
+                return 0;
+            }
+        }
+        long headerFieldDate = this.getHeaderFieldDate("Last-Modified", 0);
+        return headerFieldDate;
     }
 
     public String getContentType() {
         return this.getHeaderField("Content-Type");
     }
 
-    public long getHeaderFieldDate(String name, long Default) {
+    public long getHeaderFieldDate(String name, long defaultValue) {
         try {
             return this.response.getDateHeader(name);
         } catch (Exception e) {
-            // FIXME We should do something about it.
+            this.logger.warn("Exception while reading the response header '" + name + "'.");
         }
 
-        return Default;
+        return defaultValue;
     }
 
     public String getHeaderField(String name) {
         try {
             this.connect();
         } catch (Exception e) {
-            // FIXME We should do something about it.
+            this.logger.warn("Exception while reading the response header '" + name + "'.");
             return null;
         }
 
@@ -155,10 +164,9 @@ public abstract class AbstractServletConnection implements ServletConnection {
 
     /**
      * Returns an output stream that writes as POST to this connection.
-     *
+     * 
      * @return an output stream that writes as POST to this connection.
-     * @throws IllegalStateException -
-     *             if already connected
+     * @throws IllegalStateException - if already connected
      */
     public OutputStream getOutputStream() throws IllegalStateException {
         if (this.connected) {
@@ -186,6 +194,5 @@ public abstract class AbstractServletConnection implements ServletConnection {
         }
 
     }
-
 
 }
