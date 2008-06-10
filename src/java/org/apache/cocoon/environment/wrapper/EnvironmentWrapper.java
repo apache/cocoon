@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,11 +58,11 @@ public class EnvironmentWrapper extends AbstractEnvironment {
 
     /** The stream to output to */
     protected OutputStream outputStream;
-    
+
     protected String contentType;
 
     protected boolean internalRedirect = false;
-    
+
     /**
      * Constructs an EnvironmentWrapper object from a Request
      * and Response objects
@@ -101,7 +101,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     throws MalformedURLException {
         this(env, requestURI, queryString, logger, null, rawMode,env.getView(), true);
     }
-    
+
     /**
      * Constructs an EnvironmentWrapper object from a Request
      * and Response objects
@@ -176,7 +176,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
             this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
         }
     }
-   
+
     public EnvironmentWrapper(Environment env, ComponentManager manager, String uri,  Logger logger, boolean wrapResponse)  throws MalformedURLException {
         super(env.getURI(), env.getView(), env.getContext(), env.getAction());
 
@@ -224,16 +224,16 @@ public class EnvironmentWrapper extends AbstractEnvironment {
             uri = uri.substring(position);
         }
 
-        
+
         // determine if the queryString specifies a cocoon-view
         String view = null;
         if (queryString != null) {
             int index = queryString.indexOf(Constants.VIEW_PARAM);
-            if (index != -1 
+            if (index != -1
                 && (index == 0 || queryString.charAt(index-1) == '&')
-                && queryString.length() > index + Constants.VIEW_PARAM.length() 
+                && queryString.length() > index + Constants.VIEW_PARAM.length()
                 && queryString.charAt(index+Constants.VIEW_PARAM.length()) == '=') {
-                
+
                 String tmp = queryString.substring(index+Constants.VIEW_PARAM.length()+1);
                 index = tmp.indexOf('&');
                 if (index != -1) {
@@ -258,7 +258,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
 
         this.init(env, requestURI, queryString, logger, manager, rawMode, view, wrapResponse);
         this.setURI(prefix, uri);
-        
+
     }
 
     /**
@@ -316,12 +316,12 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     */
     public boolean tryResetResponse() throws IOException {
         final OutputStream outputStream = getOutputStream(-1);
-        if (outputStream != null && outputStream instanceof BufferedOutputStream) {
+        if (outputStream instanceof BufferedOutputStream && ((BufferedOutputStream) outputStream).isResettable()) {
             ((BufferedOutputStream)outputStream).reset();
             return true;
-        } else {
-          return super.tryResetResponse();
         }
+        // return false
+        return super.tryResetResponse();
     }
 
     /**
@@ -329,10 +329,11 @@ public class EnvironmentWrapper extends AbstractEnvironment {
      */
     public void commitResponse() throws IOException {
         final OutputStream outputStream = getOutputStream(-1);
-        if (outputStream != null && outputStream instanceof BufferedOutputStream) {
+        if (outputStream != null) {
             outputStream.flush();
         } else {
-          super.commitResponse();
+            // no action
+            super.commitResponse();
         }
     }
 
@@ -343,7 +344,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     public String getRedirectURL() {
         return this.redirectURL;
     }
-    
+
     public void reset() {
         this.redirectURL = null;
     }
@@ -412,7 +413,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     public Object getAttribute(String name)
     {
         Object value = super.getAttribute(name);
-        
+
         // get it from the wrapped env only if it's not defined here with a null value
         if (value == null  && !hasAttribute(name)) {
             value = this.environment.getAttribute(name);
