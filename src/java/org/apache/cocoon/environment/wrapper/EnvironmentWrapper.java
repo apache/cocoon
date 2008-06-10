@@ -317,7 +317,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     public boolean tryResetResponse() throws IOException {
         final OutputStream outputStream = getOutputStream(-1);
         if (outputStream != null && outputStream instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)outputStream).clearBuffer();
+            ((BufferedOutputStream)outputStream).reset();
             return true;
         } else {
           return super.tryResetResponse();
@@ -330,7 +330,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     public void commitResponse() throws IOException {
         final OutputStream outputStream = getOutputStream(-1);
         if (outputStream != null && outputStream instanceof BufferedOutputStream) {
-            ((BufferedOutputStream)outputStream).realFlush();
+            outputStream.flush();
         } else {
           super.commitResponse();
         }

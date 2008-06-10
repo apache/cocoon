@@ -479,28 +479,27 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      *
      * <br>This method replaces {@link #getOutputStream()}.
      */
-    public OutputStream getOutputStream(int bufferSize)
-    throws IOException {
-
+    public OutputStream getOutputStream(int bufferSize) throws IOException {
         // This method could be called several times during request processing
         // with differing values of bufferSize and should handle this situation
         // correctly.
-
-        if (bufferSize == -1) {
-            if (this.secureOutputStream == null) {
-                this.secureOutputStream = new BufferedOutputStream(this.outputStream);
-            }
-            return this.secureOutputStream;
-        } else if (bufferSize == 0) {
+        // FIXME (JH): Question is what "correctly" means. The current behavior
+        // seems to be inconsistent: On a second call with bufferSize == 0 we
+        // discard whatever the first called set up. With a bufferSize != 0 the
+        // first call's setup is preserved. Why not always creating new
+        // BufferedOutputStream in the else block replacing a potentially
+        // existing one?
+        if (bufferSize == 0) {
             // Discard secure output stream if it was created before.
             if (this.secureOutputStream != null) {
                 this.secureOutputStream = null;
             }
             return this.outputStream;
         } else {
-            // FIXME Triple buffering, anyone?
-            this.outputStream = new java.io.BufferedOutputStream(this.outputStream, bufferSize);
-            return this.outputStream;
+            if (this.secureOutputStream == null) {
+                this.secureOutputStream = new BufferedOutputStream(this.outputStream, bufferSize);
+            }
+            return this.secureOutputStream;
         }
     }
 
@@ -513,8 +512,8 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     */
     public boolean tryResetResponse()
     throws IOException {
-        if (this.secureOutputStream != null) {
-            this.secureOutputStream.clearBuffer();
+        if (this.secureOutputStream != null && this.secureOutputStream.isResettable()) {
+            this.secureOutputStream.reset();
             return true;
         }
         return false;
@@ -526,8 +525,10 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     public void commitResponse()
     throws IOException {
         if (this.secureOutputStream != null) {
-            this.setContentLength(this.secureOutputStream.getCount());
-            this.secureOutputStream.realFlush();
+            if (this.secureOutputStream.isResettable()) {
+                this.setContentLength(this.secureOutputStream.getCount());
+            }
+            this.secureOutputStream.flush();
         } else if (this.outputStream != null) {
             this.outputStream.flush();
         }
