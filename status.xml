@@ -182,6 +182,10 @@
 
   <changes>
   <release version="2.1.12" date="TBD">
+    <!-- Leave this entry about raising minimum Java to 1.4 at the top for 2.1.12! -->
+    <action dev="all" type="update">
+      Starting with 2.1.12 the minimum required Java version will be 1.4.2.
+    </action>
     <action dev="JH" type="update">
       Core: Cocoon's pipeline buffer increases from an initial buffer size of 8192 bytes to the configurable flush
       buffer size rather than allocating the complete buffer beforehand.
