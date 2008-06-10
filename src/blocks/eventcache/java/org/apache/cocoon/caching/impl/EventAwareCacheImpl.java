@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,9 +38,9 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
 
 /**
- * This implementation holds all mappings between Events and PipelineCacheKeys 
+ * This implementation holds all mappings between Events and PipelineCacheKeys
  * in two MultiValueMaps to facilitate efficient lookup by either as Key.
- * 
+ *
  * @version $Id$
  */
 public class EventAwareCacheImpl
@@ -52,7 +52,7 @@ public class EventAwareCacheImpl
     private EventRegistry m_eventRegistry;
 
     // clean-up thread
-    private static final Timer timer = new Timer("event-cache-checker",true);
+    private static final Timer timer = new Timer(true);
     private TimerTask timerTask;
     private long interval;
 
@@ -72,21 +72,21 @@ public class EventAwareCacheImpl
         }
     }
 
-    /** 
-     * Clears the entire Cache, including all registered event-pipeline key 
+    /**
+     * Clears the entire Cache, including all registered event-pipeline key
      * mappings..
      */
     public void clear() {
         super.clear();
         m_eventRegistry.clear();
     }
-    
-    /** 
-     * When a new Pipeline key is stored, it needs to have it's 
-     * <code>SourceValidity</code> objects examined.  For every 
-     * <code>EventValidity</code> found, it's <code>Event</code> will be 
+
+    /**
+     * When a new Pipeline key is stored, it needs to have it's
+     * <code>SourceValidity</code> objects examined.  For every
+     * <code>EventValidity</code> found, it's <code>Event</code> will be
      * registered with this key in the <code>EventRegistry</code>.
-     * 
+     *
      * <code>AggregatedValidity</code> is handled recursively.
      */
     public void store(Serializable key,
@@ -101,7 +101,7 @@ public class EventAwareCacheImpl
     }
 
     /**
-     * Look up the EventRegistry 
+     * Look up the EventRegistry
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.m_manager = manager;
@@ -109,17 +109,17 @@ public class EventAwareCacheImpl
     }
 
     /**
-     * Un-register this key in the EventRegistry in addition to 
+     * Un-register this key in the EventRegistry in addition to
      * removing it from the Store
      */
     public void remove(Serializable key) {
         super.remove(key);
         m_eventRegistry.removeKey(key);
     }
-    
+
     /**
      * Receive notification about the occurrence of an Event.
-     * If this event has registered pipeline keys, remove them 
+     * If this event has registered pipeline keys, remove them
      * from the Store and unregister them
      * @param e The Event to be processed.
      */
@@ -133,17 +133,17 @@ public class EventAwareCacheImpl
                     getLogger().debug("Processing cache event, found Pipeline key: " + keys[i].toString());
                 }
                 /* every pck associated with this event needs to be
-                 * removed -- regardless of event mapping. and every 
-                 * event mapped to those keys needs to be removed 
+                 * removed -- regardless of event mapping. and every
+                 * event mapped to those keys needs to be removed
                  * recursively.
-                 */ 
+                 */
                 remove(keys[i]);
             }
         }
     }
-    
+
     /**
-     * Get the EventRegistry ready, and make sure it does not contain 
+     * Get the EventRegistry ready, and make sure it does not contain
      * orphaned Event/PipelineKey mappings.
      */
     public void initialize() throws Exception {
@@ -154,13 +154,13 @@ public class EventAwareCacheImpl
             verifyEventCache();
         }
     }
-    
+
     /**
-     * Ensure that all PipelineCacheKeys registered to events still 
-     * point to valid cache entries.  Having an isTotallyEmpty() on 
-     * Store might make this less necessary, as the most likely time 
+     * Ensure that all PipelineCacheKeys registered to events still
+     * point to valid cache entries.  Having an isTotallyEmpty() on
+     * Store might make this less necessary, as the most likely time
      * to discover orphaned entries is at startup.  This is because
-     * stray events could hang around indefinitely if the cache is 
+     * stray events could hang around indefinitely if the cache is
      * removed abnormally or is not configured with persistence.
      */
     public void verifyEventCache() {
@@ -170,7 +170,7 @@ public class EventAwareCacheImpl
             if (!this.containsKey(keys[i])) {
                 m_eventRegistry.removeKey(keys[i]);
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Cache key no longer valid: " + 
+                    getLogger().debug("Cache key no longer valid: " +
                             keys[i]);
                 }
             }
@@ -213,9 +213,9 @@ public class EventAwareCacheImpl
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Found EventValidity: " + val.toString());
         }
-        m_eventRegistry.register(val.getEvent(),key); 
+        m_eventRegistry.register(val.getEvent(),key);
     }
-    
+
     /**
      * starts cache-cleaner timer task scheduling
      */
