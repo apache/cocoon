@@ -25,6 +25,10 @@
 <document>
   <body>
     <release version="1.0.1" date="TBD" description="unreleased">
+      <action dev="joerg" type="update">
+        Cocoon's pipeline buffer increases from an initial buffer size of 8192 bytes to the configurable flush
+        buffer size rather than allocating the complete buffer beforehand.
+      </action>
       <action dev="joerg" type="fix" fixes-bug="COCOON-2192" due-to="Steven Dolg" due-to-email="steven.dolg@indoqa.com">
         Fix CachingOutputStream not caching all content or leading to ArrayIndexOutOfBoundsException when using
         write(byte[], int, int).
