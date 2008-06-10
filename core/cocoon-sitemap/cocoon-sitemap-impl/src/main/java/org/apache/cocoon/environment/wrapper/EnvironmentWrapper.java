@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,6 @@ package org.apache.cocoon.environment.wrapper;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
@@ -55,7 +54,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
 
     /**
      * Construct a new environment.
-     * 
+     *
      * @param env    The origial Environment
      * @param info   A description of the uri for the new environment
      */
@@ -66,7 +65,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
 
     /**
      * Construct a new environment.
-     * 
+     *
      * @param env    The origial Environment
      * @param info   A description of the uri for the new environment
      * @param wrapResponse  Whether or not to wrap the Response object
@@ -94,9 +93,9 @@ public class EnvironmentWrapper extends AbstractEnvironment {
             this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
         }
 
-        setURI(info.prefix, info.uri);        
+        setURI(info.prefix, info.uri);
     }
-    
+
     /**
      * @see org.apache.cocoon.environment.Environment#redirect(String, boolean, boolean)
      */
@@ -130,26 +129,25 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     /**
      * @see org.apache.cocoon.environment.Environment#tryResetResponse()
      */
-    public boolean tryResetResponse()
-    throws IOException {
+    public boolean tryResetResponse() throws IOException {
         final OutputStream os = getOutputStream(-1);
-        if (os instanceof BufferedOutputStream) {
-            ((BufferedOutputStream) os).clearBuffer();
+        if (os instanceof BufferedOutputStream && ((BufferedOutputStream) os).isResettable()) {
+            ((BufferedOutputStream) os).reset();
             return true;
         }
-
+        // return false
         return super.tryResetResponse();
     }
 
     /**
      * @see org.apache.cocoon.environment.Environment#commitResponse()
      */
-    public void commitResponse() 
-    throws IOException {
+    public void commitResponse() throws IOException {
         final OutputStream os = getOutputStream(-1);
-        if (os instanceof BufferedOutputStream) {
-            ((BufferedOutputStream) os).realFlush();
+        if (os != null) {
+            os.flush();
         } else {
+            // no action
             super.commitResponse();
         }
     }
@@ -161,7 +159,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     public String getRedirectURL() {
         return this.redirectURL;
     }
-    
+
     public void reset() {
         this.redirectURL = null;
     }

@@ -23,6 +23,13 @@
  -->
 <document>
   <body>
+    <release version="1.0.1" date="TBD" description="unreleased">
+      <action dev="joerg" type="update">
+        Cocoon's BufferedOutputStream extends functionality of the java.io implementation by providing an increasing
+        buffer, the ability to reset the stream and counting written bytes.
+      </action>
+    </release>
+
     <release version="1.0.0" date="TBA" description="released">
     </release>
 
