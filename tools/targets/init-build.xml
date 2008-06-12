@@ -36,18 +36,20 @@
         <or>
           <equals arg1="1.1" arg2="${ant.java.version}"/>
           <equals arg1="1.2" arg2="${ant.java.version}"/>
+          <equals arg1="1.3" arg2="${ant.java.version}"/>
         </or>
       </not>
     </condition>
-    <fail unless="target.vm">Please use a JVM 1.3 or superior to compile cocoon ${version}</fail>
+    <fail unless="target.vm">Please use a JVM 1.4.2 or superior to compile cocoon ${version}</fail>
 
     <condition property="used.vm" value="${target.vm}" else="1.4">
       <or>
-        <equals arg1="1.3" arg2="${target.vm}"/>
         <equals arg1="1.4" arg2="${target.vm}"/>
       </or>
     </condition>
+    <!-- No JDK specific classes at the moment
     <property name="jdk.java" value="${src}${file.separator}jdk${used.vm}${file.separator}java"/>
+    -->
 
     <!-- The location of tools.jar, relative to the JAVA_HOME home. -->
     <property name="tools.jar" value="${java.home}/../lib/tools.jar"/>

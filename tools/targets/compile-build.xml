@@ -24,7 +24,7 @@
 
   <!-- compilation parts used by all targets -->
   <presetdef name="cocoon.javac">
-    <javac 
+    <javac
            debug="${compiler.debug}"
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
@@ -38,7 +38,7 @@
    <macrodef name="cocoon.compile">
    <attribute name="destdir"/>
    <attribute name="srcdir"/>
-   <attribute name="classpathref" default="classpath"/> 
+   <attribute name="classpathref" default="classpath"/>
    <sequential>
     <mkdir dir="@{destdir}"/>
     <!-- copy those files that need to be in the classpath -->
@@ -66,9 +66,10 @@
   <target name="compile-core" depends="compile-mocks, clover.on">
     <cocoon.compile srcdir="${java}"
                     destdir="${build.dest}"/>
+    <!-- No JDK specific classes at the moment
     <echo>Compiling jdk ${used.vm} core classes</echo>
     <cocoon.compile srcdir="${jdk.java}"
-                    destdir="${build.dest}"/>
+                    destdir="${build.dest}"/> -->
   </target>
 
   <!-- compiles deprecated code -->
@@ -158,7 +159,7 @@
    <attribute name="name"/>
    <attribute name="dir"/>
    <attribute name="index" default="false"/>
-   <attribute name="update" default="yes"/>   
+   <attribute name="update" default="yes"/>
    <sequential>
         <jar jarfile="${build}/@{name}.jar" update="@{update}" index="@{index}">
           <fileset dir="@{dir}">
@@ -167,7 +168,7 @@
         </jar>
       </sequential>
     </macrodef>
-   
+
    <!-- optionally add source files to the core jar -->
    <macrodef name="cocoon.package-sources">
    <attribute name="name"/>
@@ -190,7 +191,7 @@
         </if>
       </sequential>
     </macrodef>
-    
+
   <!-- packages everything -->
   <target name="package"
           depends="package-core, package-deprecated, package-testcase"/>
@@ -205,7 +206,7 @@
 
     <cocoon.package-sources name="${name}"
                             dir="${java}"/>
- 
+
   </target>
 
   <!-- package deprecated code -->
@@ -214,7 +215,7 @@
     <jar jarfile="${build}/${name}-deprecated.jar" index="true">
       <fileset dir="${build.deprecated}"/>
     </jar>
-    
+
     <cocoon.package-sources name="${name}-deprecated"
                             dir="${deprecated.src}"/>
   </target>
@@ -227,7 +228,7 @@
         <exclude name="htmlunit/**"/>
       </fileset>
     </jar>
- 
+
     <cocoon.package-sources name="${name}-testcase"
                             dir="${test}"/>
   </target>
