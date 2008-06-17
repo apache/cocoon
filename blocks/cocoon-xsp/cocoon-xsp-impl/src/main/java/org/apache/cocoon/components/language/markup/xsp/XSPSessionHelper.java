@@ -16,11 +16,11 @@
  */
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.cocoon.environment.Session;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * The <code>Session</code> object helper
@@ -37,7 +37,7 @@ public class XSPSessionHelper {
      * @param name The parameter name
      * @param defaultValue Value to substitute in absence of a parameter value
      */
-    public static Object getSessionAttribute(Session session, String name,
+    public static Object getSessionAttribute(HttpSession session, String name,
                                              Object defaultValue) {
         Object value = null;
         if (session != null) {
@@ -56,7 +56,7 @@ public class XSPSessionHelper {
      *
      * @param session The Session object
      */
-    public static List getSessionAttributeNames(Session session) {
+    public static List getSessionAttributeNames(HttpSession session) {
         ArrayList v = new ArrayList();
         if (session == null) {
             return v;

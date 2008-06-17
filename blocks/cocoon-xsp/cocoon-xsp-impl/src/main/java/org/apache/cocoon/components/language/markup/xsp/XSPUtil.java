@@ -21,7 +21,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
@@ -47,6 +46,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * The XSP <code>Utility</code> object helper
@@ -194,7 +195,7 @@ public class XSPUtil {
         return ++count;
     }
 
-    public static int getSessionCount(Session session) {
+    public static int getSessionCount(HttpSession session) {
         synchronized (session) {
             Integer integer = (Integer)session.getAttribute("util.counter");
             if (integer == null) {

@@ -33,7 +33,7 @@
       <xsl:apply-templates select="@*"/>
 
       <xsp:structure>
-        <xsp:include>org.apache.cocoon.environment.Session</xsp:include>
+        <xsp:include>javax.servlet.http.HttpSession</xsp:include>
       </xsp:structure>
 
       <xsl:variable name="create">
@@ -44,7 +44,7 @@
         </xsl:choose>
       </xsl:variable>
       <xsp:init-page>
-        Session session = request.getSession(<xsl:value-of select="$create"/>);
+        HttpSession session = request.getSession(<xsl:value-of select="$create"/>);
       </xsp:init-page>
 
       <xsl:apply-templates/>
