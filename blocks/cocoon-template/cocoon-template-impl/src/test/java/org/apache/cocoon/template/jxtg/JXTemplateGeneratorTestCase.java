@@ -270,7 +270,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     }
 
     public void testPrefixMappingFailDueToNoNameSpecified() throws Exception {
-        String inputURI = docBase + "jxElement-fail1.xml";
+        String inputURI = docBase + "jxElement-noNameSpecified.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
         
@@ -284,7 +284,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     }
     
     public void testPrefixMappingFailDueToInvalidNameSpecified() throws Exception {
-	String inputURI = docBase + "jxElement-fail2.xml";
+        String inputURI = docBase + "jxElement-invalidNameSpecified.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
         
@@ -299,7 +299,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     }
     
     public void testPrefixMappingFailDueToMissingNamespaceSpecifedPrefix() throws Exception {
-	String inputURI = docBase + "jxElement-fail3.xml";
+	String inputURI = docBase + "jxElement-missingNamespacePrefixSpecified.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
         
@@ -314,7 +314,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     }    
     
     public void testPrefixMappingFailDueToEmptyName() throws Exception {
-	String inputURI = docBase + "jxElement-fail4.xml";
+	String inputURI = docBase + "jxElement-failDueToEmptyName.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
         
@@ -329,17 +329,17 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
     }      
     
     public void testPrefixMappingFailDueToInvalidPrefix() throws Exception {
-	String inputURI = docBase + "jxElement-fail4.xml";
+	String inputURI = docBase + "jxElement-failDueToInvalidPrefix.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
         
         try {
             generate(JX, inputURI, EMPTY_PARAMS);
         } catch (SAXParseException e) {
-            if (e.getMessage().equals(Element.XML_ELEM_NAME_BLANK))
+            if (e.getMessage().equals(Element.XML_PREFIX_NAME_INVALID))
         	error = true;        
         }
-        assertTrue("should throw sax exception due empty name", error);      
+        assertTrue("should throw sax exception due invalid prefix", error);      
         getNewObjectModel().cleanupLocalContext();
     }     
     
