@@ -43,6 +43,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * Class representing interpreted XSP-generated
  * <code>ServerPagesGenerator</code> programs
@@ -322,11 +324,11 @@ public class JSGenerator extends XSPGenerator
     }
 
     // XSPSessionHelper
-    public Object getSessionAttribute(Session session, String name, Object defaultValue) {
+    public Object getSessionAttribute(HttpSession session, String name, Object defaultValue) {
         return XSPSessionHelper.getSessionAttribute(session, name, defaultValue);
     }
 
-    public String[] getSessionAttributeNames(Session session) {
+    public String[] getSessionAttributeNames(HttpSession session) {
         Collection c = XSPSessionHelper.getSessionAttributeNames(session);
         return (String[])c.toArray(new String[c.size()]);
     }
