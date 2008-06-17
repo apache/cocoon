@@ -24,9 +24,14 @@
     +-->
 <document>
   <body>
+    <release version="1.2.0" date="2008-??-??" description="unreleased">  
+      <action dev="gkossakowski" type="add" fixes-bug="COCOON-2211" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+        Added support for jx:element - the instructions that allow dynamic element creation.
+      </action>
+    </release>
     <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
       
-    </release>    
+    </release>
     <release version="1.0.0-M3" date="2007-03-02" description="released">
       <action dev="vgritsenko" type="fix">
         Fix exception handling in script manager. Do not wrap processing exception into SAXException.

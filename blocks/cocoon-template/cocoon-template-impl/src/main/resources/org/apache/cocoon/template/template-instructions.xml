@@ -24,6 +24,7 @@
         <instruction name="when" class="org.apache.cocoon.template.instruction.When"/>
         <instruction name="otherwise" class="org.apache.cocoon.template.instruction.Otherwise"/>
         <instruction name="out" class="org.apache.cocoon.template.instruction.Out"/>
+        <instruction name="element" class="org.apache.cocoon.template.instruction.Element"/>        
         <instruction name="import" class="org.apache.cocoon.template.instruction.Import"/>
         <instruction name="set" class="org.apache.cocoon.template.instruction.Set"/>
         <instruction name="macro" class="org.apache.cocoon.template.instruction.Define"/>
