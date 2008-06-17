@@ -277,12 +277,10 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-javaflow-sample</artifactId>
         </dependency>
-        <!-- Does not build yet
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jcr-sample</artifactId>
         </dependency>
-        -->
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jfor-sample</artifactId>
