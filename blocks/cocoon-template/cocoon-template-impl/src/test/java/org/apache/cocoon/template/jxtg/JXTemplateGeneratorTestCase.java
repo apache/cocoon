@@ -27,6 +27,8 @@ import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.xml.sax.SAXParseException;
 
+import org.apache.cocoon.template.instruction.Element;
+
 /**
  * @version SVN $Id$
  */
@@ -266,4 +268,93 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
         getNewObjectModel().cleanupLocalContext();
     }
+
+    public void testPrefixMappingFailDueToNoNameSpecified() throws Exception {
+        String inputURI = docBase + "jxElement-fail1.xml";
+        getNewObjectModel().markLocalContext();
+        boolean error = false;
+        
+        try {
+            generate(JX, inputURI, EMPTY_PARAMS);
+        } catch (SAXParseException e) {               
+              error = true;
+        }
+        assertTrue("should throw sax exception due to no name", error);
+        getNewObjectModel().cleanupLocalContext();
+    }
+    
+    public void testPrefixMappingFailDueToInvalidNameSpecified() throws Exception {
+	String inputURI = docBase + "jxElement-fail2.xml";
+        getNewObjectModel().markLocalContext();
+        boolean error = false;
+        
+        try {
+            generate(JX, inputURI, EMPTY_PARAMS);
+        } catch (SAXParseException e) {
+            if (e.getMessage().equals(Element.XML_ELEM_NAME_INVALID))
+        	error = true;        
+        }
+        assertTrue("should throw sax exception due to invalid element name", error);      
+        getNewObjectModel().cleanupLocalContext();
+    }
+    
+    public void testPrefixMappingFailDueToMissingNamespaceSpecifedPrefix() throws Exception {
+	String inputURI = docBase + "jxElement-fail3.xml";
+        getNewObjectModel().markLocalContext();
+        boolean error = false;
+        
+        try {
+            generate(JX, inputURI, EMPTY_PARAMS);
+        } catch (SAXParseException e) {
+            if (e.getMessage().equals(Element.XML_PREFIX_MISSING_NAMESPACE))
+        	error = true;        
+        }
+        assertTrue("should throw sax exception due missing namespace", error);      
+        getNewObjectModel().cleanupLocalContext();
+    }    
+    
+    public void testPrefixMappingFailDueToEmptyName() throws Exception {
+	String inputURI = docBase + "jxElement-fail4.xml";
+        getNewObjectModel().markLocalContext();
+        boolean error = false;
+        
+        try {
+            generate(JX, inputURI, EMPTY_PARAMS);
+        } catch (SAXParseException e) {
+            if (e.getMessage().equals(Element.XML_ELEM_NAME_BLANK))
+        	error = true;        
+        }
+        assertTrue("should throw sax exception due empty name", error);      
+        getNewObjectModel().cleanupLocalContext();
+    }      
+    
+    public void testPrefixMappingFailDueToInvalidPrefix() throws Exception {
+	String inputURI = docBase + "jxElement-fail4.xml";
+        getNewObjectModel().markLocalContext();
+        boolean error = false;
+        
+        try {
+            generate(JX, inputURI, EMPTY_PARAMS);
+        } catch (SAXParseException e) {
+            if (e.getMessage().equals(Element.XML_ELEM_NAME_BLANK))
+        	error = true;        
+        }
+        assertTrue("should throw sax exception due empty name", error);      
+        getNewObjectModel().cleanupLocalContext();
+    }     
+    
+    public void testElementSuccess() throws Exception {
+        String inputURI =  docBase + "jxElement.xml";
+        
+        String outputURI = docBase + "jxElement-output.xml";
+
+        getNewObjectModel().markLocalContext();
+        Calendar cal = new GregorianCalendar(1979, 0, 1, 10, 21, 33);
+        getFlowContext().put("date", cal.getTime());
+        addFlowContextToObjectModel(getNewObjectModel());
+
+        assertEqual(load(outputURI), generate(JX, inputURI, EMPTY_PARAMS));
+
+        getNewObjectModel().cleanupLocalContext();
+    } 
 }
