@@ -19,9 +19,8 @@ package org.apache.cocoon.environment.impl;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
-
-import org.apache.cocoon.environment.Session;
 
 /**
  * Base class for any session
@@ -29,7 +28,7 @@ import org.apache.cocoon.environment.Session;
  * @version $Id$
  */
 public abstract class AbstractSession 
-    implements Session {
+    implements HttpSession {
 
     public Map getAttributes() {
 	return new SessionMap(this);

@@ -21,9 +21,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.impl.AbstractResponse;
 
 public class MockResponse extends AbstractResponse implements Response {
@@ -34,7 +36,7 @@ public class MockResponse extends AbstractResponse implements Response {
     private Set cocoonCookies = new HashSet();
     private Map header = new HashMap();
 
-    private Session session;
+    private HttpSession session;
     
     public void setCharacterEncoding(String encoding) {
         this.encoding = encoding;
@@ -126,7 +128,7 @@ public class MockResponse extends AbstractResponse implements Response {
         header.clear();
     }
     
-    public void setSession( Session session ) {
+    public void setSession(HttpSession session) {
         this.session = session;
     }
 }

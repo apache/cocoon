@@ -18,7 +18,8 @@ package org.apache.cocoon.jxpath;
 
 import java.util.Enumeration;
 
-import org.apache.cocoon.environment.Session;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.collections.EnumerationUtils;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 
@@ -31,15 +32,15 @@ import org.apache.commons.jxpath.DynamicPropertyHandler;
 public class CocoonSessionHandler implements DynamicPropertyHandler {
 
     public String[] getPropertyNames(Object session) {
-        final Enumeration e = ((Session) session).getAttributeNames();
+        final Enumeration e = ((HttpSession) session).getAttributeNames();
         return (String[]) EnumerationUtils.toList(e).toArray();
     }
 
     public Object getProperty(Object session, String property) {
-        return ((Session) session).getAttribute(property);
+        return ((HttpSession) session).getAttribute(property);
     }
 
     public void setProperty(Object session, String property, Object value) {
-        ((Session) session).setAttribute(property, value);
+        ((HttpSession) session).setAttribute(property, value);
     }
 }

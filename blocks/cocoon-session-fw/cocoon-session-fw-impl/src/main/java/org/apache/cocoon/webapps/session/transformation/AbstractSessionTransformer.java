@@ -16,9 +16,10 @@
  */
 package org.apache.cocoon.webapps.session.transformation;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.apache.cocoon.webapps.session.ContextManager;
 import org.apache.cocoon.webapps.session.FormManager;
@@ -99,7 +100,7 @@ public abstract class AbstractSessionTransformer extends AbstractSAXTransformer 
      * Get the current session if available or return <code>null</code>.
      * @return The Session object or null.
      */
-    public Session getSession()
+    public HttpSession getSession()
     throws ProcessingException {
         return this.getSessionManager().getSession(false);
     }

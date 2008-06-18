@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.HttpSession;
 import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.framework.configuration.Configuration;
@@ -30,7 +31,6 @@ import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.ValidatorActionResult;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.session.SessionConstants;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.source.Source;
@@ -329,7 +329,7 @@ public class SessionPostTransformer extends SessionPreTransformer {
                     SourceUtil.parse(this.manager, resource, saxBuilder);
 
                     Configuration conf = saxBuilder.getConfiguration();
-                    Session session = this.getSessionManager().getSession(true);
+                    HttpSession session = this.getSessionManager().getSession(true);
                     session.setAttribute(this.formName, conf);
 
                     if (validationDoc != null) {
@@ -377,7 +377,7 @@ public class SessionPostTransformer extends SessionPreTransformer {
                         String validationXML = XMLUtils.serializeNode(validationNode, props);
                         DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
                         Configuration conf = builder.build(new ByteArrayInputStream(validationXML.getBytes()));
-                        Session session = this.getSessionManager().getSession(true);
+                        HttpSession session = this.getSessionManager().getSession(true);
                         session.setAttribute(this.formName, conf);
                         //the constraint-set to validate is the first and single one
                         session.setAttribute(this.formName + "constraint-set", conf.getChildren("constraint-set")[0]);
