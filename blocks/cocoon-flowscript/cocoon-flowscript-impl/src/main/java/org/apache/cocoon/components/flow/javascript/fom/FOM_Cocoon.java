@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.service.ServiceManager;
 
@@ -44,7 +46,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.util.ClassUtils;
 
@@ -136,7 +137,7 @@ public class FOM_Cocoon extends ScriptableObject {
             }
             session = new FOM_Session(
                     getParentScope(),
-                    (Session) ObjectModelHelper.getRequest(this.getObjectModel()).getSession(true));
+                    (HttpSession) ObjectModelHelper.getRequest(this.getObjectModel()).getSession(true));
             return session;
         }
 
@@ -528,10 +529,10 @@ public class FOM_Cocoon extends ScriptableObject {
      * Session attributes are also present as properties on this object.
      */
     public static class FOM_Session extends AttributeHolderJavaObject {
-        private final Session session;
+        private final HttpSession session;
         
-        public FOM_Session(Scriptable scope, Session session) {
-            super(scope, session, Session.class);
+        public FOM_Session(Scriptable scope, HttpSession session) {
+            super(scope, session, HttpSession.class);
             this.session = session;
         }
         
@@ -628,8 +629,8 @@ public class FOM_Cocoon extends ScriptableObject {
      * Get the current session
      * @return The session (may be null)
      */
-    public Session getSession() {
-        return (Session) ObjectModelHelper.getRequest(currentCall.getObjectModel()).getSession(true);
+    public HttpSession getSession() {
+        return (HttpSession) ObjectModelHelper.getRequest(currentCall.getObjectModel()).getSession(true);
     }
 
     /**

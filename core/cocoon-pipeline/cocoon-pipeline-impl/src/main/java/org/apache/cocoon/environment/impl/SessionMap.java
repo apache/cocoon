@@ -16,11 +16,11 @@
  */
 package org.apache.cocoon.environment.impl;
 
-import org.apache.cocoon.environment.Session;
-
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Session attributes map
@@ -29,10 +29,10 @@ import java.util.Set;
  */
 public class SessionMap extends BaseMap {
 
-    private Session session;
+    private HttpSession session;
 
 
-    public SessionMap(Session session) {
+    public SessionMap(HttpSession session) {
         this.session = session;
     }
 

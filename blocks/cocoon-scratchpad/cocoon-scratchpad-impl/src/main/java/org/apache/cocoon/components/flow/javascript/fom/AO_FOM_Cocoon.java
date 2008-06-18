@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -38,7 +40,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Session;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -532,14 +533,14 @@ public class AO_FOM_Cocoon extends ScriptableObject {
 
     public static class FOM_Session extends ScriptableObject {
 
-        Session session;
+        HttpSession session;
 
         public FOM_Session() {
             // prototype ctor
         }
 
         public FOM_Session(Object session) {
-            this.session = (Session)unwrap(session);
+            this.session = (HttpSession) unwrap(session);
         }
 
         public String getClassName() {
@@ -834,7 +835,7 @@ public class AO_FOM_Cocoon extends ScriptableObject {
      * Get the current session
      * @return The session (may be null)
      */
-    public Session getSession() {
+    public HttpSession getSession() {
         if (getRequest().getSession(false) == null) {
             return null;
         }

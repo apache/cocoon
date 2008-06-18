@@ -121,7 +121,7 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
             Context envContext = ObjectModelHelper.getContext(objectModel);
             JXPathContext parentContext = null;
 
-            Session session = (Session) request.getSession(false);
+            HttpSession session = request.getSession(false);
             if (session != null) {
                 parentContext = getSessionContext(session, envContext);
             } else {
@@ -140,7 +140,7 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
      * Returns a JXPathContext bound to the "session" scope.
      * Caches that context within the session itself.
      */
-    public final JXPathContext getSessionContext(Session session, Context envContext) {
+    public final JXPathContext getSessionContext(HttpSession session, Context envContext) {
         JXPathContext context = (JXPathContext) session.getAttribute(Constants.JXPATH_CONTEXT);
         if (context == null) {
             JXPathContext parentContext = getApplicationContext(envContext);
@@ -427,9 +427,9 @@ public final class JXPathCocoonContexts implements Contextualizable, ThreadSafe 
     }
 
     public class SessionProxy extends AbstractSession {
-        private Session delegate;
+        private HttpSession delegate;
 
-        public SessionProxy(Session delegate) {
+        public SessionProxy(HttpSession delegate) {
             this.delegate = delegate;
         }
 

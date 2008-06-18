@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -45,7 +47,6 @@ import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
@@ -208,7 +209,7 @@ public class VelocityGenerator extends ServiceableGenerator
         /**
          * A local reference to the servlet session.
          */
-        private Session session;
+        private HttpSession session;
         
         /**
          * A local reference to the servlet context.
@@ -258,7 +259,7 @@ public class VelocityGenerator extends ServiceableGenerator
             super(null, ctx);
             this.request = request;
             this.response = response;
-            this.session = (Session) request.getSession(false);
+            this.session = request.getSession(false);
             this.application = application;
             this.parameters = parameters;
         }

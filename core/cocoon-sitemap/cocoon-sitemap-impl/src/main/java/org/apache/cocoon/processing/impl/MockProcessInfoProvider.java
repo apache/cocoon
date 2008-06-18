@@ -37,7 +37,6 @@ import javax.servlet.http.HttpSessionContext;
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.processing.ProcessInfoProvider;
 
 /**
@@ -260,7 +259,7 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
         }
 
         public HttpSession getSession(boolean create) {
-            return new StubSession((Session) request.getSession(create));
+            return new StubSession(request.getSession(create));
         }
 
         public String getSitemapPath() {
@@ -552,9 +551,9 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
     }
     
     static public class StubSession implements HttpSession {
-        private Session session;
+        private HttpSession session;
         
-        public StubSession(Session session) {
+        public StubSession(HttpSession session) {
             this.session = session;
         }
 
@@ -567,7 +566,8 @@ public class MockProcessInfoProvider implements ProcessInfoProvider {
         }
 
         public Map getAttributes() {
-            return session.getAttributes();
+            //FIXME: Implement this method if needed
+            throw new UnsupportedOperationException();
         }
 
         public long getCreationTime() {

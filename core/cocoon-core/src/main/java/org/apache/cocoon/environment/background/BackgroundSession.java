@@ -16,11 +16,12 @@
  */
 package org.apache.cocoon.environment.background;
 
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.impl.AbstractSession;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -88,7 +89,7 @@ extends AbstractSession {
     /**
      * Get the current session object - if available
      */
-    public static Session getSession(boolean create) {
+    public static HttpSession getSession(boolean create) {
         if (create && session == null) {
             session = new BackgroundSession();
         }
