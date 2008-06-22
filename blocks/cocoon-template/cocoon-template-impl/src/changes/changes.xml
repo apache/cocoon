@@ -28,6 +28,9 @@
       <action dev="gkossakowski" type="add" fixes-bug="COCOON-2211" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
         Added support for jx:element - the instructions that allow dynamic element creation.
       </action>
+      <action dev="gkossakowski" type="add" fixes-bug="COCOON-2212" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+        Added check for name correctnes in jx:attribute.
+      </action>
     </release>
     <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
       
