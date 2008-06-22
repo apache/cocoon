@@ -28,6 +28,7 @@ import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.xml.sax.SAXParseException;
 
 import org.apache.cocoon.template.instruction.Element;
+import org.apache.cocoon.template.instruction.Attribute;
 
 /**
  * @version SVN $Id$
@@ -185,6 +186,35 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getNewObjectModel().cleanupLocalContext();
     }
 
+    public void testAttributeFailDueToEmptyName() throws Exception {
+	String inputURI = docBase + "jxAttribute-failDueToEmptyName.xml";
+        getNewObjectModel().markLocalContext();
+        boolean error = false;
+        
+        try {
+            generate(JX, inputURI, EMPTY_PARAMS);
+        } catch (SAXParseException e) {            
+            if (e.getMessage().equals(Attribute.XML_ATTR_NAME_BLANK))
+        	error = true;        
+        }
+        assertTrue("should throw sax exception due to empty name", error);      
+        getNewObjectModel().cleanupLocalContext();
+    }    
+    
+    public void testAttributeFailDueToInvalidName() throws Exception {
+	String inputURI = docBase + "jxAttribute-failDueToInvalidName.xml";
+        getNewObjectModel().markLocalContext();
+        boolean error = false;    
+        try {
+            generate(JX, inputURI, EMPTY_PARAMS);
+        } catch (SAXParseException e) {          
+            if (e.getMessage().equals(Attribute.XML_ATTR_NAME_INVALID))
+        	error = true;        
+        }
+        assertTrue("should throw sax exception due to invalid name", error);      
+        getNewObjectModel().cleanupLocalContext();
+    }    
+    
     public void testFormatDate() throws Exception {
         String inputURI = docBase + "formatDate.xml";
         String outputURI = docBase + "formatDate-output.xml";
@@ -269,7 +299,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getNewObjectModel().cleanupLocalContext();
     }
 
-    public void testPrefixMappingFailDueToNoNameSpecified() throws Exception {
+    public void testElementFailDueToNoNameSpecified() throws Exception {
         String inputURI = docBase + "jxElement-noNameSpecified.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
@@ -283,7 +313,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getNewObjectModel().cleanupLocalContext();
     }
     
-    public void testPrefixMappingFailDueToInvalidNameSpecified() throws Exception {
+    public void testElementFailDueToInvalidNameSpecified() throws Exception {
         String inputURI = docBase + "jxElement-invalidNameSpecified.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
@@ -298,7 +328,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getNewObjectModel().cleanupLocalContext();
     }
     
-    public void testPrefixMappingFailDueToMissingNamespaceSpecifedPrefix() throws Exception {
+    public void testElementFailDueToMissingNamespaceSpecifedPrefix() throws Exception {
 	String inputURI = docBase + "jxElement-missingNamespacePrefixSpecified.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
@@ -313,7 +343,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getNewObjectModel().cleanupLocalContext();
     }    
     
-    public void testPrefixMappingFailDueToEmptyName() throws Exception {
+    public void testElementFailDueToEmptyName() throws Exception {
 	String inputURI = docBase + "jxElement-failDueToEmptyName.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
@@ -328,7 +358,7 @@ public class JXTemplateGeneratorTestCase extends SitemapComponentTestCase {
         getNewObjectModel().cleanupLocalContext();
     }      
     
-    public void testPrefixMappingFailDueToInvalidPrefix() throws Exception {
+    public void testElementFailDueToInvalidPrefix() throws Exception {
 	String inputURI = docBase + "jxElement-failDueToInvalidPrefix.xml";
         getNewObjectModel().markLocalContext();
         boolean error = false;
