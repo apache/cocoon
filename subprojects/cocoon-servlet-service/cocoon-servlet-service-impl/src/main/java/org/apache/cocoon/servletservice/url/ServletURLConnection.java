@@ -20,6 +20,7 @@ package org.apache.cocoon.servletservice.url;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -107,4 +108,7 @@ public class ServletURLConnection extends URLConnection {
         return this.servletConnection.getLastModified();
     }
 
+    public OutputStream getOutputStream() throws IOException {
+        return this.servletConnection.getOutputStream();
+    }
 }
