@@ -33,7 +33,7 @@
 
   <artifactId>cocoon-jnet</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Cocoon: JNet</name>
+  <name>Cocoon JNet</name>
   <description>Dynamically register URLStreamHandler factories with your JVM.</description>
 
   <dependencies>

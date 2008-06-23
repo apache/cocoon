@@ -32,7 +32,7 @@
 
   <artifactId>cocoon-block-deployment</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Cocoon: Block Deployment</name>
+  <name>Cocoon Block Deployment</name>
   <description>Deployment utilities for Cocoon Blocks.</description>
 
   <dependencies>
