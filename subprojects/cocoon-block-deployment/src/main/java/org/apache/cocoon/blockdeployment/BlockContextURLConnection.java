@@ -20,15 +20,15 @@ package org.apache.cocoon.blockdeployment;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
 
 public class BlockContextURLConnection extends URLConnection {
 
-    private URL resolvedPath;
     private final Map blockContexts;
+
+    private URLConnection urlConnection;
 
     protected BlockContextURLConnection(URL url, Map blockContexts) {
         super(url);
@@ -36,16 +36,19 @@ public class BlockContextURLConnection extends URLConnection {
         this.url = url;
     }
 
+    @Override
     public void connect() throws IOException {
-        this.getRealPath().openConnection().connect();
+        this.getConnection().connect();
     }
 
+    @Override
     public InputStream getInputStream() throws IOException {
-        return getRealPath().openStream();
+        return this.getConnection().getInputStream();
     }
 
-    private URL getRealPath() {
-        if (this.resolvedPath == null) {
+    private URLConnection getConnection() {
+        if (this.urlConnection == null) {
+            URL resolvedPath = null;
             String location = this.url.toExternalForm();
 
             // Remove the protocol and the first '/'
@@ -60,8 +63,9 @@ public class BlockContextURLConnection extends URLConnection {
                 String blockContext = (String) this.blockContexts.get(blockName);
 
                 try {
-                    this.resolvedPath = new URL(new URL(blockContext), path);
-                } catch (MalformedURLException e) {
+                    resolvedPath = new URL(new URL(blockContext), path);
+                    this.urlConnection = resolvedPath.openConnection();
+                } catch (IOException e) {
                     throw new RuntimeException("Can create URL for '" + blockContext + path + "'.'");
                 }
             } else {
@@ -69,6 +73,11 @@ public class BlockContextURLConnection extends URLConnection {
                         + location);
             }
         }
-        return this.resolvedPath;
+        return this.urlConnection;
+    }
+
+    @Override
+    public long getLastModified() {
+        return this.getConnection().getLastModified();
     }
 }
