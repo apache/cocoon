@@ -74,7 +74,6 @@ public class BlockContextURLConnection extends URLConnection {
         return this.urlConnection;
     }
 
-    @Override
     public long getLastModified() {
         return this.getConnection().getLastModified();
     }
