@@ -36,12 +36,10 @@ public class BlockContextURLConnection extends URLConnection {
         this.url = url;
     }
 
-    @Override
     public void connect() throws IOException {
         this.getConnection().connect();
     }
 
-    @Override
     public InputStream getInputStream() throws IOException {
         return this.getConnection().getInputStream();
     }
