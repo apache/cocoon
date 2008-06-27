@@ -27,7 +27,7 @@ process.
 
 To build Cocoon, use the following command:
 
-  $ build.sh install
+  $ ./build.sh install
 
 In case of any failures, repeat command as necessary till you see
 the message:
@@ -51,7 +51,7 @@ HOW TO MOUNT THE PROJECTS IN ECLIPSE
 
 from /trunk, run
 
-  $ build.sh eclipse:clean eclipse:eclipse
+  $ ./build.sh eclipse:clean eclipse:eclipse
 
 Next go to eclipse, and make sure you haven't got trunk mounted as a
 project already.  Also remove .classpath and .project files possibly
@@ -94,7 +94,7 @@ HOW TO START THE COCOON WEBAPP
 Checkout complete trunk and build it. If clean rebuild is desired,
 use command:
 
-  $ build.sh clean install
+  $ ./build.sh clean install
 
 Call this until you get "BUILD SUCCESSFUL" - sometimes downloads from maven
 repositories are temporarily unaccessible and cause the build to fail.
