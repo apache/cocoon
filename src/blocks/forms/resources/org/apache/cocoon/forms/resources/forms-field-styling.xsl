@@ -537,7 +537,7 @@
         <xsl:variable name="value" select="@value"/>
         <xsl:variable name="item-id" select="concat($id, ':', position())"/>
         <input id="{$item-id}" type="checkbox" value="{@value}" name="{$id}">
-          <xsl:apply-templates select="." mode="css"/>
+          <xsl:apply-templates select="../.." mode="styling"/>
           <xsl:if test="$state = 'disabled'">
             <xsl:attribute name="disabled">disabled</xsl:attribute>
           </xsl:if>
