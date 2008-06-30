@@ -36,21 +36,21 @@ import org.springframework.beans.factory.ListableBeanFactory;
 
 /**
  * This is a map implementation collecting all beans of a specific type (class)
- * from a spring bean factory.
- * The beans are available through their configured bean id.
+ * from a spring bean factory. The beans are available through their configured
+ * bean id.
  *
- * The map has a lazy implementation: the beans are not searched on instantiation
- * but the first time the map is accessed. This avoids any startup ordering problems.
+ * The map has a lazy implementation: the beans are not searched on
+ * instantiation but the first time the map is accessed. This avoids any startup
+ * ordering problems.
  *
- * By default the map searches in the bean factory it is used in and in all the parent
- * bean factories (if there are any). This behaviour can be changed by calling the
- * {@link #setCheckParent(boolean)} method.
+ * By default the map searches in the bean factory it is used in and in all the
+ * parent bean factories (if there are any). This behaviour can be changed by
+ * calling the {@link #setCheckParent(boolean)} method.
  *
  * @version $Id$
  * @since 1.0.1
  */
-public class BeanMap
-    implements Map, BeanFactoryAware {
+public class BeanMap implements Map, BeanFactoryAware {
 
     /** The real map. */
     protected final Map beanMap = new HashMap();
@@ -77,33 +77,36 @@ public class BeanMap
     protected String keyProperty;
 
     /**
-     * Get all the bean's from the bean factory and put them into
-     * a map using their id.
-     * @param beanNames The bean names to load.
+     * Get all the bean's from the bean factory and put them into a map using
+     * their id.
+     *
+     * @param beanNames
+     *            The bean names to load.
      */
     protected void load(Set beanNames) {
         final String prefix1 = this.beanClass.getName() + '.';
         final String prefix2 = this.beanClass.getName() + '/';
         final Iterator i = beanNames.iterator();
-        while ( i.hasNext() ) {
-            final String beanName = (String)i.next();
+        while (i.hasNext()) {
+            final String beanName = (String) i.next();
             Object key = beanName;
-            if ( this.stripPrefix && (beanName.startsWith(prefix1) || beanName.startsWith(prefix2)) ) {
+            if (this.stripPrefix && (beanName.startsWith(prefix1) || beanName.startsWith(prefix2))) {
                 key = beanName.substring(prefix1.length());
             }
-            if(this.hasProperties.size() > 0) {
+            if (this.hasProperties.size() > 0) {
                 final Object bean = this.beanFactory.getBean(beanName);
                 final BeanWrapperImpl wrapper = new BeanWrapperImpl(bean);
                 boolean isOk = true;
                 final Iterator iter = this.hasProperties.iterator();
-                while(iter.hasNext()) {
-                    final String propName = (String)iter.next();
-                    if(!wrapper.isReadableProperty(propName)) {
+                while (iter.hasNext()) {
+                    final String propName = (String) iter.next();
+                    if (!wrapper.isReadableProperty(propName)) {
                         isOk = false;
                     }
                 }
-                if(isOk) {
-                    if( this.keyProperty != null && this.keyProperty.length() > 0 && wrapper.isReadableProperty(this.keyProperty)) {
+                if (isOk) {
+                    if (this.keyProperty != null && this.keyProperty.length() > 0
+                            && wrapper.isReadableProperty(this.keyProperty)) {
                         key = wrapper.getPropertyValue(this.keyProperty);
                     }
                     this.beanMap.put(key, bean);
@@ -111,7 +114,8 @@ public class BeanMap
             } else {
                 final Object bean = this.beanFactory.getBean(beanName);
                 final BeanWrapperImpl wrapper = new BeanWrapperImpl(bean);
-                if( this.keyProperty != null && this.keyProperty.length() > 0 && wrapper.isReadableProperty(this.keyProperty)) {
+                if (this.keyProperty != null && this.keyProperty.length() > 0
+                        && wrapper.isReadableProperty(this.keyProperty)) {
                     key = wrapper.getPropertyValue(this.keyProperty);
                 }
                 this.beanMap.put(key, bean);
@@ -120,16 +124,17 @@ public class BeanMap
     }
 
     /**
-     * Check if the bean is already initialized.
-     * If not, the bean's are searched in the bean factory.
+     * Check if the bean is already initialized. If not, the bean's are searched
+     * in the bean factory.
      */
     protected void checkInit() {
-        if ( !this.initialized ) {
+        if (!this.initialized) {
             synchronized (this) {
-                if ( !this.initialized ) {
-                    // although it is unlikely, but if this bean is used outside spring
+                if (!this.initialized) {
+                    // although it is unlikely, but if this bean is used outside
+                    // spring
                     // it will just contain an empty map
-                    if ( this.beanFactory != null ) {
+                    if (this.beanFactory != null) {
                         final Set beanNames = new HashSet();
                         this.getBeanNames(this.beanFactory, beanNames);
                         this.load(beanNames);
@@ -142,15 +147,19 @@ public class BeanMap
 
     /**
      * Get all bean names for the given type.
-     * @param factory The bean factory.
-     * @param beanNames The set containing the resulting bean names.
+     *
+     * @param factory
+     *            The bean factory.
+     * @param beanNames
+     *            The set containing the resulting bean names.
      */
     protected void getBeanNames(ListableBeanFactory factory, Set beanNames) {
         // check parent first
-        if ( this.checkParent ) {
-            if ( factory instanceof HierarchicalBeanFactory ) {
-                if ( ((HierarchicalBeanFactory)factory).getParentBeanFactory() != null ) {
-                    this.getBeanNames((ListableBeanFactory)((HierarchicalBeanFactory)factory).getParentBeanFactory(), beanNames);
+        if (this.checkParent) {
+            if (factory instanceof HierarchicalBeanFactory) {
+                if (((HierarchicalBeanFactory) factory).getParentBeanFactory() != null) {
+                    this.getBeanNames((ListableBeanFactory) ((HierarchicalBeanFactory) factory).getParentBeanFactory(),
+                            beanNames);
                 }
             }
         }
@@ -165,10 +174,10 @@ public class BeanMap
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
     public void setBeanFactory(BeanFactory factory) throws BeansException {
-        if ( !(factory instanceof ListableBeanFactory) ) {
+        if (!(factory instanceof ListableBeanFactory)) {
             throw new BeanDefinitionStoreException("BeanFactory must be listable.");
         }
-        this.beanFactory = (ListableBeanFactory)factory;
+        this.beanFactory = (ListableBeanFactory) factory;
     }
 
     public void setStripPrefix(boolean stripPrefix) {
@@ -182,8 +191,8 @@ public class BeanMap
     public void setHasProperties(String pHasProperties) {
         final StringTokenizer tokenizer = new StringTokenizer(pHasProperties, " \t\n\r\f,");
         final List propNames = new ArrayList();
-        while(tokenizer.hasMoreTokens()) {
-            propNames.add( tokenizer.nextToken() );
+        while (tokenizer.hasMoreTokens()) {
+            propNames.add(tokenizer.nextToken());
         }
         this.hasProperties = propNames;
     }
