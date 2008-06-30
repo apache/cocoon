@@ -60,7 +60,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
         if (value == null || value.trim().length() == 0) {
             value = defaultValue;
         }
-        
+
         return value;
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
                 elements.add(node);
             }
         }
-        
+
         return (Element[]) elements.toArray(new Element[elements.size()]);
     }
 
@@ -180,7 +180,7 @@ public abstract class AbstractElementParser implements BeanDefinitionParser {
     }
 
     private void fillBeanDefinition(RootBeanDefinition beanDef, String initMethod, boolean requiresSettings) {
-        beanDef.setSingleton(true);
+        beanDef.setScope(BeanDefinition.SCOPE_SINGLETON);
         beanDef.setLazyInit(false);
         if (initMethod != null) {
             beanDef.setInitMethodName(initMethod);
