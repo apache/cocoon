@@ -87,9 +87,9 @@ public class BeanMap
         final Iterator i = beanNames.iterator();
         while ( i.hasNext() ) {
             final String beanName = (String)i.next();
-            String key = beanName;
+            Object key = beanName;
             if ( this.stripPrefix && (beanName.startsWith(prefix1) || beanName.startsWith(prefix2)) ) {
-                key = key.substring(prefix1.length());
+                key = beanName.substring(prefix1.length());
             }
             if(this.hasProperties.size() > 0) {
                 final Object bean = this.beanFactory.getBean(beanName);
@@ -104,7 +104,7 @@ public class BeanMap
                 }
                 if(isOk) {
                     if( this.keyProperty != null && this.keyProperty.length() > 0 && wrapper.isReadableProperty(this.keyProperty)) {
-                        key = (String)wrapper.getPropertyValue(this.keyProperty);
+                        key = wrapper.getPropertyValue(this.keyProperty);
                     }
                     this.beanMap.put(key, bean);
                 }
@@ -112,7 +112,7 @@ public class BeanMap
                 final Object bean = this.beanFactory.getBean(beanName);
                 final BeanWrapperImpl wrapper = new BeanWrapperImpl(bean);
                 if( this.keyProperty != null && this.keyProperty.length() > 0 && wrapper.isReadableProperty(this.keyProperty)) {
-                    key = (String)wrapper.getPropertyValue(this.keyProperty);
+                    key = wrapper.getPropertyValue(this.keyProperty);
                 }
                 this.beanMap.put(key, bean);
             }
