@@ -124,4 +124,8 @@ public class SourceResource implements Resource {
         return this.source.exists();
     }
 
+	public long lastModified() throws IOException {
+		return this.source.getLastModified();
+	}
+
 }
