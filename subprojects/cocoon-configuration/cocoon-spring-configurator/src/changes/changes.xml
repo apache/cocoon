@@ -24,7 +24,13 @@
   -->
 <document>
   <body>
-    <release version="1.0.2" date="2008-00-00" description="unreleased">
+    <release version="1.0.3" date="2008-00-00" description="unreleased">
+      <action dev="lgawron" type="fix">
+        Fix configurator:bean-map throwing ClassCastException when key-property="propertyName" did not resolve to a String property.
+      </action>
+    </release>
+
+    <release version="1.0.2" date="2008-04-07" description="released">
       <action dev="reinhard" type="fix" issue="COCOON-2172" due-to="Juan Jose Vazquez Delgado" due-to-email="jvazquez@apache.org">
         Fix block deployment for Weblogic 9.2.
       </action>
