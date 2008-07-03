@@ -24,10 +24,6 @@
                            http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
 
   <bean name="org.apache.cocoon.generation.Generator/event-cache-sample" class="org.apache.cocoon.samples.EventAwareGenerator"
-    scope="prototype">
-    <property name="saxParser" ref="org.apache.cocoon.core.xml.SAXParser" />
-    <property name="scriptManager" ref="org.apache.cocoon.template.script.ScriptManager" />
-    <property name="objectModel" ref="org.apache.cocoon.el.objectmodel.ObjectModel" />    
-  </bean>
+    scope="prototype" parent="org.apache.cocoon.generation.Generator/jx" />
 
 </beans>
