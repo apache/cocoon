@@ -58,7 +58,7 @@
       </xsl:for-each>
 
       <!-- 3. JRE runtime -->
-      <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
+      <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 
       <!-- 4. output directory
            Build in a separate dir since Eclipse is confused
