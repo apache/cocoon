@@ -104,6 +104,17 @@
   
   <profiles>
     <profile>
+      <id>eventcache</id>
+      <modules>
+        <module>cocoon-eventcache/cocoon-eventcache-impl</module>
+        <module>cocoon-eventcache/cocoon-eventcache-sample</module>
+        <module>cocoon-jms/cocoon-jms-impl</module>
+        <module>cocoon-jms/cocoon-jms-sample</module>   
+        <module>cocoon-cron/cocoon-cron-impl</module>
+        <module>cocoon-cron/cocoon-cron-sample</module>        
+      </modules>
+    </profile>
+    <profile>
       <id>allblocks</id>
       <activation>
         <property>
