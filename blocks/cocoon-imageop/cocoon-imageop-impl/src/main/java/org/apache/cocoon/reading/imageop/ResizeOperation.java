@@ -57,6 +57,9 @@ public class ResizeOperation
         if( ! enabled ) {
             return image;
         }
+        if ( this.width == 0 && this.height == 0 ) {
+            return image;
+        }
         double height = image.getHeight();
         double width = image.getWidth();
         double xScale = this.width / width;
