@@ -38,6 +38,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -373,7 +374,12 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 this.bodyMimeType = DEFAULT_BODY_MIMETYPE;
             }
 
-            startTextRecording();
+            Properties outputProperties = new Properties();
+            if (this.bodyMimeType.startsWith("text/plain"))
+            	outputProperties.put(OutputKeys.METHOD, "text");
+            else if (this.bodyMimeType.startsWith("text/html"))
+            	outputProperties.put(OutputKeys.METHOD, "html");
+            startSerializedXMLRecording(outputProperties);
             this.mode = MODE_BODY;
         } else if (name.equals(ELEMENT_ATTACHMENT)) {
             this.attachmentDescriptor = new AttachmentDescriptor(attr.getValue("name"),
@@ -433,7 +439,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         } else if (name.equals(ELEMENT_MAILBODY)) {
             String strB = null;
             try {
-                strB = endTextRecording();
+                strB = endSerializedXMLRecording();
             } catch (Exception e) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Mail: No Body as String in config-file available");
@@ -586,9 +592,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             InputStream inStr   = inSrc.getInputStream();
             byte[]      byteArr = new byte[inStr.available()];
             inStr.read(byteArr);
-            
+
             messageString = new String(byteArr);
-            
+
             // String mailBody = new String(byteArr);
             // this.setMessageBody(messageBodyPart, mailBody, this.bodyMimeType);
         } else {
@@ -596,9 +602,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             // this.setMessageBody(messageBodyPart, this.body, this.bodyMimeType);            
         }
 
-        // make it a simple plain text message in the case of a set plain/text 
+        // make it a simple plain text message in the case of a set plain/text
         // mime-type and any attachements
-        if("text/plain".equals(this.bodyMimeType) && this.attachments.size() == 0) {     
+        if (this.bodyMimeType.startsWith("text/plain") && this.attachments.size() == 0) {
             sm.setText(messageString);
         }
         // add message as message body part
@@ -612,18 +618,18 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             while (i.hasNext()) {
                 AttachmentDescriptor aD = (AttachmentDescriptor) i.next();
                 messageBodyPart = new MimeBodyPart();
-    
+
                 if (!aD.isTextContent()) {
                     Source inputSource = resolver.resolveURI(aD.isURLSource() ? aD.strAttrSrc : aD.strAttrFile);
                     this.usedSources.add(inputSource);
-    
+
                     DataSource dataSource = new SourceDataSource(inputSource, aD.strAttrMimeType, aD.strAttrName);
 
                     messageBodyPart.setDataHandler(new DataHandler(dataSource));
                 } else {
                     messageBodyPart.setContent(aD.strContent, aD.strAttrMimeType);
                 }
-    
+
                 messageBodyPart.setFileName(aD.strAttrName);
                 multipart.addBodyPart(messageBodyPart);
             }
