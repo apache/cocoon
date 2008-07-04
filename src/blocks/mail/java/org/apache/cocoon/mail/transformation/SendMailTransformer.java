@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * The SendMailTransformer send mails with optional attachments using a SMTP
+ * The <code>SendMailTransformer</code> send mails with optional attachments using a SMTP
  * server and delivers furthermore a status report of each sent mail.
  *
  * <p>
@@ -198,7 +198,11 @@ import org.xml.sax.helpers.AttributesImpl;
  *   </ul>
  * </p>
  *
- * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
+ * @cocoon.sitemap.component.documentation
+ * The <code>SendMailTransformer</code> send mails with optional attachments using a SMTP
+ * server and delivers furthermore a status report of each sent mail.
+ * @cocoon.sitemap.component.documentation.caching No
+ *
  * @version $Id$
  */
 public class SendMailTransformer extends AbstractSAXTransformer {
@@ -206,6 +210,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     /*
      * constants, related to elements in configuration-file
      */
+
     public static final String NAMESPACE                  = "http://apache.org/cocoon/transformation/sendmail";
     public static final String ELEMENT_SENDMAIL           = "sendmail";
     public static final String ELEMENT_SMTPHOST           = "smtphost";
@@ -228,6 +233,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     /*
      * mode-constants
      */
+
     protected static final int MODE_NONE               = 0;
     protected static final int MODE_SMTPHOST           = 1;
     protected static final int MODE_FROM               = 2;
@@ -369,9 +375,9 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             }
 
             Properties outputProperties = new Properties();
-            if (this.bodyMimeType.equals("text/plain"))
+            if (this.bodyMimeType.startsWith("text/plain"))
             	outputProperties.put(OutputKeys.METHOD, "text");
-            else if (this.bodyMimeType.equals("text/html"))
+            else if (this.bodyMimeType.startsWith("text/html"))
             	outputProperties.put(OutputKeys.METHOD, "html");
             startSerializedXMLRecording(outputProperties);
             this.mode = MODE_BODY;
@@ -579,6 +585,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
         // decide, if to take content from source or plain text
         // from variable to build mailbody
+        String messageString;
         if (this.bodyURI != null) {
             Source      inSrc   = resolver.resolveURI(this.bodyURI);
             this.usedSources.add(inSrc);
@@ -586,38 +593,49 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             byte[]      byteArr = new byte[inStr.available()];
             inStr.read(byteArr);
 
-            String mailBody = new String(byteArr);
-            messageBodyPart.setContent(mailBody, this.bodyMimeType);
+            messageString = new String(byteArr);
+
+            // String mailBody = new String(byteArr);
+            // this.setMessageBody(messageBodyPart, mailBody, this.bodyMimeType);
         } else {
-            messageBodyPart.setContent(this.body, this.bodyMimeType);
+            messageString = this.body;
+            // this.setMessageBody(messageBodyPart, this.body, this.bodyMimeType);            
         }
 
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(messageBodyPart);
-
-        // process attachments
-        Iterator i = this.attachments.iterator();
-        while (i.hasNext()) {
-            AttachmentDescriptor aD = (AttachmentDescriptor) i.next();
-            messageBodyPart = new MimeBodyPart();
-
-            if (!aD.isTextContent()) {
-                Source inputSource = resolver.resolveURI(aD.isURLSource() ? aD.strAttrSrc : aD.strAttrFile);
-                this.usedSources.add(inputSource);
-
-                DataSource dataSource = new SourceDataSource(inputSource, aD.strAttrMimeType, aD.strAttrName);
-                ((SourceDataSource) dataSource).enableLogging(getLogger());
-
-                messageBodyPart.setDataHandler(new DataHandler(dataSource));
-            } else {
-                messageBodyPart.setContent(aD.strContent, aD.strAttrMimeType);
-            }
-
-            messageBodyPart.setFileName(aD.strAttrName);
+        // make it a simple plain text message in the case of a set plain/text
+        // mime-type and any attachements
+        if (this.bodyMimeType.startsWith("text/plain") && this.attachments.size() == 0) {
+            sm.setText(messageString);
+        }
+        // add message as message body part
+        else {
+            messageBodyPart.setContent(messageString, this.bodyMimeType);
+            Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
-        }
 
-        sm.setContent(multipart);
+            // process attachments
+            Iterator i = this.attachments.iterator();
+            while (i.hasNext()) {
+                AttachmentDescriptor aD = (AttachmentDescriptor) i.next();
+                messageBodyPart = new MimeBodyPart();
+
+                if (!aD.isTextContent()) {
+                    Source inputSource = resolver.resolveURI(aD.isURLSource() ? aD.strAttrSrc : aD.strAttrFile);
+                    this.usedSources.add(inputSource);
+
+                    DataSource dataSource = new SourceDataSource(inputSource, aD.strAttrMimeType, aD.strAttrName);
+                    ((SourceDataSource) dataSource).enableLogging(getLogger());
+
+                    messageBodyPart.setDataHandler(new DataHandler(dataSource));
+                } else {
+                    messageBodyPart.setContent(aD.strContent, aD.strAttrMimeType);
+                }
+
+                messageBodyPart.setFileName(aD.strAttrName);
+                multipart.addBodyPart(messageBodyPart);
+            }
+            sm.setContent(multipart);
+        }
 
         //sm.setReturnOption(SMTPMessage.RETURN_FULL);
         sm.saveChanges();

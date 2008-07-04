@@ -186,6 +186,15 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="AN" type="fix" fixes-bug="COCOON-2213" due-to="Jasha Joachimsthal" due-to-email="j.joachimsthal@onehippo.com">
+      Mail block: Allow mime-type to explicitly set a charset as in mime-type="text/html;charset=UTF-8".
+    </action>
+    <action dev="RP" type="fix">
+      Mail block: Make a difference between plain text mails and mails that have a multi-part body.
+      If the mail-body has set the mime-type="text/plain", then the message body isn't send as
+      body part but as simple content.  That avoids getting a plain text-message without attachment
+      being marked as mail with attachment.
+    </action>
     <action dev="JH" type="update">
       Core: Cocoon's pipeline buffer increases from an initial buffer size of 8192 bytes to the configurable flush
       buffer size rather than allocating the complete buffer beforehand.
