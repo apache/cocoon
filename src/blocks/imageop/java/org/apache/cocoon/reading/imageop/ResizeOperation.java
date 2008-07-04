@@ -31,6 +31,7 @@ public class ResizeOperation
     private int     width;
     private boolean preserveRatio;
     private boolean adjustX;
+    private boolean allowEnlarge;
 
     public void setPrefix( String prefix ) {
         this.prefix = prefix;
@@ -49,27 +50,50 @@ public class ResizeOperation
         }
         preserveRatio = params.getParameterAsBoolean( prefix + "preserve-ratio", false );
         adjustX = params.getParameterAsBoolean( prefix + "adjust-x", false );
+        allowEnlarge = params.getParameterAsBoolean( prefix + "allow-enlarge", true );
     }
  
     public WritableRaster apply( WritableRaster image ) {
         if( ! enabled ) {
             return image;
         }
+        if ( this.width == 0 && this.height == 0 ) {
+            return image;
+        }
         double height = image.getHeight();
         double width = image.getWidth();
         double xScale = this.width / width;
         double yScale = this.height / height;
-        if( preserveRatio )
+        if (allowEnlarge || (xScale <= 1 && yScale <= 1))
         {
-            if( adjustX )
-                xScale = yScale;
-            else
-                yScale = xScale;
+	        if( preserveRatio )
+	        {
+	        	if (allowEnlarge) {
+	        		if (xScale >= 1) {
+	        			yScale = xScale;
+	        		} else if (yScale >= 1) {
+	        			xScale = yScale;
+	        		}
+	        	} else {
+	        		if (xScale <= 1) {
+	        			yScale = xScale;
+	        		} else if (yScale <= 1) {
+	        			xScale = yScale;
+	        		}
+	        	}
+	            if( adjustX )
+	                xScale = yScale;
+	            else
+	                yScale = xScale;
+	        }
+	        
+	        AffineTransform scale = AffineTransform.getScaleInstance( xScale, yScale );
+	        AffineTransformOp op = new AffineTransformOp( scale, AffineTransformOp.TYPE_BILINEAR );
+	        WritableRaster scaledRaster = op.filter( image, null );
+	        return scaledRaster;
+        } else {
+        		return image;
         }
-        AffineTransform scale = AffineTransform.getScaleInstance( xScale, yScale );
-        AffineTransformOp op = new AffineTransformOp( scale, AffineTransformOp.TYPE_BILINEAR );
-        WritableRaster scaledRaster = op.filter( image, null );
-        return scaledRaster;
     }
 
     public String getKey() {
@@ -77,6 +101,7 @@ public class ResizeOperation
                + ( enabled ? "enable" : "disable" )
                + ":" + width
                + ":" + height
-               + ":" + prefix;
+               + ":" + prefix
+               + ":" + ( allowEnlarge ? "allowEnlarge" : "disallowEnlarge" );
     }
 } 
