@@ -186,6 +186,12 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="AN" type="fix" fixes-bug="COCOON-2177" due-to="Mark Lundquist" due-to-email="lundquist.mark@gmail.com">
+      ImageOp block: Make resize a no-op if width and height are zero.
+    </action>
+    <action dev="AN" type="add" fixes-bug="COCOON-2133" due-to="Robin Wyles" due-to-email="reb@robinwyles.com">
+      ImageOp block: Addition of "allow-enlarge" parameter to resize operation.
+    </action>
     <action dev="AN" type="fix" fixes-bug="COCOON-2213" due-to="Jasha Joachimsthal" due-to-email="j.joachimsthal@onehippo.com">
       Mail block: Allow mime-type to explicitly set a charset as in mime-type="text/html;charset=UTF-8".
     </action>
