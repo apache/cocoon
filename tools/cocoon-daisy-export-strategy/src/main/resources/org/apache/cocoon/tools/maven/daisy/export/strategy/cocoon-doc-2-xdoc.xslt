@@ -21,8 +21,8 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:p="http://outerx.org/daisy/1.0#publisher"
-                xmlns:d="http://outerx.org/daisy/1.0"
                 xmlns:ns="http://outerx.org/daisy/1.0"
+                xmlns:d="http://outerx.org/daisy/1.0"
                 exclude-result-prefixes="p d ns">
 
   <xsl:output method="xml"/>
@@ -232,6 +232,73 @@
       </div>
     </div>
   </xsl:template>
+  
+  <!--+
+    | MultiMediaObject (typeId=9)
+    +-->
+  <xsl:template match="d:document[@typeId='9']">
+    <object>
+      <xsl:apply-templates select="d:fields/d:field[(@name = 'MultiMediaObjectHeight') or (@name = 'MultiMediaObjectWidth')]" mode="object"/>
+      <xsl:apply-templates select="d:parts/d:part[@name = 'MultiMediaData']" mode="object"/>
+      <xsl:apply-templates select="d:fields/d:field[starts-with(@name, 'MultiMediaObject') and
+        ((@name != 'MultiMediaObjectHeight') or (@name != 'MultiMediaObjectWidth')) ]" mode="object"/>
+      <embed>
+        <xsl:apply-templates select="d:parts/d:part[@name = 'MultiMediaData']" mode="embed"/>
+        <xsl:apply-templates select="d:fields/d:field[starts-with(@name, 'MultiMediaObject')]" mode="embed"/>
+      </embed>
+    </object>
+    <br/>
+  </xsl:template>
+  
+  <!--+
+    | MultiMediaData part (typeId=13)
+    +-->
+  <xsl:template match="d:part[@typeId='13']">
+    
+  </xsl:template>
+  
+<!--  <xsl:template match="d:part" mode="object">
+    <xsl:variable name="filePath" select="concat($documentBasePath, $document/@id, '/version/', $document/@dataVersionId, '/part/', $document/d:parts/d:part[@name = 'MultiMediaData']/@typeId, '/data', $fileName, '?branch=', $document/@branch, '&amp;language=', $document/@language)"/>
+    
+    <xsl:choose>
+      <xsl:when test="@mimeType = 'application/x-shockwave-flash'">
+        <xsl:attribute name="classid">clsid:D27CDB6E-AE6D-11cf-96B8-444553540000</xsl:attribute>
+        <xsl:attribute name="codebase">http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0</xsl:attribute>
+        <param name="movie" value="{$filePath}"/>
+      </xsl:when>
+    </xsl:choose>   
+    <xsl:attribute name="type">
+      <xsl:value-of select="@mimeType" />
+    </xsl:attribute>
+  </xsl:template>
+  
+  <xsl:template match="d:part" mode="embed">
+    <xsl:attribute name="src">
+      <xsl:value-of select="$filePath"/>
+    </xsl:attribute>
+  </xsl:template>
+  
+  <xsl:template match="d:field" mode="object">
+    <xsl:variable name="fieldName" select="substring-after(@name,'MultiMediaObject')"/>
+    <xsl:choose>
+      <xsl:when test="(($fieldName = 'Height') or ($fieldName = 'Width'))">
+        <xsl:attribute name="{$fieldName}">
+          <xsl:value-of select="@valueFormatted"/>
+        </xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise>
+        <param name="{$fieldName}" value="{@valueFormatted}"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template match="d:field" mode="embed">
+    <xsl:variable name="fieldName" select="substring-after(@name,'MultiMediaObject')"/>
+    
+    <xsl:attribute name="{$fieldName}">
+      <xsl:value-of select="@valueFormatted"/>
+    </xsl:attribute>
+  </xsl:template>-->
 
   <!--+
       | Add link to Daisy page at the bottom of each page
