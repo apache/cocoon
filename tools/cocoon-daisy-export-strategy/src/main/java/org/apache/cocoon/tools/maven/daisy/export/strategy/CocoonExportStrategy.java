@@ -63,7 +63,7 @@ public class CocoonExportStrategy extends DefaultExportStrategy {
         //   documentTypeId ==  9 --> MultiMediaObject (flash hopefully)
         else if(documentTypeId == 9) {
             si.relativeName = PATH_RESOURCES_FLASH + DaisyDocumentProxy.createUniqeFileName(doc) + ".swf";
-            log.info("Trying to export flash object" + si.relativeName);
+            log.debug("Trying to export flash object " + si.relativeName);
             try {
                 // partTypeId == 13 --> MultiMediaData
                 si.data = doc.getDocument().getPart(13).getData();
@@ -72,6 +72,7 @@ public class CocoonExportStrategy extends DefaultExportStrategy {
             } catch (RepositoryException e) {
                 throw new DaisyClientException("Problems occurred while accessing the Daisy repository.", e);
             }
+            log.debug("The " + si.relativeName + " has been exported succesfully.");
         }
         else {
             log.warn("Document id=" + doc.getDocId() + " not streamed because there is no available serialization strategy. documentTypeId=" + documentTypeId);
