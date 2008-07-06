@@ -44,6 +44,7 @@ public class CocoonExportStrategy extends DefaultExportStrategy {
         //   documentTypeId ==  5 --> CocoonDocument
         //   documentTypeId == 13 --> NewsItem
         //   documentTypeId == 12 --> SitemapComponent
+        //   documentTypeId == 14 --> WebpageWithSidebar
         if(documentTypeId == 2 || documentTypeId == 5 || documentTypeId == 10 || documentTypeId == 12 || documentTypeId == 13 || documentTypeId == 14) {
             transformDocument(doc, editUrl, author, si, "org/apache/cocoon/tools/maven/daisy/export/strategy/cocoon-doc-2-xdoc.xslt");
         }
@@ -55,6 +56,19 @@ public class CocoonExportStrategy extends DefaultExportStrategy {
             } catch (PartNotFoundException e) {
                 throw new DaisyClientException("Problems occurred while accessing part id=3 of document id="
                         + doc.getDocId() + "'.", e);
+            } catch (RepositoryException e) {
+                throw new DaisyClientException("Problems occurred while accessing the Daisy repository.", e);
+            }
+        }
+        //   documentTypeId ==  9 --> MultiMediaObject (flash hopefully)
+        else if(documentTypeId == 9) {
+            si.relativeName = PATH_RESOURCES_FLASH + DaisyDocumentProxy.createUniqeFileName(doc) + ".swf";
+            log.info("Trying to export flash object" + si.relativeName);
+            try {
+                // partTypeId == 13 --> MultiMediaData
+                si.data = doc.getDocument().getPart(13).getData();
+            } catch (PartNotFoundException e) {
+                throw new DaisyClientException("Problems occurred while accessing the Daisy repository.", e);
             } catch (RepositoryException e) {
                 throw new DaisyClientException("Problems occurred while accessing the Daisy repository.", e);
             }
