@@ -48,6 +48,12 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
+    <!-- This is temporary repository -->
+    <repository>
+      <id>gkossakowski-maven2</id>
+      <name>gkossakowski-maven2</name>
+      <url>http://people.apache.org/~gkossakowski/maven2/repository</url>
+    </repository>
   </repositories>
 
   <organization>
