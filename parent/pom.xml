@@ -1494,7 +1494,7 @@
       <dependency>
         <groupId>org.daisycms</groupId>
         <artifactId>daisy-maven-plugin</artifactId>
-        <version>1.0.0-alpha-1</version>
+        <version>1.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>ojb</groupId>
@@ -3416,7 +3416,7 @@
             <plugin>
               <groupId>org.daisycms</groupId>
               <artifactId>daisy-maven-plugin</artifactId>
-              <version>1.0.0-alpha-2</version>
+              <version>1.0.0-SNAPSHOT</version>
               <configuration>
                 <repoUrl>${docs.repoUrl}</repoUrl>
                 <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
