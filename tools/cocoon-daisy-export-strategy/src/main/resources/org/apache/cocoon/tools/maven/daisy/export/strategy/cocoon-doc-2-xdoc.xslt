@@ -234,16 +234,20 @@
   </xsl:template>
   
   <!--+
-    | MultiMediaObject (typeId=9)
+    | MultiMediaObject (typeId=9) (supports flash only!)
     +-->
   <xsl:template match="d:document[@typeId='9']">
     <object>
       <xsl:apply-templates select="d:fields/d:field[(@name = 'MultiMediaObjectHeight') or (@name = 'MultiMediaObjectWidth')]" mode="object"/>
-      <xsl:apply-templates select="d:parts/d:part[@name = 'MultiMediaData']" mode="object"/>
+      <xsl:apply-templates select="d:parts/d:part[@name = 'MultiMediaData']" mode="object">
+        <xsl:with-param name="filePath" select="concat('flash/', @id, '_', @branchId, '_', @languageId, '.swf')"/>
+      </xsl:apply-templates>
       <xsl:apply-templates select="d:fields/d:field[starts-with(@name, 'MultiMediaObject') and
         ((@name != 'MultiMediaObjectHeight') or (@name != 'MultiMediaObjectWidth')) ]" mode="object"/>
       <embed>
-        <xsl:apply-templates select="d:parts/d:part[@name = 'MultiMediaData']" mode="embed"/>
+        <xsl:apply-templates select="d:parts/d:part[@name = 'MultiMediaData']" mode="embed">
+          <xsl:with-param name="filePath" select="concat('flash/', @id, '_', @branchId, '_', @languageId, '.swf')"/>
+        </xsl:apply-templates>
         <xsl:apply-templates select="d:fields/d:field[starts-with(@name, 'MultiMediaObject')]" mode="embed"/>
       </embed>
     </object>
@@ -253,13 +257,8 @@
   <!--+
     | MultiMediaData part (typeId=13)
     +-->
-  <xsl:template match="d:part[@typeId='13']">
-    
-  </xsl:template>
-  
-<!--  <xsl:template match="d:part" mode="object">
-    <xsl:variable name="filePath" select="concat($documentBasePath, $document/@id, '/version/', $document/@dataVersionId, '/part/', $document/d:parts/d:part[@name = 'MultiMediaData']/@typeId, '/data', $fileName, '?branch=', $document/@branch, '&amp;language=', $document/@language)"/>
-    
+  <xsl:template match="d:part" mode="object">
+    <xsl:param name="filePath"/>
     <xsl:choose>
       <xsl:when test="@mimeType = 'application/x-shockwave-flash'">
         <xsl:attribute name="classid">clsid:D27CDB6E-AE6D-11cf-96B8-444553540000</xsl:attribute>
@@ -273,6 +272,7 @@
   </xsl:template>
   
   <xsl:template match="d:part" mode="embed">
+    <xsl:param name="filePath"/>
     <xsl:attribute name="src">
       <xsl:value-of select="$filePath"/>
     </xsl:attribute>
@@ -298,7 +298,7 @@
     <xsl:attribute name="{$fieldName}">
       <xsl:value-of select="@valueFormatted"/>
     </xsl:attribute>
-  </xsl:template>-->
+  </xsl:template>
 
   <!--+
       | Add link to Daisy page at the bottom of each page
