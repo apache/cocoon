@@ -40,11 +40,11 @@ public class ResizeOperation
     public void setup( Parameters params )
     throws ProcessingException {
         enabled = params.getParameterAsBoolean( prefix + "enabled", true);
-        height = params.getParameterAsInteger( prefix + "height", 200 );
+        height = params.getParameterAsInteger( prefix + "height", 0 );
         if( height < 0 ) {
             throw new ProcessingException( "Negative Height is not allowed: " + height );
         }
-        width = params.getParameterAsInteger( prefix + "width", 300 );
+        width = params.getParameterAsInteger( prefix + "width", 0 );
         if( width < 0 ) {
             throw new ProcessingException( "Negative Width is not allowed: " + width );
         }
@@ -57,13 +57,17 @@ public class ResizeOperation
         if( ! enabled ) {
             return image;
         }
-        if ( this.width == 0 && this.height == 0 ) {
+
+        // If parameter width or height is zero, use the original image size.
+        // Therefore, if both are zero, the image is returned unchanged.
+
+        if ( width == 0 && height == 0 ) {
             return image;
         }
-        double height = image.getHeight();
-        double width = image.getWidth();
-        double xScale = this.width / width;
-        double yScale = this.height / height;
+
+        double xScale = width == 0 ? 1 : width / (double) image.getWidth();
+        double yScale = height == 0 ? 1 : height / (double) image.getHeight();
+
         if (allowEnlarge || (xScale <= 1 && yScale <= 1))
         {
 	        if( preserveRatio )
