@@ -186,8 +186,10 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
-    <action dev="AN" type="fix" fixes-bug="COCOON-2177" due-to="Mark Lundquist" due-to-email="lundquist.mark@gmail.com">
-      ImageOp block: Make resize a no-op if width and height are zero.
+    <action dev="AN" type="fix" fixes-bug="COCOON-2169" due-to="Mark Lundquist" due-to-email="lundquist.mark@gmail.com">
+      ImageOp block: If parameter width or height in resize operation is zero, use the original image size.
+      If both are zero, then handle as no-op.  Set default values to zero to allow using that feature by
+      leaving out the parameters.
     </action>
     <action dev="AN" type="add" fixes-bug="COCOON-2133" due-to="Robin Wyles" due-to-email="reb@robinwyles.com">
       ImageOp block: Addition of "allow-enlarge" parameter to resize operation.
