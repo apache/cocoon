@@ -220,10 +220,10 @@
           </div>
           <div id="gettingDownload">
             <div class="downloadVersion">
-              <xsl:copy-of select="d:parts/d:part[@typeId='2']/html/body//p[contains(@id,'gettingDownloadText1')]"/>
+              <xsl:apply-templates select="d:parts/d:part[@typeId='2']/html/body//p[contains(@id,'gettingDownloadText1')]"/>
             </div>
             <div class="moreDownload">
-              <xsl:copy-of select="d:parts/d:part[@typeId='2']/html/body//p[contains(@id,'gettingDownloadText2')]"/>
+              <xsl:apply-templates select="d:parts/d:part[@typeId='2']/html/body//p[contains(@id,'gettingDownloadText2')]"/>
             </div>
           </div>
         </div>
@@ -243,7 +243,7 @@
         <xsl:with-param name="filePath" select="concat('flash/', @id, '_', @branchId, '_', @languageId, '.swf')"/>
       </xsl:apply-templates>
       <xsl:apply-templates select="d:fields/d:field[starts-with(@name, 'MultiMediaObject') and
-        ((@name != 'MultiMediaObjectHeight') or (@name != 'MultiMediaObjectWidth')) ]" mode="object"/>
+        ((@name != 'MultiMediaObjectHeight') and (@name != 'MultiMediaObjectWidth')) ]" mode="object"/>
       <embed>
         <xsl:apply-templates select="d:parts/d:part[@name = 'MultiMediaData']" mode="embed">
           <xsl:with-param name="filePath" select="concat('flash/', @id, '_', @branchId, '_', @languageId, '.swf')"/>
@@ -259,16 +259,16 @@
     +-->
   <xsl:template match="d:part" mode="object">
     <xsl:param name="filePath"/>
+    <xsl:attribute name="type">
+      <xsl:value-of select="@mimeType" />
+    </xsl:attribute>
     <xsl:choose>
       <xsl:when test="@mimeType = 'application/x-shockwave-flash'">
         <xsl:attribute name="classid">clsid:D27CDB6E-AE6D-11cf-96B8-444553540000</xsl:attribute>
         <xsl:attribute name="codebase">http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0</xsl:attribute>
         <param name="movie" value="{$filePath}"/>
       </xsl:when>
-    </xsl:choose>   
-    <xsl:attribute name="type">
-      <xsl:value-of select="@mimeType" />
-    </xsl:attribute>
+    </xsl:choose>
   </xsl:template>
   
   <xsl:template match="d:part" mode="embed">
@@ -474,6 +474,11 @@
     <div class="warning">
       <strong style="color:red;font-weight:bold">Warning: There is no styling for this query available.</strong>
     </div>
+  </xsl:template>
+  
+  <!-- Suppress any p:* elements from the output but still process child elements -->
+  <xsl:template match="p:*">
+    <xsl:apply-templates/>
   </xsl:template>
 
   <!--+
