@@ -215,7 +215,7 @@ limitations under the License.
         function startsWith(string1, string2) {
           return (new java.lang.String(string1.toLowerCase())).startsWith(string2.toLowerCase());
         }
-        
+
         function searchByString() {
           for (var i = 0; i < list.length; i++) {
             if (startsWith(list[i].label, filter)) {
@@ -223,7 +223,7 @@ limitations under the License.
             }
           }
         }
-        
+
         function searchById() {
           for (var i = 0; i < list.length; i++) {
             if (list[i].value == parseInt(filter)) {
@@ -231,7 +231,7 @@ limitations under the License.
             }
           }
         }
-        
+
         var suggestions = [];
         var list = personList();
         if (filter) {
@@ -242,9 +242,9 @@ limitations under the License.
             } else {
               cocoon.log.error("The filter: '" + filter + "' must be a number.");
             }
-          } else {              
+          } else {
             searchByString();
-          }          
+          }
         } else {
           suggestions = list;
         }
@@ -258,7 +258,22 @@ limitations under the License.
       <fd:help>field_14</fd:help>
       <fd:datatype base="long" />
     </fd:multivaluefield>
-        
+
+    <fd:multivaluefield id="field_15">
+        <fd:label><b>Multivalue dojo widget:</b></fd:label>
+        <fd:hint>double-list multivalue dojo widget</fd:hint>
+        <fd:help>double-list multivalue dojo widget</fd:help>
+        <fd:datatype base="string"/>
+        <fd:selection-list>
+            <fd:item value="1"/>
+            <fd:item value="2"/>
+            <fd:item value="3"/>
+            <fd:item value="4"/>
+            <fd:item value="5"/>
+            <fd:item value="6"/>
+        </fd:selection-list>
+    </fd:multivaluefield>
+
     <fd:repeater id="contacts">
       <fd:widgets>
         <fd:field id="firstname">
@@ -282,7 +297,7 @@ limitations under the License.
     <fd:repeater-action id="removecontacts" command="delete-rows" repeater="contacts" select="select">
       <fd:label>Remove selected contacts</fd:label>
     </fd:repeater-action>
-    
+
     <fd:repeater id="contacts2">
       <fd:widgets>
         <fd:field id="firstname">
@@ -306,7 +321,7 @@ limitations under the License.
     <fd:repeater-action id="removecontacts2" command="delete-rows" repeater="contacts2" select="select">
       <fd:label>Remove selected contacts</fd:label>
     </fd:repeater-action>
-    
+
     <fd:repeater id="contacts3">
       <fd:widgets>
         <fd:field id="firstname">
@@ -336,7 +351,7 @@ limitations under the License.
       <fd:on-action>
         <fd:javascript>
         	var i;
-			for (i=1; i &lt;= 14; i++) {
+			for (i=1; i &lt;= 15; i++) {
           		widget.getForm().getChild("field_" + i).setState(org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
           	}
         </fd:javascript>
@@ -347,7 +362,7 @@ limitations under the License.
       <fd:on-action>
         <fd:javascript>
         	var i;
-			for (i=1; i &lt;= 14; i++) {
+			for (i=1; i &lt;= 15; i++) {
           		widget.getForm().getChild("field_" + i).setState(org.apache.cocoon.forms.formmodel.WidgetState.INVISIBLE);
           	}
         </fd:javascript>
@@ -358,7 +373,7 @@ limitations under the License.
 	    <fd:on-action>
 		    <fd:javascript>
 			    var i;
-			    for (i=1; i &lt;= 14; i++) {
+			    for (i=1; i &lt;= 15; i++) {
 			         widget.getForm().getChild("field_" + i).setState(org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
 			    }
 		    </fd:javascript>

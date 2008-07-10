@@ -290,3 +290,19 @@ function do_widgetstates() {
     var form = new Form("forms/widgetstates.xml");
     form.showForm("widgetstates-display-pipeline.jx");
 }
+
+function do_multiValueDoubleList() {
+    var list = new Packages.java.util.ArrayList();
+    list.add("3");
+    list.add("5");
+    var form = new Form("forms/multiValueDoubleList.xml");
+    form.getChild("field_1").setValue(list.toArray());
+    form.showForm("multiValueDoubleList-display-pipeline.jx");
+    var _field_1 = form.getChild("field_1").getValue();
+    var _string1 = "";
+    for (var i = 0; i < _field_1.length; i++) {
+        _string1 += " " + _field_1[i] + ",";
+    }
+    cocoon.sendPage("textresult-display-pipeline.jx",
+        { title: "Values selected", text: "_field_1: "+_string1 });
+}

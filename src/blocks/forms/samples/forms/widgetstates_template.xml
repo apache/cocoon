@@ -32,8 +32,8 @@ limitations under the License.
       <br />
       <fi:group>
         <fi:styling layout="columns"/>
-        <fi:items>          
-          <ft:widget id="field_2"/>          
+        <fi:items>
+          <ft:widget id="field_2"/>
           <ft:widget id="field_4">
             <fi:styling list-type="listbox"/>
           </ft:widget>
@@ -58,6 +58,12 @@ limitations under the License.
             <fi:styling type="MultiValueEditorWithSuggestion"
                         dataUrl="_cocoon/forms/suggest/contacts"/>
           </ft:widget>
+          <ft:widget id="field_15">
+              <fi:styling list-type="dojo-double-listbox">
+                <fi:available-label>Available items</fi:available-label>
+                <fi:selected-label>Selected items</fi:selected-label>
+              </fi:styling>
+        </ft:widget>
         </fi:items>
       </fi:group>
       <br />
@@ -125,7 +131,7 @@ limitations under the License.
             <table border="1">
               <tr>
                 <th><ft:repeater-widget-label widget-id="firstname"/></th>
-                <th><ft:repeater-widget-label widget-id="lastname"/></th>                
+                <th><ft:repeater-widget-label widget-id="lastname"/></th>
                 <th><ft:repeater-widget-label widget-id="select"/></th>
               </tr>
               <tbody>

@@ -44,7 +44,8 @@ dojo.require("dojo.ns");
             "dropdowndatetimepicker"    : "cocoon.forms.DropdownDateTimePicker",
             "infopopup"                 : "cocoon.forms.InfoPopup",
             "multivalueeditor"          : "cocoon.forms.MultiValueEditor",
-            "multivalueeditorwithsuggestion" : "cocoon.forms.MultiValueEditorWithSuggestion"
+            "multivalueeditorwithsuggestion" : "cocoon.forms.MultiValueEditorWithSuggestion",
+            "multivaluedoublelist" : "cocoon.forms.MultiValueDoubleList"
             // register new Widgets in the cocoon.forms namespace here
         },
         svg: {

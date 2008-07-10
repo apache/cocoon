@@ -186,6 +186,9 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="AG" type="fix" fixes-bug="COCOON-1822" due-to="Karen Torres &amp; Rafael Márquez" due-to-email="ktorres@agssa.net &amp; rmarquez@agssa.net">
+      Forms: MultiValueField list-type="double-listbox" does not work correctly in ajax enabled forms.
+    </action>
     <action dev="AN" type="fix" fixes-bug="COCOON-2169" due-to="Mark Lundquist" due-to-email="lundquist.mark@gmail.com">
       ImageOp block: If parameter width or height in resize operation is zero, use the original image size.
       If both are zero, then handle as no-op.  Set default values to zero to allow using that feature by
