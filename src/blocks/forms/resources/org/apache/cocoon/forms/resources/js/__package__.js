@@ -14,9 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
- 
- 
+
 // DEPRECATED: This functionality is provided more elegantly via the manifest.js file
 
 dojo.kwCompoundRequire({
@@ -30,6 +28,7 @@ dojo.kwCompoundRequire({
                 "cocoon.forms.InfoPopup",
                 "cocoon.forms.MultiValueEditor",
                 "cocoon.forms.MultiValueEditorWithSuggestion",
+                "cocoon.forms.MultiValueDoubleList",
                 "dojo.widget.InlineEditBox" // also needed by advanced-field-styling
         ]
 });

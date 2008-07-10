@@ -171,6 +171,69 @@
   <xsl:template match="fi:multivaluefield/fi:styling[@list-type='double-listbox']/@submit-on-change" mode="styling"/>
 
   <!--+
+      | fi:multivaluefield with list-type='dojo-double-listbox' styling
+      +-->
+  <xsl:template
+      match="fi:multivaluefield[fi:styling/@list-type='dojo-double-listbox']">
+      <xsl:variable name="id" select="@id"/>
+      <xsl:variable name="values" select="fi:values/fi:value/text()"/>
+      <div id="{@id}" class="forms-doubleList forms doubleList"
+          title="{fi:hint}">
+          <table>
+              <tr>
+                  <td>
+                      <div dojoType="forms:MultiValueDoubleList" styleClass="multivalue-widget" id="{$id}:widget" cformsIdPrefix="{$id}"
+                          availableListLabel="{fi:styling/fi:available-label}" selectedListLabel="{fi:styling/fi:selected-label}"
+                          size="{fi:styling/@size}">
+                          <!-- Data is supplied to the widget using this table-->
+                          <table>
+                              <tbody>
+                                  <!-- select for the available values-->
+                                  <xsl:for-each select="fi:selection-list/fi:item">
+                                      <xsl:variable name="value" select="@value"/>
+                                      <xsl:if test="not($values[. = $value])">
+                                          <tr>
+                                              <td>
+                                                  <xsl:value-of select="$value"/>
+                                              </td>
+                                              <td>
+                                                  <xsl:copy-of select="fi:label/node()"/>
+                                              </td>
+                                          </tr>
+                                      </xsl:if>
+                                  </xsl:for-each>
+                              </tbody>
+                          </table>
+                          <table>
+                              <tbody>
+                                  <!-- select for the selected values -->
+                                  <xsl:for-each select="fi:selection-list/fi:item">
+                                      <xsl:variable name="value" select="@value"/>
+                                      <xsl:if test="$values[. = $value]">
+                                          <tr>
+                                              <td>
+                                                  <xsl:value-of select="$value"/>
+                                              </td>
+                                              <td>
+                                                  <xsl:copy-of select="fi:label/node()"/>
+                                              </td>
+                                          </tr>
+                                      </xsl:if>
+                                  </xsl:for-each>
+                              </tbody>
+                          </table>
+                      </div>
+                  </td>
+                  <td>
+                      <xsl:apply-templates select="." mode="common"/>
+                  </td>
+              </tr>
+          </table>
+      </div>
+      <xsl:apply-templates select="." mode="label-ajax-request"/>
+  </xsl:template>
+
+  <!--+
       | fi:multivaluefield without a selection list
       +-->
   <xsl:template match="fi:multivaluefield[not(fi:selection-list)]">
@@ -210,7 +273,7 @@
     <!-- <xsl:variable name="values" select="fi:values/fi:value/text()"/>
     <xsl:variable name="popupUri" select="fi:styling/@popup-uri"/>
     <xsl:variable name="popupLinkText" select="fi:styling/@popup-link-text"/>
-    <xsl:variable name="dataUrl" select="fi:styling/@dataUrl"/> 
+    <xsl:variable name="dataUrl" select="fi:styling/@dataUrl"/>
     <xsl:variable name="popupSize" select="fi:styling/@popup-size"/>-->
 
     <div id="{@id}" dojoType="forms:MultiValueEditorWithSuggestion" styleClass="multivalue-widget" dataUrl="{fi:styling/@dataUrl}"
