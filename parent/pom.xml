@@ -1495,7 +1495,7 @@
       <dependency>
         <groupId>daisy</groupId>
         <artifactId>daisy-util</artifactId>
-        <version>1.5-dev</version>
+        <version>5.0</version>
       </dependency>
       <dependency>
         <groupId>org.daisycms</groupId>
