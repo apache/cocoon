@@ -28,6 +28,7 @@ import org.apache.cocoon.configuration.MutableSettings;
 import org.apache.cocoon.configuration.PropertyHelper;
 import org.apache.cocoon.configuration.PropertyProvider;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.configurator.ResourceFilter;
 import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,6 +72,8 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
     protected BeanFactory beanFactory;
 
     protected ResourceLoader resourceLoader;
+    
+    protected ResourceFilter resourceFilter;
 
     /**
      * Additional properties.
@@ -102,6 +105,10 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
      */
     public void setResourceLoader(ResourceLoader loader) {
         this.resourceLoader = loader;
+    }
+    
+    public void setResourceFilter(ResourceFilter resourceFilter) {
+        this.resourceFilter = resourceFilter;
     }
 
     public void setDirectories(List directories) {
@@ -224,9 +231,9 @@ public abstract class AbstractSettingsBeanFactoryPostProcessor
             while (i.hasNext()) {
                 final String directory = (String) i.next();
                 // now read all properties from the properties directory
-                ResourceUtils.readProperties(directory, properties, getResourceLoader(), this.logger);
+                ResourceUtils.readProperties(directory, properties, getResourceLoader(), this.resourceFilter, this.logger);
                 // read all properties from the mode dependent directory
-                ResourceUtils.readProperties(directory + '/' + mode, properties, getResourceLoader(), this.logger);
+                ResourceUtils.readProperties(directory + '/' + mode, properties, getResourceLoader(), this.resourceFilter, this.logger);
             }
         }
 

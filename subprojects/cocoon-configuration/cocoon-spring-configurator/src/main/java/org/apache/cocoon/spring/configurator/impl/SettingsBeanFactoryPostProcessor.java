@@ -170,19 +170,19 @@ public class SettingsBeanFactoryPostProcessor
         if (this.readFromClasspath) {
             // now read all properties from classpath directory
             ResourceUtils.readProperties(Constants.CLASSPATH_PROPERTIES_LOCATION,
-                                         properties, getResourceLoader(), this.logger);
+                                         properties, getResourceLoader(), this.resourceFilter, this.logger);
             // read all properties from the mode dependent directory
             ResourceUtils.readProperties(Constants.CLASSPATH_PROPERTIES_LOCATION +
-                                         "/" + mode, properties, getResourceLoader(), this.logger);
+                                         "/" + mode, properties, getResourceLoader(), this.resourceFilter, this.logger);
         }
 
         if (this.readFromGlobalLocation) {
             // now read all properties from the properties directory
             ResourceUtils.readProperties(Constants.GLOBAL_PROPERTIES_LOCATION,
-                                         properties, getResourceLoader(), this.logger);
+                                         properties, getResourceLoader(), this.resourceFilter, this.logger);
             // read all properties from the mode dependent directory
             ResourceUtils.readProperties(Constants.GLOBAL_PROPERTIES_LOCATION +
-                                         "/" + mode, properties, getResourceLoader(), this.logger);
+                                         "/" + mode, properties, getResourceLoader(), this.resourceFilter, this.logger);
         }
 
         // set default work directory value
@@ -241,10 +241,10 @@ public class SettingsBeanFactoryPostProcessor
                 if (additionalFile.isDirectory()) {
                     // read from directory
                     ResourceUtils.readProperties(additionalFile.getAbsolutePath(),
-                                                 properties, getResourceLoader(), this.logger);
+                                                 properties, getResourceLoader(), this.resourceFilter, this.logger);
                     // read all properties from the mode dependent directory
                     ResourceUtils.readProperties(additionalFile.getAbsolutePath() + File.separatorChar + mode,
-                                                 properties, getResourceLoader(), this.logger);
+                                                 properties, getResourceLoader(), this.resourceFilter, this.logger);
                 } else {
                     // read the file
                     try {

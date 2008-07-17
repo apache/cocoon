@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.cocoon.spring.configurator.ResourceFilter;
 import org.apache.cocoon.spring.configurator.ResourceUtils;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -55,8 +56,10 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
                                                                    ParserContext parserContext,
                                                                    String        runningMode);
 
+    private ResourceFilter resourceFilter;
+    
     /**
-     * Get additonal includes of property directories.
+     * Get additional includes of property directories.
      */
     protected List getPropertyIncludes(Element childSettingsElement) {
         List propertyDirs = null;
@@ -119,6 +122,12 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         final String runningMode = this.getRunningMode(element);
+        
+        try {
+            this.resourceFilter = getResourceFilter(element);
+        } catch (Exception e) {
+            throw new BeanDefinitionStoreException("Unable to read filter configuration", e);
+        }
 
         // create factory for settings object
         this.createSettingsBeanFactoryPostProcessor(element, parserContext, runningMode);
@@ -182,6 +191,7 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
         if ( load ) {
             try {
                 Resource[] resources = resolver.getResources(path + "/*.xml");
+                resources = ResourceUtils.filterResources(resources, getResourceFilter());
                 Arrays.sort(resources, ResourceUtils.getResourceComparator());
                 for (int i = 0; i < resources.length; i++) {
                     this.handleImport(parserContext, resources[i].getURL().toExternalForm());
@@ -211,7 +221,27 @@ public abstract class AbstractSettingsElementParser extends AbstractElementParse
         beanDef.getPropertyValues().addPropertyValue("locations", locations);
         beanDef.getPropertyValues().addPropertyValue("resourceLoader",
                 parserContext.getReaderContext().getReader().getResourceLoader());
+        beanDef.getPropertyValues().addPropertyValue("resourceFilter", getResourceFilter());
         beanDef.getPropertyValues().addPropertyValue("beanNameSeparator", "/");
         this.register(beanDef, ExtendedPropertyOverrideConfigurer.class.getName(), parserContext.getRegistry());
+    }
+    
+    
+    protected ResourceFilter getResourceFilter(Element e) throws Exception {
+        Element[] filters = this.getChildElements(e, "filter");
+        
+        if (filters.length == 0)
+            return null;
+        else if (filters.length > 1)
+            throw new RuntimeException("Only one filter definition is allowed and you configured " + filters.length + " filters.");
+        
+        String filterClassName = filters[0].getAttribute("class");
+        if (filterClassName.length() == 0)
+            throw new RuntimeException("Missing 'class' attribute.");
+        return (ResourceFilter)java.lang.Class.forName(filterClassName).newInstance();
+    }
+    
+    protected final ResourceFilter getResourceFilter() {
+        return this.resourceFilter;
     }
 }

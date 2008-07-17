@@ -29,6 +29,8 @@ import org.springframework.beans.factory.config.PropertyOverrideConfigurer;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
+import org.apache.cocoon.spring.configurator.ResourceFilter;
+
 /**
  * Our version of the property override configurer which reads properties from
  * the Cocoon spring configuration directory. A property should have the
@@ -51,6 +53,8 @@ public class ExtendedPropertyOverrideConfigurer extends PropertyOverrideConfigur
      * context.
      */
     protected ResourceLoader resourceLoader = new DefaultResourceLoader();
+    
+    protected ResourceFilter resourceFilter;
 
     /**
      * The settings object.
@@ -90,6 +94,15 @@ public class ExtendedPropertyOverrideConfigurer extends PropertyOverrideConfigur
     public void setResourceLoader(final ResourceLoader loader) {
         this.resourceLoader = loader;
     }
+    
+    /**
+     * Set the {@link ResourceFilter resource filter}
+     * 
+     * @param resourceFilter
+     */
+    public void setResourceFilter(ResourceFilter resourceFilter) {
+        this.resourceFilter = resourceFilter;
+    }
 
     /**
      * Read all property files from the specified location and apply the
@@ -108,9 +121,9 @@ public class ExtendedPropertyOverrideConfigurer extends PropertyOverrideConfigur
             final Iterator i = this.locations.iterator();
             while ( i.hasNext() ) {
                 final String location = (String)i.next();
-                ResourceUtils.readProperties(location, mergedProps, this.resourceLoader, this.logger);
+                ResourceUtils.readProperties(location, mergedProps, this.resourceLoader, resourceFilter, this.logger);
                 // read properties from running-mode dependent directory
-                ResourceUtils.readProperties(location + '/' + mode, mergedProps, this.resourceLoader, this.logger);
+                ResourceUtils.readProperties(location + '/' + mode, mergedProps, this.resourceLoader, resourceFilter, this.logger);
             }
         }
 
