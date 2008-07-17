@@ -22,6 +22,7 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.spring.configurator.ResourceFilter;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
@@ -53,6 +54,12 @@ public class SettingsElementParser extends AbstractSettingsElementParser {
         // create bean definition for settings object
         final RootBeanDefinition beanDef = this.createBeanDefinition(SettingsBeanFactoryPostProcessor.class.getName(),
                 "init", false);
+        
+        //pass resource filter
+        final ResourceFilter resourceFilter = getResourceFilter();
+        if (resourceFilter != null) {
+            beanDef.getPropertyValues().addPropertyValue("resourceFilter", resourceFilter);
+        }
         // add additional properties
         final Properties additionalProps = this.getAdditionalProperties(element);
         if (additionalProps != null) {

@@ -19,9 +19,12 @@ package org.apache.cocoon.spring.configurator;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.springframework.core.io.Resource;
@@ -76,11 +79,13 @@ public abstract class ResourceUtils {
      * @param propertiesPath The directory path.
      * @param properties The properties object where all the read properties are applied to.
      * @param resourceLoader The resource loader to load the property files.
+     * @param resourceFilter The resource filter used to filter read property files, if null no filtering is being applied.
      * @param logger Optional logger for debugging.
      */
     public static void readProperties(String         propertiesPath,
                                       Properties     properties,
                                       ResourceLoader resourceLoader,
+                                      ResourceFilter resourceFilter,
                                       Log            logger) {
         if (logger != null && logger.isDebugEnabled()) {
             logger.debug("Reading properties from directory: " + propertiesPath);
@@ -106,6 +111,7 @@ public abstract class ResourceUtils {
         if (load) {
             try {
                 resources = resolver.getResources(propertiesPath + "/*.properties");
+                resources = filterResources(resources, resourceFilter);
                 if (logger != null && logger.isDebugEnabled())
                     logger.debug("Found " + resources.length + " matching resources in " +
                                  propertiesPath + "/*.properties");
@@ -218,5 +224,19 @@ public abstract class ResourceUtils {
         } catch (IOException ignore) {
             return null;
         }
+    }
+    
+    /**
+     * @param resources The array of resources need to be filtered
+     * @param filter The instance of the filter itself
+     * @return the array of resources that has been filtered
+     */
+    public static Resource[] filterResources(Resource[] resources, ResourceFilter filter) {
+        if (filter == null)
+            return resources;
+        
+        Set resourcesSet = new HashSet(Arrays.asList(resources));
+        Set filteredResources = filter.filter(resourcesSet);
+        return (Resource[])(new ArrayList(filteredResources)).toArray(new Resource[0]);
     }
 }
