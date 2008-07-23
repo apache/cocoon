@@ -21,10 +21,10 @@ package org.apache.cocoon.servletservice.url;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 
 import javax.servlet.ServletException;
 
@@ -33,7 +33,7 @@ import org.apache.cocoon.servletservice.Absolutizable;
 import org.apache.cocoon.servletservice.CallStackHelper;
 import org.apache.cocoon.servletservice.ServletConnection;
 
-public class ServletURLConnection extends URLConnection {
+public class ServletURLConnection extends HttpURLConnection {
 
     private final ServletConnection servletConnection;
     private final URL url;
@@ -91,6 +91,7 @@ public class ServletURLConnection extends URLConnection {
     public InputStream getInputStream() throws IOException {
         try {
             this.connect();
+
             return this.servletConnection.getInputStream();
         } catch (ServletException e) {
             IOException ioException = new IOException("Can't read from servlet URL " + this.url + ".");
@@ -105,10 +106,29 @@ public class ServletURLConnection extends URLConnection {
         } catch (IOException e) {
             return 0;
         }
+
         return this.servletConnection.getLastModified();
     }
 
     public OutputStream getOutputStream() throws IOException {
         return this.servletConnection.getOutputStream();
+    }
+
+    public int getResponseCode() {
+        try {
+            this.connect();
+
+            return this.servletConnection.getResponseCode();
+        } catch (IOException e) {
+            return 500;
+        }
+    }
+
+    public void disconnect() {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    public boolean usingProxy() {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }
