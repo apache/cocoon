@@ -32,11 +32,16 @@ import org.apache.cocoon.servletservice.AbsoluteServletConnection;
 import org.apache.cocoon.servletservice.Absolutizable;
 import org.apache.cocoon.servletservice.CallStackHelper;
 import org.apache.cocoon.servletservice.ServletConnection;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ServletURLConnection extends HttpURLConnection {
 
     private final ServletConnection servletConnection;
+
     private final URL url;
+
+    private final Log logger = LogFactory.getLog(this.getClass());
 
     protected ServletURLConnection(URL url) throws URISyntaxException {
         super(url);
@@ -86,6 +91,20 @@ public class ServletURLConnection extends HttpURLConnection {
             ioException.initCause(e);
             throw ioException;
         }
+    }
+
+    public InputStream getErrorStream() {
+        if (!this.connected) {
+            return null;
+        }
+
+        try {
+            return this.servletConnection.getInputStream();
+        } catch (Exception e) {
+            this.logger.warn(e);
+        }
+
+        return null;
     }
 
     public InputStream getInputStream() throws IOException {
