@@ -819,3 +819,56 @@ GBECAAYFAjZoeAcACgkQmobXzNGq6mD1XgCgxQfTHPft4E9f6G38IEoi1O29KiwA
 oK1snk+SwJLXrTUakAE7gDzSqe9a
 =xcFs
 -----END PGP PUBLIC KEY BLOCK-----
+pub   1024D/FB89FCA4 2008-04-06
+uid                  Grzegorz Kossakowski <gkossakowski@apache.org>
+sig 3        FB89FCA4 2008-04-06  Grzegorz Kossakowski <gkossakowski@apache.org>
+sig          E41EDC7E 2008-04-07  Carsten Ziegeler <cziegeler@apache.org>
+sig          D1AAEA60 2008-04-07  Reinhard Poetz <reinhard.poetz@gmx.net>
+sig          9C85222B 2008-04-07  Henning Schmiedehausen <hps@intermeta.de>
+sig          152924AF 2008-04-11  Sander Temme <sander@temme.net>
+sig          B2A2EC6A 2008-04-11  Sander Temme <sctemme@ncipher.com>
+sig          7C200941 2008-04-27  Torsten Curdt <tcurdt@apache.org>
+sig          015AFC8A 2008-04-28  Bertrand Delacretaz <bdelacretaz@apache.org>
+sub   2048g/F59FCCD2 2008-04-06
+sig          FB89FCA4 2008-04-06  Grzegorz Kossakowski <gkossakowski@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v2.0.9 (GNU/Linux)
+
+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
+=wneK
+-----END PGP PUBLIC KEY BLOCK-----
