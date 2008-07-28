@@ -25,6 +25,9 @@
 <document>
   <body>
     <release version="1.1.1" date="TBD" description="unreleased">
+      <action dev="felixk" type="fix" fixes-bug="COCOON-1822" due-to="Karen Torres &amp; Rafael Márquez" due-to-email="ktorres@agssa.net &amp; rmarquez@agssa.net">
+        Forms: MultiValueField list-type="double-listbox" does not work correctly in ajax enabled forms.
+      </action>
       <action dev="joerg" type="fix" fixes-bug="COCOON-1825" due-to="Vincent Demay" due-to-email="vincent@demay-fr.net">
         Fix @id handling on fi:group/fi:struct element in conjunction with AJAX requests.
       </action>
