@@ -30,6 +30,7 @@ dojo.kwCompoundRequire({
                 "cocoon.forms.InfoPopup",
                 "cocoon.forms.MultiValueEditor",
                 "cocoon.forms.MultiValueEditorWithSuggestion",
+                "cocoon.forms.MultiValueDoubleList",
                 "dojo.widget.InlineEditBox" // also needed by advanced-field-styling
         ]
 });
