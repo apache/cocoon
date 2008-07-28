@@ -26,7 +26,7 @@
                            http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
 
   <bean name="org.apache.cocoon.ajax.sample.servlet" class="org.apache.cocoon.sitemap.SitemapServlet">
-    <servlet:context mount-path="/cocoon-ajax-sample" context-path="blockcontext:/cocoon-ajax-sample/">
+    <servlet:context mount-path="/samples/ajax" context-path="blockcontext:/cocoon-ajax-sample/">
       <servlet:connections>
         <entry key="ajax" value-ref="org.apache.cocoon.ajax.impl.servlet"/>
         <entry key="style-default" value-ref="org.apache.cocoon.samples.style.default.servlet"/>
