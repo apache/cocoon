@@ -122,7 +122,7 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-sample</artifactId>
     </dependency>
-
+	
     <!-- Integration Tests -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -179,15 +179,21 @@
                   <excludes>
                     <exclude>none</exclude>
                   </excludes>
-                  <includes>
-                    <include>**/cocoon/it/**</include>
-                  </includes>
                 </configuration>
               </execution>
             </executions>
           </plugin>
         </plugins>
       </build>
+    </profile>
+	<profile>
+      <id>eventcache</id>
+	    <dependencies>
+	      <dependency>
+            <groupId>org.apache.cocoon</groupId>
+			  <artifactId>cocoon-eventcache-sample</artifactId>
+			</dependency>
+		</dependencies>
     </profile>
     <profile>
       <id>allblocks</id>
