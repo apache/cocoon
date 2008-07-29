@@ -18,14 +18,12 @@ package org.apache.cocoon.samples;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.validity.EventValidity;
 import org.apache.cocoon.caching.validity.NamedEvent;
-import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;

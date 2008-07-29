@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.caching.impl.EventAwareCacheImpl;
 import org.apache.cocoon.caching.validity.NamedEvent;
@@ -40,6 +39,11 @@ import org.apache.cocoon.environment.SourceResolver;
  */
 public class CacheEventAction extends ServiceableAction implements ThreadSafe {
 
+	/**
+	 * Cache implementation injected by Spring.
+	 */
+	private Cache cache = null;
+	
     /**
      * Lookup the cache and call its processEvent method. Returns an 
      * empty map to signal success.
@@ -50,24 +54,28 @@ public class CacheEventAction extends ServiceableAction implements ThreadSafe {
                     String src,
                     Parameters par
     ) throws Exception {
-        final String cacheRole = par.getParameter("cache-role", Cache.ROLE + "/EventAware");
-        Cache cache = (Cache)this.manager.lookup(cacheRole);
-        try {
-            // FIXME - This cast might not work with every container!
-            if (cache instanceof EventAwareCacheImpl) {
-                String eventName = par.getParameter("event");
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Configured for cache event named: " + eventName);
-                }
-                if (eventName == null || "".equals(eventName)) {
-                    return null;
-                }
-                ((EventAwareCacheImpl)cache).processEvent(
-                                                    new NamedEvent(eventName));
+        // FIXME - This cast might not work with every container!
+        if (cache instanceof EventAwareCacheImpl) {
+            String eventName = par.getParameter("event");
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug(
+                        "Configured for cache event named: " + eventName);
             }
-        } finally {
-            this.manager.release(cache);
+            if (eventName == null || "".equals(eventName)) {
+                return null;
+            }
+            ((EventAwareCacheImpl) cache)
+                    .processEvent(new NamedEvent(eventName));
         }
         return EMPTY_MAP;
     }
+
+	/**
+	 * Sets cache.
+     * @param cache
+     *            the cache to set
+     */
+	public final void setCache(Cache cache) {
+		this.cache = cache;
+	}
 }
