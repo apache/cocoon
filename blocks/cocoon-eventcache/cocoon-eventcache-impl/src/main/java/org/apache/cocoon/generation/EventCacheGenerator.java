@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  * TODO: share common code with EventCacheTransformer
  */
 public class EventCacheGenerator extends ServiceableGenerator 
-implements Configurable, CacheableProcessingComponent {
+implements CacheableProcessingComponent {
 
 
     // ---------------------------------------------------- constants

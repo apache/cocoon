@@ -38,7 +38,7 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
  * 
  * @version $Id$
  */
-public class EventAwareCacheImpl extends CacheImpl implements Initializable, EventAware {
+public class EventAwareCacheImpl extends CacheImpl implements EventAware {
 
     private Log logger = LogFactory.getLog(getClass());       
     
