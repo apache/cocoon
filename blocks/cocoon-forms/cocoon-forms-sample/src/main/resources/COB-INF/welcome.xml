@@ -22,7 +22,7 @@
  <group name="Back">
   <sample name="Back" href="../..">to Cocoon Samples main page</sample>
   <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
-  <sample name="Cocoon Forms Documentation" href="http://cocoon.apache.org/2.1/userdocs/basics/index.html">
+  <sample name="Cocoon Forms Documentation" href="http://cocoon.apache.org/2.2/blocks/forms/1.0/">
     Documentation is available on the Cocoon site.
   </sample>
   <note>
