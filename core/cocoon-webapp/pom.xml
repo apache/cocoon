@@ -186,14 +186,18 @@
         </plugins>
       </build>
     </profile>
-	<profile>
-      <id>eventcache</id>
-	    <dependencies>
-	      <dependency>
-            <groupId>org.apache.cocoon</groupId>
-			  <artifactId>cocoon-eventcache-sample</artifactId>
-			</dependency>
-		</dependencies>
+    <profile>
+      <id>eventcache-jms</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-eventcache-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-jms-sample</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
     <profile>
       <id>allblocks</id>
@@ -249,6 +253,10 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-eventcache-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-jms-sample</artifactId>
         </dependency>
         <!-- Breaks currently cocoon-webapp
         <dependency>
