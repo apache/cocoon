@@ -6,9 +6,9 @@
   The ASF licenses this file to You under the Apache License, Version 2.0
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,29 +29,30 @@
   <map:components>
 
     <!-- =========================== Matchers =================================== -->
-
-    <map:matchers default="wildcard">
+    <!-- 
+      <map:matchers default="wildcard">
       <map:matcher name="host-matcher" logger="sitemap.matcher.wildcard" src="org.apache.cocoon.matching.modular.CachingWildcardMatcher">
-        <input-module name="request" />
-        <parameter-name>serverName</parameter-name>
+      <input-module name="request" />
+      <parameter-name>serverName</parameter-name>
       </map:matcher>
-    </map:matchers>
-
+      </map:matchers>
+    -->
     <!-- =========================== Actions =================================== -->
-
-    <map:actions>
+    <!-- 
+      <map:actions>
       <map:action name="cacheevent" src="org.apache.cocoon.acting.CacheEventAction" />
       <map:action name="jmsevent" src="org.apache.cocoon.acting.JMSPublisherAction" logger="sitemap.actions.jms">
-        <parameter name="connection" value="local-topics" />
-        <parameter name="topic" value="topic1" />
+      <parameter name="connection" value="local-topics" />
+      <parameter name="topic" value="topic1" />
       </map:action>
-    </map:actions>
-
+      </map:actions>
+    -->
     <!-- =========================== Pipes =================================== -->
 
     <map:pipes default="caching">
-      <!-- A pipe must be defined configured to use the EventAware cache. -->
-      <map:pipe name="event-aware" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
+
+      <map:pipe name="event-aware"
+        src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
         <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware" />
       </map:pipe>
     </map:pipes>
@@ -70,17 +71,26 @@
 
   <map:pipelines>
 
-    <!-- Our content must occur in a pipeline configured to use our Event Aware cache -->
-    <map:pipeline type="event-aware">
-      <map:match pattern="eventcache">
-        <map:generate type="serverpages" src="{0}.xsp" />
-        <!-- Make use of servlet services -->
-        <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
-        </map:serialize>
+    <map:pipeline>
+      <map:match pattern="test">
+        <map:generate src="test.xml" type="file" />
+        <map:serialize type="xml" />
       </map:match>
     </map:pipeline>
 
+    <!-- Our content must occur in a pipeline configured to use our Event Aware cache -->
+    <!-- 
+      <map:pipeline type="event-aware">
+      <map:match pattern="eventcache">
+      <map:generate type="serverpages" src="{0}.xsp" />
+      
+      <map:serialize type="servletService">
+      <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+      </map:serialize>
+      </map:match>
+      </map:pipeline>
+    -->
+<!-- 
     <map:pipeline>
 
       <map:match pattern="">
@@ -109,13 +119,14 @@
 
       <map:match pattern="*">
         <map:generate type="serverpages" src="{1}.xsp" />
-        <!-- Make use of servlet services -->
+
         <map:serialize type="servletService">
-          <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+          <map:parameter name="service"
+            value="servlet:style-default:/service/blocks/dynamic-page2html" />
         </map:serialize>
       </map:match>
     </map:pipeline>
-
+ -->
   </map:pipelines>
 </map:sitemap>
 

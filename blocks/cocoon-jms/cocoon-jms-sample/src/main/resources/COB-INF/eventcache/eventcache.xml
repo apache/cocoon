@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | event-based cache sample.
+    |
+    | @version $Id$
+    +-->
+<page>
+    <title>Demonstrating Event-Aware Cache Invalidation via JMS</title>
+    <content>
+        <para>
+          This page is a sample for publishing JMS messages. If you don't already understand at
+          least the basics of caching in Cocoon, you should probably start there, not here. Read the
+          text below, and the sitemap and source for more details.
+        </para>
+        <para>
+            I pause for ${cocoon.parameters.DELAY_SECS} seconds during generation, so 
+            that you can tell if I'm being served from the cache or not.
+            <br/>
+            What you see here was generated on <b>${cocoon.parameters.DATE}</b>.
+        </para>
+
+        <para>
+            I'm cached for each unique value of request parameter 'pageKey'.  Other 
+            parameters do not matter.
+            <br/>
+            Here the value is:
+            <b>${cocoon.parameters.KEY}</b>.  
+            <br/>
+            If this is not the same as the 'pageKey' parameter in the page URL, we have a problem.
+        </para>
+
+        <para>
+            Unlike other cacheable pages in Cocoon, I can be un-cached by events external 
+            to Cocoon - for instance, when a JMS message is received.
+            <br/>
+            My cache entry will be invalidated (actually, removed) when an event named 
+            <i>${cocoon.parameters.KEY}</i> occurs.  Such an event can be triggered by
+            clicking the "uncache" links below.
+        </para>
+        <para>Test links:
+            <ul>
+                <li><a href="?pageKey=one">pageKey=one</a> 
+                    (<a href="action?pageKey=one&amp;event=one">uncache with jms message</a>)</li> 
+                <li><a href="?pageKey=two">pageKey=two</a>
+                    (<a href="action?pageKey=two&amp;event=two">uncache with jms message</a>)</li>
+            </ul>
+            Note: the random numbers you see included in the url after an uncache link 
+            serve two purposes in the example, making it easier to see the effect of the 
+            cache invalidation.  They prevent browser caching and they demonstrate that 
+            only our designated key matters in the retrieval from cache.  
+        </para>
+    </content>
+</page>
