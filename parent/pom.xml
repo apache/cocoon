@@ -3343,6 +3343,8 @@
     <docs.m.maven-plugin.relPath>2.2/maven-plugins/maven-plugin/${docs.m.maven-plugin.version}/</docs.m.maven-plugin.relPath>
     <docs.m.it-fw.version>1.0</docs.m.it-fw.version>
     <docs.m.it-fw.relPath>2.2/maven-plugins/it-fw/${docs.m.it-fw.version}/</docs.m.it-fw.relPath>
+    <docs.m.it.version>1.0</docs.m.it.version>
+    <docs.m.it.relPath>2.2/maven-plugins/it/${docs.m.it.version}/</docs.m.it.relPath>
   </properties>
 
   <profiles>
@@ -3606,6 +3608,10 @@
                   <collection>
                     <name>cdocs-it-fw</name>
                     <path>${docs.m.it-fw.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-it</name>
+                    <path>${docs.m.it.relPath}</path>
                   </collection>
                 </collections>
                 <siteXmlContent> &lt;project&gt; &lt;skin&gt;
