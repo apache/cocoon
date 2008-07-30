@@ -34,6 +34,7 @@
   <description>
     Integration test suite for Cocoon.
   </description>
+  <url>http://cocoon.apache.org/${docs.m.it.relPath}</url>
 
   <dependencies>
     <dependency>
@@ -50,6 +51,37 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.it.relPath}</url>
+    </site>
+  </distributionManagement>
+
+  <properties>
+    <docs.name>Cocoon Integration Tests</docs.name>
+    <docs.version>${docs.m.it.version}</docs.version>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>1465</navDocId>
+              <collection>cdocs-it</collection>
+              <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <build>
     <plugins>
