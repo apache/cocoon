@@ -20,18 +20,14 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-  <!--+
-    | Event-cache implementation based on the default CacheImpl.
-    +-->
+  <!-- Event-cache implementation based on the default CacheImpl. -->
   <bean name="org.apache.cocoon.caching.Cache/EventAware"
     class="org.apache.cocoon.caching.impl.EventAwareCacheImpl" init-method="initialize">
     <property name="store" ref="org.apache.excalibur.store.Store/TransientStore" />
     <property name="eventRegistry" ref="org.apache.cocoon.caching.EventRegistry" />
   </bean>
 
-  <!--+
-    | Event-cache registry.
-    +-->
+  <!-- Event-cache registry. -->
   <bean name="org.apache.cocoon.caching.EventRegistry"
     class="org.apache.cocoon.caching.impl.StoreEventRegistryImpl" init-method="initialize">
     <property name="store" ref="org.apache.excalibur.store.Store/TransientStore" />
