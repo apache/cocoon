@@ -24,7 +24,13 @@
   -->
 <document>
   <body>
-    <release version="1.0.3" date="2008-00-00" description="unreleased">
+    <release version="1.1.0-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="add">
+        Introduced resource filter feature as explained here: http://article.gmane.org/gmane.text.xml.cocoon.devel/78158
+        The resource filtering is used for *all* resources being processed by Spring Configurator including beans defintions and property files.
+        
+        The resource filter itself is a simple class implementing one method of ResourceFilter interface.
+      </action>
       <action dev="lgawron" type="fix">
         Fix configurator:bean-map throwing ClassCastException when key-property="propertyName" did not resolve to a String property.
       </action>
