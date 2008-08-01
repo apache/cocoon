@@ -25,6 +25,14 @@
 <document>
   <body>
     <release version="1.0.0" date="2008-00-00" description="unreleased">
+      <action dev="reinhard" type="fix">
+        Fix the lastModified() method of the ServletConnection: make sure that there is an existing connection 
+        before reading the Last-Modified header 
+      </action>    
+      <action dev="reinhard" type="add">
+        Add a ServletURLConnection, ServletURLStreamHandler and a ServletURLStreamHandlerFactory to provide 
+        support for service: URLs in the standard JDK URL handling.
+      </action>    
       <action dev="gkossakowski" type="fix" issue="COCOON-2150">
         Fixed bug in ServletServiceContext that was responsible for errors on resetting response that was already committed.
         Now Servlet Service Framework buffers response but only if 404 status code has been set.
