@@ -142,10 +142,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     db.setVisible(false);
                 }
             });
-            db.setOptimizationLevel(OPTIMIZATION_LEVEL);
             db.setVisible(true);
             debugger = db;
-            ContextFactory.getGlobal().addListener(debugger);
+            debugger.attachTo(ContextFactory.getGlobal());
         }
         return debugger;
     }
