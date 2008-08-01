@@ -74,7 +74,7 @@
         <check-time>4000</check-time>
         -->
       <!-- JavaScript Debugger support -->  
-      <!-- <debugger>enabled</debugger> -->  
+      <debugger>${org.apache.cocoon.flowscript.debugger}</debugger>
     </component-instance>
   </flow-interpreters>
   
