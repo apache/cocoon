@@ -26,7 +26,18 @@
     <title>Changes Cocoon FlowScript Implementation</title>
   </properties>
   <body>
-    <release version="1.0.0" date="2008-??-??" description="unreleased">
+    <release version="1.1.0-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="add">
+        Made enabling of flowscript debugger possible to configure through property org.apache.cocoon.flowscript.debugger.
+        The flowscript debugger is enabled if you are running in development mode.
+      </action>
+      <action dev="gkossakowski" type="fix">
+        Remove use of deprecated method setOptimazationLevel that actually does nothing in current implementation of debugger.
+        Switched to new method of attaching debugger to the context.
+        This fixes a problem with java.lang.IllegalStateException being thrown when Flowscript debugger is enabled.
+      </action>
+    </release>
+    <release version="1.0.0" date="2008-03-26" description="released">
       <action dev="vgritsenko" type="update">
         Reduce thred contention in flowscript interpreter. Do not synchronize
         execution of scripts within current thread scope on global map of
