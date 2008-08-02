@@ -57,22 +57,11 @@ java org.apache.cocoon.documentation.daisy.SitemapTagsToDaisy
     </plugins>
   </build>
   <repositories>
-    <repository>
-      <id>apache-maven2</id>
-      <name>Apache Maven2 Repository</name>
-      <url>http://cvs.apache.org/maven-snapshot-repository</url>
-    </repository>
     <!-- The cocoondev repository contains the needed Daisy artifacts -->
     <repository>
       <id>cocoondev</id>
       <name>Cocoondev Maven Repository</name>
       <url>http://cocoondev.org/repository</url>
-      <layout>legacy</layout>
-    </repository>
-    <repository>
-      <id>apache-cvs</id>
-      <name>Apache CVS Repository</name>
-      <url>http://cvs.apache.org/repository</url>
       <layout>legacy</layout>
     </repository>
     <repository>
