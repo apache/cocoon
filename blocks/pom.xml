@@ -169,7 +169,7 @@
         <module>cocoon-jfor/cocoon-jfor-impl</module>
         <module>cocoon-jfor/cocoon-jfor-sample</module>
         <module>cocoon-jms/cocoon-jms-impl</module>
-        <module>cocoon-jms/cocoon-jms-sample</module>
+        <!--module>cocoon-jms/cocoon-jms-sample</module-->
         <module>cocoon-jsp/cocoon-jsp-impl</module>
         <module>cocoon-jsp/cocoon-jsp-mocks</module>
         <module>cocoon-jsp/cocoon-jsp-sample</module>
