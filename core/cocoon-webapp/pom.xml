@@ -254,10 +254,10 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-eventcache-sample</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jms-sample</artifactId>
-        </dependency>
+        </dependency-->
         <!-- Breaks currently cocoon-webapp
         <dependency>
           <groupId>org.apache.cocoon</groupId>
