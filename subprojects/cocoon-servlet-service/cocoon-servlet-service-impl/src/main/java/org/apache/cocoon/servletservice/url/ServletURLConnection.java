@@ -31,6 +31,7 @@ import javax.servlet.ServletException;
 import org.apache.cocoon.servletservice.AbsoluteServletConnection;
 import org.apache.cocoon.servletservice.Absolutizable;
 import org.apache.cocoon.servletservice.CallStackHelper;
+import org.apache.cocoon.servletservice.NoCallingServletServiceRequestAvailableException;
 import org.apache.cocoon.servletservice.ServletConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,12 +64,22 @@ public class ServletURLConnection extends HttpURLConnection {
         // find out the type of the reference and create a service name
         if (servletReference == null) {
             // self-reference
+            if (absolutizable == null) {
+                throw new NoCallingServletServiceRequestAvailableException(
+                        "A self-reference requires an active servlet request.");
+            }
+
             servletName = absolutizable.getServiceName();
         } else if (servletReference.endsWith(AbsoluteServletConnection.ABSOLUTE_SERVLET_SOURCE_POSTFIX)) {
             // absolute reference
             servletName = servletReference.substring(0, servletReference.length() - 1);
         } else {
             // relative reference
+            if (absolutizable == null) {
+                throw new NoCallingServletServiceRequestAvailableException(
+                        "A relative servlet call requires an active servlet request.");
+            }
+
             servletName = absolutizable.getServiceName(servletReference);
         }
 

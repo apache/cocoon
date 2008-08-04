@@ -33,7 +33,7 @@ import org.apache.cocoon.callstack.CallStack;
  *
  * @version $Id$
  */
-public final class CallFrameHelper {
+public abstract class CallFrameHelper {
 
     /** Key for the environment {@link HttpServletRequest} in the call frame. */
     public final static String REQUEST_OBJECT  = "request";
@@ -44,10 +44,6 @@ public final class CallFrameHelper {
     /** Key for the environment {@link ServletContext} in the call frame. */
     public final static String CONTEXT_OBJECT  = "context";
 
-    private CallFrameHelper() {
-        // Forbid instantiation
-    }
-
     public static final void setEnvironment(HttpServletRequest request, HttpServletResponse response, ServletContext context) {
         CallFrame frame = CallStack.getCurrentFrame();
         frame.setAttribute(REQUEST_OBJECT, request);
@@ -56,7 +52,13 @@ public final class CallFrameHelper {
     }
 
     public static final HttpServletRequest getRequest() {
-        return (HttpServletRequest) CallStack.getCurrentFrame().getAttribute(REQUEST_OBJECT);
+        CallFrame currentCallFrame = CallStack.getCurrentFrame();
+        
+        if(currentCallFrame == null) {
+            return null;
+        }
+        
+        return (HttpServletRequest) currentCallFrame.getAttribute(REQUEST_OBJECT);
     }
 
     public static final void setRequest(HttpServletRequest request) {
@@ -64,7 +66,13 @@ public final class CallFrameHelper {
     }
 
     public static final HttpServletResponse getResponse() {
-        return (HttpServletResponse) CallStack.getCurrentFrame().getAttribute(RESPONSE_OBJECT);
+        CallFrame currentCallFrame = CallStack.getCurrentFrame();
+        
+        if(currentCallFrame == null) {
+            return null;
+        }
+        
+        return (HttpServletResponse) currentCallFrame.getAttribute(RESPONSE_OBJECT);
     }
 
     public static final void setResponse(HttpServletResponse response) {
@@ -72,11 +80,16 @@ public final class CallFrameHelper {
     }
 
     public static final ServletContext getContext() {
-        return (ServletContext) CallStack.getCurrentFrame().getAttribute(CONTEXT_OBJECT);
+        CallFrame currentCallFrame = CallStack.getCurrentFrame();
+        
+        if(currentCallFrame == null) {
+            return null;
+        }        
+        
+        return (ServletContext) currentCallFrame.getAttribute(CONTEXT_OBJECT);
     }
 
     public static final void setContext(ServletContext context) {
         CallStack.getCurrentFrame().setAttribute(CONTEXT_OBJECT, context);
     }
-
 }
