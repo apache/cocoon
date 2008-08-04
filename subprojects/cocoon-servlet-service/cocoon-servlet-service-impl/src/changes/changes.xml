@@ -24,20 +24,29 @@
 -->
 <document>
   <body>
-    <release version="1.0.0" date="2008-00-00" description="unreleased">
+    <release version="1.1.0" date="2008-00-00" description="unreleased">
+      <action dev="reinhard" type="fix">
+        The dependency on the Cocoon SourceResolver, that introduced a circular dependency with Cocoon 2.2, was
+        removed. The Cocoon SourceResolver was used to resolve URLs in the context-path attribute of a servlet
+        bean definition. After the change the Servlet-Service framework only relies on the default URL handling
+        of the JVM. In order to dynamically support different URLStreamHandlers, it is recommended to use 
+        Cocoon JNet.
+      </action>    
       <action dev="reinhard" type="fix">
         Fix the lastModified() method of the ServletConnection: make sure that there is an existing connection 
         before reading the Last-Modified header 
       </action>    
       <action dev="reinhard" type="add">
         Add a ServletURLConnection, ServletURLStreamHandler and a ServletURLStreamHandlerFactory to provide 
-        support for service: URLs in the standard JDK URL handling.
+        support for service: URLs.
       </action>    
       <action dev="gkossakowski" type="fix" issue="COCOON-2150">
         Fixed bug in ServletServiceContext that was responsible for errors on resetting response that was already committed.
-        Now Servlet Service Framework buffers response but only if 404 status code has been set.
+        Now the Servlet-Service framework buffers response but only if 404 status code has been set.
         This allows to reset the response safely.
       </action>
+    </release>
+    <release version="1.0.0" date="2008-04-07" description="unreleased">      
       <action dev="gkossakowski" type="update">
         Made attributes 'mount-path' and 'context-path' of servlet-context tag required.
       </action>
