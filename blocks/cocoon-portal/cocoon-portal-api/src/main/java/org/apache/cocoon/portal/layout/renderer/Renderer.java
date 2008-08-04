@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 public interface Renderer {
 
     /**
-     * Stream out raw layout 
+     * Stream out raw layout
      */
     void toSAX(Layout layout, PortalService service, ContentHandler handler)
     throws SAXException, LayoutException;
