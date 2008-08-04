@@ -16,7 +16,6 @@
  */
 package org.apache.cocoon.portal.om;
 
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.util.PortalUtils;
 
@@ -85,7 +84,7 @@ public abstract class Layout extends AbstractParameters {
     }
 
     /**
-     * Get the custom {@link org.apache.cocoon.portal.layout.renderer.Renderer} for this layout.
+     * Get the custom {@link org.apache.cocoon.portal.om.Renderer} for this layout.
      * @return The custom renderer or null.
      */
     public Renderer getCustomRenderer() {

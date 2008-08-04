@@ -20,11 +20,11 @@ import java.util.List;
 
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.services.LayoutFactory;
 import org.apache.cocoon.portal.services.LinkService;
 import org.apache.cocoon.portal.services.PortalManager;
+import org.apache.cocoon.portal.services.ProfileManager;
 import org.apache.cocoon.portal.services.UserService;
 import org.apache.cocoon.portal.services.VariableResolver;
 

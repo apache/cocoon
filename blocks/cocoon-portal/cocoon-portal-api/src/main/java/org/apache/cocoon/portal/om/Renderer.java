@@ -14,11 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.layout.renderer;
+package org.apache.cocoon.portal.om;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.om.Layout;
-import org.apache.cocoon.portal.om.LayoutException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 

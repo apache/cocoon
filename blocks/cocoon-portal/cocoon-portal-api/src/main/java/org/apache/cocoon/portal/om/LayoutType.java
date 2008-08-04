@@ -19,7 +19,6 @@ package org.apache.cocoon.portal.om;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 
 
 /**
