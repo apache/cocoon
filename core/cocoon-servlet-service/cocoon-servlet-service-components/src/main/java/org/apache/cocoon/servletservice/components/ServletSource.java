@@ -30,6 +30,7 @@ import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.servletservice.AbsoluteServletConnection;
 import org.apache.cocoon.servletservice.Absolutizable;
 import org.apache.cocoon.servletservice.CallStackHelper;
+import org.apache.cocoon.servletservice.NoCallingServletServiceRequestAvailableException;
 import org.apache.cocoon.servletservice.ServletConnection;
 import org.apache.cocoon.servletservice.postable.PostableSource;
 import org.apache.commons.logging.Log;
@@ -110,11 +111,11 @@ public class ServletSource extends AbstractSource
             if (logger.isDebugEnabled()) {
                 logger.debug("Trying to create a servlet connection for location " + location);
             }
-            
+
             locationUri = new URI(location);
             if (!locationUri.isAbsolute()) {
                 throw new MalformedURLException("Only absolute URIs are allowed for the block protocol. "
-                                + locationUri.toString());
+                        + locationUri.toString());
             }
 
             // get the referenced servlet and find out if it is an absolute or
@@ -128,19 +129,29 @@ public class ServletSource extends AbstractSource
             // find out the type of the reference and create a service name
             if (servletReference == null) {
                 // self-reference
+                if (absolutizable == null) {
+                    throw new NoCallingServletServiceRequestAvailableException(
+                            "A self-reference requires an active servlet request.");
+                }
+
                 servletName = absolutizable.getServiceName();
             } else if (servletReference.endsWith(AbsoluteServletConnection.ABSOLUTE_SERVLET_SOURCE_POSTFIX)) {
                 // absolute reference
                 servletName = servletReference.substring(0, servletReference.length() - 1);
             } else {
                 // relative reference
+                if (absolutizable == null) {
+                    throw new NoCallingServletServiceRequestAvailableException(
+                            "A relative servlet call requires an active servlet request.");
+                }
+
                 servletName = absolutizable.getServiceName(servletReference);
             }
+            
             return new AbsoluteServletConnection(servletName, locationUri.getRawPath(), locationUri.getRawQuery());
-
         } catch (URISyntaxException e) {
             MalformedURLException malformedURLException = new MalformedURLException("Invalid URI syntax. "
-                            + e.getMessage());
+                    + e.getMessage());
             malformedURLException.initCause(e);
             throw malformedURLException;
         }
