@@ -23,8 +23,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.excalibur.sourceresolve.jnet.DynamicURLStreamHandlerFactory;
-import org.apache.excalibur.sourceresolve.jnet.URLStreamHandlerFactoryInstaller;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 public class URLHandlerFactoryCollector {
