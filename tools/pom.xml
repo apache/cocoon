@@ -44,7 +44,6 @@
     <module>cocoon-maven-javadocs-script-report</module>
     <module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
     <module>cocoon-rcl/cocoon-rcl-spring-reloader</module>        
-    <module>cocoon-sitemaptags2daisy-plugin</module>
   </modules>
 
   <scm>
