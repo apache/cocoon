@@ -192,10 +192,10 @@
   </target>	
 	
   <target name="ssf" depends="init" description="Release the Servlet-Service Framework">
-    <add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.0/servlet-service-impl/1.1/" type="impl"/>
+    <add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.1/servlet-service-impl/1.0/" type="impl"/>
     <!--add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.0/servlet-service-components/1.0/" type="cocoon-components"/-->
 
-    <add-module name="cocoon-servlet-service-impl" version="1.0.0" type="impl" />
+    <add-module name="cocoon-servlet-service-impl" version="1.1.0" type="impl" />
     <!--add-module name="cocoon-servlet-service-components" version="1.0.0" type="cocoon-components" /-->
 
     <add-files dir="legal/default" />
@@ -204,10 +204,10 @@
   </target>
 
   <target name="conf" depends="init" description="Release the Cocoon Configuration subproject">
-    <add-docs dir="../../../site-svn/site/subprojects/configuration/1.0/configuration-api/1.0/" type="configuration-api"/>
+    <!--add-docs dir="../../../site-svn/site/subprojects/configuration/1.0/configuration-api/1.0/" type="configuration-api"/-->
     <add-docs dir="../../../site-svn/site/subprojects/configuration/1.0/spring-configurator/2.0/" type="spring-configurator"/>
 
-    <add-module name="cocoon-configuration-api" version="1.0.2" type="configuration-api" />
+    <!--add-module name="cocoon-configuration-api" version="1.0.2" type="configuration-api" /-->
     <add-module name="cocoon-spring-configurator" version="2.0.0" type="components" />
 
     <add-files dir="legal/default" />
