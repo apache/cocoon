@@ -18,8 +18,7 @@
   under the License.
  -->
 <!-- $Id$ -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
@@ -27,12 +26,12 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>6-SNAPSHOT</version>
+    <version>7</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>cocoon-jnet</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Cocoon JNet</name>
   <description>Dynamically register URLStreamHandler factories with your JVM.</description>
   <url>http://cocoon.apache.org/${docs.m.jnet.relPath}</url>  
@@ -53,6 +52,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
+      <version>2.0.0</version>
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
@@ -152,4 +152,10 @@
       </build>      
     </profile>   
   </profiles>  
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-jnet/cocoon-jnet/cocoon-jnet-1.0.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-jnet/cocoon-jnet/cocoon-jnet-1.0.0</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-jnet/cocoon-jnet/cocoon-jnet-1.0.0</url>
+  </scm>
 </project>
