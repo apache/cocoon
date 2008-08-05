@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>7</version>
+    <version>5-SNAPSHOT</version>
     <relativePath>../parent</relativePath>
   </parent>
   <artifactId>cocoon-tools-modules</artifactId>
@@ -44,6 +44,7 @@
     <module>cocoon-maven-javadocs-script-report</module>
     <module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
     <module>cocoon-rcl/cocoon-rcl-spring-reloader</module>        
+    <module>cocoon-sitemaptags2daisy-plugin</module> 
   </modules>
 
   <scm>
