@@ -163,8 +163,9 @@
         <module>cocoon-imageop/cocoon-imageop-sample</module>
         <module>cocoon-itext/cocoon-itext-impl</module>
         <module>cocoon-itext/cocoon-itext-sample</module>
-        <module>cocoon-javaflow/cocoon-javaflow-impl</module>
-        <module>cocoon-javaflow/cocoon-javaflow-sample</module>
+        <!-- Java flow was excluded from building because org.apache.commons:javaflow:jar:1.0-SNAPSHOT is not available on any repository -->
+        <!--<module>cocoon-javaflow/cocoon-javaflow-impl</module>
+        <module>cocoon-javaflow/cocoon-javaflow-sample</module>-->
         <module>cocoon-jcr</module>
         <module>cocoon-jfor/cocoon-jfor-impl</module>
         <module>cocoon-jfor/cocoon-jfor-sample</module>
