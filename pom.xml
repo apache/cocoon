@@ -61,4 +61,26 @@
     </plugins>
   </build>  
 
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+	  <plugin>
+	    <groupId>org.apache.cocoon</groupId>
+	    <artifactId>cocoon-sitemaptags2daisy-plugin</artifactId>
+	    <executions>
+	      <execution>
+	        <phase>install</phase>
+		<goals>
+		  <goal>sitemaptags2daisy</goal>
+		</goals>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
