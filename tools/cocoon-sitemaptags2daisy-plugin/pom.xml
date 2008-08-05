@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!-- @version $Id$ -->
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>cocoon-tools-modules</artifactId>
+    <groupId>org.apache.cocoon</groupId>
+    <version>5-SNAPSHOT</version>
+  </parent>
+  <artifactId>cocoon-sitemaptags2daisy-plugin</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>maven-plugin</packaging>
+  <name>Cocoon Sitemap Tags to Daisy Plugin</name>
+
+  <repositories>
+    <!-- The cocoondev repository contains the needed Daisy artifacts -->
+    <repository>
+      <id>cocoondev</id>
+      <name>Cocoondev Maven Repository</name>
+      <url>http://cocoondev.org/repository</url>
+      <layout>legacy</layout>
+    </repository>
+    <repository>
+      <id>maven-snapshot</id>
+      <name>Maven snapshot Repository</name>
+      <url>http://snapshots.maven.codehaus.org/maven2/</url>
+    </repository>
+  </repositories>
+  <dependencies>
+    <!-- utility libs -->
+    <dependency>
+      <groupId>daisy</groupId>
+      <artifactId>daisy-repository-api</artifactId>
+      <version>1.5-dev</version>
+    </dependency>
+    <dependency>
+      <groupId>daisy</groupId>
+      <artifactId>daisy-repository-xmlschema-bindings</artifactId>
+      <version>1.5-dev</version>
+    </dependency>
+    <dependency>
+      <groupId>daisy</groupId>
+      <artifactId>daisy-repository-client-impl</artifactId>
+      <version>1.5-dev</version>
+    </dependency>
+    <dependency>
+      <groupId>daisy</groupId>
+      <artifactId>daisy-repository-common-impl</artifactId>
+      <version>1.5-dev</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>daisy</groupId>
+      <artifactId>daisy-repository-spi</artifactId>
+      <version>1.5-dev</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>daisy</groupId>
+      <artifactId>daisy-jmsclient-api</artifactId>
+      <version>1.5-dev</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>2.0.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>concurrent</groupId>
+      <artifactId>concurrent</artifactId>
+      <version>1.3.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlbeans</groupId>
+      <artifactId>xbean</artifactId>
+      <version>2.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>stax</groupId>
+      <artifactId>stax-api</artifactId>
+      <version>1.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>daisy</groupId>
+      <artifactId>daisy-htmlcleaner</artifactId>
+      <version>1.5-dev</version>
+    </dependency>
+    <dependency>
+      <groupId>daisy</groupId>
+      <artifactId>daisy-util</artifactId>
+      <version>1.5-dev</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>qdox</groupId>
+      <artifactId>qdox</artifactId>
+      <version>1.5</version>
+    </dependency>
+    <dependency>
+      <groupId>nekohtml</groupId>
+      <artifactId>nekohtml</artifactId>
+      <version>0.9.5</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>nekodtd</groupId>
+      <artifactId>nekodtd</artifactId>
+      <version>0.1.11</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.6.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xmlParserAPIs</artifactId>
+      <version>2.6.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>avalon-framework</groupId>
+      <artifactId>avalon-framework-api</artifactId>
+      <version>4.2.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Maven specific -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-settings</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <configuration>
+          <goalPrefix>cocoon</goalPrefix>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <properties>
+    <docs.name>${project.name}</docs.name>
+    <docs.version>${docs.m.maven-sitemaptags2daisy-plugin.version}</docs.version>
+  </properties>
+
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.maven-sitemaptags2daisy-plugin.relPath}</url>
+    </site>
+  </distributionManagement>
+
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>???</navDocId>
+              <collection>cdocs-maven-plugin</collection>
+              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
