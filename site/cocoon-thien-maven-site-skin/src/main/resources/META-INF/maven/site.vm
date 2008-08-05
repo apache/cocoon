@@ -234,13 +234,11 @@
           <div class="grouplogo">
              <p class="grouptitle"><a href="$project.getProperties().get("docs.urlRelativizer")">The Apache Cocoon Project</a><img
                src="$PathTool.calculateLink( "images/apache-logo.jpg", $relativePath )" alt="Cocoon Project Logo" /></p>
-             #if( $project.getProperties().get("docs.mode") == "online")
-               <form class="searchbox" action="http://www.google.com/search" method="get">
-                 <input value="cocoon.apache.org" name="sitesearch" type="hidden" />
-                 <input onFocus="getBlank (this, 'Search the site with google');" size="25" name="q" id="query" type="text" value="Search the site with google" />&nbsp;
-                 <input class="searchboxsubmit" name="Search" value="Search" type="submit" />
-               </form>
-             #end
+             <form class="searchbox" action="http://www.google.com/search" method="get">
+               <input value="cocoon.apache.org" name="sitesearch" type="hidden" />
+               <input onFocus="getBlank (this, 'Search the site with google');" size="25" name="q" id="query" type="text" value="Search the site with google" />&nbsp;
+               <input class="searchboxsubmit" name="Search" value="Search" type="submit" />
+             </form>
          </div>
          </div>
          <div id="projectBar">
@@ -249,7 +247,12 @@
            alt="#nameAndVersion() homepage"
            border="0" title="#nameAndVersion() homepage" /></a></p>
            <h1 class="projectTitle"><a href="./index.html">#nameAndVersion()</a></h1>
-           #if( $project.getProperties().get("docs.mode") == "online")
+           #if( $project.getProperties().get("docs.breadcrumb") == "corona")
+              <ul class="projectList">
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")">Cocoon</a></em></strong></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></strong></li>
+              </ul>              
+           #else
               <ul class="projectList">
                 <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></em></strong></li>
                 <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Core <span class="pl-version-small">2.2</span></a></li>
@@ -257,7 +260,7 @@
                 <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins <span class="pl-version-small">2.2</span></a></li>
                 <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></strong></li>
               </ul>
-            #end
+           #end
          </div>
          <div class="projectBarClear"><!-- --></div>
       </div>
@@ -265,7 +268,9 @@
 
     <div id="content">
        #mainMenu( $decoration.body.menus )
+       <div class="main">
          $bodyContent
+       </div>
     </div>
 
     <!-- end of content -->
