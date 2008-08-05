@@ -19,13 +19,13 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 import java.util.Iterator;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.om.CompositeLayout;
 import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
+import org.apache.cocoon.portal.om.Renderer;
 import org.apache.cocoon.portal.om.LayoutFeatures.RenderInfo;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;

@@ -17,11 +17,11 @@
 package org.apache.cocoon.portal.layout.renderer.impl;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.support.RendererAspectChain;
 import org.apache.cocoon.portal.layout.renderer.aspect.impl.support.RendererContextImpl;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
+import org.apache.cocoon.portal.om.Renderer;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;

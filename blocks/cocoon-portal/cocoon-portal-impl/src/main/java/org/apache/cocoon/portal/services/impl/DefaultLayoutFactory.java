@@ -34,9 +34,9 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.LayoutType;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.services.CopletFactory;
 import org.apache.cocoon.portal.services.LayoutFactory;
+import org.apache.cocoon.portal.services.ProfileManager;
 import org.apache.cocoon.portal.util.AbstractBean;
 
 /**

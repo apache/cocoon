@@ -17,12 +17,12 @@
 package org.apache.cocoon.portal.layout.renderer.impl;
 
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.LinkLayout;
+import org.apache.cocoon.portal.om.Renderer;
 import org.apache.cocoon.portal.util.AbstractBean;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -42,7 +42,7 @@ public class DefaultLinkRenderer
     implements Renderer {
 
     /**
-     * @see org.apache.cocoon.portal.layout.renderer.Renderer#toSAX(org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     * @see org.apache.cocoon.portal.om.Renderer#toSAX(org.apache.cocoon.portal.om.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
      */
     public void toSAX(Layout layout, PortalService service, ContentHandler handler)
     throws SAXException, LayoutException {

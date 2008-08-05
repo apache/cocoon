@@ -61,7 +61,7 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getLayout(java.lang.String)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getLayout(java.lang.String)
      */
     public Layout getLayout(String layoutID) {
         try {
@@ -196,7 +196,7 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstance(java.lang.String)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletInstance(java.lang.String)
      */
     public CopletInstance getCopletInstance(String copletID) {
         // TODO - we should store a map in the static profile manager
@@ -216,7 +216,7 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinition(java.lang.String)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletDefinition(java.lang.String)
      */
     public CopletDefinition getCopletDefinition(String copletDataId) {
         try {
@@ -239,7 +239,7 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances(org.apache.cocoon.portal.om.CopletDefinition)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletInstances(org.apache.cocoon.portal.om.CopletDefinition)
      */
     public List getCopletInstances(CopletDefinition data) {
         List coplets = new ArrayList();
@@ -258,7 +258,7 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinitions()
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletDefinitions()
      */
     public Collection getCopletDefinitions() {
         try {
@@ -269,7 +269,7 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances()
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletInstances()
      */
     public Collection getCopletInstances() {
         try {
@@ -280,7 +280,7 @@ public class StaticProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getLayoutInstance(org.apache.cocoon.portal.om.Layout)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getLayoutInstance(org.apache.cocoon.portal.om.Layout)
      */
     public LayoutInstance getLayoutInstance(Layout layout) {
         // TODO Auto-generated method stub

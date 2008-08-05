@@ -39,7 +39,7 @@ import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutFeatures;
 import org.apache.cocoon.portal.om.LayoutInstance;
 import org.apache.cocoon.portal.om.LayoutFeatures.RenderInfo;
-import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.services.ProfileManager;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**

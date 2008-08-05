@@ -22,14 +22,14 @@ import java.util.Properties;
 
 import org.apache.cocoon.portal.PortalException;
 import org.apache.cocoon.portal.PortalRuntimeException;
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletInstanceFeatures;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.LayoutFeatures;
-import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.om.Renderer;
 import org.apache.cocoon.portal.services.PortalManager;
+import org.apache.cocoon.portal.services.ProfileManager;
 import org.apache.cocoon.portal.services.aspects.AspectChain;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspect;
 import org.apache.cocoon.portal.services.aspects.RequestProcessorAspectContext;
