@@ -1873,6 +1873,11 @@
         <artifactId>maven-project</artifactId>
         <version>2.0.1</version>
       </dependency>
+       <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-settings</artifactId>
+        <version>2.0.5</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -3656,6 +3661,18 @@
                   </goals>
                 </execution>
               </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.cocoon</groupId>
+              <artifactId>cocoon-sitemaptags2daisy-plugin</artifactId>
+              <version>1.0.0-SNAPSHOT</version>
+              <!-- the plugins default configuration
+              <configuration>
+                <simulateInput>false</simulateInput>
+                <daisyServerId>cocoon-daisy</daisyServerId>
+                <repoUrl>http://cocoon.zones.apache.org:9263</repoUrl>
+              </configuration>
+              -->
             </plugin>
           </plugins>
         </pluginManagement>
