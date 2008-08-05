@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!--+
+    - Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+    - $Id$
+  -->
+<document>
+  <body>
+    <release version="1.0.0-M3" date="2008-??-??" description="unreleased">
+      <action dev="reinhard" type="update">
+        Upgrade to Spring-Framework 2.5.5
+      </action>
+    </release>
+    <release version="1.0.0-M2" date="2008-04-27" description="released">
+      <action dev="reinhard" type="add">
+        Introduce the configuration parameter 'webappProfile'. For now two values are supported: 'cocoon-22' (default) and
+        'ssf'. 'cocoon-22' creates a Cocoon 2.2 web application, 'ssf' a web application that only makes use of the Servlet-Service
+        Framework.
+      </action>
+      <action dev="reinhard" type="add">
+        Introduce the configuration parameter 'customWebappDirectory'. If it is set, the content of the referenced
+        directory is added to the prepared web application.
+      </action>
+      <action dev="reinhard" type="update">
+        Rename the goal 'cocoon:rcl' to the less obscure  name 'cocoon:prepare'. This is closer
+        to the actual meaning because the purpose of this goal is creating a web application that
+        wraps the current block. 'cocooon:rcl' is still supported but deprecated and will be removed
+        in future versions of the plugin.
+      </action>
+      <action dev="reinhard" type="add">
+        Add a configuration parameter 'reloadingClassLoaderEnabled' that controlls the usage
+        of the reloading classloader. If it is set to false, a URLClassLoader is used.
+      </action>
+      <action dev="reinhard" type="add">
+        Show CREATED messages in console only after the first DELETE or UPDATE message was sent.
+        This prevents users from being flooded by CREATED messages during startup.
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2007-07-02" description="released">
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>
+    </release>
+  </body>
+</document>

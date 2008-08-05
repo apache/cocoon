@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<map:sitemap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://apache.org/cocoon/sitemap/1.0 http://cocoon.apache.org/schema/sitemap/cocoon-sitemap-1.0.xsd"
+ xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!--+
+      | Definition of the control flow implementation.
+      +-->
+  <map:flow language="javascript"/>
+
+  <map:pipelines>
+    <!--+
+        | Demo pipelines
+        +-->
+    <map:pipeline id="demo">
+      <!-- Simple demo, that show how Cocoon pipelines. -->
+      <map:match pattern="">
+        <!--+
+            | Start generating SAX events inside the pipeline. In this case,
+            | since no "type" attribute is specified, the default generator
+            | is used and this is a regular XML parser that reads the
+            | given file from the URL included in the "src" attribute and
+            | sends the events produced by the parser down the pipeline to
+            | be processed by the next stage.
+            +-->
+        <map:generate src="demo/welcome.xml"/>
+        <!--+
+            | This transformer gets the input SAX events and transforms them
+            | using the default transformer (the XSLT transformer) thus
+            | applying the XSLT stylesheet indicated in the "src" attribute
+            | and sending the output down the pipeline to be processed by the
+            | next stage.
+            +-->
+        <map:transform src="demo/welcome.xslt"/>
+        <!--+
+            | The serializer concludes the SAX events journey into the pipeline
+            | since it serializes the events it receives into a representation
+            | depending on the serializer type. Here we choose the "XHMTL"
+            | serializer, which will produce an XHTML representation of the
+            | SAX stream.
+            +-->
+        <map:serialize type="xhtml"/>
+      </map:match>
+      <!-- Implement application logic using a Flowscript function.
+        Flowscripts in ./flow are loaded automatically in alphabetical order. -->
+      <map:match pattern="spring-bean">
+        <map:call function="demo"/>
+      </map:match>
+    </map:pipeline>
+    <map:pipeline id="demo-internal" internal-only="true">
+      <!-- This pipeline is invoked by the above flowscript. -->
+      <map:match pattern="screens/spring-bean">
+        <map:generate src="demo/spring-bean.jx.xml" type="jx"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <!--+
+        | Default pipelines
+        +-->
+    <map:pipeline id="internal-resource" internal-only="true">
+      <!-- Put matchers for internal (accessible only to Cocoon blocks) resources here
+        More details: http://cocoon.zones.apache.org/daisy/cdocs-site-main/g2/1345.html -->
+      <map:match pattern="resource/internal/**">
+        <map:read src="resource/internal/{1}"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline id="external-resource">
+      <!-- Put matchers for external (accessible to the outside world, e.g. browser) resources here.
+        More details: http://cocoon.zones.apache.org/daisy/cdocs-site-main/g2/1345.html -->
+      <map:match pattern="resource/external/**">
+        <map:read src="resource/external/{1}"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline id="service">
+      <!-- Put your servlet service matchers here.
+        More details: http://cocoon.zones.apache.org/daisy/cdocs-site-main/g2/1345.html -->
+    </map:pipeline>
+  </map:pipelines>
+
+</map:sitemap>
