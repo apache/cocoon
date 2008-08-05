@@ -1,0 +1,335 @@
+
+jetty-6.0.1 - 24 September 2006
+    + fixed isUserInRole checking for JAASUserRealm
+    + fixed ClassCastException in JAASUserRealm.setRoleClassNames(String[])
+    + Improved charset handling in URLs
+    + Factored ErrorPageErrorHandler out of WebAppContext
+    + Refactored ErrorHandler to avoid statics
+    + JETTY-112 ContextHandler checks if started
+    + JETTY-114 removed utf8 characters from code
+    + JETTY-115 Fixed addHeader
+    + JETTY-121 init not called on externally constructed servlets
+    + Improved charset handling in URLs
+    + minor optimization of bytes to UTF8 strings
+    + JETTY-113 support optional query char encoding on requests
+    + JETTY-124 always initialize filter caches
+    + JETYY-120 SelectChannelConnector closes all connections on stop
+
+jetty-6.0.0 - 10 September 2006
+    + SocketConnector closes all connections in doStop
+    + Conveniance builder methods for listeners and filters
+    + Transforming classloader does not transform resources.
+    + Plugin shutdown context before stopping it.
+
+jetty-6.0.0rc4 - 5 September 2006
+    + bind jetty-env.xml entries to java:comp/env
+    + Fix for JETTY-107. Poor cast in SessionDump demo.
+    + Set charset on error pages
+
+jetty-6.0.0rc3 - 1 September 2006
+    + pulled 6.0.0 branch
+    + turn URLConnection caching off when searching for tlds [JETTY-103]
+    + Move MailSessionReference to org.mortbay.naming.factories
+    + Less verbose handling of BadResources from bad URLs
+    + Avoid double error handling of Bad requests
+    + don't warn for content length on head requests
+    + temp fix for JETTY-104 (raised glassfish ISSUE-1044) hide
+      JSP forced path attribute
+    + Fixed JETTY-68. Complete request after sendRedirect
+    + Transferred the sslengine patch from the patches directory to extras
+
+jetty-6.0.0rc2 - 25 August 2006
+    + use mvn -Dslf4j=false jetty:run to disable use of slf4j logging with jdk1.4/jsp2.0
+    + added org.apache.commons.logging package to system classes that can't be overridden by a webapp classloader
+    + mvn -Djetty.port=x jetty:run uses port number given for the default connector
+    + Fixed NPE when no resource cache
+    + Refactored WebXmlConfiguration to allow custom web.xml resource
+    + Moved more utility packagtes to the util jar
+    + Direct buffer useage is optional
+    + Destroy HttpConnection to improve buffer pooling
+    + Timestamp in StdErrLog
+
+jetty-6.0.0rc1 - 16 August 2006
+    + Support for binding References and Referenceables and javax.mail.Sessions in JNDI
+    + Added TransformingWebAppClassLoader for spring 2.0 byte code modification support
+    + Ensure classes come before dependencies for plugin [JETTY-90]
+    + Fixed FD leak for bad TCP acks. JETTY-63
+    + new Server().addHandler(handler) no longer throws NPE [JETTY-87]
+    + Change path mapping so that a path spec of /foo/* does not match /foo.bar : JETTY-88
+    + add <requestLog> config param to jetty plugin
+    + Improve Ssl config JETTY-85 JETTY-86 (TrustManager and SecureRandom are now configurable; better handling of null/default values)
+    + parse jsp-property-group in web.xml for additional JSP servlet mappings
+    + protected setContentType from being set during include
+    + added toString() on JAASUserPrincipal (JETTY-91)
+    + added modules/spring with XmlBeanFactory configuration
+    + removed support for lowResources from SelectChannelConnector
+    + added start of cometd implementation (JSON only)
+    + added start of grizzly connector
+    + removed org.mortbay. from context system classes configuration
+    + -DSTOP.PORT must be specified.
+    + moved optional modules to extras
+    + fixed bug that caused Response.setStatus to ignore the provided message
+    + refactored resource cache 
+    + Allow direct filling of buffers for uncached static content.
+    + Added simple ResourceHandler and FileServer example
+
+jetty-6.0.0rc0 - 7 July 2006
+    + change prefix from "jetty6" to just "jetty" for plugin: eg is now mvn jetty:run
+    + allow <key> or <name> in <systemProperty> for plugin
+    + simplified jetty.xml with new constructor injections
+    + added setters and getters on SessionManager API for session related config: cookie name, url parameter name, domain, max age and path.
+    + add ability to have a lib/ext dir from which to recursively add all jars and zips to the classpath
+    + patch to allow Jetty to use JSP2.1 from Glassfish instead of Jasper from Tomcat
+    + fixed classesDirectory param for maven plugin to be configurable
+    + ensure explicitly set tmp directory called "work" is not deleted on exit
+    + ensure war is only unpacked if war is newer than "work" directory
+    + change name of generated tmp directory to be "Jetty_"+host+"_"+port+"_"+contextpath+"_"+virtualhost
+    + Cleaned up idle expiry.
+    + Ssl algorithm taken from system property
+    + Added 8 random letters&digits to Jetty-generated tmp work dir name to ensure uniqueness
+    + Simplify runtime resolution of JSP library for plugin
+    + Ensure mvn clean cleans the build 
+    + Do not wrap EofException with EofException
+    + reverse order for destroy event listeners
+    + added StatisticsHandler and statistics on Connector.
+    + Simplified Servlet Context API
+    + Added maximum limit to filter chain cache.
+    + refactor HttpChannelEndPoint in preparation for SslEngine
+    + ContextHandlerCollection addContext and setContextClass 
+    + Discard excess bytes in header buffer if connection is closing
+    + Updated javax code from http://svn.apache.org/repos/asf/tomcat/tc6.0.x/trunk/java/javax@417727
+    + Threadpool does not need to be a LifeCycle
+    + support graceful shutdown
+    + Added WebAppContextClassLoader.newInstance to better support exensible loaders.
+    + immutable getParameterMap()
+    + support <load-on-startup> for SingleThreadModel
+    + changed ServletContext.getResourcePaths()  to not return paths containing double slashes
+    + fixed HttpGenerator convertion of non UTF-8: JETTY-82
+    + added html module from jetty 5 - but deprecated until maintainer found
+
+jetty-6.0.0beta17 - 1/6/2006
+    + Added config to disable file memory mapped buffers for windows
+    + Added Request.isHandled()
+    + Refactored Synchronization of SelectChannelConnector
+    + Recovered repository from Codehaus crash
+    + ContextHandler.setConnectors replace setHosts
+    + Connector lowResourceMaxIdleTime  implemented.
+    + Default servlet checks for aliases resources
+    + Added clover reports and enough tests to get >50% coverage
+    + Fixed IE SSL issue.
+    + Implemented runAs on servlets
+    + Flush will flush all bytes rather than just some.
+    + Protected WEB-INF and META-INF
+    + don't reset headers during forward
+    + BoundedThreadPool.doStop waits for threads to complete
+
+jetty-6.0.0beta16 - 12/5/2006
+    + remove a couple of System.err.printlns
+    + replace backwards compativle API in UrlEncoded
+
+jetty-6.0.0beta15 - 11/5/2006
+    + Added Server attribute org.mortbay.jetty.Request.maxFormContentSize
+    + Renamed NotFoundHandler to DefaultHandler
+    + Added automatic scan of all WEB-INF/jetty-*.xml files for plugin
+    + Added <scanTargets> parameter to allow other locations to scan for plugin
+    + Major refactor to simplify Server and handler hierarchy
+    + setSendServerVersion method added to Server to control sending of Server: http header
+    + removed SelectBlockingChannelConnector (unmaintained)
+    + Improved HttpException
+    + Moved more resources to resources 
+    + Added ThrottlingFilter and fixed race in Continuations
+    + Added taglib resources to 2.1 jsp api jar
+    + Reset of timer task clears expiry
+    + improved MBeanContainer object removal
+    + ContextHandler.setContextPath can be called after start.
+    + Fixed handling of params after forward 
+    + Added --version to start.jar
+    + Added embedded examples
+    + Simplified DefaultServlet static content buffering
+    + readded BoundedThreadPool shrinking (and then fixed resulting deadlock)
+    + improved MBean names
+    + improved support for java5 jconsole
+    + Session scavenger threads from threadpool
+    + Thread names include URI if debug set
+    + don't accept partial authority in request line.
+    + enforce 204 and 304 have no content
+
+jetty-6.0.0beta14 - 9/4/2006
+    + ignore dirs and files that don't exist in plugin scanner
+    + added support for stopping jetty using "java -jar start.jar --stop"
+    + added configurability for webdefault.xml in maven plugin
+    + adding InvokerServlet
+    + added ProxyServlet
+    + stop JDBCUserRealm coercing all credentials to String
+    + Change tmp dir of plugin to work to be in line with jetty convention
+    + Modify plugin to select JSP impl at runtime
+    + Use start.config to select which JSP impl at runtime based on jdk version
+    + Added JSP 2.1 APIs from apache
+    + Added Jasper 2.1 as jesper (jasper without JCL)
+    + Started readding logging to jesper using jdk logging
+    + fixed priority of port from url over host header
+    + implemented request.isUserInRole
+    + securityHandler removed if not used.
+    + moved test webapps to examples directory
+    + improved contentType handling and test harness
+    + fixed forward bug (treated as include)
+    + fixed HttpField iterator
+    + added jetty-util.jar module
+    + added reset to Continuation
+  
+ 
+jetty-6.0.0beta12 - 16/3/2006
+    + Fixed maven plugin JNDI for redeploys
+    + Fixed tld discovery for plugin (search dependencies)
+    + Fixed JettyPlus for root contexts
+    + Fixed error handling in error page
+    + Added JSP2.0 demos to test webapp
+    + Upgraded jasper to 5.5.15
+    + Added provider support to SslListener
+    + Log ERROR for runtimeExceptions
+
+jetty-6.0.0beta11 - 14/3/2006
+    + added JAAS
+    + added webapp-specific JNDI entries
+    + added missing Configurations for maven plugin
+    + fixed FORM authentication
+    + moved dtd and xsd to standard javax location
+    + added patch to use joda-time
+    + refactored session ID management
+    + refactored configuration files and start()
+    + fixed ; decoding in URIs
+    + Added HttpURI and improved UTF-8 parsing.
+    + refactored writers and improved UTF-8 generation.
+
+jetty-6.0.0beta10 25/2/2006
+    + Added support for java:comp/env
+    + Added support for pluggable transaction manager
+    + Forward masks include attributes and vice versa
+    + Fixed default servlet handling of includes
+    + Additional accessors for request logging
+    + added getLocalPort() to connector
+    + Fixed content-type for range requests
+    + Fix for sf1435795 30sec delay from c taylor
+    + Fix for myfaces and include with close
+    + Fix sf1431936 don't chunk the chunk
+    + Fix http://jira.codehaus.org/browse/JETTY-6. hi byte reader
+    + Updates javax to MR2 release
+   
+jetty-6.0.0beta9 9/2/2006
+    + PathMap for direct context mapping.
+    + Refactored chat demo and upgraded prototype.js
+    + Continuation cleanup
+    + Fixed unraw decoding of query string
+    + Fixed dispatch of wrapped requests.
+    + Fixed double flush of short content.
+    + Added request log.
+    + Added CGI servlet.
+    + Force a tempdir to be set.
+    + Force jasper scratch dir.
+    + fixed setLocale bug sf1426940 
+    + Added TLD tag listener handling.
+
+jetty-6.0.0beta8 24/1/2006
+    + fixed dispatch of new session problem. sf:1407090
+    + reinstated rfc2616 test harness
+    + Handle pipeline requests without hangs
+    + Removed queue from thread pool.
+    + improved caching of content types
+    + fixed bug in overloaded write method on HttpConnection (reported against Tapestry4.0)
+    + hid org.apache.commons.logging and org.slf4j packages from webapp
+    + maven-jetty6-plugin stopped transitive inclusion of log4j and
+      commons-logging from commons-el for jasper
+    + patch to remove spurious ; in HttpFields
+    + improve buffer return mechanism.
+    + conveniance addHandler removeHandler methods
+    + maven-jetty6-plugin: ensure compile is done before invoking jetty
+    + maven-jetty6-plugin: support all types of artifact dependencies
+
+Jetty-6.0.0Beta7
+    + Fixed infinite loop with chunk handling
+    + Faster header name lookup
+    + removed singleton Container
+    + reduced info verbosity
+    + null dispatch attributes not in names
+    + maven-jetty6-plugin added tmpDirectory property
+    + maven-jetty6-plugin stopped throwing an error if there is no target/classes directory
+
+Jetty-6.0.0Beta6
+    + Fixed issue with blocking reads
+    + Fixed issue with unknown headers
+    + optimizations
+
+Jetty-6.0.0Beta5
+    + Moved to SVN
+    + Fixed writer char[] creations
+    + Added management module for mbeans
+
+Jetty-6.0.0Beta4
+    + System property support in plugin
+    + Fixed JSP visibility security issue.
+    + Improved jetty-web.xml access to org.mortbay classes.
+    + Jasper 5.5.12
+
+Jetty-6.0.0Beta3
+    + Fixed error in block read
+    + Named dispatch.
+    + Fixed classloader issue with server classes
+
+Jetty-6.0.0Beta2
+    + merged util jar back into jetty jar
+    + Simpler continuation API
+    + loosely coupled with JSP servlet
+    + loosely coupled with SLF4J
+    + Improved reuse of HttpField values and cookies.
+    + Improved buffer return
+
+Jetty-6.0.0Beta1
+    + Servlet 2.5 API
+    + SSL connector
+    + maven2 plugin
+    + shutdown hook
+    + refactored start/stop
+    + Implemented all listeners
+    + Error pages
+    + Virtual hosts
+    + Multiple select sets
+
+Jetty-6.0.0Beta0
+    + Maven 2 build
+    + Dispatcher parameters
+    + UTF-8 encoding for URLs
+    + Fixed blocking read
+
+Jetty-6.0.0APLPA3
+    + Added demo for Continuations
+    + Jasper and associated libraries.
+
+Jetty-6.0.0ALPHA2
+    + Continuations - way cool way to suspend a request and retry later.
+    + Dispatchers
+    + Security
+
+Jetty-6.0.0ALPHA1
+    + Filters
+    + web.xml handling
+
+Jetty-6.0.0ALPHA0
+    * Totally rearchitected and rebuilt, so 10 years of cruft could be removed!
+    * Improved "dependancy injection" and "inversion of control" design of components
+    * Improved "interceptor" design of handlers
+    * Smart split buffer design allows large buffers to only be allocated to active connections. The
+      resulting memory savings allow very large buffers to be used, which increases the chance of efficient
+      asynchronous flushing and of avoiding chunking.
+    * Optional use of NIO Buffering so that efficient direct buffers and memory mapped files can be
+      used.
+    * Optional use of NIO non-blocking scheduling so that threads are not allocated per connection.
+    * Optional use of NIO gather writes, so that for example a HTTP header and a memory mapped
+    * file may be sent as sent is a single operation.
+    - Missing Security
+    - Missing Request Dispatchers
+    - Missing web.xml based configuration
+    - Missing war support
+
+
+
+
