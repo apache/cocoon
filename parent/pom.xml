@@ -2903,7 +2903,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-spring-configurator</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -3238,6 +3238,7 @@
     <docs.urlRelativizer>../../../../</docs.urlRelativizer>
     <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
     <docs.mode>online</docs.mode>
+    <docs.breadcrumb>cocoon</docs.breadcrumb>
     <!-- Path and version properties: sites -->
     <docs.m.site-main.relPath />
     <docs.m.site-22.relPath>2.2/</docs.m.site-22.relPath>
@@ -3246,7 +3247,7 @@
     <docs.m.site-maven-plugins.relPath>2.2/maven-plugins/</docs.m.site-maven-plugins.relPath>
     <docs.m.site-subprojects.relPath>subprojects/</docs.m.site-subprojects.relPath>
     <docs.m.site-configuration.relPath>subprojects/configuration/1.0/</docs.m.site-configuration.relPath>
-    <docs.m.site-servlet-service.version>1.0</docs.m.site-servlet-service.version>
+    <docs.m.site-servlet-service.version>1.1</docs.m.site-servlet-service.version>
     <docs.m.site-servlet-service.relPath>subprojects/servlet-service/${docs.m.site-servlet-service.version}/</docs.m.site-servlet-service.relPath>
     <!-- Path and version properties: core -->
     <docs.m.core.version>2.2</docs.m.core.version>
@@ -3291,8 +3292,12 @@
     <docs.m.servlet-service-components.relPath>${docs.m.site-servlet-service.relPath}servlet-service-components/${docs.m.servlet-service-components.version}/</docs.m.servlet-service-components.relPath>
     <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
     <docs.m.configuration-api.relPath>${docs.m.site-configuration.relPath}configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>
-    <docs.m.spring-configurator.version>1.0</docs.m.spring-configurator.version>
+    <docs.m.spring-configurator.version>2.0</docs.m.spring-configurator.version>
     <docs.m.spring-configurator.relPath>${docs.m.site-configuration.relPath}spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>
+    <docs.m.jnet.version>1.0</docs.m.jnet.version>
+    <docs.m.jnet.relPath>subprojects/jnet/${docs.m.jnet.version}/</docs.m.jnet.relPath>
+    <docs.m.block-deployment.version>1.0</docs.m.block-deployment.version>
+    <docs.m.block-deployment.relPath>subprojects/block-deployment/${docs.m.block-deployment.version}/</docs.m.block-deployment.relPath>    
     <!-- Path and version properties: blocks -->
     <docs.m.ajax.version>1.0</docs.m.ajax.version>
     <docs.m.ajax.relPath>2.2/blocks/ajax/${docs.m.ajax.version}/</docs.m.ajax.relPath>
@@ -3526,6 +3531,14 @@
                   <collection>
                     <name>cdocs-servlet-service-components</name>
                     <path>${docs.m.servlet-service-components.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-jnet</name>
+                    <path>${docs.m.jnet.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-block-deployment</name>
+                    <path>${docs.m.block-deployment.relPath}</path>
                   </collection>
                   <!-- blocks -->
                   <collection>
