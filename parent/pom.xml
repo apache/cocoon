@@ -29,7 +29,7 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>6-SNAPSHOT</version>
+  <version>7</version>
   <name>Apache Cocoon</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
@@ -1097,9 +1097,9 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-5</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-5</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-5</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-7</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-7</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-7</url>
   </scm>
 
   <distributionManagement>
@@ -3465,7 +3465,7 @@
             <plugin>
               <groupId>org.daisycms</groupId>
               <artifactId>daisy-maven-plugin</artifactId>
-              <version>1.0.0-SNAPSHOT</version>
+              <version>1.0.0-alpha-2</version>
               <configuration>
                 <repoUrl>${docs.repoUrl}</repoUrl>
                 <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
