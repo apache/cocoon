@@ -29,7 +29,7 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>6-SNAPSHOT</version>
+  <version>7</version>
   <name>Apache Cocoon</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
@@ -1097,9 +1097,9 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-5</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-5</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-5</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-7</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-7</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-7</url>
   </scm>
 
   <distributionManagement>
@@ -1112,7 +1112,8 @@
     <snapshotRepository>
       <id>apache-maven-snapshot</id>
       <name>snapshot repository</name>
-      <url>scpexe://people.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
+      <url>scpexe://dev.indoqa.com/daten/repo.indoqa.com/maven2/snapshots</url>
+      <uniqueVersion>true</uniqueVersion>
     </snapshotRepository>
     <site>
       <id>website</id>
@@ -2212,7 +2213,7 @@
       </dependency>
 
       <!-- Cocoon SNAPSHOT dependencies -->
-      <dependency>
+      <!--dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
         <version>1.1.0-SNAPSHOT</version>
@@ -3070,7 +3071,7 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>javaflow</artifactId>
         <version>1.0-SNAPSHOT</version>
-      </dependency>
+      </dependency-->
     </dependencies>
   </dependencyManagement>
 
