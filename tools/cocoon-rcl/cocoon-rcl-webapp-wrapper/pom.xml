@@ -26,7 +26,7 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>7</version>
+    <version>5-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
