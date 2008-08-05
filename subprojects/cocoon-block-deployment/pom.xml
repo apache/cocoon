@@ -31,7 +31,7 @@
   </parent>
 
   <artifactId>cocoon-block-deployment</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0-SNAPSHOT</version>
   <name>Cocoon Block Deployment</name>
   <description>Deployment utilities for Cocoon Blocks.</description>
   <url>http://cocoon.apache.org/${docs.m.block-deployment.relPath}</url>  
@@ -159,11 +159,5 @@
         </plugins>
       </build>      
     </profile>   
-  </profiles>  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-block-deployment/cocoon-block-deployment/cocoon-block-deployment-1.0.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-block-deployment/cocoon-block-deployment/cocoon-block-deployment-1.0.0</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-block-deployment/cocoon-block-deployment/cocoon-block-deployment-1.0.0</url>
-  </scm>
+  </profiles>
 </project>
