@@ -15,10 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<!--
-  - $Id$
-  -->
+<!-- $Id$ -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             targetNamespace="http://cocoon.apache.org/schema/configurator"
             xmlns:tns="http://cocoon.apache.org/schema/configurator"
@@ -75,9 +72,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <!--
-    - Since 1.0.1:
-    -->
+  <!-- Since 1.0.1 -->
   <xsd:element name="bean-map">
     <xsd:complexType>
       <xsd:attribute name="id" type="xsd:ID" use="optional"/>
