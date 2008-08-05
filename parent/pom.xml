@@ -3433,7 +3433,7 @@
           <plugin>
             <groupId>org.apache.cocoon</groupId>
             <artifactId>cocoon-maven-docs-cleaner-plugin</artifactId>
-            <version>1.0.0-alpha-2</version>
+            <version>1.0.0-M1-SNAPSHOT</version>
           </plugin>
         </plugins>
       </build>
