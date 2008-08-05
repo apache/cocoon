@@ -34,7 +34,20 @@
   <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Block Deployment</name>
   <description>Deployment utilities for Cocoon Blocks.</description>
-
+  <url>http://cocoon.apache.org/${docs.m.block-deployment.relPath}</url>  
+  
+  <properties>
+    <docs.name>${project.name}</docs.name>    
+    <docs.version>${docs.m.block-deployment.version}</docs.version>
+  </properties>  
+  
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.block-deployment.relPath}</url>
+    </site>
+  </distributionManagement>     
+  
   <dependencies>
     <dependency>
       <groupId>commons-io</groupId>
@@ -83,5 +96,43 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.0.1</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>project-team</report>
+              <report>dependencies</report>
+              <report>license</report>
+              <report>summary</report>
+              <report>index</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>    
 
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>1473</navDocId>
+              <collection>cdocs-block-deployment</collection>
+              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin> 
+        </plugins>
+      </build>      
+    </profile>   
+  </profiles>  
 </project>
