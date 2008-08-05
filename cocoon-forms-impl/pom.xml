@@ -28,12 +28,12 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
+    <version>6</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-forms-impl</artifactId>
   <name>Cocoon Forms Block Implementation</name>
-  <version>1.0.0-RC2-SNAPSHOT</version>
+  <version>1.0.0</version>
   <url>http://cocoon.apache.org/${docs.m.forms.relPath}</url>
 
   <build>
@@ -62,27 +62,33 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ajax-impl</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-flowscript-impl</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-api</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-impl</artifactId>
+      <version>1.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
+      <version>1.0.0</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -121,6 +127,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.0</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -166,4 +173,10 @@
       </build>
     </profile>
   </profiles>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-impl/cocoon-forms-impl-1.0.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-impl/cocoon-forms-impl-1.0.0</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-impl/cocoon-forms-impl-1.0.0</url>
+  </scm>
 </project>
