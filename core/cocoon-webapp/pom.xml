@@ -287,10 +287,13 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-itext-sample</artifactId>
         </dependency>
+        <!-- Java flow was excluded from building because org.apache.commons:javaflow:jar:1.0-SNAPSHOT is not available anywhere -->
+        <!--
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-javaflow-sample</artifactId>
         </dependency>
+        -->
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jcr-sample</artifactId>
