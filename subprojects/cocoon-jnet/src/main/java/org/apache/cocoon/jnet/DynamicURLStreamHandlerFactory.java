@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.excalibur.sourceresolve.jnet;
+package org.apache.cocoon.jnet;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
