@@ -102,7 +102,7 @@
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
-          <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-block-deployment/${project.artifactId}</tagBase>
+          <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
     </plugins>
