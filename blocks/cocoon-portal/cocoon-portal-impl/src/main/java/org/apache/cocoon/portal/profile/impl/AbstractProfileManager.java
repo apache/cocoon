@@ -34,7 +34,7 @@ import org.apache.cocoon.portal.om.Item;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutException;
 import org.apache.cocoon.portal.om.PortalUser;
-import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.services.ProfileManager;
 import org.apache.cocoon.portal.services.aspects.AspectChain;
 import org.apache.cocoon.portal.services.aspects.impl.support.ProfileManagerAspectContextImpl;
 import org.apache.cocoon.portal.services.aspects.support.AspectChainImpl;
@@ -76,21 +76,21 @@ public abstract class AbstractProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getProfileManagerAspectChain()
+     * @see org.apache.cocoon.portal.services.ProfileManager#getProfileManagerAspectChain()
      */
     public AspectChain getProfileManagerAspectChain() {
         return this.chain;
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletTypes()
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletTypes()
      */
     public Collection getCopletTypes() {
         return this.copletTypesMap.values();
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletType(java.lang.String)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletType(java.lang.String)
      */
     public CopletType getCopletType(String id) {
         return (CopletType)this.copletTypesMap.get(id);
@@ -109,7 +109,7 @@ public abstract class AbstractProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
+     * @see org.apache.cocoon.portal.services.ProfileManager#saveUserProfiles()
      */
     public void saveUserProfiles() {
         // override in subclass

@@ -20,7 +20,7 @@ import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent;
 import org.apache.cocoon.portal.om.CopletInstance;
-import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.services.ProfileManager;
 
 /**
  * Helper class for a full screen event.

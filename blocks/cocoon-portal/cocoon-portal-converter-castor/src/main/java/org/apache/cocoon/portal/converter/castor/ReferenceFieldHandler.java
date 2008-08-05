@@ -19,12 +19,12 @@ package org.apache.cocoon.portal.converter.castor;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.CopletDefinition;
 import org.apache.cocoon.portal.om.CopletInstance;
 import org.apache.cocoon.portal.om.CopletType;
 import org.apache.cocoon.portal.om.Layout;
 import org.apache.cocoon.portal.om.LayoutType;
+import org.apache.cocoon.portal.om.Renderer;
 import org.apache.cocoon.portal.profile.PersistenceType;
 import org.exolab.castor.mapping.AbstractFieldHandler;
 

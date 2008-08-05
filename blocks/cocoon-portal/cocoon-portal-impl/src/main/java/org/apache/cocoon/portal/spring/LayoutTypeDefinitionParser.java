@@ -16,8 +16,8 @@
  */
 package org.apache.cocoon.portal.spring;
 
-import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.om.LayoutType;
+import org.apache.cocoon.portal.om.Renderer;
 import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;

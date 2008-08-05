@@ -136,7 +136,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstance(java.lang.String)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletInstance(java.lang.String)
      */
     public CopletInstance getCopletInstance(String copletID) {
         final ProfileHolder profile = this.getUserProfile();
@@ -147,7 +147,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinition(java.lang.String)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletDefinition(java.lang.String)
      */
     public CopletDefinition getCopletDefinition(String copletDataId) {
         final ProfileHolder profile = this.getUserProfile();
@@ -158,7 +158,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances(org.apache.cocoon.portal.om.CopletDefinition)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletInstances(org.apache.cocoon.portal.om.CopletDefinition)
      */
     public List getCopletInstances(CopletDefinition data) {
         final ProfileHolder profile = this.getUserProfile();
@@ -233,7 +233,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getLayout(java.lang.String)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getLayout(java.lang.String)
      */
     public Layout getLayout(String layoutId) {
         ProfileHolder profile = this.getUserProfile();
@@ -250,7 +250,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletDefinitions()
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletDefinitions()
      */
     public Collection getCopletDefinitions() {
         final ProfileHolder profile = this.getUserProfile();
@@ -261,7 +261,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getCopletInstances()
+     * @see org.apache.cocoon.portal.services.ProfileManager#getCopletInstances()
      */
     public Collection getCopletInstances() {
         final ProfileHolder profile = this.getUserProfile();
@@ -465,7 +465,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#saveUserProfiles()
+     * @see org.apache.cocoon.portal.services.ProfileManager#saveUserProfiles()
      */
     public void saveUserProfiles() {
         this.saveCopletInstances();
@@ -505,7 +505,7 @@ public class GroupBasedProfileManager
     }
 
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getLayoutInstance(org.apache.cocoon.portal.om.Layout)
+     * @see org.apache.cocoon.portal.services.ProfileManager#getLayoutInstance(org.apache.cocoon.portal.om.Layout)
      */
     public LayoutInstance getLayoutInstance(Layout layout) {
         LayoutInstance result = null;
