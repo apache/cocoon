@@ -61,7 +61,7 @@ class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
     private int statusCode;
     private boolean sendError;
 
-    private LimitingServletOutputStream outputStream;
+    private LimitingServletOutputStream outputStream = new LimitingServletOutputStream(BUFFER_LIMIT);
     private PrintWriter printWriter;
 
     public HttpServletResponseBufferingWrapper(HttpServletResponse response) {
@@ -165,8 +165,6 @@ class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
         if (!bufferResponse) {
             return super.getOutputStream();
         } else {
-            if (outputStream == null)
-                outputStream = new LimitingServletOutputStream(BUFFER_LIMIT);
             committed = true;
             return outputStream;
         }
