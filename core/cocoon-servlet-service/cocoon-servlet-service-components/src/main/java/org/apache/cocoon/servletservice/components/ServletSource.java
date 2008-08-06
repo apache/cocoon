@@ -146,6 +146,9 @@ public class ServletSource extends AbstractSource
                 }
 
                 servletName = absolutizable.getServiceName(servletReference);
+                
+                if (servletName == null)
+                    throw new RuntimeException("Could not find connection named '" + servletReference + "'. Did you forgot to declare it in servlet bean configuration?");
             }
             
             return new AbsoluteServletConnection(servletName, locationUri.getRawPath(), locationUri.getRawQuery());
