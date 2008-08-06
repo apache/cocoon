@@ -107,4 +107,21 @@ public class HttpServletResponseBufferingWrapperTestCase extends TestCase {
         assertTrue("Did not catch exception of overflowed buffer.", catchedException);
     }
     
+    public void testFlushBufferedResponseWhenBufferIsEmpty() throws IOException {
+        MockControl control = MockControl.createControl(HttpServletResponse.class);
+        HttpServletResponse response = (HttpServletResponse)control.getMock();
+        response.isCommitted();
+        control.setReturnValue(false, MockControl.ZERO_OR_MORE);
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        response.getOutputStream();
+        control.setReturnValue(new ServletOutputStream() {
+            public void write(int arg0) throws IOException { }
+        });
+        control.replay();
+        HttpServletResponseBufferingWrapper responseWrapper = new HttpServletResponseBufferingWrapper(response);
+        responseWrapper.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        responseWrapper.flushBufferedResponse();
+        control.verify();
+    }
+    
 }
