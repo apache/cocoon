@@ -39,7 +39,7 @@
     </release>
     <release version="1.0.0" date="2008-03-26" description="released">
       <action dev="vgritsenko" type="update">
-        Reduce thred contention in flowscript interpreter. Do not synchronize
+        Reduce thread contention in flowscript interpreter. Do not synchronize
         execution of scripts within current thread scope on global map of
         compiled scripts.
       </action>
