@@ -60,10 +60,10 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-samples-style-default</artifactId>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xsp-impl</artifactId>
-    </dependency>
+    </dependency-->
   </dependencies>
 
 </project>
