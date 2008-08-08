@@ -65,7 +65,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * The ReloadingWebappMojo creates a web application environment for a Cocoon block.
+ * Create a web application environment for a Cocoon block, including support
+ * for the reloading classloader. 
  *
  * @goal prepare
  * @requiresProject true
