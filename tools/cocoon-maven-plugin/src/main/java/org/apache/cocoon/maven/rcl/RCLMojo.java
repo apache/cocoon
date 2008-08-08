@@ -19,8 +19,7 @@ package org.apache.cocoon.maven.rcl;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * The ReloadingWebappMojo creates a web application environment for a Cocoon
- * block.
+ * [DEPRECATED] Use the 'prepare' goal instead.
  *
  * @goal rcl
  * @requiresProject true
