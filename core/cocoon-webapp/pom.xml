@@ -304,10 +304,6 @@
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
-          <artifactId>cocoon-jms-sample</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jsp-sample</artifactId>
         </dependency>
         <dependency>
