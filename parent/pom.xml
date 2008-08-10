@@ -3248,7 +3248,7 @@
     <docs.urlRelativizer>../../../../</docs.urlRelativizer>
     <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
     <docs.mode>online</docs.mode>
-    <docs.breadcrumb>cocoon</docs.breadcrumb>
+    <docs.breadcrumb>cocoon22</docs.breadcrumb>
     <!-- Path and version properties: sites -->
     <docs.m.site-main.relPath />
     <docs.m.site-22.relPath>2.2/</docs.m.site-22.relPath>
