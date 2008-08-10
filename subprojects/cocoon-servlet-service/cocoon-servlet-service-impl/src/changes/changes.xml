@@ -24,7 +24,7 @@
 -->
 <document>
   <body>
-    <release version="1.1.0" date="2008-00-00" description="unreleased">
+    <release version="1.1.0" date="2008-08-09" description="released">
       <action dev="reinhard" type="fix">
         The dependency on the Cocoon SourceResolver, that introduced a circular dependency with Cocoon 2.2, was
         removed. The Cocoon SourceResolver was used to resolve URLs in the context-path attribute of a servlet
