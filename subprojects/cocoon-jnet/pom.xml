@@ -39,6 +39,7 @@
   <properties>
     <docs.name>${project.name}</docs.name>    
     <docs.version>${docs.m.jnet.version}</docs.version>
+    <docs.urlRelativizer>../../../</docs.urlRelativizer>    
   </properties>  
   
   <distributionManagement>
