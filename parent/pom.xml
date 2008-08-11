@@ -3247,7 +3247,6 @@
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.urlRelativizer>../../../../</docs.urlRelativizer>
     <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
-    <docs.mode>online</docs.mode>
     <docs.breadcrumb>cocoon22</docs.breadcrumb>
     <!-- Path and version properties: sites -->
     <docs.m.site-main.relPath />
@@ -3311,6 +3310,8 @@
     <!-- Path and version properties: blocks -->
     <docs.m.ajax.version>1.0</docs.m.ajax.version>
     <docs.m.ajax.relPath>2.2/blocks/ajax/${docs.m.ajax.version}/</docs.m.ajax.relPath>
+    <docs.m.apples.version>1.0</docs.m.apples.version>
+    <docs.m.apples.relPath>2.2/blocks/apples/${docs.m.apples.version}/</docs.m.apples.relPath>
     <docs.m.auth.version>1.0</docs.m.auth.version>
     <docs.m.auth.relPath>2.2/blocks/auth/${docs.m.auth.version}/</docs.m.auth.relPath>
     <docs.m.batik.version>1.0</docs.m.batik.version>
@@ -3321,6 +3322,8 @@
     <docs.m.databases.relPath>2.2/blocks/databases/${docs.m.databases.version}/</docs.m.databases.relPath>
     <docs.m.databases-bridge.version>1.0</docs.m.databases-bridge.version>
     <docs.m.databases-bridge.relPath>2.2/blocks/databases-bridge/${docs.m.databases-bridge.version}/</docs.m.databases-bridge.relPath>
+    <docs.m.eventcache.version>1.0</docs.m.eventcache.version>
+    <docs.m.eventcache.relPath>2.2/blocks/eventcache/${docs.m.eventcache.version}/</docs.m.eventcache.relPath>
     <docs.m.flowscript.version>1.0</docs.m.flowscript.version>
     <docs.m.flowscript.relPath>2.2/blocks/flowscript/${docs.m.flowscript.version}/</docs.m.flowscript.relPath>
     <docs.m.fop.version>1.0</docs.m.fop.version>
@@ -3329,6 +3332,10 @@
     <docs.m.forms.relPath>2.2/blocks/forms/${docs.m.forms.version}/</docs.m.forms.relPath>
     <docs.m.html.version>1.0</docs.m.html.version>
     <docs.m.html.relPath>2.2/blocks/html/${docs.m.html.version}/</docs.m.html.relPath>
+    <docs.m.jcr.version>1.0</docs.m.jcr.version>
+    <docs.m.jcr.relPath>2.2/blocks/jcr/${docs.m.jcr.version}/</docs.m.jcr.relPath>
+    <docs.m.jms.version>1.0</docs.m.jms.version>
+    <docs.m.jms.relPath>2.2/blocks/jms/${docs.m.jms.version}/</docs.m.jms.relPath>
     <docs.m.linkrewriter.version>1.0</docs.m.linkrewriter.version>
     <docs.m.linkrewriter.relPath>2.2/blocks/linkrewriter/${docs.m.linkrewriter.version}/</docs.m.linkrewriter.relPath>
     <docs.m.mail.version>1.0</docs.m.mail.version>
@@ -3556,6 +3563,10 @@
                     <path>${docs.m.ajax.relPath}</path>
                   </collection>
                   <collection>
+                    <name>cdocs-apples</name>
+                    <path>${docs.m.apples.relPath}</path>
+                  </collection>
+                  <collection>
                     <name>cdocs-auth</name>
                     <path>${docs.m.auth.relPath}</path>
                   </collection>
@@ -3566,6 +3577,10 @@
                   <collection>
                     <name>cdocs-captcha</name>
                     <path>${docs.m.captcha.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-eventcache</name>
+                    <path>${docs.m.eventcache.relPath}</path>
                   </collection>
                   <collection>
                     <name>cdocs-flowscript</name>
@@ -3582,6 +3597,14 @@
                   <collection>
                     <name>cdocs-javaflow</name>
                     <path>${docs.m.javaflow.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-jcr</name>
+                    <path>${docs.m.jcr.relPath}</path>
+                  </collection>
+                  <collection>
+                    <name>cdocs-jms</name>
+                    <path>${docs.m.jms.relPath}</path>
                   </collection>
                   <collection>
                     <name>cdocs-lucene</name>
