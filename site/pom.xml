@@ -86,6 +86,7 @@
       <modules>
         <!-- Cocoon Blocks -->
         <module>../blocks/cocoon-ajax/cocoon-ajax-impl</module>
+        <module>../blocks/cocoon-apples/cocoon-apples-impl</module>        
         <module>../blocks/cocoon-auth/cocoon-auth-impl</module>
         <module>../blocks/cocoon-captcha/cocoon-captcha-impl</module>
         <module>../blocks/cocoon-flowscript/cocoon-flowscript-impl</module>
@@ -102,8 +103,11 @@
         <module>../blocks/cocoon-databases/cocoon-databases-hsqldb-client</module>
     
         <!-- Unreleased Cocoon Blocks -->
+        <module>../blocks/cocoon-eventcache/cocoon-eventcache-impl</module>
         <!-- Java flow was excluded from building because org.apache.commons:javaflow:jar:1.0-SNAPSHOT is not available anywhere -->
         <!--<module>../blocks/cocoon-javaflow/cocoon-javaflow-impl</module>-->
+        <module>../blocks/cocoon-jcr/cocoon-jcr-impl</module>
+        <module>../blocks/cocoon-jms/cocoon-jms-impl</module>
         <module>../blocks/cocoon-lucene/cocoon-lucene-impl</module>
         <module>../blocks/cocoon-portal/cocoon-portal-impl</module>
         <module>../blocks/cocoon-profiler/cocoon-profiler-impl</module>
