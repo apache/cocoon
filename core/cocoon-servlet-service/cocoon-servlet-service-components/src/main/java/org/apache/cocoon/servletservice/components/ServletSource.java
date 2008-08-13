@@ -37,6 +37,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.AbstractSource;
 import org.apache.excalibur.store.Store;
@@ -77,6 +78,11 @@ public class ServletSource extends AbstractSource
     public InputStream getInputStream() throws IOException, SourceException {
         try {
             connect();
+            
+            if (!exists())
+                throw new SourceNotFoundException("Location " + this.getURI() + " cannot be found."
+                       + "The servlet returned " + servletConnection.getResponseCode() + " response code.");
+            
             // FIXME: This is not the most elegant solution
             if (servletConnection.getResponseCode() != HttpServletResponse.SC_OK) {
                 //most probably, servlet returned 304 (not modified) and we need to perform second request to get data
@@ -203,7 +209,15 @@ public class ServletSource extends AbstractSource
      * @see org.apache.excalibur.source.Source#exists()
      */
     public boolean exists() {
-        return true;
+        try {
+            connect();
+            int rc = servletConnection.getResponseCode();
+            return rc == HttpServletResponse.SC_OK || rc == HttpServletResponse.SC_FOUND || rc == HttpServletResponse.SC_NOT_MODIFIED;
+        } catch (Exception e) {
+            if (logger.isDebugEnabled())
+                logger.debug("Exception occured while making servlet request", e);
+            return false;
+        }
     }
 
     /**
