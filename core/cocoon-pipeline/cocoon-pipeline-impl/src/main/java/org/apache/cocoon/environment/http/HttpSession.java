@@ -18,6 +18,7 @@ package org.apache.cocoon.environment.http;
 
 import java.util.Enumeration;
 
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.impl.AbstractSession;
 
 /**
@@ -45,7 +46,8 @@ import org.apache.cocoon.environment.impl.AbstractSession;
  * will not be directly visible in another.
  *
  * @version $Id$
- *
+ * @deprecated This class extends deprecated class and will be removed in the future.
+ *             See {@link Session} interface for details.
  */
 public final class HttpSession
 extends AbstractSession {
