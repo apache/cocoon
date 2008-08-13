@@ -19,16 +19,19 @@ package org.apache.cocoon.environment.impl;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
+
+import org.apache.cocoon.environment.Session;
 
 /**
  * Base class for any session
  *
  * @version $Id$
+ * @deprecated This class implements deprecated interface and will be removed in the future.
+ *             See {@link Session} interface for details. 
  */
 public abstract class AbstractSession 
-    implements HttpSession {
+    implements Session {
 
     public Map getAttributes() {
 	return new SessionMap(this);
