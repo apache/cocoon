@@ -53,31 +53,43 @@ public class HttpServletResponseBufferingWrapperTestCase extends TestCase {
     }
     
     public void testNoBuffering() throws IOException {
+        CountingServletOutputStream countingStream = new CountingServletOutputStream();
+        
         MockControl control = MockControl.createControl(HttpServletResponse.class);
         HttpServletResponse response = (HttpServletResponse)control.getMock();
         response.setStatus(HttpServletResponse.SC_OK);
         response.isCommitted();
         control.setReturnValue(false, MockControl.ZERO_OR_MORE);
         response.getOutputStream();
-        control.setReturnValue(new ServletOutputStream() {
-            public void write(int b) throws IOException { }
-        });
+        control.setReturnValue(countingStream);
         control.replay();
+        
         HttpServletResponseBufferingWrapper responseWrapper = new HttpServletResponseBufferingWrapper(response);
         responseWrapper.setStatus(HttpServletResponse.SC_OK);
-        responseWrapper.getOutputStream();
+        OutputStream outputStream = responseWrapper.getOutputStream();
+        outputStream.write(0);
+        
+        assertEquals(1, countingStream.getCounter());
         control.verify();
     }
     
     public void testBuffering() throws IOException {
+        CountingServletOutputStream countingStream = new CountingServletOutputStream();
+        
         MockControl control = MockControl.createControl(HttpServletResponse.class);
         HttpServletResponse response = (HttpServletResponse)control.getMock();
         response.isCommitted();
         control.setReturnValue(false, MockControl.ZERO_OR_MORE);
+        response.getOutputStream();
+        control.setReturnValue(countingStream);
         control.replay();
+        
         HttpServletResponseBufferingWrapper responseWrapper = new HttpServletResponseBufferingWrapper(response);
         responseWrapper.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        responseWrapper.getOutputStream();
+        OutputStream outputStream = responseWrapper.getOutputStream();
+        outputStream.write(0);
+        
+        assertEquals(0, countingStream.getCounter());
         control.verify();
     }
     
@@ -86,6 +98,8 @@ public class HttpServletResponseBufferingWrapperTestCase extends TestCase {
         HttpServletResponse response = (HttpServletResponse)control.getMock();
         response.isCommitted();
         control.setReturnValue(false, MockControl.ZERO_OR_MORE);
+        response.getOutputStream();
+        control.setReturnValue(new CountingServletOutputStream());
         control.replay();
         HttpServletResponseBufferingWrapper responseWrapper = new HttpServletResponseBufferingWrapper(response);
         responseWrapper.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -113,15 +127,54 @@ public class HttpServletResponseBufferingWrapperTestCase extends TestCase {
         response.isCommitted();
         control.setReturnValue(false, MockControl.ZERO_OR_MORE);
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        response.getOutputStream();
-        control.setReturnValue(new ServletOutputStream() {
-            public void write(int arg0) throws IOException { }
-        });
         control.replay();
         HttpServletResponseBufferingWrapper responseWrapper = new HttpServletResponseBufferingWrapper(response);
         responseWrapper.setStatus(HttpServletResponse.SC_NOT_FOUND);
         responseWrapper.flushBufferedResponse();
         control.verify();
+    }
+    
+    /**
+     * This method tests late setting of status code to 404. Late here means <b>after</b> getOutputStream method was called.
+     * @throws IOException
+     */
+    public void testLateSettingStatusCodeTo404() throws IOException {
+        CountingServletOutputStream countingStream = new CountingServletOutputStream();
+        
+        MockControl control = MockControl.createControl(HttpServletResponse.class);
+        HttpServletResponse response = (HttpServletResponse)control.getMock();
+        response.isCommitted();
+        control.setReturnValue(false, MockControl.ZERO_OR_MORE);
+        response.getOutputStream();
+        control.setReturnValue(countingStream);
+        control.replay();
+        
+        HttpServletResponseBufferingWrapper responseWrapper = new HttpServletResponseBufferingWrapper(response);
+        responseWrapper.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        OutputStream outputStream = responseWrapper.getOutputStream();
+        outputStream.write(0);
+        
+        assertEquals(0, countingStream.getCounter());
+        responseWrapper.resetBufferedResponse();
+        assertEquals(0, countingStream.getCounter());
+        control.verify();
+    }
+    
+    /**
+     * Simple ServletOutputStream that counts how many bytes were written.
+     *
+     */
+    private class CountingServletOutputStream extends ServletOutputStream {
+        
+        private int counter = 0;
+
+        public void write(int arg0) throws IOException {
+            counter++;
+        }
+        
+        public int getCounter() {
+            return counter;
+        }
     }
     
 }
