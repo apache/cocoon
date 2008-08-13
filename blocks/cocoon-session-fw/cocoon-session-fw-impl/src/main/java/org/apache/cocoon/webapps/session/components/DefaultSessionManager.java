@@ -112,7 +112,7 @@ implements Serviceable, ThreadSafe, SessionManager, Disposable, Contextualizable
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN getSession create=" + createFlag);
         }
-        Session session = (Session) request.getSession(createFlag);
+        Session session = (Session) request.getCocoonSession(createFlag);
 
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("END getSession session=" + session);
