@@ -252,7 +252,7 @@
               <ul class="projectList">
                 <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")/2.2/">Cocoon 2.2</a></em></strong></li>
                 <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")/3.0/">Cocoon 3.0 <span class="pl-version-small">[alpha]</span></a></em></strong></li>                
-                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></strong></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")/subprojects/">Subprojects</a></strong></li>
               </ul>              
            #else
               <ul class="projectList">
