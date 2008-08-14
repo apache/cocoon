@@ -23,27 +23,29 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.AggregatedValidity;
-import org.apache.excalibur.source.impl.validity.DeferredValidity;
-import org.apache.excalibur.source.impl.validity.NOPValidity;
-import org.apache.excalibur.store.Store;
-import org.springframework.web.context.request.RequestContextHolder;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
 import org.apache.cocoon.caching.ComponentCacheKey;
 import org.apache.cocoon.caching.PipelineCacheKey;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.HashUtil;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.AggregatedValidity;
+import org.apache.excalibur.source.impl.validity.DeferredValidity;
+import org.apache.excalibur.source.impl.validity.NOPValidity;
+import org.apache.excalibur.store.Store;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * This is the base class for all caching pipeline implementations
@@ -873,8 +875,14 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     setMimeTypeForReader(environment);
                     if (this.reader.shouldSetContentLength()) {
                         ByteArrayOutputStream os = new ByteArrayOutputStream();
-                        this.reader.setOutputStream(os);
-                        this.reader.generate();
+                        try {
+                            this.reader.setOutputStream(os);
+                            this.reader.generate();
+                        } catch (SourceException se) {
+                            //it's valid that generate() method returns SourceException (which extension to IOException)
+                            //and pipeline execution should be more clever
+                            throw SourceUtil.handle(se);
+                        }
                         environment.setContentLength(os.size());
                         if (outputStream == null) {
                             outputStream = environment.getOutputStream(0);
@@ -884,8 +892,14 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                         if (outputStream == null) {
                             outputStream = environment.getOutputStream(this.outputBufferSize);
                         }
-                        this.reader.setOutputStream(outputStream);
-                        this.reader.generate();
+                        try {
+                            this.reader.setOutputStream(outputStream);
+                            this.reader.generate();
+                        } catch (SourceException se) {
+                            //it's valid that generate() method returns SourceException (which extension to IOException)
+                            //and pipeline execution should be more clever
+                            throw SourceUtil.handle(se);
+                        }
                     }
 
                     // store the response

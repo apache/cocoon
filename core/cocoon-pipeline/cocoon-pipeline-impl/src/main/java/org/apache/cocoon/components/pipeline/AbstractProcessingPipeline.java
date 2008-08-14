@@ -31,10 +31,12 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Response;
@@ -650,13 +652,25 @@ public abstract class AbstractProcessingPipeline extends AbstractLogEnabled
             this.setMimeTypeForReader(environment);
             if (this.reader.shouldSetContentLength()) {
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
-                this.reader.setOutputStream(os);
-                this.reader.generate();
+                try {
+                    this.reader.setOutputStream(os);
+                    this.reader.generate();
+                } catch (SourceException se) {
+                    //it's valid that generate() method returns SourceException (which extension to IOException)
+                    //and pipeline execution should be more clever
+                    throw SourceUtil.handle(se);
+                }
                 environment.setContentLength(os.size());
                 os.writeTo(environment.getOutputStream(0));
             } else {
-                this.reader.setOutputStream(environment.getOutputStream(this.outputBufferSize));
-                this.reader.generate();
+                try {
+                    this.reader.setOutputStream(environment.getOutputStream(this.outputBufferSize));
+                    this.reader.generate();
+                } catch (SourceException se) {
+                    //it's valid that generate() method returns SourceException (which extension to IOException)
+                    //and pipeline execution should be more clever
+                    throw SourceUtil.handle(se);
+                }
             }
         } catch (Exception e) {
             handleException(e);
