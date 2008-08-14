@@ -20,6 +20,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-  <bean name="org.apache.cocoon.spring.BlockPathPropertyPlaceholderConfigurer" class="org.apache.cocoon.spring.BlockPathPropertyPlaceholderConfigurer" />
+  <bean name="org.apache.cocoon.servletservice.components.BlockPathPropertyPlaceholderConfigurer" 
+      class="org.apache.cocoon.servletservice.components.BlockPathPropertyPlaceholderConfigurer" />
 
 </beans>
