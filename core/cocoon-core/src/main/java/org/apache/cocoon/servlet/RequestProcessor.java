@@ -193,10 +193,6 @@ public class RequestProcessor extends AbstractLogEnabled {
                 getLogger().warn(e.getMessage());
             }
 
-            if (rethrowExceptions()) {
-                throw new ServletException(e);
-            }
-
             RequestUtil.manageException(request, res, env, uri,
                                         HttpServletResponse.SC_NOT_FOUND,
                                         "Resource Not Found",
