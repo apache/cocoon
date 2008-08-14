@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.spring;
+package org.apache.cocoon.servletservice.components;
 
 import java.util.HashSet;
 import java.util.Iterator;
