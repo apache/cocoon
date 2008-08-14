@@ -26,11 +26,13 @@ import org.apache.cocoon.caching.IdentifierCacheKey;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.components.sax.XMLTeePipe;
+import org.apache.cocoon.components.source.util.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.xml.XMLConsumer;
 
+import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
@@ -325,18 +327,30 @@ public class ExpiresCachingProcessingPipeline
 
                     // set the output stream
                     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    this.reader.setOutputStream(baos);
-
-                    this.reader.generate();
+                    try {
+                        this.reader.setOutputStream(baos);
+                        this.reader.generate();
+                    } catch (SourceException se) {
+                        //it's valid that generate() method returns SourceException (which extension to IOException)
+                        //and pipeline execution should be more clever
+                        throw SourceUtil.handle(se);
+                    }
 
                     cachedData = baos.toByteArray();
                     environment.setContentLength(cachedData.length);
                     os.write(cachedData);
                 } else {
                     final CachingOutputStream os = new CachingOutputStream( environment.getOutputStream(this.outputBufferSize) );
-                    // set the output stream
-                    this.reader.setOutputStream( os );
-                    this.reader.generate();
+                    
+                    try {
+                        // set the output stream
+                        this.reader.setOutputStream( os );
+                        this.reader.generate();
+                    } catch (SourceException se) {
+                        //it's valid that generate() method returns SourceException (which extension to IOException)
+                        //and pipeline execution should be more clever
+                        throw SourceUtil.handle(se);
+                    }
 
                     cachedData = os.getContent();
                 }
