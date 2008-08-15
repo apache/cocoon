@@ -29,6 +29,10 @@
         Fixed HttpServletResponseBufferingWrapper implementation so it does not throw IllegalStateException
         when resestBufferedResponse is being called.
       </action>
+      <action dev="gkossakowski" type="fix" issue="COCOON-2236">
+        ServletFactoryBean will install JNet handlers before calling init() method
+        of Servlet that is being created. This should make SSF compatible with Cocoon Core 2.2.0 again.
+      </action>
     </release>
     <release version="1.1.0" date="2008-08-09" description="released">
       <action dev="reinhard" type="fix">
