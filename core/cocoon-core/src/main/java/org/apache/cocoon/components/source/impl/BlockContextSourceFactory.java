@@ -20,12 +20,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.blockdeployment.BlockDeploymentServletContextListener;
-import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -50,16 +51,14 @@ public class BlockContextSourceFactory extends AbstractLogEnabled
      */
     public void service(ServiceManager aServiceManager) throws ServiceException {
         this.serviceManager = aServiceManager;
+        ServletContext servletContext = (ServletContext) serviceManager.lookup(ServletContext.class.getName());
+        this.blockContexts = (Map) servletContext.getAttribute(BlockDeploymentServletContextListener.BLOCK_CONTEXT_MAP);
     }
 
     /**
      * @see SourceFactory#getSource(java.lang.String, java.util.Map)
      */
     public Source getSource(String location, Map parameters) throws IOException {
-        if(this.blockContexts == null) {
-            this.blockContexts = (Map) WebAppContextUtils.getCurrentWebApplicationContext().getServletContext()
-            .getAttribute(BlockDeploymentServletContextListener.BLOCK_CONTEXT_MAP);
-        }
         // the root "directory" of the blocks
         if (location.endsWith(":/")) {
             return new BlockContextSource(location, this.blockContexts, this.serviceManager);
