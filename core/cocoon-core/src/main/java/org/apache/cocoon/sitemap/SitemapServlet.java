@@ -63,9 +63,6 @@ public class SitemapServlet extends HttpServlet {
      */
     private static final String PARAM_PASS_THROUGH = "pass-through";
 
-    private boolean initialized;
-
-
     protected RequestProcessor processor;
 
     /**
@@ -74,6 +71,7 @@ public class SitemapServlet extends HttpServlet {
      */
     public void init() throws ServletException {
         super.init();
+        this.processor = new RequestProcessor(getServletContext());
     }
 
     /**
@@ -81,11 +79,6 @@ public class SitemapServlet extends HttpServlet {
      */
     protected void service(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        if (!initialized) {
-            this.processor = new RequestProcessor(getServletContext());
-            initialized = true;
-        }
-
         this.processor.service(request, response);
     }
 
