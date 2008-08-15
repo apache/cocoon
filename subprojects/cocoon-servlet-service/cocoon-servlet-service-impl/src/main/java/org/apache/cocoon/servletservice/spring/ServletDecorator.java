@@ -82,6 +82,9 @@ public class ServletDecorator implements BeanDefinitionDecorator {
         servletFactoryDefBuilder.setInitMethodName("init");
         servletFactoryDefBuilder.setDestroyMethodName("destroy");
         servletFactoryDefBuilder.addPropertyValue("serviceName", holder.getBeanName());
+        //this dependency is needed because JNet must be called manually when init() method is called on servlet
+        //see COCOON-2236
+        servletFactoryDefBuilder.addPropertyReference("urlHandlerFactoryCollector", "org.apache.cocoon.jnet.URLHandlerFactoryCollector");
 
         servletFactoryDefBuilder.addPropertyValue("mountPath", mountPath);
         servletFactoryDefBuilder.addPropertyValue("contextPath", contextPath);

@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.cocoon.jnet.URLHandlerFactoryCollector;
 import org.apache.cocoon.servletservice.Mountable;
 import org.apache.cocoon.servletservice.ServletServiceContext;
 import org.springframework.aop.framework.ProxyFactory;
@@ -67,6 +68,8 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
     private String serviceName;
 
     private ServletServiceContext servletServiceContext;
+    
+    private URLHandlerFactoryCollector urlHandlerFactoryCollector;
 
     public ServletFactoryBean() {
     }
@@ -122,7 +125,14 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
                 };
 
         // create and initialize the embedded servlet
-        this.embeddedServlet.init(blockServletConfig);
+        try {
+            //manual call to pushUrlHandlerFactories is needed due to issue COCOON-2236
+            urlHandlerFactoryCollector.pushUrlHandlerFactories();
+            this.embeddedServlet.init(blockServletConfig);
+        } finally {
+            urlHandlerFactoryCollector.popUrlHandlerFactories();
+        }
+        
         this.servletServiceContext.setServlet(this.embeddedServlet);
     }
 
@@ -259,6 +269,10 @@ public class ServletFactoryBean implements FactoryBean, ApplicationContextAware,
         public MountableMixinAdvisor() {
             super(new MountableMixin(), Mountable.class);
         }
+    }
+
+    public void setUrlHandlerFactoryCollector(URLHandlerFactoryCollector urlHandlerFactoryCollector) {
+        this.urlHandlerFactoryCollector = urlHandlerFactoryCollector;
     }
 
 }
