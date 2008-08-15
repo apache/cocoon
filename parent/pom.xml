@@ -3129,8 +3129,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.0.2</version>
         <configuration>
-          <source>1.4</source>
-          <target>1.4</target>
+          <source>1.5</source>
+          <target>1.5</target>
         </configuration>
       </plugin>
       <plugin>
@@ -3145,9 +3145,9 @@
         <artifactId>maven-idea-plugin</artifactId>
         <version>2.0</version>
         <configuration>
-          <!-- Cocoon 2.2 requires JDK 1.4 -->
-          <jdkName>1.4</jdkName>
-          <jdkLevel>1.4</jdkLevel>
+          <!-- Cocoon 2.2 requires JDK 1.5 -->
+          <jdkName>1.5</jdkName>
+          <jdkLevel>1.5</jdkLevel>
         </configuration>
       </plugin>
       <plugin>
@@ -3178,7 +3178,7 @@
             <configuration>
               <rules>
                 <requireMavenVersion>
-                  <version>[2.0.6,)</version>
+                  <version>[2.0.9,)</version>
                 </requireMavenVersion>
               </rules>
             </configuration>
@@ -3193,10 +3193,10 @@
         <configuration>
           <maxmemory>512m</maxmemory>
           <links>
-            <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
             <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
             <link>http://excalibur.apache.org/apidocs/</link>
-            <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
             <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
             <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
             <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
@@ -3414,10 +3414,10 @@
             <configuration>
               <maxmemory>512m</maxmemory>
               <links>
-                <link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
+                <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
                 <link>http://static.springframework.org/spring/docs/2.0.x/api/</link>
                 <link>http://excalibur.apache.org/apidocs/</link>
-                <link>http://java.sun.com/j2ee/1.4/docs/api/</link>
+                <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
                 <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
                 <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
                 <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
