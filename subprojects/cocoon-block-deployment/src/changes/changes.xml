@@ -27,6 +27,16 @@
     <title>Changes Cocoon Block-Deployment</title>
   </properties>
   <body>
+    <release version="1.1.0-SNAPSHOT" date="2008-??-??">
+      <action dev="gkossakowski" type="add">
+        Added implementation of org.apache.cocoon.spring.configurator.BlockResourcesHolder interface to 
+        restore back-compatiblity with Cocoon Core 2.2.
+      </action>
+      <action dev="gkossakowski" type="remove">
+        Deprecated org.apache.cocoon.spring.configurator.BlockResourcesHolder interface, use
+        org.apache.cocoon.blockdeployment.BlockResourcesHolder intead.
+      </action>
+    </release>
     <release version="1.0.0" date="2008-08-09" description="released">
       <action dev="reinhard" type="add">
         Initial creation.

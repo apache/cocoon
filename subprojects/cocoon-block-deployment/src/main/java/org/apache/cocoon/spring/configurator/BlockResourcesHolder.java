@@ -23,6 +23,7 @@ import java.util.Map;
  *
  * @version $Id$
  * @since 1.0
+ * @deprecated Use {@link org.apache.cocoon.blockdeployment.BlockResourcesHolder} instead.
  */
 public interface BlockResourcesHolder {
 
