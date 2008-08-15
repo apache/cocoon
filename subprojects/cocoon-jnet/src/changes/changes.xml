@@ -27,6 +27,12 @@
     <title>Changes Cocoon JNet</title>
   </properties>
   <body>
+    <release version="1.1.0-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="add">
+        Splitted installURLHandlers into different public methods so URLHandlerFactoryCollector 
+        can be used directly from Java code and not only as AOP advice.
+      </action>
+    </release>
     <release version="1.0.0" date="2008-08-09" description="released">
       <action dev="reinhard" type="add">
         Initial creation.

@@ -33,21 +33,28 @@ public class URLHandlerFactoryCollector {
 
     public Object installURLHandlers(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         try {
-            if (!this.urlStreamHandlerInstalled) {
-                URLStreamHandlerFactoryInstaller.setURLStreamHandlerFactory(new DynamicURLStreamHandlerFactory());
-                this.urlStreamHandlerInstalled = true;
-            }
-
-            for (Iterator i = this.urlHandlerFactories.values().iterator(); i.hasNext();) {
-                URLStreamHandlerFactory streamHandlerFactory = (URLStreamHandlerFactory) i.next();
-                DynamicURLStreamHandlerFactory.push(streamHandlerFactory);
-            }
-
+            pushUrlHandlerFactories();
             return proceedingJoinPoint.proceed();
         } finally {
-            for (Iterator i = this.urlHandlerFactories.values().iterator(); i.hasNext(); i.next()) {
-                DynamicURLStreamHandlerFactory.pop();
-            }
+            popUrlHandlerFactories();
+        }
+    }
+    
+    public void pushUrlHandlerFactories() throws Exception {
+        if (!this.urlStreamHandlerInstalled) {
+            URLStreamHandlerFactoryInstaller.setURLStreamHandlerFactory(new DynamicURLStreamHandlerFactory());
+            this.urlStreamHandlerInstalled = true;
+        }
+
+        for (Iterator i = this.urlHandlerFactories.values().iterator(); i.hasNext();) {
+            URLStreamHandlerFactory streamHandlerFactory = (URLStreamHandlerFactory) i.next();
+            DynamicURLStreamHandlerFactory.push(streamHandlerFactory);
+        }
+    }
+    
+    public void popUrlHandlerFactories() {
+        for (Iterator i = this.urlHandlerFactories.values().iterator(); i.hasNext(); i.next()) {
+            DynamicURLStreamHandlerFactory.pop();
         }
     }
 
