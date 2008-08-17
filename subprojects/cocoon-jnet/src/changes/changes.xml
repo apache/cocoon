@@ -28,6 +28,9 @@
   </properties>
   <body>
     <release version="1.1.0-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="update">
+        Java 5 as minimum requirement.
+      </action>    
       <action dev="gkossakowski" type="add">
         Splitted installURLHandlers into different public methods so URLHandlerFactoryCollector 
         can be used directly from Java code and not only as AOP advice.
