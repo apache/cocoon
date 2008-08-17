@@ -3113,6 +3113,18 @@
           <artifactId>maven-plugin-plugin</artifactId>
           <version>2.4.2</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>rat-maven-plugin</artifactId>
+          <version>1.0-alpha-3</version>
+          <configuration>
+            <excludes>
+              <exclude>.externalToolBuilders/Maven_Ant_Builder.launch</exclude>
+              <exclude>maven-eclipse.xml</exclude>
+              <exclude>src/site/**</exclude>
+            </excludes>
+          </configuration>
+        </plugin>          
       </plugins>
     </pluginManagement>
 
@@ -3208,7 +3220,7 @@
             <link>http://jakarta.apache.org/velocity/api/</link>
           </links>
         </configuration>
-      </plugin>
+      </plugin>       
     </plugins>
   </build>
 
@@ -3387,6 +3399,18 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>rat-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>              
         </plugins>
       </build>
     </profile>
