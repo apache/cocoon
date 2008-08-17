@@ -25,6 +25,9 @@
 <document>
   <body>
     <release version="1.1.1-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="update">
+        Java 5 as minimum requirement.
+      </action>    
       <action dev="gkossakowski" type="fix" issue="COCOON-2237">
         Fixed HttpServletResponseBufferingWrapper implementation so it does not throw IllegalStateException
         when resestBufferedResponse is being called.
