@@ -36,16 +36,18 @@ public class JettyStopperMojo extends AbstractMojo {
             this.getLog().info("Skip starting server environment.");
             return;
         }
+        
         try {
             new JettyContainer().stop();
         } catch (Exception e) {
             this.getLog().error("Can't stop JettyContainer. ", e);
         }
+        
         // flush information collected by Cobertura
         try {
             String className = "net.sourceforge.cobertura.coveragedata.ProjectData";
             String methodName = "saveGlobalProjectData";
-            Class saveClass = Class.forName(className);
+            Class<?> saveClass = Class.forName(className);
             java.lang.reflect.Method saveMethod = saveClass.getDeclaredMethod(methodName, new Class[0]);
             saveMethod.invoke(null, new Object[0]);
         } catch (Throwable t) {

@@ -99,6 +99,7 @@ class HttpClientResponse implements WebResponse {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public List getResponseHeaders() {
         // TODO Auto-generated method stub
         return null;
