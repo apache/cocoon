@@ -16,11 +16,14 @@
 */
 package org.apache.cocoon.tools.it;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -31,6 +34,8 @@ import org.apache.commons.logging.LogFactory;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
 import org.jaxen.dom.DOMXPath;
+import org.junit.After;
+import org.junit.Before;
 import org.w3c.dom.Document;
 
 import com.gargoylesoftware.htmlunit.Page;
@@ -50,7 +55,7 @@ import com.gargoylesoftware.htmlunit.xml.XmlPage;
  *
  * @version $Id$
  */
-public abstract class HtmlUnitTestCase extends TestCase {
+public abstract class HtmlUnitTestCase {
 
     private static final String BASEURL = "http://localhost:8888";
 
@@ -75,17 +80,17 @@ public abstract class HtmlUnitTestCase extends TestCase {
     /**
      * Low-level access to namespace mappings for XPath expressions.
      */
-    protected Map namespaces = new HashMap();
+    protected Map<String, String> namespaces = new HashMap<String, String>();
 
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void createClient() throws Exception {
         this.webClient = new WebClient();
         this.webClient.setRedirectEnabled(false);
         this.namespaces.clear();
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void reset() throws Exception {
         this.response = null;
         this.document = null;
         this.webClient = null;
