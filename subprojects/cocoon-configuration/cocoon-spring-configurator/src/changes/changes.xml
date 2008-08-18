@@ -23,13 +23,11 @@
   - @version $Id$
   -->
 <document>
-  <body>
-    <release version="2.1.0-SNAPSHOT" date="2008-??-??">
+  <body>  
+    <release version="2.0.0" date="2008-08-09" description="released">
       <action dev="gkossakowski" type="update">
         Java 5 as minimum requirement.
-      </action>
-    </release>    
-    <release version="2.0.0" date="2008-08-09" description="released">
+      </action>    
       <action dev="reinhard" type="fix">
         Remove Block-Deployment functionality into a separate module.
       </action>
