@@ -25,6 +25,9 @@
 <document>
   <body>
     <release version="1.2.0-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="fix">
+        Fixed NPE thrown by HttpServletResponseBufferingWrapper after resetBuffer() method was called.
+      </action>
       <action dev="gkossakowski" type="update">
         Java 5 as minimum requirement.
       </action>    
