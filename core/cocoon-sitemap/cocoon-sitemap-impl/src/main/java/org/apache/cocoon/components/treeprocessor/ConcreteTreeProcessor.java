@@ -24,11 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
-
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
@@ -50,6 +47,11 @@ import org.apache.cocoon.spring.configurator.WebAppContextUtils;
 import org.apache.cocoon.util.AbstractLogEnabled;
 import org.apache.cocoon.util.location.Location;
 import org.apache.cocoon.util.location.LocationImpl;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -322,6 +324,21 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
         return result;
     }
+    
+    protected boolean handleServletRedirect(String uri, Environment environment) throws IOException, ProcessingException {
+        SourceFactory sourceFactory;
+        try {
+            sourceFactory = (SourceFactory) this.manager.lookup("org.apache.excalibur.source.SourceFactory/servlet");
+        } catch (ServiceException e) {
+            throw new ProcessingException("Could not find ServletSourceFactory. Are you trying to use servlet: source " +
+                    "without using Servlet Service Framework (components)?", e);
+        }
+
+        Source source = sourceFactory.getSource(uri, null);
+        org.apache.commons.io.IOUtils.copy(source.getInputStream(), environment.getOutputStream(0));
+
+        return true;
+    }
 
     /**
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
@@ -374,6 +391,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
                 throw new ProcessingException(e);
             }
         }
+
+        protected void servletRedirect(String uri) throws IOException, ProcessingException {
+            handleServletRedirect(uri, this.env);
+        }
+
     }
 
     public SourceResolver getSourceResolver() {
