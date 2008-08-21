@@ -269,6 +269,10 @@ public abstract class AbstractWidget implements Widget {
         return null;
     }
 
+    /**
+     * @deprecated getWidget(id) got deprecated from the API.<br>
+     *             Consider using getChild(id) or even lookupWidget(path) instead.
+     */
     public Widget getWidget(String id) {
         throw new UnsupportedOperationException("getWidget(id) got deprecated from the API. \n" +
                                                 "Consider using getChild(id) or even lookupWidget(path) instead.");
