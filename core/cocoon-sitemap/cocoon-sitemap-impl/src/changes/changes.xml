@@ -25,6 +25,13 @@
   -->
 <document>
   <body>
+    <release version="1.1.0-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="add" issue="COCOON-2239">
+        ForwardRedirector supports servlet: protocol redirections now. As a side effect of this change
+        (which was needed in order to support servlet: protocol in flow) redirection inside sitemap using
+        &lt;map:redirect-to uri="servlet:/some/path"/&gt; are supported now.
+      </action>
+    </release>
     <release version="1.0.1" date="TBA" description="unreleased">
       <action dev="joerg" type="fix">
         Fix synchronization issues in ContinuationsManager implementation.
