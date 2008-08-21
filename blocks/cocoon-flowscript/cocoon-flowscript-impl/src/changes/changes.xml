@@ -28,8 +28,7 @@
   <body>
     <release version="1.1.0-SNAPSHOT" date="2008-??-??" description="unreleased">
       <action dev="gkossakowski" type="add">
-        Made enabling of flowscript debugger possible to configure through property org.apache.cocoon.flowscript.debugger.
-        The flowscript debugger is enabled if you are running in development mode.
+        Made enabling of flowscript debugger possible to configure by setting property org.apache.cocoon.flowscript.debugger to "true" value.
       </action>
       <action dev="gkossakowski" type="fix">
         Remove use of deprecated method setOptimazationLevel that actually does nothing in current implementation of debugger.
