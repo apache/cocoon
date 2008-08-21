@@ -32,6 +32,8 @@ import org.apache.cocoon.util.AbstractLogEnabled;
  */
 public abstract class ForwardRedirector extends AbstractLogEnabled
                                         implements Redirector, PermanentRedirector {
+	
+	private static final String SERVLET_PROTOCOL = "servlet:";
 
     /**
      * Was there a call to <code>redirect()</code> ?
@@ -60,6 +62,8 @@ public abstract class ForwardRedirector extends AbstractLogEnabled
 
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
+        } else if (url.startsWith(SERVLET_PROTOCOL)) {
+            servletRedirect(url);
         } else {
             this.doRedirect(sessionMode, url, false, false);
         }
@@ -74,6 +78,8 @@ public abstract class ForwardRedirector extends AbstractLogEnabled
 
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
+        } else if (url.startsWith(SERVLET_PROTOCOL)) {
+            servletRedirect(url);
         } else {
             this.doRedirect(sessionMode, url, true, false);
         }
@@ -93,6 +99,8 @@ public abstract class ForwardRedirector extends AbstractLogEnabled
         // FIXME : how to handle global redirect to cocoon: ?
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
+        } else if (url.startsWith(SERVLET_PROTOCOL)) {
+            throw new ProcessingException("Global redirect with servlet: protocol are not possible!");
         } else {
             this.doRedirect(sessionMode, url, false, true);
         }
@@ -100,6 +108,14 @@ public abstract class ForwardRedirector extends AbstractLogEnabled
     }
 
     protected abstract void cocoonRedirect(String uri) throws IOException, ProcessingException;
+    
+    /**
+     * Handles rediraction to <code>servlet:</code> protocol URI.
+     * @param uri starting with <code>servlet:</code>
+     * @throws IOException
+     * @throws ProcessingException
+     */
+    protected abstract void servletRedirect(String uri) throws IOException, ProcessingException;
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Redirector#hasRedirected()

@@ -199,6 +199,14 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             // this is a hint for the redirector
             objectModel.put("cocoon:forward", "true");
             redirector.redirect(false, uri);
+        } if (SourceUtil.getScheme(uri).equals("servlet")) {
+            if (redirector.hasRedirected()) {
+                throw new IllegalStateException("Pipeline has already been processed for this request");
+            }
+            final Map objectModel = this.processInfoProvider.getObjectModel();
+            FlowHelper.setWebContinuation(objectModel, newObjectModel, continuation);
+            FlowHelper.setContextObject(objectModel, newObjectModel, bizData);
+            redirector.redirect(false, uri);
         } else {
             throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
         }
