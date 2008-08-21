@@ -133,6 +133,7 @@ public class ServletServiceResponse implements HttpServletResponse {
 
                 public void write(int b) throws IOException {
                     ServletServiceResponse.this.outputStream.write(b);
+                    ServletServiceResponse.this.committed = true;
                 }
 
                 /*
@@ -173,13 +174,12 @@ public class ServletServiceResponse implements HttpServletResponse {
     }
 
     public void resetBuffer() {
+        //this class does not buffer anything so if first byte is written to output stream
+        //there is no way to reset anything
+        //Servlet Service Framework uses for buffering a wrapper called HttpServletResponseBufferingWrapper
         if (this.committed) {
             throw new IllegalStateException("May not resetBuffer after response is committed");
         }
-
-        this.outputStream = null;
-        this.servletStream = null;
-        this.writer = null;
     }
 
     public void sendError(int sc) throws IOException {
