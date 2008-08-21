@@ -24,6 +24,12 @@
   -->
 <document>
   <body>
+    <release version="1.1.0-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="add" issue="COCOON-2239">
+        Class org.apache.cocoon.components.flow.AbstractInterpreter learned to handle servlet: protocol for sendPage() calls.
+        It's now possible to to call sendPage("servlet:/some/path").
+      </action>
+    </release>
     <release version="1.0.1" date="TBD" description="unreleased">
       <action dev="joerg" type="update">
         Cocoon's pipeline buffer increases from an initial buffer size of 8192 bytes to the configurable flush
