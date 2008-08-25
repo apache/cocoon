@@ -18,6 +18,7 @@ package org.apache.cocoon.servletservice;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -127,6 +128,7 @@ public class HttpServletResponseBufferingWrapperTestCase extends TestCase {
         response.isCommitted();
         control.setReturnValue(false, MockControl.ZERO_OR_MORE);
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        response.flushBuffer();
         control.replay();
         HttpServletResponseBufferingWrapper responseWrapper = new HttpServletResponseBufferingWrapper(response);
         responseWrapper.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -158,6 +160,34 @@ public class HttpServletResponseBufferingWrapperTestCase extends TestCase {
         responseWrapper.resetBufferedResponse();
         assertEquals(0, countingStream.getCounter());
         control.verify();
+    }
+    
+    /**
+     * This method tests if flushing of obtained writer is performed correctly in flushBufferedResponse.
+     * @throws Exception
+     */
+    public void testWriterFlushing() throws Exception {
+        CountingServletOutputStream countingStream = new CountingServletOutputStream();
+        
+        MockControl control = MockControl.createControl(HttpServletResponse.class);
+        HttpServletResponse response = (HttpServletResponse)control.getMock();
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getCharacterEncoding();
+        control.setReturnValue("ISO-8859-1");
+        response.isCommitted();
+        control.setReturnValue(false, MockControl.ZERO_OR_MORE);
+        response.getOutputStream();
+        control.setReturnValue(countingStream, MockControl.ONE_OR_MORE);
+        response.flushBuffer();
+        control.replay();
+        
+        HttpServletResponseBufferingWrapper responseWrapper = new HttpServletResponseBufferingWrapper(response);
+        responseWrapper.setStatus(HttpServletResponse.SC_OK);
+        PrintWriter writer = responseWrapper.getWriter();
+        writer.write("0");
+        responseWrapper.flushBufferedResponse();
+        
+        assertEquals(1, countingStream.getCounter());
     }
     
     /**

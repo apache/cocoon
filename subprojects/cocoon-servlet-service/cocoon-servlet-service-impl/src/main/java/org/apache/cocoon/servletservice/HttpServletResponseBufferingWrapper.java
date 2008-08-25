@@ -225,17 +225,19 @@ class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
                 else
                     super.setStatus(SC_NOT_FOUND);
             }
-
-            if (this.printWriter != null) {
-                if (this.printWriter.checkError())
-                    throw new IOException(
-                            "Error occured while writing to printWriter.");
-                this.printWriter.close();
-            }
-            
-            if (outputStream != null)
-                outputStream.writeTo(super.getOutputStream());
         }
+        
+        //since all data goes through ForwardingOrLimitingServletOutputStream then flushing
+        //must be performed in *every* case now
+        if (this.printWriter != null) {
+            if (this.printWriter.checkError())
+                throw new IOException(
+                        "Error occured while writing to printWriter.");
+            this.printWriter.close();
+        } else if (outputStream != null)
+            outputStream.writeTo(super.getOutputStream());
+        
+        super.flushBuffer();
     }
 
     public void resetBufferedResponse() {
