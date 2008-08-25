@@ -24,6 +24,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.xml.sax.Attributes;
@@ -76,7 +77,22 @@ public class StripNameSpacesTransformer extends AbstractTransformer
 
     public void startElement(String uri, String localName, String qName, Attributes attr)
     throws SAXException {
-        super.startElement(EMPTY_NS, localName, localName, attr);
+	    
+	    AttributesImpl l_attr = new AttributesImpl(attr);
+
+        String attrName;
+        String attrValue;
+        String attrType;
+        for (int i = 0; i < attr.getLength(); i++) {
+            attrName = l_attr.getLocalName(i);
+            attrValue = l_attr.getValue(i);
+            attrType = l_attr.getType(i);
+            if (attrValue != null) {
+                l_attr.removeAttribute(i);
+                l_attr.addAttribute(EMPTY_NS, attrName, attrName, attrType, attrValue);
+            }
+        }
+        super.startElement(EMPTY_NS, localName, localName, l_attr);
     }
 
     public void endElement(String uri, String localName, String qName)
