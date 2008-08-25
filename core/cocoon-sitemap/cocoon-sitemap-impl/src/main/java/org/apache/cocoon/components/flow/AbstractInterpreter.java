@@ -199,7 +199,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             // this is a hint for the redirector
             objectModel.put("cocoon:forward", "true");
             redirector.redirect(false, uri);
-        } if (SourceUtil.getScheme(uri).equals("servlet")) {
+        } else if (SourceUtil.getScheme(uri).equals("servlet")) {
             if (redirector.hasRedirected()) {
                 throw new IllegalStateException("Pipeline has already been processed for this request");
             }
