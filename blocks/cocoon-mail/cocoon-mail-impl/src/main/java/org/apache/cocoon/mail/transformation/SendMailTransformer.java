@@ -604,7 +604,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
         // make it a simple plain text message in the case of a set plain/text
         // mime-type and any attachements
-        if (this.bodyMimeType.startsWith("text/plain") && this.attachments.size() == 0) {
+        if (("text/plain").equals(this.bodyMimeType) && this.attachments.size() == 0) {
             sm.setText(messageString);
         }
         // add message as message body part
