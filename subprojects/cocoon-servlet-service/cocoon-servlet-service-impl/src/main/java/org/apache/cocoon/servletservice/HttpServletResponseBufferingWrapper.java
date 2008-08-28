@@ -298,7 +298,8 @@ class HttpServletResponseBufferingWrapper extends HttpServletResponseWrapper {
         }
 
         public void writeTo(OutputStream outputStream) throws IOException {
-            this.outputStream.writeTo(outputStream);
+            if (this.outputStream.size() > 0)
+                this.outputStream.writeTo(outputStream);
         }
         
         private boolean isForwarding() {
