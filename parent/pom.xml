@@ -519,6 +519,18 @@
       <timezone />
     </developer>
     <developer>
+	    <id>jasha</id>
+	    <name>Jasha Joachimsthal</name>
+	    <email>jasha@apache.org</email>
+	    <organization>ASF</organization>
+	    <organizationUrl>http://www.apache.org</organizationUrl>
+			<roles>
+				<role>PMC Member</role>
+				<role>Committer</role>
+			</roles>	    
+			<timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>jjohnston</id>
       <name>Jason Johnston</name>
       <email>jjohnston@apache.org</email>
