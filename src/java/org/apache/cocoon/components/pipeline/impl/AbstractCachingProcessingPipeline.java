@@ -36,6 +36,8 @@ import org.apache.cocoon.caching.CachingOutputStream;
 import org.apache.cocoon.caching.ComponentCacheKey;
 import org.apache.cocoon.caching.PipelineCacheKey;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.commandline.AbstractCommandLineEnvironment;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.HashUtil;
@@ -193,6 +195,9 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
             // Avoid deadlock with self (see JIRA COCOON-1985).
             Object current = env.getObjectModel().get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+            if (current==null){
+              current = env.getObjectModel().get(AbstractCommandLineEnvironment.CLI_REQUEST_ID);
+            }
             if (lock != null && lock != current) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Waiting on Lock '" + lockKey + "'");
@@ -243,6 +248,9 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                     }
                 } else {
                     Object lock = env.getObjectModel().get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+                    if (lock == null){
+                      lock = env.getObjectModel().get(AbstractCommandLineEnvironment.CLI_REQUEST_ID);
+                    }
                     try {
                         transientStore.store(lockKey, lock);
                     } catch (IOException e) {

@@ -19,7 +19,6 @@ package org.apache.cocoon.environment.commandline;
 import org.apache.avalon.framework.logger.Logger;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.ObjectModelHelper;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -51,13 +50,7 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
                                  OutputStream stream,
                                  Logger log)
     throws MalformedURLException {
-        super(uri, null, context, stream, log);
-        this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT,
-                             new CommandLineRequest(this, null, uri, null, attributes, parameters, headers));
-        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
-                             new CommandLineResponse());
-        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT,
-                             cliContext);
+        super(uri, attributes, parameters, headers, null, context, cliContext, stream, log);
         this.sourceLastModified = lastModified;
         if (links != null) {
             this.objectModel.put(Constants.LINK_OBJECT, links);
