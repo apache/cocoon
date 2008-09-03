@@ -324,23 +324,17 @@ public final class HttpRequest implements Request {
 
     public String getParameter(String name) {
         String value = this.req.getParameter(name);
-        if (this.form_encoding == null || this.container_encoding == null || value == null) {
-            return value;
+        if (!this.container_encoding.equals(this.form_encoding)) {
+            value = decode(value);
         }
-        // Form and container encoding are equal, skip expensive value decoding
-        if (this.container_encoding.equals(this.form_encoding)) {
-            return value;
-        }
-        return decode(value);
+        return value;
     }
 
     private String decode(String str) {
         if (str == null) return null;
         try {
-            if (this.container_encoding == null)
-                this.container_encoding = "ISO-8859-1";
             byte[] bytes = str.getBytes(this.container_encoding);
-            return new String(bytes, form_encoding);
+            return new String(bytes, this.form_encoding);
         } catch (UnsupportedEncodingException uee) {
             throw new CascadingRuntimeException("Unsupported Encoding Exception", uee);
         }
@@ -353,7 +347,7 @@ public final class HttpRequest implements Request {
     public String[] getParameterValues(String name) {
         String[] values = this.req.getParameterValues(name);
         if (values == null) return null;
-        if (this.form_encoding == null) {
+        if (this.container_encoding.equals(this.form_encoding)) {
             return values;
         }
         String[] decoded_values = new String[values.length];
