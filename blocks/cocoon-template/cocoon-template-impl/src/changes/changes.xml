@@ -24,16 +24,16 @@
     +-->
 <document>
   <body>
-    <release version="1.2.0" date="2008-??-??" description="unreleased">  
-      <action dev="gkossakowski" type="add" fixes-bug="COCOON-2211" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
-        Added support for jx:element - the instructions that allow dynamic element creation.
+    <release version="1.2.0" date="2008-??-??" description="unreleased">
+      <action dev="gkossakowski" type="add" issue="COCOON-2211" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+        Add support for jx:element - the instructions that allow dynamic element creation.
       </action>
-      <action dev="gkossakowski" type="add" fixes-bug="COCOON-2212" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
-        Added check for name correctnes in jx:attribute.
+      <action dev="gkossakowski" type="add" issue="COCOON-2212" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+        Add check for name correctness in jx:attribute.
       </action>
     </release>
-    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">  
-      
+    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
+
     </release>
     <release version="1.0.0-M3" date="2007-03-02" description="released">
       <action dev="vgritsenko" type="fix">
@@ -52,23 +52,22 @@
         This is a target syntax for CTemplate.
       </action>
       <action dev="lgawron" type="add">
-        support for following use cases: &lt;jx:out value=&quot;${xmlString}&quot; xmlize=&quot;true&quot; strip-root=&quot;true&quot;/&gt;
+        Support for following use cases: &lt;jx:out value=&quot;${xmlString}&quot; xmlize=&quot;true&quot; strip-root=&quot;true&quot;/&gt;
         and &lt;jx:out value=&quot;${domDocument}&quot; strip-root=&quot;true&quot;/&gt;
       </action>
       <action dev="dfagerstrom" type="fix">
-        JxTemplate block: fix a bug in <code>&lt;jx:set&gt;</code> that caused considerable
-        performance problems.
+        Fix a bug in <code>&lt;jx:set&gt;</code> that caused considerable performance problems.
       </action>
       <action dev="lgawron" type="update">
         JXTemplateGenerator's ScriptManager uses transient store to cache parsed templates.
-      </action>      
+      </action>
     </release>
     <release version="1.0.0-M2" date="2006-12-19" description="released"/>
-    <release version="1.0.0-M1" date="2006-08-03" description="released">  
+    <release version="1.0.0-M1" date="2006-08-03" description="released">
       <action dev="reinhard" type="add">
         Initial creation.
-      </action>    
-    </release>        
+      </action>
+    </release>
   </body>
 </document>
-    
+
