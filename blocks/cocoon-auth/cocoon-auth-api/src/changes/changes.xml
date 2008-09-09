@@ -22,13 +22,17 @@
     |
     | @version $Id$
     +-->
-    <document>
-      <body>
-        <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-          <action dev="reinhard" type="add">
-            Initial creation.
-          </action>      
-        </release>
-      </body>
-    </document>
-    
+<document>
+  <body>
+    <release version="1.0.1" date="TBD" description="unreleased">
+      <action dev="joerg" type="add" issue="COCOON-2243" due-to="Benjamin Boksa" due-to-email="benjamin@boksa.de">
+        Handle case in ApplicationUtil.isUserInRole(..) when User is null.
+      </action>
+    </release>
+    <release version="1.0.0" date="2008-03-26" description="released">
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>
+    </release>
+  </body>
+</document>
