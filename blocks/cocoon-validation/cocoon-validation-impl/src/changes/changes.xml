@@ -25,7 +25,7 @@
 <document>
   <body>
     <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-      <action dev="JH" type="fix" fixes-bug="COCOON-1878">
+      <action dev="JH" type="fix" issue="COCOON-1878">
         Replaced references to constant declarations in
         <code>javax.xml.XMLConstants</code>, which are not in the official API.
       </action>

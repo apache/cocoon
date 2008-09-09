@@ -30,7 +30,7 @@
       </action>
     </release>
     <release version="1.0.0-M1" date="2007-03-02" description="released">  
-      <action dev="asavory" type="fix" fixes-bug="COCOON-1818" due-to="Jasha Joachimsthal">
+      <action dev="asavory" type="fix" issue="COCOON-1818" due-to="Jasha Joachimsthal">
         Apply patch to handle malformed recipient address exception correctly.
       </action>
       <action dev="unico" type="add" due-to="Johan Stuyts">

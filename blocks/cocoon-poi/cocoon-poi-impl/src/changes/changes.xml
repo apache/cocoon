@@ -31,14 +31,14 @@
       <action dev="anathaniel" type="update">
         Update to poi-3.0.2.
       </action>
-      <action dev="antonio" type="fix" fixes-bug="COCOON-1440" due-to="Krystian Nowak" due-to-email="krystian@man.poznan.pl">
+      <action dev="antonio" type="fix" issue="COCOON-1440" due-to="Krystian Nowak" due-to-email="krystian@man.poznan.pl">
         Color string normalization.
       </action>
       <action dev="felixk" type="update">
         Cocoon-Poi-Block becomes a normal Spring application which means that it is
         initialized by Spring and not the other way around.
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-1976" due-to="Rob Berens">
+      <action dev="joerg" type="fix" issue="COCOON-1976" due-to="Rob Berens">
         Prevent NPE in ElementProcessorSerializer on characters before first startElement.
       </action>
       <action dev="reinhard" type="add">

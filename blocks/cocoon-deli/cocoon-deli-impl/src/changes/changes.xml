@@ -25,7 +25,7 @@
 <document>
   <body>
     <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-      <action dev="JHS" type="fix" fixes-bug="COCOON-1543" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
+      <action dev="JHS" type="fix" issue="COCOON-1543" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
         Deli block updated to use the latest revision of DELI. This uses a more robust method of loading configuration
         files that should ensure DELI works on different apps servers or deployed as a WAR.
       </action>

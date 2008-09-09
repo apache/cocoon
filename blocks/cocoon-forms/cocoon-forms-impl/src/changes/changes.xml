@@ -28,10 +28,10 @@
       <action dev="felixk" type="fix" fixes-bug="COCOON-1822" due-to="Karen Torres &amp; Rafael Márquez" due-to-email="ktorres@agssa.net &amp; rmarquez@agssa.net">
         Forms: MultiValueField list-type="double-listbox" does not work correctly in ajax enabled forms.
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-1825" due-to="Vincent Demay" due-to-email="vincent@demay-fr.net">
+      <action dev="joerg" type="fix" issue="COCOON-1825" due-to="Vincent Demay" due-to-email="vincent@demay-fr.net">
         Fix @id handling on fi:group/fi:struct element in conjunction with AJAX requests.
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-2204" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+      <action dev="joerg" type="fix" issue="COCOON-2204" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
         Fix @id handling on fi:group element in conjunction with AJAX requests.
       </action>
     </release>
@@ -41,10 +41,10 @@
       </action>
     </release>
     <release version="1.0.0" date="2008-??-??" description="unreleased">
-      <action dev="joerg" type="fix" fixes-bug="COCOON-2178" due-to="Harald Entner" due-to-email="harald.entner@workflow.at">
+      <action dev="joerg" type="fix" issue="COCOON-2178" due-to="Harald Entner" due-to-email="harald.entner@workflow.at">
         Dispatch only one TreeSelectionEvent on multiple selection rather than one event for each selected tree item.
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-2058" due-to="Ralph Collett" due-to-email="ralph.collett@semantico.com">
+      <action dev="joerg" type="fix" issue="COCOON-2058" due-to="Ralph Collett" due-to-email="ralph.collett@semantico.com">
         Fix ambiguous rule issue with Forms stylesheets when using Saxon.
       </action>
       <action dev="vgritsenko" type="fix">
@@ -53,7 +53,7 @@
         method. Do not use WidgetDefinitionBuilder.buildWidgetDefinition(Element) method, it is intended to be
         implemented only by the top level widget (Form).
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
+      <action dev="joerg" type="fix" issue="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
         Allow Ajax submission of forms with empty upload field.
       </action>
     </release>

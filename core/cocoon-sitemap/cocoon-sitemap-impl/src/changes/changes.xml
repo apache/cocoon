@@ -36,7 +36,7 @@
       <action dev="joerg" type="fix">
         Fix synchronization issues in ContinuationsManager implementation.
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-2109" due-to="Miguel Cuervo" due-to-email="miguel.cuervo@cgi.com">
+      <action dev="joerg" type="fix" issue="COCOON-2109" due-to="Miguel Cuervo" due-to-email="miguel.cuervo@cgi.com">
         Fix clean up of continuations.
       </action>
     </release>

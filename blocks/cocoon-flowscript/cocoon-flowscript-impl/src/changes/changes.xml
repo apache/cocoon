@@ -55,7 +55,7 @@
         Make settings bean and web application context available via the cocoon object in
         flow script (cocoon.settings and cocoon.applicationContext).
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-1811" due-to="Rob Berens">
+      <action dev="joerg" type="fix" issue="COCOON-1811" due-to="Rob Berens">
         Allow dynamic loading of JavaScript objects even when scope is locked.
       </action>
     </release> 

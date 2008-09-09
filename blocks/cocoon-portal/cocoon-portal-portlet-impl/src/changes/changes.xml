@@ -31,7 +31,7 @@
       <action dev="cziegler" type="add">
         Add deployment infrastructure.
       </action>
-      <action dev="cziegler" type="add" fixes-bug="COCOON-1674">
+      <action dev="cziegler" type="add" issue="COCOON-1674">
         Improved user support for portlets: user name, principal and role are "forwarded"
         from the authentication mechanism to the portlet.
       </action>

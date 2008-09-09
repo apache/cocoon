@@ -32,7 +32,7 @@
         Cocoon-Lucene-Block becomes a normal Spring application which means that it is 
         initialized by Spring and not the other way around.
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-1936" due-to="Jeroen Reijn" due-to-email="j.reijn@hippo.nl">
+      <action dev="joerg" type="fix" issue="COCOON-1936" due-to="Jeroen Reijn" due-to-email="j.reijn@hippo.nl">
         Add <code>analyzer</code> parameter to <code>SearchGenerator</code> as stated by the docs.
       </action>
       <action dev="reinhard" type="add">Initial creation.</action>

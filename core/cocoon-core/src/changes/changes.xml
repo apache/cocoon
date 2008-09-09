@@ -40,17 +40,17 @@
         Close streams properly after copying Parts (MultipartParser). Allow to access InputStream of PartInMemory
         multiple times.
       </action>
-      <action dev="joerg" type="add" fixes-bug="COCOON-2149" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
+      <action dev="joerg" type="add" issue="COCOON-2149" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
         Add capability to IncludeTransformer to strip the root element from included XML content.
       </action>
       <action dev="vgritsenko" type="update">
         Cocoon Core has been switched from Avalon Logger to Jakarta Commons Logging.
         See <a href="http://cocoon.apache.org/2.2/">migration guide</a> for more details.
       </action>
-      <action dev="cziegler" type="fix" fixes-bug="COCOON-2070" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+      <action dev="cziegler" type="fix" issue="COCOON-2070" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
         Fix bug in recycling of poolable components where recycle() was not called in all cases.
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-2055" due-to="Martin Heiden" due-to-email="martin.heiden@netcologne.de">
+      <action dev="joerg" type="fix" issue="COCOON-2055" due-to="Martin Heiden" due-to-email="martin.heiden@netcologne.de">
         Fix MultipartFilter cleaning up the request and so disposing the uploaded files before the
         request has been processed actually.
       </action>
