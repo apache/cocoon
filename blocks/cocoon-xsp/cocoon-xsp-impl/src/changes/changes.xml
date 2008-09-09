@@ -25,10 +25,10 @@
 <document>
   <body>
     <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-      <action dev="joerg" type="fix" fixes-bug="COCOON-1883" due-to="Fabian Linz" due-to-email="f.linz@gmx.de">
+      <action dev="joerg" type="fix" issue="COCOON-1883" due-to="Fabian Linz" due-to-email="f.linz@gmx.de">
         SOAPHelper does no longer accept only replies with an XML declaration.
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-1196">
+      <action dev="joerg" type="fix" issue="COCOON-1196">
         Use namespace-uri and not the namespace-prefix to select parameters in logicsheet-util.xsl.
       </action>
       <action dev="reinhard" type="add">

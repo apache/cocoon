@@ -45,7 +45,7 @@
       <action dev="reinhard" type="update">
         Initial release from trunk.
       </action>
-      <action dev="JHS" type="fix" fixes-bug="COCOON-1728" due-to="Paul Focke" due-to-email="paul@outerthought.org">
+      <action dev="JHS" type="fix" issue="COCOON-1728" due-to="Paul Focke" due-to-email="paul@outerthought.org">
         Apples can now access components declared in mounted sitemaps.
       </action>
       <action dev="LG" type="add">

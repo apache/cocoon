@@ -28,7 +28,7 @@
       <action dev="vgritsenko" type="remove">
         CachingSource: Moved into the Repository block.
       </action>
-      <action dev="vgritsenko" type="fix" fixes-bug="COCOON-1363">
+      <action dev="vgritsenko" type="fix" issue="COCOON-1363">
         CookieCreatorAction: Changed default for maxAge to -1, corrected documentation.
       </action>
       <action dev="reinhard" type="add">

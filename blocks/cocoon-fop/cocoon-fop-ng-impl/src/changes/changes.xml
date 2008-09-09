@@ -25,7 +25,7 @@
 <document>
   <body>
     <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-      <action dev="JBQ" type="add" fixes-bug="COCOON-1924">
+      <action dev="JBQ" type="add" issue="COCOON-1924">
         Add support for FOP 0.92beta and later, written by Jeremias Märki (FOP Developer) and Lars
         Trieloff. It uses the new FOP API which simplifies the Serializer code greatly and allows
         using Cocoon's source resolver.

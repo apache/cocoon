@@ -25,7 +25,7 @@
 <document>
   <body>
     <release version="1.0.0-RC2" date="2007-??-??" description="unreleased">
-      <action dev="gkossakowski" type="add" fixes-bug="COCOON-2083">
+      <action dev="gkossakowski" type="add" issue="COCOON-2083">
       	Implemented bridge to allow database connections defined as Spring beans to be used in Avalon components.
       </action>
     </release>
@@ -38,10 +38,10 @@
         Read CLOBs using getCharacterStream, delegate character decoding
         to the database. Revert to old behavior if clob-encoding parameter is present.
       </action>
-      <action dev="vgritsenko" type="fix" fixes-bug="COCOON-1247">
+      <action dev="vgritsenko" type="fix" issue="COCOON-1247">
         Support multiple results in SQLTransformer.
       </action>
-      <action dev="vgritsenko" type="fix" fixes-bug="COCOON-1552">
+      <action dev="vgritsenko" type="fix" issue="COCOON-1552">
         Fix NPE in SQLTransformer in error handling code.
       </action>
       <action dev="vgritsenko" type="update">

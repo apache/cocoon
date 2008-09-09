@@ -31,7 +31,7 @@
       </action>
     </release>
     <release version="1.0.0-RC2" date="2007-10-29" description="released">
-      <action dev="TS" type="fix" fixes-bug="COCOON-2144">
+      <action dev="TS" type="fix" issue="COCOON-2144">
         Fixed getAttributeNames(...) in SettingsInputModule:
         The getAttributeNames(...) method returns an iterator of all properties instead an empty one.
       </action>
@@ -41,7 +41,7 @@
       <action dev="gkossakowski" type="add" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com" issue="COCOON-2054">
         StatusGenerator must now show default Store explicitly (because no longer part of StoreJanitor)
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-2077" due-to="Ellis Pritchard">
+      <action dev="joerg" type="fix" issue="COCOON-2077" due-to="Ellis Pritchard">
         Fixed getInputStream() in XModuleSource:
         Set up XMLSerializer in a component way, i.e. retrieve it from ServiceManager.
       </action>

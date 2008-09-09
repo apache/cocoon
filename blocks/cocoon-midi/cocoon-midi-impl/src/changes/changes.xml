@@ -25,7 +25,7 @@
 <document>
   <body>
     <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-      <action dev="joerg" type="update" fixes-bug="COCOON-1108">
+      <action dev="joerg" type="update" issue="COCOON-1108">
         Marked as stable.
       </action>
       <action dev="reinhard" type="add">

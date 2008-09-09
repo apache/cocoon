@@ -39,7 +39,7 @@
       <action dev="vgritsenko" type="fix">
         Fix exception handling in script manager. Do not wrap processing exception into SAXException.
       </action>
-      <action dev="joerg" type="fix" fixes-bug="COCOON-1866" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
+      <action dev="joerg" type="fix" issue="COCOON-1866" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
         Fix an ArrrayIndexOutOfBoundsException with jx:comment.
       </action>
       <action dev="lgawron" type="add">

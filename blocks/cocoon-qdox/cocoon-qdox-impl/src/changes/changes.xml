@@ -25,7 +25,7 @@
 <document>
   <body>
     <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
-      <action dev="joerg" type="fix" fixes-bug="COCOON-2077" due-to="Ellis Pritchard">
+      <action dev="joerg" type="fix" issue="COCOON-2077" due-to="Ellis Pritchard">
         Fixed getInputStream() in QDoxSource: Set up XMLSerializer in a component way, i.e. retrieve it from ServiceManager.
       </action>
       <action dev="reinhard" type="add">

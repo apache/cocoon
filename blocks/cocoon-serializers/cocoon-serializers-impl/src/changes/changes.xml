@@ -28,7 +28,7 @@
       <action dev="cziegler" type="update">
         Moved the general charsets to own project.
       </action>
-      <action dev="asavory" type="add" fixes-bug="COCOON-1845" due-to="Maurizio Pillitu" due-to-email="m.pillitu@thebug.it">
+      <action dev="asavory" type="add" issue="COCOON-1845" due-to="Maurizio Pillitu" due-to-email="m.pillitu@thebug.it">
         As with all the AbstractTextSerializer based serializers, the XHTMLSerializer should handle
         the omit-xml-declaration to not put the XML declaration as first line of the serialized
         document. This prevents many rendering problems in Internet Explorer. Default behaviour is
