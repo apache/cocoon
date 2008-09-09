@@ -25,7 +25,7 @@
 <document>
   <body>
     <release version="1.0.0-M1" date="2008-??-??" description="unreleased">
-      <action dev="antonio" type="fix" fixes-bug="COCOON-2209" due-to="Reynaldo Porras" due-to-email="rporras@agssa.net">
+      <action dev="antonio" type="fix" issue="COCOON-2209" due-to="Reynaldo Porras" due-to-email="rporras@agssa.net">
         Formatted style regions stop creating style at 2000 rows.
       </action>
       <action dev="anathaniel" type="update">
