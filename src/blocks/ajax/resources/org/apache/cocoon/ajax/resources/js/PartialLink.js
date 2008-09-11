@@ -16,7 +16,7 @@
  */
 dojo.provide("cocoon.ajax.PartialLink");
 
-dojo.require("dojo.widget.DomWidget");
+dojo.require("dijit._Widget");
 dojo.require("cocoon.ajax.common");
 
 /**
@@ -25,33 +25,24 @@ dojo.require("cocoon.ajax.common");
  * @version $Id$
  */
 
-dojo.widget.defineWidget(
+dojo.declare(
     "cocoon.ajax.PartialLink",
-    dojo.widget.DomWidget,
+    dijit._Widget,
  {
-	// Properties
-	href: "",
-	target: "",
+    // Properties from HTML Attributes
+    href: "",   // String, the url from which to load the page fragment
+    target: "", // String, the ID of the element to be updated
 
-	// Widget definition
-	ns: "forms",
-	widgetType: "PartialLink",
-    isContainer: false,
-    preventClobber: true, // don't clobber our node
-
-    fillInTemplate: function(args, frag) {
-
-	    if (this.target.indexOf("#") < 0) {
-	        dojo.debug("PartialLink: wrong value for 'target' attribute: " + this.target);
-	        return;
-	    }
-
-	    dojo.event.connect(this.domNode, "onclick", this, "onClick");
+    postCreate: function() {
+        if (this.target.indexOf("#") < 0) {
+            console.debug("PartialLink: wrong value for 'target' attribute: " + this.target);
+            return;
+        }
+        dojo.connect(this.domNode, "onclick", this, "onClick");
     },
 
     onClick: function(event) {
         event.preventDefault();
-        var _this = this;
-        cocoon.ajax.update(_this.href, _this.target);
+        cocoon.ajax.update(this.href, this.target);
     }
 });

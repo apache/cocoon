@@ -19,13 +19,11 @@
  * Frequently used Ajax functions
  */
 
-dojo.provide("cocoon.ajax");
 dojo.provide("cocoon.ajax.common");
 dojo.require("cocoon.ajax.insertion");
-dojo.require("dojo.lfx.html");
+dojo.require("dojox.fx");
 
-
-dojo.lang.mixin(cocoon.ajax, {
+dojo.mixin(cocoon.ajax, {
     /**
      * Update the current page with some remote content.
      * @param href the URL of the remote content
@@ -36,9 +34,8 @@ dojo.lang.mixin(cocoon.ajax, {
      *        precedence. If no insertion is speficied, it default to "inside".
      */
     update: function(href, target, insertion) {
-
         // If target is a string, parse it. Otherwise, assume it's an element
-        if (dojo.lang.isString(target)) {
+        if (dojo.isString(target)) {
             var split = target.split("#");
             if (split.length == 2) {
                 insertion = split[0];
@@ -48,18 +45,19 @@ dojo.lang.mixin(cocoon.ajax, {
             }
         }
 
-        if (dojo.lang.isString(insertion)) {
+        if (dojo.isString(insertion)) {
             insertion = cocoon.ajax.insertion[insertion];
         }
 
         insertion = insertion || cocoon.ajax.insertion.inside;
 
-        dojo.io.bind({
+        dojo.xhrGet({
 		    url: href,
-		    load: function(type, data, evt){
-		        insertion(target, data);
+		    load: function(response, args){
+		        insertion(target, response);
+		        return response;
 		    },
-		    mimetype: "text/plain"
+		    handleAs: "text"
 		    // TODO: add an error-handling function
 		});
 
@@ -68,15 +66,7 @@ dojo.lang.mixin(cocoon.ajax, {
     /**
      */
     periodicalUpdate: function(delay, href, target, insertion) {
-        dojo.require("dojo.lang.timing.Timer");
-        var timer = new dojo.lang.timing.Timer(delay);
-        timer.onTick = function() {
-            cocoon.ajax.update(href, target, insertion);
-        };
-
-        timer.onStart = timer.onTick;
-        timer.start();
-        return timer;
+        return setInterval(function(){cocoon.ajax.update(href, target, insertion)}, delay);
     },
 
     // Update effects. These function can be used to set cocoon.ajax.BUHandler.highlight
@@ -84,31 +74,31 @@ dojo.lang.mixin(cocoon.ajax, {
         // highlight effects - transition the background colour
         highlight: { // these are intended to look like a semi-opaque layer of colour over white
             yellow: function(node) {
-                dojo.lfx.html.highlight(node, [240, 238, 133], 1000).play(0);
+                dojox.fx.highlight({node: node, color: "#F0EE85", duration: 1000});
             },
             blue: function(node) {
-                dojo.lfx.html.highlight(node, [141, 133, 252], 1000).play(0);
+                dojox.fx.highlight({node: node, color: "#5685FC", duration: 1000});
             },
             red: function(node) {
-                dojo.lfx.html.highlight(node, [220, 133, 133], 1000).play(0);
+                 dojox.fx.highlight({node: node, color: "#DC8585", duration: 1000});
             },
             green: function(node) {
-                dojo.lfx.html.highlight(node, [159, 223, 133], 1000).play(0);
+                 dojox.fx.highlight({node: node, color: "#9FDF85", duration: 1000});
             },
             grey: function(node) {
-                dojo.lfx.html.highlight(node, [128, 128, 128], 1000).play(0);
+                dojox.fx.highlight({node: node, color: "#808080", duration: 1000});
             },
             purple: function(node) {
-                dojo.lfx.html.highlight(node, [197, 133, 220], 1000).play(0);
+                dojox.fx.highlight({node: node, color: "#C585DC", duration: 1000});
             },
             orange: function(node) {
-                dojo.lfx.html.highlight(node, [252, 202, 133], 1000).play(0);
+                dojox.fx.highlight({node: node, color: "#FCCA85", duration: 1000});
             }
         },
         blink: function(node) { // hide then show the node
-            var opacity = dojo.html.getOpacity(node);
-            dojo.html.setOpacity(node, 0.2);
-            setTimeout(function() {dojo.html.setOpacity(node, opacity);}, 600);
+            var opacity = dojo._getOpacity(node);
+            dojo._setOpacity(node, 0.2);
+            setTimeout(function() {dojo._setOpacity(node, opacity);}, 600);
         }
         // add more effects?
     }

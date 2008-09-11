@@ -15,140 +15,117 @@
  * limitations under the License.
  */
 
- /*
-    FormUploadProgress Widget
-
-    This is a Dojo Widget for Cocoon that monitors the progress of uploads from a form.
-
-    It works by sending periodical XMLHttp calls to Cocoon in the background, while the files are being uploaded.
-    Cocoon responds with JSON data which is used to draw the progress bar and status strings.
-
-    @version $Id$
-
- */
-
 dojo.provide("cocoon.ajax.FormUploadProgress");
-dojo.require("dojo.event");
-dojo.require("dojo.widget.HtmlWidget");
-dojo.require("dojo.lang.timing.Timer");
+dojo.require("dijit.ProgressBar");
 
-dojo.widget.defineWidget(
-    "cocoon.ajax.FormUploadProgress",
-    dojo.widget.HtmlWidget,
-    {
-        // override properties (these may be overridden by using the same-named attributes on the widget tag)
-        background: "#BFCCDF",      // the colour of the progress bar
-        color: "#336699",           // the colour of the text and border
-        ready: "Ready.",            // Strings the widget needs, that may require external i18n transformation
-        connecting: "Connecting ...",
+/**
+ * Ajax Upload Progress Bar Widget.
+ * A wrapper for dijit.ProgressBar that polls the server during uploads
+ * and displays the status in a ProgressBar
+ *
+ * NOTE: introduced in 2.1.?
+ *
+ * @version $Id$
+ */
+dojo.declare("cocoon.ajax.FormUploadProgress", [dijit.ProgressBar], {	
 
-        // widget API properties
-        ns: "forms",
-        widgetType: "FormUploadProgress",
-        isContainer: true,
-        templateString: '<div class="FormUpload">' +
-                            '<div class="FormUploadUser" dojoAttachPoint="containerNode"></div>' +
-                            '<div class="FormUploadProgress" style="border:1px solid ${this.color};margin:2px;height: 16px;position:relative;">' +
-                                '<div style="width:0px;background:${this.background};position:absolute;top:0;left:0;width:0;right:0;" class="bar" dojoAttachPoint="barNode">&nbsp;</div>' +
-                                '<div style="color:${this.color};position:absolute;top:0;left:0;bottom:0;right:0;background:none;padding:2px;font-size:10px;overflow:hidden;" class="data" dojoAttachPoint="msgNode">${this.ready}</div>' +
-                            '</div>' +
-                         '</div>',
+  statusUri: dojo.moduleUrl("cocoon.ajax", "../../../system/ajax/upload/status").toString(), // this is not great
 
-        // DOM Nodes in the template
-        containerNode: null,   // the node containing the user content
-        msgNode: null,         // the node containing the progress status text
-        barNode: null,         // the progress bar node
+  progress: "0%", // prime the progress bar to accept percentages
+  templateString: "<div class=\"FormUpload\"><div class=\"FormUploadUser\" dojoAttachPoint=\"containerNode\"></div><div class=\"dijitProgressBar dijitProgressBarEmpty\"\r\t><div waiRole=\"progressbar\" tabindex=\"0\" dojoAttachPoint=\"internalProgress\" class=\"dijitProgressBarFull\"\r\t\t><div class=\"dijitProgressBarTile\"></div\r\t\t><span style=\"visibility:hidden\">&nbsp;</span\r\t></div\r\t><div dojoAttachPoint=\"label\" class=\"dijitProgressBarLabel\" id=\"${id}_label\">&#160;</div\r\t><img dojoAttachPoint=\"inteterminateHighContrastImage\" class=\"dijitProgressBarIndeterminateHighContrastImage\"\r\t></img\r></div></div>",
+  
+  constructor: function() {
+    this.form = null;   // the form I am in
+    this.target = null; // the form widget
+    this.timer = null;  
+    this.busy = false;
+    this.delay = 2000;
+  }, 
 
-        // private properties
-        _form: null,           // this widget's form
-        _target: null,         // the form's *Form widget
-        _timer: null,          // timer for periodical updates
-        _busy: false,          // busy getting the status
-        _delay: 2000,          // 2 secs between status calls
+  // Widget interface
+  postCreate: function() {
+    this.inherited(arguments);
+    this.startedHidden = this.domNode.style.visibility !== "visible";
+    var el = this.domNode.parentNode
+    while (el && el.tagName && el.tagName.toLowerCase() !== "form") el = el.parentNode; // find my form
+    this.form = el && el.tagName && el.tagName.toLowerCase() === "form" ? el : null;
+    this.target = dijit.byNode(this.form);
+    if (this.target) {
+      this.afterSubmitSubscription = dojo.subscribe(this.target.getAfterSubmitTopic(), this, this.startUpload);
+    } else {
+      throw new Error("FormUploadProgress Error: ", "This may only be used inside a form widget.");
+    }    
+  },
+  
+  // Widget interface
+  destroy: function() {
+    this.inherited(arguments);
+    dojo.unsubscribe(this.afterSubmitSubscription);
+  },
+    
+  // event handler, should fire after the forms starts submitting
+  startUpload: function() {
+    if (this.checkForActiveFile(this.form)) {
+      if (this.startedHidden) {
+        this.domNode.style.visibility = "visible"; 
+        dojo.fadeIn({ duration: 500, node: this.domNode }).play();
+      }
+      this.indeterminate = true;
+      this.update({progress:"0%"});
+      this.timer = setTimeout(dojo.hitch(this, this.getStatus), this.delay);
+    }
+  },
 
-        // widget interface
-        postCreate: function(){
-            // work out where to attach the event listener
-            this._form = dojo.dom.getFirstAncestorByTag(this.domNode, "form");
-            if (this._form) {
-                var dojoId = this._form.getAttribute("dojoWidgetId");
-                var formWidget = dojo.widget.byId(dojoId);
-                if (formWidget) { // use the *Form Widget if there is one
-                    this._target = formWidget;
-                    dojo.event.connect("after", this._target, "submit", this, "_startUpload");
-                } else { // otherwise use the form itself
-                    dojo.event.connect("after", this._form, "onsubmit", this, "_startUpload");
-                }
-            } else {
-                throw new Error("The FormUploadProgress widget may only be used inside a form.");
-            }
-        },
-
-        // widget interface
-        destroy: function(){
-            if (this._target) {
-                dojo.event.disconnect("after", this._target, "submit", this, "_startUpload");
-            } else if (this._form) {
-                dojo.event.disconnect("after", this._form, "onsubmit", this, "_startUpload");
-            }
-        },
-
-        // private widget funtions
-
-        // event handler, should fire after the forms starts submitting
-        _startUpload: function(event) {
-            if (this._checkForActiveFile(this._form)) {
-                this._timer = new dojo.lang.timing.Timer(this._delay);
-                this._timer.onTick = dojo.lang.hitch(this, function() { this._getStatus() });
-                this._timer.onStart = this._timer.onTick;
-                this._timer.start();
-                this.msgNode.innerHTML = this.connecting;
-            }
-        },
-
-        // get the current upload status from Cocoon
-        _getStatus: function() {
-            if (this._busy) return; // only one request at a time
-            dojo.io.bind({
-                url: new dojo.uri.Uri(djConfig["baseRelativePath"], "../../../_cocoon/system/ajax/upload/status"),
-                mimetype: "text/json",
-                useCache: false,
-                handle: dojo.lang.hitch(this, function(type, data, evt) {
-                    if (type == "load") {
-                        this._update(data);
-                        this._busy = false;
-                    } else if (type == "error") {
-                        dojo.debug("FormUploadProgress - status request failed");
-                    }
-                }),
-            });
-            this._busy = true;
-        },
-
-        // perform the display update
-        _update: function(status) {
-            if (!status) return;
-            if (status.sent) {
-                if (status.finished) {
-                    this.barNode.style.width = "100%";
-                    this._timer.stop();
-                } else {
-                    this.barNode.style.width = status.percent + "%";
-                }
-            }
-            if (status.message) this.msgNode.innerHTML = status.message;
-        },
-
-        // look to see if there are active (file has been chosen) file-upload fields in the form
-        _checkForActiveFile: function(node) {
-            var hasFile = false;
-            var inputs = node.getElementsByTagName("input");
-            dojo.lang.forEach(inputs, function(input){
-                if(hasFile){ return; }
-                if(input.getAttribute("type")=="file" && input.value){
-                    hasFile = true;
-                }
-            });
-            return hasFile;
-        }
+  // get the status of the file upload from the server
+  getStatus: function() {
+    if (this.busy) return; // only deal with one request at a time
+    dojo.xhrGet({
+      url: this.statusUri,
+      preventCache: true,
+      handleAs: "json-comment-filtered",
+      load: dojo.hitch(this, function(response) {
+        this.status = response;
+        this.busy = false;
+        this._update();
+      }),
+      error: dojo.hitch(this, function(){
+        console.error("FormUploadProgress Error: ", "Status request failed");
+      })
+    });
+    this.busy = true;
+  },
+  
+  // update the widget with the new data
+  _update: function() {
+    if (this.status) {
+      this.indeterminate = false;
+      if (this.status.finished) {
+        this.update({progress:"100%"});
+        if (this.startedHidden) 
+          dojo.fadeOut({ duration: 500, node: this.domNode }).play(5000); // fade after 5 secs
+        return;
+      } else if (this.status.percent) {
+        this.update({progress:this.status.percent + "%"});
+      }
+    }
+    this.timer = setTimeout(dojo.hitch(this, this.getStatus), this.delay);
+  },
+  
+  // ProgressBar interface - provide a status message
+  report: function() {
+    return this.status && this.status.message ? this.status.message : "";
+  },
+  
+  // look to see if there are active (file has been chosen) file-upload fields in the form
+  checkForActiveFile: function(node) {
+    var hasFile = false;
+    var inputs = node.getElementsByTagName("input");
+    dojo.forEach(inputs, function(input){
+      if (hasFile){ return; }
+      if (input.getAttribute("type") === "file" && input.value){
+        hasFile = true;
+      }
+    });
+    return hasFile;
+  }
 });

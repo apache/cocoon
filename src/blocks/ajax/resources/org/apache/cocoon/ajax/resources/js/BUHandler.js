@@ -25,36 +25,30 @@
  */
 
 dojo.provide("cocoon.ajax.BUHandler");
-dojo.require("dojo.dom");
+
 dojo.require("cocoon.ajax.common");
 dojo.require("cocoon.ajax.insertion");
 
-cocoon.ajax.BUHandler = function() { };
-
-// Default highlight effect (none)
-cocoon.ajax.BUHandler.highlight = null;
-
-dojo.lang.extend(cocoon.ajax.BUHandler, {
-
+dojo.declare("cocoon.ajax.BUHandler", null, {
+	highlight: null, // Default highlight effect (none)
+	
     processResponse: function(doc) {
 		var base = doc.documentElement;
 
 		var nodes = [];
 		if (base.nodeName.toLowerCase() == "bu:document") {
 			nodes = base.childNodes;
-			dojo.debug("got response using: XMLHTTPTransport");
 		} else {
-			base = dojo.byId("browser-update", doc);
+			base = dojo.byId("browser-update", doc) || doc.getElementsByTagName("form")[0];
 			if (base) {
 				nodes = base.childNodes;
-				dojo.debug("got response using: IframeTransport");
 			} else {
 				this.handleError("No response data found", doc);
 			}
 		}
 		for (var i = 0; i < nodes.length; i++) {
 			var node = nodes[i];
-			if (node.nodeType == dojo.dom.ELEMENT_NODE) {
+			if (node.nodeType === 1 /*ELEMENT_NODE*/) {
 				var handler = node.nodeName.replace(/.*:/, "").toLowerCase();
 				if (handler == "textarea") handler = node.getAttribute("name");
 				var handlerFunc = this.handlers[handler];
@@ -79,7 +73,8 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 					doc.write(response.responseText);
 					doc.close();
 				} else if (response.childNodes) {
-					dojo.dom.copyChildren(doc,response);
+					dojo.require("dojox.data.dom"); // NB. Marked as experimental
+					dojox.data.dom.replaceChildren(doc,response.childNodes);
 				}
 			}
 		}
@@ -93,10 +88,17 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 				return;
 			}
 			// Get the first child element (the first child may be some text!)
-			var firstChild = dojo.dom.getFirstChildElement(element);
-			if (!firstChild && element.nodeName.toLowerCase() == "textarea")
-				firstChild = dojo.dom.createDocumentFromText(element.value).documentElement;
-
+			//var firstChild = dojo.dom.getFirstChildElement(element);
+			
+			var firstChild = element.firstChild;
+			while(firstChild && firstChild.nodeType != 1 /*ELEMENT_NODE*/){
+				firstChild = firstChild.nextSibling;
+			}
+			
+			if (!firstChild && element.nodeName.toLowerCase() == "textarea") {
+				dojo.require("dojox.data.dom"); // NB. Marked as experimental
+				firstChild = dojox.data.dom.createDocument(element.value).documentElement;
+			}
 			var oldElement = document.getElementById(id);
 
 			if (!oldElement) {
@@ -110,17 +112,21 @@ dojo.lang.extend(cocoon.ajax.BUHandler, {
 			}
 
 			/* update the label */
-      var nextChild = dojo.dom.getNextSiblingElement(firstChild);
-      if (nextChild) {
-          cocoon.ajax.BUHandler.Helper.replaceLabel(nextChild);
-      }
+
+		    var nextChild = firstChild.nextSibling;
+            while (nextChild && nextChild.nodeType != 1 /*ELEMENT_NODE*/){
+                nextChild = nextChild.nextSibling;
+            }
+            if (nextChild) {
+              cocoon.ajax.BUHandler.Helper.replaceLabel(nextChild);
+            }
 		}
 	}
 });
 
 cocoon.ajax.BUHandler.Helper = function() { };
 
-dojo.lang.mixin(cocoon.ajax.BUHandler.Helper, {
+dojo.mixin(cocoon.ajax.BUHandler.Helper, {
     replaceLabel: function(element) {
           var oldElement = document.getElementById(element.getAttribute("id"));
           if (oldElement) {
