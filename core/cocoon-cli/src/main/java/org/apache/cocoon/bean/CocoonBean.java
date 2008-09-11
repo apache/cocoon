@@ -745,7 +745,7 @@ public class CocoonBean extends CocoonWrapper {
         String lSep = SystemUtils.LINE_SEPARATOR;
         StringBuffer msg = new StringBuffer();
         msg.append("------------------------------------------------------------------------ ").append(lSep);
-        msg.append(Constants.NAME).append(" ").append(Constants.VERSION).append(lSep);
+        msg.append(Constants.COMPLETE_NAME).append(lSep);
         msg.append("Copyright (c) ").append(Constants.YEAR).append(" Apache Software Foundation. All rights reserved.").append(lSep);
         msg.append("Build: ").append(Constants.BUILD_INFO).append(lSep);
         msg.append("------------------------------------------------------------------------ ").append(lSep).append(lSep);
