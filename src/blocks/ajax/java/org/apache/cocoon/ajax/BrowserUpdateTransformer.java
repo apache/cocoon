@@ -98,7 +98,7 @@ public class BrowserUpdateTransformer extends AbstractTransformer {
         if (BU_NSURI.equals(uri) && "replace".equals(loc)) {
             // Keep the id attribute. It may be null, in which case the one of the
             // child element will be used.
-            this.updateTagId = attrs.getValue("id");
+            this.updateTagId = attrs.getValue("id").substring(0, attrs.getValue("id").indexOf(":bu")); // strip the suffix (used to avoid id conflict on page widgets needing an id)
             this.inUpdateTag = true;
             if (this.ajaxRequest && this.replaceDepth == 0) {
                 // Pass this element through
