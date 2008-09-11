@@ -19,6 +19,10 @@
 <catalogue>
   <message key="validation.captcha.mismatch">CAPTCHA check failed.</message>
 
+   <message key="general.field-required-symbol">*</message><!-- &#9733; &#9055; &#10026; -->
+   <message key="general.field-help-symbol">?</message><!-- &#8505; -->
+   <message key="general.field-invalid-symbol">!</message><!-- &#9872; &#9889; -->
+
    <message key="general.field-required">This field is required.</message>
    <message key="datatype.conversion-failed">Not a valid {0}.</message>
    <message key="datatype.decimal">decimal number</message>
