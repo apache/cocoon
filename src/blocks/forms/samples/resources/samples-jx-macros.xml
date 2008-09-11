@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- Macros of HTML and JavaScript, used across several sample templates -->
+<!-- $Id$ -->
+
+<jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+
+
+<!-- A menu and support scripts for choosing the current Locale, displayed in the local language as well as in the language of the selection -->
+<!-- NB. These macros require that a list of Locales is sent in the Flowscript -->
+<jx:macro name="sample-locale-chooser">
+<!-- functions for locale chooser buttons -->
+<script type="text/javascript"><![CDATA[
+  function getThemeParam() {
+    var theme = dojo.body().className.split(" ")[0]; /* the sample xslt puts the theme into the class first */
+    if (!theme) return "";
+    return "&dojo-theme=" + theme;
+  }
+  function nextCountry(){
+    var select = dojo.byId("sample-locale-chooser-countries");
+    var idx = select.selectedIndex + 1;
+    if (idx > select.options.length) idx = 0;
+    location.href = location.pathname + "?locale=" + select.options[idx].value + getThemeParam();
+  }
+  function previousCountry(){
+    var select = dojo.byId("sample-locale-chooser-countries");
+    var idx = select.selectedIndex - 1;
+    if (idx < 0) idx =  select.options.length;
+    location.href = location.pathname + "?locale=" + select.options[idx].value + getThemeParam();
+  }
+]]></script>
+<select style="font-family: Monaco, Anadale Mono, Courier New, Fixed, monospace;" id="sample-locale-chooser-countries" class="dijitComboBox" name="locale" onChange="location.href=location.pathname+'?locale='+this.options[this.selectedIndex].value + getThemeParam();">
+  <jx:forEach var="item" items="${locales}"><jx:set var="countryLangLocal" value="${item.getDisplayCountry(item)}"/><!-- the name of the country in it's own language --><jx:set var="countryLangLocale" value="${item.getDisplayCountry(locale)}"/><!-- the name of the country in this locale --><jx:choose><jx:when test="${countryLangLocal != '' &amp;&amp; item == locale}"><option value="${item}" selected="selected">${item} : ${countryLangLocal}</option></jx:when><jx:when test="${countryLangLocal != ''}"><option value="${item}">${item} : ${countryLangLocal}<jx:if test="${countryLangLocal != countryLangLocale}"> (${countryLangLocale})</jx:if></option></jx:when></jx:choose></jx:forEach>
+</select>
+<button dojoType="dijit.form.Button" onClick="previousCountry();" style="font-size:90%;">&#11014;</button>
+<button dojoType="dijit.form.Button" onClick="nextCountry();" style="font-size:90%;">&#11015;</button>
+</jx:macro>
+
+
+<!-- Display the current Locale in the local language as well as in the language of the selection -->
+<jx:macro name="sample-locale-display">
+<jx:set var="default" value="${locale.getDisplayName()}"/>
+<jx:set var="local" value="${locale.getDisplayName(locale)}"/>
+Locale: [<jx:out value="${locale}"/>] <jx:out value="${default}"/><jx:if test="${default != local}"> - <jx:out value="${local}"/></jx:if>
+</jx:macro>
+
+
+<!-- Links for the (currently) 3 Dojo themes -->
+<jx:macro name="sample-theme-chooser">
+<script type="text/javascript"><![CDATA[
+function chooseTheme(theme){
+  var select = dojo.byId("sample-locale-chooser-countries"), localeParam;
+  if (select && select.selectedIndex > -1) {
+    localeParam = "locale=" + select.options[select.selectedIndex].value;
+  }
+  location.href = location.pathname + "?" + (localeParam ? localeParam + "&" : "") + "dojo-theme=" + theme;
+}
+]]></script>
+Themes: <a href="javascript:chooseTheme('tundra');">Tundra</a>, <a href="javascript:chooseTheme('soria');">Soria</a>, <a href="javascript:chooseTheme('nihilo')">Nihilo</a>
+</jx:macro>
+
+</jx:template>
