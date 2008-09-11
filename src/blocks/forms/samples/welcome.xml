@@ -26,38 +26,39 @@
     Documentation is available on the Cocoon site.
   </sample>
   <note>
-     Samples with the (Ajax) mark use the new transparent Ajax (Asynchronous Javascript And XML) framework
-     to reduce client/server roundtrips and perform partial page updates.
+    CForms in this branch is not complete yet. There are many samples either currently broken, or possibly obsolete.
   </note>
  </group>
 
  <group name="Basic Samples">
-  <sample name="Various (Actions)" href="form1">This sample shows validation, event handling and various Cocoon Forms features.</sample>
-  <sample name="Various (Flowscript)" href="form1.flow">The same sample as above using Flowscript.</sample>
-  <sample name="Registration" href="registration">A simple registration form.</sample>
+  <note>
+    <b>TODO:</b> Several of these samples use deprecated FormsGenerator so have various problems
+  </note>
+  <sample name="Various (Actions)" href="form1">This sample shows validation, event handling and various Cocoon Forms features. <b>TODO:</b> Not processed properly by XSLT, missing Widget implementations.</sample>
+  <sample name="Various (Flowscript)" href="form1.flow">The same sample as above using Flowscript. <b>TODO:</b> Repeater not working.</sample>
+  <sample name="Registration" href="registration">A simple registration form. <b>TODO:</b> Not processed properly by XSLT.</sample>
   <sample name="Car selector" href="carselector">(Ajax) Illustrates programmatically changing selectionlists.</sample>
-  <!-- XHR Car selector removed: broken and superceded by Ajax version -->
-<!--
-  <sample name="XHR Car selector" href="xhr_carselector">Same sample, with the historical first use of XmlHttpRequest to reduce client/server roundtrips.</sample>
--->
-  <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists.</sample>
-  <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
-  <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
-  <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget.</sample>
-  <sample name="Aggregate" href="aggregate/example">Aggregate field examples</sample>
+  <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists. <b>TODO:</b> Has a bit of a limp.</sample>
+  <sample name="Upload" href="upload">Shows an upload widget used with Flowscript <b>TODO:</b> ErrorAware version of the Widget not implemented yet.</sample>
+  <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union. <b>TODO:</b> Not processed properly by XSLT.</sample>
+  <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget. Welcome to <b>dijit.Editor.</b></sample>
+  <sample name="Aggregate" href="aggregate/example">Aggregate field examples. <b>TODO:</b> Not quite right yet.</sample>
   <sample name="Multipage wizard" href="do-multipage.flow">(Ajax) A multipage wizard, using widget states and actions to move between pages.</sample>
-  <sample name="CAPTCHA validation" href="captcha/">CAPTCHA validation (requires <a href="/samples/blocks/batik/">Batik block</a>)</sample>
-  <sample name="ImageMap" href="imagemap">A simple form using the Image Map widget</sample>
-  <sample name="Calculated fields" href="do-calculatedfields.flow">Calculated fields : values are calculated automatically</sample>
+  <sample name="CAPTCHA validation" href="captcha/">CAPTCHA validation (requires <a href="/samples/blocks/batik/">Batik block</a>) <b>TODO:</b> Value not submitting properly.</sample>
+  <sample name="ImageMap" href="imagemap">A simple form using the Image Map widget. <b>TODO:</b> Value not submitting properly.</sample>
+  <sample name="Calculated fields" href="do-calculatedfields.flow">Calculated fields : values are calculated automatically.</sample>
  </group>
 
  <group name="Binding Samples">
+  <note>
+    <b>TODO:</b> this whole section uses the deprecated FormsTransformer. They are not being rendered properly.
+  </note>
   <note>
     Cocoon Forms has a binding framework which assists in copying Java-bean or XML (DOM) data into a form and back.
   </note>
   <sample name="XML Binding" href="form2xml.flow">A form for just editing an XML file.</sample>
   <sample name="Simple XML Binding" href="form2simpleXML.flow">A form for just editing XML data. Illustrates the XMLAdapter.</sample>
-  <sample name="Bean Binding" href="form2bean.flow">A form for just editing a Java bean</sample>
+  <sample name="Bean Binding" href="form2bean.flow">A form for just editing a Java bean.</sample>
   <note>
   	Step-by-step tutorial into individual binding features:
   </note>
@@ -78,9 +79,13 @@
      SQL database query and update without any custom Java code, O/R mapping tool nor form binding.
      Uses flowscript, Map and List views on the forms and the database (using <a href="http://jdbi.codehaus.org">JDBI</a>).
    </sample>
+   <!-- TODO: We ought to have an OJB Sample -->
  </group>
 
  <group name="Locales">
+  <note>
+    <b>TODO:</b> Repeater actions not currently working in these non-ajax forms.
+  </note>
   <note>
     The samples below are the same as the basic flowscript sample but now use different locales.
     The locale can affect things like date and number formatting.
@@ -94,6 +99,15 @@
   <sample name="Flowscript" href="form1.flow?locale=zh_CN">Chinese</sample>
  </group>
 
+ <group name="New Samples">
+  <sample name="Group Styling" href="do-groupStyles.flow">This sample shows the new grouping styles. <b>TODO:</b> form not finalising.</sample>
+  <sample name="Formatted Numbers" href="do-numbers.flow">Samples of some of the different ways you can present and validate numbers on the client.</sample>
+  <sample name="Lists" href="do-lists.flow">Samples of different ways you can present and interact with lists.</sample>
+  <sample name="Editors &amp; TextAreas" href="do-textareas.flow">Several different types of text editor.</sample>
+  <sample name="Multi DnD Repeaters" href="do-dojoRepeaters.flow">Powerful Drag and Drop capabilities for Repeaters.</sample>
+  <sample name="Calendars" href="do-calendars.flow">Samples of some of the different ways you can present calendars.</sample>
+ </group>
+
  <group name="Dynamic templates and recursive forms">
    <note>
      These samples were written for the GT2004 presentation about dynamic templates and recursive forms.
@@ -103,18 +117,19 @@
    </note>
    <sample name="Dynamic repeater template" href="do-dynaRepeater.flow">
      (Ajax) Shows a simple repeater, which isn't displayed at all if empty, and whose row action depend on
-     the row number.
+     the row number. <b>TODO:</b> no the up/down button images 
    </sample>
    <sample name="Datasource chooser" href="do-datasourceChooser.flow">
      (Ajax) A datasource chooser, illustrating the fd:union widget.
    </sample>
    <sample name="Task tree" href="do-taskTree.flow">
      (Ajax) A project work breakdown into a hierarchy of tasks, showing the use of the fd:class and fd:new
-     widgets.
+     widgets. 
    </sample>
  </group>
 
  <group name="Tree widget samples">
+   <note><b>TODO:</b> To resolve ID conflicts, BU nodes now have ':bu' appended to their ids, this does not work with trees yet</note>
    <sample name="File explorer" href="do-fileExplorer.flow">
      (Ajax) A file explorer built with two tree widgets.
    </sample>
@@ -133,29 +148,29 @@
      with the ability to drag and drop from one repeater to another.
    </sample>
    <sample name="Cocoon suggests" href="do-suggest.flow">
-     (Ajax) Very simple demo of the &lt;fd:suggestion-list&gt; feature.
+     (Ajax) Very simple demo of the &lt;fd:suggestion-list&gt; feature. <b>TODO:</b> not working yet (problem looking up continuation)
    </sample>
    <sample name="Cocoon multivalue editor with suggestions" href="do-multivalueWithSuggestion.flow">
-     (Ajax) Very simple demo of the &lt;fd:multivaluefield&gt; with suggestion support feature.
+     (Ajax) Very simple demo of the &lt;fd:multivaluefield&gt; with suggestion support feature. <b>TODO:</b> needs re-implementing
    </sample>
    <sample name="Cocoon double-list multivalue widget" href="do-multiValueDoubleList.flow">
-     (Ajax) Demo of the double list &lt;fd:multivaluefield&gt;.
+     (Ajax) Demo of the double list &lt;fd:multivaluefield&gt;. <b>TODO:</b> needs re-implementing
    </sample>
    <sample name="In place editing" href="do-inplace.flow">
      (Ajax) Various ways to use in place editing.
    </sample>
-   <sample name="Upload Progress" href="uploadprogress">Shows upload widgets in a repeater with a progress bar</sample>
+   <sample name="Upload Progress" href="uploadprogress">Shows upload widgets in a repeater with a progress bar. <b>TODO:</b> not showing errors, FileField not implemented</sample>
    <sample name="Other Ajax samples" href="../ajax/">
      (Ajax) Don't forget to look at the samples in the Ajax block!
    </sample>
    <sample name="States Switch on AJAX form" href="do-widgetstates.flow">
-     (Ajax) Demostrate how it works the change of the widget state on a ajax request
+     (Ajax) Demostrate how it works the change of the widget state on a ajax request. <b>TODO:</b> currently broken
    </sample>
  </group>
 
  <group name="Dynamic repeater template and event handling">
     <sample name="Dynamic repeater template" href="dreamteam">
-      Create your Euro 2004 soccer dream team
+      Create your Euro 2004 soccer dream team. <b>TODO:</b> Adding fi:styling/@type="suggest" to the selection-lists (that have fi:styling/@submit-on-change="true") results in the whole form being submitted early.
     </sample>
  </group>
 
@@ -179,6 +194,7 @@
   <group name="Forms Library samples">
     <note>
       This demonstrates the new library subsystem of Cocoon Forms. This is currently under development and is likely to change.
+      <b>TODO:</b> Uses the deprecated FormsTransformer, missing an i18n transformation.
     </note>
     <sample name="Basic Sample" href="library/form1.flow">Basic Sample</sample>
     <sample name="Basic Sample 2" href="library/form2.flow">Basic Sample 2 (depends on the same library as above, see how it still changes after editing the library and reloading the first)</sample>
@@ -188,6 +204,7 @@
   <group name="Repeater advanced features">
     <note>
       This demonstrates the Google Summer of Code 2006 improvements to the repeater.
+      <b>TODO:</b> Needs testing with Ajax turned on. Will this work with DnD? Would it make more sense to use a batchloading dojo grid?
     </note>
     <sample name="Pagination, sorting and filtering" href="pagination/paginated.do">Pagination, sorting and filtering.</sample>
   </group>
