@@ -62,16 +62,16 @@
                 </fd:booleanfield>
 
             <fd:row-action id="add" action-command="add-after">
-              <fd:label>+</fd:label>
+              <fd:label>⎋</fd:label>
             </fd:row-action>
             <fd:row-action id="up" action-command="move-up">
-              <fd:label>^</fd:label>
+              <fd:label>▲</fd:label>
             </fd:row-action>
             <fd:row-action id="down" action-command="move-down">
-              <fd:label>v</fd:label>
+              <fd:label>▼</fd:label>
             </fd:row-action>
             <fd:row-action id="delete" action-command="delete">
-              <fd:label>X</fd:label>
+              <fd:label>⌽</fd:label>
             </fd:row-action>
         </fd:widgets>
            <fd:validation>

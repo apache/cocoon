@@ -24,6 +24,7 @@
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
       <link href="local-resources/dreamteam.css" type="text/css" rel="stylesheet"/>
       <title>The Dream Team</title>
+      <style type="text/css">.forms.action {font-size: 60%;}</style>
     </head>
     <body>
       <h1>The Dream Team</h1>
@@ -34,27 +35,19 @@
             <td><i>Legend</i></td>
           </tr>
           <tr>
-            <td>
-              <img src="resources/forms/img/move_up.gif"/>
-            </td>
+            <td>&#9650;</td>
             <td>Move this row 1 up</td>
           </tr>
           <tr>
-            <td>
-              <img src="resources/forms/img/move_down.gif"/>
-            </td>
+            <td>&#9660;</td>
             <td>Move this row 1 down</td>
           </tr>
           <tr>
-            <td>
-              <img src="resources/forms/img/delete.gif"/>
-            </td>
+            <td>&#9021;</td>
             <td>Delete this row</td>
           </tr>
           <tr>
-            <td>
-              <img src="resources/forms/img/new.gif"/>
-            </td>
+            <td>&#9099;</td>
             <td>Add a new row below this row</td>
           </tr>
         </table>
