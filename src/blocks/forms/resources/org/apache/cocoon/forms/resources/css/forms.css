@@ -14,43 +14,319 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-.forms-tab {
-    background-color: white;
-    border: 1px solid black;
-    border-bottom-width: 0px;
-    padding: 2px 1em 2px 1em;
-    margin-right: 5px;
-    position: relative;
-    text-decoration: none;
-    top: -1px;
-    z-index: 1;
-    cursor: pointer;
+
+
+/* TODO: clean this up */
+
+/* CForm's additions and modifications to stylings for Dojo defined classes  */
+
+/* don't let ToolTips get too wide */
+.dijitTooltipContainer {
+  max-width: 30em;
+}
+/* 
+  Displaying required and error text-mark in form fields  
+  NB. You could revert to Dojo's normal error icon, by deleting this section
+      Add a rule for eg. .required .dijitValidationIcon if you want to show a required mark
+*/
+.forms-field-input .dijitValidationIcon,
+.forms-field-select .dijitValidationIcon{ /* disable the error icon, so we can use the error text instead */
+	display: none;
+}
+.forms-field-input .dijitValidationIconText, 
+.forms-field-select .dijitValidationIconText, 
+.forms-inplace-editor fieldset .dijitValidationIconText,
+.inPlaceValidation.dijitValidationIconText { /* enable the error text marker */
+	display: block;
+	font-style: normal;
+	font-size-adjust: none;
+	line-height: normal;
+	padding: 0;
+	font-size: 110%;
+	float: none;
+	position: absolute;
+	margin: 0 0 0 -.6em; /* push the symbol out to the left of the field */
+}
+.cformsRequired .dijitValidationIconText {
+	display: inline-block;
+	font-style: normal;
+	font-size: inherit;
+	font-size-adjust: none;
+	line-height: normal;
+	padding: 0;
+	margin: 0 0 0 0.1em;
+}
+.required .dijitValidationIconText, 
+.cformsRequired .dijitValidationIconText { /* show the error text marker when a field is required */
+	visibility: visible;
+	color: blue;
+}
+.brokenValidation .required .dijitValidationIconText { /* show the error text marker when a field has broken validation (!!!!!) */
+	visibility: visible;
+	color: orange;
+}
+.dijitError .dijitValidationIconText, 
+.cformsError .dijitValidationIconText { /* show the error text marker when a field is in error */
+	visibility: visible;
+	color: red;
+}
+/* [end] displaying required and error mark in form fields */
+
+/* Add the "fadeIn" class to a form you'd like to fade in when rendered */
+form.fadeIn { opacity: 0.0; }
+.dj_ie form.fadeIn { filter: alpha(opacity=0); }
+/* If "fadeIn" use this loading gif */
+.cformsLoading.dijitContentPaneLoading {
+	height: auto;
+	width: auto;
+	position: absolute;
+	top: 40%;
+	left: 45%;
+	z-index: 999;
+	color: #ccc;
+	font-family: Lucida Grande, Helvetica, Arial Black, Trebuchet MS, sans-serif;
+	font-size: large;
+	line-height: normal;
+	font-style: normal;
+	font-weight: bold;
+}
+.forms .forms-field-input,
+.forms .forms-field-select,
+.forms .forms-field-radio,
+.forms .forms-field-checkbox {
+  margin-left: 1em; /* provide space for required symbol */
+  font-size: 90%;
+}
+/* try to make selects blend in a bit better */
+.dijitComboBox select, /* Select widget */
+select.dijitComboBox /* Used in Samples */
+{
+	border: 1px #aaa outset;
+	background: transparent;
+	color: #111;
+	height: auto;
+	width: auto;
+	overflow: visible;
+  font: normal normal normal 11px/normal Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+.forms-field-select div.dijitComboBox {
+	width: auto;
+	border: 1px none transparent;
+}
+/* visual guides and alignment for columns layout */
+table.columns tr {
+	vertical-align: top;
+}
+table.columns {
+  width: auto;
+}
+table.columns > tbody > tr > td {
+  width: auto;
+	padding: .1em .4em .4em 0; 
+	border-bottom: 1px #f9f9fc solid;
+	border-top: 3px transparent solid;
+	border-right: 3px #fefeff solid;/**/
+}
+table.columns > tbody > tr > td.content {
+	background: #fefefe;
+  -moz-border-radius-bottomright: 0.8em;
+  -webkit-border-bottom-right-radius: 0.8em;
+  -moz-border-radius-topright: 0.8em;
+  -webkit-border-top-right-radius: 0.8em;
+}
+table.columns > tbody > tr > td.label {
+	padding: .1em 0 .4em .4em; 
+	background: #fcfcfc;
+	border-bottom: 1px #f3f3fe solid;
+	border-left: 1px #eef solid;/**/
+	border-top: 1px #fdfdfe solid;/**/
+	text-align: right; /* NB This is what is right-aligning labels in column layouts (in case you were wondering) */
+  padding: 0.3em;
+  -moz-border-radius-bottomleft: 0.8em;
+  -webkit-border-bottom-left-radius: 0.8em;
+  -moz-border-radius-topleft: 0.8em;
+  -webkit-border-top-left-radius: 0.8em;
 }
 
-.forms-tab.forms-activeTab {
-    font-weight: bold;
-    padding-top: 5px;
-    cursor: default;
-    z-index: 3;
+/* Dojo DND CSS not included in dojo's standard CSS */
+.dojoDndHandle {/* default DND Handle */
+	width: 16px;
+	background-image: url('images/repeaterHandle.png');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+}
+.dojoDndItem, .dojoDndItem > td { 
+	padding:3px; 
+	border-top:1px solid transparent;
+	border-bottom:1px solid #eee;
+}
+.dojoDndItemOver {
+	background: #ededed;
+	cursor:move;
+}
+.dojoDndItemSelected {
+	background: #ccf; color: #444;
+}
+.dojoDndItemAnchor {
+	background: #ccf; color: black;
+}
+.dojoDndItemOver .dojoDndItemSelected {
+	background: #ededed;
+}
+.dojoDndItemOver .dojoDndItemAnchor {
+	background: #ededed;
+}
+.dojoDndItemBefore, .dojoDndItemBefore > td { /* drop markers for DND */
+	border-top: 2px solid #369;
+	border-bottom: none;
+}
+.dojoDndItemAfter, .dojoDndItemAfter > td {
+	border-top: none;
+	border-bottom: 2px solid #369;
+}
+div.dojoDndHorizontal .dojoDndItem.dojoDndItemBefore {
+	border-top: none;
+	border-right: none;
+  border-left: 2px solid #369;
+	border-bottom: none;
+}
+div.dojoDndHorizontal .dojoDndItem.dojoDndItemAfter {
+	border-top: none;
+  border-right: 2px solid #369;
+	border-left: none;
+	border-bottom: none;
+}
+div.dojoDndHorizontal > .dojoDndItem { /*  To inline block elements when horizontal (+ browser hacks) */
+	display:-moz-inline-box;		/* FF2 */
+	display:inline-block;			/* webkit and FF3 */
+	#zoom: 1; /* set hasLayout:true to mimic inline-block */
+	#display:inline; /* don't use .dj_ie since that increases the priority */
+	border: 1px solid white;
+	padding:0;
+	vertical-align:top;
+}
+/* DND Avatar */
+.dojoDndAvatar {
+  border:2px solid #ccc;
+  font-size: 75%;
+  -moz-border-radius:8pt 8pt;
+  -webkit-border-radius:8pt 8pt;
+  radius:8pt;
+  opacity: 0.6;
+}	
+.dojoDndAvatarHeader {
+		background: #aaa;
+}
+.dojoDndAvatarItem {
+		background: #ccf;
+		border-bottom:1px solid #666;
+}
+/* used as a general loading icon, the icon url is supplied by the dojo theme */
+.dijitTreeExpandoLoading {
+	min-height: 20px; /* cross your fingers */
+	min-width: 20px;  /* or hope to die     */
+	background: no-repeat;
+	background-position: 50% 50%;
 }
 
-.forms-tabContent {
-    background-color: white;
-    border: 1px solid black;
-    padding: 1em;
-    position: relative;
-    z-index: 2;
+/* remove Button-look for DropDownButton in TitlePane, for ChoiceGroup */
+.forms-choice-group .dijitTitlePaneTitle .dijitDropDownButton {
+  margin: 0;
+}
+.forms-choice-group .dijitTitlePaneTitle .dijitDropDownButton .dijitButtonNode {
+	padding: 0px;
+	border: 0px transparent none;
+	background: transparent;
+}
+.forms-choice-group .dijitTitlePaneContentOuter .dijitTitlePaneContentInner {
+  padding: 0px 1em;
+}
+.forms-choice-group .dijitTitlePaneContentOuter .dijitTitlePaneContentInner .dijitContentPane {
+  padding: 1em 0px;
+}
+/* vertical space for TitlePanes in Groups */
+.dijitTitlePane.forms.group, .dijitTitlePane.forms-choice-group {
+  margin: 1em 0px;
+} 
+
+/* dojo-style the fieldset */
+fieldset {
+  margin: 1em 0px;
+  padding: 1em;
+  border: 1px solid #BFBFBF; 
 }
 
-.forms-validation-errors {
+/* don't let the inplace editor's controls disturb the layout */
+.forms-inplace-editor > fieldset > span {
+	position: absolute;
+	display: block;
+	margin-left: 2px;
+	padding: .2em;
+	cursor: default;
+	background-color: #FEFEFE;
+	border-top: 0px #39F none;
+	border-right: 1px #39F solid;
+	border-bottom: 1px #39F solid;
+	border-left: 1px #39F solid;
+	opacity: .9;
+	font-size: 80%;
+}
+/* show white-space in inplace textarea proxies */
+.forms-inplace-textarea > span.forms.field {
+  white-space: pre;
 }
 
-.forms-validation-error {
+/* place and size the help button */
+.forms-field-select .forms-help-button, .forms-field-textarea .forms-help-button {
+  vertical-align: top;
+}
+.forms-help-button .dijitDropDownButton {
+  padding: 0;
+  margin: 0;
+}
+.forms-help-button .dijitDropDownButton .dijitButtonNode {
+  padding: 0;
+  margin: 0;
+  font-size: 0.75em;
+  line-height: inherit;
+}
+/* hide the dropdown arrow on help buttons */
+.forms-help-button .dijitArrowButtonChar, .forms-help-button .dijitArrowButtonInner {
+  display: none;
 }
 
-.forms-field-required {
-	color:blue;
-    font-weight: bold;
+/* CSS Icons */
+.moveUpIcon {
+	background-image: url("images/move_up.gif");
+	background-repeat: no-repeat; 
+	width: 12px;
+	height: 11px;
+}
+.moveDownIcon {
+	background-image: url("images/move_down.gif");
+	background-repeat: no-repeat; 
+	width: 12px;
+	height: 11px;
+}
+
+/* FormUploadProgress widget starts hidden, then only shows while uploading */
+.FormUpload { 
+  visibility:hidden; 
+}
+.dijitProgressBarLabel {
+  line-height: 2em;
+  font-size: 60%;
+}
+/* obsolete ?? */
+
+
+.forms-help-popup {
+    padding: 10px;
+    margin: 0px;
+    visibility: hidden;
+}
+.forms-help-popup > p, .forms-help-popup > div {
+	margin: 5px;
 }
 
 .forms-doubleList select {
