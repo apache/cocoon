@@ -36,7 +36,7 @@
     </p>
     <p>
       Description:<br/>
-      <ft:widget id="description" fi:type="textarea" fi:rows="10" fi:style="width: 100%"/>
+      <ft:widget id="description" fi:type="textarea" fi:rows="10" fi:style="width: 100%;"/>
     </p>
     <p>
       <ft:widget id="ok"/> <ft:widget id="cancel"/>
