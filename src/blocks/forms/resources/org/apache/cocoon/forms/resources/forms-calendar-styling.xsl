@@ -34,41 +34,57 @@
   <xsl:template match="fi:field[fi:styling/@type='date'] |
                        fi:field[fi:datatype[@type='date']][not(fi:styling/@type)][not(fi:selection-list)] |
                        fi:aggregatefield[fi:datatype[@type='date'][fi:convertor/@variant='date']][not(fi:styling/@type)][not(fi:selection-list)]
-                       ">
+                       " priority="2">
     <xsl:variable name="id" select="concat(@id, ':cal')"/>
 
-    <xsl:variable name="format">
-      <xsl:choose>
-        <xsl:when test="fi:datatype[@type='date']/fi:convertor/@pattern">
-          <xsl:value-of select="fi:datatype[@type='date']/fi:convertor/@pattern"/>
-        </xsl:when>
-        <xsl:otherwise>yyyy-MM-dd</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <xsl:variable name="variant">
-      <xsl:choose>
-        <xsl:when test="fi:datatype[@type='date']/fi:convertor/@variant">
-          <xsl:value-of select="fi:datatype[@type='date']/fi:convertor/@variant"/>
-        </xsl:when>
-        <xsl:otherwise>date</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <span id="{@id}">
+    <span id="{@id}:bu" class="dijitReset dijitInline dijitInlineTable dijitLeft forms forms-field">
       <xsl:choose>
         <xsl:when test="@state = 'output'">
           <xsl:value-of select="fi:value"/>
         </xsl:when>
         <xsl:otherwise>
-        <!-- regular input -->
-	      <input id="{@id}:input" name="{@id}" value="{fi:value}" title="{normalize-space(fi:hint)}" type="text" dojoType="forms:dropdownDateTimePicker" pattern="{$format}" variant="{$variant}">
-	        <xsl:apply-templates select="." mode="styling"/>
-	      </input>
-        <!-- common stuff -->
-	      <xsl:apply-templates select="." mode="common"/>
-	    </xsl:otherwise>
-	  </xsl:choose>
+
+          <!-- TODO: inplace version of calendar editors -->
+
+          <xsl:variable name="format">
+            <xsl:choose>
+              <xsl:when test="fi:datatype[@type='date']/fi:convertor/@pattern">
+                <xsl:value-of select="fi:datatype[@type='date']/fi:convertor/@pattern"/>
+              </xsl:when>
+              <xsl:otherwise>yyyy-MM-dd</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="variant">
+            <xsl:choose>
+              <xsl:when test="fi:datatype[@type='date']/fi:convertor/@variant">
+                <xsl:value-of select="fi:datatype[@type='date']/fi:convertor/@variant"/>
+              </xsl:when>
+              <xsl:otherwise>date</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="editor">
+            <xsl:choose>
+              <xsl:when test="fi:styling/@editor != ''"><xsl:value-of select="fi:styling/@editor"/></xsl:when>
+              <xsl:when test="$variant = 'datetime'">cocoon.forms.DateTimeField</xsl:when>
+              <xsl:when test="$variant = 'time'">cocoon.forms.TimeField</xsl:when>
+              <xsl:otherwise>cocoon.forms.DateField</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="constraints"><!-- format pattern -->
+            pattern:'<xsl:value-of select="$format"/>'
+          </xsl:variable>
+    
+          <span class="dijitInline forms-field-input">
+            <script type="text/javascript">dojo.require("<xsl:value-of select="$editor"/>");</script>
+            <input id="{@id}:input" name="{@id}" value="{fi:value}" type="text" dojoType="{$editor}">
+              <xsl:if test="$constraints !=''"><xsl:attribute name="constraints">{<xsl:value-of select="normalize-space($constraints)"/>}</xsl:attribute></xsl:if>
+              <xsl:apply-templates select="." mode="styling"/>
+            </input>
+          </span>
+          <!-- common stuff -->
+          <span class="dijitReset dijitInline forms-help-button"><xsl:apply-templates select="." mode="common"/></span>
+        </xsl:otherwise>
+      </xsl:choose>
     </span>
     <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>

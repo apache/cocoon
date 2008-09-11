@@ -46,11 +46,12 @@
 		</form>
 	</xsl:template>	
 
-	<!-- wrap the BU Data in a textarea, nasty but widely compatible -->
+	<!-- 
+				Wrap the BU Data in a textarea, nasty but widely compatible
+				NB. the content will be a text node which has to be parsed when it arrives at the client
+	-->
 	<xsl:template match="bu:*">
-		<textarea name="{local-name()}" id="{@id}">
-			<xsl:apply-templates/>
-		</textarea>
+		<textarea name="{local-name()}" id="{@id}"><xsl:apply-templates/></textarea>
 	</xsl:template>	
 
   <xsl:template match="@*|node()" priority="-1">

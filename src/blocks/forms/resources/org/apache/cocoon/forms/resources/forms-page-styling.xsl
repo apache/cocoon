@@ -18,9 +18,11 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+                xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
+      | @version $Id$
       +-->
   <xsl:template match="head" mode="forms-page">
     <!--+ 'forms-page-styling.xsl' relies on 'forms-field-styling.xsl' for the
@@ -35,7 +37,8 @@
     fi:group with a layout but no type : enclose items in a div
   -->
   <xsl:template match="fi:group[fi:styling/@layout and not(fi:styling/@type)]">
-    <div title="{fi:hint}">
+    <div>
+      <xsl:if test="fi:hint"><xsl:attribute name="title"><xsl:value-of select="normalize-space(fi:hint/text())"/></xsl:attribute></xsl:if>
       <xsl:apply-templates select="." mode="css"/>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates mode="group-layout" select="."/>
@@ -43,167 +46,229 @@
   </xsl:template>
 
   <!--
+    fi:group with a label but no type : enclose items in a TitlePane
+  -->
+  <xsl:template match="fi:group[fi:label and not(fi:styling/@type)]">
+    <script type="text/javascript">dojo.require("cocoon.forms.TitlePane");</script>
+    <div dojoType="cocoon.forms.TitlePane" title="{normalize-space(fi:label/text())}">
+      <xsl:if test="@formsOnShow"><xsl:attribute name="onShow"><xsl:value-of select="@formsOnShow"/></xsl:attribute></xsl:if>
+      <xsl:if test="fi:styling/@collapsable = 'true' or fi:styling/@collapsable = 'yes'">
+        <xsl:attribute name="collapsable">true</xsl:attribute>
+        <xsl:if test="fi:styling/@open = 'false' or fi:styling/@open = 'no'">
+          <xsl:attribute name="open">false</xsl:attribute>
+        </xsl:if>
+      </xsl:if>
+      <xsl:apply-templates select="." mode="css"/>
+      <xsl:copy-of select="@*[not(local-name() = 'formsOnShow')]"/>
+      <xsl:apply-templates mode="group-layout" select="."/>
+    </div>
+    <note title="fi:group[not(fi:styling/@type)]"/>
+  </xsl:template>
+
+<!-- TODO: compress types tabs, folding, nav and choice into a single template, or make from reusable parts -->
+
+  <!--
     fi:group of type tabs
   -->
   <xsl:template match="fi:group[fi:styling/@type='tabs']">
-    <!-- find the currently selected tab.
-         Thoughts still needed here, such as autogenerating a field in the
-         forms transformer to hold this state.
-    -->
     <xsl:variable name="active">
       <xsl:variable name="value" select="normalize-space(fi:state/fi:*/fi:value)"/>
       <xsl:choose>
-        <xsl:when test="$value">
-          <xsl:value-of select="$value"/>
-        </xsl:when>
+        <xsl:when test="$value"><xsl:value-of select="$value"/></xsl:when>
         <xsl:otherwise>0</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <!-- copy the "state-widget" attribute for use in for-each -->
     <xsl:variable name="state-widget" select="fi:state/fi:*/@id"/>
-
     <xsl:variable name="id">
       <xsl:choose>
         <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
         <xsl:otherwise><xsl:value-of select="generate-id()"/></xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-
-    <div id="{$id}" title="{fi:hint}">
-      <!-- add an hidden input for the state -->
+    <script type="text/javascript">dojo.require("cocoon.forms.TabGroup")</script>
+    <script type="text/javascript">dojo.require("dijit.layout.ContentPane");</script>
+    <div id="{$id}" dojoType="cocoon.forms.TabGroup">
+      <xsl:apply-templates select="fi:styling/@*" mode="styling"/>
+      <xsl:apply-templates select="." mode="css"/>
       <xsl:if test="$state-widget">
-        <input type="hidden" id="{$state-widget}" name="{$state-widget}" value="{$active}"/>
+        <xsl:attribute name="stateId"><xsl:value-of select="$state-widget"/></xsl:attribute>
       </xsl:if>
-      <!-- div containing the tabs -->
-      <div class="forms-tabArea forms tabArea">
-        <xsl:for-each select="fi:items/fi:*">
-          <xsl:variable name="pos" select="position() - 1"/>
-          <span id="{$id}_tab_{$pos}" onclick="forms_showTab('{$id}', {$pos}, {last()}, '{$state-widget}')">
-            <xsl:attribute name="class">
-              <xsl:text>forms-tab forms tab</xsl:text>
-              <xsl:if test="$active = $pos"> forms-activeTab active</xsl:if>
-            </xsl:attribute>
-            <xsl:copy-of select="fi:label/node()"/>
-            <xsl:if test="fi:items/*//fi:validation-message">
-              <span class="forms-validation-message forms validation-message">&#160;<img src="{$resources-uri}/forms/js/templates/images/validation-message.gif"/>&#160;</span>
-            </xsl:if>
-          </span>
-        </xsl:for-each>
-      </div>
       <!-- a div for each of the items -->
       <xsl:for-each select="fi:items/fi:*">
         <xsl:variable name="pos" select="position() - 1"/>
-        <div class="forms-tabContent forms tabContent" id="{$id}_items_{$pos}">
-          <xsl:if test="$active != $pos">
-            <xsl:attribute name="style">display:none</xsl:attribute>
+        <div id="{$id}_items_{$pos}" dojoType="dijit.layout.ContentPane" closable="false">
+          <xsl:if test="$active = $pos">
+            <xsl:attribute name="selected">true</xsl:attribute>
           </xsl:if>
-          <xsl:apply-templates select="."/>
+          <xsl:if test="$active != $pos"><!-- TODO: decide: this makes the page render a bit less jerky, but would pose an extra problem for people with JS turned off -->
+            <xsl:attribute name="style">display:none;</xsl:attribute>
+          </xsl:if>
+          <xsl:if test="@formsOnShow">
+            <xsl:attribute name="onShow"><xsl:value-of select="@formsOnShow"/></xsl:attribute>
+          </xsl:if>
+          <xsl:attribute name="title"><xsl:value-of select="normalize-space(fi:label/text())"/></xsl:attribute>
+          <xsl:apply-templates select="." mode="group-layout"/>
         </div>
       </xsl:for-each>
     </div>
-    <!-- The tabbed elements can have an attribute formsOnShow containing some javascript to be executed
-         when a tab gets shown. -->
-    <xsl:call-template name="formsOnShow">
-      <xsl:with-param name="id" select="$id"/>
-      <xsl:with-param name="active" select="$active"/>
-    </xsl:call-template>
+    <!-- add an hidden input for the state -->
+    <xsl:if test="$state-widget">
+      <input type="hidden" id="{$state-widget}" name="{$state-widget}" value="{$active}" />
+    </xsl:if>
   </xsl:template>
 
+
   <!--
-    fi:group of type choice : a popup is used instead of tabs
+    fi:group of type folding (TODO: not working)
   -->
-  <xsl:template match="fi:group[fi:styling/@type='choice']">
-    <!-- find the currently selected tab.
-         Thoughts still needed here, such as autogenerating a field in the formstransformer
-         to hold this state.
-    -->
+  <xsl:template match="fi:group[fi:styling/@type='folding']">
     <xsl:variable name="active">
       <xsl:variable name="value" select="normalize-space(fi:state/fi:*/fi:value)"/>
       <xsl:choose>
-        <xsl:when test="$value">
-          <xsl:value-of select="$value"/>
-        </xsl:when>
+        <xsl:when test="$value"><xsl:value-of select="$value"/></xsl:when>
         <xsl:otherwise>0</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <!-- copy the "state-widget" attribute for use in for-each -->
     <xsl:variable name="state-widget" select="fi:state/fi:*/@id"/>
-
     <xsl:variable name="id">
       <xsl:choose>
         <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
         <xsl:otherwise><xsl:value-of select="generate-id()"/></xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-
-    <fieldset id="{$id}">
-      <legend title="{fi:hint}">
-        <xsl:apply-templates select="fi:label/node()"/>
-        <select name="{$state-widget}" id="{$state-widget}" onchange="forms_showTab('{$id}', this.selectedIndex, {count(fi:items/*)}, '{$state-widget}')">
-          <xsl:for-each select="fi:items/fi:*">
-            <xsl:variable name="pos" select="position() - 1"/>
-            <option>
-              <xsl:attribute name="value">
-                <xsl:choose>
-                  <xsl:when test="fi:value">
-                    <xsl:value-of select="fi:value"/>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:value-of select="$pos"/>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:attribute>
-              <xsl:if test="$active = $pos">
-                <xsl:attribute name="selected">selected</xsl:attribute>
-              </xsl:if>
-              <xsl:copy-of select="fi:label/node()"/>
-            </option>
-          </xsl:for-each>
-        </select>
-        <xsl:if test="fi:items/*//fi:validation-message">
-          <span class="forms-validation-message forms validation-message">&#160;<img src="{$resources-uri}/forms/js/templates/images/validation-message.gif"/>&#160;</span>
-        </xsl:if>
-      </legend>
+    <script type="text/javascript">dojo.require("cocoon.forms.FoldingGroup")</script>
+    <script type="text/javascript">dojo.require("dijit.layout.AccordionContainer");</script>
+    <div id="{$id}" dojoType="cocoon.forms.FoldingGroup">
+      <xsl:apply-templates select="fi:styling/@*" mode="styling"/>
+      <xsl:apply-templates select="." mode="css"/>
+      <xsl:if test="$state-widget">
+        <xsl:attribute name="stateId"><xsl:value-of select="$state-widget"/></xsl:attribute>
+      </xsl:if>
       <!-- a div for each of the items -->
       <xsl:for-each select="fi:items/fi:*">
         <xsl:variable name="pos" select="position() - 1"/>
-        <div id="{$id}_items_{$pos}">
-          <xsl:if test="$active != $pos">
-            <xsl:attribute name="style">display:none</xsl:attribute>
+        <div id="{$id}_items_{$pos}" dojoType="dijit.layout.AccordionPane">
+          <xsl:if test="$active = $pos">
+            <xsl:attribute name="selected">true</xsl:attribute>
           </xsl:if>
-          <xsl:apply-templates select="."/>
+          <xsl:if test="$active != $pos">
+            <xsl:attribute name="style">display:none;</xsl:attribute>
+          </xsl:if>
+          <xsl:if test="@formsOnShow">
+            <xsl:attribute name="onShow"><xsl:value-of select="@formsOnShow"/></xsl:attribute>
+          </xsl:if>
+          <xsl:attribute name="title"><xsl:value-of select="normalize-space(fi:label/text())"/></xsl:attribute>
+          <xsl:apply-templates select="." mode="group-layout"/>
         </div>
       </xsl:for-each>
-    </fieldset>
-    <xsl:call-template name="formsOnShow">
-      <xsl:with-param name="id" select="$id"/>
-      <xsl:with-param name="active" select="$active"/>
-    </xsl:call-template>
+    </div>
+    <!-- add an hidden input for the state -->
+    <xsl:if test="$state-widget">
+      <input type="hidden" id="{$state-widget}" name="{$state-widget}" value="{$active}" />
+    </xsl:if>
   </xsl:template>
 
-  <xsl:template name="formsOnShow">
-    <xsl:param name="id"/>
-    <xsl:param name="active"/>
-    <script type="text/javascript">
-      if (window.onTabShownHandlers == undefined)
-        window.onTabShownHandlers = new Object();
-      var currentHandlers = new Object();
-      var initialHandler = null;
-      window.onTabShownHandlers["<xsl:value-of select="$id"/>"] = currentHandlers;
+  <!--
+    fi:group of type nav NB. Supply your own nav buttons in your template: see examples
+  -->
+  <xsl:template match="fi:group[fi:styling/@type='nav']">
+    <xsl:variable name="active">
+      <xsl:variable name="value" select="normalize-space(fi:state/fi:*/fi:value)"/>
+      <xsl:choose>
+        <xsl:when test="$value"><xsl:value-of select="$value"/></xsl:when>
+        <xsl:otherwise>0</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="state-widget" select="fi:state/fi:*/@id"/>
+    <xsl:variable name="id">
+      <xsl:choose>
+        <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+        <xsl:otherwise>
+          <xsl:message terminate="yes">
+            <xsl:text>An fi:group with fi:styling type="nav" should always have an id attribute.</xsl:text>
+            <xsl:text>You need one to have something to connect your custom controller to.</xsl:text>
+          </xsl:message>        
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <script type="text/javascript">dojo.require("cocoon.forms.NavGroup");</script>
+    <script type="text/javascript">dojo.require("cocoon.forms.TitlePane");</script>
+    <div id="{$id}" dojoType="cocoon.forms.NavGroup">
+      <xsl:apply-templates select="fi:styling/@*" mode="styling"/>
+      <xsl:apply-templates select="." mode="css"/>
+      <xsl:if test="$state-widget">
+        <xsl:attribute name="stateId"><xsl:value-of select="$state-widget"/></xsl:attribute>
+      </xsl:if>
       <xsl:for-each select="fi:items/fi:*">
         <xsl:variable name="pos" select="position() - 1"/>
-          <xsl:if test="@formsOnShow">
-            currentHandlers["<xsl:value-of select="concat($id, '_items_', $pos)"/>"] = "<xsl:value-of select="@formsOnShow"/>";
-            <xsl:if test="$active = $pos">
-               initialHandler = "<xsl:value-of select="@formsOnShow"/>";
-            </xsl:if>
+        <div id="{$id}_items_{$pos}" dojoType="cocoon.forms.TitlePane">
+          <xsl:if test="$active = $pos">
+            <xsl:attribute name="selected">true</xsl:attribute>
           </xsl:if>
+          <xsl:if test="$active != $pos">
+            <xsl:attribute name="style">display:none;</xsl:attribute>
+          </xsl:if>
+          <xsl:if test="@formsOnShow">
+            <xsl:attribute name="onShow"><xsl:value-of select="@formsOnShow"/></xsl:attribute>
+          </xsl:if>
+          <xsl:attribute name="title"><xsl:value-of select="normalize-space(fi:label/text())"/></xsl:attribute>
+          <xsl:apply-templates select="." mode="group-layout"/>
+        </div>
       </xsl:for-each>
-      if (initialHandler != null) {
-        eval(initialHandler);
-        initialHandler = null;
-      }
-    </script>
+    </div>
+    <xsl:if test="$state-widget">
+      <input type="hidden" id="{$state-widget}" name="{$state-widget}" value="{$active}" />
+    </xsl:if>
+  </xsl:template>
+
+
+  <!--
+    fi:group of type nav NB. Supply your own nav buttons in your template: see examples
+  -->
+  <xsl:template match="fi:group[fi:styling/@type='choice']">
+    <xsl:variable name="active">
+      <xsl:variable name="value" select="normalize-space(fi:state/fi:*/fi:value)"/>
+      <xsl:choose>
+        <xsl:when test="$value"><xsl:value-of select="$value"/></xsl:when>
+        <xsl:otherwise>0</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="state-widget" select="fi:state/fi:*/@id"/>
+    <xsl:variable name="id">
+      <xsl:choose>
+        <xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="generate-id()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <script type="text/javascript">dojo.require("cocoon.forms.ChoiceGroup");</script>
+    <script type="text/javascript">dojo.require("dijit.layout.ContentPane");</script>
+    <div id="{$id}" dojoType="cocoon.forms.ChoiceGroup">
+      <xsl:apply-templates select="fi:styling/@*" mode="styling"/>
+      <xsl:apply-templates select="." mode="css"/>
+      <xsl:if test="$state-widget">
+        <xsl:attribute name="stateId"><xsl:value-of select="$state-widget"/></xsl:attribute>
+      </xsl:if>
+      <!-- a div for each of the items -->
+      <xsl:for-each select="fi:items/fi:*">
+        <xsl:variable name="pos" select="position() - 1"/>
+        <div id="{$id}_items_{$pos}" dojoType="dijit.layout.ContentPane">
+          <xsl:if test="$active = $pos">
+            <xsl:attribute name="selected">true</xsl:attribute>
+          </xsl:if>
+          <xsl:if test="$active != $pos">
+            <xsl:attribute name="style">display:none;</xsl:attribute>
+          </xsl:if>
+          <xsl:if test="@formsOnShow">
+            <xsl:attribute name="onShow"><xsl:value-of select="@formsOnShow"/></xsl:attribute>
+          </xsl:if>
+          <xsl:attribute name="title"><xsl:value-of select="normalize-space(fi:label/text())"/></xsl:attribute>
+          <xsl:apply-templates select="." mode="group-layout"/>
+        </div>
+      </xsl:for-each>
+    </div>
+    <xsl:if test="$state-widget">
+      <input type="hidden" id="{$state-widget}" name="{$state-widget}" value="{$active}" />
+    </xsl:if>
   </xsl:template>
 
   <!--
@@ -212,9 +277,10 @@
   <xsl:template match="fi:group[fi:styling/@type='fieldset']">
     <fieldset>
       <xsl:if test="@id">
-        <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
+        <xsl:attribute name="id"><xsl:value-of select="@id"/>:bu</xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="." mode="styling"/>
+      <xsl:apply-templates select="." mode="css"/>
       <legend title="{fi:hint}"><xsl:copy-of select="fi:label/node()"/></legend>
       <xsl:apply-templates mode="group-layout" select="."/>
     </fieldset>
