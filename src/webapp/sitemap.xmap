@@ -595,12 +595,14 @@
           <map:read src="resources/{1}/{2}"/>
         </map:when>
         <!-- For Cocoon development, read directly from source directories
-          <map:when test="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/resources/{2}">
-              <map:read src="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/resources/{2}"/>
-            </map:when>
+        <map:when test="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/resources/{2}">
+          <map:read src="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/resources/{2}"/>
+        </map:when>
         -->
         <map:otherwise>
-          <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
+          <map:read src="resource://org/apache/cocoon/{1}/resources/{2}">
+            <map:parameter name="expires" value="604800000"/><!-- expires in one week -->
+          </map:read>
         </map:otherwise>
       </map:select>
     </map:match>
@@ -611,9 +613,9 @@
           <map:mount src="system/{1}/sitemap.xmap" uri-prefix="_cocoon/system/"/>
         </map:when>
         <!-- For Cocoon development, read directly from source directories
-          <map:when test="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/system/sitemap.xmap">
-              <map:mount src="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/system/sitemap.xmap" uri-prefix="_cocoon/system/{1}/"/>
-          </map:when>
+        <map:when test="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/system/sitemap.xmap">
+          <map:mount src="../../src/blocks/{1}/resources/org/apache/cocoon/{1}/system/sitemap.xmap" uri-prefix="_cocoon/system/{1}/"/>
+        </map:when>
         -->
         <map:otherwise>
           <map:mount src="resource://org/apache/cocoon/{1}/system/sitemap.xmap" uri-prefix="_cocoon/system/{1}/"/>
