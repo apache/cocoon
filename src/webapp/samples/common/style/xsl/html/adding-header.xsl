@@ -23,12 +23,15 @@
   <!-- assume that sitemapURIs don't occur in servletPath more than once -->
   <xsl:variable name="sitemap" select="concat($directory,'sitemap.xmap')"/>
   <xsl:template match="body">
-    <div style="text-align:right;width:100%;">
-      <a href="?cocoon-view=content">Content View</a> |
-      <a href="?cocoon-view=pretty-content">Source</a> |
-      <a href="{$sitemap}?cocoon-view=pretty-content">Sitemap</a>
-    </div>
-    <xsl:apply-templates/>
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <div style="text-align:right;width:100%;">
+        <a href="?cocoon-view=content">Content View</a> |
+        <a href="?cocoon-view=pretty-content">Source</a> |
+        <a href="{$sitemap}?cocoon-view=pretty-content">Sitemap</a>
+      </div>
+      <xsl:apply-templates/>
+    </xsl:copy>
   </xsl:template>
   <xsl:template match="@*|node()" priority="-2">
     <xsl:copy>
