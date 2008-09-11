@@ -35,6 +35,9 @@
 	    }
 	
 	    var resolver = cocoon.getComponent(org.apache.excalibur.source.SourceResolver.ROLE);
+	    
+	    // TODO: filter may now contain "*term" (match end), "term*" (match start) or "term" (match whole)
+	    
         var filename = filter;
 	    var src = resolver.resolveURI("context://samples/" + filename);
 	    var suggestions = [];
@@ -122,6 +125,8 @@
             }
           }
         }
+
+	    // TODO: filter may now contain "*term" (match end), "term*" (match start) or "term" (match whole)
         
         var suggestions = [];
         var list = personList();

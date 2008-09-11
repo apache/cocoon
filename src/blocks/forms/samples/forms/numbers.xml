@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id: form1.xml 497900 2007-01-19 18:39:48Z bruno $
+-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+
+  <fd:widgets>
+    <!-- group state holders -->
+    <fd:field id="tab-state">
+      <fd:datatype base="string"/>
+    </fd:field>
+
+    <!-- Currencies based on BigDecimal -->
+    <fd:field id="EUR" required="true">
+      <fd:label>Euros</fd:label>
+      <fd:hint>A helpful hint</fd:hint>
+      <fd:help>Some useful help</fd:help>
+      <fd:datatype base="decimal">
+        <fd:convertor variant="currency" currency="EUR"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="USD" required="true">
+      <fd:label>US Dollars</fd:label>
+      <fd:hint>A helpful hint</fd:hint>
+      <fd:help>Some useful help</fd:help>
+      <fd:datatype base="decimal">
+        <fd:convertor variant="currency" currency="USD"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="CNY" required="false">
+      <fd:label>Chinese Yuan</fd:label>
+      <fd:hint>A helpful hint</fd:hint>
+      <fd:help>Some useful help</fd:help>
+      <fd:datatype base="decimal">
+        <fd:convertor variant="currency" currency="CNY"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="JPY" required="true">
+      <fd:label>Japanese Yen</fd:label>
+      <fd:datatype base="decimal">
+        <fd:convertor variant="currency" currency="JPY"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="GBP" required="true">
+      <fd:label>Pounds Sterling</fd:label>
+      <fd:datatype base="decimal">
+        <fd:convertor variant="currency" currency="GBP"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="RUB" required="true">
+      <fd:label>Russian Roubles</fd:label>
+      <fd:datatype base="decimal">
+        <fd:convertor variant="currency" currency="RUB"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="XXX" required="true">
+      <fd:label>Default Locale</fd:label>
+      <fd:datatype base="decimal">
+        <fd:convertor variant="currency"/>
+      </fd:datatype>
+    </fd:field>    
+  
+    <!-- Unformatted Numbers -->
+    <fd:field id="plainInteger" required="true">
+      <fd:label>Plain Integer</fd:label>
+      <fd:initial-value>123456</fd:initial-value>
+      <fd:datatype base="integer"><fd:convertor type="plain"/></fd:datatype>
+    </fd:field>
+    <fd:field id="plainLong" required="true">
+      <fd:label>Plain Long</fd:label>
+      <fd:initial-value>123456</fd:initial-value>
+      <fd:datatype base="long"><fd:convertor type="plain"/></fd:datatype>
+    </fd:field>
+    <fd:field id="plainDecimal" required="true">
+      <!-- NB. Initial value supplied from the FlowScript -->
+      <fd:label>Plain Decimal</fd:label>
+      <fd:datatype base="decimal"><fd:convertor type="plain"/></fd:datatype>
+    </fd:field>
+    <fd:field id="plainDouble" required="true">
+      <fd:label>Plain Double</fd:label>
+      <fd:initial-value>123456.678</fd:initial-value>
+      <fd:datatype base="double"><fd:convertor type="plain"/></fd:datatype>
+    </fd:field>
+    <fd:field id="plainFloat" required="true">
+      <fd:label>Plain Float</fd:label>
+      <fd:initial-value>123456.678</fd:initial-value>
+      <fd:datatype base="float"><fd:convertor type="plain"/></fd:datatype>
+    </fd:field>
+
+    <!-- Formatted Numbers -->
+    <fd:field id="formattedInteger" required="true">
+      <fd:label>Formatted Integer</fd:label>
+      <fd:initial-value>123456</fd:initial-value>
+      <fd:datatype base="integer"><fd:convertor variant="integer"/></fd:datatype>
+    </fd:field>
+    <fd:field id="formattedLong" required="true">
+      <fd:label>Formatted Long</fd:label>
+      <fd:initial-value>123456</fd:initial-value>
+      <fd:datatype base="long"><fd:convertor variant="integer"/></fd:datatype>
+    </fd:field>
+    <fd:field id="formattedDecimal" required="true">
+      <!-- NB. Initial value supplied from the FlowScript -->
+      <fd:label>Formatted Decimal</fd:label>
+      <fd:datatype base="decimal"><fd:convertor variant="number"/></fd:datatype>
+    </fd:field>
+    <fd:field id="formattedDouble" required="true">
+      <fd:label>Formatted Double</fd:label>
+      <fd:initial-value>123456.678</fd:initial-value>
+      <fd:datatype base="double"><fd:convertor variant="number"/></fd:datatype>
+    </fd:field>
+    <fd:field id="formattedFloat" required="true">
+      <fd:label>Formatted Float</fd:label>
+      <fd:initial-value>123456.678</fd:initial-value>
+      <fd:datatype base="float"><fd:convertor variant="number"/></fd:datatype>
+    </fd:field>
+    <fd:field id="formattedPercent" required="true">
+      <fd:label>Formatted Percent</fd:label>
+      <fd:datatype base="double"><fd:convertor variant="percent"/></fd:datatype>
+    </fd:field>
+
+    <fd:submit id="ok">
+      <fd:label>Submit</fd:label>
+    </fd:submit>
+
+  </fd:widgets>
+
+</fd:form>

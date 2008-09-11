@@ -74,7 +74,7 @@
               </fi:items>
             </fi:group>
 
-            <fi:group>
+            <!-- <fi:group>
               <fi:styling layout="columns"/>
               <fi:label>Multivalue fields</fi:label>
               <fi:items>
@@ -86,7 +86,7 @@
                 </ft:widget>
                 <ft:widget id="freemv"/>
               </fi:items>
-            </fi:group>
+            </fi:group> TODO: re-implement multivaluefield widget  -->
           </fi:items>
         </fi:group>
 

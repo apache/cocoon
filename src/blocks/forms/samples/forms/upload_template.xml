@@ -38,7 +38,7 @@
           <ft:widget id="user"/>
           <ft:widget id="upload"/>
 	      <ft:widget id="message"/>
-          <input type="submit"/>
+          <ft:widget id="done"/>
         </fi:items>
       </fi:group>
     </ft:form-template>

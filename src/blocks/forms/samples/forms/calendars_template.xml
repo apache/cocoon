@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- The only difference between this file and the form1_template_flow.xml
+     is the value of the action attribute on the ft:form-template element -->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <jx:import uri="resources/samples-jx-macros.xml"/><!-- common macros for samples -->
+
+  <h4 class="samplesGroup">Validating Calendar Samples</h4>
+  <title>Calendar Samples (<jx:out value="${locale}"/>)</title>
+	<style type="text/css">
+
+		body {
+			margin:20px;
+		}
+
+		/* add padding to each contentpane inside the tab container, and scrollbar if necessary */
+		.dijitTabPane {
+			padding : 1em;
+		}
+		table.columns {
+		  width:100%;
+		}
+    table.columns > tbody > tr > td {
+      width:50%;
+    }
+
+	</style>
+		
+  <content>
+
+    <ft:form-template class="fadeIn" action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
+      <div style="width: 90%; margin: 10px 50px 50px 50px;">
+        <p>
+          <sample-locale-display/><!-- a macro from samples-jx-macros.xml -->
+        </p>
+
+        <div>
+          <fi:group>
+            <fi:label>Formatted Dates</fi:label>
+            <fi:styling layout="columns"/>
+            <fi:items>
+              <ft:widget id="date0"/>
+              <ft:widget id="date1"/>
+              <ft:widget id="date2"/>
+            </fi:items>
+          </fi:group>
+          <fi:group>
+            <fi:label>Formatted Times</fi:label>
+            <fi:styling layout="columns"/>
+            <fi:items>
+              <ft:widget id="time0"/>
+              <ft:widget id="time1"/>
+              <ft:widget id="time2"/>
+            </fi:items>
+          </fi:group>
+          <!--<fi:group>
+            <fi:label>Formatted DateTimes</fi:label>
+            <fi:styling layout="columns"/>
+            <fi:items>
+              <ft:widget id="datetime0"/>
+              <ft:widget id="datetime1"/>
+              <ft:widget id="datetime2"/>
+            </fi:items>
+          </fi:group> TODO: complete implementation -->
+        </div>
+        
+        <p><ft:widget id="ok"/></p>
+      </div>
+      <p>Supported Locales: 
+          <sample-locale-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+      <p>
+        <a href="./do-calendars.flow">Restart this sample</a> - <a href="./">Back to samples</a>
+      </p>
+      <p align="center">
+         <sample-theme-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+    </ft:form-template>
+  </content>
+</page>
+

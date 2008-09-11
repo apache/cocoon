@@ -24,15 +24,22 @@
          xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
 
   <fd:widgets>
-    <fd:field id="name" required="true">
+    <fd:field id="name" required="true" whitespace="trim">
+	  <fd:hint>Please name your datasource</fd:hint>
+	  <fd:help><div>The name for your datasource.</div><div>The name should begin with <b>C</b></div></fd:help>
       <fd:datatype base="string"/>
+      <fd:validation>
+        <fd:regexp pattern="C.*">
+          <fd:failmessage>Sorry, the PMC really does insist the name should begin with the letter 'C'.</fd:failmessage>
+        </fd:regexp>
+      </fd:validation>
     </fd:field>
     
     <!-- The datasource type. This is the union's "case" widget -->
     <fd:field id="sourcetype">
       <fd:datatype base="string"/>
       <!-- If you uncomment the line below the union will initially be showing the "SQL" choice -->
-      <!-- <fd:initial-value>SQL</fd:initial-value> -->
+      <fd:initial-value>SQL</fd:initial-value>
       <fd:selection-list>
         <fd:item value=""/>
         <fd:item value="SQL"/>

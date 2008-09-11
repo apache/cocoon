@@ -37,8 +37,8 @@ limitations under the License.
     <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
       <!-- manual layout of fields, without use of a fi:group -->
       <ft:widget-label id="articles"/><br/>
-      <ft:repeater id="articles">
-        <div dojoType="forms:CFormsRepeater" orderable="true">
+      <ft:repeater id="articles" select="select">
+        <div>
           <table border="1">
             <thead>
               <tr>

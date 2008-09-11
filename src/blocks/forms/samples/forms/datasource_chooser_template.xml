@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -21,15 +21,24 @@
       
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <jx:import uri="resources/samples-jx-macros.xml"/><!-- common macros for samples -->
   <h4 class="samplesGroup">Union widget sample (with AJAX)</h4>
   <title>Datasource chooser</title>
+  
   <script type="text/javascript">
+      dojo.require("cocoon.ajax.BUHandler");
       dojo.addOnLoad(function(){cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.highlight.green});
   </script>
   <content>
-    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
+    <ft:form-template class="fadeIn" action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
       
-      <p>Datasource name: <ft:widget id="name"/></p>
+      <div>
+        Datasource name: 
+        <ft:widget id="name">
+          <!-- BTW. @regExp here is cheating and will be disallowed. It is hoped that most model validation rules will be translated to work on the browser as well. -->
+          <fi:styling textcase="proper" regExp="^C.*"/>
+        </ft:widget> <span style="font-size: 200%;">☜</span> TODO: Why is the help button so small in Safari?
+      </div>
       <fieldset>
         <legend>Type:
           <ft:widget id="sourcetype"/>
@@ -43,7 +52,7 @@
               <fi:group>
                 <fi:styling layout="columns"/>
                 <fi:items>
-                  <ft:widget id="jdbc-url"/>
+                  <ft:widget id="jdbc-url"><fi:styling size="30"/></ft:widget>
                   <ft:widget id="login"/>
                   <ft:widget id="password"><fi:styling type="password"/></ft:widget>
                 </fi:items>
@@ -63,6 +72,9 @@
       <ft:widget id="ok"/>
       <br/>
       <a href="./do-datasourceChooser.flow">Restart this sample</a> -  <a href="./">Back to Forms samples</a>
+      <p align="center">
+        <sample-theme-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
 
     </ft:form-template>
   </content>

@@ -23,6 +23,8 @@
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
   <h4 class="samplesGroup">Inline editing</h4>
   <title>Inline editing</title>
+  
+  <!-- TODO: Highlighting has been broken for a while .... -->
   <script type="text/javascript">
       dojo.addOnLoad(function(){cocoon.ajax.BUHandler.highlight = cocoon.ajax.effects.highlight.red});
   </script>
