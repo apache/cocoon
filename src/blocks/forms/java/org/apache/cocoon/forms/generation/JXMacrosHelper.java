@@ -159,7 +159,7 @@ public class JXMacrosHelper {
 
     private void startBuReplace(String id) throws SAXException {
         AttributesImpl attr = new AttributesImpl();
-        attr.addCDATAAttribute("id", id);
+        attr.addCDATAAttribute("id", id + ":bu"); // add suffix to avoid id conflict with page widgets needing an id
         this.cocoonConsumer.startElement(BrowserUpdateTransformer.BU_NSURI, "replace", "bu:replace", attr);
     }
 
@@ -277,20 +277,78 @@ public class JXMacrosHelper {
      *
      * @param path widget path
      * @param ajaxAware distinguishes between &lt;ft:repeater-widget&gt; and &lt;ft:repeater&gt;.
+     * @param attributes the model attributes
      * @return true if the repeater template is to be executed
      * @throws SAXException
      */
-    public boolean pushRepeater(String path, boolean ajaxAware) throws SAXException {
+    public boolean pushRepeater(String path, boolean ajaxAware, Map attributes) throws SAXException {
         if (!ajaxAware && this.ajaxTemplate) {
             throw new IllegalStateException("Cannot use <ft:repeater-widget> in an Ajax form");
         }
         boolean result = pushWidget(path, true);
         if (result && !(peekWidget() instanceof Repeater)) {
             throw new IllegalArgumentException("Widget " + peekWidget() + " is not a repeater");
+        } else if (peekWidget() instanceof Repeater) {
+					Repeater repeater = (Repeater)peekWidget();
+        	AttributesImpl attrs = new AttributesImpl();
+					
+					if (repeater.getOrderable()) attrs.addCDATAAttribute("orderable", Boolean.toString(repeater.getOrderable()));
+					Iterator it = repeater.getAcceptTypes().iterator();
+					if (it.hasNext()) {
+						StringBuffer type = new StringBuffer();
+						while (it.hasNext()) {
+							String value = (String)it.next();
+							type.append(value);
+							if (it.hasNext() && !"".equals(value)) type.append(',');
+						}
+						attrs.addCDATAAttribute("acceptType", type.toString());
+					}
+					it = repeater.getRowTypes().iterator();
+					if (it.hasNext()) {
+						StringBuffer type = new StringBuffer();
+						while (it.hasNext()) {
+							String value = (String)it.next();
+							type.append(value);
+							if (it.hasNext() && !"".equals(value)) type.append(',');
+						}
+						attrs.addCDATAAttribute("rowType", type.toString());
+					}
+					it = repeater.getAllowed().iterator();
+					if (it.hasNext()) {
+						StringBuffer type = new StringBuffer();
+						while (it.hasNext()) {
+							String value = (String)it.next();
+							type.append(value);
+							if (it.hasNext() && !"".equals(value)) type.append(',');
+						}
+						attrs.addCDATAAttribute("dndAllow", type.toString());
+					}
+
+        	// copy attributes from Template
+					Iterator iter = attributes.entrySet().iterator();
+					while(iter.hasNext()) {
+							Map.Entry entry = (Map.Entry)iter.next();
+							final String attrName = (String)entry.getKey();
+							if (!"id".equals(attrName)) attrs.addCDATAAttribute(attrName, (String)entry.getValue());
+					}
+					attrs.addCDATAAttribute("id", repeater.getFullName());
+					this.cocoonConsumer.startPrefixMapping(FormsConstants.INSTANCE_PREFIX, FormsConstants.INSTANCE_NS);
+					this.cocoonConsumer.startElement(FormsConstants.INSTANCE_NS,
+                                         "repeater-widget",
+                                         FormsConstants.INSTANCE_PREFIX_COLON + "repeater-widget",
+                                         attrs);
         }
         // the child widgets of the repeater never update the label
         this.labelStack.push(Boolean.FALSE);
         return result;
+    }
+
+    public void popRepeater() throws SAXException {
+        this.cocoonConsumer.endElement(FormsConstants.INSTANCE_NS,
+                                       "repeater-widget",
+                                       FormsConstants.INSTANCE_PREFIX_COLON + "repeater-widget");
+        this.cocoonConsumer.endPrefixMapping(FormsConstants.INSTANCE_PREFIX);
+        popWidget();
     }
 
     /**

@@ -229,33 +229,33 @@
 
     <jx:macro name="repeater" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
-      <jx:if test="${cformsHelper.pushRepeater(id, true)}">
-        <jx:set var="repeater" value="${cformsHelper.peekWidget()}"/>
-        <jx:set var="widget" value="${cformsHelper.peekWidget()}"/>
-        <jx:evalBody/>
-        <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
+      <jx:if test="${cformsHelper.pushRepeater(id, true, macro.arguments)}">
+				<jx:set var="repeater" value="${cformsHelper.peekWidget()}"/>
+				<jx:set var="widget" value="${cformsHelper.peekWidget()}"/>
+				<jx:evalBody/>
+				<jx:set var="cformsDummy" value="${cformsHelper.popRepeater()}"/>
       </jx:if>
     </jx:macro>
 
     <jx:macro name="repeater-rows" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
-        <jx:forEach varStatus="repeaterLoop" begin="0" end="${repeater.getSize() - 1}">
-          <jx:if test="#{pushContainer($cformsHelper, java.lang.Integer.toString($repeaterLoop/index))}">
-            <jx:set var="widget" value="${cformsHelper.peekWidget()}"/>
-            <jx:evalBody/>
-            <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
-          </jx:if>
-        </jx:forEach>
+      <jx:forEach varStatus="repeaterLoop" begin="0" end="${repeater.getSize() - 1}">
+        <jx:if test="#{pushContainer($cformsHelper, java.lang.Integer.toString($repeaterLoop/index))}">
+          <jx:set var="widget" value="${cformsHelper.peekWidget()}"/>
+          <jx:evalBody/>
+          <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
+        </jx:if>
+      </jx:forEach>
     </jx:macro>
 
     <jx:macro name="tree" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
       <jx:parameter name="id"/>
       <jx:if test="${cformsHelper.pushContainer(id)}">
         <jx:set var="widget" value="${cformsHelper.peekWidget()}"/>
-          <jx:set var="treeWidget" value="${widget}"/>
+        <jx:set var="treeWidget" value="${widget}"/>
 	      <jx:set var="treeNode" value="${cformsHelper.createWalker()}"/>
 	      <jx:evalBody/>
-          <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
-	  </jx:if>
+        <jx:set var="cformsDummy" value="${cformsHelper.popWidget()}"/>
+	    </jx:if>
     </jx:macro>
 
     <jx:macro name="tree-nodes" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
