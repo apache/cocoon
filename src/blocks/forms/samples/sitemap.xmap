@@ -16,6 +16,8 @@
   limitations under the License.
 -->
 
+<!-- TODO: Remove FormsTransformer, update existing Templates and Pipelines to use JXGenerator for Forms Generation -->
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
  <map:components>
@@ -238,47 +240,53 @@
      <!--
         | Show a form, using the jx template macros
         -->
-     <map:match pattern="*-display-pipeline.jx">
-       <map:generate type="jx" src="forms/{1}_template.xml" label="content1">
-         <map:parameter name="locale" value="{flow-attribute:locale}"/>
-       </map:generate>
-       <map:transform type="log">
-          <map:parameter name="logfile" value="logfile.log"/>
-          <map:parameter name="append" value="no"/>
-       </map:transform>
-       <map:transform type="browser-update"/><!-- AJAX-style form update -->
-       <map:transform type="i18n">
-         <map:parameter name="locale" value="{flow-attribute:locale}"/>
-       </map:transform>
-       <map:call resource="simple-page2html">
-         <map:parameter name="file" value="forms/{1}_template.xml"/>
-       </map:call>
-       <map:transform src="resources/forms-samples-styling.xsl">
-         <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
-         <map:parameter name="dojo-debug" value="true"/><!-- set to true to turn on dojo debugging in the Browser -->
-         <map:parameter name="dojo-locale" value="{flow-attr:locale}"/>
-       </map:transform>
-       <map:transform type="i18n">
-         <map:parameter name="locale" value="{flow-attribute:locale}"/>
-       </map:transform>
-       <map:select type="ajax-request">
-         <map:when test="true"><!-- sending a partial Browser Update -->
-            <map:select type="request-parameter">
-              <map:parameter name="parameter-name" value="dojo.transport"/>
-              <map:when test="iframe"><!-- sending BU via iFrameIO -->
-                <map:transform src="resource://org/apache/cocoon/forms/resources/IframeTransport-bu-styling.xsl"/>
-                <map:serialize type="xhtml"/><!-- this is REALLY important -->
-              </map:when>
-              <map:otherwise><!-- sending BU via XHR -->
-                <map:serialize type="xml"/>
-              </map:otherwise>
-            </map:select>
-         </map:when>
-         <map:otherwise><!-- sending a complete page -->
-           <map:serialize type="html"/>
-         </map:otherwise>
-       </map:select>
-     </map:match>
+    <map:match pattern="*-display-pipeline.jx">
+        <map:generate type="jx" src="forms/{1}_template.xml" label="content1">
+            <map:parameter name="locale" value="{flow-attribute:locale}"/>
+        </map:generate>
+        <map:transform type="browser-update"/><!-- AJAX-style form update -->
+        <map:transform type="i18n">
+            <map:parameter name="locale" value="{flow-attribute:locale}"/>
+        </map:transform>
+        <map:call resource="simple-page2html">
+            <map:parameter name="file" value="forms/{1}_template.xml"/>
+        </map:call>
+        <map:transform src="resources/forms-samples-styling.xsl">
+            <!-- <map:parameter name="context-path"  value="{request:contextPath}"/> You only need to set this param in 2.1.X if you have a non-empty contextPath -->
+            <!-- TODO: (JQ) looking at this module path list, I think it is clear that the block name should come before the source (resource or system), then we'd only need 2 items -->
+            <!-- NB. Using 2.2 parameterisation style, to ease differences between the two platforms, these have sensible defaults in forms-advanced-styling.xsl
+            <map:parameter name="dojo-resources"  value="{request:contextPath}/_cocoon/resources/dojotoolkit"/>
+            <map:parameter name="forms-resources" value="{request:contextPath}/_cocoon/resources/forms"/>
+            <map:parameter name="forms-system" value="{request:contextPath}/_cocoon/system/forms"/>
+            <map:parameter name="ajax-resources"  value="{request:contextPath}/_cocoon/resources/ajax"/>  -->
+            <map:parameter name="dojo-debug" value="false"/><!-- set to true to turn on dojo debugging in the Browser TODO: turn off before committing. NB. Turning it off, with console.debug statements in the code, breaks Safari !!!!!!! -->
+            <map:parameter name="dojo-locale" value="{flow-attr:locale}"/><!-- TODO: Should not require flow to output the chosen locale, this is fine for samples but not for User's Apps -->
+            <map:parameter name="dojo-theme-param" value="{request-param:dojo-theme}"/><!-- You may not wish to include this in your application -->
+            <!-- <map:parameter name="dojo-theme-default" value="tundra"/> Change this to what your application prefers, other choices are currently 'nihilo' and 'soria', the default in xslt is 'tundra' -->
+        </map:transform>
+        <map:transform type="i18n">
+            <map:parameter name="locale" value="{flow-attribute:locale}"/>
+        </map:transform>
+        <map:select type="ajax-request">
+            <map:when test="true"><!-- sending a partial Browser Update -->
+                <map:select type="request-parameter">
+                    <map:parameter name="parameter-name" value="dojo.transport"/>
+                    <map:when test="iframe"><!-- sending BU via iFrameIO -->
+                        <map:transform src="resource://org/apache/cocoon/forms/resources/IframeTransport-bu-styling.xsl"/>
+                        <map:serialize type="xhtml"/><!-- this is REALLY important -->
+                    </map:when>
+                    <map:otherwise><!-- sending BU via XHR -->
+                        <map:serialize type="xml"/>
+                    </map:otherwise>
+                </map:select>
+            </map:when>
+            <map:otherwise><!-- sending a complete page -->
+                <!-- apply YSlow advice, improve perceived load-time -->
+                <map:transform src="resource://org/apache/cocoon/forms/resources/browser-optimisation.xsl"/>
+                <map:serialize type="html"/>
+            </map:otherwise>
+        </map:select>
+    </map:match>
 
      <!--
         | Display a success page using XSP
