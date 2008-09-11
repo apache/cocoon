@@ -17,7 +17,7 @@
 package org.apache.cocoon.forms.datatype.convertor;
 
 import java.util.Locale;
-import java.text.DecimalFormat;
+import com.ibm.icu.text.DecimalFormat;
 import java.text.ParseException;
 
 /**

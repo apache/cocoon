@@ -37,16 +37,20 @@ public class FormattingDecimalConvertorBuilder implements ConvertorBuilder {
 
         String variant = configElement.getAttribute("variant");
         if (!variant.equals("")) {
-            if (variant.equals("integer"))
+            if (variant.equals("integer")) {
                 convertor.setVariant(FormattingDecimalConvertor.INTEGER);
-            else if (variant.equals("number"))
+            } else if (variant.equals("number")) {
                 convertor.setVariant(FormattingDecimalConvertor.NUMBER);
-            else if (variant.equals("percent"))
+            } else if (variant.equals("percent")) {
                 convertor.setVariant(FormattingDecimalConvertor.PERCENT);
-            else if (variant.equals("currency"))
+            } else if (variant.equals("currency")) {
                 convertor.setVariant(FormattingDecimalConvertor.CURRENCY);
-            else
+                // NB. if currency is not set manually, the currency for the locale will be used
+                String currencyCode = configElement.getAttribute("currency");
+                if (!currencyCode.equals("")) convertor.setCurrency(currencyCode);
+            } else {
                 throw new Exception("Invalid value \"" + variant + "\" for variant attribute at " + DomHelper.getLocation(configElement));
+            }
         }
 
         Element patternsEl = DomHelper.getChildElement(configElement, FormsConstants.DEFINITION_NS, "patterns", false);

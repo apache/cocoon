@@ -18,10 +18,13 @@ package org.apache.cocoon.forms.datatype.convertor;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.apache.cocoon.forms.FormsConstants;
+import org.apache.cocoon.xml.AttributesImpl;
 
+import com.ibm.icu.util.Currency;
 import java.util.Locale;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import com.ibm.icu.text.DecimalFormat;
+import com.ibm.icu.text.NumberFormat;
 import java.text.ParseException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -43,11 +46,12 @@ import java.math.BigInteger;
  */
 public class FormattingDecimalConvertor implements Convertor {
     private int variant;
+    private Currency currency = Currency.getInstance(Locale.getDefault()); // lets get some consistency here.
     /** Locale-specific formatting patterns. */
     private LocaleMap localizedPatterns;
     /** Non-locale specific formatting pattern. */
     private String nonLocalizedPattern;
-
+    
     public static final int INTEGER = 0;
     public static final int NUMBER = 1;
     public static final int CURRENCY = 2;
@@ -63,19 +67,24 @@ public class FormattingDecimalConvertor implements Convertor {
     }
 
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
+        
         // Some locales (e.g. "fr") produce non-breaking spaces sent back as space by the browser
-        value = value.replace(' ', (char)160);
+        //value = value.replace(' ', (char)160); [JQ] This was breaking with the Dojo upgrade 
         DecimalFormat decimalFormat = getDecimalFormat(locale, formatCache);
-
+        //decimalFormat.setParseBigDecimal(true);
         Number decimalValue;
         try {
             decimalValue = decimalFormat.parse(value);
         } catch (ParseException e) {
+            System.out.println("Exception converting: " + value + " : " + e.getMessage());
             return ConversionResult.create("decimal");
         }
 
         if (decimalValue instanceof BigDecimal) {
             // no need for conversion
+        } else if (decimalValue instanceof com.ibm.icu.math.BigDecimal) {
+            // no need for conversion
+            decimalValue = ((com.ibm.icu.math.BigDecimal)decimalValue).toBigDecimal();
         } else if (decimalValue instanceof Integer) {
             decimalValue = new BigDecimal(decimalValue.intValue());
         } else if (decimalValue instanceof Long) {
@@ -122,12 +131,17 @@ public class FormattingDecimalConvertor implements Convertor {
                 break;
             case CURRENCY:
                 decimalFormat = (DecimalFormat)NumberFormat.getCurrencyInstance(locale);
+                decimalFormat.setCurrency(this.currency);
+                int frac = this.currency.getDefaultFractionDigits();
+                decimalFormat.setMinimumFractionDigits(frac);
+                decimalFormat.setMaximumFractionDigits(frac);
+                
                 break;
             case PERCENT:
                 decimalFormat = (DecimalFormat)NumberFormat.getPercentInstance(locale);
                 break;
         }
-
+        
         String pattern = (String)localizedPatterns.get(locale);
 
         if (pattern != null) {
@@ -144,6 +158,35 @@ public class FormattingDecimalConvertor implements Convertor {
         this.variant = variant;
     }
 
+    /** 
+     *   Set the currency of the Convertor
+     *   @param currencyCode String the ISO 4217 code of the currency (http://www.iso.org/iso/support/faqs/faqs_widely_used_standards/widely_used_standards_other/currency_codes/currency_codes_list-1.htm)
+     */
+    public void setCurrency(String currencyCode) throws IllegalArgumentException, NullPointerException {
+        Currency currency = Currency.getInstance(currencyCode);
+        this.setCurrency(currency);
+    }
+    
+    /** 
+     *   Set the currency of the Convertor
+     *   @param currency java.util.Currency the currency to display for this field
+     */
+    public void setCurrency(Currency currency) throws IllegalArgumentException {
+        if (this.variant != CURRENCY)
+            throw new IllegalArgumentException("Cannot set currency on this variant of convertor.");
+        this.currency = currency;
+    }
+
+    /** 
+     *   Get the L10N name of the Currency of this Convertor
+     */
+    public String getCurrencyName(Locale locale) throws IllegalArgumentException {
+        if (this.variant != CURRENCY)
+            throw new IllegalArgumentException("Cannot set currency on this variant of convertor.");
+            
+        return this.currency.getName(locale, Currency.LONG_NAME, new boolean[1]);
+    }
+
     public void addFormattingPattern(Locale locale, String pattern) {
         localizedPatterns.put(locale, pattern);
     }
@@ -156,7 +199,31 @@ public class FormattingDecimalConvertor implements Convertor {
         return java.math.BigDecimal.class;
     }
 
+    private static final String CONVERTOR_EL = "convertor";
+
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        // intentionally empty
+        String pattern = (String)localizedPatterns.get(locale);
+        if (pattern == null) pattern = nonLocalizedPattern;
+        String variantString = null; // we have to convert the variant back into a string
+        String currencyCode = null; // there may be a currency code
+        String currencySymbol = null; // there may be a currency symbol
+        if (this.variant == INTEGER) variantString = "integer";
+        if (this.variant == NUMBER) variantString = "number";
+        if (this.variant == CURRENCY) { 
+            variantString = "currency"; 
+            currencyCode = this.currency.getCurrencyCode();
+            currencySymbol = this.currency.getSymbol(locale);
+        }
+        if (this.variant == PERCENT) variantString = "percent";
+
+        if (pattern != null || variantString != null) {
+            AttributesImpl attrs = new AttributesImpl();
+            if (pattern != null) attrs.addCDATAAttribute("pattern", pattern);
+            if (variantString != null) attrs.addCDATAAttribute("variant", variantString);
+            if (currencyCode != null) attrs.addCDATAAttribute("currency", currencyCode);
+            if (currencySymbol != null) attrs.addCDATAAttribute("symbol", currencySymbol);
+            contentHandler.startElement(FormsConstants.INSTANCE_NS, CONVERTOR_EL, FormsConstants.INSTANCE_PREFIX_COLON + CONVERTOR_EL, attrs);
+            contentHandler.endElement(FormsConstants.INSTANCE_NS, CONVERTOR_EL, FormsConstants.INSTANCE_PREFIX_COLON + CONVERTOR_EL);
+        }
     }
 }
