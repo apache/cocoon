@@ -22,13 +22,12 @@
       | 'forms-field-styling.xsl' the latter one is imported there. If you don't
       | want advanced styling of widgets, change it here!
       | See xsl:include as composition and xsl:import as extension/inheritance.
+      |
+      | @version $Id$
       +-->
   <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-page-styling.xsl"/>
   <xsl:include href="resource://org/apache/cocoon/forms/resources/forms-advanced-field-styling.xsl"/>
-
-  <!-- Location of the resources directory, where JS libs and icons are stored -->
-  <xsl:param name="resources-uri">resources</xsl:param>
-  
+ 
   <xsl:template match="head">
     <head>
       <xsl:apply-templates select="." mode="forms-page"/>
@@ -38,7 +37,13 @@
   </xsl:template>
 
   <xsl:template match="body">
-    <body>
+    <xsl:variable name="class">
+      <xsl:choose>
+        <xsl:when test="@class != ''"><xsl:value-of select="concat($dojo-theme, ' ', @class)"/></xsl:when><!-- append the dojo-theme to existing classes -->
+        <xsl:otherwise><xsl:value-of select="$dojo-theme"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <body class="{$class}"><!-- ensure we get a dojo-theme setup -->
       <!--+ !!! If template with mode 'forms-page' adds text or elements
           |        template with mode 'forms-field' can no longer add attributes!!!
           +-->
