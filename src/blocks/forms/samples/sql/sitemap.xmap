@@ -87,13 +87,19 @@
       <map:generate type="jx" src="pages/{1}.xml"/>
       <map:transform type="browser-update"/>
       <map:transform type="i18n"/>
-      <map:transform src="../resources/forms-samples-styling.xsl"/>
+      <map:transform src="../resources/forms-samples-styling.xsl">
+        <map:parameter name="dojo-resources"  value="{request:contextPath}/_cocoon/resources/dojotoolkit"/>
+        <map:parameter name="forms-resources" value="{request:contextPath}/_cocoon/resources/forms"/>
+        <map:parameter name="forms-system" value="{request:contextPath}/_cocoon/system/forms"/>
+        <map:parameter name="ajax-resources"  value="{request:contextPath}/_cocoon/resources/ajax"/><!-- NB. Using 2.2 parameterisation style, to ease differences between the two platforms -->
+      </map:transform>
       <map:select type="ajax-request">
         <map:when test="true">
           <map:serialize type="xml"/>
         </map:when>
         <map:otherwise>
           <map:transform src="resources/page-styling.xsl"/>
+          <map:transform src="resource://org/apache/cocoon/forms/resources/browser-optimisation.xsl"/>
           <map:serialize type="html"/>
         </map:otherwise>
       </map:select>
