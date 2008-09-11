@@ -22,11 +22,11 @@
  */
 
 dojo.provide("cocoon.ajax.insertion");
-dojo.require("dojo.dom");
+dojo.provide("cocoon.ajax.insertionHelper");
+dojo.require("dojo.parser");
+dojo.require("dijit._base");
 
-cocoon.ajax.insertion = {};
-
-dojo.lang.mixin(cocoon.ajax.insertion, {
+dojo.mixin(cocoon.ajax.insertion, {
 
 	/**
 	 * Inserts before the reference node
@@ -81,7 +81,7 @@ dojo.lang.mixin(cocoon.ajax.insertion, {
             // Destroy and remove all children
             while (refElt.hasChildNodes()) {
                 var firstChild = refElt.firstChild;
-                if (firstChild.nodeType == dojo.dom.ELEMENT_NODE) {
+                if (firstChild.nodeType === 1 /*ELEMENT_NODE*/) {
                     cocoon.ajax.insertionHelper.destroy(firstChild);
                 }
                 refElt.removeChild(firstChild);
@@ -103,9 +103,7 @@ dojo.lang.mixin(cocoon.ajax.insertion, {
     }
 });
 
-cocoon.ajax.insertionHelper = {};
-
-dojo.lang.mixin(cocoon.ajax.insertionHelper, {
+dojo.mixin(cocoon.ajax.insertionHelper, {
 	/**
 	 * Imports an element into a document, taking care of using the correct implementation
 	 * so that the browser interprets it as displayable XML.
@@ -116,22 +114,22 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
 	 * @return { element: <em>imported_element</em>, scripts: <em>array_of_script_text</em> }
 	 */
     importNode: function(node, targetDoc) {
-	    if(node.xml || dojo.lang.isString(node)) {
+	    if(node.xml || dojo.isString(node)) {
 	        // IE or text
-	        var text = dojo.lang.isString(node) ? node : node.xml;
+	        var text = dojo.isString(node) ? node : node.xml;
 	        var div = targetDoc.createElement("DIV");
 
 	        // Code below heavily inspired by the Prototype library
 	        var scriptExpr = "(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)";
-            var textWithoutScripts = text.replace(new RegExp(scriptExpr, 'img'), '');
+					var textWithoutScripts = text.replace(new RegExp(scriptExpr, 'img'), '');
 
-            // Internet Explorer can't handle empty <textarea .../> elements, so replace
-            // them with <textarea></textarea>
-            var textareaExpr = "(<textarea[^<]*)\/>";
-            var textAreaMatches = textWithoutScripts.match(textareaExpr);
-            var textFixed = textWithoutScripts.replace(new RegExp(textareaExpr, 'img'), "$1></textarea>");
+					// Internet Explorer can't handle empty <textarea .../> elements, so replace
+					// them with <textarea></textarea>
+					var textareaExpr = "(<textarea[^<]*)\/>";
+					var textAreaMatches = textWithoutScripts.match(textareaExpr);
+					var textFixed = textWithoutScripts.replace(new RegExp(textareaExpr, 'img'), "$1></textarea>");
 
-            // Update screen with removed scripts
+					// Update screen with removed scripts
 	        div.innerHTML = textFixed;
 
 	        var matchAll = new RegExp(scriptExpr, 'img');
@@ -143,7 +141,13 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
 		            scripts.push(allMatches[i].match(matchOne)[1]);
 		        }
 		    }
-	        return { element: dojo.dom.getFirstChildElement(div), scripts: scripts };
+		    
+		    var firstChild = div.firstChild;
+				while(firstChild && firstChild.nodeType != 1 /*ELEMENT_NODE*/){
+					firstChild = firstChild.nextSibling;
+				}
+		    
+	      return { element: firstChild, scripts: scripts };
 
 	    } else {
 	        var scripts = new Array();
@@ -158,7 +162,7 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
 	 */
 	_importDomNode: function(node, targetDoc, scripts) {
 	    switch(node.nodeType) {
-	        case dojo.dom.ELEMENT_NODE:
+	        case 1 /*ELEMENT_NODE*/:
 	            if (node.nodeName.toLowerCase() == "script") {
 	                // Collect scripts
 	                scripts.push(node.firstChild && node.firstChild.nodeValue);
@@ -180,79 +184,64 @@ dojo.lang.mixin(cocoon.ajax.insertionHelper, {
 	            return element;
 	        break;
 
-	        case dojo.dom.TEXT_NODE:
+	        case 3 /*TEXT_NODE*/:
 	            return targetDoc.createTextNode(node.nodeValue);
 	        break;
 
-	        case dojo.dom.CDATA_SECTION_NODE:
+	        case 4 /*CDATA_SECTION_NODE*/:
 	            return targetDoc.createTextNode(node.nodeValue);
 	        break;
 	    }
 	},
 
 	_runScripts: function(imported) {
-        // Evaluate scripts
-        for (var i = 0; i < imported.scripts.length; i++) {
-            eval(imported.scripts[i]);
-        }
+			// Evaluate scripts
+			for (var i = 0; i < imported.scripts.length; i++) {
+					eval(imported.scripts[i]);
+			}
 	},
 
-    insert: function(refElt, content, insertFunc) {
-        refElt = dojo.byId(refElt, content);
-        var imports = this.importNode(content, refElt.ownerDocument);
-        insertFunc(refElt, imports.element);
-        this._runScripts(imports);
-        return this.parseDojoWidgets(imports.element);
-    },
-
-    destroy: function(element) {
-	    var widget = dojo.widget.byNode(element);
-	    if (widget) {
-	        // Dojo will destroy all its children
-	        widget.destroy(true, true);
-	    } else {
-	        // Recurse until we eventually find a widget
-	        var children = element.childNodes;
-	        for (var i = 0; i < children.length; i++) {
-	            var child = children[i];
-	            if (child.nodeType == dojo.dom.ELEMENT_NODE) {
-	                this.destroy(child);
-	            }
-	        }
-	    }
+	insert: function(refElt, content, insertFunc) {
+			refElt = dojo.byId(refElt, content);
+			var imports = this.importNode(content, refElt.ownerDocument);
+			insertFunc(refElt, imports.element);
+			this._runScripts(imports);
+			this.parseDojoWidgets(imports.element)
+			return imports.element;
 	},
-
+	
 	parseDojoWidgets: function(element) {
-	    // Find a parent widget (if any) so that Dojo can maintain its widget tree
-	    var parentWidget = this.findParentWidget(element);
-		var parser = new dojo.xml.Parse();
-
-		// FIXME: parser.parseElement() parses the _children_ of an element, whereas we want here
+		// parser parses the _children_ of an element, whereas we want here
 		// the element itself to be parsed. Parsing its parent is not an option as we don't want
 		// to parse the siblings. So place it in a temporary div that we'll trash afterwards.
 		var div = document.createElement("DIV");
 		element.parentNode.replaceChild(div, element);
 		div.appendChild(element);
-		var frag = parser.parseElement(div, null, true);
-		dojo.widget.getParser().createComponents(frag, parentWidget);
+		dojo.parser.parse(div)
 		// Get again the first child of the div, which may no more be the original one
 		// if it's a widget
 		element = div.firstChild;
 		div.parentNode.replaceChild(element, div);
-		parentWidget && parentWidget.onResized();
-
 		return element;
 	},
 
-	findParentWidget: function(element) {
-	    var parent = element.parentNode;
-	    var widget;
-	    while (parent && !widget) {
-	        var widget = dojo.widget.byNode(parent);
-	        if (widget) {
-	            return widget;
+  // recursively destroy nested Dojo Widgets
+  destroy: function(element) {
+	    var widget = dijit.byNode(element);
+	    if (widget) {
+	        // Dojo will destroy all its children
+	        // console.debug("insertion - destroying widget: " + widget.id);
+	        widget.destroyRecursive();
+	    } else {
+	        // Recurse until we eventually find a widget
+	        var children = element.childNodes;
+	        for (var i = 0; i < children.length; i++) {
+	            var child = children[i];
+	            if (child.nodeType === 1 /*ELEMENT_NODE*/) {
+	                // console.debug("insertion - recursing into element: " + child.tagName);
+	                this.destroy(child);
+	            }
 	        }
-	        parent = parent.parentNode;
 	    }
 	}
 });

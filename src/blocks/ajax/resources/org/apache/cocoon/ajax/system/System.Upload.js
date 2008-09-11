@@ -49,7 +49,7 @@ System.Upload = System.Upload || {};
 
 */
 System.Upload.status = function(){
-    var json = "{}";
+    var json = "/* {} */"; // the pipeline sends text/json-comment-filtered as a security measure
     var i18n = null;
     var status = cocoon.session.getAttribute(MultipartParser.UPLOAD_STATUS_SESSION_ATTR);
     if (status instanceof Map && status.size() > 0) {
@@ -73,7 +73,7 @@ System.Upload.status = function(){
             tempMap.put("message", System.JSON.getI18nMessage("progress.sent", catalogue, [percent, sent, total, status.get("filename")]));
             tempMap.put("percent", percent);
         }
-        json = System.JSON.serializeMap(tempMap);
+        json = "/* " + System.JSON.serializeMap(tempMap) + " */"; // the pipeline sends text/json-comment-filtered as a security measure
     }
     cocoon.sendPage("send-json", {json: json});
 };

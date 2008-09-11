@@ -16,15 +16,53 @@
   limitations under the License.
 -->
 <!-- Ant file to build the Dojo jar file.
-     You need to set the "dojo.home" property in a local.build.properties file in the
-     same directory as this file. This property should point to the location where the
-     Dojo sources are available (e.g. dojo.home=/home/foobar/dev/dojotoolkit.org/trunk)
+
+      This build file is intended for two purposes :
+      
+      1) to build the nano-dojo that is committed to and distributed with Cocoon
+         Since 2.1.12, by default, Cocoon uses the CDN at Google as the repository to serve 
+         Dojo 1.1.1 to browsers viewing your CForms pages. i.e. Dojo XDomain loading.
+         
+         This has several advantages :
+          We no longer have to distribute the fast-growing Dojo source with Cocoon.
+          If you are paying for your bandwidth, you don't have to pay for Dojo to be served.
+          Your users may already have dojo cached from this popular source.
+          Google serves Dojo with a far-future expires header.
+      
+        However, we cannot do without Dojo resources altogether.
+        Several components on some platforms require that certain resources 
+        are loaded from the same server as your forms.
+        eg. dojo/resources/blank.html
+      
+      2) to allow the user easy access to Dojo's build system for their own experimental purposes.
+         The kind of things you may be able to do :
+            Make custom builds of dojo to serve locally
+            Make custom builds of dojo to serve from your own CDN
+            Run custom build profiles to combine all the code required by one form into one js file
+
+
+      First you need to obtain one of dojo's src releases, currently: http://download.dojotoolkit.org/release-1.1.1/dojo-release-1.1.1-src.tar.gz
+      NB. You MUST build from a src release. You must NOT serve from a src release without first building from it.
+      
+      NB. Before building Dojo, you will most likely want to suplement the default locales that dojo builds in.
+          See the comments in dojo's util/buildscripts/cldr/build.xml
+      
+      To perform a build of Dojo, you need several properties setup.
+      As a starting point you may copy 'build.properties' to 'local.build.properties' and edit that to your needs.
+      
+      Targets :
+      
+        build: run dojo's build system
+        jar:   make a jar of a dojo build (default)
+        nano:  make a jar of a nano-build of dojo, to distribute with Cocoon
+
 
      @version $Id$
 -->
 
 <project name="build-dojo" default="jar">
 
+  <property name="build" location="build/org/apache/cocoon/dojotoolkit/resources"/>
 	<property file="local.build.properties"/>
 
 	<!-- Set dojo.revision to the date if unspecified -->
@@ -42,34 +80,65 @@ Set it either on the command-line or in your local.build.properties.
 	</target>
 
 	<target name="init" depends="check-dojo.home, check-dojo.revision">
-		<echo>dojo.home=${dojo.home}</echo>
-		<echo>dojo.revision=${dojo.revision}</echo>
+		<echo>dojo.home         ${dojo.home}</echo>
+		<echo>dojo.revision     ${dojo.revision}</echo>
+		<echo>dojo.profile      ${dojo.profile}</echo>
+		<echo>dojo.profileFile  ${dojo.profileFile}</echo>
+		<echo>dojo.optimize     ${dojo.optimize}</echo>
+		<echo>dojo.cssOptimize  ${dojo.cssOptimize}</echo>
+		<echo>dojo.loader       ${dojo.loader}</echo>
+	</target>
+	
+	<target name="build" depends="init">
+      <java jar="${dojo.home}/util/shrinksafe/custom_rhino.jar" 
+            dir="${dojo.home}/util/buildscripts" fork="true" failonerror="true">
+        <arg value="build.js"/> 
+        <arg value="profile=${dojo.profile}"/> 
+        <!--<arg value="profileFile=${dojo.profileFile}"/> TODO: how do you make this conditional? -->
+        <arg value="action=${dojo.action}"/>
+        <arg value="version=${dojo.version}"/> 
+        <arg value="releaseDir=${build}"/> 
+        <arg value="optimize=${dojo.optimize}"/> 
+        <arg value="layerOptimize=${dojo.layerOptimize}"/> 
+        <arg value="cssOptimize=${dojo.cssOptimize}"/> 
+        <arg value="loader=${dojo.loader}"/> 
+        <arg value="localeList=${dojo.localeList}"/> 
+        <arg value="copyTests=${dojo.copyTests}"/> 
+        <arg value="releaseName="/>
+      </java>
 	</target>
 
-	<target name="jar" depends="init">
-		<ant dir="${dojo.home}/buildscripts" target="release" inheritAll="false">
-			<property name="docless" value="true"/>
-			<property name="release_dir" location="build/org/apache/cocoon/dojo/resources"/>
-			<property name="revision" value="${dojo.revision}"/>
-			<property name="profile" value="widget"/>
-			<property name="version" value="0.4.3"/>
-		</ant>
+	<target name="jar" depends="build">
 
+    <!-- remove demos, useless files -->
 		<delete includeemptydirs="true">
-			<!-- remove demos, useless files and js sources (they're all packed in dojo.js) -->
-			<fileset dir="build/org/apache/cocoon/dojo/resources"
-			       includes="CHANGELOG, README, build.txt, dojo.js.uncompressed.js, DojoFileStorageProvider.jar"/>
-			<fileset dir="build/org/apache/cocoon/dojo/resources/demos"/>
-			<fileset dir="build/org/apache/cocoon/dojo/resources/release"/>
-			<fileset dir="build/org/apache/cocoon/dojo/resources/tests"/>
-
-			<!--<fileset dir="build/org/apache/cocoon/dojo/resources/src"
-				   includes="*.js, **/*.js"/>-->
-
+			<fileset dir="${build}/dojo" includes="changes.txt, build.txt"/>
+			<fileset dir="${build}/dijit/demos"/>
+			<fileset dir="${build}/dijit/bench"/>
 		</delete>
 
+    <!-- make a jar of the dojo build -->
 		<jar destfile="dojo-rsrc-${dojo.revision}.jar" basedir="build"/>
 
 		<echo>You can now replace the dojo lib in "lib/optional" with dojo-rsrc-${dojo.revision}.jar</echo>
 	</target>
+
+	<target name="nano" depends="init">
+
+    <!-- clean the build directory -->
+    <delete dir="build"/>
+    
+    <!-- copy in the required static resources for Cocoon to use a CDN for Dojo -->
+    <copy file="${dojo.home}/dojo/resources/blank.html" todir="${build}/dojo/resources"/>
+    <copy file="${dojo.home}/dojo/resources/iframe_history.html" todir="${build}/dojo/resources"/>
+    <copy file="${dojo.home}/dojo/resources/LICENSE" todir="${build}/dojo/resources"/>
+    <copy file="${dojo.home}/dojo/LICENSE" todir="${build}/dojo"/>
+
+    <!-- make a jar of the nano build -->
+		<jar destfile="nano-dojo-rsrc-${dojo.revision}.jar" basedir="build"/>
+
+		<echo>You can now replace the dojo lib in "lib/optional" with dojo-rsrc-${dojo.revision}.jar</echo>
+	</target>
+
+
 </project>

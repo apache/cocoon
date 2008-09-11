@@ -18,31 +18,28 @@
 <page>
   <title>Linked Updating</title>
   <!-- include ajax scripts -->
+  <script djConfig="isDebug: true, parseOnLoad: true" type="text/javascript" src="/_cocoon/resources/dojotoolkit/dojo/dojo.js"/>
   <script type="text/javascript">
-    // djConfig = { isDebug: true };
-  </script>
-  <script type="text/javascript" src="resources/dojo/dojo.js"/>
-  <!--<script type="text/javascript" src="_cocoon/resources/ajax/cocoon.js"/>-->
-  <script type="text/javascript">
-    dojo.require("dojo.widget.*");
-    dojo.registerModulePath("cocoon.ajax", "../ajax/js");
+    dojo.require("dojo.parser");
+    dojo.registerModulePath("cocoon.ajax", "../../ajax/js");
     dojo.require("cocoon.ajax.common");
-
-	function initTimer() {
-	    cocoon.ajax.periodicalUpdate(2000, "display-freememory", "freemem");
-	}
-	dojo.addOnLoad(initTimer);
-
-	function initClock() {
-  	cocoon.ajax.periodicalUpdate(1000, "display-clock", "clock");
-	}
-	dojo.addOnLoad(initClock);
-
-	function initClock1() {
-  	cocoon.ajax.periodicalUpdate(5000, "display-clock", "clock1");
-	}
- 	dojo.addOnLoad(initClock1);
-  dojo.debug("The current version of dojo is: ", dojo.version.toString());
+    dojo.require("cocoon.ajax.PartialLink");
+	
+	try{
+		dojo.addOnLoad(function() {
+			try{
+				cocoon.ajax.periodicalUpdate(2000, "display-freememory", "freemem");
+				cocoon.ajax.periodicalUpdate(1000, "display-clock", "clock");
+				cocoon.ajax.periodicalUpdate(5000, "display-clock", "clock1");
+				console.debug("The current version of dojo is: ", dojo.version.toString());
+			} catch (e) {
+				console.debug("Error in cocoon.ajax.periodicalUpdate : " + e);
+			}	
+			
+		});
+	} catch (e) {
+		console.debug("Error in dojo.addOnLoad : " + e);
+	}	
   </script>
 
 	<style>
@@ -57,12 +54,12 @@
 		<table width="100%">
 			<tr valign="top">
 				<td width="30%">
-					<a href="linked-updater-content-1" dojoType="ajax:PartialLink" target="replace#changeme">Click me to do a replace</a><br/>
-					<a href="linked-updater-content-2" dojoType="ajax:PartialLink" target="replace#changeme">Click me to do a different replace</a><br/>
-					<a href="linked-updater-content-3" dojoType="ajax:PartialLink" target="before#changeme">Click me to insert before</a><br/>
-					<a href="linked-updater-content-3" dojoType="ajax:PartialLink" target="top#changeme">Click me to insert at the top</a><br/>
-					<a href="linked-updater-content-3" dojoType="ajax:PartialLink" target="bottom#changeme">Click me to insert at the bottom</a><br/>
-					<a href="linked-updater-content-3" dojoType="ajax:PartialLink" target="after#changeme">Click me to insert after</a><br/>
+					<a href="linked-updater-content-1" dojoType="cocoon.ajax.PartialLink" target="replace#changeme">Click me to do a replace</a><br/>
+					<a href="linked-updater-content-2" dojoType="cocoon.ajax.PartialLink" target="replace#changeme">Click me to do a different replace</a><br/>
+					<a href="linked-updater-content-3" dojoType="cocoon.ajax.PartialLink" target="before#changeme">Click me to insert before</a><br/>
+					<a href="linked-updater-content-3" dojoType="cocoon.ajax.PartialLink" target="top#changeme">Click me to insert at the top</a><br/>
+					<a href="linked-updater-content-3" dojoType="cocoon.ajax.PartialLink" target="bottom#changeme">Click me to insert at the bottom</a><br/>
+					<a href="linked-updater-content-3" dojoType="cocoon.ajax.PartialLink" target="after#changeme">Click me to insert after</a><br/>
 					<p>Memory available on the server:
 					  <span id="freemem">[unknown]</span>
 					</p>

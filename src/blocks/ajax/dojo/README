@@ -1,0 +1,28 @@
+Tools to make a build of Dojo 1.1.1
+
+Currently Cocoon Forms defaults to accessing Dojo from Google CDN.
+If you would either like to serve a local Dojo, or you'd like to setup your own CDN, 
+you will need to build Dojo.
+
+This process is very easy :
+
+1. Downlaod a source release of Dojo :
+    eg. $ wget http://download.dojotoolkit.org/release-1.1.1/dojo-release-1.1.1-src.zip
+    
+2. Unpack the release
+    eg. $ unzip dojo-release-1.1.1-src.zip
+    
+3. Build the full set of locales in Dojo, to give you full formatting support in CForms
+    run the Ant build script in dojo release util/buildscripts/cldr/build.xml
+    
+4. Setup the build script in this directory
+    copy 'build.properties' to 'local.build.properties'
+    edit the 'dojo.home' property to the location of your dojo release directory
+
+5. Run the build script in this directory
+    $ ant
+
+6. Install the resulting Jar file in Cocoon 
+
+
+Please read also the comments in build.xml
