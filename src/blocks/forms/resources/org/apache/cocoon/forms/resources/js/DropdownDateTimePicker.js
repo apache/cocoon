@@ -25,6 +25,10 @@ dojo.require("dojo.string.*");
  * Compared to the dojo dropdown date and time pickers, this one supports also combined datetime input
  * in one field. It also makes use of the correct forms locale.
  */
+
+/* Deprecated in 2.1.12 TODO: This is no longer used and will no longer work  */
+
+
 dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.HtmlWidget,
     function() {
     },

@@ -34,7 +34,7 @@
   * To be removed in 2.1.12(?) release
   */
 forms_submitForm = function() { 
-    if (dojo) dojo.debug("DEPRECATED: forms_submitForm(), use cocoon.forms.submitForm(element[, name, params]) instead");
+    if (console) console.warn("DEPRECATED: forms_submitForm(), use cocoon.forms.submitForm(element[, name, params]) instead");
     // we do not know which form is being submitted, let's at least try to find it.
     var form = document.getElementById("_cforms_default_form_"); // maybe forms_onsubmitHandlers.push has been called
     if (!form) {
@@ -53,30 +53,30 @@ forms_submitForm = function() {
 }
 
 forms_getForm = function(element) { 
-    if (dojo) dojo.debug("DEPRECATED: forms_getForm(element), use cocoon.forms.getForm(element) instead");
+    if (console) console.warn("DEPRECATED: forms_getForm(element), use cocoon.forms.getForm(element) instead");
     cocoon.forms.getForm.apply(cocoon.forms, arguments); 
 }
 
 forms_onsubmit = function() { 
-    if (dojo) dojo.debug("DEPRECATED: forms_onsubmit(), use cocoon.forms.callOnSubmitHandlers(form) instead");
+    if (console) console.warn("DEPRECATED: forms_onsubmit(), use cocoon.forms.callOnSubmitHandlers(form) instead");
     var form = document.getElementById("_cforms_default_form_");
     cocoon.forms.callOnSubmitHandlers.apply(cocoon.forms, [form]); 
 }
 
 forms_onload = function() { 
-    if (dojo) dojo.debug("DEPRECATED: forms_onload(), use cocoon.forms.callOnLoadHandlers() instead");
+    if (console) console.warn("DEPRECATED: forms_onload(), use cocoon.forms.callOnLoadHandlers() instead");
     cocoon.forms.callOnLoadHandlers.apply(cocoon.forms, arguments);
 }
 
 var forms_onloadHandlers = new Array();
 forms_onloadHandlers.push = function(handler) {
-    if (dojo) dojo.debug("DEPRECATED: forms_onloadHandlers.push(handler), use cocoon.forms.addOnLoadHandler(handler) instead");
+    if (console) console.warn("DEPRECATED: forms_onloadHandlers.push(handler), use cocoon.forms.addOnLoadHandler(handler) instead");
     cocoon.forms.addOnLoadHandler.apply(cocoon.forms, arguments) 
 }
 
 var forms_onsubmitHandlers = new Array();
 forms_onsubmitHandlers.push = function(handler) {
-    if (dojo) dojo.debug("DEPRECATED: forms_onsubmitHandlers.push(handler), use cocoon.forms.addOnSubmitHandler(form, handler) instead");
+    if (console) console.warn("DEPRECATED: forms_onsubmitHandlers.push(handler), use cocoon.forms.addOnSubmitHandler(form, handler) instead");
     // we do not know which form the handler is from, let's at least try to find it.
     var form = document.getElementById("_cforms_default_form_"); // maybe we did this before
     if (!form) {
@@ -160,6 +160,7 @@ function forms_createOptionTransfer(id, submitOnChange) {
  * @param state (string, optional) name of the input storing the tabgroup state
  */
 function forms_showTab(tabgroup, idx, length, state) {
+    if (console) console.warn("DEPRECATED: forms_showTab(), replaced by cocoon.forms.TabGroup tab implementation");
     // Change state value
     if (state.length > 0) {
         document.getElementById(state).value = idx;

@@ -15,40 +15,77 @@
  * limitations under the License.
  */
 dojo.provide("cocoon.forms.SimpleForm");
-dojo.require("dojo.event");
-dojo.require("dojo.widget.DomWidget");
+
+dojo.require("dijit._Widget");
 dojo.require("cocoon.forms.common");
+dojo.requireLocalization("dijit", "loading", null, "ar,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sv,tr,ROOT,zh,zh-tw"); // bummer!
 
 
 /**
  * Dojo widget for Cocoon Forms, that handles full-page submits to the server.
  *
- * Extends the base DomWidget class. We don't need all the HtmlWidget stuff
- * but need traversal of the DOM to build child widgets
+ * Extends dijit._Widget.
  *
  * NOTE: Introduced in 2.1.11, replaces functionality in forms-lib.js
  *
  * @version $Id$
  */
 
-dojo.widget.defineWidget(
-    "cocoon.forms.SimpleForm",
-    dojo.widget.DomWidget,
-    {
-
-    // widget properties
-    ns: "forms",
-    widgetType: "SimpleForm",
-    isContainer: true,
-    preventClobber: true, // don't clobber our form node (this.domNode)
+dojo.declare("cocoon.forms.SimpleForm", dijit._Widget, {
+    
+    duration: 2000, // default fade-in duration in milliseconds
+    loadingMessage: "<span class='cformsLoading dijitContentPaneLoading'>${loadingState}</span>", 
+    
+    buildRendering: function() {
+        this.inherited(arguments);
+        // if the form is invisible (there was @class="fadeIn" on the form in the Template), draw the loader animation
+        if (dojo.hasClass(this.domNode, "fadeIn")) {
+            dojo.require("dojo.i18n");
+            dojo.require("dojo.string");
+            var messages = dojo.i18n.getLocalization("dijit", "loading", this.lang);
+		    this.loadingMessage = dojo.string.substitute(this.loadingMessage, messages);
+            this.loadingNode = dojo.doc.createElement('div');
+            this.loadingNode.innerHTML = this.loadingMessage;
+            this.domNode.parentNode.appendChild(this.loadingNode);
+        }
+    },
+    
+    /** 
+     *  dijit.Widget interface
+     *  Hook up our events and onSubmit handler
+     */
+    postCreate: function() {
+        this.inherited(arguments);
+        this.id = this.domNode.getAttribute("id"); // why do we need to do this?
+        if (!this.id && console) console.warn("WARNING: IDs on forms are now required, this form may not work properly.");
+        // make getDescendants() work
+        if(!this.containerNode) this.containerNode = this.domNode; 
+        // set the form's onsubmit handler to call this.submit
+        // pick up the User's optional onSubmit handler (Added in the CForms Template)
+        this.userOnSubmit = this.domNode["onsubmit"]; 
         
-    // widget interface
-    fillInTemplate: function(args, frag) {
-        this.id = this.domNode.getAttribute("id"); 
-        if (!this.id) dojo.debug("WARNING: IDs on forms are now required, this form may not work properly.");
-        this.domNode.setAttribute("dojoWidgetId", this.widgetId); // mark this node as a widget impl of a form
-        dojo.event.connect("around", this.domNode, "onsubmit", this, "_browserSubmit");
-        dojo.event.connect(this.domNode, "onclick", this, "_grabClickTarget"); 
+        // replace the onSubmit handler with our own
+        this.domNode["onsubmit"] = dojo.hitch(this, function() {
+            // submit the form using the cocoon.forms.*Form Widget's handlers
+            this.submit(this.lastClickTarget && this.lastClickTarget.name); 
+            return false; // no further submits
+        });
+        // capture the click target
+        this.connect(this.domNode, "onclick", "_grabClickTarget"); 
+    },
+    
+    /** 
+     *  dijit.Widget interface
+     *  Reveal the form if it was rendered hidden (there was @class="fadeIn" on the form in the Template)
+     */
+    startup: function() {
+        this.inherited(arguments);
+        var loading = this.loadingNode;
+        dojo.fadeIn({
+            node:this.domNode, 
+            duration: this.duration,
+            onEnd: function() { if (loading) loading.parentNode.removeChild(loading); }
+        }).play(); // ready to reveal the form in all it's glory
     },
     
     /** 
@@ -57,24 +94,15 @@ dojo.widget.defineWidget(
      * (the event in onsubmit() is the HTMLFormElement).
      */
     _grabClickTarget: function(event) {
-        this.lastClickTarget = dojo.html.getEventTarget(event);
+        this.lastClickTarget = event.target;
+    },
+    
+    getOnSubmitTopic: function() {
+        return this.id + "_cforms_onSubmit";
     },
 
-    /** 
-     * Connected to the forms 'onsubmit' event 
-     * called when the user clicks a submit input 
-     * Calls the user's optional @onsubmit handler on the form tag
-     * If real submit has to occur, it's taken care of in this.submit()
-     * We always return false, to stop the native submit from running
-     *
-     */
-    _browserSubmit: function(onSubmitEvent) {
-        if (onSubmitEvent.proceed() == false) { 
-            // onsubmit handlers stopped submission
-            return false;
-        }
-        this.submit(this.lastClickTarget && this.lastClickTarget.name); // submit the form
-        return false;
+    getAfterSubmitTopic: function() {
+        return this.id + "_cforms_afterSubmit";
     },
 
     /**
@@ -85,10 +113,15 @@ dojo.widget.defineWidget(
      *
      */
     submit: function(name, params) {
-        dojo.debug("SimpleForm.submit");
-        if (!params) params = {};
-        cocoon.forms.fullPageSubmit(this.domNode, name, params);
+        // Widgets subscribing to this topic get called first, but cannot stop form submit
+        dojo.publish(this.getOnSubmitTopic()); 
+        // The user supplied onSubmit handler may stop submit (only for full page submits)
+        if (dojo.isFunction(this.userOnSubmit) ) {
+            if (this.userOnSubmit() === false) return false; 
+        }
+        cocoon.forms.fullPageSubmit(this.domNode, name, params || {});
         // Toggle the click target off, so it does not get resubmitted if another submit is fired before this has finished
         if (this.domNode[name]) this.domNode[name].disabled = true;
+        dojo.publish(this.getAfterSubmitTopic()); 
     }
 });

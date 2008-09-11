@@ -29,84 +29,78 @@ dojo.require("cocoon.ajax.BUHandler");
  * @version $Id$
  */
 
-dojo.widget.defineWidget(
-    "cocoon.forms.AjaxForm",
-    cocoon.forms.SimpleForm,
-    {
 
-    // widget properties
-    widgetType: "AjaxForm",
+dojo.declare("cocoon.forms.AjaxForm", cocoon.forms.SimpleForm, {
 
     /**
      * Submit the form via Ajax.
      * Choose the right transport depending on the widgets in the form and the browser's capabilities.
      *
      * @param name the name of the widget that triggered the submit (if any)
-     * @param params an object containing additional parameters to be added to the form data (optional)
+     * @param content an object containing additional parameters to be added to the form data (optional)
      */
-    submit: function(name, params) {
-        var form = this.domNode;                                /* the form node */
-        var mimetype = "text/xml";                              /* the default mime-type */
-        if (!params) params = {};                               /* create if not passed */
-
-        // TODO: should CForm's onSubmit handlers be called for Ajax events ?
-        //if (cocoon.forms.callOnSubmitHandlers(form)) == false) return; /* call CForm's onSubmit handlers */
-
+    submit: function(name, content) {
         // Provide feedback that something is happening.
         document.body.style.cursor = "wait";
-
+        // Call child Widget's onSubmit function
+        dojo.publish(this.getOnSubmitTopic()); 
         // The "ajax-action" attribute specifies an alternate submit location used in Ajax mode.
         // This allows to use Ajax in the portal where forms are normally posted to the portal URL.
-        var uri = form.getAttribute("ajax-action");
-        if (!uri) uri = form.action;
-        if (uri == "") uri = document.location;
-
-        params["forms_submit_id"] = name;                       /* name of the button doing the submit */
-        params["cocoon-ajax"] = true;                           /* tell Cocoon we want AJAX-style browser updates */
-        if (dojo.io.formHasFile(form)) {                        /* check for file-upload fields */
-            dojo.require("dojo.io.IframeIO");                   /* using IframeIO as we have file-upload fields */
-            mimetype = "text/html";                             /* a different mime-type is required for IframeIO */
+        var url = this.domNode.getAttribute("ajax-action") || this.domNode.action || document.location;
+        content = content || {};
+        // ROFL, we are using every type of delimiter in standard CForms fields, legacy legacy :) (JQ)
+        content["forms_submit_id"] = name;                      /* name of the button doing the submit */
+        content["cocoon-ajax"] = true;                          /* tell Cocoon we want AJAX-style browser updates */
+        content["dojo.transport"] = "xmlhttp";                  /* tell Cocoon we are using xmlhttp transport */
+        // prepare the basic IOArgs
+        var xhrArgs = {
+            url: url,
+            content: content,
+            form: this.domNode,
+            handleAs: "xml",
+            handle: dojo.hitch(this, function(response, ioArgs) { this._handleBrowserUpdate(this, name, response, ioArgs) })
+        };
+        // choose a transport
+        if (this.checkForActiveFile(this.domNode)) {            /* check for file-upload fields */
+            dojo.require("dojo.io.iframe");                     /* using IframeIO as we have file-upload fields */
+            xhrArgs.handleAs = "html";                          /* a different mime-type is required for IframeIO */
+            xhrArgs.content["dojo.transport"] = "iframe";       /* a different transport id is required for IframeIO */
+            dojo.io.iframe.send(xhrArgs);                       /* send the AJAX Request via iframe IO */
+            // TODO: weird bug with Safari, does not send 'cocoon-ajax' or 'dojo.transport' the second time the form is posted
+        } else {
+            xhrArgs.contentType = "application/x-www-form-urlencoded; charset=UTF-8";
+            dojo.xhrPost(xhrArgs);                              /* send the AJAX Request via xhr IO */
         }
-
-        dojo.io.bind({
-            url: uri,
-            handle: dojo.lang.hitch(this, function(type, data) { this._handleBrowserUpdate(this, name, type, data) }),
-            method: "post",
-            mimetype: mimetype,                                 /* the mimetype of the response */
-            content: params,                                    /* add extra params to the form */
-            formNode: form,                                     /* the form */
-            sendTransport: true                                 /* tell cocoon what transport we are using */
-        });
         // Toggle the click target off, so it does not get resubmitted if another submit is fired before this has finished
         // NB. This must be done after the form is assembled by dojo, or certain onChange handlers may fail
-        // Avoid the use of widget.lastClickTarget as it may already be out of date
-        if (form[name]) form[name].disabled = true;
+        // Avoid the use of this.lastClickTarget as it may already be out of date
+        if (this.domNode[name]) this.domNode[name].disabled = true;
+        dojo.publish(this.getAfterSubmitTopic());
     },
 
     /**
      * Handle the server's BrowserUpdate response.
      * Update the part of the form referenced by ids in the reponse.
      */
-    _handleBrowserUpdate: function(widget, name, type, data) {
+    _handleBrowserUpdate: function(widget, name, response, ioArgs) {
+        _response = response; // debug
         // Restore normal cursor
         document.body.style.cursor = "auto";
         // Attempt to re-enable the click target
         if (this.domNode[name]) this.domNode[name].disabled = false;
         // get a BrowsewrUpdateHandler which will replace the updated parts of the form
         var updater = new cocoon.ajax.BUHandler();
-        if (type == "load") {
-            if (!data) {
-                cocoon.ajax.BUHandler.handleError("No xml answer", data);
-                return;
-            }
+        if (response instanceof Error && response.dojoType == "timeout") {
+            updater.handleError("Request timed out", response);
+        } else if (response instanceof Error) {
+            updater.handleError("Request failed", response);
+        } else if (!response) {
+            cocoon.ajax.BUHandler.handleError("No xml answer");
+        } else {
             // add the continue handler for CForms
             updater.handlers['continue'] = function() { widget._continue(); }
             // Handle browser update directives
-            updater.processResponse(data);
-        } else if (type == "error") {
-            updater.handleError("Request failed", data);
-        } else {
-            dojo.debug("WARNING: dojo.io.bind returned an unhandled state : " + type);
+            updater.processResponse(response);
         }
     },
 
@@ -138,22 +132,17 @@ dojo.widget.defineWidget(
             }
             window.location.href = form.action + contParam;
         }
+    },
+    
+    checkForActiveFile: function(node) {
+        var hasFile = false;
+        var inputs = node.getElementsByTagName("input");
+        dojo.forEach(inputs, function(input){
+            if(hasFile){ return; }
+            if(input.getAttribute("type")=="file" && !input.disabled && input.value){
+                hasFile = true;
+            }
+        });
+        return hasFile;
     }
 });
-
-/**
- * Override built-in dojo function, we do not care about 'file' fields that are disabled.
- * We overide because dojo will call this during form submission and we do not want it
- * to be bothered by disabled file fields. Hopefully this can be added to dojo .....
- */
-dojo.io.checkChildrenForFile = function(node) {
-    var hasFile = false;
-    var inputs = node.getElementsByTagName("input");
-    dojo.lang.forEach(inputs, function(input){
-        if(hasFile){ return; }
-        if(input.getAttribute("type")=="file" && !input.disabled && input.value){
-            hasFile = true;
-        }
-    });
-    return hasFile;
-}

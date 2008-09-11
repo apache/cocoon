@@ -31,11 +31,21 @@ dojo.require("dojo.widget.DomWidget");
 // Extends the base DomWidget class. We don't need all the HtmlWidget stuff
 // but need traversal of the DOM to build child widgets.
 
+/* Deprecated in 2.1.12 TODO: This is no longer used and will no longer work  */
+
+
 dojo.widget.defineWidget(
     "cocoon.forms.CFormsRepeater",
     dojo.widget.DomWidget, {
     // Properties
+    
+    // useHandle ? class of handle element ?
+    // multi-dnd @accept, @type ?? don't know full IDs when in CForms Templates? (but do in xslt)
+    
+    // if we are making a dnd widget, why make it unorderable by default?
     orderable: false,
+    
+    // what is the use of having no selection? the model won't work ??
     select: "$no$", // default value used to type the property, but indicating that
                     // no selection will occur
 
@@ -44,20 +54,67 @@ dojo.widget.defineWidget(
     widgetType: "CFormsRepeater",
     isContainer: true,
     preventClobber: true, // don't clobber our node
+
+
+
+	/*
+	
+	constructor :
+	
+		1. go through finding all dragable children
+		2. add class="dojoDndItem" to them
+		3. make Arrays of subscribed and connected events
+			add a destroy function to remove them
+
+
+	notes :
+
+		4. instantiate a dojo.dnd.Source or Selector (depending on dnd on or off?) on my node
+			or more likely a cocoon.cforms.DndSource (in this file)
+				extends dojo.dnd.Source - adds our select stuff to Selector
+		
+		? drop indicator : add support for tables :
+			.dojoDndItemBefore, .dojoDndItemBefore td {
+				border-top: 2px solid #369;
+			}
+
+		? onSelect, onDeselect(?) check/uncheck select widget
+	
+		when loaded, set the selected ones as selected
+		
+		when mousing, turn selection on or off as appropriate (how?)
+		
+		if select checkbox is visible?
+			turn row select on and off?
+			
+	
+	*/
+
+
+
+
     
     getType: function() {
 			    return "cforms-" + this.id;
     },
     
     // widget interface
+    // make sure this still runs under 1.1
     buildRendering: function(args, frag) {
 	    // FIXME: we should destroy all drag sources and drop targets when the widget is destroyed
-	    
+
+
+		// break down buildRendering so we can use inheritance more decently?
+		// or make one widget that does both multi and single dnd
         cocoon.forms.CFormsRepeater.superclass.buildRendering.call(this, args, frag);
         this.id = this.domNode.getAttribute("id");
         if (!this.orderable && this.select == "none") {
             dojo.debug(this.widgetType + " '" + this.id + "' is not orderable nor selectable");
         }
+
+
+
+
 
         if (this.orderable) {
 	        // Get the parent of the first repeater row (may be different from this.domNode)

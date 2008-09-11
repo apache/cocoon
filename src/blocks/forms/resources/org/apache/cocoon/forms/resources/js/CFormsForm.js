@@ -32,6 +32,9 @@ dojo.require("cocoon.ajax.BUHandler");
  * @version $Id$
  */
 
+/* TODO: This is no longer used and will no longer work  */
+
+
 dojo.widget.defineWidget(
     "cocoon.forms.CFormsForm",
     dojo.widget.DomWidget,
