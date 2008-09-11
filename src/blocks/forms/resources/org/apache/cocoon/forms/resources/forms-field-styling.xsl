@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -20,30 +20,30 @@
   This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
 
   @version $Id$
+  
+  TODO: this needs serious rationalisation
+        
+     (JQ) My thoughts are as follows :
+        
+        It is useful to have this imported into forms-advanced-styling.xsl
+          as it can provide re-usable basic Templates
+        But this ought to have all templates that make dojo references moved out to advanced
+        so that people could use just this one for making very basic non-javascript forms 
+        
+        ATM, it has a bad mix
+  
+  NB. This xslt currently cannot be used without forms-advanced-styling
+  
 -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+                xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
                 exclude-result-prefixes="fi">
 
-  <xsl:param name="dojo-debug">false</xsl:param><!-- option to turn on console debugging for dojo on the browser, from a parameter in the sitemap -->
-  <xsl:param name="dojo-locale">en</xsl:param> <!-- Allows to configure the dojo locale from a parameter in the sitemap. This should be the same as the form locale. -->
-
-  <!-- Create a variable with the normalized locale, dojo needs locale parts to be separated with a dash -->
-  <xsl:variable name="dojoLocale">
-    <xsl:choose>
-      <xsl:when test="$dojo-locale != ''">
-        <xsl:value-of select="translate($dojo-locale, '_', '-')"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>en</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-
   <!--+
-      | Setup the scripts for CForms
+      | Setup the scripts for CForms (TODO: update this)
       |
       | CForms can run in two different modes, in each mode different form widgets get instantiated.
       | The @ajax attribute in your ft:form-template controls the mode.
@@ -72,34 +72,10 @@
       |       <xsl:attribute name="onload">cocoon.forms.callOnLoadHandlers(); <xsl:value-of select="@onload"/></xsl:attribute>
       +-->
   <xsl:template match="head" mode="forms-field">
-    <script type="text/javascript">
-      var djConfig = {};
-      <xsl:if test="$dojo-debug = 'true'">                                           <!-- turn on debugging, if requested -->
-        <xsl:text> djConfig.isDebug = true; </xsl:text>
-      </xsl:if>
-      djConfig.locale = "<xsl:value-of select="$dojoLocale"/>";
-      var cocoon;
-      if (!cocoon)
-        cocoon = {};
-      cocoon.resourcesUri = "<xsl:value-of select="$resources-uri"/>";
-    </script>
-    <script src="{$resources-uri}/dojo/dojo.js" type="text/javascript"/>           <!-- load dojo -->
-    <script type="text/javascript">dojo.require("dojo.widget.*");</script>         <!-- require dojo.widget for auto-loading -->
-    <xsl:if test="$dojo-debug = 'true'">                                           <!-- require console etc. for dojo debug, if requested -->
-        <script type="text/javascript">dojo.require("dojo.debug.console"); dojo.require("dojo.widget.Tree");</script>
-    </xsl:if>
-    <script src="{$resources-uri}/forms/js/forms-lib.js" type="text/javascript"/>  <!-- load legacy scripts -->
-    <!-- load forms library -->
-    <script type="text/javascript">
-    dojo.registerModulePath("cocoon.forms", "../forms/js");                        <!-- tell dojo how to find our forms module. NB: (since 2.1.11, replaces cocoon.js) -->
-    dojo.require("cocoon.forms.common");                                           <!-- tell dojo we require the commons library -->
-    dojo.addOnLoad(cocoon.forms.callOnLoadHandlers);                               <!-- ask dojo to run our onLoad handlers -->
-    </script>
-    <xsl:copy-of select="fi:init/node()"/>                                         <!-- copy optional initialisation from form template -->
-    <xsl:if test="/*/fi:googlemap">                                                <!-- googlemap-key TODO: This looks broken to me (JQ) -->
+    <xsl:copy-of select="fi:init/node()"/>                                             <!-- copy optional initialisation from form template -->
+    <xsl:if test="/*/fi:googlemap">                                                    <!-- googlemap-key TODO: This looks broken to me (JQ) -->
       <script src="/*/fi:googlemap/fi:key" type="text/javascript"/>
     </xsl:if>
-    <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms/css/forms.css"/>
   </xsl:template>
 
   <xsl:template match="fi:init"/>                                                  <!-- ignore, was handled above -->
@@ -112,10 +88,12 @@
       | Generic fi:field : produce an <input>
       +-->
   <xsl:template match="fi:field">
-    <span id="{@id}">
+    <div id="{@id}:bu">
       <xsl:if test="fi:captcha-image">
-        <img src="captcha-{fi:captcha-image/@id}.jpg" style="vertical-align:middle" class="forms captcha"/>
-        <xsl:text> </xsl:text>
+        <span class="forms capcha dijitInline">
+          <img src="captcha-{fi:captcha-image/@id}.jpg" style="vertical-align:middle" class="forms captcha"/>
+          <xsl:text> </xsl:text>
+        </span>
       </xsl:if>
       <!--  @id:input is what labels point to -->
       <input name="{@id}" id="{@id}:input" value="{fi:value}" title="{fi:hint}" type="text">
@@ -125,7 +103,7 @@
         <xsl:apply-templates select="." mode="styling"/>
       </input>
       <xsl:apply-templates select="." mode="common"/>
-    </span>
+    </div>
     <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
 
@@ -133,20 +111,48 @@
       | Field in "output" state: display its value
       +-->
   <xsl:template match="fi:field[@state='output']" priority="3">
-    <span id="{@id}"><xsl:apply-templates select="." mode="css"/><xsl:value-of select="fi:value/node()"/></span>
+    <span id="{@id}:bu"><xsl:apply-templates select="." mode="css"/><xsl:value-of select="fi:value/node()"/></span>
   </xsl:template>
+
+  <!--+
+      | Hidden fi:field : produce input with type='hidden'
+      +-->
+  <xsl:template match="fi:field[fi:styling/@type='hidden']" priority="2">
+    <input type="hidden" name="{@id}" id="{@id}" value="{fi:value}">
+      <xsl:apply-templates select="." mode="styling"/>
+    </input>
+  </xsl:template>
+
+
+  <!--+
+      | Number fi:field : produce input with constraints
+  <xsl:template match="fi:field[fi:datatype/@type='integer'] | fi:field[fi:datatype/@type='long'] | 
+                       fi:field[fi:datatype/@type='decimal'] | fi:field[fi:datatype/@type='float'] |
+                       fi:field[fi:datatype/@type='double']">
+  </xsl:template>
+      +-->
 
   <!--+
       | Common stuff like fi:validation-message, @required.
       +-->
   <xsl:template match="fi:*" mode="common">
-    <!-- validation message -->
-    <xsl:apply-templates select="fi:validation-message"/>
-    <!-- required mark -->
-    <xsl:if test="@required='true'">
-      <span class="forms-field-required forms {local-name()} required-mark"> * </span>
-    </xsl:if>
+    <!-- validation message, required mark or spacer -->
+    <span xclass="forms-field-marker">
+      <xsl:choose>
+        <xsl:when test="fi:validation-message"><xsl:apply-templates select="fi:validation-message"/></xsl:when>
+        <xsl:when test="@required='true'"><span class="forms-field-required"><i18n:text i18n:catalogue="forms">general.field-required-symbol</i18n:text></span></xsl:when>
+      </xsl:choose>
+    </span>
   </xsl:template>
+
+  <!--+
+      |
+  <xsl:template match="fi:validation-message">
+    <script type="text/javascript">dojo.require("dijit.Tooltip");</script>
+    <span id="{../@id}Validation" xclass="forms-field-invalid"><i18n:text i18n:catalogue="forms">general.field-invalid-symbol</i18n:text></span>
+    <span dojoType="dijit.Tooltip" connectId="{../@id}Validation" position="above,below" class="forms-validation-message-popup"><xsl:copy-of select="node()"/></span>
+  </xsl:template>
+      +-->
 
   <!--+
       | Handling the common styling. You may only add attributes to the output
@@ -172,6 +178,9 @@
 
     <xsl:if test="@state = 'disabled'">
       <xsl:attribute name="disabled">disabled</xsl:attribute>
+    </xsl:if>
+    <xsl:if test="@required = 'true'">
+      <xsl:attribute name="required">true</xsl:attribute>
     </xsl:if>
 
     <!--+
@@ -240,24 +249,6 @@
     </xsl:choose>
   </xsl:template>
 
-  <!--+
-      |
-      +-->
-  <xsl:template match="fi:validation-message">
-    <span dojoType="forms:infopopup" style="display:none" class="forms-validation-message-popup"
-          id="forms-validation-message-{../@id}" icon="validation-message.gif">
-      <xsl:copy-of select="node()"/>
-    </span>
-  </xsl:template>
-
-  <!--+
-      | Hidden fi:field : produce input with type='hidden'
-      +-->
-  <xsl:template match="fi:field[fi:styling/@type='hidden']" priority="2">
-    <input type="hidden" name="{@id}" id="{@id}" value="{fi:value}">
-      <xsl:apply-templates select="." mode="styling"/>
-    </input>
-  </xsl:template>
 
   <!--+
       | fi:field with a selection list and @list-type 'radio' : produce
@@ -270,12 +261,13 @@
     <xsl:variable name="vertical" select="string(fi:styling/@list-orientation) != 'horizontal'"/>
     <xsl:choose>
       <xsl:when test="$vertical">
-        <table id="{$id}" cellpadding="0" cellspacing="0" border="0" title="{fi:hint}" class="forms vertical-list">
+        <table id="{$id}:bu" cellpadding="0" cellspacing="0" border="0" title="{fi:hint}" class="dijitReset forms-field-radio vertical-list">
+          <script type="text/javascript">dojo.require("dijit.form.CheckBox");</script>
           <xsl:for-each select="fi:selection-list/fi:item">
             <xsl:variable name="item-id" select="concat($id, ':', position())"/>
             <tr>
               <td>
-                <input type="radio" id="{$item-id}" name="{$id}" value="{@value}">
+                <input type="radio" id="{$item-id}" name="{$id}" value="{@value}" dojoType="dijit.form.RadioButton">
                   <xsl:if test="@value = $value">
                     <xsl:attribute name="checked">checked</xsl:attribute>
                   </xsl:if>
@@ -289,7 +281,10 @@
               </td>
               <xsl:if test="position() = 1">
                 <td rowspan="{count(../fi:item)}">
-                  <xsl:apply-templates select="../.." mode="common"/>
+                  <!--<xsl:apply-templates select="../.." mode="common">
+                    <xsl:with-param name="id" select="concat($id,':bu')"/>
+                  </xsl:apply-templates>-->
+                  <span class="forms-help-button"><xsl:apply-templates select="../.." mode="common"/></span>
                 </td>
               </xsl:if>
             </tr>
@@ -297,10 +292,11 @@
         </table>
       </xsl:when>
       <xsl:otherwise>
-        <span id="{$id}" title="{fi:hint}" class="forms horizontal-list">
+        <span id="{$id}:bu" title="{fi:hint}" class="dijitReset dijitInlineTable forms-field-radio horizontal-list">
+          <script type="text/javascript">dojo.require("dijit.form.CheckBox");</script>
           <xsl:for-each select="fi:selection-list/fi:item">
             <xsl:variable name="item-id" select="concat($id, ':', position())"/>
-            <input type="radio" id="{$item-id}" name="{$id}" value="{@value}">
+            <input type="radio" id="{$item-id}" name="{$id}" value="{@value}" dojoType="dijit.form.RadioButton">
               <xsl:if test="@value = $value">
                 <xsl:attribute name="checked">checked</xsl:attribute>
               </xsl:if>
@@ -310,7 +306,7 @@
               <xsl:with-param name="id" select="$item-id"/>
             </xsl:apply-templates>
           </xsl:for-each>
-          <xsl:apply-templates select="." mode="common"/>
+          <span class="dijitInline forms-help-button"><xsl:apply-templates select="." mode="common"/></span>
         </span>
       </xsl:otherwise>
     </xsl:choose>
@@ -323,24 +319,31 @@
       | - if @list-type is "listbox" : produce a list box with @listbox-size visible
       |   items (default 5)
       | - otherwise, produce a dropdown menu
+      |
+      |  TODO: revert this to the simple version
       +-->
   <xsl:template match="fi:field[fi:selection-list]" priority="1">
     <xsl:variable name="value" select="fi:value"/>
 
     <!-- dropdown or listbox -->
-    <span id="{@id}">
-      <select title="{fi:hint}" id="{@id}:input" name="{@id}">
-        <xsl:apply-templates select="." mode="styling"/>
-        <xsl:for-each select="fi:selection-list/fi:item">
-          <option value="{@value}">
-            <xsl:if test="@value = $value">
-              <xsl:attribute name="selected">selected</xsl:attribute>
-            </xsl:if>
-            <xsl:copy-of select="fi:label/node()"/>
-          </option>
-        </xsl:for-each>
-      </select>
-      <xsl:apply-templates select="." mode="common"/>
+    <span id="{@id}:bu" class="dijitReset dijitInlineTable forms-field-select">
+      <span class="dijitInline">
+        <script type="text/javascript">dojo.require("cocoon.forms.Select");</script>
+        <select id="{@id}:input" name="{@id}" dojoType="cocoon.forms.Select">
+          <xsl:apply-templates select="." mode="styling"/>
+          <xsl:if test="fi:hint"><xsl:attribute name="promptMessage"><xsl:value-of select='translate(fi:hint,"&#x27;","`")'/></xsl:attribute></xsl:if>
+          <xsl:if test="fi:validation-message"><xsl:attribute name="invalidMessage"><xsl:value-of select='translate(fi:validation-message/text(),"&#x27;","`")'/></xsl:attribute></xsl:if>
+          <xsl:for-each select="fi:selection-list/fi:item">
+            <option value="{@value}">
+              <xsl:if test="@value = $value">
+                <xsl:attribute name="selected">selected</xsl:attribute>
+              </xsl:if>
+              <xsl:copy-of select="fi:label/node()"/>
+            </option>
+          </xsl:for-each>
+        </select>
+      </span>
+      <span class="dijitInline forms-help-button"><xsl:apply-templates select="." mode="common"/></span>
     </span>
     <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
@@ -349,7 +352,7 @@
       | fi:field with @type 'textarea'
       +-->
   <xsl:template match="fi:field[fi:styling/@type='textarea']">
-    <span id="{@id}">
+    <span id="{@id}:bu">
       <textarea id="{@id}:input" name="{@id}" title="{fi:hint}">
         <xsl:apply-templates select="." mode="styling"/>
         <!-- remove carriage-returns (occurs on certain versions of IE and doubles linebreaks at each submit) -->
@@ -365,14 +368,14 @@
       +-->
   <xsl:template match="fi:field[@state='output' and fi:selection-list]" priority="3">
     <xsl:variable name="value" select="fi:value/node()"/>
-    <span id="{@id}"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:selection-list/fi:item[@value=$value]/fi:label/node()"/></span>
+    <span id="{@id}:bu"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:selection-list/fi:item[@value=$value]/fi:label/node()"/></span>
   </xsl:template>
 
   <!--+
       | fi:output is rendered as text
       +-->
   <xsl:template match="fi:output">
-    <span id="{@id}"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:value/node()"/></span>
+    <span id="{@id}:bu"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:value/node()"/></span>
   </xsl:template>
 
   <!--+
@@ -457,8 +460,9 @@
       | the value and not the checked attribute
       +-->
   <xsl:template match="fi:booleanfield">
-    <span id="{@id}">
-      <input id="{@id}:input" type="checkbox" value="{@true-value}" name="{@id}" title="{fi:hint}">
+    <span id="{@id}:bu" class="dijitReset dijitInlineTable forms-field-checkbox">
+      <script type="text/javascript">dojo.require("dijit.form.CheckBox");</script>
+      <input id="{@id}:input" type="checkbox" value="{@true-value}" name="{@id}" title="{fi:hint}" dojoType="dijit.form.CheckBox" class="dijitInline">
         <xsl:apply-templates select="." mode="styling"/>
         <xsl:choose>
           <xsl:when test="./fi:styling[@type='hidden']">
@@ -473,7 +477,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </input>
-      <xsl:apply-templates select="." mode="common"/>
+      <span class="dijitInline forms-help-button"><xsl:apply-templates select="." mode="common"/></span>
     </span>
     <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
@@ -483,32 +487,46 @@
       | use text but avoids i18n problems related to hardcoding 'yes'/'no' or 'true'/'false'
       +-->
   <xsl:template match="fi:booleanfield[@state='output']" priority="3">
-    <input id="{@id}" type="checkbox" title="{fi:hint}" disabled="disabled" value="{@true-value}" name="{@id}">
-      <xsl:apply-templates select="." mode="css"/>
-      <xsl:if test="fi:value != 'false'">
-        <xsl:attribute name="checked">checked</xsl:attribute>
-      </xsl:if>
-    </input>
+    <span id="{@id}:bu">
+      <script type="text/javascript">dojo.require("dijit.form.CheckBox");</script>
+      <input id="{@id}" type="checkbox" title="{fi:hint}" disabled="disabled" value="{@true-value}" name="{@id}" dojoType="dijit.form.CheckBox">
+        <xsl:apply-templates select="." mode="css"/>
+        <xsl:if test="fi:value != 'false'">
+          <xsl:attribute name="checked">checked</xsl:attribute>
+        </xsl:if>
+      </input>
+    </span>
   </xsl:template>
 
   <!--+
       | fi:action
+      |
+      | TODO: Special version of this Action that can submit only itself (not the whole form)
+      | Usecase : An AddRow Action on a Repeater, that contains File Input fields
+      |
       +-->
   <xsl:template match="fi:action">
-    <input id="{@id}" type="submit" name="{@id}" title="{fi:hint}">
-      <xsl:attribute name="value"><xsl:value-of select="fi:label/node()"/></xsl:attribute>
-      <xsl:apply-templates select="." mode="styling"/>
-    </input>
+    <span id="{@id}:bu">
+      <script type="text/javascript">dojo.require("dijit.Tooltip");</script>
+      <script type="text/javascript">dojo.require("dijit.form.Button");</script>
+      <input id="{@id}" name="{@id}" type="submit" dojoType="dijit.form.Button" iconClass="{@iconClass}" onClick="cocoon.forms.submitForm(this.focusNode, this.id);return false">
+        <xsl:attribute name="label"><xsl:value-of select="fi:label/node()"/></xsl:attribute>
+        <xsl:apply-templates select="." mode="styling"/>
+      </input>
+      <xsl:if test="fi:hint"><span dojoType="dijit.Tooltip" connectId="{@id}" position="above,below"><xsl:value-of select="fi:hint/node()"/></span></xsl:if>
+    </span>
   </xsl:template>
 
   <!--+
       | fi:action, link-style
       +-->
   <xsl:template match="fi:action[fi:styling/@type = 'link']" priority="1">
-    <a id="{@id}" title="{fi:hint}" href="#" onclick="cocoon.forms.submitForm(this, '{@id}'); return false">
-      <xsl:apply-templates select="." mode="styling"/>
-      <xsl:copy-of select="fi:label/node()"/>
-    </a>
+    <span id="{@id}:bu">
+      <a id="{@id}" title="{fi:hint}" href="#" onclick="cocoon.forms.submitForm(this, '{@id}'); return false">
+        <xsl:apply-templates select="." mode="styling"/>
+        <xsl:copy-of select="fi:label/node()"/>
+      </a>
+    </span>
   </xsl:template>
 
   <!--+
@@ -532,11 +550,12 @@
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
     <xsl:variable name="state" select="@state" />
 
-    <span id="{@id}" title="{fi:hint}">
+    <span id="{@id}:bu" title="{fi:hint}">
+      <script type="text/javascript">dojo.require("dijit.form.CheckBox");</script>
       <xsl:for-each select="fi:selection-list/fi:item">
         <xsl:variable name="value" select="@value"/>
         <xsl:variable name="item-id" select="concat($id, ':', position())"/>
-        <input id="{$item-id}" type="checkbox" value="{@value}" name="{$id}">
+        <input id="{$item-id}" type="checkbox" value="{@value}" name="{$id}" dojoType="dijit.form.CheckBox">
           <xsl:apply-templates select="../.." mode="styling"/>
           <xsl:if test="$state = 'disabled'">
             <xsl:attribute name="disabled">disabled</xsl:attribute>
@@ -562,7 +581,7 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
 
-    <span id="{@id}" title="{fi:hint}">
+    <span id="{@id}:bu" title="{fi:hint}">
       <select id="{@id}:input" name="{$id}" multiple="multiple">
         <xsl:apply-templates select="." mode="styling"/>
         <xsl:for-each select="fi:selection-list/fi:item">
@@ -585,7 +604,7 @@
       +-->
   <xsl:template match="fi:multivaluefield[@state='output']" priority="3">
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
-    <span id="{@id}">
+    <span id="{@id}:bu">
       <xsl:apply-templates select="." mode="css"/>
       <xsl:for-each select="fi:selection-list/fi:item">
         <xsl:variable name="value" select="@value"/>
@@ -600,7 +619,7 @@
       | fi:upload
       +-->
   <xsl:template match="fi:upload">
-    <span id="{@id}" title="{fi:hint}">
+    <span id="{@id}:bu" title="{fi:hint}">
       <xsl:choose>
         <xsl:when test="fi:value">
             <xsl:apply-templates select="." mode="css"/>
@@ -624,7 +643,7 @@
       | fi:upload, output state
       +-->
   <xsl:template match="fi:upload[@state='output']" priority="3">
-      <span id="{@id}"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:value/node()"/></span>
+      <span id="{@id}:bu"><xsl:apply-templates select="." mode="css"/><xsl:copy-of select="fi:value/node()"/></span>
   </xsl:template>
 
   <!--+
@@ -635,8 +654,24 @@
           <xsl:apply-templates select="." mode="styling"/>
       </input>
   </xsl:template>
+
   <!--+
-      | fi:repeater
+      | fi:repeater-widget (new in 2.1.12)
+      +-->
+  <xsl:template match="fi:repeater-widget">
+    <span id="{@id}:bu">
+      <script type="text/javascript">dojo.require("cocoon.forms.Repeater");</script>
+      <div dojoType="cocoon.forms.Repeater">
+        <xsl:apply-templates select="." mode="styling"/>
+        <xsl:apply-templates select="." mode="css"/>
+        <xsl:copy-of select="@*"/>
+        <xsl:apply-templates select="*"/>
+      </div>
+    </span>
+  </xsl:template>
+
+  <!--+
+      | fi:repeater (obsolete)
       +-->
   <xsl:template match="fi:repeater">
     <input type="hidden" name="{@id}.size" value="{@size}"/>
@@ -653,7 +688,7 @@
   </xsl:template>
 
   <!--+
-      | fi:repeater-row
+      | fi:repeater-row (obsolete)
       +-->
   <xsl:template match="fi:repeater-row">
     <tr>
@@ -666,7 +701,7 @@
   </xsl:template>
 
   <!--+
-      | fi:repeater-size
+      | fi:repeater-size (obsolete ??)
       +-->
   <xsl:template match="fi:repeater-size">
     <input type="hidden" name="{@id}.size" value="{@size}"/>
@@ -688,19 +723,18 @@
         <xsl:otherwise><xsl:value-of select="generate-id()"/></xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <xsl:variable name="class">
+      <xsl:choose>
+        <!-- <xsl:when test="@dojoType != ''"><xsl:value-of select="@dojoType"/></xsl:when>TODO: do we really want people putting @dojoType in their Templates for standard WIdgets? (I think not) -->
+        <xsl:when test="@ajax = 'true'">cocoon.forms.AjaxForm</xsl:when>
+        <xsl:otherwise>cocoon.forms.SimpleForm</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <script type="text/javascript">dojo.require("<xsl:value-of select="$class"/>");</script>
     <form>
       <xsl:copy-of select="@*"/>
       <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute><!-- form/@id required since 2.1.11-->
-      <xsl:if test="not(@dojoType)">
-        <xsl:choose>
-          <xsl:when test="@ajax = 'true'">
-            <xsl:attribute name="dojoType">forms:AjaxForm</xsl:attribute>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:attribute name="dojoType">forms:SimpleForm</xsl:attribute>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:if>
+      <xsl:attribute name="dojoType"><xsl:value-of select="$class"/></xsl:attribute>
       <xsl:apply-templates/>
 
       <!-- TODO: consider putting this in the xml stream from the generator? -->
@@ -709,9 +743,9 @@
       </xsl:if>
     </form>
   </xsl:template>
-
+  
   <!--+
-      | fi:form
+      | fi:form (obsolete ??)
       +-->
   <xsl:template match="fi:form">
     <table border="1">
@@ -747,7 +781,7 @@
   </xsl:template>
 
   <xsl:template match="fi:aggregatefield">
-    <span id="{@id}">
+    <span id="{@id}:bu">
       <input id="{@id}:input" name="{@id}" value="{fi:value}" title="{fi:hint}">
         <xsl:apply-templates select="." mode="styling"/>
       </input>
@@ -757,7 +791,7 @@
   </xsl:template>
 
   <xsl:template match="fi:messages">
-    <div id="{@id}">
+    <div id="{@id}:bu">
       <xsl:if test="fi:message">
         <xsl:apply-templates select="." mode="label"/>:
         <ul>
@@ -814,11 +848,13 @@
   </xsl:template>
 
   <xsl:template match="fi:union">
-    <div id="{@id}">
+    <div id="{@id}:bu">
       <xsl:apply-templates/>
     </div>
+    <note title="fi:union"/>
   </xsl:template>
 
+    <!-- TODO - remove this, it does not appear to be used (JQ) -->
   <xsl:template match="fi:repeater-template">
     <div id="{@id}">
       <xsl:apply-templates/>
@@ -830,7 +866,7 @@
       | know where to insert the widget if it becomes visible
       +-->
   <xsl:template match="fi:placeholder">
-    <span id="{@id}"/>
+    <span id="{@id}:bu"/>
     <!-- Set the label widget placeholder -->
     <xsl:apply-templates select="." mode="label-ajax-request"/>
   </xsl:template>
@@ -839,7 +875,7 @@
       | fi:struct - has no visual representation by default
       | If the fi:struct contains an id and has only one child that is not in the fi: namespace,
       | then copy the id to the child. This is needed for ajax when grouping is just used to group
-      | widgets.
+      | widgets. TODO: fi:struct has been replaced by fi:group ??
       +-->
   <xsl:template match="fi:struct">
     <xsl:apply-templates/>
@@ -861,14 +897,16 @@
 
   <xsl:template match="fi:group[@id and count(*) = 1 and not(fi:*)]">
     <xsl:apply-templates mode="copy-parent-id"/>
+    <note title="fi:group[@id and count(*) = 1 and not(fi:*)]"/>
   </xsl:template>
 
   <xsl:template match="*" mode="copy-parent-id">
     <xsl:copy>
-      <xsl:attribute name="id"><xsl:value-of select="../@id"/></xsl:attribute>
       <xsl:copy-of select="@*"/>
+      <xsl:attribute name="id"><xsl:value-of select="../@id"/>:bu</xsl:attribute>
       <xsl:apply-templates/>
     </xsl:copy>
+    <note title="* mode:copy-parent-id"/>
   </xsl:template>
 
   <xsl:template match="@*|node()" priority="-1">
@@ -889,7 +927,7 @@
   </xsl:template>
 
   <!--+
-      | fi:googlemap - generate div and hidden fields for value
+      | fi:googlemap - generate div and hidden fields for value. TODO: this probably needs remaking from scratch
       +-->
   <xsl:template match="fi:googlemap">
 
@@ -985,5 +1023,5 @@
     <input name="{../../@id}_geo" id="{../../@id}_geo"/>
     <input name="{../../@id}_geo_go" id="{../../@id}_geo_go" value="Go!" onclick="usermarker_{$jsid}.showAddress(this.form['{../../@id}_geo'].value)" type="button"/>
   </xsl:template>
-
+  
 </xsl:stylesheet>
