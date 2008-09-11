@@ -41,6 +41,11 @@
     <fd:output id="message">
       <fd:datatype base="string"/>
     </fd:output>
+
+    <fd:submit id="done">
+      <fd:label>Submit</fd:label>
+      <fd:hint>Finish tagging the upload</fd:hint>
+    </fd:submit>
     
   </fd:widgets>
 </fd:form>

@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- The only difference between this file and the form1_template_flow.xml
+     is the value of the action attribute on the ft:form-template element -->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <jx:import uri="resources/samples-jx-macros.xml"/><!-- common macros for samples -->
+  	
+  <h4 class="samplesGroup">TextArea Samples</h4>
+  <title>TextArea Samples</title>
+	<style type="text/css">
+
+		body {
+			margin:20px;
+		}
+
+		/* add padding to each contentpane inside the tab container, and scrollbar if necessary */
+		.dijitTabPane {
+			padding : 10px 10px 10px 10px;
+			margin:5px;
+			overflow: auto;
+		}
+
+	</style>
+  <content>
+    <ft:form-template class="fadeIn" action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
+      <div style="width: 90%; margin: 10px 50px 50px 50px;">
+        <p>
+          <sample-locale-display/><!-- a macro from samples-jx-macros.xml -->
+        </p>
+
+        <!-- group with tabs. Each of the children of <items> will constitute a tab -->
+        <fi:group>
+          <fi:styling type="tabs" style="height:30em;width:100%;"/>
+          <fi:state>
+            <ft:widget id="tab-state"/>
+          </fi:state>
+          <fi:items>
+            <fi:group>
+              <fi:label>Simple</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="simple">
+                  <fi:styling type="textarea" rows="8" cols="50"/>
+                </ft:widget>
+                <p>A simple textarea for editing text with line breaks</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Validating</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="validating">
+                  <fi:styling type="textarea" rows="8" cols="50"/>
+                </ft:widget>                
+                <p>A validating textarea for editing text with line breaks</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Inline Area</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="inplacearea">
+                  <fi:styling type="inplace-area" rows="8" cols="50"/>
+                </ft:widget>                
+                <p>A simple textarea embedded in an Inplace Editor</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>RichText</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="rich">
+                  <fi:styling type="htmlarea" height="10em"/>
+                </ft:widget>                
+                <p>A richtext textarea for editing HTML<br/>NB. Sometimes the text is too small to edit, in Safari.</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Inline RichText</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="inplacerich">
+                  <fi:styling type="inplace-area" height="10em" editor="cocoon.forms.RichTextArea"/>
+                </ft:widget>                
+                <p>A richtext textarea embedded in an Inplace Editor<br/>NB. This is not currently working, a fix should come with Dojo 1.2.</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Description</fi:label>
+              <fi:items>
+                <h2>Variously styled textareas</h2>
+                <p>Samples of different kinds of textarea, simple, validating and rich text.</p>
+                <p>Including samples of these editors in an Inplace Editor.</p>
+              </fi:items>
+            </fi:group>
+          </fi:items>
+        </fi:group>
+        
+        <p><ft:widget id="ok"/></p>
+      </div>
+      <p>Supported Locales: 
+          <sample-locale-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+      <p>
+        <a href="./do-groupStyles.flow">Restart this sample</a> - <a href="./">Back to samples</a>
+      </p>
+      <p align="center">
+         <sample-theme-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+    </ft:form-template>
+  </content>
+</page>
+

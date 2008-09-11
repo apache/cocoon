@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- The only difference between this file and the form1_template_flow.xml
+     is the value of the action attribute on the ft:form-template element -->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <jx:import uri="resources/samples-jx-macros.xml"/><!-- common macros for samples -->
+
+  <!--+
+      | A Handler to dim left or right buttons if you are at the end of the list
+      | Used by the custom buttons for the 'myNavGroup' sample below
+      |
+      +-->
+<script type="text/javascript">dojo.require("dijit.form.Button");</script><!-- NB. By putting each require statement in a separate script tag, we can filter out duplicates -->
+<script type="text/javascript">
+function selected(page){
+  var widget = dijit.byId("myNavGroup");
+  dijit.byId("previous").setAttribute("disabled", page.isFirstChild);
+  dijit.byId("next").setAttribute("disabled", page.isLastChild);
+}
+dojo.subscribe("myNavGroup-selectChild", selected); // connect my handler to the 'myNavGroup-selectChild' event, published by the NavGroup 
+</script>
+  	
+  <h4 class="samplesGroup">Styled Groups</h4>
+  <title>Styled Groups</title>
+	<style type="text/css">
+
+		body {
+			margin:20px;
+		}
+
+		/* add padding to each contentpane inside the tab container, and scrollbar if necessary */
+		.dijitTabPane {
+			padding : 10px 10px 10px 10px;
+			overflow: auto;
+		}
+		
+		#myNavGroupButtons {
+		  margin-top: 2em;
+		  margin-bottom: .5em;
+		  text-align: center;
+		}
+		#myNavGroupButtons .dijitToggleButton {
+		  margin: 0 .2em;
+		}
+
+	</style>
+  <content>
+    <ft:form-template class="fadeIn" action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true" accept-charset="UTF-8" >
+      <div style="width: 90%; margin: 10px 50px 50px 50px;">
+        <p>
+          <sample-locale-display/><!-- a macro from samples-jx-macros.xml -->
+        </p>
+
+        <div><!-- not sure this works with Ajax turned on (?) -->
+          <fi:validation-errors>
+            <header><p>Correct these errors please:</p></header>
+            <footer><p>And then resubmit the form.</p></footer>
+          </fi:validation-errors>               
+        </div>
+
+
+        <!-- group with tabs. Each of the children of <items> will constitute a tab -->
+        <fi:group>
+          <fi:styling type="tabs"/>
+          <fi:state>
+            <ft:widget id="tab-state"/>
+          </fi:state>
+
+          <fi:items>
+            <fi:group>
+              <fi:label>Description</fi:label>
+              <fi:items>
+                <h2>Tab Group</h2>
+                <p>Built using an outer group, with fi:styling/@type="tabs". <br/>Each inner group becomes a Tab, they must each have an fi:label.</p>
+                <p>When a tab is focussed, you can also use arrow keys to navigate.</p>
+              </fi:items>
+            </fi:group>
+            <!-- group with automatic two-column layout -->
+            <fi:group formsOnShow="console.info('Activated the Strings tab');">
+              <fi:label>String fields</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="email"/>
+                <ft:widget id="something"/>
+                <ft:widget id="fourchars">
+                  <!-- particular styling for the enumeration -->
+                  <fi:styling list-type="listbox" listbox-size="4"/>
+                </ft:widget>
+              </fi:items>
+            </fi:group>
+
+            <fi:group formsOnShow="console.info('Activated the Number Fields tab');">
+              <fi:label>Number fields</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="number1"/>
+                <ft:widget id="number2"/>
+                <ft:widget id="account"/>
+                <ft:widget id="cowheight">
+                  <fi:styling list-type="radio"/>
+                </ft:widget>
+              </fi:items>
+            </fi:group>
+
+            <fi:group>
+              <fi:styling layout="columns"/>
+              <fi:label>Boolean fields</fi:label>
+              <fi:items>
+                <ft:widget id="somebool"/>
+              </fi:items>
+            </fi:group>
+          </fi:items>
+        </fi:group>
+
+        <fi:group>
+          <fi:styling type="choice"/>
+          <fi:state>
+            <ft:widget id="choice-state"/>
+          </fi:state>
+          <fi:items>
+            <fi:group>
+              <fi:label>Description</fi:label>
+              <fi:items>
+                <h2>Choice Group</h2>
+                <p>Built using an outer group, with fi:styling/@type="choice". <br/>Each inner group becomes an item in a menu, they must each have an fi:label.</p>
+                <p>When the menu is focussed, you can also use arrow keys to navigate and return to choose.</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:styling layout="columns"/>
+              <fi:label>Boolean fields</fi:label>
+              <fi:items>
+                <ft:widget id="someotherbool"/>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Other Stuff</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="altbirthdate"/>
+                <ft:widget id="altbirthdate2"/>
+              </fi:items>
+            </fi:group>
+          </fi:items>
+        </fi:group> 
+
+        <!-- buttons to control paging on myNavGroup -->
+        <div id="myNavGroupButtons">
+          <button dojoType="dijit.form.Button" id="previous" onClick="dijit.byId('myNavGroup').back()">&#9664;</button>
+          <span dojoType="cocoon.forms.NavController" id="myNavGroupController" containerId="myNavGroup"></span>
+          <button dojoType="dijit.form.Button" id="next" onClick="dijit.byId('myNavGroup').forward()">&#9654;</button>
+        </div>
+
+        <!-- Group of type 'nav' gives you responsibility for providing a controller -->
+        <fi:group id="myNavGroup">
+          <fi:styling type="nav"/>
+          <fi:state>
+            <ft:widget id="nav-state"/>
+          </fi:state>
+          <fi:label>Misc controls</fi:label>
+          <fi:items>
+            <fi:group>
+              <fi:label>Description</fi:label>
+              <fi:items>
+                <h2>Navigation Group</h2>
+                <p>Built using an outer group, with fi:styling/@type="nav". <br/>Each inner group becomes a pane you can navigate to, they must each have an fi:label.</p>
+                <p>Use this kind of group when you want to make your own custom controller, which may be placed anywhere in the template. See the template for a sample of how to do this.</p>
+                <p>When a button is focussed, you can also use arrow keys to navigate.</p>
+              </fi:items>
+            </fi:group>
+            <fi:group formsOnShow="console.info('Activated Stuff');">
+              <fi:label>Stuff</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="visa"/>
+                <ft:widget id="ipaddress"/>            
+                <ft:widget id="birthdate"/><!---->
+                <!--<ft:widget id="timestamp"/>-->
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>More Stuff</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="dieselprice"/>
+              </fi:items>
+            </fi:group>
+          </fi:items>
+        </fi:group>
+
+        <fi:group>
+          <fi:label>Labelled Group Sample</fi:label>
+          <fi:items>
+            this is a sample of a group with an fi:label, but no fi:styling/@type
+          </fi:items>
+        </fi:group>
+
+        <fi:group>
+          <fi:styling collapsable="true"/>
+          <fi:label>Collapsable Group Sample</fi:label>
+          <fi:items>
+            this is a sample of a group with an fi:label, fi:styling/@collapsable, but no fi:styling/@type
+          </fi:items>
+        </fi:group>
+
+        <fi:group>
+          <fi:styling type="fieldset"/>
+          <fi:label>FieldSet Group Sample</fi:label>
+          <fi:items>
+            this is a sample of a group with fi:styling/@type="fieldset"
+          </fi:items>
+        </fi:group>
+        
+        <p><ft:widget id="ok"/></p>
+      </div>
+      <p>Supported Locales: 
+          <sample-locale-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+      <p>
+        <a href="./do-groupStyles.flow">Restart this sample</a> - <a href="./">Back to samples</a>
+      </p>
+      <p align="center">
+         <sample-theme-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+    </ft:form-template>
+  </content>
+</page>
+

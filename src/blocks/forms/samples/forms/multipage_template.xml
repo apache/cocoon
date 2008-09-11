@@ -34,7 +34,7 @@
       <div style="width: 70%; margin: 10px 50px 50px 50px;">
       	
         <ft:group id="page1">
-	       <div id="page1">
+	       <div>
             <!-- group with automatic two-column layout -->
             <fi:group>
               <fi:label>String fields</fi:label>
@@ -55,7 +55,7 @@
          </ft:group>
 
          <ft:group id="page2">
-	        <div id="page2">
+	        <div>
             <fi:group>
               <fi:label>Number fields</fi:label>
               <fi:styling type="fieldset" layout="columns"/>
@@ -76,7 +76,7 @@
          </ft:group>
          
          <ft:group id="page3">
-	        <div id="page3">
+	        <div>
             <fi:group>
               <fi:styling type="fieldset" layout="columns"/>
               <fi:label>Boolean fields</fi:label>

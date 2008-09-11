@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- The only difference between this file and the form1_template_flow.xml
+     is the value of the action attribute on the ft:form-template element -->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <jx:import uri="resources/samples-jx-macros.xml"/><!-- common macros for samples -->
+
+  <h4 class="samplesGroup">List Samples</h4>
+  <title>List Samples (<jx:out value="${locale}"/>)</title>
+	<style type="text/css">
+
+		body {
+			margin:20px;
+		}
+
+		/* add padding to each contentpane inside the tab container, and scrollbar if necessary */
+		.dijitTabPane {
+			padding : 1em;
+		}
+		table.columns {
+		  width:100%;
+		}
+    table.columns > tbody > tr > td {
+      width:50%;
+    }
+	</style>
+
+  <content>
+
+    <ft:form-template class="fadeIn" action="continue" method="POST" ajax="true">
+      <ft:continuation-id/><!-- Widget-supplied SuggestionLists, require that the continuation-id be in a form field -->
+      <div style="width: 90%; margin: 10px 50px 50px 50px;">
+        <p>
+          <sample-locale-display/><!-- a macro from samples-jx-macros.xml -->
+        </p>
+        <!-- group with tabs. Each of the children of <items> will constitute a tab -->
+        <fi:group>
+          <fi:styling type="tabs" style="height:28em;width:100%;"/>
+          <fi:state>
+            <ft:widget id="tab-state"/>
+          </fi:state>
+          <fi:items>
+            <fi:group>
+              <fi:label>Single Choice</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="height"/>
+                <ft:widget id="fourchars"/>
+                <ft:widget id="altbirthdate"/>
+                <ft:widget id="altbirthdate2"/>
+                <ft:widget id="petfish">
+                  <fi:styling list-type="listbox" listbox-size="3"/>
+                </ft:widget>
+                <ft:widget id="fishgender"/>
+                <p>Single selection lists from different sources.</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Multiple Choice</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <p><b>TODO: </b> These need to be implemented</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Suggestable</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="vegetables">
+                  <fi:styling type="suggest"/>
+                </ft:widget>
+                <!--<ft:widget id="personId"> TODO: currently broken, org.apache.cocoon.forms.generation.SuggestionListGenerator cannot find the continuation
+                  <fi:styling type="suggest"/>
+                </ft:widget>-->
+                <ft:widget id="workplace">
+                  <fi:styling type="suggest" dataUrl="countries" pageSize="10"/>
+                </ft:widget>
+                <p>Auto-suggest single selection lists, using different mechanisms.</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Description</fi:label>
+              <fi:items>
+                <h2>Lists</h2>
+                <p>TODO: Describe them</p>
+              </fi:items>
+            </fi:group>
+          </fi:items>
+        </fi:group>
+        
+        <p><ft:widget id="ok"/></p>
+      </div>
+      <p>Supported Locales: 
+          <sample-locale-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+      <p>
+        <a href="./do-groupStyles.flow">Restart this sample</a> - <a href="./">Back to samples</a>
+      </p>
+      <p align="center">
+         <sample-theme-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+    </ft:form-template>
+  </content>
+</page>
+

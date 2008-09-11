@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id: form1.xml 497900 2007-01-19 18:39:48Z bruno $
+-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+
+  <fd:widgets>
+    <!-- group state holders
+    <fd:field id="tab-state">
+      <fd:datatype base="string"/>
+    </fd:field> -->
+
+ 
+    <!-- Dates -->
+    <fd:field id="date0" required="true">
+      <fd:label>icu4j date</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="icu4j" variant="date"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="date1" required="true">
+      <fd:label>icu4j date full</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="icu4j" style="full" variant="date"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="date2" required="true">
+      <fd:label>icu4j date - yyyy MM dd</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="icu4j" variant="date">
+          <fd:patterns>
+            <fd:pattern>yyyy MM dd</fd:pattern>
+          </fd:patterns>
+        </fd:convertor>
+      </fd:datatype>
+    </fd:field>
+  
+    <!-- Times -->
+    <fd:field id="time0">
+      <fd:label>icu4j time</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="icu4j" variant="time"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="time1">
+      <fd:label>icu4j time medium</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="icu4j" variant="time" timeStyle="medium"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="time2">
+      <fd:label>icu4j time - HH:mm:ss</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="icu4j" variant="time">
+          <fd:patterns>
+            <fd:pattern>HH:mm:ss</fd:pattern>
+          </fd:patterns>
+        </fd:convertor>
+      </fd:datatype>
+    </fd:field>
+
+    <!-- DateTimes -->
+    <fd:field id="datetime0">
+      <fd:label>icu4j datetime</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="icu4j" variant="datetime"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="datetime1">
+      <fd:label>icu4j datetime medium</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="icu4j" variant="datetime" style="medium" timeStyle="medium"/>
+      </fd:datatype>
+    </fd:field>
+    <fd:field id="datetime2">
+      <fd:label>icu4j time - yyyy-MM-dd HH-mm-ss</fd:label>
+      <fd:datatype base="date">
+        <fd:convertor type="icu4j" variant="datetime">
+          <fd:patterns>
+            <fd:pattern>yyyy-MM-dd HH-mm-ss</fd:pattern>
+          </fd:patterns>
+        </fd:convertor>
+      </fd:datatype>
+    </fd:field>
+
+    <fd:submit id="ok">
+      <fd:label>Submit</fd:label>
+    </fd:submit>
+
+  </fd:widgets>
+
+</fd:form>

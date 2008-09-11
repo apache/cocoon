@@ -24,25 +24,7 @@
       <div style="width:500px">
         <ft:widget-label id="data1"/><br/>
         <ft:widget id="data1">
-          <fi:styling type="htmlarea" rows="8" style="width:100%">
-            <!-- at this place, the configuration property of the HTMLArea is under 'conf'
-                 available. Find more info about the available properties at
-                 http://www.htmlarea.com/htmlarea_2/documentation.html -->
-            <conf>
-              conf.statusBar = false;
-              conf.sizeIncludesToolbar = false;
-              conf.fullPage = false;
-              conf.toolbar = [
-                [ "bold", "italic", "separator",
-                  "subscript", "superscript", "separator",
-                  "insertorderedlist", "insertunorderedlist",
-                  "outdent", "indent", "separator",
-                  "inserthorizontalrule", "separator",
-                  "copy", "cut", "paste", "space", "undo", "redo",
-                  "separator", "showhelp"]
-                ];               
-            </conf>
-          </fi:styling>
+          <fi:styling type="htmlarea" rows="8" style="width:100%"/><!-- TODO: Add sample of dijit.Editor toolbar configuration -->
         </ft:widget>
       </div>
       <p/>
@@ -53,10 +35,7 @@
         <tr>
           <td>
             <ft:widget id="data2">
-              <fi:styling type="htmlarea" rows="8" cols="70">
-                <!-- if you add initFunction, make sure that it is available at the browser -->
-                <!--initFunction>myInit</initFunction-->
-              </fi:styling>
+              <fi:styling type="htmlarea" rows="8" cols="70"/>
             </ft:widget>
           </td>
         </tr>

@@ -15,167 +15,194 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- This file is similar to form1_template_action.xml. They differ in group layout,
-     form's action attribute (to use continuations) and, this one is a dynamic form
-     template that changes the 'contacts' repeater layout depending on its size -->
+
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
       xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
       
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
-  <h4 class="samplesGroup">Repeater widget with advanced interaction</h4>
-  <title>Repeater widget with advanced interaction</title>
+  <jx:import uri="resources/samples-jx-macros.xml"/><!-- common macros for samples -->
+  
+  <h4 class="samplesGroup">Repeater widget with multi Drag &amp; Drop</h4>
+  <title>Repeater widget with multi Drag &amp; Drop</title>
+  
   <style type="text/css">
-    .forms-row td {
-       padding: 5px;
+    @import "/_cocoon/resources/dojotoolkit/dojo/resources/dnd.css";
+    
+    .container {
+        border:3px solid #ccc;
+        padding: 1em 3em; 
+        margin: 1em 0;
+        cursor: default;
+        radius:8pt;
+        background:#ddd;
+        -moz-border-radius:8pt 8pt;
+        -webkit-border-radius:8pt 8pt;
     }
-
-    /* Ensure the inline edit is visible on selected rows */
-    .forms-row-selected .editableRegion {
-       color: black;
+    .soria .container {
+      border-color: #657c9c;
+      background: #e2ebfb;
+    }
+    .nihilo .container {
+      border-color: #ddd;
+      background: #eee;
+    }
+    div.dojoDndHorizontal > .dojoDndItem {
+        width: 100px;
+        overflow: hidden;
+        padding: 3px;
+    }
+    .small {
+      font-size:60%;
     }
   </style>
   
   <content>
-    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
-    
-    <p>This example expands on the <a href="do-dynaRepeater.flow">dynamic repeater sample</a> and uses
-       <a href="http://dojotoolkit.org">Dojo</a> to provide additional interaction features.
-       After adding rows in any repeater below, you will be able to:</p>
-    <ul>
-      <li>move rows between repeaters using drag-and-drop,</li>
-      <li>reorder rows into the same repater using drag-and-drop,</li>
-      <li>select and deselect rows by clicking anywhere rather than in a checkbox,</li>
-      <li>use in-place editing (an input appears when you click on the text) in the third repeater.</li>
-    </ul>
-      <ft:repeater id="contacts1">
-        <div dojoType="forms:CFormsDragAndDropRepeater" dnd-id="contacto" dnd-action="dnd" orderable="true" select="select">
-        <jx:choose>
-          <jx:when test="${repeater.getSize() == 0}">
-            <p><strong><em>There are no contacts to display</em></strong></p>
-          </jx:when>
-          <jx:otherwise>
-            <table border="1">
-              <tr>
-                <th width="300"><ft:repeater-widget-label widget-id="firstname"/></th>
-                <th width="300"><ft:repeater-widget-label widget-id="lastname"/></th>
-                <th><ft:repeater-widget-label widget-id="ID"/></th>
-              </tr>
-              <tbody>
-                  <!-- The contents of the repeater-widget element is a template that will
-                       be applied to each row in the repeater. -->
+    <ft:form-template class="fadeIn" action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
+      <div style="width: 90%; margin: 10px 50px 50px 50px;">
+      
+        <p>This example expands on the <a href="do-dynaRepeater.flow">dynamic repeater sample</a> and uses
+           <a href="http://dojotoolkit.org">Dojo</a> to provide additional interaction features.
+           After adding rows in any repeater below, you will be able to:</p>
+        <ul>
+          <li>Move rows between repeaters using drag-and-drop.</li>
+          <li>Reorder rows into the same repater using drag-and-drop.</li>
+          <li>Use (OS specific) meta-keys to select/deselect multiple rows and change copy/move behaviour (if the Model allows it).</li>
+          <li>Select and deselect single or multiple rows by clicking the row or the checkbox, the checkbox may be hidden.</li>
+          <li>Repeater behaviours are controlled by settings on the Model and Template (look at the comments in source); there should be a lot of flexibility to do different things.</li>
+        </ul>
+        
+        <!-- 1st repeater -->
+        <ft:repeater id="contacts1" select="select">
+          <div><b>Family</b></div>
+          <jx:choose>
+            <jx:when test="${repeater.getSize() == 0}">
+              <div class="container small">
+                <strong><em>There are no family to display</em></strong>
+                <ft:widget id="../addcontact1"/>
+              </div>
+            </jx:when>
+            <jx:otherwise>
+              
+              <table border="0" cellspacing="0" cellpadding="0" class="container" width="100%">
+                <tr>
+                  <th width="45%"><ft:repeater-widget-label widget-id="firstname"/></th>
+                  <th width="45%"><ft:repeater-widget-label widget-id="lastname"/></th>
+                  <th width="10%"><ft:repeater-widget-label widget-id="ID"/></th>
+                </tr>
+                <tbody>
+                  <ft:repeater-rows>
+                    <tr class="forms-row">
+                      <td><ft:widget id="firstname"/></td>
+                      <td><ft:widget id="lastname"/></td>
+                      <td><ft:widget id="ID"/> <ft:widget id="select"/></td>
+                    </tr>
+                  </ft:repeater-rows>
+                  <tr><td colspan="3">
+                    <div class="small">
+                      Source: You can re-arrange items, and drag them to the Target at the bottom. (But not to "Friends").<br/>
+                      You can move or copy out of this Repeater, depending on the meta key.
+                      <p>
+                        <ft:widget id="../addcontact1"/>
+                        <jx:if test="${widget.getSize() > 0}">
+                          <ft:widget id="../removecontacts1"/>
+                        </jx:if>
+                      </p>
+                    </div>
+                  </td></tr>
+                </tbody>
+              </table>
+            </jx:otherwise>
+          </jx:choose>
+        </ft:repeater>
+        
+        <!-- 2nd repeater -->
+        <ft:repeater id="contacts2" select="select">
+          <div><b>Friends</b></div>
+          <jx:choose>
+            <jx:when test="${repeater.getSize() == 0}">
+              <div class="container small">
+                <strong><em>There are no friends to display</em></strong>
+                <ft:widget id="../addcontact2"/>
+              </div>
+            </jx:when>
+            <jx:otherwise>
+              <table border="0" cellspacing="0" cellpadding="0" class="container" width="100%">
+                <tr>
+                  <th width="45%"><ft:repeater-widget-label widget-id="firstname"/></th>
+                  <th width="45%"><ft:repeater-widget-label widget-id="lastname"/></th>
+                  <th width="10%"><ft:repeater-widget-label widget-id="ID"/></th>
+                </tr>
+                <tbody>
                   <ft:repeater-rows>
                     <tr class="forms-row">
                       <td><ft:widget id="firstname"/></td>
                       <td><ft:widget id="lastname"/>
-		              </td>
+                      </td>
                       <td><ft:widget id="ID"/>
                         <ft:widget id="select">
-	                      <fi:styling style="display: none"/>
-	                    </ft:widget>
+                          <fi:styling style="display: none"/>
+                        </ft:widget>
                       </td>
                     </tr>
                   </ft:repeater-rows>
+                  <tr><td colspan="3">
+                    <div class="small">
+                      Source: You can re-arrange items, and drag them to the Target at the bottom. You can only copy out of this Repeater. (But not to "Family")
+                      <p>
+                        <ft:widget id="../addcontact2"/>
+                        <jx:if test="${widget.getSize() > 0}">
+                          <ft:widget id="../removecontacts2"/>
+                        </jx:if>
+                      </p>
+                    </div>
+                  </td></tr>
                 </tbody>
-            </table>
-          </jx:otherwise>
-        </jx:choose>
-        <p>
-          <ft:widget id="../addcontact1"/>
-          <jx:if test="${widget.getSize() > 0}">
-            <ft:widget id="../removecontacts1"/>
-          </jx:if>
-        </p>
-      </div>
-    </ft:repeater>
-    <!-- 2nd repeater -->
-    <ft:repeater id="contacts2">
-        <div dojoType="forms:CFormsDragAndDropRepeater" dnd-id="contacto" dnd-action="dnd" orderable="true" select="select">
-        <jx:choose>
-          <jx:when test="${repeater.getSize() == 0}">
-            <p><strong><em>There are no contacts to display</em></strong></p>
-          </jx:when>
-          <jx:otherwise>
-
-            <table border="1">
-              <tr>
-                <th width="300"><ft:repeater-widget-label widget-id="firstname"/></th>
-                <th width="300"><ft:repeater-widget-label widget-id="lastname"/></th>
-                <th><ft:repeater-widget-label widget-id="ID"/></th>
-              </tr>
-              <tbody>
-                  <!-- The contents of the repeater-widget element is a template that will
-                       be applied to each row in the repeater. -->
-                  <ft:repeater-rows>
-                    <tr class="forms-row">
-                      <td><ft:widget id="firstname"/></td>
-                      <td><ft:widget id="lastname"/>
-		              </td>
-                      <td><ft:widget id="ID"/>
-                        <ft:widget id="select">
-	                      <fi:styling style="display: none"/>
-	                    </ft:widget>
-                      </td>
-                    </tr>
-                  </ft:repeater-rows>
-                </tbody>
-            </table>
-                </jx:otherwise>
-              </jx:choose>
-             <p>
-                  <ft:widget id="../addcontact2"/>
-                  <jx:if test="${widget.getSize() > 0}">
-                    <ft:widget id="../removecontacts2"/>
-                  </jx:if>
-              </p>
+              </table>
+            </jx:otherwise>
+          </jx:choose>
+        </ft:repeater>
+        
+        <!-- 3rd repeater -->
+        <div><b>Invitation Labels</b></div>
+        <ft:repeater id="contacts3" select="select" horizontal="true">
+          <jx:choose>
+            <jx:when test="${repeater.getSize() == 0}">
+              <div class="container"><!-- temporary placeholder to drop onto -->
+                <div>Drag some contacts here</div>
+                <div class="small">Target: You can drag items to this Target and re-arrange them but cannot drag them out.</div>
               </div>
-            </ft:repeater>
-     <!-- 3rd repeater -->
-     <ft:repeater id="contacts3">
-        <div dojoType="forms:CFormsDragAndDropRepeater" dnd-id="contacto" dnd-action="dnd" orderable="true" select="select">
-        <jx:choose>
-          <jx:when test="${repeater.getSize() == 0}">
-            <p><strong><em>There are no contacts to display</em></strong></p>
-          </jx:when>
-          <jx:otherwise>
-
-            <table border="1">
-              <tr>
-                <th width="300"><ft:repeater-widget-label widget-id="firstname"/></th>
-                <th width="300"><ft:repeater-widget-label widget-id="lastname"/></th>
-                <th><ft:repeater-widget-label widget-id="ID"/></th>
-              </tr>
-              <tbody>
-                  <!-- The contents of the repeater-widget element is a template that will
-                       be applied to each row in the repeater. -->
-                  <ft:repeater-rows>
-                    <tr class="forms-row">
-                      <td><ft:widget id="firstname" fi:type="inplace" fi:submit-on-change="true"/></td>
-                      <td><ft:widget id="lastname" fi:type="inplace"/>
-		              </td>
-                      <td><ft:widget id="ID"/>
-                        <ft:widget id="select">
-	                      <fi:styling style="display: none"/>
-	                    </ft:widget>
-                      </td>
-                    </tr>
-                  </ft:repeater-rows>
-                </tbody>
-            </table>
-                </jx:otherwise>
-              </jx:choose>
-             <p>
-                  <ft:widget id="../addcontact3"/>
-                  <jx:if test="${widget.getSize() > 0}">
-                    <ft:widget id="../removecontacts3"/>
-                  </jx:if>
-              </p>
+            </jx:when>
+            <jx:otherwise>
+              <div class="container">
+                <ft:repeater-rows>
+                  <div>
+                    <span class="small">(<ft:widget id="ID"/>)</span><br/>
+                    <ft:widget id="firstname"/>,
+                    <ft:widget id="lastname"/>
+                    <ft:widget id="select">
+                      <fi:styling style="display: none"/>
+                    </ft:widget>
+                  </div>
+                </ft:repeater-rows>
+                <div class="small">
+                  Target: You can drag items to this Target and re-arrange them but cannot drag them out, or copy.
+                  <p><ft:widget id="../removecontacts3"/></p>
+                </div>
               </div>
-            </ft:repeater>
-            <ft:widget id="ok"/><br/>
-            <a href="./do-dojoRepeaters.flow">Restart this sample</a> - <a href="./">Back to samples</a>
-
+            </jx:otherwise>
+          </jx:choose>
+        </ft:repeater>
+        
+        <ft:widget id="ok"/><br/>
+      </div>  
+      <p>
+        <a href="./do-dojoRepeaters.flow">Restart this sample</a> - <a href="./">Back to samples</a>
+      </p>
+      <p align="center">
+         <sample-theme-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
     </ft:form-template>
   </content>
 </page>

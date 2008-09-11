@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id: form1.xml 497900 2007-01-19 18:39:48Z bruno $
+-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+
+  <fd:widgets>
+    <!-- group state holders -->
+    <fd:field id="tab-state">
+      <fd:datatype base="string"/>
+    </fd:field>
+
+    <!-- Selection Lists -->
+    <fd:field id="height">
+      <fd:label>Your Height</fd:label>
+      <fd:hint>Your height in potatoes</fd:hint>
+      <fd:help>Selection-list built into the Model, with an initial value set.</fd:help>
+      <fd:datatype base="long"/>
+      <fd:initial-value>4</fd:initial-value>
+      <fd:selection-list>
+        <fd:item value="1">
+          <fd:label>One Potato</fd:label>
+        </fd:item>
+        <fd:item value="2">
+          <fd:label>Two Potato</fd:label>
+        </fd:item>
+        <fd:item value="3">
+          <fd:label>Three Potato</fd:label>
+        </fd:item>
+        <fd:item value="4">
+          <fd:label>Four</fd:label>
+        </fd:item>
+        <fd:item value="5">
+          <fd:label>Five Potato</fd:label>
+        </fd:item>
+        <fd:item value="6">
+          <fd:label>Six Potato</fd:label>
+        </fd:item>
+        <fd:item value="7">
+          <fd:label>Seven Potato</fd:label>
+        </fd:item>
+        <fd:item value="8">
+          <fd:label>More</fd:label>
+        </fd:item>
+      </fd:selection-list>
+    </fd:field>
+
+    <fd:field id="fourchars" required="true">
+      <fd:label>Can you count?</fd:label>
+      <fd:help>Selection-list made from an external file, with validation on the response.</fd:help>
+      <fd:hint>Choose something with four characters</fd:hint>
+      <fd:help>Something Helpful</fd:help>
+      <fd:datatype base="string"/>
+      <fd:validation>
+        <fd:length exact="4"/>
+      </fd:validation>
+      <fd:selection-list src="forms/a-choices.xml"/>
+    </fd:field>
+
+    <fd:field id="altbirthdate" required="true">
+      <fd:label>Prefered Date of Birth</fd:label>
+      <fd:help>A static selection-list with a Date DataType and convertor.</fd:help>
+      <fd:hint>Select a date on which you'd rather had been born</fd:hint>
+      <fd:datatype base="date">
+        <fd:convertor variant="date" style="full"/>
+      </fd:datatype>
+      <fd:selection-list>
+        <!-- The convertor element here is used to specify how the values
+             in the value attributes of the fd:item elements should be
+             interpreted. -->
+        <fd:convertor type="formatting">
+          <fd:patterns>
+            <fd:pattern>yyyyMMdd</fd:pattern>
+          </fd:patterns>
+        </fd:convertor>
+        <fd:item value="13020711"/>
+        <fd:item value="19120623"/>
+        <fd:item value="19690721"/>
+        <fd:item value="19700506"/>
+        <fd:item value="19781014"/>
+        <fd:item value="20010911"/>
+        <fd:item value="20120729"/>
+      </fd:selection-list>
+    </fd:field>
+
+    <fd:field id="altbirthdate2" required="true">
+      <fd:label>Other date of birth</fd:label>
+      <fd:help>A selection-list made by a Java Class</fd:help>
+      <fd:hint>Select another date on which you'd rather had been born</fd:hint>
+      <fd:datatype base="date">
+        <fd:convertor variant="date" style="medium"/>
+      </fd:datatype>
+      <fd:selection-list type="java" class="org.apache.cocoon.forms.samples.DateTestJavaSelectionList" nullable="false"/>
+    </fd:field>
+
+    <fd:field id="petfish">
+      <fd:label>Fish</fd:label>
+      <fd:help>A selection-list made by the Flowscript</fd:help>
+      <fd:hint>Please choose the species of your pet fish</fd:hint>
+      <fd:datatype base="string"/>
+      <fd:selection-list  type="flow-jxpath" list-path="fish" value-path="value" label-path="label"/>
+    </fd:field>
+
+    <fd:field id="fishgender">
+      <fd:label>Gender</fd:label>
+      <fd:help>A selection-list made using an Enum</fd:help>
+      <fd:hint>The gender of your pet fish</fd:hint>
+      <fd:datatype base="enum">
+        <fd:convertor type="enum">
+          <fd:enum>org.apache.cocoon.forms.samples.Sex</fd:enum>
+        </fd:convertor>
+      </fd:datatype>
+      <fd:selection-list type="enum" class="org.apache.cocoon.forms.samples.Sex"/>
+    </fd:field>
+
+    <fd:field id="vegetables">
+      <fd:label>Eat your Vegetables</fd:label>
+      <fd:hint>Choose your least favourite vegetable</fd:hint>
+      <fd:help>A selection list with suggestions, based on what you type.<br/>In this case, there is a static selection-list which is also used for the suggestions, due to the type="suggest" styling.</fd:help>
+      <fd:datatype base="string"/>
+      <fd:selection-list>
+        <fd:item value="Artichokes"/>
+        <fd:item value="Asparagus"/>
+        <fd:item value="Aubergine"/>
+        <fd:item value="Beetroot"/>
+        <fd:item value="Broad Beans"/>
+        <fd:item value="Broccoli"/>
+        <fd:item value="Brussel Sprouts"/>
+        <fd:item value="Cabbage"/>
+        <fd:item value="Carrots"/>
+        <fd:item value="Cauliflower"/>
+        <fd:item value="Courgettes"/>
+        <fd:item value="Aubergine"><fd:label>Egg Plant</fd:label></fd:item>
+        <fd:item value="Fennel"/>
+        <fd:item value="French Beans"/>
+        <fd:item value="Garlic"/>
+        <fd:item value="Green Peppers"/>
+        <fd:item value="Jerusalem Artichokes"/>
+        <fd:item value="Leeks"/>
+        <fd:item value="Okra"/>
+        <fd:item value="Onions"/>
+        <fd:item value="Parsnips"/>
+        <fd:item value="Peas"/>
+        <fd:item value="Potatoes"/>
+        <fd:item value="Red Peppers"/>
+        <fd:item value="Spinach"/>
+        <fd:item value="Swedes"/>
+        <fd:item value="Turnips"/>
+        <fd:item value="Courgettes"><fd:label>Zucchini</fd:label></fd:item>
+      </fd:selection-list>
+    </fd:field>
+
+    <!-- TODO: this version of the FilteringSelect WIdget is not working properly yet. -->
+    <fd:field id="personId">
+      <fd:label>Person</fd:label>
+      <fd:help>A suggestion-list made using a Widget, by adding a fd:suggestion-list/@type="javascript" to the model.</fd:help>
+      <fd:hint>The person who'd make the best lunch from the other vegetables.</fd:hint>
+      <fd:datatype base="integer"/>
+      <fd:initial-value>9</fd:initial-value>
+      <fd:suggestion-list type="javascript">
+      <![CDATA[
+        function addSuggestion(bean) {
+            suggestions.push({value: bean.value, label: bean.label});
+        }
+
+        function personList() {
+          return [
+                  {value: 1, label: "Donald Ball"},
+                  {value: 2, label: "Sylvain Wallez"},
+                  {value: 3, label: "Carsten Ziegeler"},
+                  {value: 4, label: "Torsten Curdt"},
+                  {value: 5, label: "Marcus Crafter"},
+                  {value: 6, label: "Ovidiu Predescu"},
+                  {value: 7, label: "Christian Haul"},
+                  {value: 8, label: "Jeremy Quinn"},
+                  {value: 9, label: "Stefano Mazzocchi"},
+                  {value: 10, label: "Pierpaolo Fumagalli"},
+                  {value: 11, label: "Davanum Srinivas"},
+                  {value: 12, label: "Antonio Gallardo"},
+                  {value: 13, label: "Ugo Cei"},
+                  {value: 14, label: "David Crossley"},
+                  {value: 15, label: "Bertrand Delacrétaz"},
+                  {value: 16, label: "Bruno Dumon"},
+                  {value: 17, label: "Daniel Fagerstrom"},
+                  {value: 18, label: "Leszek Gawron"},
+                  {value: 19, label: "Ralph Goers"},
+                  {value: 20, label: "Vadim Gritsenko"},
+                  {value: 21, label: "Jorg Heymans"},
+                  {value: 22, label: "Joerg Heinicke"},
+                  {value: 23, label: "Jean-Baptiste Quenot"}
+                ];
+        }
+
+  var suggestable = System.Collections.getSuggestionList(
+    System.Collections.registerSuggestionList("people", personList(), "value", "label")
+  );
+	var suggestions = [];
+	var filter = cocoon.request.getParameter("filter");
+	var id = cocoon.request.getParameter("id");
+  var locale = Packages.org.apache.cocoon.i18n.I18nUtils.parseLocale(cocoon.request.get("locale"));
+	if (filter) {
+	  suggestions = suggestable.getSuggested(locale, filter, cocoon.request.getParameter("ignoreCase"), cocoon.request.getParameter("start"), cocoon.request.getParameter("count"));
+	} else if (id) {
+	  suggestions = suggestable.getById(locale, id);
+	} else {
+	  suggestions = suggestable.getAll(locale, cocoon.request.getParameter("start"), cocoon.request.getParameter("count"));
+	}
+
+
+        return suggestions;
+      ]]>
+      </fd:suggestion-list>
+    </fd:field>
+
+    <fd:field id="workplace">
+      <fd:label>Location</fd:label>
+      <fd:help>A suggestion-list made using a Flow Pipeline, by using the styling attributes: <br/><code>dataUrl="countries"<br/>pageSize="10"</code>.</fd:help>
+      <fd:hint>The country where you'd rather work.</fd:hint>
+      <fd:datatype base="string"/>
+      <fd:initial-value>NL</fd:initial-value>
+    </fd:field>
+
+    <fd:submit id="ok">
+      <fd:label>Submit</fd:label>
+    </fd:submit>
+
+  </fd:widgets>
+
+</fd:form>

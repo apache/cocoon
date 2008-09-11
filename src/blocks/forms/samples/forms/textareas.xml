@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  @version $Id: form1.xml 497900 2007-01-19 18:39:48Z bruno $
+-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+
+  <fd:widgets>
+    <!-- group state holders -->
+    <fd:field id="tab-state">
+      <fd:datatype base="string"/>
+    </fd:field>
+
+    <fd:field id="simple">
+      <fd:label>Simple TextArea</fd:label>
+      <fd:hint>A helpful hint</fd:hint>
+      <fd:help>Some useful help</fd:help>
+      <fd:datatype base="string"/>
+    </fd:field>
+    <fd:field id="validating" required="true">
+      <fd:label>Validating TextArea</fd:label>
+      <fd:hint>A helpful hint</fd:hint>
+      <fd:help>Some useful help</fd:help>
+      <fd:datatype base="string"/>
+    </fd:field>
+    <fd:field id="rich">
+      <fd:label>Rich Text</fd:label>
+      <fd:hint>A helpful hint</fd:hint>
+      <fd:help>Some useful help</fd:help>
+      <fd:datatype base="string"/>
+    </fd:field>
+    <fd:field id="inplacearea">
+      <fd:label>Inplace TextArea</fd:label>
+      <fd:hint>A helpful hint</fd:hint>
+      <fd:help>Some useful help</fd:help>
+      <fd:datatype base="string"/>
+    </fd:field>
+    <fd:field id="inplacerich">
+      <fd:label>Inplace Rich Text</fd:label>
+      <fd:hint>A helpful hint</fd:hint>
+      <fd:help>Some useful help</fd:help>
+      <fd:datatype base="string"/>
+    </fd:field>
+
+    <fd:submit id="ok">
+      <fd:label>Submit</fd:label>
+    </fd:submit>
+
+  </fd:widgets>
+
+</fd:form>

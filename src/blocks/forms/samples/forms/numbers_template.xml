@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- The only difference between this file and the form1_template_flow.xml
+     is the value of the action attribute on the ft:form-template element -->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <jx:import uri="resources/samples-jx-macros.xml"/><!-- common macros for samples -->
+
+  <h4 class="samplesGroup">Validating Number Samples</h4>
+  <title>Number Samples (<jx:out value="${locale}"/>)</title>
+<style type="text/css">
+
+  body {
+    margin:20px;
+  }
+
+  /* add padding to each contentpane inside the tab container, and scrollbar if necessary */
+  .dijitTabPane {
+    padding : 1em;
+  }
+  table.columns {
+    width:100%;
+  }
+  table.columns > tbody > tr > td {
+    width:50%;
+  }
+</style>
+
+  <content>
+
+    <ft:form-template class="fadeIn" action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
+      <div style="width: 90%; margin: 10px 50px 50px 50px;">
+        <p>
+          <sample-locale-display/><!-- a macro from samples-jx-macros.xml -->
+        </p>
+
+        <!-- group with tabs. Each of the children of <items> will constitute a tab -->
+        <fi:group>
+          <fi:styling type="tabs" style="height:28em;width:100%;"/>
+          <fi:state>
+            <ft:widget id="tab-state"/>
+          </fi:state>
+          <fi:items>
+            <fi:group>
+              <fi:label>Currency fields</fi:label>
+              <fi:items>
+                <table border="0" class="columns">
+                  <tr>
+                    <td class="label"><jx:out value="${currencies.get('EUR')}"/></td>
+                    <td class="content"><ft:widget id="EUR"/></td>
+                  </tr>
+                  <tr>
+                    <td class="label"><jx:out value="${currencies.get('USD')}"/></td>
+                    <td class="content"><ft:widget id="USD"/></td>
+                  </tr>
+                  <tr>
+                    <td class="label"><jx:out value="${currencies.get('CNY')}"/></td>
+                    <td class="content"><ft:widget id="CNY"/></td>
+                  </tr>
+                  <tr>
+                    <td class="label"><jx:out value="${currencies.get('JPY')}"/></td>
+                    <td class="content"><ft:widget id="JPY"/></td>
+                  </tr>
+                  <tr>
+                    <td class="label"><jx:out value="${currencies.get('GBP')}"/></td>
+                    <td class="content"><ft:widget id="GBP"/></td>
+                  </tr>
+                  <tr>
+                    <td class="label"><jx:out value="${currencies.get('RUB')}"/></td>
+                    <td class="content"><ft:widget id="RUB"/></td>
+                  </tr>
+                  <tr>
+                    <td class="label"><i><ft:widget-label id="XXX"/></i>- <jx:out value="${currencies.get('XXX')}"/></td>
+                    <td class="content"><ft:widget id="XXX"/></td>
+                  </tr>
+                  <tr><td colspan="2" class="content"><p>Different Currencies formatted by Locale.<br/>Try viewing this in different locales, using the menu below.</p></td></tr> 
+                </table>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Plain fields</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="plainInteger"/>
+                <ft:widget id="plainLong"/>
+                <ft:widget id="plainDecimal"/>
+                <ft:widget id="plainDouble"/>
+                <ft:widget id="plainFloat"/>
+                <p>Numbers that use a plain convertor are not formatted by locale.</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Formatted fields</fi:label>
+              <fi:styling layout="columns"/>
+              <fi:items>
+                <ft:widget id="formattedInteger"/>
+                <ft:widget id="formattedLong"/>
+                <ft:widget id="formattedDecimal"/>
+                <ft:widget id="formattedDouble"/>
+                <ft:widget id="formattedFloat"/>
+                <ft:widget id="formattedPercent"/>
+                <p>Numbers that use a formatting convertor are formatted to suit the User's locale.</p>
+              </fi:items>
+            </fi:group>
+            <fi:group>
+              <fi:label>Description</fi:label>
+              <fi:items>
+                <h2>Validated Number Fields</h2>
+                <p>Samples of different kinds of numbers and their validation, available in many different locales.</p>
+                <p>There are currently a few combinations of number type and locale that do not work properly. Fields with broken validation, show an orange marker.</p>
+              </fi:items>
+            </fi:group>
+          </fi:items>
+        </fi:group>
+        <p><ft:widget id="ok"/></p>
+      </div>
+      <p>Supported Locales: 
+          <sample-locale-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+      <p>
+        <a href="./do-numbers.flow">Restart this sample</a> - <a href="./">Back to samples</a>
+      </p>
+      <p align="center">
+         <sample-theme-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
+
+    </ft:form-template>
+
+  </content>
+</page>
+

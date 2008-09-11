@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -25,7 +25,7 @@
 
   <fd:widgets>
   
-    <fd:repeater id="contacts" orderable="true">
+    <fd:repeater id="contacts" orderable="true"><!-- NB. @orderable controls whether DnD is added to the Repeater. This needs to be enforced by the Model -->
       <fd:widgets>
         
         <!-- The ID is here to keep track of row creation order, which can
@@ -38,6 +38,7 @@
         <fd:field id="firstname">
           <fd:label>Firstname</fd:label>
           <fd:hint>First name</fd:hint>
+          <fd:help>Help ME! I am stuck inside this tiny icon!!<br/>Hey! I can have <b>markup</b>!!</fd:help>
           <fd:datatype base="string"/>
         </fd:field>
         
@@ -47,9 +48,12 @@
           <fd:datatype base="string"/>
         </fd:field>
         
-        <fd:row-action id="up" command="move-up"/>
-        
-        <fd:row-action id="down" command="move-down"/>
+        <fd:row-action id="up" command="move-up">
+          <fd:label>&#9650;</fd:label>
+        </fd:row-action>
+        <fd:row-action id="down" command="move-down">
+          <fd:label>&#9660;</fd:label>
+        </fd:row-action>
         
         <fd:booleanfield id="select">
           <fd:label>Select</fd:label>
@@ -60,6 +64,7 @@
   
     <fd:repeater-action id="addcontact" command="add-row" repeater="contacts">
       <fd:label>Add contact</fd:label>
+      <fd:hint>Add a new contact to the list</fd:hint>
       <fd:on-action>
         <fd:javascript>
           // Increment the row creation ID counter (it has been initialized in

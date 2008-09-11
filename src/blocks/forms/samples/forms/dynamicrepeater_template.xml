@@ -36,6 +36,7 @@
     .forms-row-1 td {
        padding: 5px;
     }
+    .forms.action {font-size: 60%;}
   </style>
   
   <content>
@@ -52,7 +53,7 @@
        of rows and clicking anywhere in a row to select it.</p>
     <p>Here is another <a href="do-dojoRepeaters.flow">Dojo sample</a> that extends the above dojo sample by
     allowing drag-and-drop support between different repeaters.</p>
-      <ft:repeater id="contacts">
+      <ft:repeater id="contacts" select="select">
         <div>
         <jx:choose>
           <jx:when test="${repeater.getSize() == 0}">
@@ -83,7 +84,7 @@
                           </jx:when>
                           <jx:otherwise>
                             <ft:widget id="up">
-                              <fi:styling type="image" src="resources/forms/img/move_up.gif"/>
+                              <fi:styling type="image" src="resources/forms/img/move_up.gif"/><!-- TODO: deprecate @src, replace with @class - i.e. use CSS instead -->
                             </ft:widget>
                           </jx:otherwise>
                         </jx:choose>
