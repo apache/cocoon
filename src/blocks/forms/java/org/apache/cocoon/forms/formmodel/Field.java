@@ -279,7 +279,6 @@ public class Field extends AbstractWidget
             } else {
                 this.enteredValue = null;
             }
-
             if (callListeners) {
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
             }
@@ -428,7 +427,6 @@ public class Field extends AbstractWidget
         if (this.valueState != VALUE_UNPARSED) {
             throw new IllegalStateException("Field is not in UNPARSED state (" + this.valueState + ")");
         }
-
         // Clear value, it will be recomputed
         this.value = null;
         this.validationError = null;
@@ -534,6 +532,10 @@ public class Field extends AbstractWidget
     public AttributesImpl getXMLElementAttributes() {
         AttributesImpl attrs = super.getXMLElementAttributes();
         attrs.addCDATAAttribute("required", String.valueOf(isRequired()));
+        Whitespace trim = this.definition.getWhitespaceTrim();
+        if (trim != null) {
+          attrs.addCDATAAttribute("whitespace", trim.getName());
+        }
         return attrs;
     }
 
