@@ -21,6 +21,8 @@ import org.apache.cocoon.forms.event.RepeaterEvent;
 import org.apache.cocoon.forms.event.RepeaterListener;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 
+import java.util.List;
+
 /**
  * The {@link WidgetDefinition} part of a Repeater widget, see {@link Repeater} for more information.
  *
@@ -32,6 +34,9 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
     private int minSize;
     private int maxSize;
     private boolean orderable;
+    private List acceptTypes;
+    private List rowTypes;
+    private List allowed;
     private RepeaterListener listener;
 
     private boolean enhanced=false;
@@ -41,15 +46,18 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
 
 
     public RepeaterDefinition(int initialSize, int minSize, int maxSize,
-                              boolean selectable, boolean orderable) {
+                              boolean selectable, boolean orderable, List acceptTypes, List rowTypes, List allowed) {
         super();
         this.initialSize = initialSize;
         this.minSize = minSize;
         this.maxSize = maxSize;
         this.orderable = orderable;
+        this.acceptTypes = acceptTypes;
+        this.rowTypes = rowTypes;
+        this.allowed = allowed;
     }
     
-    public RepeaterDefinition(int initialSize, int minSize, int maxSize, boolean selectable,boolean orderable,boolean enhanced, int initialPage, int pageSize, String customPageId) {
+    public RepeaterDefinition(int initialSize, int minSize, int maxSize, boolean selectable,boolean orderable,boolean enhanced, int initialPage, int pageSize, String customPageId, List acceptTypes, List rowTypes, List allowed) {
 		super();
 		this.initialSize = initialSize;
 		this.minSize = minSize;
@@ -59,6 +67,9 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
 		this.initialPage = initialPage;
 		this.pageSize = pageSize;
 		this.customPageId = customPageId;
+        this.acceptTypes = acceptTypes;
+        this.rowTypes = rowTypes;
+        this.allowed = allowed;
 	}
 
     /**
@@ -80,6 +91,9 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
         this.orderable = other.orderable;
         this.initialPage = other.initialPage;
         this.pageSize = other.pageSize;
+        this.acceptTypes = other.acceptTypes;
+        this.rowTypes = other.rowTypes;
+        this.allowed = other.allowed;
     }
 
     public Widget createInstance() {
@@ -104,6 +118,18 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
 
     public boolean getOrderable() {
         return this.orderable;
+    }
+
+    public List getAcceptTypes() {
+        return this.acceptTypes;
+    }
+
+    public List getRowTypes() {
+        return this.rowTypes;
+    }
+
+    public List getAllowed() {
+        return this.allowed;
     }
 
     public void addRepeaterListener(RepeaterListener listener) {
@@ -140,5 +166,4 @@ public class RepeaterDefinition extends AbstractContainerDefinition {
 	public String getCustomPageId() {
 		return customPageId;
 	}
-    
 }

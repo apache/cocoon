@@ -24,6 +24,10 @@ import org.apache.cocoon.forms.event.RepeaterListener;
 import org.apache.cocoon.forms.util.DomHelper;
 
 import org.w3c.dom.Element;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * Builds {@link RepeaterDefinition}s.
@@ -74,7 +78,21 @@ public final class RepeaterDefinitionBuilder extends AbstractContainerDefinition
             customPageId = DomHelper.getAttribute(pagesElement, "page-field", null);
         }
 
-        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize, minSize, maxSize, selectable, orderable, enhanced, initialPage, pageSize, customPageId);
+        String values = DomHelper.getAttribute(repeaterElement, "acceptType", "");
+        ArrayList acceptTypes = new ArrayList();
+        if (!"".equals(values)) 
+            acceptTypes = new ArrayList(Arrays.asList(values.split("\\s*,\\s*")));
+        values = DomHelper.getAttribute(repeaterElement, "rowType", "");
+        ArrayList rowTypes = new ArrayList();
+        if (!"".equals(values)) 
+            rowTypes = new ArrayList(Arrays.asList(values.split("\\s*,\\s*")));
+        values = DomHelper.getAttribute(repeaterElement, "dndAllow", "");
+        ArrayList allowed = new ArrayList();
+        if (!"".equals(values)) {
+            allowed = new ArrayList(Arrays.asList(values.split("\\s*,\\s*")));
+        }
+        
+        RepeaterDefinition repeaterDefinition = new RepeaterDefinition(initialSize, minSize, maxSize, selectable, orderable, enhanced, initialPage, pageSize, customPageId, acceptTypes, rowTypes, allowed);
         setupDefinition(repeaterElement, repeaterDefinition, context);
         setDisplayData(repeaterElement, repeaterDefinition);
 

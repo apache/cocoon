@@ -17,6 +17,7 @@
 package org.apache.cocoon.forms.formmodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -102,6 +103,22 @@ public class Repeater extends AbstractWidget
 
     public int getMaxSize() {
         return this.definition.getMaxSize();
+    }
+
+    public boolean getOrderable() {
+        return this.orderable;
+    }
+
+    public List getAcceptTypes() {
+        return this.definition.getAcceptTypes();
+    }
+
+    public List getRowTypes() {
+        return this.definition.getRowTypes();
+    }
+
+    public List getAllowed() {
+        return this.definition.getAllowed();
     }
 
     public RepeaterRow addRow() {
@@ -383,32 +400,105 @@ public class Repeater extends AbstractWidget
             return;
         }
 
-        // Handle row move. It's important for this to happen *after* row.readFromRequest,
+        // Handle row(s) move. It's important for this to happen *after* row.readFromRequest,
         // as reordering rows changes their IDs and therefore their child widget's ID too.
-        if (action.equals("move")) {
-            if (!this.orderable) {
-                throw new FormsRuntimeException("Widget " + this + " is not orderable",
-                                                getLocation());
+        // NB. this get's called on the target of the dnd operation
+        if ("move".equals(action) || "copy".equals(action)) {
+            String sourceId = req.getParameter(paramName + ".sourceRepeaterId");
+            if (sourceId == null) { // do a local copy or move
+              this.checkAllowedState(this, action); // test if copy/move is allowed by the model
+              if (!this.orderable) throw new FormsRuntimeException("Widget " + this + " is not orderable", getLocation());
+              int beforeIdx = Integer.parseInt(req.getParameter(paramName + ".before"));
+              String[] froms = req.getParameterValues(paramName + ".from");
+              int[] rowz = new int[froms.length];
+              for (int i = 0; i < froms.length; i++) rowz[i] = Integer.parseInt(froms[i]);// make a sortable copy
+              Arrays.sort(rowz); // move/copy in ascending order
+              boolean up = (beforeIdx < rowz[0]);
+              if ("move".equals(action)) {
+                for (int i = 0; i < rowz.length; i++) {
+                    int fromIdx = rowz[i] - (up ? 0 : i); // track previous location changes
+                    RepeaterRow row = (RepeaterRow)this.rows.get(fromIdx);
+                    this.rows.add(beforeIdx, row);// Add at the new location
+                    if (up) { // moving up
+                        fromIdx++;
+                        beforeIdx++;
+                    }
+                    this.rows.remove(fromIdx); // Remove original row, taking into account location changes
+                }
+              } else { // it's a copy
+                for (int i = 0; i < rowz.length; i++) {
+                    int fromIdx = rowz[i] + (up ? i : 0); // track previous location changes
+                    RepeaterRow row = (RepeaterRow)this.rows.get(fromIdx);
+                    RepeaterRow newrow = this.addRow(beforeIdx + i);
+                    this.copyRow(row, newrow);// copy values
+                }
+              }        
+            } else { // copy or move between Repeaters
+              String formId = this.getForm().getId();
+              if ("" != formId) sourceId = sourceId.substring(formId.length()+1);
+              Repeater source = (Repeater)this.getForm().lookupWidget(sourceId.replace('.', '/'));
+              if (source != null) {
+                this.checkAllowedState(source, action); // test if copy/move is allowed by the model
+                Iterator rowtypes = source.getRowTypes().iterator();
+                boolean acceptable = false;
+                while(rowtypes.hasNext() && !acceptable) {
+                    String type = (String)rowtypes.next();
+                    if (!"".equals(type) && this.getAcceptTypes().contains(type)) acceptable = true;
+                }
+                if (!acceptable) throw new FormsRuntimeException("Rows in Widget " + source + " are not accepted by Widget " + this, getLocation());
+                int targetIdx = Integer.parseInt(req.getParameter(paramName + ".before"));
+                String[] sourceIdxs = req.getParameterValues(paramName + ".sourceRepeaterIndex");
+                int[] rowz = new int[sourceIdxs.length];
+                for (int i = 0; i < sourceIdxs.length; i++) rowz[i] = Integer.parseInt(sourceIdxs[i]);// make a sortable copy
+                Arrays.sort(rowz); // move in ascending order
+                for (int i = 0; i < rowz.length; i++) { // add the new rows
+                    RepeaterRow row = (RepeaterRow)source.rows.get(rowz[i]);
+                    RepeaterRow newrow = this.addRow(targetIdx + i);
+                    this.copyRow(row, newrow);// copy values
+                }
+                if ("move".equals(action)) { // the old rows need deleting
+                    for (int i = rowz.length -1; i > -1; i--) source.removeRow(rowz[i]); // remove in reverse order
+                }
+              } else {
+                  throw new FormsRuntimeException("Source Widget " + this + " was not found", getLocation());
+              }
             }
-
-            int from = Integer.parseInt(req.getParameter(paramName + ".from"));
-            int before = Integer.parseInt(req.getParameter(paramName + ".before"));
-
-            Object row = this.rows.get(from);
-            // Add to the new location
-            this.rows.add(before, row);
-            // Remove from the previous one, taking into account potential location change
-            // because of the previous add()
-            if (before < from) from++;
-            this.rows.remove(from);
-
-            // Needs refresh
             getForm().addWidgetUpdate(this);
-
         } else {
             throw new FormsRuntimeException("Unknown action " + action + " for " + this, getLocation());
         }
     }
+
+    private void checkAllowedState(Repeater source, String action) throws FormsRuntimeException {
+      List allows = source.getAllowed();
+      if (allows.size() == 0) return;
+      boolean isCopy = action.equals("copy");
+      String allow = (String)allows.get(0);
+      if (this != source) allow = allows.size() > 1 ? (String)allows.get(1) : (String)allows.get(0);
+      if (isCopy && "move".equals(allow)) 
+          throw new FormsRuntimeException("Widget " + source + " is not allowed to copy rows", getLocation());
+      if (!isCopy && "copy".equals(allow)) 
+          throw new FormsRuntimeException("Widget " + source + " is not allowed to move rows", getLocation());
+    }
+    
+    
+		// recursively copy values from widgets in one row to another
+		private void copyRow(ContainerWidget source, ContainerWidget target) {
+				Iterator sourceChildren = source.getChildren(); // get the Repeater's child Widgets
+				while (sourceChildren.hasNext()) { // for each child widget
+						Widget child = ((Widget) sourceChildren.next()); // get the child
+						Widget newchild = target.getChild(child.getName()); // look for the same-named child in the target repeater
+						if (newchild != null) { // if it exists
+							try {
+									if (child instanceof ContainerWidget) { // recurse if the child is a Repeater
+											this.copyRow((ContainerWidget)child, (ContainerWidget)newchild);
+									} else if (!(child instanceof Action)) { // you cannot set values on Actions
+											newchild.setValue(child.getValue()); // copy the value
+									} 
+							} catch (UnsupportedOperationException e) { /* some widgets may throw this */ }
+						}
+				}
+		}
 
     /**
      * @see org.apache.cocoon.forms.formmodel.Widget#validate()
@@ -455,11 +545,13 @@ public class Repeater extends AbstractWidget
 
 
     /**
-     * Adds @size attribute
+     * Adds attributes to XML output
      */
     public AttributesImpl getXMLElementAttributes() {
         AttributesImpl attrs = super.getXMLElementAttributes();
         attrs.addCDATAAttribute("size", String.valueOf(getSize()));
+        attrs.addCDATAAttribute("orderable", Boolean.toString(getOrderable()));
+        
         // Generate the min and max sizes if they don't have the default value
         int size = getMinSize();
         if (size > 0) {
