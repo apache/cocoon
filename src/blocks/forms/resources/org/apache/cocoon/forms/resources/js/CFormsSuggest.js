@@ -34,6 +34,8 @@ dojo.require("dojo.widget.ComboBox");
  * @version $Id$
  */
 
+/* Deprecated in 2.1.12 TODO: This is no longer used and will no longer work  */
+
 dojo.widget.defineWidget(
     "cocoon.forms.CFormsSuggest",
     dojo.widget.ComboBox, {

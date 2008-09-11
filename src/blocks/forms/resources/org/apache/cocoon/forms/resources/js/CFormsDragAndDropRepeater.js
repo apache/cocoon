@@ -28,6 +28,8 @@ dojo.require("cocoon.forms.CFormsRepeater");
 
 // Extends the base CFormsRepeater class.
 
+/* Deprecated in 2.1.12: TODO: This is no longer used and will no longer work  */
+
 dojo.widget.defineWidget(
     "cocoon.forms.CFormsDragAndDropRepeater",
     cocoon.forms.CFormsRepeater, {

@@ -24,6 +24,10 @@ dojo.provide("cocoon.forms.MultiValueDoubleList");
  *  - items can be moved around using ctrl+up and ctrl+down.
  *  - an item can be replaced/updated by pressing ctrl+enter in the input box
  */
+ 
+ /* TODO: This needs to be replaced with a version for dojo 1.1.1 */
+
+ 
 dojo.widget.defineWidget(
     // widget name and class
     "cocoon.forms.MultiValueDoubleList",

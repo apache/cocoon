@@ -15,42 +15,61 @@
  * limitations under the License.
  */
 dojo.provide("cocoon.forms.InfoPopup");
+dojo.require("dijit.form.Button");
+dojo.require("dijit.layout.ContentPane");
 
 /*
  * A widget displaying an icon which when pressed shows a popup.
  * The content of the popup is the content of the original element declaring the widget.
  */
-dojo.widget.defineWidget(
+dojo.declare(
     // widget name and class
     "cocoon.forms.InfoPopup",
 
     // superclass
-    dojo.widget.HtmlWidget,
-
-    function() {
-
-    },
+    [dijit.form.DropDownButton],
 
     // properties and methods
     {
+				iconClass: "dijitValidationIcon",
+				closeIconClass: "dijitDialogCloseIcon",
+				label: "",
+	
+				widgetsInTemplate: true,
+	
         isContainer: true,
-        icon: "",
+				templateString: "",
+        templatePath: dojo.moduleUrl("cocoon.forms", "templates/InfoPopup.html"),
 
-        templatePath: cocoon.resourcesUri + "/forms/js/templates/InfoPopup.html",
-        templateCssPath: cocoon.resourcesUri + "/forms/js/templates/InfoPopup.css",
 
-        closeIconURL: cocoon.resourcesUri + "/forms/js/templates/images/close.gif",
 
         containerToggle: "plain", /* plain, explode, wipe, fade */
 
         containerToggleDuration: 150,
+        
+        
 
-        postMixInProperties: function(args, frag, parent) {
-            cocoon.forms.InfoPopup.superclass.postMixInProperties(this, args, frag, parent);
-
-            this.iconURL = cocoon.resourcesUri + "/forms/js/templates/images/" + this.icon;
-        },
-
+				startup: function(){
+					// the child widget from srcNodeRef is the dropdown widget.  Insert it in the page DOM,
+					// make it invisible, and store a reference to pass to the popup code.
+					if(!this.dropDown){
+						console.debug("dropDownNode: " + this.dropDownContainer);
+						//var dropDownNode = dojo.query("[widgetId]", this.dropDownContainer);
+						//console.debug("dropDownNode: " + this.dropDownNode);
+						//this.dropDown = dijit.byNode(dropDownNode);
+						this.dropDown = dijit.byNode(this.dropDownContainer);
+						delete this.dropDownContainer;
+					}
+					dojo.body().appendChild(this.dropDown.domNode);
+					this.dropDown.domNode.style.display="none";
+				}
+        
+        
+        
+        
+        
+        
+/*
         attachTemplateNodes: function(){
             // summary: use attachTemplateNodes to specify containerNode, as fillInTemplate is too late for this
             cocoon.forms.InfoPopup.superclass.attachTemplateNodes.apply(this, arguments);
@@ -91,6 +110,6 @@ dojo.widget.defineWidget(
         hidePopup: function() {
             this.infoPopup.close();
         }
-
+*/
     }
 );

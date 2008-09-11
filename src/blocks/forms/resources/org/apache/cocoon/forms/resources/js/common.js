@@ -35,14 +35,14 @@ if (dojo) {
     cocoon.forms = cocoon.forms || {};
 }
 
-
 /**
  * Get the parent form of an element
  *
  * NOTE: Introduced in 2.1.11, replaces forms_getForm
  */
 cocoon.forms.getForm = function(element) {
-    while(element != null && element.tagName != null && element.tagName.toLowerCase() != "form") {
+    if (element.form) return element.form;
+    while(element !== null && element.tagName !== null && element.tagName.toLowerCase() !== "form") {
         element = element.parentNode;
     }
     return element;
@@ -61,25 +61,25 @@ cocoon.forms.getForm = function(element) {
  */
 cocoon.forms.submitForm = function(element, name, params) {
     var form = this.getForm(element);
-    if (form == null) {
+    if (form === null) {
         alert("Cannot find form for " + element);
         return;
     }
 
     if (!name) name = element.name;
 
-    var dojoId = form.getAttribute("dojoWidgetId");
+    var dojoId = form.id;
     if (dojoId) {
         // Delegate to the SimpleForm or AjaxForm widget
-        dojo.widget.byId(dojoId).submit(name, params);
+        dijit.byId(dojoId).submit(name, params);
     } else {
         // Regular submit. There is no *Form widget available
 
         // A form's onsubmit is only called when submit is triggered by user action, but not when
         // called by a script. So call it now, cancelling the submit if it returns false
-        if (!form.onsubmit || form.onsubmit() != false) {     // call the user's onSubmit handler
+        //if (!form.onsubmit || form.onsubmit() !== false) {     // call the user's onSubmit handler
             cocoon.forms.fullPageSubmit(form, name, params);
-        }
+        //}
     }
 }
 
@@ -122,7 +122,7 @@ cocoon.forms.onLoadHandlers = new Array();
  * NOTE: Introduced in 2.1.11, replaces forms_onloadHandlers.push
  */
 cocoon.forms.addOnLoadHandler = function(handler) {
-    if (handler && typeof(handler.forms_onload) == "function") {
+    if (handler && typeof(handler.forms_onload) === "function") {
         cocoon.forms.onLoadHandlers.push(handler);
     }
 }
@@ -159,7 +159,7 @@ cocoon.forms.onSubmitHandlers = {};
  * @param handler  the handler
  */
 cocoon.forms.addOnSubmitHandler = function(element, handler) {
-    if (handler && typeof(handler.forms_onsubmit) == "function") {
+    if (handler && typeof(handler.forms_onsubmit) === "function") {
         var form = this.getForm(element);
         if (form) {
             var id = form.getAttribute("id");
@@ -167,7 +167,7 @@ cocoon.forms.addOnSubmitHandler = function(element, handler) {
                 if (!cocoon.forms.onSubmitHandlers[id]) cocoon.forms.onSubmitHandlers[id] = new Array();
                 cocoon.forms.onSubmitHandlers[id].push(handler);
             } else {
-                if (dojo) dojo.debug("WARNING: SubmitHandler not added. There is no id attribute on your form.");
+                if (dojo) console.warn("WARNING: SubmitHandler not added. There is no id attribute on your form.");
             }
         }
     }
@@ -192,7 +192,7 @@ cocoon.forms.callOnSubmitHandlers = function(form) {
         return true;
     }
     for (var i = 0; i < cocoon.forms.onSubmitHandlers[id].length; i++) {
-        if (cocoon.forms.onSubmitHandlers[id][i].forms_onsubmit() == false) {
+        if (cocoon.forms.onSubmitHandlers[id][i].forms_onsubmit() === false) {
             // handler cancels the submit
             return false;
             // TODO: should we allow all onsubmithandlers to be called, but then return the aggregate result ?
@@ -202,6 +202,36 @@ cocoon.forms.callOnSubmitHandlers = function(form) {
     }
     // clear it
     // TODO: if AjaxForm were to start calling submit handlers, this would need to change
-    cocoon.forms.onSubmitHandlers[id] = null;
+    //cocoon.forms.onSubmitHandlers[id] = null;
     return true;
+}
+
+
+/**
+ * Defaults for Widgets
+ *
+ * May be overridden in your form template
+ *   <script type="text/javascript">cocoon.forms.defaults.status.field = "!";</script>
+ *
+ * NOTE: Introduced in 2.1.12
+ *
+ */
+
+cocoon.forms.defaults = {
+    
+    statusMark: "*",
+    constraints: { // default constraints for numerical datatypes
+        "decimal":       {pattern:"###0.###", type: "decimal", locale:"en"}, // PlainDecimalConvertor NB. Dojo has no concept of a plain number, hence force it to show 'en' to get '.' decimal
+        "double":        {pattern:"###0.###", type: "decimal", locale:"en"}, // PlainDoubleConvertor
+        "float":         {pattern:"###0.###", type: "decimal", locale:"en"}, // PlainFloatConvertor
+        "integer":       {pattern: '#', places: 0, min: -2147483648, max: 2147483647}, // PlainIntegerConvertor
+        "long":          {pattern: '#', places: 0, min: -9223372036854775808, max: 9223372036854775807},// PlainLongConvertor
+        "l10n-currency": {fractional:true},  // FormattingDecimalConverter - currency variant 
+        "l10n-integer":  {places: 0, min: -2147483648, max: 2147483647}, // FormattingIntegerConverter
+        "l10n-long":     {places: 0, min:-9223372036854775808, max: 9223372036854775807}, // FormattingLongConverter
+        "l10n-number":   {type: "decimal"}, // FormattingDecimalConverter, FormattingFloatConverter, FormattingDoubleConverter
+        "l10n-percent":  {type: "percent"}, // FormattingDecimalConverter - percent variant
+    
+    }
+    
 }
