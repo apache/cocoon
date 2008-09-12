@@ -92,6 +92,8 @@ Set it either on the command-line or in your local.build.properties.
 	<target name="build" depends="init">
       <java jar="${dojo.home}/util/shrinksafe/custom_rhino.jar" 
             dir="${dojo.home}/util/buildscripts" fork="true" failonerror="true">
+        <jvmarg value="-Xms256m"/> 
+        <jvmarg value="-Xmx256m"/> 
         <arg value="build.js"/> 
         <arg value="profile=${dojo.profile}"/> 
         <!--<arg value="profileFile=${dojo.profileFile}"/> TODO: how do you make this conditional? -->
@@ -111,7 +113,7 @@ Set it either on the command-line or in your local.build.properties.
 	<target name="jar" depends="build">
 
     <!-- remove demos, useless files -->
-		<delete includeemptydirs="true">
+		<delete includeemptydirs="true" quiet="true">
 			<fileset dir="${build}/dojo" includes="changes.txt, build.txt"/>
 			<fileset dir="${build}/dijit/demos"/>
 			<fileset dir="${build}/dijit/bench"/>
