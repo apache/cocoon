@@ -34,7 +34,7 @@
   <note>
     <b>TODO:</b> Several of these samples use deprecated FormsGenerator so have various problems
   </note>
-  <sample name="Various (Actions)" href="form1">This sample shows validation, event handling and various Cocoon Forms features. <b>TODO:</b> Not processed properly by XSLT, missing Widget implementations.</sample>
+  <sample name="Various (Actions)" href="form1">This sample shows validation, event handling and various Cocoon Forms features.</sample>
   <sample name="Various (Flowscript)" href="form1.flow">The same sample as above using Flowscript. <b>TODO:</b> Repeater not working.</sample>
   <sample name="Registration" href="registration">A simple registration form. <b>TODO:</b> Not processed properly by XSLT.</sample>
   <sample name="Car selector" href="carselector">(Ajax) Illustrates programmatically changing selectionlists.</sample>
@@ -100,7 +100,7 @@
  </group>
 
  <group name="New Samples">
-  <sample name="Group Styling" href="do-groupStyles.flow">This sample shows the new grouping styles. <b>TODO:</b> form not finalising.</sample>
+  <sample name="Group Styling" href="do-groupStyles.flow">This sample shows the new grouping styles.</sample>
   <sample name="Formatted Numbers" href="do-numbers.flow">Samples of some of the different ways you can present and validate numbers on the client.</sample>
   <sample name="Lists" href="do-lists.flow">Samples of different ways you can present and interact with lists.</sample>
   <sample name="Editors &amp; TextAreas" href="do-textareas.flow">Several different types of text editor.</sample>
