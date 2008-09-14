@@ -24,6 +24,7 @@
       
   <!-- Import the macros that define CForms template elements -->
   <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <jx:import uri="resources/samples-jx-macros.xml"/><!-- common macros for samples -->
   <h4 class="samplesGroup">Repeater widget</h4>
   <title>Dynamic template</title>
   <style type="text/css">
@@ -55,20 +56,19 @@
     allowing drag-and-drop support between different repeaters.</p>
       <ft:repeater id="contacts" select="select">
         <div>
-        <jx:choose>
-          <jx:when test="${repeater.getSize() == 0}">
-            <p><strong><em>There are no contacts to display</em></strong></p>
-          </jx:when>
-          <jx:otherwise>
-
-            <table border="1">
-              <tr>
-                <th><ft:repeater-widget-label widget-id="firstname"/></th>
-                <th><ft:repeater-widget-label widget-id="lastname"/></th>
-                <th><ft:repeater-widget-label widget-id="ID"/></th>
-                <th><ft:repeater-widget-label widget-id="select"/></th>
-              </tr>
-              <tbody>
+          <jx:choose>
+            <jx:when test="${repeater.getSize() == 0}">
+              <p><strong><em>There are no contacts to display</em></strong></p>
+            </jx:when>
+            <jx:otherwise>
+              <table border="1">
+                <tr>
+                  <th><ft:repeater-widget-label widget-id="firstname"/></th>
+                  <th><ft:repeater-widget-label widget-id="lastname"/></th>
+                  <th><ft:repeater-widget-label widget-id="ID"/></th>
+                  <th><ft:repeater-widget-label widget-id="select"/></th>
+                </tr>
+                <tbody>
                   <!-- The contents of the repeater-widget element is a template that will
                        be applied to each row in the repeater. -->
                   <ft:repeater-rows>
@@ -104,20 +104,24 @@
                     </tr>
                   </ft:repeater-rows>
                 </tbody>
-            </table>
-                </jx:otherwise>
-              </jx:choose>
-             <p>
-                  <ft:widget id="../addcontact"/>
-                  <jx:if test="${widget.getSize() > 0}">
-                    <ft:widget id="../removecontacts"/>
-                  </jx:if>
-              </p>
-              </div>
-            </ft:repeater>
-            <ft:widget id="ok"/><br/>
-            <a href="./do-dynaRepeater.flow">Restart this sample</a> - <a href="./">Back to samples</a>
-
+              </table>
+            </jx:otherwise>
+          </jx:choose>
+          <p>
+            <ft:widget id="../addcontact"/>
+            <jx:if test="${widget.getSize() > 0}">
+              <ft:widget id="../removecontacts"/>
+            </jx:if>
+          </p>
+        </div>
+      </ft:repeater>
+      <ft:widget id="ok"/><br/>
+      <p>
+        <a href="./do-dynaRepeater.flow">Restart this sample</a> - <a href="./">Back to samples</a>
+      </p>
+      <p align="center">
+         <sample-theme-chooser/><!-- a macro from samples-jx-macros.xml -->
+      </p>
     </ft:form-template>
   </content>
 </page>

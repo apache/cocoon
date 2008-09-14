@@ -325,10 +325,10 @@
     </div>
   </xsl:template>
 
-
   <!--+
       | Dojoize regular submit buttons
-      +-->
+      |
+      | TODO: This currently supplies an invalid submit ID, so commented out, is there a fix?
   <xsl:template match="input[@type='submit']">
     <script type="text/javascript">dojo.require("dijit.form.Button");</script>
     <xsl:copy>
@@ -339,6 +339,7 @@
       </xsl:attribute>
     </xsl:copy>
   </xsl:template>
+      +-->
 
   <!--+
       | TODO: Not used

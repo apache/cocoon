@@ -141,7 +141,7 @@
       </fd:validation>
     </fd:field>
   
-    <fd:multivaluefield id="drinks">
+    <!--<fd:multivaluefield id="drinks">
       <fd:label>Indicate which 2 of the following drinks you'd like to receive:</fd:label>
       <fd:datatype base="string"/>
       <fd:validation>
@@ -159,7 +159,7 @@
     <fd:multivaluefield id="freemv">
       <fd:label>Here you can enter values freely:</fd:label>
       <fd:datatype base="string"/>
-    </fd:multivaluefield>
+    </fd:multivaluefield>-->
 
     <fd:aggregatefield id="visa" required="true">
       <fd:label>Enter your (16-digit) visa number (without spaces)
