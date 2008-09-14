@@ -36,23 +36,20 @@
   </note>
   <sample name="Various (Actions)" href="form1">This sample shows validation, event handling and various Cocoon Forms features. <b>TODO:</b> missing Widget implementations.</sample>
   <sample name="Various (Flowscript)" href="form1.flow">The same sample as above using Flowscript.</sample>
-  <sample name="Registration" href="registration">A simple registration form. <b>TODO:</b> Not processed properly by XSLT.</sample>
+  <sample name="Registration" href="registration">A simple registration form.</sample>
   <sample name="Car selector" href="carselector">(Ajax) Illustrates programmatically changing selectionlists.</sample>
-  <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists. <b>TODO:</b> Has a bit of a limp.</sample>
+  <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists.</sample>
   <sample name="Upload" href="upload">Shows an upload widget used with Flowscript <b>TODO:</b> ErrorAware version of the Widget not implemented yet.</sample>
-  <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union. <b>TODO:</b> Not processed properly by XSLT.</sample>
+  <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
   <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget. Welcome to <b>dijit.Editor.</b></sample>
-  <sample name="Aggregate" href="aggregate/example">Aggregate field examples. <b>TODO:</b> Not quite right yet.</sample>
+  <sample name="Aggregate" href="aggregate/example">Aggregate field examples.</sample>
   <sample name="Multipage wizard" href="do-multipage.flow">(Ajax) A multipage wizard, using widget states and actions to move between pages.</sample>
   <sample name="CAPTCHA validation" href="captcha/">CAPTCHA validation (requires <a href="/samples/blocks/batik/">Batik block</a>) <b>TODO:</b> Value not submitting properly.</sample>
-  <sample name="ImageMap" href="imagemap">A simple form using the Image Map widget. <b>TODO:</b> Value not submitting properly.</sample>
+  <sample name="ImageMap" href="imagemap">A simple form using the Image Map widget.</sample>
   <sample name="Calculated fields" href="do-calculatedfields.flow">Calculated fields : values are calculated automatically.</sample>
  </group>
 
  <group name="Binding Samples">
-  <note>
-    <b>TODO:</b> this whole section uses the deprecated FormsTransformer. They are not being rendered properly.
-  </note>
   <note>
     Cocoon Forms has a binding framework which assists in copying Java-bean or XML (DOM) data into a form and back.
   </note>
@@ -64,10 +61,10 @@
   </note>
   <sample name="1. Binding Simple Values" href="binding-01value.flow">fb:*/@direction and fb:value/*</sample>
   <sample name="2. Lenient Binding" href="binding-02lenient.flow">fb:*/@lenient</sample>
-  <sample name="3. Aggregate Binding" href="binding-03aggregate.flow">fb:aggregate</sample>
+  <sample name="3. Aggregate Binding" href="binding-03aggregate.flow">fb:aggregate. <b>TODO:</b> client-side validation issues</sample>
   <sample name="4. Heavy Form" href="binding-04heavy-XML.flow">Form with lots of select boxes - test memory utilization, performance</sample>
   <sample name="5. Custom Bindings using Java or Javascript" href="binding-05custom.flow">fb:javascript and fb:custom</sample>
-  <sample name="6. XML binding using namespaces" href="binding-06namespaced-XML.flow">Using XML binding with complex namespaced XML</sample>
+  <sample name="6. XML binding using namespaces" href="binding-06namespaced-XML.flow">Using XML binding with complex namespaced XML <b>TODO:</b> not rendering properly</sample>
   <!-- TODO: provide more tutorial samples like these:
   <sample name="6. MultiValue/Repeater Binding" href="binding-03multi.flow">fb:multi-value</sample>
   <sample name="7. Repeater Binding" href="binding-06repeater.flow">fb:repeater</sample>
@@ -83,9 +80,6 @@
  </group>
 
  <group name="Locales">
-  <note>
-    <b>TODO:</b> Repeater actions not currently working in these non-ajax forms.
-  </note>
   <note>
     The samples below are the same as the basic flowscript sample but now use different locales.
     The locale can affect things like date and number formatting.
