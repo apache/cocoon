@@ -34,7 +34,7 @@
   <note>
     <b>TODO:</b> Several of these samples use deprecated FormsGenerator so have various problems
   </note>
-  <sample name="Various (Actions)" href="form1">This sample shows validation, event handling and various Cocoon Forms features. <b>TODO:</b> Not processed properly by XSLT, missing Widget implementations.</sample>
+  <sample name="Various (Actions)" href="form1">This sample shows validation, event handling and various Cocoon Forms features. <b>TODO:</b> missing Widget implementations.</sample>
   <sample name="Various (Flowscript)" href="form1.flow">The same sample as above using Flowscript.</sample>
   <sample name="Registration" href="registration">A simple registration form. <b>TODO:</b> Not processed properly by XSLT.</sample>
   <sample name="Car selector" href="carselector">(Ajax) Illustrates programmatically changing selectionlists.</sample>
