@@ -685,6 +685,18 @@
       <timezone />
     </developer>
     <developer>
+      <id>lmorandini</id>
+      <name>Luca Morandini</name>
+      <email>lmorandini@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>morrijr</id>
       <name>John Morrison</name>
       <email>morrijr@apache.org</email>
