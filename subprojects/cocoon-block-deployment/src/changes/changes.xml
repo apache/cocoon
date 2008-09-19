@@ -28,6 +28,10 @@
   </properties>
   <body>
     <release version="1.1.0-SNAPSHOT" date="2008-??-??">
+      <action dev="reinhard" type="add">
+        The blockcontext: URLConnection checks if a requested block is available. Otherwise
+        an an exception, that explains what has gone wrong, is thrown.
+      </action>    
       <action dev="gkossakowski" type="add">
         Added implementation of org.apache.cocoon.spring.configurator.BlockResourcesHolder interface to 
         restore back-compatiblity with Cocoon Core 2.2.

@@ -36,10 +36,12 @@ public class BlockContextURLConnection extends URLConnection {
         this.url = url;
     }
 
+    @Override
     public void connect() throws IOException {
         this.getConnection().connect();
     }
 
+    @Override
     public InputStream getInputStream() throws IOException {
         return this.getConnection().getInputStream();
     }
@@ -60,6 +62,11 @@ public class BlockContextURLConnection extends URLConnection {
                 path = path.substring(pos + 1);
                 String blockContext = (String) this.blockContexts.get(blockName);
 
+                if (blockContext == null) {
+                    throw new RuntimeException("There is no block '" + blockName
+                            + "' deployed. The available blocks are " + this.blockContexts + ".");
+                }
+
                 try {
                     resolvedPath = new URL(new URL(blockContext), path);
                     this.urlConnection = resolvedPath.openConnection();
@@ -74,6 +81,7 @@ public class BlockContextURLConnection extends URLConnection {
         return this.urlConnection;
     }
 
+    @Override
     public long getLastModified() {
         return this.getConnection().getLastModified();
     }
