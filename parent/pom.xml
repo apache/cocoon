@@ -615,6 +615,18 @@
       <timezone />
     </developer>
     <developer>
+      <id>dlegg</id>
+      <name>David Legg</name>
+      <email>dlegg@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+0</timezone>
+    </developer>
+    <developer>
       <id>bloritsch</id>
       <name>Berin Loritsch</name>
       <email>bloritsch@apache.org</email>
