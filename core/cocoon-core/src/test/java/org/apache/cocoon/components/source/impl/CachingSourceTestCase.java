@@ -17,17 +17,27 @@
 package org.apache.cocoon.components.source.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.SitemapComponentTestCase;
+import org.apache.cocoon.core.container.spring.avalon.ComponentInfo;
+import org.apache.cocoon.core.container.spring.avalon.ConfigurationInfo;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.xml.LoggingContentHandler;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceUtil;
+import org.apache.excalibur.source.impl.AbstractSource;
 
 /**
  * CachingSource (cached: protocol) tests
@@ -43,6 +53,19 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
     public void setUp() throws Exception {
         super.setUp();
         resolver = (SourceResolver) lookup(SourceResolver.ROLE);
+    }
+    
+    @Override
+    protected void addComponents(ConfigurationInfo info) throws Exception {
+        super.addComponents(info);
+        
+        //register MockSourceFactory
+        ComponentInfo componentInfo = new ComponentInfo();
+        componentInfo.setComponentClassName(MockSourceFactory.class.getName());
+        componentInfo.setRole(SourceFactory.ROLE + "/mock");
+        componentInfo.setConfiguration(new DefaultConfiguration("-"));
+        
+        info.addComponent(componentInfo);
     }
 
     public void testResolveURI() throws Exception {
@@ -72,7 +95,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
     }
 
     public void testCachingURI() throws Exception {
-        String uri = "cached:http://slashdot.org/?cocoon:cache-expires=5";
+        String uri = "cached:mock://dummyaddress.org/?cocoon:cache-expires=1";
 
         CachingSource source;
 
@@ -95,7 +118,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
         // Source is still cached -- still same meta data
         assertSame(meta1, meta3);
 
-        Thread.sleep(5100);
+        Thread.sleep(1100);
 
         source = (CachingSource) resolver.resolveURI(uri);
         source.refresh();
@@ -110,7 +133,7 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
     }
 
     public void testRefreshSyncURI() throws Exception {
-        testRefreshURI("cached", "http://slashdot.org/");
+        testRefreshURI("cached", "mock://dummyaddress.org/");
     }
 
 //    public void testRefreshAsyncURI() throws Exception {
@@ -221,4 +244,48 @@ public class CachingSourceTestCase extends SitemapComponentTestCase {
         ctx.put("work-directory", new File("build/work"));
         ctx.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new MockContext());
     }
+    
+    //------------------------ Mock objects ---------------------------
+    
+    /**
+     * Simple source that does not provide anything meaningful apart from lastModification date which is passed
+     * to it from outside.
+     */
+    private static class MockSource extends AbstractSource {
+        
+        public MockSource(String uri, long lastModified) {
+            setSystemId(uri);
+            setScheme(SourceUtil.getScheme(uri));
+            setLastModified(lastModified);
+        }
+
+        public boolean exists() { 
+            return true; 
+        }
+        
+        @Override
+        protected void getInfos() {
+            //overrode this method because it wipes out last modification date
+        }
+    }
+    
+    /**
+     * This simple SourceFactory produces instances of MockSource with current lastModification date.
+     */
+    private static final class MockSourceFactory implements SourceFactory {
+        
+        public MockSourceFactory() { }
+
+        @SuppressWarnings("unchecked")
+        public Source getSource(String location, Map parameters)
+                throws IOException, MalformedURLException {
+            return new MockSource(location, (new Date()).getTime());
+        }
+
+        public void release(Source source) {
+            //it's mock source, do nothing
+        }
+        
+    }
+    
 }
