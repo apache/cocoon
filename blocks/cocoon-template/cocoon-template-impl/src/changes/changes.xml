@@ -25,6 +25,11 @@
 <document>
   <body>
     <release version="1.2.0" date="2008-??-??" description="unreleased">
+      <action dev="lgawron" type="fix">
+        &lt;jx:out xmlize=&quot;true&quot;/&gt; problem: val.toString().getBytes() effected in xml parsing errors
+        (uses default platform encoding while parser expects utf-8).
+        Introduction of &lt;jx:out xmlize=&quot;true&quot; encoding=&quot;...&quot;/&gt; should be considered.
+      </action>
       <action dev="gkossakowski" type="add" issue="COCOON-2211" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
         Add support for jx:element - the instructions that allow dynamic element creation.
       </action>
