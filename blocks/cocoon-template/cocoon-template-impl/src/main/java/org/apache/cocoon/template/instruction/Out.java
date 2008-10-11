@@ -85,7 +85,7 @@ public class Out extends Instruction {
                     Invoker.executeNode(consumer, val, stripRoot);
                 else {
                     SAXParser parser = executionContext.getSaxParser();
-                    InputSource source = new InputSource(new ByteArrayInputStream(val.toString().getBytes()));
+                    InputSource source = new InputSource(new ByteArrayInputStream(val.toString().getBytes("utf-8")));
                     IncludeXMLConsumer includeConsumer = new IncludeXMLConsumer(consumer);
                     includeConsumer.setIgnoreRootElement(stripRoot);
                     parser.parse(source, includeConsumer);
