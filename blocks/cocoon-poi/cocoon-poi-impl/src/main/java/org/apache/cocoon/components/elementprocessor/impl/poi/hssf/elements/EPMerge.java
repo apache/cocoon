@@ -68,7 +68,7 @@ public class EPMerge extends BaseElementProcessor {
                     + fromCol + ")" + " to Row (" + toRow + ") Col (" + toCol
                     + ")");
         }
-        CellRangeAddress cellRangeAddress = new CellRangeAddress(fromRow, fromCol, toRow, toCol);
+        CellRangeAddress cellRangeAddress = new CellRangeAddress(fromRow, toRow, fromCol, toCol);
         sheet.addMergedRegion(cellRangeAddress);
     }
 

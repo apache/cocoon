@@ -231,7 +231,8 @@ public class EPCell extends BaseElementProcessor implements LocaleAware {
         }
         
         if(getColumns() != -1 && getRows() != -1) {
-            getSheet().addMergedRegion(new CellRangeAddress(getRow(),getColumn(),getRow() + getRows() - 1,(getColumn() + getColumns() - 1)));
+            getSheet().addMergedRegion(new CellRangeAddress(getRow(), getRow() + getRows() - 1,
+                    getColumn(), (getColumn() + getColumns() - 1)));
         }
 
     }
