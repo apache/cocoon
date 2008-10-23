@@ -52,7 +52,6 @@ class Cell {
     Cell(final HSSFCell cell, final int cellType) {
         _cell = cell;
         _celltype = cellType;
-        _cell.setEncoding(HSSFCell.ENCODING_UTF_16);
     }
 
     /**

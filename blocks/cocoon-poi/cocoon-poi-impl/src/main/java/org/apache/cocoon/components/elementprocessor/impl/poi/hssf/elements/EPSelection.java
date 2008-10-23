@@ -27,7 +27,7 @@ import java.io.IOException;
  * "Selection" tag
  *
  * This element is a container of other elements and has four
- * attributes that define the boundaries of the region.
+ * attributes that define the boundaries of the cellRangeAddress.
  *
  * This element is not used in HSSFSerializer 1.0
  *

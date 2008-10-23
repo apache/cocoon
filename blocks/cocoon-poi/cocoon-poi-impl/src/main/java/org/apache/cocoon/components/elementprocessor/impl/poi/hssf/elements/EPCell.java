@@ -26,7 +26,7 @@ import org.apache.cocoon.components.elementprocessor.types.Attribute;
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
 import org.apache.cocoon.components.elementprocessor.types.NumericResult;
 import org.apache.cocoon.components.elementprocessor.types.Validator;
-import org.apache.poi.hssf.util.Region;
+import org.apache.poi.hssf.util.CellRangeAddress;
 /**
  * Implementation of ElementProcessor to handle the "Cell" tag.
  * This element has several attributes and may contain other elements.
@@ -231,7 +231,7 @@ public class EPCell extends BaseElementProcessor implements LocaleAware {
         }
         
         if(getColumns() != -1 && getRows() != -1) {
-            getSheet().addMergedRegion(new Region(getRow(),(short)getColumn(),getRow() + getRows() - 1,(short)(getColumn() + getColumns() - 1)));
+            getSheet().addMergedRegion(new CellRangeAddress(getRow(),getColumn(),getRow() + getRows() - 1,(getColumn() + getColumns() - 1)));
         }
 
     }
