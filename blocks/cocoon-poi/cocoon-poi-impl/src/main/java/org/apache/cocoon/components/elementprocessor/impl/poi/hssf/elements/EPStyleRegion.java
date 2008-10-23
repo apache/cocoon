@@ -80,8 +80,8 @@ public class EPStyleRegion extends BaseElementProcessor {
                 final ElementProcessor parent) throws IOException {
         super.initialize(attributes, parent);
 
-        CellRangeAddress cellRangeAddress = new CellRangeAddress(getStartRow(), getStartCol(),
-                getEndRow(), getEndCol());
+        CellRangeAddress cellRangeAddress = new CellRangeAddress(getStartRow(), getEndRow(),
+                getStartCol(), getEndCol());
 
         getLogger().debug("region area is " + getArea(cellRangeAddress));
         if (getArea(cellRangeAddress) < MAX_AREA) {
@@ -91,7 +91,8 @@ public class EPStyleRegion extends BaseElementProcessor {
             getLogger().debug("region added");
             _style = getSheet().addStyleRegion(cellRangeAddress); //test
         } else {
-            getLogger().debug("Region NOT added!. Reason: getArea(cellRangeAddress) = " + getArea(cellRangeAddress) + " > " + MAX_AREA);
+            getLogger().debug("Region NOT added!. Reason: getArea(cellRangeAddress) = " 
+                    + getArea(cellRangeAddress) + " > " + MAX_AREA);
             invalid = true;
         }
         colorhash = ((EPStyles)parent).getColorHash();
