@@ -100,7 +100,7 @@ public class EPSheet extends BaseElementProcessor {
     }
 
     /**
-     * override of endProcessing(). Reponsible for fixing style regions with
+     * override of endProcessing(). Responsible for fixing style regions with
      * blank cells.
      * @exception IOException
      */
