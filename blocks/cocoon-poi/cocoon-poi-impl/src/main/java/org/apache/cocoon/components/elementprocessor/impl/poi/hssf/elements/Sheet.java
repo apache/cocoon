@@ -30,8 +30,8 @@ import org.apache.poi.hssf.usermodel.HSSFFooter;
 import org.apache.poi.hssf.usermodel.HSSFHeader;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.hssf.util.Region;
 
 /**
  * internal representation of a Sheet
@@ -51,13 +51,13 @@ class Sheet extends AbstractLogEnabled {
     // keys are Shorts (row numbers), values are Row instances
     private Map _rows;
 
-    private Map regions;
+    private Map cellRangeAddresses;
 
     //optimization constant
     private final static int ROWS_CAPACITY = 200;
 
     //optimization constant
-    private final static int REGION_CAPACITY = 20;
+    private final static int CELLRANGEADDRESS_CAPACITY = 20;
 
     /**
      * Constructor Sheet
@@ -69,7 +69,7 @@ class Sheet extends AbstractLogEnabled {
         _sheet = _workbook.createSheet(_name);
         _physical_index = _workbook.getPhysicalIndex(_name);
         _rows = new HashMap(ROWS_CAPACITY);
-        regions = new HashMap(REGION_CAPACITY);
+        cellRangeAddresses = new HashMap(CELLRANGEADDRESS_CAPACITY);
     }
 
     /**
@@ -97,7 +97,7 @@ class Sheet extends AbstractLogEnabled {
         if (!isValidColumnPoints(points)) {
             throw new IOException("points " + points + " is out of range");
         }
-        _sheet.setColumnWidth((short)number, (short) ((points * 48) + .5));
+        _sheet.setColumnWidth((int)number, (short) ((points * 48) + .5));
     }
 
     /**
@@ -105,7 +105,7 @@ class Sheet extends AbstractLogEnabled {
      * @param number the column number
      * @return column width in characters
      */
-    short getColumnWidth(short number) {
+    int getColumnWidth(int number) {
         return _sheet.getColumnWidth(number);
     }
 
@@ -118,13 +118,13 @@ class Sheet extends AbstractLogEnabled {
         if (width < 0 || (width >= (4.8 * (0.5 + Short.MAX_VALUE)))) {
             throw new IOException("Invalid width (" + width + ")");
         } // 12 is being used as a "guessed" points for the font
-        _sheet.setDefaultColumnWidth((short) ((width / 4.8) + 0.5));
+        _sheet.setDefaultColumnWidth((int) ((width / 4.8) + 0.5));
     }
 
     /**
      * @return default column width (in 1/256ths of a character width)
      */
-    short getDefaultColumnWidth() {
+    int getDefaultColumnWidth() {
         return _sheet.getDefaultColumnWidth();
     }
 
@@ -184,9 +184,9 @@ class Sheet extends AbstractLogEnabled {
         return rval;
     }
 
-    HSSFCellStyle addStyleRegion(Region region) {
+    HSSFCellStyle addStyleRegion(CellRangeAddress cellRangeAddress) {
         HSSFCellStyle style = _workbook.createStyle();
-        regions.put(region, style);
+        cellRangeAddresses.put(cellRangeAddress, style);
         return style;
     }
 
@@ -197,11 +197,12 @@ class Sheet extends AbstractLogEnabled {
      * @return HSSFCellStyle
      */
     HSSFCellStyle getCellStyleForRegion(int row, short col) {
-        Iterator iregions = regions.keySet().iterator();
-        while (iregions.hasNext()) {
-            Region region = ((Region)iregions.next());
-            if (region.contains(row, col)) {
-                return (HSSFCellStyle)regions.get(region);
+        Iterator icellRangeAddresses = cellRangeAddresses.keySet().iterator();
+        while (icellRangeAddresses.hasNext()) {
+            CellRangeAddress cellRangeAddress = ((CellRangeAddress)icellRangeAddresses.next());
+            if ( row >= cellRangeAddress.getFirstRow() && row <= cellRangeAddress.getLastRow()
+              && col >= cellRangeAddress.getFirstColumn() && col <= cellRangeAddress.getLastColumn()) {
+                return (HSSFCellStyle)cellRangeAddresses.get(cellRangeAddress);
             }
         }
         return null;
@@ -227,10 +228,10 @@ class Sheet extends AbstractLogEnabled {
 
     /**
      * Flag a certain region of cells to be merged
-     * @param region the region to create as merged
+     * @param cellRangeAddress the region to create as merged
      */
-    void addMergedRegion(Region region) {
-        this._sheet.addMergedRegion(region);
+    void addMergedRegion(CellRangeAddress cellRangeAddress) {
+        this._sheet.addMergedRegion(cellRangeAddress);
     }
 
     /**
@@ -242,14 +243,14 @@ class Sheet extends AbstractLogEnabled {
      * defined.
      */
     public void assignBlanksToRegions() {
-        Iterator iregions = regions.keySet().iterator();
+        Iterator iregions = cellRangeAddresses.keySet().iterator();
         while (iregions.hasNext()) {
-            Region region = ((Region)iregions.next());
-            for (int rownum = region.getRowFrom(); rownum < region.getRowTo() + 1; rownum++) {
+            CellRangeAddress cellRangeAddress = ((CellRangeAddress)iregions.next());
+            for (int rownum = cellRangeAddress.getFirstRow(); rownum < cellRangeAddress.getLastColumn() + 1; rownum++) {
                 HSSFRow row = _sheet.getRow(rownum);
-                for (short colnum = region.getColumnFrom();
-                            colnum < region.getColumnTo() + 1; colnum++) {
-                    HSSFCellStyle style = (HSSFCellStyle)regions.get(region);
+                for (int colnum = cellRangeAddress.getFirstColumn();
+                            colnum < cellRangeAddress.getLastColumn() + 1; colnum++) {
+                    HSSFCellStyle style = (HSSFCellStyle)cellRangeAddresses.get(cellRangeAddress);
                     if (!isBlank(style)) {
                         //don't waste time with huge blocks of blankly styled cells
                         if (row == null) {
@@ -263,7 +264,7 @@ class Sheet extends AbstractLogEnabled {
                             cell = row.createCell(colnum);
                             cell.setCellType(HSSFCell.CELL_TYPE_BLANK);
                             cell.setCellStyle(
-                                (HSSFCellStyle)regions.get(region));
+                                (HSSFCellStyle)cellRangeAddresses.get(cellRangeAddress));
                         }
                     }
                 }

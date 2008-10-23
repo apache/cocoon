@@ -25,7 +25,7 @@ import org.apache.cocoon.components.elementprocessor.ElementProcessor;
 import org.apache.cocoon.components.elementprocessor.types.Attribute;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.util.Region;
+import org.apache.poi.hssf.util.CellRangeAddress;
 
 
 import java.io.IOException;
@@ -80,18 +80,18 @@ public class EPStyleRegion extends BaseElementProcessor {
                 final ElementProcessor parent) throws IOException {
         super.initialize(attributes, parent);
 
-        Region region = new Region(getStartRow(), (short)getStartCol(),
-                getEndRow(), (short)getEndCol());
+        CellRangeAddress cellRangeAddress = new CellRangeAddress(getStartRow(), getStartCol(),
+                getEndRow(), getEndCol());
 
-        getLogger().debug("region area is " + region.getArea());
-        if (region.getArea() < MAX_AREA) {
+        getLogger().debug("region area is " + getArea(cellRangeAddress));
+        if (getArea(cellRangeAddress) < MAX_AREA) {
             //protect against stupid mega regions
             //of generally NOTHING and no real
-            //puprose created by gnumeric
+            //purpose created by gnumeric
             getLogger().debug("region added");
-            _style = getSheet().addStyleRegion(region); //test
+            _style = getSheet().addStyleRegion(cellRangeAddress); //test
         } else {
-            getLogger().debug("Region NOT added!. Reason: region.getArea() = " + region.getArea() + " > " + MAX_AREA);
+            getLogger().debug("Region NOT added!. Reason: getArea(cellRangeAddress) = " + getArea(cellRangeAddress) + " > " + MAX_AREA);
             invalid = true;
         }
         colorhash = ((EPStyles)parent).getColorHash();
@@ -167,6 +167,11 @@ public class EPStyleRegion extends BaseElementProcessor {
      */
     public boolean isValid() {
         return (!invalid);
+    }
+    
+    private int getArea(CellRangeAddress cellRangeAddress) {
+        return ((1 + (cellRangeAddress.getLastRow() - cellRangeAddress.getFirstRow()))
+                * (1 + (cellRangeAddress.getLastColumn() - cellRangeAddress.getFirstColumn())));
     }
 
 } // end public class EPStyleRegion
