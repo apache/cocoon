@@ -511,6 +511,7 @@
       <script type="text/javascript">dojo.require("dijit.form.Button");</script>
       <input id="{@id}" name="{@id}" type="submit" dojoType="dijit.form.Button" iconClass="{@iconClass}" onClick="cocoon.forms.submitForm(this.focusNode, this.id);return false">
         <xsl:attribute name="label"><xsl:value-of select="fi:label/node()"/></xsl:attribute>
+        <xsl:attribute name="value"><xsl:value-of select="fi:label/node()"/></xsl:attribute>
         <xsl:apply-templates select="." mode="styling"/>
       </input>
       <xsl:if test="fi:hint"><span dojoType="dijit.Tooltip" connectId="{@id}" position="above,below"><xsl:value-of select="fi:hint/node()"/></span></xsl:if>

@@ -58,7 +58,7 @@ dojo.declare("cocoon.forms.AjaxForm", cocoon.forms.SimpleForm, {
             content: content,
             form: this.domNode,
             handleAs: "xml",
-            handle: dojo.hitch(this, function(response, ioArgs) { this._handleBrowserUpdate(this, name, response, ioArgs) })
+            handle: dojo.hitch(this, function(response, ioArgs) { this._handleBrowserUpdate(this, name, response, ioArgs); })
         };
         // choose a transport
         if (this.checkForActiveFile(this.domNode)) {            /* check for file-upload fields */
@@ -74,7 +74,7 @@ dojo.declare("cocoon.forms.AjaxForm", cocoon.forms.SimpleForm, {
         // Toggle the click target off, so it does not get resubmitted if another submit is fired before this has finished
         // NB. This must be done after the form is assembled by dojo, or certain onChange handlers may fail
         // Avoid the use of this.lastClickTarget as it may already be out of date
-        if (this.domNode[name]) this.domNode[name].disabled = true;
+        if (this.domNode[name]) { this.domNode[name].disabled = true; }
         dojo.publish(this.getAfterSubmitTopic());
     },
 
@@ -98,7 +98,7 @@ dojo.declare("cocoon.forms.AjaxForm", cocoon.forms.SimpleForm, {
             cocoon.ajax.BUHandler.handleError("No xml answer");
         } else {
             // add the continue handler for CForms
-            updater.handlers['continue'] = function() { widget._continue(); }
+            updater.handlers['continue'] = function() { widget._continue(); };
             // Handle browser update directives
             updater.processResponse(response);
         }
