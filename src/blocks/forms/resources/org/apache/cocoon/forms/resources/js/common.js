@@ -46,7 +46,7 @@ cocoon.forms.getForm = function(element) {
         element = element.parentNode;
     }
     return element;
-}
+};
 
 /**
  * Submits a form.
@@ -68,8 +68,8 @@ cocoon.forms.submitForm = function(element, name, params) {
 
     if (!name) name = element.name;
 
-    var dojoId = form.id;
-    if (dojoId) {
+    var formId = form.id;
+    if (dojo && formId) {
         // Delegate to the SimpleForm or AjaxForm widget
         dijit.byId(dojoId).submit(name, params);
     } else {
@@ -81,7 +81,7 @@ cocoon.forms.submitForm = function(element, name, params) {
             cocoon.forms.fullPageSubmit(form, name, params);
         //}
     }
-}
+};
 
 /**
  * Internal function
@@ -125,7 +125,7 @@ cocoon.forms.addOnLoadHandler = function(handler) {
     if (handler && typeof(handler.forms_onload) === "function") {
         cocoon.forms.onLoadHandlers.push(handler);
     }
-}
+};
 
 /**
  * call the onLoad Handlers (typically this function is passed to dojo.addOnLoad)
@@ -138,7 +138,7 @@ cocoon.forms.callOnLoadHandlers = function() {
     }
     // Reset it (we do not need them anymore)
     cocoon.forms.onLoadHandlers = new Array();
-}
+};
 
 /**
  * onSubmit Handlers
@@ -167,11 +167,11 @@ cocoon.forms.addOnSubmitHandler = function(element, handler) {
                 if (!cocoon.forms.onSubmitHandlers[id]) cocoon.forms.onSubmitHandlers[id] = new Array();
                 cocoon.forms.onSubmitHandlers[id].push(handler);
             } else {
-                if (dojo) console.warn("WARNING: SubmitHandler not added. There is no id attribute on your form.");
+                if (console) console.warn("WARNING: SubmitHandler not added. There is no id attribute on your form.");
             }
         }
     }
-}
+};
 
 /**
  * call the onSubmit Handlers
@@ -204,7 +204,7 @@ cocoon.forms.callOnSubmitHandlers = function(form) {
     // TODO: if AjaxForm were to start calling submit handlers, this would need to change
     //cocoon.forms.onSubmitHandlers[id] = null;
     return true;
-}
+};
 
 
 /**
@@ -230,8 +230,6 @@ cocoon.forms.defaults = {
         "l10n-integer":  {places: 0, min: -2147483648, max: 2147483647}, // FormattingIntegerConverter
         "l10n-long":     {places: 0, min:-9223372036854775808, max: 9223372036854775807}, // FormattingLongConverter
         "l10n-number":   {type: "decimal"}, // FormattingDecimalConverter, FormattingFloatConverter, FormattingDoubleConverter
-        "l10n-percent":  {type: "percent"}, // FormattingDecimalConverter - percent variant
-    
+        "l10n-percent":  {type: "percent"} // FormattingDecimalConverter - percent variant
     }
-    
-}
+};
