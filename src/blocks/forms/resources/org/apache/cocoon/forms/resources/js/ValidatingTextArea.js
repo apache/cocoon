@@ -43,6 +43,6 @@ dojo.declare("cocoon.forms.ValidatingTextArea", [dijit.form.ValidationTextBox, c
     return (new RegExp("^(" + this.regExpGen(constraints) + ")"+(this.required?"":"?")+"$", "m")).test(value) &&
       (!this.required || !this._isEmpty(value)) &&
       (this._isEmpty(value) || this.parse(value, constraints) !== undefined); // Boolean
-  },
+  }
   
 });

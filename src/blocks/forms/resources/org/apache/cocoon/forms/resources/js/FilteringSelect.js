@@ -40,7 +40,7 @@ dojo.declare("cocoon.forms.FilteringSelect", [dijit.form.FilteringSelect, cocoon
   buildRendering: function() {
     this.inherited(arguments);
     if (this.value && this.suggestion) this._setValue(this.value, this.suggestion, false); 
-  },
+  }
 
 
 

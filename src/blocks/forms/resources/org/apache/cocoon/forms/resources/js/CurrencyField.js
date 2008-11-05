@@ -37,6 +37,6 @@ dojo.require("dojo.currency");
 dojo.declare("cocoon.forms.CurrencyField", [cocoon.forms.NumberField], {	
 		regExpGen: dojo.currency.regexp,
 		_formatter: dojo.currency.format,
-		parse: dojo.currency.parse,
+		parse: dojo.currency.parse
 
 });

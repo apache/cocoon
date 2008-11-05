@@ -114,7 +114,7 @@ dojo.declare("cocoon.forms.Select", [dijit.form._FormValueWidget, cocoon.forms._
       this
     );
     this.inherited(arguments);
-  },
+  }
 
   
 });
