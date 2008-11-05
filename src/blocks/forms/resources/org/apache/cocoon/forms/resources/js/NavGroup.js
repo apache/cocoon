@@ -75,6 +75,6 @@ dojo.declare("cocoon.forms._NavButton", [dijit.layout._StackButton], {
   postMixInProperties: function() {
     this._cforms_statusMarker = cocoon.forms.defaults.statusMark;
     this.inherited(arguments); 
-  },
+  }
 
 });
