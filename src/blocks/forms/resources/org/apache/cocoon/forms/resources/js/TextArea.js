@@ -39,6 +39,6 @@ dojo.declare("cocoon.forms.TextArea", [dijit.form.TextBox, cocoon.forms._FilterF
 	rows: "",
 	cols: "",
 
-	templateString:"<textarea class=\"dijit dijitReset dijitLeft\" dojoAttachPoint='textbox,focusNode,containerNode' name=\"${name}\"\n\tdojoAttachEvent='onmouseenter:_onMouse,onmouseleave:_onMouse,onfocus:_onMouse,onblur:_onMouse,onkeypress:_onKeyPress,onkeyup'>",
+	templateString:"<textarea class=\"dijit dijitReset dijitLeft\" dojoAttachPoint='textbox,focusNode,containerNode' name=\"${name}\"\n\tdojoAttachEvent='onmouseenter:_onMouse,onmouseleave:_onMouse,onfocus:_onMouse,onblur:_onMouse,onkeypress:_onKeyPress,onkeyup'>"
   
 });
