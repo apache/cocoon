@@ -37,13 +37,18 @@ import org.apache.commons.jxpath.JXPathContext;
  *
  * <p>Example configuration :
  * <pre>
- *   &lt;map:selector type="error" src="....XPathExceptionSelector">
- *     &lt;exception name="denied" class="my.comp.auth.AuthenticationFailure">
- *       &lt;xpath name="PasswordWrong" test="authCode=10"/>
- *       &lt;xpath name="PasswordExpired" test="errorCode=11"/>
- *       &lt;xpath name="AccessForbidden" test="errorCode&gt;11"/>
- *     &lt;/exception>
- *   &lt;/map:selector>
+ *   &lt;map:components>
+ *     &lt;map:selectors>
+ *        ...
+ *       &lt;map:selector name="error" src="org.apache.cocoon.selection.XPathExceptionSelector">
+ *         &lt;exception name="denied" class="my.comp.auth.AuthenticationFailure">
+ *           &lt;xpath name="PasswordWrong" test="authCode=10"/>
+ *           &lt;xpath name="PasswordExpired" test="errorCode=11"/>
+ *           &lt;xpath name="AccessForbidden" test="errorCode&gt;11"/>
+ *         &lt;/exception>
+ *       &lt;/map:selector>
+ *     &lt;/map:selectory>
+ *   &lt;/components>
  * </pre>
  * This example shows several features:
  * <ul>
