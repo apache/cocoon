@@ -44,8 +44,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  *         &lt;exception name="denied" class="java.security.SecurityException"/>
  *         &lt;exception name="denied" class="my.comp.auth.AuthenticationFailure"/>
  *       &lt;/map:selector>
- *     &lt;selectors/>
- *   &lt;map:components/>
+ *     &lt;/selectors>
+ *   &lt;/map:components>
  * </pre>
  * This example shows several features :
  * <li>the "class" is the class name of the exception (which can be any <code>Throwable</code>),</li>
