@@ -34,13 +34,18 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * <p>
  * Example configuration :
  * <pre>
- *   &lt;map:selector type="error" src="....ExceptionSelector">
- *     &lt;exception class="org.xml.sax.SAXException" name="sax" unroll="true"/>
- *     &lt;exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
- *     &lt;exception class="org.apache.cocoon.ProcessingException" unroll="true"/>
- *     &lt;exception name="denied" class="java.security.SecurityException"/>
- *     &lt;exception name="denied" class="my.comp.auth.AuthenticationFailure"/>
- *   &lt;/map:selector>
+ *   &lt;map:components>
+ *     &lt;map:selectors>
+ *        ....
+ *       &lt;map:selector name="error" src="org.apache.cocoon.selection.ExceptionSelector">
+ *         &lt;exception class="org.xml.sax.SAXException" name="sax" unroll="true"/>
+ *         &lt;exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
+ *         &lt;exception class="org.apache.cocoon.ProcessingException" unroll="true"/>
+ *         &lt;exception name="denied" class="java.security.SecurityException"/>
+ *         &lt;exception name="denied" class="my.comp.auth.AuthenticationFailure"/>
+ *       &lt;/map:selector>
+ *     &lt;selectors/>
+ *   &lt;map:components/>
  * </pre>
  * This example shows several features :
  * <li>the "class" is the class name of the exception (which can be any <code>Throwable</code>),</li>
