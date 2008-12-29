@@ -39,7 +39,8 @@
     <module>cocoon-configuration/cocoon-configuration-api</module>
     <module>cocoon-configuration/cocoon-spring-configurator</module>
     <module>cocoon-servlet-service/cocoon-servlet-service-impl</module>
-    <module>cocoon-servlet-service/cocoon-servlet-service-impl-sample</module>	
+    <module>cocoon-servlet-service/cocoon-servlet-service-impl-sample</module>
+    <module>cocoon.xml</module>
   </modules>
   
 </project>
