@@ -13,12 +13,12 @@
       <td/>
       <td>
         <select name="${this.widgetId}" id="${this.widgetId}:input" size="5" multiple="multiple" style="width:100%"
-          dojoAttachPoint="select">
+          dojoAttachPoint="select" onchange="${this.onchange}">
         </select>
       </td>
       <td width="20px">
         <a id="${this.widgetId}.link" href="#" dojoAttachPoint="linkButton">${this.popupLinkText}</a>
-        <br/>		
+        <br/>
         <img dojoAttachPoint="deleteButton" src="${this.resourcesUri}/forms/img/delete.gif"/>
         <br/>
         <img dojoAttachPoint="moveUpButton" src="${this.resourcesUri}/forms/img/move_up.gif"/>
