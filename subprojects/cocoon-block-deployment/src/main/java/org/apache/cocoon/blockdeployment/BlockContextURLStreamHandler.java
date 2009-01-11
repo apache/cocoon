@@ -24,15 +24,15 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.Map;
 
-
 public class BlockContextURLStreamHandler extends URLStreamHandler {
 
-    private final Map blockContexts;
+    private final Map<String, String> blockContexts;
 
-    public BlockContextURLStreamHandler(Map blockContexts) {
+    public BlockContextURLStreamHandler(Map<String, String> blockContexts) {
         this.blockContexts = blockContexts;
     }
 
+    @Override
     protected URLConnection openConnection(URL url) throws IOException {
         return new BlockContextURLConnection(url, this.blockContexts);
     }

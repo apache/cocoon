@@ -26,12 +26,22 @@ import java.util.Map;
 
 public class BlockContextURLConnection extends URLConnection {
 
-    private final Map blockContexts;
+    private final Map<String, String> blockContexts;
 
     private URLConnection urlConnection;
 
-    protected BlockContextURLConnection(URL url, Map blockContexts) {
+    protected BlockContextURLConnection(URL url, Map<String, String> blockContexts) {
         super(url);
+
+        // check if there the BlockContext map is not null.
+        // This null check can't be done earlier because in development
+        // environments, the cocoon-block-deployment library is available, but
+        // you don't necessarily use the blockcontext protocol.
+        if (blockContexts == null) {
+            throw new BlockContextInitializationException("There are no block contexts available. Make sure that the "
+                    + BlockDeploymentServletContextListener.class.getName()
+                    + " is configured correctly in the web.xml.");
+        }
         this.blockContexts = blockContexts;
         this.url = url;
     }
@@ -60,7 +70,7 @@ public class BlockContextURLConnection extends URLConnection {
                 // extract the block name and get the block context path
                 String blockName = path.substring(0, pos);
                 path = path.substring(pos + 1);
-                String blockContext = (String) this.blockContexts.get(blockName);
+                String blockContext = this.blockContexts.get(blockName);
 
                 if (blockContext == null) {
                     throw new RuntimeException("There is no block '" + blockName

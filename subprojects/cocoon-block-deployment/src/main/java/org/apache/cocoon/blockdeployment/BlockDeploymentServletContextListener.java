@@ -26,8 +26,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-
-
 public class BlockDeploymentServletContextListener implements ServletContextListener {
 
     public static final String BLOCK_CONTEXT_MAP = BlockDeploymentServletContextListener.class.getName() + "/"
@@ -37,7 +35,8 @@ public class BlockDeploymentServletContextListener implements ServletContextList
         try {
             ServletContext servletContext = sce.getServletContext();
 
-            Map blocks = DeploymentUtil.deployBlockArtifacts(this.getWorkdir(servletContext).getAbsolutePath());
+            Map<String, String> blocks = DeploymentUtil.deployBlockArtifacts(this.getWorkdir(servletContext)
+                    .getAbsolutePath());
             servletContext.setAttribute(BLOCK_CONTEXT_MAP, blocks);
         } catch (IOException e) {
             throw new RuntimeException("The available Cocoon blocks can't be deployed.", e);
