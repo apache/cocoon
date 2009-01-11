@@ -31,11 +31,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 public class BlockContextURLStreamHandlerFactory implements URLStreamHandlerFactory, ApplicationContextAware {
 
-    private Map blockContexts;
+    private Map<String, String> blockContexts;
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)
      */
     public URLStreamHandler createURLStreamHandler(String protocol) {
@@ -48,12 +48,14 @@ public class BlockContextURLStreamHandlerFactory implements URLStreamHandlerFact
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
      */
+    @SuppressWarnings("unchecked")
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         WebApplicationContext webApplicationContext = (WebApplicationContext) applicationContext;
         ServletContext servletContext = webApplicationContext.getServletContext();
-        this.blockContexts = (Map) servletContext.getAttribute(BlockDeploymentServletContextListener.BLOCK_CONTEXT_MAP);
+        this.blockContexts = (Map<String, String>) servletContext
+                .getAttribute(BlockDeploymentServletContextListener.BLOCK_CONTEXT_MAP);
     }
 }

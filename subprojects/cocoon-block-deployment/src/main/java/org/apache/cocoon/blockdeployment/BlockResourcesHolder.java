@@ -20,16 +20,18 @@ import java.util.Map;
 
 /**
  * This component provides a map with the deployed block resources.
- *
- * @version $Id$
+ * 
+ * @version $Id: BlockResourcesHolder.java 686263 2008-08-15 15:53:47Z
+ *          gkossakowski $
  * @since 1.1.0
  */
 public interface BlockResourcesHolder {
 
     /**
-     * Return a map with deployed block names as keys and the url of the deployed
-     * resources as value.
+     * Return a map with deployed block names as keys and the url of the
+     * deployed resources as value.
+     * 
      * @return The map with the block contexts.
      */
-    Map getBlockContexts();
+    Map<String, String> getBlockContexts();
 }

@@ -20,17 +20,20 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+@SuppressWarnings("deprecation")
 public class DefaultBlockResourcesHolder implements BlockResourcesHolder,
         org.apache.cocoon.spring.configurator.BlockResourcesHolder {
 
     ServletContext servletContext;
 
-    public Map getBlockContexts() {
-        return (Map) servletContext.getAttribute(BlockDeploymentServletContextListener.BLOCK_CONTEXT_MAP);
+    @SuppressWarnings("unchecked")
+    public Map<String, String> getBlockContexts() {
+        return (Map<String, String>) this.servletContext
+                .getAttribute(BlockDeploymentServletContextListener.BLOCK_CONTEXT_MAP);
     }
 
     public ServletContext getServletContext() {
-        return servletContext;
+        return this.servletContext;
     }
 
     public void setServletContext(ServletContext servletContext) {
