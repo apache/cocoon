@@ -250,9 +250,9 @@
            <h1 class="projectTitle"><a href="./index.html">#nameAndVersion()</a></h1>
            #if( $project.getProperties().get("docs.breadcrumb") == "cocoon3")
               <ul class="projectList">
-                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")/2.2/">Cocoon 2.2</a></em></strong></li>
-                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")/3.0/">Cocoon 3.0 <span class="pl-version-small">[alpha]</span></a></em></strong></li>                
-                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")/subprojects/">Subprojects</a></strong></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></em></strong></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")3.0/">Cocoon 3.0 <span class="pl-version-small">[alpha]</span></a></em></strong></li>                
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")subprojects/">Subprojects</a></strong></li>
               </ul>              
            #else
               <ul class="projectList">
