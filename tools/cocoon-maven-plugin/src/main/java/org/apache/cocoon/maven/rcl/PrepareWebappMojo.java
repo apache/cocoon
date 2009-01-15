@@ -290,15 +290,42 @@ public class PrepareWebappMojo extends AbstractMojo {
         return props;
     }
 
+    @SuppressWarnings("unchecked")
     protected void createReloadingClassLoaderConf(File webAppBaseDir, RwmProperties props) throws MojoExecutionException {
         File urlClConfFile = createPath(new File(webAppBaseDir, WEB_INF_RCLWRAPPER_RCL_CONF));
         try {
             FileWriter fw = new FileWriter(urlClConfFile);
-            for(Iterator aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
+            for(Iterator<?> aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
                 String dir = (String) aIt.next();
                 fw.write(dir + "\n");
                 this.getLog().debug("Adding classes-dir to RCLClassLoader configuration: " + dir);
             }
+
+            Set<Artifact> artifacts = this.project.getArtifacts();
+            Set excludeLibProps = props.getExcludedLibProps();
+            ScopeArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
+            for (Artifact artifact : artifacts) {
+                // exclude optional and snapshot dependencies
+                if (artifact.isOptional()) {
+                    continue;
+                }
+                // exclude all artifacts that are not in the runtime scope
+                if (!filter.include(artifact)) {
+                    continue;
+                }
+                // keep only snapshot artifacts
+                if (!artifact.isSnapshot()) {
+                    continue;
+                }
+                // skip explicit excludes
+                if (excludeLibProps.contains(artifact.getGroupId() + ":" + artifact.getArtifactId())) {
+                    continue;
+                }
+                
+                fw.write(artifact.getFile().toURI().toURL().toExternalForm() + "\n");
+                this.getLog().debug("Adding library (URLClassLoader configuration): " + artifact.getArtifactId());
+            }
+            
             fw.close();
         } catch(IOException e) {
             throw new MojoExecutionException("Error while writing to " + urlClConfFile, e);
@@ -309,33 +336,46 @@ public class PrepareWebappMojo extends AbstractMojo {
         File urlClConfFile = createPath(new File(webAppBaseDir, WEB_INF_RCL_URLCL_CONF));
         try {
             FileWriter fw = new FileWriter(urlClConfFile);
-            Set excludeLibProps = props.getExcludedLibProps();
+            Set<?> excludeLibProps = props.getExcludedLibProps();
 
-            for(Iterator aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
+            for(Iterator<?> aIt = props.getClassesDirs().iterator(); aIt.hasNext();) {
                 String dir = (String) aIt.next();
                 fw.write(dir + "\n");
                 this.getLog().debug("Adding classes-dir (URLClassLoader configuration): " + dir);
             }
 
             // add all project artifacts
-            Set artifacts = project.getArtifacts();
+            Set<Artifact> artifacts = project.getArtifacts();
             ScopeArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
 
-            // add the Spring reloader libraries
-            Set springReloaderArtifacts = getDependencies("org.apache.cocoon", "cocoon-rcl-spring-reloader",
-                            LIB_VERSION_SPRING_RELOADER, "jar");
-            artifacts.addAll(springReloaderArtifacts);
-
-            for (Iterator iter = artifacts.iterator(); iter.hasNext();) {
-                Artifact artifact = (Artifact) iter.next();
-                if (!artifact.isOptional() && filter.include(artifact) &&
-                        !excludeLibProps.contains(artifact.getGroupId() + ":" + artifact.getArtifactId())) {
-                    fw.write(artifact.getFile().toURL().toExternalForm() + "\n");
-                    this.getLog().debug("Adding library (URLClassLoader configuration): " + artifact.getArtifactId());
-                } else {
-                    this.getLog().debug("Skipping library (URLClassLoader configuration): " + artifact.getArtifactId());
+            Set<Artifact> filteredArtifacts = new HashSet<Artifact>();
+            for (Artifact eachArtifact : artifacts) {
+                // remove optional artifacts
+                if(eachArtifact.isOptional()) {
+                    continue;
                 }
+                // remove artifacts that are not in runtime scope
+                if(!filter.include(eachArtifact)) { 
+                    continue;
+                }
+                // skip explicit excludes
+                if(excludeLibProps.contains(eachArtifact.getGroupId() + ":" + eachArtifact.getArtifactId())) {
+                    continue;
+                }
+                
+                filteredArtifacts.add(eachArtifact);
             }
+            
+            // add the Spring reloader libraries
+            Set<Artifact> springReloaderArtifacts = getDependencies("org.apache.cocoon", "cocoon-rcl-spring-reloader",
+                            LIB_VERSION_SPRING_RELOADER, "jar");
+            filteredArtifacts.addAll(springReloaderArtifacts);
+
+            for (Artifact eachArtifact : filteredArtifacts) {
+                fw.write(eachArtifact.getFile().toURI().toURL().toExternalForm() + "\n");
+                this.getLog().debug("Adding library (URLClassLoader configuration): " + eachArtifact.getArtifactId());
+            }
+            
             fw.close();
         } catch(IOException e) {
             throw new MojoExecutionException("Error while writing to " + urlClConfFile, e);
@@ -346,7 +386,7 @@ public class PrepareWebappMojo extends AbstractMojo {
         File springPropFile = createPath(new File(webAppBaseDir, WEB_INF_COCOON_SPRING_PROPS));
         try {
             FileOutputStream springPropsOs = new FileOutputStream(springPropFile);
-            props.getSpringProperties().store(springPropsOs, "Spring properties as read from " + this.rclPropertiesFile.toURL());
+            props.getSpringProperties().store(springPropsOs, "Spring properties as read from " + this.rclPropertiesFile.toURI().toURL());
             springPropsOs.close();
         } catch (IOException e) {
             throw new MojoExecutionException("Can't write to  " + springPropFile.getAbsolutePath(), e);
@@ -357,7 +397,7 @@ public class PrepareWebappMojo extends AbstractMojo {
         File springPropFile = createPath(new File(webAppBaseDir, WEB_INF_COCOON_PROPS));
         try {
             FileOutputStream springPropsOs = new FileOutputStream(springPropFile);
-            props.getCocoonProperties().store(springPropsOs, "Cocoon properties as read from " + this.rclPropertiesFile.toURL());
+            props.getCocoonProperties().store(springPropsOs, "Cocoon properties as read from " + this.rclPropertiesFile.toURI().toURL());
             springPropsOs.close();
         } catch (IOException e) {
             throw new MojoExecutionException("Can't write to  " + springPropFile.getAbsolutePath(), e);
@@ -384,7 +424,7 @@ public class PrepareWebappMojo extends AbstractMojo {
             Properties props = new Properties();
             props.setProperty("reloading.spring.enabled", Boolean.toString(this.reloadingSpringEnabled));
             props.setProperty("reloading.classloader.enabled", Boolean.toString(this.reloadingClassLoaderEnabled));
-            props.save(new FileOutputStream(rclProps), "Reloading Classloader Properties");
+            props.store(new FileOutputStream(rclProps), "Reloading Classloader Properties");
         } catch (IOException e) {
             throw new MojoExecutionException("Can't write to  " + rclProps.getAbsolutePath(), e);
         }
@@ -474,7 +514,7 @@ public class PrepareWebappMojo extends AbstractMojo {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ utility methods ~~~~~~~~~~
 
-    protected Set getDependencies(final String groupId, final String artifactId, final String version,
+    protected Set<Artifact> getDependencies(final String groupId, final String artifactId, final String version,
             final String packaging) throws MojoExecutionException {
         Set returnSet = new HashSet();
         try {
@@ -567,6 +607,7 @@ public class PrepareWebappMojo extends AbstractMojo {
     protected void writeInputStreamToFile(final InputStream is, final File f) throws MojoExecutionException {
         Validate.notNull(is);
         Validate.notNull(f);
+        
         try {
             FileWriter fw = new FileWriter(f);
             IOUtils.copy(is, fw);
@@ -575,5 +616,4 @@ public class PrepareWebappMojo extends AbstractMojo {
             throw new MojoExecutionException("Can't write to file " + f);
         }
     }
-
 }
