@@ -60,6 +60,7 @@ public class CocoonReloadingListener extends ReloadingListener {
                 changedFilePath.endsWith(".xmap") ||                                // any file that ends with xmap (sitemaps)
                 changedFilePath.endsWith(".xmap.xml") ||                            // any sitemap that ends with xmap.xml (sitemaps)
                 changedFilePath.endsWith(".class") ||                               // Java class file change
+                changedFilePath.endsWith(".jar") ||                                 // JAR file change
                 changedFileParentPath.endsWith("config/spring")                     // local Spring bean configurations
            ) {
             log.debug("Configuration or .class file change detected [" + operation + "]: " + changedFile);
