@@ -220,7 +220,6 @@ public abstract class AbstractDeployMojo extends AbstractWarMojo {
         } finally {
             IOUtils.closeQuietly(sourceWebXmlFile);
         }
-
     }
 
     /**

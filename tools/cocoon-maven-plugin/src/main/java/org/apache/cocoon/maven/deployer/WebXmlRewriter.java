@@ -44,9 +44,11 @@ public class WebXmlRewriter {
     public boolean rewrite(Document webAppDoc) {
         boolean rewritten = false;
         final Element rootElement = webAppDoc.getDocumentElement();
+        
         // first rewrite servlets
         final List servlets = XMLUtils.getChildNodes(rootElement, "servlet");
         Iterator i = servlets.iterator();
+        
         while ( i.hasNext() ) {
             final Element servletElement = (Element)i.next();
             final Element servletClassElement = XMLUtils.getChildNode(servletElement, "servlet-class");
@@ -57,8 +59,10 @@ public class WebXmlRewriter {
                 final Element initParamElem = webAppDoc.createElementNS(null, "init-param");
                 final Element initParamNameElem = webAppDoc.createElementNS(null, "param-name");
                 final Element initParamValueElem = webAppDoc.createElementNS(null, "param-value");
+                
                 initParamElem.appendChild(initParamNameElem);
                 initParamElem.appendChild(initParamValueElem);
+                
                 XMLUtils.setValue(initParamNameElem, "servlet-class");
                 XMLUtils.setValue(initParamValueElem, className);
                 Element beforeElement = XMLUtils.getChildNode(servletElement, "load-on-startup");
@@ -73,6 +77,7 @@ public class WebXmlRewriter {
                 } else {
                     servletElement.insertBefore(initParamElem, beforeElement);
                 }
+                
                 rewritten = true;
             }
         }
@@ -178,10 +183,13 @@ public class WebXmlRewriter {
         final Element contextParamElement = root.getOwnerDocument().createElementNS(null, "context-param");
         final Element contextParamNameElement = root.getOwnerDocument().createElementNS(null, "param-name");
         final Element contextParamValueElement = root.getOwnerDocument().createElementNS(null, "param-value");
+        
         contextParamElement.appendChild(contextParamNameElement);
         contextParamElement.appendChild(contextParamValueElement);
+        
         XMLUtils.setValue(contextParamNameElement, name);
         XMLUtils.setValue(contextParamValueElement, value);
+        
         root.insertBefore(contextParamElement, searchElement);
     }
 }
