@@ -20,7 +20,7 @@ import org.apache.cocoon.components.serializers.encoding.XHTMLEncoder;
 import org.xml.sax.SAXException;
 
 /**
- * <p>A pedantinc XHTML serializer encoding all recognized entities with their
+ * <p>A pedantic XHTML serializer encoding all recognized entities with their
  * proper HTML names.</p>
  *
  * <p>For configuration options of this serializer, please look at the
@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  *
  * <dl>
  *   <dt>"<code>none</code>"</dt>
- *   <dd>Not to emit any dococument type declaration.</dd>
+ *   <dd>Not to emit any document type declaration.</dd>
  *   <dt>"<code>strict</code>"</dt>
  *   <dd>The XHTML 1.0 Strict document type.</dd>
  *   <dt>"<code>loose</code>"</dt>
