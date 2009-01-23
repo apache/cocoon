@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@ import org.xml.sax.Attributes;
 
 /**
  * A helper Class creating SAX Attributes
- * 
+ *
  * @version $Id$
  */
 public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
@@ -52,7 +52,7 @@ public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
 	public void addCDATAAttribute(String localName, String value) {
 		addAttribute("", localName, localName, AttributeTypes.CDATA, value);
 	}
-    
+
     /**
      * Add an attribute of type CDATA with the namespace to the end of the list.
      *
@@ -90,7 +90,7 @@ public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
                             		String value) {
 		addAttribute(uri, localName, qName, AttributeTypes.CDATA, value);
 	}
-    
+
     /**
      * Remove an attribute
      */
@@ -110,5 +110,40 @@ public class AttributesImpl extends org.xml.sax.helpers.AttributesImpl {
             this.removeAttribute(index);
         }
     }
+
+    /**
+     * Utility method to update the value of the named attribute. Returns
+     * an updated set of attributes instead of modifying the given attribute
+     * set as the given value may be read-only.
+     *
+     * @param attributes original set of attributes
+     * @param name attribute name
+     * @param value new attribute value
+     * @return updated set of attributes
+     */
+    public static Attributes update(Attributes attributes, String name, String value) {
+        AttributesImpl update = new AttributesImpl(attributes);
+        int index = update.getIndex(name);
+        if (index != -1) {
+            update.setValue(index, value);
+        } else {
+            update.addCDATAAttribute(name, value);
+        }
+        return update;
+    }
+
+    /**
+     * Update or add an attribute of type CDATA with empty Namespace.
+     *
+     * @param localName The local name.
+     * @param value The attribute value.
+     */
+    public void updateCDATAAttribute(String localName, String value) {
+        int index = this.getIndex(localName);
+        if (index != -1) {
+            this.setValue(index, value);
+        } else {
+            this.addCDATAAttribute(localName, value);
+        }
+    }
 }
-  
