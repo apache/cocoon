@@ -70,8 +70,6 @@ public class HTMLSerializer extends XHTMLSerializer {
 
     private static final HTMLEncoder HTML_ENCODER = new HTMLEncoder();
 
-    protected boolean encodeCharacters = true;
-
     /**
      * Create a new instance of this <code>HTMLSerializer</code>
      */
@@ -185,10 +183,6 @@ public class HTMLSerializer extends XHTMLSerializer {
             length++;
         }
 
-        // script and style are CDATA sections by default, so no encoding
-        if ( "SCRIPT".equals(name) || "STYLE".equals(name) ) {
-            this.encodeCharacters = false;
-        }
         super.startElementImpl(XHTML1_NAMESPACE, name, name, NAMESPACES, at);
     }
 
@@ -220,22 +214,7 @@ public class HTMLSerializer extends XHTMLSerializer {
         if (name.equals("META")) return;
         if (name.equals("PARAM")) return;
 
-        // script and style are CDATA sections by default, so no encoding
-        if ( "SCRIPT".equals(name) || "STYLE".equals(name) ) {
-            this.encodeCharacters = true;
-        }
         super.endElementImpl(XHTML1_NAMESPACE, name, name);
     }
 
-    /**
-     * Encode and write a specific part of an array of characters.
-     */
-    protected void encode(char data[], int start, int length)
-    throws SAXException {
-        if ( !this.encodeCharacters ) {
-            this.write(data, start, length);
-            return;
-        }
-        super.encode(data, start, length);
-    }
 }
