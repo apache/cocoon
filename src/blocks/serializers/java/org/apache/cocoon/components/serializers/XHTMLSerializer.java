@@ -78,6 +78,8 @@ public class XHTMLSerializer extends XMLSerializer {
 
     private static final XHTMLEncoder XHTML_ENCODER = new XHTMLEncoder();
 
+    protected boolean encodeCharacters = true;
+    
     /* ====================================================================== */
 
     /** The <code>DocType</code> instance representing the document. */
@@ -181,6 +183,11 @@ public class XHTMLSerializer extends XMLSerializer {
                                  String namespaces[][], String attributes[][])
     throws SAXException {
         if (uri.length() == 0) uri = XHTML1_NAMESPACE;
+        
+        if (isCdataElement(local)) {
+            this.encodeCharacters = false;
+        }
+
         super.startElementImpl(uri, local, qual, namespaces, attributes);
     }
 
@@ -202,7 +209,7 @@ public class XHTMLSerializer extends XMLSerializer {
                 this.closeElement(false);
             } else if (local.equalsIgnoreCase("head")) {
                 String loc = "meta";
-                String qua = namespaces.qualify(XHTML1_NAMESPACE, loc, "meta");
+                String qua = this.namespaces.qualify(XHTML1_NAMESPACE, loc, "meta");
                 String nsp[][] = new String[0][0];
                 String att[][] = new String[2][ATTRIBUTE_LENGTH];
 
@@ -217,7 +224,33 @@ public class XHTMLSerializer extends XMLSerializer {
                 this.endElementImpl(XHTML1_NAMESPACE, loc, qua);
             }
         }
+        
+        if (isCdataElement(local)) {
+            this.encodeCharacters = true;
+        }
+
         super.endElementImpl(uri, local, qual);
     }
     
+    /**
+     * script and style are CDATA sections by default, so no encoding
+     * @param localName The local name of the element.
+     * @return If the element should be serialized without encoding.
+     */
+    protected boolean isCdataElement(String localName) {
+        String upperCase = localName.toUpperCase();
+        return "SCRIPT".equals(upperCase) || "STYLE".equals(upperCase);
+    }
+    
+    /**
+     * Encode and write a specific part of an array of characters.
+     */
+    protected void encode(char data[], int start, int length)
+    throws SAXException {
+        if (this.encodeCharacters) {
+            super.encode(data, start, length);
+        } else {
+            this.write(data, start, length);
+        }
+    }
 }
