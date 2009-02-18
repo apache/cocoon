@@ -17,23 +17,22 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    +-->
+<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  
   <parent>
-    <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5</version>
+    <artifactId>cocoon</artifactId>
+    <version>6-SNAPSHOT</version>
+    <relativePath>../../parent/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
+  
   <artifactId>cocoon-xml</artifactId>
   <version>2.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>Cocoon XML Utilities</name>
-  <description>
-    Various utilities classes.
-  </description>
+  <description>Various XML utilities classes.</description>
   <url>http://cocoon.apache.org/${docs.m.xml-util.relPath}</url>    
   
   <properties>
