@@ -186,7 +186,10 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
-    <action dev="joerg" type="add" fixes-bug="COCOON-2243" due-to="Benjamin Boksa" due-to-email="benjamin@boksa.de">
+    <action dev="JH" type="update" fixes-bug="COCOON-1887" due-to="Andrew Stevens" due-to-email="stevensa@users.sourceforge.net">
+      Change HostSelector to be case-insensitive according to RFC3986 section 3.2.2.
+    </action>
+    <action dev="JH" type="add" fixes-bug="COCOON-2243" due-to="Benjamin Boksa" due-to-email="benjamin@boksa.de">
       Handle case in ApplicationUtil.isUserInRole(..) when User is null.
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1822" due-to="Karen Torres &amp; Rafael Márquez" due-to-email="ktorres@agssa.net &amp; rmarquez@agssa.net">
