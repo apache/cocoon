@@ -28,6 +28,7 @@
                        name="host">
       <host name="myhost-eu" value="myhost-dns-name-in-a-europe-country"/>
       <host name="myhost-us" value="myhost-dns-name-in-a-us-state"/>
+      <host name="myhost-uppercase" value="MYHOST-DNS-NAME"/>
     </component-instance>
   </selectors>
  </components>

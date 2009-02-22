@@ -95,7 +95,7 @@ public abstract class NamedPatternsSelector extends AbstractLogEnabled
     }
 
     /**
-     * Checks if <code>value</code> is a substring of one of the patterns associated
+     * Checks if <code>value</code> is a (case-sensitive) substring of one of the patterns associated
      * to <code>expression</code>
      *
      * @param expression the expression that is selected
@@ -103,6 +103,19 @@ public abstract class NamedPatternsSelector extends AbstractLogEnabled
      * @return true if <code>value</code> matches one of the patterns
      */
     protected boolean checkPatterns(String expression, String value) {
+        return checkPatterns(expression, value, true);
+    }
+
+    /**
+     * Checks if <code>value</code> is a substring of one of the patterns associated
+     * to <code>expression</code>
+     *
+     * @param expression the expression that is selected
+     * @param value the value to check
+     * @param caseSensitive boolean switch whether comparison is done case-sensitive  
+     * @return true if <code>value</code> matches one of the patterns
+     */
+    protected boolean checkPatterns(String expression, String value, boolean caseSensitive) {
         if (value == null) {
             getLogger().debug("No value given -- failing.");
             return false;
@@ -114,9 +127,14 @@ public abstract class NamedPatternsSelector extends AbstractLogEnabled
             return false;
         }
 
+        if (!caseSensitive) {
+            value = value.toLowerCase();
+        }
+
         // Does a pattern match 'value' ?
         for (int i = 0; i < patterns.length; i++) {
-            if (value.indexOf(patterns[i]) != -1) {
+            if ((caseSensitive && value.indexOf(patterns[i]) != -1)
+                || (!caseSensitive && value.indexOf(patterns[i].toLowerCase()) != -1)) {
                 getLogger().debug(expression + " selected value " + value);
                 return true;
             }

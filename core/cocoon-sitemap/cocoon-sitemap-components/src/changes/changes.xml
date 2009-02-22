@@ -24,6 +24,11 @@
     +-->
 <document>
   <body>
+    <release version="1.0.1" date="TBD" description="to be done">
+      <action dev="joerg" type="update" fixes-bug="COCOON-1887" due-to="Andrew Stevens" due-to-email="stevensa@users.sourceforge.net">
+        Change HostSelector to be case-insensitive according to RFC3986 section 3.2.2.
+      </action>
+    </release>
     <release version="1.0.0" date="TBA" description="released">
       <action dev="rgoers" type="fix" issue="COCOON-1574">
         Created XPathXMLFileModule to fix problems with XMLFileModule. Added getAttributeValue to JXPathHelper
