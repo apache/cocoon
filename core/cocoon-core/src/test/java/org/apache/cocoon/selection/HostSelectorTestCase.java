@@ -19,13 +19,14 @@ package org.apache.cocoon.selection;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 
 
 public class HostSelectorTestCase extends SitemapComponentTestCase {
 
-    private final String HOST_SELECTOR = "host";
+    private static final String HOST_SELECTOR = "host";
 
     /**
      * Run this test suite from commandline
@@ -92,4 +93,30 @@ public class HostSelectorTestCase extends SitemapComponentTestCase {
         System.out.println(result);
         assertTrue( "Test if host is not " + expectedHostName, !result );
     }
+
+    /**
+     * Test the host selector matches regardless of whether the hostname and
+     * value are upper or lower case.
+     */
+    public void testHostCaseInsensitive() throws Exception {
+        final String hostLower = "myhost-dns-name";
+        final String hostUpper = "MYHOST-DNS-NAME-IN-A-EUROPE-COUNTRY";
+        String expectedHostName;
+
+        Parameters parameters = new Parameters();
+        boolean result;
+
+        getRequest().setHeader("Host", hostUpper);
+        expectedHostName = "myhost-eu";
+        result = this.select(HOST_SELECTOR, expectedHostName, parameters);
+        System.out.println(result);
+        assertTrue("Test upper case host doesn't match lower case value as expected.", result);
+
+        getRequest().setHeader("Host", hostLower);
+        expectedHostName = "myhost-uppercase";
+        result = this.select(HOST_SELECTOR, expectedHostName, parameters);
+        System.out.println(result);
+        assertTrue("Test lower case host doesn't match upper case value as expected.", result);
+    }
+
 }
