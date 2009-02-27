@@ -186,6 +186,9 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="AG" type="update">
+      Updated ant to 1.7.1. This ant detects correctly java 1.6.
+    </action>
     <action dev="JH" type="update" fixes-bug="COCOON-1887" due-to="Andrew Stevens" due-to-email="stevensa@users.sourceforge.net">
       Change HostSelector to be case-insensitive according to RFC3986 section 3.2.2.
     </action>
