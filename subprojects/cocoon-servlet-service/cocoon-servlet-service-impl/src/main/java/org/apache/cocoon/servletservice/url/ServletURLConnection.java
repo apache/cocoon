@@ -25,6 +25,12 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
@@ -88,6 +94,12 @@ public class ServletURLConnection extends HttpURLConnection {
         this.servletConnection.setIfModifiedSince(0);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.URLConnection#connect()
+     */
+    @Override
     public void connect() throws IOException {
         try {
             if (this.connected) {
@@ -104,6 +116,12 @@ public class ServletURLConnection extends HttpURLConnection {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.HttpURLConnection#getErrorStream()
+     */
+    @Override
     public InputStream getErrorStream() {
         if (!this.connected) {
             return null;
@@ -118,6 +136,12 @@ public class ServletURLConnection extends HttpURLConnection {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.URLConnection#getInputStream()
+     */
+    @Override
     public InputStream getInputStream() throws IOException {
         try {
             this.connect();
@@ -130,6 +154,12 @@ public class ServletURLConnection extends HttpURLConnection {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.URLConnection#getLastModified()
+     */
+    @Override
     public long getLastModified() {
         try {
             this.connect();
@@ -140,10 +170,32 @@ public class ServletURLConnection extends HttpURLConnection {
         return this.servletConnection.getLastModified();
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.URLConnection#getOutputStream()
+     */
+    @Override
     public OutputStream getOutputStream() throws IOException {
         return this.servletConnection.getOutputStream();
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.URLConnection#getContentType()
+     */
+    @Override
+    public String getContentType() {
+        return this.servletConnection.getContentType();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.HttpURLConnection#getResponseCode()
+     */
+    @Override
     public int getResponseCode() {
         try {
             this.connect();
@@ -154,11 +206,42 @@ public class ServletURLConnection extends HttpURLConnection {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.HttpURLConnection#disconnect()
+     */
+    @Override
     public void disconnect() {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.HttpURLConnection#usingProxy()
+     */
+    @Override
     public boolean usingProxy() {
         throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.net.URLConnection#getHeaderFields()
+     */
+    @Override
+    public Map<String, List<String>> getHeaderFields() {
+        Map<String, List<String>> result = new HashMap<String, List<String>>();
+
+        Map<String, String> headers = this.servletConnection.getHeaders();
+        for (Entry<String, String> eachHeader : headers.entrySet()) {
+            List<String> values = new ArrayList<String>();
+            values.add(eachHeader.getValue());
+            result.put(eachHeader.getKey(), Collections.unmodifiableList(values));
+        }
+
+        return Collections.unmodifiableMap(result);
     }
 }

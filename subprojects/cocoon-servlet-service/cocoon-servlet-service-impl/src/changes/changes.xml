@@ -25,6 +25,9 @@
 <document>
   <body>
     <release version="1.2.0-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="reinhard" type="add">
+        ServletUrlConnection correctly implements #getHeaderFields() instead of relying on the NOP implementation of HttpURLConnection.
+      </action>
       <action dev="gkossakowski" type="fix">
         Fixed NPE thrown by HttpServletResponseBufferingWrapper and ServletServiceResponse after resetBuffer() method was called.
       </action>
