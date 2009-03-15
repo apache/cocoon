@@ -118,7 +118,7 @@ public abstract class AbstractServletConnection implements ServletConnection {
     }
 
     public String getContentType() {
-        return this.getHeader("Content-Type");
+        return this.getHeaderField("Content-Type");
     }
 
     public long getDateHeader(String name, long defaultValue) {
@@ -131,7 +131,7 @@ public abstract class AbstractServletConnection implements ServletConnection {
         return defaultValue;
     }
 
-    public String getHeader(String name) {
+    public String getHeaderField(String name) {
         try {
             this.connect();
         } catch (Exception e) {

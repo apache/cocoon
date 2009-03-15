@@ -114,7 +114,7 @@ public interface ServletConnection {
      * @param name The name of the header parameter
      * @return The value of the header parameter
      */
-    String getHeader(String name);
+    String getHeaderField(String name);
 
     /**
      * Get all response header fields.
