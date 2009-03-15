@@ -29,54 +29,53 @@ import org.apache.cocoon.configuration.SettingsDefaults;
 import org.apache.cocoon.spring.configurator.ResourceUtils;
 
 /**
- * This is a bean factory post processor which handles all the settings stuff
- * for Cocoon. It reads in all properties files and replaces references to
- * them in the spring configuration files.
- * In addition this bean acts as a factory bean providing the settings object.
- *
- * <p>The settings object is created by reading several property files and merging of
- * the values. If there is more than one definition for a property, the last one wins.
- * The property files are read in the following order:
+ * This is a bean factory post processor which handles all the settings stuff for Cocoon. It reads
+ * in all properties files and replaces references to them in the spring configuration files. In
+ * addition this bean acts as a factory bean providing the settings object.
+ * 
+ * <p>
+ * The settings object is created by reading several property files and merging of the values. If
+ * there is more than one definition for a property, the last one wins. The property files are read
+ * in the following order:
  * <ol>
  * <li>If {@link #readFromClasspath} is true: classpath*:/META-INF/cocoon/properties/*.properties
- *    Default values for the core and each block - the files are read in alphabetical order.
- *    Actually the files are read in two chunks, the first one containing all property files
- *    from jar files, and the second one containing all property files from WEB-INF/classes.
- * <li>If {@link #readFromClasspath} is true: classpath*:/META-INF/cocoon/properties/[RUNNING_MODE]/*.properties
- *    Default values for the core and each block for a specific running mode - the files are
- *    read in alphabetical order.
- *    Actually the files are read in two chunks, the first one containing all property files
- *    from jar files, and the second one containing all property files from WEB-INF/classes.
- * <li>If {@link #readFromGlobalLocation} is true: /WEB-INF/cocoon/properties/*.properties
- *    Default values for the core and each block - the files are read in alphabetical order.
- *    Actually the files are read in two chunks, the first one containing all property files
- *    from jar files, and the second one containing all property files from WEB-INF/classes.
- * <li>If {@link #readFromGlobalLocation} is true: /WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties
- *    Default values for the core and each block for a specific running mode - the files are
- *    read in alphabetical order.
- *    Actually the files are read in two chunks, the first one containing all property files
- *    from jar files, and the second one containing all property files from WEB-INF/classes.
+ * Default values for the core and each block - the files are read in alphabetical order. Actually
+ * the files are read in two chunks, the first one containing all property files from jar files, and
+ * the second one containing all property files from WEB-INF/classes.
+ * <li>If {@link #readFromClasspath} is true:
+ * classpath*:/META-INF/cocoon/properties/[RUNNING_MODE]/*.properties Default values for the core
+ * and each block for a specific running mode - the files are read in alphabetical order. Actually
+ * the files are read in two chunks, the first one containing all property files from jar files, and
+ * the second one containing all property files from WEB-INF/classes.
+ * <li>If {@link #readFromGlobalLocation} is true: /WEB-INF/cocoon/properties/*.properties Default
+ * values for the core and each block - the files are read in alphabetical order. Actually the files
+ * are read in two chunks, the first one containing all property files from jar files, and the
+ * second one containing all property files from WEB-INF/classes.
+ * <li>If {@link #readFromGlobalLocation} is true:
+ * /WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties Default values for the core and each block
+ * for a specific running mode - the files are read in alphabetical order. Actually the files are
+ * read in two chunks, the first one containing all property files from jar files, and the second
+ * one containing all property files from WEB-INF/classes.
  * <li>Working directory from servlet context (if not already set)
  * <li>Optional property file which is stored under ".cocoon/settings.properties" in the user
- *    directory.
+ * directory.
  * <li>Additional property file specified by the "org.apache.cocoon.settings" property. If the
- *    property defines a directory, all property files from this directory are read in alphabetical
- *    order and all files from a sub directory with the name of the current running mode
- *    are read in alphabetical order as well.
+ * property defines a directory, all property files from this directory are read in alphabetical
+ * order and all files from a sub directory with the name of the current running mode are read in
+ * alphabetical order as well.
  * <li>Property provider (if configured in the bean factory)
  * <li>Add properties from configured directories {@link #directories}.
  * <li>Add additional properties configured at {@link #additionalProperties}
  * <li>System properties
  * </ol>
- *
+ * 
  * This means that system properties (provided on startup of the web application) override all
  * others etc.
- *
+ * 
  * @since 1.0
  * @version $Id$
  */
-public class SettingsBeanFactoryPostProcessor
-    extends AbstractSettingsBeanFactoryPostProcessor {
+public class SettingsBeanFactoryPostProcessor extends AbstractSettingsBeanFactoryPostProcessor {
 
     /**
      * The running mode for the web application.
@@ -85,18 +84,21 @@ public class SettingsBeanFactoryPostProcessor
 
     /**
      * Should we read the properties from the classpath?
+     * 
      * @see Constants#CLASSPATH_PROPERTIES_LOCATION
      */
     protected boolean readFromClasspath = true;
 
     /**
      * Should we read the properties from the global location?
+     * 
      * @see Constants#GLOBAL_PROPERTIES_LOCATION
      */
     protected boolean readFromGlobalLocation = true;
 
     /**
      * Set the running mode.
+     * 
      * @param mode The new running mode.
      */
     public void setRunningMode(String mode) {
@@ -105,6 +107,7 @@ public class SettingsBeanFactoryPostProcessor
 
     /**
      * Set if we read property configurations from the classpath.
+     * 
      * @param readFromClasspath
      */
     public void setReadFromClasspath(boolean readFromClasspath) {
@@ -119,14 +122,14 @@ public class SettingsBeanFactoryPostProcessor
     }
 
     /**
-     * Initialize this processor.
-     * Setup the settings object.
+     * Initialize this processor. Setup the settings object.
+     * 
      * @throws Exception
      */
-    public void init()
-    throws Exception {
+    @Override
+    public void init() throws Exception {
         // get the running mode
-        final String mode = getRunningMode();
+        final String mode = this.getRunningMode();
         RunningModeHelper.checkRunningMode(mode);
 
         // print out version information
@@ -139,9 +142,8 @@ public class SettingsBeanFactoryPostProcessor
         }
 
         // give a startup message
-        final String msg = "Apache Cocoon Spring Configurator " +
-                           (version != null ? "v" + version + " " : "") +
-                           "is running in mode '" + mode + "'.";
+        final String msg = "Apache Cocoon Spring Configurator " + (version != null ? "v" + version + " " : "")
+                + "is running in mode '" + mode + "'.";
         if (this.servletContext != null) {
             this.servletContext.log(msg);
         } else {
@@ -149,40 +151,42 @@ public class SettingsBeanFactoryPostProcessor
         }
 
         // first we dump the system properties
-        dumpSystemProperties();
+        this.dumpSystemProperties();
 
         // now create the settings object
         super.init();
 
         // finally pre load classes
-        forceLoad();
+        this.forceLoad();
     }
 
     /**
      * @see org.apache.cocoon.spring.configurator.impl.AbstractSettingsBeanFactoryPostProcessor#getRunningMode()
      */
+    @Override
     protected String getRunningMode() {
         return RunningModeHelper.determineRunningMode(this.runningMode);
     }
 
+    @Override
     protected void preInit(final MutableSettings s, final Properties properties) {
-        final String mode = getRunningMode();
+        final String mode = this.getRunningMode();
         if (this.readFromClasspath) {
             // now read all properties from classpath directory
-            ResourceUtils.readProperties(Constants.CLASSPATH_PROPERTIES_LOCATION,
-                                         properties, getResourceLoader(), this.resourceFilter, this.logger);
+            ResourceUtils.readProperties(Constants.CLASSPATH_PROPERTIES_LOCATION, properties, this.getResourceLoader(),
+                    this.resourceFilter, this.logger);
             // read all properties from the mode dependent directory
-            ResourceUtils.readProperties(Constants.CLASSPATH_PROPERTIES_LOCATION +
-                                         "/" + mode, properties, getResourceLoader(), this.resourceFilter, this.logger);
+            ResourceUtils.readProperties(Constants.CLASSPATH_PROPERTIES_LOCATION + "/" + mode, properties, this
+                    .getResourceLoader(), this.resourceFilter, this.logger);
         }
 
         if (this.readFromGlobalLocation) {
             // now read all properties from the properties directory
-            ResourceUtils.readProperties(Constants.GLOBAL_PROPERTIES_LOCATION,
-                                         properties, getResourceLoader(), this.resourceFilter, this.logger);
+            ResourceUtils.readProperties(Constants.GLOBAL_PROPERTIES_LOCATION, properties, this.getResourceLoader(),
+                    this.resourceFilter, this.logger);
             // read all properties from the mode dependent directory
-            ResourceUtils.readProperties(Constants.GLOBAL_PROPERTIES_LOCATION +
-                                         "/" + mode, properties, getResourceLoader(), this.resourceFilter, this.logger);
+            ResourceUtils.readProperties(Constants.GLOBAL_PROPERTIES_LOCATION + "/" + mode, properties, this
+                    .getResourceLoader(), this.resourceFilter, this.logger);
         }
 
         // set default work directory value
@@ -204,7 +208,7 @@ public class SettingsBeanFactoryPostProcessor
 
         // read additional properties file
         // first try in home directory
-        final String homeDir = getSystemProperty("user.home");
+        final String homeDir = this.getSystemProperty("user.home");
         if (homeDir != null) {
             final String fileName = homeDir + File.separator + ".cocoon" + File.separator + "settings.properties";
             final File testFile = new File(fileName);
@@ -229,9 +233,13 @@ public class SettingsBeanFactoryPostProcessor
             }
         }
 
-        // check for additionally specified custom file
-        String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS,
-                                                      getSystemProperty(Settings.PROPERTY_USER_SETTINGS));
+        // check for additionally specified custom file:
+        // 1. bean attribute
+        // 2. servletContext init parameter
+        // 3. system property
+        String additionalPropertyFile = s.getProperty(Settings.PROPERTY_USER_SETTINGS, this
+                .getServletContextInitParameter(Settings.PROPERTY_USER_SETTINGS, this
+                        .getSystemProperty(Settings.PROPERTY_USER_SETTINGS)));
         if (additionalPropertyFile != null) {
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Reading user settings from '" + additionalPropertyFile + "'");
@@ -240,11 +248,11 @@ public class SettingsBeanFactoryPostProcessor
             if (additionalFile.exists()) {
                 if (additionalFile.isDirectory()) {
                     // read from directory
-                    ResourceUtils.readProperties(additionalFile.getAbsolutePath(),
-                                                 properties, getResourceLoader(), this.resourceFilter, this.logger);
+                    ResourceUtils.readProperties(additionalFile.getAbsolutePath(), properties,
+                            this.getResourceLoader(), this.resourceFilter, this.logger);
                     // read all properties from the mode dependent directory
                     ResourceUtils.readProperties(additionalFile.getAbsolutePath() + File.separatorChar + mode,
-                                                 properties, getResourceLoader(), this.resourceFilter, this.logger);
+                            properties, this.getResourceLoader(), this.resourceFilter, this.logger);
                 } else {
                     // read the file
                     try {
@@ -252,15 +260,28 @@ public class SettingsBeanFactoryPostProcessor
                         properties.load(fis);
                         fis.close();
                     } catch (IOException ignore) {
-                        this.logger.info("Unable to read '" + additionalPropertyFile + "' - continuing with initialization.", ignore);
+                        this.logger.info("Unable to read '" + additionalPropertyFile
+                                + "' - continuing with initialization.", ignore);
                     }
                 }
             } else {
-                this.logger.info("Additional settings file '" + additionalPropertyFile + "' does not exist - continuing with initialization.");
+                this.logger.info("Additional settings file '" + additionalPropertyFile
+                        + "' does not exist - continuing with initialization.");
             }
         }
     }
 
+    protected String getServletContextInitParameter(String key, String defaultValue) {
+        String servletContextSettings = this.servletContext.getInitParameter(key);
+
+        if (servletContextSettings == null || "".equals(servletContextSettings)) {
+            return defaultValue;
+        }
+
+        return servletContextSettings;
+    }
+
+    @Override
     protected MutableSettings createSettings() {
         final MutableSettings s = super.createSettings();
 
@@ -301,16 +322,17 @@ public class SettingsBeanFactoryPostProcessor
     }
 
     /**
-     * Handle the <code>load-class</code> settings. This overcomes
-     * limits in many classpath issues. One of the more notorious
-     * ones is a bug in WebSphere that does not load the URL handler
-     * for the <code>classloader://</code> protocol. In order to
-     * overcome that bug, set <code>org.apache.cocoon.classloader.load.classes.XY</code> property to
-     * the <code>com.ibm.servlet.classloader.Handler</code> value.
-     *
-     * <p>If you need to load more than one class, then add several
-     * properties, all starting with <cod>org.apache.cocoon.classloader.load.classes.</code>
-     * followed by a self defined identifier.</p>
+     * Handle the <code>load-class</code> settings. This overcomes limits in many classpath issues.
+     * One of the more notorious ones is a bug in WebSphere that does not load the URL handler for
+     * the <code>classloader://</code> protocol. In order to overcome that bug, set
+     * <code>org.apache.cocoon.classloader.load.classes.XY</code> property to the
+     * <code>com.ibm.servlet.classloader.Handler</code> value.
+     * 
+     * <p>
+     * If you need to load more than one class, then add several properties, all starting with
+     * <cod>org.apache.cocoon.classloader.load.classes.</code> followed by a self defined
+     * identifier.
+     * </p>
      */
     protected void forceLoad() {
         final Iterator i = this.settings.getLoadClasses().iterator();
