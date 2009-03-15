@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -113,20 +114,32 @@ public abstract class AbstractServletConnection implements ServletConnection {
     }
 
     public long getLastModified() {
-        if (!this.connected) {
-            try {
-                this.connect();
-            } catch (Exception e) {
-                this.logger.warn("Exception while reading the getLastModified data.");
-                return 0;
-            }
-        }
-        long headerFieldDate = this.getHeaderFieldDate("Last-Modified", 0);
-        return headerFieldDate;
+        return this.getDateHeader("Last-Modified", 0);
     }
 
     public String getContentType() {
-        return this.getHeaderField("Content-Type");
+        return this.getHeader("Content-Type");
+    }
+
+    public long getDateHeader(String name, long defaultValue) {
+        try {
+            return this.response.getDateHeader(name);
+        } catch (Exception e) {
+            this.logger.warn("Exception while reading the response header '" + name + "'.");
+        }
+
+        return defaultValue;
+    }
+
+    public String getHeader(String name) {
+        try {
+            this.connect();
+        } catch (Exception e) {
+            this.logger.warn("Exception while reading the response header '" + name + "'.");
+            return null;
+        }
+
+        return this.response.getHeader(name);
     }
 
     public long getHeaderFieldDate(String name, long defaultValue) {
@@ -139,24 +152,22 @@ public abstract class AbstractServletConnection implements ServletConnection {
         return defaultValue;
     }
 
-    public String getHeaderField(String name) {
+    public Map getHeaders() {
         try {
             this.connect();
         } catch (Exception e) {
-            this.logger.warn("Exception while reading the response header '" + name + "'.");
+            this.logger.warn("Exception while reading the response headers.");
             return null;
         }
 
-        return this.response.getHeader(name);
+        return this.response.getHeaders();
     }
 
     public int getResponseCode() throws IOException {
-        if (!this.connected) {
-            try {
-                this.connect();
-            } catch (ServletException e) {
-                throw new IOException("Could not get response status code");
-            }
+        try {
+            this.connect();
+        } catch (ServletException e) {
+            throw new IOException("Could not get response status code");
         }
 
         return this.response.getStatus();
@@ -189,10 +200,10 @@ public abstract class AbstractServletConnection implements ServletConnection {
      */
     protected static class NoServletContextAvailableException extends RuntimeException {
 
+        private static final long serialVersionUID = 1L;
+
         public NoServletContextAvailableException(String message) {
             super(message);
         }
-
     }
-
 }

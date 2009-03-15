@@ -1,19 +1,19 @@
 /*
-* Licensed to the Apache Software Foundation (ASF) under one or more
-* contributor license agreements.  See the NOTICE file distributed with
-* this work for additional information regarding copyright ownership.
-* The ASF licenses this file to You under the Apache License, Version 2.0
-* (the "License"); you may not use this file except in compliance with
-* the License.  You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.cocoon.servletservice.util;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Creates a {@link HttpServletResponse} object that is usable for internal block calls.
- *
+ * 
  * @version $Id$
  * @since 1.0.0
  */
@@ -46,17 +46,16 @@ public class ServletServiceResponse implements HttpServletResponse {
     private Locale locale;
     private int statusCode;
 
-    private Map headers;
+    private Map<String, String> headers;
 
     /**
      * format definied by RFC 822, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3
      */
     final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US);
 
-
     public ServletServiceResponse() {
-        headers = new HashMap();
-        statusCode = HttpServletResponse.SC_OK;
+        this.headers = new HashMap<String, String>();
+        this.statusCode = HttpServletResponse.SC_OK;
     }
 
     public void addCookie(Cookie cookie) {
@@ -64,22 +63,22 @@ public class ServletServiceResponse implements HttpServletResponse {
     }
 
     public void addDateHeader(String name, long date) {
-        //this class does not support multivalue headers
-        setDateHeader(name, date);
+        // this class does not support multivalue headers
+        this.setDateHeader(name, date);
     }
 
     public void addHeader(String name, String value) {
-        //this class does not support multivalue headers
-        setHeader(name, value);
+        // this class does not support multivalue headers
+        this.setHeader(name, value);
     }
 
     public void addIntHeader(String name, int value) {
-        //this class does not support multivalue headers
-        setIntHeader(name, value);
+        // this class does not support multivalue headers
+        this.setIntHeader(name, value);
     }
 
     public boolean containsHeader(String name) {
-        return headers.containsKey(name);
+        return this.headers.containsKey(name);
     }
 
     public String encodeRedirectUrl(String url) {
@@ -121,30 +120,32 @@ public class ServletServiceResponse implements HttpServletResponse {
 
     public ServletOutputStream getOutputStream() throws IOException {
         if (this.writer != null) {
-            throw new IllegalStateException( "Tried to create output stream; writer already exists" );
+            throw new IllegalStateException("Tried to create output stream; writer already exists");
         }
 
         if (this.servletStream == null) {
             this.servletStream = new ServletOutputStream() {
 
+                @Override
                 public void flush() throws IOException {
                     ServletServiceResponse.this.outputStream.flush();
                 }
 
+                @Override
                 public void write(int b) throws IOException {
                     ServletServiceResponse.this.outputStream.write(b);
                     ServletServiceResponse.this.committed = true;
                 }
 
                 /*
-                 * This method is probably never called, the close will be
-                 * initiated directly on this.outputStream by the one who set
-                 * it via BlockCallHttpServletResponse.setOutputStream()
+                 * This method is probably never called, the close will be initiated directly on
+                 * this.outputStream by the one who set it via
+                 * BlockCallHttpServletResponse.setOutputStream()
                  */
+                @Override
                 public void close() throws IOException {
                     ServletServiceResponse.this.outputStream.close();
                 }
-
 
             };
         }
@@ -154,12 +155,11 @@ public class ServletServiceResponse implements HttpServletResponse {
 
     public PrintWriter getWriter() throws IOException {
         if (this.servletStream != null) {
-            throw new IllegalStateException( "Tried to create writer; output stream already exists" );
+            throw new IllegalStateException("Tried to create writer; output stream already exists");
         }
 
         if (this.writer == null) {
-            this.writer =
-                    new PrintWriter(new OutputStreamWriter(this.outputStream, this.getCharacterEncoding()));
+            this.writer = new PrintWriter(new OutputStreamWriter(this.outputStream, this.getCharacterEncoding()));
         }
 
         return this.writer;
@@ -174,9 +174,10 @@ public class ServletServiceResponse implements HttpServletResponse {
     }
 
     public void resetBuffer() {
-        //this class does not buffer anything so if first byte is written to output stream
-        //there is no way to reset anything
-        //Servlet Service Framework uses for buffering a wrapper called HttpServletResponseBufferingWrapper
+        // this class does not buffer anything so if first byte is written to output stream
+        // there is no way to reset anything
+        // Servlet Service Framework uses for buffering a wrapper called
+        // HttpServletResponseBufferingWrapper
         if (this.committed) {
             throw new IllegalStateException("May not resetBuffer after response is committed");
         }
@@ -203,40 +204,44 @@ public class ServletServiceResponse implements HttpServletResponse {
     }
 
     public void setContentType(String type) {
-        setHeader("Content-Type", type);
+        this.setHeader("Content-Type", type);
     }
 
     public void setDateHeader(String name, long date) {
-        setHeader(name, dateFormat.format(new Date(date)));
+        this.setHeader(name, this.dateFormat.format(new Date(date)));
     }
 
     public long getDateHeader(String name) {
-        String header = getHeader(name);
+        String header = this.getHeader(name);
         if (header == null) {
             return -1;
         }
 
         try {
-            return dateFormat.parse(header).getTime();
+            return this.dateFormat.parse(header).getTime();
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void setHeader(String name, String value) {
-        headers.put(name, value);
+        this.headers.put(name, value);
     }
 
     public String getHeader(String name) {
-        return (String) headers.get(name);
+        return this.headers.get(name);
+    }
+
+    public Map<String, String> getHeaders() {
+        return this.headers;
     }
 
     public void setIntHeader(String name, int value) {
-        setHeader(name, String.valueOf(value));
+        this.setHeader(name, String.valueOf(value));
     }
 
     public int getIntHeader(String name) {
-        String header = getHeader(name);
+        String header = this.getHeader(name);
         if (header == null) {
             return -1;
         }
@@ -265,11 +270,10 @@ public class ServletServiceResponse implements HttpServletResponse {
     }
 
     public String getContentType() {
-        return getHeader("Content-Type");
+        return this.getHeader("Content-Type");
     }
 
     public void setCharacterEncoding(String arg0) {
         // TODO Auto-generated method stub
     }
-
 }
