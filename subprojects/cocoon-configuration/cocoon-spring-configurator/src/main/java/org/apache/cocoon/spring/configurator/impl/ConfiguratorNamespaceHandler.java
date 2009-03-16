@@ -19,15 +19,17 @@ package org.apache.cocoon.spring.configurator.impl;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * Spring namespace handler for the cocoon core namespace.
- * Currently this namespace defines the following elements
- * (in the namespace "http://cocoon.apache.org/schema/configurator"):
- * "settings" : This sets up the Cocoon Settings object (by reading the property
- *              files located under /WEB-INF/cocoon/properties.
- *              By specifying the attribute "processorClassName" an own implementation
- *              can be used (this should be a subclass of the {@link SettingsBeanFactoryPostProcessor}).
- * "child-settings" : This sets up a sub context.
- * "bean-map" : Creates a bean map.
+ * Spring namespace handler for the cocoon core namespace. Currently this namespace defines the
+ * following elements (in the namespace "http://cocoon.apache.org/schema/configurator"):
+ * <ul>
+ * <li>"settings": This sets up the Cocoon Settings object (by reading the property files located
+ * under /WEB-INF/cocoon/properties. By specifying the attribute "processorClassName" an own
+ * implementation can be used (this should be a subclass of the
+ * {@link SettingsBeanFactoryPostProcessor}).</li>
+ * <li>"child-settings" : This sets up a sub context.</li>
+ * <li>"bean-map" : Creates a bean map. "wildcard-bean-map" : Creates a bean map by matching the
+ * bean name against a wildcard expression.</li>
+ * </ul>
  *
  * @version $Id$
  * @since 1.0
@@ -38,8 +40,9 @@ public class ConfiguratorNamespaceHandler extends NamespaceHandlerSupport {
      * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
      */
     public void init() {
-        registerBeanDefinitionParser("settings", new SettingsElementParser());
-        registerBeanDefinitionParser("child-settings", new ChildSettingsElementParser());
-        registerBeanDefinitionParser("bean-map", new BeanMapElementParser());
+        this.registerBeanDefinitionParser("settings", new SettingsElementParser());
+        this.registerBeanDefinitionParser("child-settings", new ChildSettingsElementParser());
+        this.registerBeanDefinitionParser("bean-map", new BeanMapElementParser());
+        this.registerBeanDefinitionParser("wildcard-bean-map", new WildcardBeanMapElementParser());
     }
 }

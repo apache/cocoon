@@ -24,9 +24,14 @@
   -->
 <document>
   <body>
-    <release version="2.0.1" date="2009-??-??" description="unreleased">
+    <release version="2.1.0" date="2009-??-??" description="unreleased">
       <action dev="reinhard" type="add">
-        Support the definition of a user properties file as servlet context init parameter (org.apache.cocoon.settings).
+        Add a WildcardBeanMap that extends BeanMap but checks for a wildcard expression
+        instead of the bean type.
+      </action>   
+      <action dev="reinhard" type="add">
+        Support the definition of a user properties file as servlet context init parameter 
+        (org.apache.cocoon.settings).
       </action>   
     </release>  
     <release version="2.0.0" date="2008-08-09" description="released">
@@ -38,12 +43,15 @@
       </action>
       <action dev="gkossakowski" type="add">
         Introduced resource filter feature as explained here: http://article.gmane.org/gmane.text.xml.cocoon.devel/78158
-        The resource filtering is used for *all* resources being processed by Spring Configurator including beans definitions and property files.
+        The resource filtering is used for *all* resources being processed by 
+        Spring Configurator including beans definitions and property files.
         
-        The resource filter itself is a simple class implementing one method of ResourceFilter interface.
+        The resource filter itself is a simple class implementing one method of 
+        ResourceFilter interface.
       </action>
       <action dev="lgawron" type="fix">
-        Fix configurator:bean-map throwing ClassCastException when key-property="propertyName" did not resolve to a String property.
+        Fix configurator:bean-map throwing ClassCastException when 
+        key-property="propertyName" did not resolve to a String property.
       </action>
     </release>
 
