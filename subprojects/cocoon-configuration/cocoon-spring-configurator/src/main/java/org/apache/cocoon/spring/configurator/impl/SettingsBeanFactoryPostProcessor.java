@@ -32,7 +32,7 @@ import org.apache.cocoon.spring.configurator.ResourceUtils;
  * This is a bean factory post processor which handles all the settings stuff for Cocoon. It reads
  * in all properties files and replaces references to them in the spring configuration files. In
  * addition this bean acts as a factory bean providing the settings object.
- * 
+ *
  * <p>
  * The settings object is created by reading several property files and merging of the values. If
  * there is more than one definition for a property, the last one wins. The property files are read
@@ -68,10 +68,10 @@ import org.apache.cocoon.spring.configurator.ResourceUtils;
  * <li>Add additional properties configured at {@link #additionalProperties}
  * <li>System properties
  * </ol>
- * 
+ *
  * This means that system properties (provided on startup of the web application) override all
  * others etc.
- * 
+ *
  * @since 1.0
  * @version $Id$
  */
@@ -84,21 +84,21 @@ public class SettingsBeanFactoryPostProcessor extends AbstractSettingsBeanFactor
 
     /**
      * Should we read the properties from the classpath?
-     * 
+     *
      * @see Constants#CLASSPATH_PROPERTIES_LOCATION
      */
     protected boolean readFromClasspath = true;
 
     /**
      * Should we read the properties from the global location?
-     * 
+     *
      * @see Constants#GLOBAL_PROPERTIES_LOCATION
      */
     protected boolean readFromGlobalLocation = true;
 
     /**
      * Set the running mode.
-     * 
+     *
      * @param mode The new running mode.
      */
     public void setRunningMode(String mode) {
@@ -107,7 +107,7 @@ public class SettingsBeanFactoryPostProcessor extends AbstractSettingsBeanFactor
 
     /**
      * Set if we read property configurations from the classpath.
-     * 
+     *
      * @param readFromClasspath
      */
     public void setReadFromClasspath(boolean readFromClasspath) {
@@ -123,7 +123,7 @@ public class SettingsBeanFactoryPostProcessor extends AbstractSettingsBeanFactor
 
     /**
      * Initialize this processor. Setup the settings object.
-     * 
+     *
      * @throws Exception
      */
     @Override
@@ -272,6 +272,10 @@ public class SettingsBeanFactoryPostProcessor extends AbstractSettingsBeanFactor
     }
 
     protected String getServletContextInitParameter(String key, String defaultValue) {
+        if (this.servletContext == null) {
+            return defaultValue;
+        }
+
         String servletContextSettings = this.servletContext.getInitParameter(key);
 
         if (servletContextSettings == null || "".equals(servletContextSettings)) {
@@ -327,7 +331,7 @@ public class SettingsBeanFactoryPostProcessor extends AbstractSettingsBeanFactor
      * the <code>classloader://</code> protocol. In order to overcome that bug, set
      * <code>org.apache.cocoon.classloader.load.classes.XY</code> property to the
      * <code>com.ibm.servlet.classloader.Handler</code> value.
-     * 
+     *
      * <p>
      * If you need to load more than one class, then add several properties, all starting with
      * <cod>org.apache.cocoon.classloader.load.classes.</code> followed by a self defined
