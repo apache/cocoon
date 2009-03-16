@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,10 +49,10 @@ import org.springframework.beans.factory.ListableBeanFactory;
  * @version $Id$
  * @since 1.0.1
  */
-public class BeanMap implements Map, BeanFactoryAware {
+public class BeanMap implements Map<Object, Object>, BeanFactoryAware {
 
     /** The real map. */
-    protected final Map beanMap = new HashMap();
+    protected final Map<Object, Object> beanMap = new HashMap<Object, Object>();
 
     /** Is the map initialized? */
     protected boolean initialized = false;
@@ -62,7 +61,7 @@ public class BeanMap implements Map, BeanFactoryAware {
     protected ListableBeanFactory beanFactory;
 
     /** The class for all beans in this map. */
-    protected Class beanClass;
+    protected Class<?> beanClass;
 
     /** Do we strip the prefix from the bean name? */
     protected boolean stripPrefix = true;
@@ -71,35 +70,24 @@ public class BeanMap implements Map, BeanFactoryAware {
     protected boolean checkParent = true;
 
     /** Do we check for properties? */
-    protected List hasProperties = new ArrayList();
+    protected List<String> hasProperties = new ArrayList<String>();
 
     /** Which property should we use to key the map? */
     protected String keyProperty;
 
     /**
-     * Get all the bean's from the bean factory and put them into a map using
-     * their id.
+     * Get all the beans from the bean factory and put them into a map using their id.
      *
-     * @param beanNames
-     *            The bean names to load.
+     * @param beanNames The bean names to load.
      */
-    protected void load(Set beanNames) {
-        final String prefix1 = this.beanClass.getName() + '.';
-        final String prefix2 = this.beanClass.getName() + '/';
-        final Iterator i = beanNames.iterator();
-        while (i.hasNext()) {
-            final String beanName = (String) i.next();
-            Object key = beanName;
-            if (this.stripPrefix && (beanName.startsWith(prefix1) || beanName.startsWith(prefix2))) {
-                key = beanName.substring(prefix1.length());
-            }
+    protected void load(Set<String> beanNames) {
+        for (String beanName : beanNames) {
+            Object key = this.stripPrefix(beanName);
             if (this.hasProperties.size() > 0) {
                 final Object bean = this.beanFactory.getBean(beanName);
                 final BeanWrapperImpl wrapper = new BeanWrapperImpl(bean);
                 boolean isOk = true;
-                final Iterator iter = this.hasProperties.iterator();
-                while (iter.hasNext()) {
-                    final String propName = (String) iter.next();
+                for (String propName : this.hasProperties) {
                     if (!wrapper.isReadableProperty(propName)) {
                         isOk = false;
                     }
@@ -123,6 +111,18 @@ public class BeanMap implements Map, BeanFactoryAware {
         }
     }
 
+    protected Object stripPrefix(final String beanName) {
+        final String prefix1 = this.beanClass.getName() + '.';
+        final String prefix2 = this.beanClass.getName() + '/';
+
+        Object key = beanName;
+        if (this.stripPrefix && (beanName.startsWith(prefix1) || beanName.startsWith(prefix2))) {
+            key = beanName.substring(prefix1.length());
+        }
+
+        return key;
+    }
+
     /**
      * Check if the bean is already initialized. If not, the bean's are searched
      * in the bean factory.
@@ -135,7 +135,7 @@ public class BeanMap implements Map, BeanFactoryAware {
                     // spring
                     // it will just contain an empty map
                     if (this.beanFactory != null) {
-                        final Set beanNames = new HashSet();
+                        final Set<String> beanNames = new HashSet<String>();
                         this.getBeanNames(this.beanFactory, beanNames);
                         this.load(beanNames);
                     }
@@ -153,7 +153,7 @@ public class BeanMap implements Map, BeanFactoryAware {
      * @param beanNames
      *            The set containing the resulting bean names.
      */
-    protected void getBeanNames(ListableBeanFactory factory, Set beanNames) {
+    protected void getBeanNames(ListableBeanFactory factory, Set<String> beanNames) {
         // check parent first
         if (this.checkParent) {
             if (factory instanceof HierarchicalBeanFactory) {
@@ -164,10 +164,14 @@ public class BeanMap implements Map, BeanFactoryAware {
             }
         }
         // get all bean names for our class
-        final String[] names = factory.getBeanNamesForType(this.beanClass);
+        final String[] names = this.lookupBeans(factory);
         for (int i = 0; i < names.length; i++) {
             beanNames.add(names[i]);
         }
+    }
+
+    protected String[] lookupBeans(ListableBeanFactory factory) {
+        return factory.getBeanNamesForType(this.beanClass);
     }
 
     /**
@@ -190,7 +194,7 @@ public class BeanMap implements Map, BeanFactoryAware {
 
     public void setHasProperties(String pHasProperties) {
         final StringTokenizer tokenizer = new StringTokenizer(pHasProperties, " \t\n\r\f,");
-        final List propNames = new ArrayList();
+        final List<String> propNames = new ArrayList<String>();
         while (tokenizer.hasMoreTokens()) {
             propNames.add(tokenizer.nextToken());
         }
@@ -201,7 +205,7 @@ public class BeanMap implements Map, BeanFactoryAware {
         this.keyProperty = pKeyProperty;
     }
 
-    public void setType(Class typeClass) {
+    public void setType(Class<?> typeClass) {
         this.beanClass = typeClass;
     }
 
@@ -233,7 +237,7 @@ public class BeanMap implements Map, BeanFactoryAware {
     /**
      * @see java.util.Map#entrySet()
      */
-    public Set entrySet() {
+    public Set<Entry<Object, Object>> entrySet() {
         this.checkInit();
         return this.beanMap.entrySet();
     }
@@ -257,7 +261,7 @@ public class BeanMap implements Map, BeanFactoryAware {
     /**
      * @see java.util.Map#keySet()
      */
-    public Set keySet() {
+    public Set<Object> keySet() {
         this.checkInit();
         return this.beanMap.keySet();
     }
@@ -273,7 +277,7 @@ public class BeanMap implements Map, BeanFactoryAware {
     /**
      * @see java.util.Map#putAll(java.util.Map)
      */
-    public void putAll(Map t) {
+    public void putAll(Map<?, ?> t) {
         this.checkInit();
         this.beanMap.putAll(t);
     }
@@ -297,7 +301,7 @@ public class BeanMap implements Map, BeanFactoryAware {
     /**
      * @see java.util.Map#values()
      */
-    public Collection values() {
+    public Collection<Object> values() {
         this.checkInit();
         return this.beanMap.values();
     }
@@ -305,6 +309,7 @@ public class BeanMap implements Map, BeanFactoryAware {
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
         this.checkInit();
         return this.beanMap.equals(obj);
@@ -313,6 +318,7 @@ public class BeanMap implements Map, BeanFactoryAware {
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
         this.checkInit();
         return this.beanMap.hashCode();
@@ -321,6 +327,7 @@ public class BeanMap implements Map, BeanFactoryAware {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         this.checkInit();
         return this.beanMap.toString();
