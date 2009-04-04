@@ -26,7 +26,7 @@
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>8</version>
+    <version>6-SNAPSHOT</version>
     <relativePath>../../../parent</relativePath>
   </parent>
   <artifactId>cocoon-spring-configurator</artifactId>
