@@ -3312,8 +3312,8 @@
     <docs.m.site-core-modules.relPath>2.2/core-modules/</docs.m.site-core-modules.relPath>
     <docs.m.site-maven-plugins.relPath>2.2/maven-plugins/</docs.m.site-maven-plugins.relPath>
     <docs.m.site-subprojects.relPath>subprojects/</docs.m.site-subprojects.relPath>
-    <docs.m.site-configuration.relPath>subprojects/configuration/1.0/</docs.m.site-configuration.relPath>
-    <docs.m.site-servlet-service.version>1.1</docs.m.site-servlet-service.version>
+    <docs.m.site-configuration.relPath>subprojects/configuration/2.1/</docs.m.site-configuration.relPath>
+    <docs.m.site-servlet-service.version>1.2</docs.m.site-servlet-service.version>
     <docs.m.site-servlet-service.relPath>subprojects/servlet-service/${docs.m.site-servlet-service.version}/</docs.m.site-servlet-service.relPath>
     <!-- Path and version properties: core -->
     <docs.m.core.version>2.2</docs.m.core.version>
@@ -3352,17 +3352,17 @@
     <docs.m.xml-util.version>1.0</docs.m.xml-util.version>
     <docs.m.xml-util.relPath>2.2/core-modules/xml-util/${docs.m.xml-util.version}/</docs.m.xml-util.relPath>
     <!-- Path and version properties: subprojects -->
-    <docs.m.servlet-service-impl.version>1.1</docs.m.servlet-service-impl.version>
+    <docs.m.servlet-service-impl.version>1.2</docs.m.servlet-service-impl.version>
     <docs.m.servlet-service-impl.relPath>${docs.m.site-servlet-service.relPath}servlet-service-impl/${docs.m.servlet-service-impl.version}/</docs.m.servlet-service-impl.relPath>
     <docs.m.servlet-service-components.version>1.0</docs.m.servlet-service-components.version>
     <docs.m.servlet-service-components.relPath>${docs.m.site-servlet-service.relPath}servlet-service-components/${docs.m.servlet-service-components.version}/</docs.m.servlet-service-components.relPath>
     <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
     <docs.m.configuration-api.relPath>${docs.m.site-configuration.relPath}configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>
-    <docs.m.spring-configurator.version>2.0</docs.m.spring-configurator.version>
+    <docs.m.spring-configurator.version>2.1</docs.m.spring-configurator.version>
     <docs.m.spring-configurator.relPath>${docs.m.site-configuration.relPath}spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>
-    <docs.m.jnet.version>1.0</docs.m.jnet.version>
+    <docs.m.jnet.version>1.1</docs.m.jnet.version>
     <docs.m.jnet.relPath>subprojects/jnet/${docs.m.jnet.version}/</docs.m.jnet.relPath>
-    <docs.m.block-deployment.version>1.0</docs.m.block-deployment.version>
+    <docs.m.block-deployment.version>1.1</docs.m.block-deployment.version>
     <docs.m.block-deployment.relPath>subprojects/block-deployment/${docs.m.block-deployment.version}/</docs.m.block-deployment.relPath>    
     <!-- Path and version properties: blocks -->
     <docs.m.ajax.version>1.0</docs.m.ajax.version>
