@@ -29,7 +29,7 @@
   </parent>
   <artifactId>cocoon-servlet-service-impl</artifactId>
   <packaging>jar</packaging>
-  <version>1.2.0</version>
+  <version>1.3.0-SNAPSHOT</version>
   <name>Cocoon Servlet Service Implementation</name>
   <description>
     The servlet service framework makes it easy to use servlets as Spring components.
@@ -141,9 +141,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-impl/cocoon-servlet-service-impl-1.2.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-impl/cocoon-servlet-service-impl-1.2.0</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-servlet-service/cocoon-servlet-service-impl/cocoon-servlet-service-impl-1.2.0</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-impl/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-impl/</developerConnection>
+    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-impl/</url>
   </scm>
 
   <reporting>
