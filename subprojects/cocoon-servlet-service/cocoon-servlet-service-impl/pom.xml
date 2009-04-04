@@ -24,7 +24,7 @@
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>8</version>
+    <version>6-SNAPSHOT</version>
     <relativePath>../../../parent/pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-servlet-service-impl</artifactId>
@@ -55,7 +55,6 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
-      <version>2.1.0</version>
       <scope>compile</scope>
     </dependency>
     <!-- Spring Framework -->
@@ -95,7 +94,6 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-jnet</artifactId>
-      <version>1.1.0</version>
     </dependency>
     <!-- commons -->
     <dependency>
