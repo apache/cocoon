@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!--
+  - See http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  -
+  - $Id$
+-->
+<document>
+  <body>
+    <release version="1.2.0-SNAPSHOT" date="2008-??-??" description="unreleased">
+      <action dev="reinhard" type="add">
+        ServletUrlConnection correctly implements #getHeaderFields() instead of relying on the NOP implementation of HttpURLConnection.
+      </action>
+      <action dev="gkossakowski" type="fix">
+        Fixed NPE thrown by HttpServletResponseBufferingWrapper and ServletServiceResponse after resetBuffer() method was called.
+      </action>
+      <action dev="gkossakowski" type="update">
+        Java 5 as minimum requirement.
+      </action>    
+      <action dev="gkossakowski" type="fix" issue="COCOON-2237">
+        Fixed HttpServletResponseBufferingWrapper implementation so it does not throw IllegalStateException
+        when resestBufferedResponse is being called.
+      </action>
+      <action dev="gkossakowski" type="fix" issue="COCOON-2236">
+        ServletFactoryBean will install JNet handlers before calling init() method
+        of Servlet that is being created. This should make SSF compatible with Cocoon Core 2.2.0 again.
+      </action>
+    </release>
+    <release version="1.1.0" date="2008-08-09" description="released">
+      <action dev="reinhard" type="fix">
+        The dependency on the Cocoon SourceResolver, that introduced a circular dependency with Cocoon 2.2, was
+        removed. The Cocoon SourceResolver was used to resolve URLs in the context-path attribute of a servlet
+        bean definition. After the change the Servlet-Service framework only relies on the default URL handling
+        of the JVM. In order to dynamically support different URLStreamHandlers, it is recommended to use 
+        Cocoon JNet.
+      </action>    
+      <action dev="reinhard" type="fix">
+        Fix the lastModified() method of the ServletConnection: make sure that there is an existing connection 
+        before reading the Last-Modified header 
+      </action>    
+      <action dev="reinhard" type="add">
+        Add a ServletURLConnection, ServletURLStreamHandler and a ServletURLStreamHandlerFactory to provide 
+        support for service: URLs.
+      </action>    
+      <action dev="gkossakowski" type="fix" issue="COCOON-2150">
+        Fixed bug in ServletServiceContext that was responsible for errors on resetting response that was already committed.
+        Now the Servlet-Service framework buffers response but only if 404 status code has been set.
+        This allows to reset the response safely.
+      </action>
+    </release>
+    <release version="1.0.0" date="2008-04-07" description="unreleased">      
+      <action dev="gkossakowski" type="update">
+        Made attributes 'mount-path' and 'context-path' of servlet-context tag required.
+      </action>
+      <action dev="reinhard" type="add">
+        The "+" character is not allowed at the end of connection names anymore. Starting
+        Cocoon will fail hard with a RuntimeException if this rule is broken. See
+        org.apache.cocoon.servletservice.spring.ServletDecorator.
+      </action>
+      <action dev="reinhard" type="add" issue="COCOON-2154">
+        Add support for absolute ServetConnections.
+      </action>
+      <action dev="reinhard" type="add" issue="COCOON-1831">
+        The ServletServiceResponse inherits the request attributes, request parameters and the session
+        from the caller.
+      </action>
+      <action dev="gkossakowski" type="add" issue="COCOON-2036" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@googlemail.com">
+        Throw an exception when circular dependencies in servlet connections are detected.
+      </action>
+      <action dev="gkossakowski" type="fix">
+      	DispatcherServlet does not throw an exception if it fails to find suitable servlet for processing incomming request.
+      	It returns 404 error and puts information to log about the failure, instead.
+      </action>
+    </release>
+    <release version="1.0.0-RC1" date="2007-10-29" description="released">
+      <action dev="gkossakowski" type="add" issue="COCOON-2038">
+        Implemented true Object Oriented approach for handling servlet calls.
+        This change removes the need for explicit super calls.
+      </action>
+      <action dev="gkossakowski" type="fix" issue="COCOON-1939">
+        Fixed handling of multilevel inheritance that could cause stack overflow.
+      </action>
+      <action dev="gkossakowski" type="fix" issue="COCOON-2121">
+        Fixed bug in DispatcherServlet that caused servlet (blocks) mounted at "/" to be handled improperly.
+      </action>
+    </release>
+  </body>
+</document>
