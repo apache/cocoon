@@ -26,12 +26,12 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>6-SNAPSHOT</version>
+    <version>8</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>cocoon-jnet</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.1.0</version>
   <name>Cocoon JNet</name>
   <description>Dynamically register URLStreamHandler factories with your JVM.</description>
   <url>http://cocoon.apache.org/${docs.m.jnet.relPath}</url>  
@@ -53,6 +53,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
+      <version>2.1.0</version>
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
@@ -152,4 +153,10 @@
       </build>      
     </profile>   
   </profiles>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-jnet/cocoon-jnet-1.1.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-jnet/cocoon-jnet-1.1.0</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-jnet/cocoon-jnet-1.1.0</url>
+  </scm>
 </project>
