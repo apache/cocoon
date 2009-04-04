@@ -2254,7 +2254,6 @@
       </dependency>
 
       <!-- Cocoon SNAPSHOT dependencies -->
-      <!--
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
@@ -3114,7 +3113,6 @@
         <artifactId>javaflow</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
-      -->
     </dependencies>
   </dependencyManagement>
 
@@ -3511,7 +3509,7 @@
           <plugin>
             <groupId>org.apache.cocoon</groupId>
             <artifactId>cocoon-maven-docs-cleaner-plugin</artifactId>
-            <version>1.0.0-alpha-2</version>
+            <version>1.0.0-M1-SNAPSHOT</version>
           </plugin>
         </plugins>
       </build>
@@ -3552,7 +3550,7 @@
             <plugin>
               <groupId>org.daisycms</groupId>
               <artifactId>daisy-maven-plugin</artifactId>
-              <version>1.0.0-alpha-2</version>
+              <version>1.0.0-SNAPSHOT</version>
               <configuration>
                 <repoUrl>${docs.repoUrl}</repoUrl>
                 <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
@@ -3756,12 +3754,10 @@
                 </execution>
               </executions>
             </plugin>
-            <!--
             <plugin>
               <groupId>org.apache.cocoon</groupId>
               <artifactId>cocoon-sitemaptags2daisy-plugin</artifactId>
               <version>1.0.0-SNAPSHOT</version>
-              -->
               <!-- the plugins default configuration
               <configuration>
                 <simulateInput>false</simulateInput>
@@ -3769,9 +3765,7 @@
                 <repoUrl>http://cocoon.zones.apache.org:9263</repoUrl>
               </configuration>
               -->
-              <!--
             </plugin>
-            -->
           </plugins>
         </pluginManagement>
       </build>
