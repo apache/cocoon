@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<!--
+  - @see http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  - @version $Id$
+  -->
+<document>
+  <body>
+    <release version="2.1.0" date="2009-??-??" description="unreleased">
+      <action dev="reinhard" type="add">
+        Add a WildcardBeanMap that extends BeanMap but checks for a wildcard expression
+        instead of the bean type.
+      </action>   
+      <action dev="reinhard" type="add">
+        Support the definition of a user properties file as servlet context init parameter 
+        (org.apache.cocoon.settings).
+      </action>   
+    </release>  
+    <release version="2.0.0" date="2008-08-09" description="released">
+      <action dev="gkossakowski" type="update">
+        Java 5 as minimum requirement.
+      </action>    
+      <action dev="reinhard" type="fix">
+        Remove Block-Deployment functionality into a separate module.
+      </action>
+      <action dev="gkossakowski" type="add">
+        Introduced resource filter feature as explained here: http://article.gmane.org/gmane.text.xml.cocoon.devel/78158
+        The resource filtering is used for *all* resources being processed by 
+        Spring Configurator including beans definitions and property files.
+        
+        The resource filter itself is a simple class implementing one method of 
+        ResourceFilter interface.
+      </action>
+      <action dev="lgawron" type="fix">
+        Fix configurator:bean-map throwing ClassCastException when 
+        key-property="propertyName" did not resolve to a String property.
+      </action>
+    </release>
+
+    <release version="1.0.2" date="2008-04-07" description="released">
+      <action dev="reinhard" type="fix" issue="COCOON-2172" due-to="Juan Jose Vazquez Delgado" due-to-email="jvazquez@apache.org">
+        Fix block deployment for Weblogic 9.2.
+      </action>
+      <action dev="vgritsenko" type="fix">
+        SettingsBeanFactoryPostProcessor creates work and cache directories only
+        after properties are loaded and settings object is populated, and
+        not before that.
+      </action>
+    </release>
+
+    <release version="1.0.1" date="2007-09-20" description="released">
+      <action dev="giacomo" type="add">
+        Added ability to the bean-map handler to specify what properties a bean must have
+        to be considered as a candidate for the constructed Map as well as keying the Map
+        with a property value from the bean itself instead of its bean-id.
+      </action>
+      <action dev="cziegeler" type="fix">
+        SettingsBeanFactoryPostProcessor can be used outside of a servlet context.
+      </action>
+    </release>
+
+    <release version="1.0.0" date="2007-02-22" description="released">
+      <action dev="reinhard" type="fix">
+        WebAppContextUtils stored a Spring parent application context in a static field. This
+        made it impossible to reload the context. The static field was removed and a request
+        for the parent context results in
+        WebApplicationContextUtils.getRequiredWebApplicationContext(ServletContext)
+        which returns the parent Spring application context stored in the servlet context.
+      </action>
+      <action dev="cziegeler" type="add">
+        Each property reference can have an optional default value, like
+        ${my.property.net:THE DEFAULT}. If no other definition for this
+        property is found, the default is used.
+      </action>
+      <action dev="cziegeler" type="add">
+        Add a bean map that collects all beans from the Spring context
+        conforming to a specified type.
+      </action>
+      <action dev="cziegeler" type="add">
+        Improved the DefaultBlockResourcesHolder to act like a PropertyPlaceholderConfigurer.
+        This allows access to the path of the deployed blocks in the configuration files
+        through properties like ${org.apache.cocoon.blocks.[BLOCK_NAME].resources}.
+      </action>
+      <action dev="cziegeler" type="add">
+        Initial creation.
+      </action>
+    </release>
+  </body>
+</document>

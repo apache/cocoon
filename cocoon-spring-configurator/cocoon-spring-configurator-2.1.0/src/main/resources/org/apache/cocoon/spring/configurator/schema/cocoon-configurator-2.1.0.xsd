@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://cocoon.apache.org/schema/configurator"
+            xmlns:tns="http://cocoon.apache.org/schema/configurator"
+            xmlns="http://cocoon.apache.org/schema/configurator">
+
+  <xsd:element name="settings">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="include-beans" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="include-properties" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="filter" minOccurs="0" maxOccurs="1"/>
+        <xsd:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="runningMode" type="xsd:string" use="optional"/>
+      <xsd:attribute name="readFromClasspath" type="xsd:boolean" use="optional"/>
+      <xsd:attribute name="readFromGlobalLocation" type="xsd:boolean" use="optional"/>
+      <xsd:attribute name="extractBlockResources" type="xsd:boolean" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="child-settings">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="include-beans" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="include-properties" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="property" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="include-beans">
+    <xsd:complexType>
+      <xsd:attribute name="dir" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="include-properties">
+    <xsd:complexType>
+      <xsd:attribute name="dir" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="filter">
+    <xsd:complexType>
+      <xsd:attribute name="class" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="property">
+    <xsd:complexType>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <!-- Since 1.0.1 -->
+  <xsd:element name="bean-map">
+    <xsd:complexType>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+      <xsd:attribute name="type" type="xsd:string" use="required"/>
+      <xsd:attribute name="check-parent" type="xsd:boolean" use="optional" default="true"/>
+      <xsd:attribute name="strip-prefix" type="xsd:boolean" use="optional" default="true"/>
+      <xsd:attribute name="has-properties" type="xsd:string" use="optional" default="">
+        <xsd:annotation>
+          <xsd:documentation>beans should have all these properties (comma separated list)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="key-property" type="xsd:string" use="optional" default="">
+        <xsd:annotation>
+          <xsd:documentation>use value of this bean property to key the map instead of bean id</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  
+  
+  <!-- Since 2.0.1 -->
+  <xsd:element name="wildcard-bean-map">
+    <xsd:complexType>
+      <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+      <xsd:attribute name="name" type="xsd:string" use="optional"/>
+      <xsd:attribute name="wildcard" type="xsd:string" use="required"/>
+      <xsd:attribute name="check-parent" type="xsd:boolean" use="optional" default="true"/>
+      <xsd:attribute name="has-properties" type="xsd:string" use="optional" default="">
+        <xsd:annotation>
+          <xsd:documentation>beans should have all these properties (comma separated list)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="key-property" type="xsd:string" use="optional" default="">
+        <xsd:annotation>
+          <xsd:documentation>use value of this bean property to key the map instead of bean id</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>  
+</xsd:schema>
