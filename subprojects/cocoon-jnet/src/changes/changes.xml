@@ -27,7 +27,11 @@
     <title>Changes Cocoon JNet</title>
   </properties>
   <body>
-    <release version="1.1.0-SNAPSHOT" date="2008-??-??" description="unreleased"> 
+    <!-- 
+    <release version="1.2.0-SNAPSHOT" date="2009-00-00" description="unreleased">
+    </release> 
+    -->
+    <release version="1.1.0" date="2009-00-00" description="Release process has started."> 
       <action dev="gkossakowski" type="add">
         Split installURLHandlers into different public methods. URLHandlerFactoryCollector 
         can be used directly from Java code and not only as AOP advice.

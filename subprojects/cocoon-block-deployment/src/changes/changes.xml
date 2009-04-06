@@ -27,13 +27,14 @@
     <title>Changes Cocoon Block-Deployment</title>
   </properties>
   <body>
-    <release version="1.1.0-SNAPSHOT" date="2008-??-??">
+    <!-- 
+    <release version="1.2.0-SNAPSHOT" date="2009-00-00" description="unreleased">
+    </release>
+     -->
+    <release version="1.1.0" date="2009-00-00" description="Release process has started.">
       <action dev="reinhard" type="add">
         Throw BlockContextInitializationException if there are no deployed blocks but the block context protocol is used.      
-      </action>
-      <action dev="reinhard" type="update">
-        Use Java 5 language features.
-      </action>    
+      </action>  
       <action dev="reinhard" type="add">
         The blockcontext: URLConnection checks if a requested block is available. Otherwise
         an exception, that explains what has gone wrong, is thrown.
