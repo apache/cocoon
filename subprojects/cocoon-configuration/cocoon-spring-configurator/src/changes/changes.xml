@@ -24,7 +24,11 @@
   -->
 <document>
   <body>
-    <release version="2.1.0" date="2009-??-??" description="unreleased">
+    <!-- 
+    <release version="2.2.0-SNAPSHOT" date="2009-00-00" description="unreleased">
+    </release>
+    -->
+    <release version="2.1.0" date="2009-00-00" description="Release process has started.">
       <action dev="reinhard" type="add">
         Add a WildcardBeanMap that extends BeanMap but checks for a wildcard expression
         instead of the bean type.
