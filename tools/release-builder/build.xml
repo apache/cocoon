@@ -172,43 +172,43 @@
   </target>
 
   <target name="jnet" depends="init" description="Release JNet">
-    <add-docs dir="../../../site-svn/site/subprojects/jnet/1.0/" type="impl"/>
+    <add-docs dir="../../../site-svn/site/subprojects/jnet/1.1/" type="impl"/>
 
-    <add-module name="cocoon-jnet" version="1.0.0" type="impl" />
+    <add-module name="cocoon-jnet" version="1.1.0" type="impl" />
 
     <add-files dir="legal/default" />
 
-    <dist name="cocoon-jnet-1.0.0" deploy-group-name="cocoon-jnet" />
+    <dist name="cocoon-jnet-1.1.0" deploy-group-name="cocoon-jnet" />
   </target>	
 
   <target name="block-deployment" depends="init" description="Release Block-Deployment">
-    <add-docs dir="../../../site-svn/site/subprojects/block-deployment/1.0/" type="impl"/>
+    <add-docs dir="../../../site-svn/site/subprojects/block-deployment/1.1/" type="impl"/>
 
-    <add-module name="cocoon-block-deployment" version="1.0.0" type="impl" />
+    <add-module name="cocoon-block-deployment" version="1.1.0" type="impl" />
 
     <add-files dir="legal/default" />
 
-    <dist name="cocoon-block-deployment-1.0.0" deploy-group-name="cocoon-block-deployment" />
+    <dist name="cocoon-block-deployment-1.1.0" deploy-group-name="cocoon-block-deployment" />
   </target>	
 	
   <target name="ssf" depends="init" description="Release the Servlet-Service Framework">
-    <add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.1/servlet-service-impl/1.0/" type="impl"/>
+    <add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.2/servlet-service-impl/1.2/" type="impl"/>
     <!--add-docs dir="../../../site-svn/site/subprojects/servlet-service/1.0/servlet-service-components/1.0/" type="cocoon-components"/-->
 
-    <add-module name="cocoon-servlet-service-impl" version="1.1.0" type="impl" />
+    <add-module name="cocoon-servlet-service-impl" version="1.2.0" type="impl" />
     <!--add-module name="cocoon-servlet-service-components" version="1.0.0" type="cocoon-components" /-->
 
     <add-files dir="legal/default" />
 
-    <dist name="cocoon-servlet-serivce-framework-1.1.0" deploy-group-name="cocoon-servlet-service-framework" />
+    <dist name="cocoon-servlet-serivce-framework-1.2.0" deploy-group-name="cocoon-servlet-service-framework" />
   </target>
 
   <target name="conf" depends="init" description="Release the Cocoon Configuration subproject">
     <!--add-docs dir="../../../site-svn/site/subprojects/configuration/1.0/configuration-api/1.0/" type="configuration-api"/-->
-    <add-docs dir="../../../site-svn/site/subprojects/configuration/1.0/spring-configurator/2.0/" type="spring-configurator"/>
+    <add-docs dir="../../../site-svn/site/subprojects/configuration/1.0/spring-configurator/2.1/" type="spring-configurator"/>
 
     <!--add-module name="cocoon-configuration-api" version="1.0.2" type="configuration-api" /-->
-    <add-module name="cocoon-spring-configurator" version="2.0.0" type="components" />
+    <add-module name="cocoon-spring-configurator" version="2.1.0" type="components" />
 
     <add-files dir="legal/default" />
 
