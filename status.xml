@@ -91,6 +91,7 @@
   <person name="Geoff Howard" email="ghoward@apache.org" id="GH"/>
   <person name="Bernhard Huber" email="huber@apache.org" id="BH"/>
   <person name="Ivelin Atanasoff Ivanov" email="ivelin@apache.org" id="IAI"/>
+  <person name="Jasha Joachimsthal" email="jasha@apache.org" id="JSJ"/>
   <person name="Jason Johnston" email="jjohnston@apache.org" id="JJ"/>
   <person name="Grzegorz Kossakowski" email="gkossakowski@apache.org" id="GK"/>
   <person name="Matthew Langham" email="mlangham@apache.org" id="ML"/>
@@ -186,6 +187,9 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="JSJ" type="fix" fixes-bug="COCOON-2257">
+      JCR block: Missing modCount attribute in JCR sample content.
+    </action>
     <action dev="AG" type="update">
       Updated ant to 1.7.1. This ant detects correctly java 1.6.
     </action>
@@ -197,6 +201,9 @@
     </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1822" due-to="Karen Torres &amp; Rafael Márquez" due-to-email="ktorres@agssa.net &amp; rmarquez@agssa.net">
       Forms: MultiValueField list-type="double-listbox" does not work correctly in ajax enabled forms.
+    </action>
+    <action dev="JSJ" type="fix" fixes-bug="COCOON-2228">
+      StripNameSpacesTransformer does not strip namespace prefix of attributes
     </action>
     <action dev="AN" type="fix" fixes-bug="COCOON-2169" due-to="Mark Lundquist" due-to-email="lundquist.mark@gmail.com">
       ImageOp block: If parameter width or height in resize operation is zero, use the original image size.
