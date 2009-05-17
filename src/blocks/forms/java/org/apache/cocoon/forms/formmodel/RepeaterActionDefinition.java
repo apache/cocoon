@@ -23,9 +23,9 @@ import org.apache.cocoon.forms.event.ActionEvent;
 import org.apache.cocoon.forms.event.ActionListener;
 
 /**
- * Abstract repeater action. Subclasses will typically just self-add an
- * event handler that will act on the repeater.
- *
+ * Abstract repeater action. Subclasses will typically just self-add an event
+ * handler that will act on the repeater.
+ * 
  * @see RepeaterActionDefinitionBuilder
  * @version $Id$
  */
@@ -70,15 +70,15 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
     /**
      * Get the name of the repeater on which to act. If <code>null</code>, the repeater
      * is the parent of the current widget (i.e. actions are in repeater rows). Otherwise,
-     * the repeater is a sibling of the current widget.
-     *
+     *the repeater is a sibling of the current widget.
+     * 
      * @return the repeater name (can be <code>null</code>).
      */
     public String getRepeaterName() {
         return this.name;
     }
 
-    //---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
     /**
      * The definition of a repeater action that deletes the selected rows of a sibling repeater.
@@ -141,7 +141,7 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
         }
     }
 
-    //---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
     /**
      * The definition of a repeater action that adds a row to a sibling repeater.
@@ -157,11 +157,11 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
                     if (repeater instanceof EnhancedRepeater) {
-                    	try {
+                        try {
                             ((EnhancedRepeater) repeater).goToPage(((EnhancedRepeater) repeater).getMaxPage());
                         } catch (BindingException e) {
-							throw new CascadingRuntimeException("Error switching page", e);
-						}
+                            throw new CascadingRuntimeException("Error switching page", e);
+                        }
                     }
                     for (int i = 0; i < AddRowActionDefinition.this.insertRows; i++) {
                         repeater.addRow();
@@ -169,10 +169,10 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                 }
             });
         }
-        
+
     }
 
-    //---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
     /**
      * The definition of a repeater action that insert rows before the selected rows in a sibling repeater,
@@ -224,22 +224,22 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
             });
         }
     }
-    
+
     public static class SortActionDefinition extends RepeaterActionDefinition {
-    	protected String field = null;
-    	
+        protected String field = null;
+
         public SortActionDefinition(String repeaterName, String field) {
             super(repeaterName);
             this.field = field;
-            
+
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
                     if (repeater instanceof EnhancedRepeater) {
-                    	EnhancedRepeater erep = (EnhancedRepeater) repeater;
+                        EnhancedRepeater erep = (EnhancedRepeater) repeater;
                         try {
                             if (repeater.validate()) {
-                            	erep.sortBy(SortActionDefinition.this.field);
+                                erep.sortBy(SortActionDefinition.this.field);
                             }
                         } catch (Exception e) {
                             throw new CascadingRuntimeException("Error switching page", e);
@@ -247,44 +247,43 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                     }
                 }
             });
-            
+
         }
     }
 
-  
     public static class ChangePageActionDefinition extends RepeaterActionDefinition {
 
-       protected int method;
-       
-       public static final int FIRST = 0; 
-       public static final int PREV = 1;
-       public static final int NEXT = 2;
-       public static final int LAST = 3;
-       public static final int CUSTOM = 4;
+        protected int method;
+
+        public static final int FIRST = 0;
+        public static final int PREV = 1;
+        public static final int NEXT = 2;
+        public static final int LAST = 3;
+        public static final int CUSTOM = 4;
 
         /**
          * initialize this definition with the other, sort of like a copy constructor
          */
         public void initializeFrom(WidgetDefinition definition) throws Exception {
             super.initializeFrom(definition);
-            if(definition instanceof ChangePageActionDefinition) {
-                ChangePageActionDefinition other = (ChangePageActionDefinition)definition;
+            if (definition instanceof ChangePageActionDefinition) {
+                ChangePageActionDefinition other = (ChangePageActionDefinition) definition;
                 this.method = other.method;
             } else {
-                throw new Exception("Definition to inherit from is not of the right type! (at "+getLocation()+")");
+                throw new Exception("Definition to inherit from is not of the right type! (at " + getLocation() + ")");
             }
         }
 
         public ChangePageActionDefinition(String repeaterName, int m) {
             super(repeaterName);
-            
+
             this.method = m;
-            
+
             this.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
                     if (repeater instanceof EnhancedRepeater) {
-                    	EnhancedRepeater erep = (EnhancedRepeater) repeater;
+                        EnhancedRepeater erep = (EnhancedRepeater) repeater;
                         int page = erep.getCurrentPage();
                         if (method == FIRST) {
                             page = 0;
@@ -301,15 +300,15 @@ public abstract class RepeaterActionDefinition extends ActionDefinition {
                         }
                         try {
                             if (repeater.validate()) {
-                            	erep.goToPage(page);
+                                erep.goToPage(page);
                             }
                         } catch (Exception e) {
                             throw new CascadingRuntimeException("Error switching page", e);
                         }
-                    } 
+                    }
                 }
             });
         }
     }
-    
+
 }
