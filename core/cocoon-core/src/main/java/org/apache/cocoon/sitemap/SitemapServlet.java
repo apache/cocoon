@@ -108,7 +108,7 @@ public class SitemapServlet extends HttpServlet {
             try {
                 config = createTreeProcessorConfiguration(this.servletContext);
             } catch (IOException e) {
-                throw new BeanCreationException("Could not create configuration for TreeProcesoor", e);
+                throw new BeanCreationException("Could not create configuration for TreeProcessor", e);
             }
 
             ServiceManager serviceManager =
