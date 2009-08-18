@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,10 +18,10 @@ package org.apache.cocoon.components.serializers.encoding;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.PrintStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -30,8 +30,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * 
- * 
+ *
+ *
  * @version $Id$
  */
 public final class CharsetFactory {
@@ -59,8 +59,8 @@ public final class CharsetFactory {
         super();
         this.unknownCharset = new UnknownCharset();
 
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        URL url = loader.getResource(CHARSET_LOOKUP_CLASS);
+        final ClassLoader loader = this.getClass().getClassLoader();
+        final URL url = loader.getResource(CHARSET_LOOKUP_CLASS);
 
         if (url == null) {
             throw new CharsetFactoryException("Unable to load charsets "
@@ -125,7 +125,7 @@ public final class CharsetFactory {
             String mtch = file.substring(file.indexOf('!'));
             file = file.substring(5, file.indexOf('!'));
             mtch = mtch.substring(2, mtch.lastIndexOf('/') + 1) + "cs_";
-    
+
             ZipFile zip = new ZipFile(file);
             Enumeration enumeration = zip.entries();
             while (enumeration.hasMoreElements()) {
@@ -215,7 +215,7 @@ public final class CharsetFactory {
         /** The root cause of this exception. */
         private Exception exception = null;
 
-        /** 
+        /**
          * Create a new <code>CharsetFactoryException</code> instance.
          */
         private CharsetFactoryException(String message, Exception exception) {
