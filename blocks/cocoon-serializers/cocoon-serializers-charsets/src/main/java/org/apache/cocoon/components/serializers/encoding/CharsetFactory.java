@@ -17,28 +17,19 @@
 package org.apache.cocoon.components.serializers.encoding;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
+ * A factory for the charsets.
+ * The list of charsets is hard-coded, whenever the list changes this
+ * hard-coded list must be updated manually.
  *
- *
- * @version $Id$
  */
 public final class CharsetFactory {
-
-    /** The lookup class name for the encodings. */
-    private static final String CHARSET_LOOKUP_CLASS =
-        "org/apache/cocoon/components/serializers/encoding/cs_US_ASCII.class";
 
     /** Our private instance. */
     private static CharsetFactory instance = new CharsetFactory();
@@ -52,6 +43,184 @@ public final class CharsetFactory {
     /** All our charsets, mapped by their name and aliases. */
     private HashMap charsets = new HashMap();
 
+    private static String[] getCharsets() {
+        return new String[] {
+        "BIG5_HKSCS",
+        "BIG5",
+        "EUC_CN",
+        "EUC_JP_LINUX",
+        "EUC_JP",
+        "EUC_KR",
+        "EUC_TW",
+        "GB18030",
+        "GB2312",
+        "GBK",
+        "IBM_THAI",
+        "IBM00858",
+        "IBM01140",
+        "IBM01141",
+        "IBM01142",
+        "IBM01143",
+        "IBM01144",
+        "IBM01145",
+        "IBM01146",
+        "IBM01147",
+        "IBM01148",
+        "IBM01149",
+        "IBM037",
+        "IBM1026",
+        "IBM1047",
+        "IBM273",
+        "IBM277",
+        "IBM278",
+        "IBM280",
+        "IBM284",
+        "IBM285",
+        "IBM297",
+        "IBM420",
+        "IBM424",
+        "IBM437",
+        "IBM500",
+        "IBM775",
+        "IBM850",
+        "IBM852",
+        "IBM855",
+        "IBM857",
+        "IBM860",
+        "IBM861",
+        "IBM862",
+        "IBM863",
+        "IBM864",
+        "IBM865",
+        "IBM866",
+        "IBM868",
+        "IBM869",
+        "IBM870",
+        "IBM871",
+        "IBM918",
+        "ISO_2022_CN_CNS",
+        "ISO_2022_CN_GB",
+        "ISO_2022_JP",
+        "ISO_2022_KR",
+        "ISO_8859_1",
+        "ISO_8859_13",
+        "ISO_8859_15",
+        "ISO_8859_2",
+        "ISO_8859_3",
+        "ISO_8859_4",
+        "ISO_8859_5",
+        "ISO_8859_6",
+        "ISO_8859_7",
+        "ISO_8859_8",
+        "ISO_8859_9",
+        "JIS_X0201",
+        "JIS_X0212_1990",
+        "JIS0201",
+        "JIS0208",
+        "JIS0212",
+        "JOHAB",
+        "KOI8_R",
+        "MACARABIC",
+        "MACCENTRALEUROPE",
+        "MACCROATIAN",
+        "MACCYRILLIC",
+        "MACDINGBAT",
+        "MACGREEK",
+        "MACHEBREW",
+        "MACICELAND",
+        "MACROMAN",
+        "MACROMANIA",
+        "MACSYMBOL",
+        "MACTHAI",
+        "MACTURKISH",
+        "MACUKRAINE",
+        "SHIFT_JIS",
+        "TIS_620",
+        "US_ASCII",
+        "UTF_16",
+        "UTF_16BE",
+        "UTF_16LE",
+        "UTF_8",
+        "WINDOWS_1250",
+        "WINDOWS_1251",
+        "WINDOWS_1252",
+        "WINDOWS_1253",
+        "WINDOWS_1254",
+        "WINDOWS_1255",
+        "WINDOWS_1256",
+        "WINDOWS_1257",
+        "WINDOWS_1258",
+        "WINDOWS_31J",
+        "WINDOWS_936",
+        "WINDOWS_949",
+        "WINDOWS_950",
+        "X_BIG5_SOLARIS",
+        "X_EUC_CN",
+        "X_EUC_JP_LINUX",
+        "X_EUC_TW",
+        "X_EUCJP_OPEN",
+        "X_IBM1006",
+        "X_IBM1025",
+        "X_IBM1046",
+        "X_IBM1097",
+        "X_IBM1098",
+        "X_IBM1112",
+        "X_IBM1122",
+        "X_IBM1123",
+        "X_IBM1124",
+        "X_IBM1381",
+        "X_IBM33722",
+        "X_IBM737",
+        "X_IBM856",
+        "X_IBM874",
+        "X_IBM875",
+        "X_IBM921",
+        "X_IBM922",
+        "X_IBM930",
+        "X_IBM933",
+        "X_IBM935",
+        "X_IBM937",
+        "X_IBM939",
+        "X_IBM942",
+        "X_IBM942C",
+        "X_IBM942",
+        "X_IBM942C",
+        "X_IBM943",
+        "X_IBM943C",
+        "X_IBM948",
+        "X_IBM949",
+        "X_IBM949C",
+        "X_IBM950",
+        "X_IBM964",
+        "X_IBM970",
+        "X_ISCII91",
+        "X_ISO_2022_CN_CNS",
+        "X_ISO_2022_CN_GB",
+        "X_ISO_8859_11",
+        "X_JIS0208",
+        "X_JOHAB",
+        "X_MACARABIC",
+        "X_MACCENTRALEUROPE",
+        "X_MACCROATIAN",
+        "X_MACCYRILLIC",
+        "X_MACDINGBAT",
+        "X_MACGREEK",
+        "X_MACHEBREW",
+        "X_MACICELAND",
+        "X_MACROMANIA",
+        "X_MACSYMBOL",
+        "X_MACTHAI",
+        "X_MACTURKISH",
+        "X_MACUKRAINE",
+        "X_MS950_HKSCS",
+        "X_MSWIN_936",
+        "X_PCK",
+        "X_WINDOWS_874",
+        "X_WINDOWS_949",
+        "X_WINDOWS_950"
+        };
+    }
+
     /**
      * Create a new instance of this <code>CharsetFactory</code>.
      */
@@ -59,23 +228,13 @@ public final class CharsetFactory {
         super();
         this.unknownCharset = new UnknownCharset();
 
-        final ClassLoader loader = this.getClass().getClassLoader();
-        final URL url = loader.getResource(CHARSET_LOOKUP_CLASS);
-
-        if (url == null) {
-            throw new CharsetFactoryException("Unable to load charsets "
-                    + "because their classes are not present", null);
+        // load charset
+        final String[] sets = getCharsets();
+        for(int i=0; i<sets.length; i++) {
+            final String name = this.getClass().getPackage().getName() + ".cs_" + sets[i];
+            loadCharset(name);
         }
-
-        if ("jar".equals(url.getProtocol())) {
-            this.loadCharsetsFromJar(url);
-        } else if ("file".equals(url.getProtocol())) {
-            this.loadCharsetsFromFile(url);
-        } else {
-            throw new CharsetFactoryException("Unable to load charsets " +
-                        "from protocol \"" + url.getProtocol() + "\"", null);
-        }
-
+        // detect default encoding
         ByteArrayOutputStream otmp = new ByteArrayOutputStream();
         OutputStreamWriter wtmp = new OutputStreamWriter(otmp);
         String etmp = wtmp.getEncoding();
@@ -112,52 +271,6 @@ public final class CharsetFactory {
         } catch (Exception exception) {
             throw new CharsetFactoryException("Unable to instantiate class \""
                                               + clazz + "\"", exception);
-        }
-    }
-
-    /**
-     * Load all <code>Charset</code> available if this class was loaded
-     * from a JAR file.
-     */
-    private void loadCharsetsFromJar(URL url) {
-        try {
-            String file = url.getFile();
-            String mtch = file.substring(file.indexOf('!'));
-            file = file.substring(5, file.indexOf('!'));
-            mtch = mtch.substring(2, mtch.lastIndexOf('/') + 1) + "cs_";
-
-            ZipFile zip = new ZipFile(file);
-            Enumeration enumeration = zip.entries();
-            while (enumeration.hasMoreElements()) {
-                ZipEntry entry = (ZipEntry)enumeration.nextElement();
-                String name = entry.getName();
-                if ((! name.startsWith(mtch)) ||
-                    (! name.endsWith(".class"))) continue;
-                name = name.substring(mtch.length());
-                name = ".cs_" + name.substring(0, name.length() - 6);
-                name = this.getClass().getPackage().getName() + name;
-                loadCharset(name);
-            }
-        } catch (IOException exception) {
-            throw new CharsetFactoryException("Unable to access JAR \""
-                                          + url.toString() + "\"", exception);
-        }
-    }
-
-    /**
-     * Load all <code>Charset</code> available if this class was loaded
-     * from a plain file on disk.
-     */
-    private void loadCharsetsFromFile(URL url) {
-        File file = new File(url.getFile()).getParentFile();
-        String children[] = file.list();
-        for (int x = 0; x < children.length; x++) {
-            String child = children[x];
-            if ((! child.startsWith("cs_")) ||
-                (! child.endsWith(".class"))) continue;
-            child = '.' + child.substring(0, child.length() - 6);
-            child = this.getClass().getPackage().getName() + child;
-            this.loadCharset(child);
         }
     }
 
