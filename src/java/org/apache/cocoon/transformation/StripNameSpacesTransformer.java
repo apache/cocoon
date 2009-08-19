@@ -67,17 +67,16 @@ public class StripNameSpacesTransformer extends AbstractTransformer implements
 	public void startElement(String uri, String localName, String qName,
 			Attributes attr) throws SAXException {
 	    
-	    AttributesImpl l_attr = new AttributesImpl(attr);
+	    AttributesImpl l_attr = new AttributesImpl();
 
         String attrName;
         String attrValue;
         String attrType;
         for (int i = 0; i < attr.getLength(); i++) {
-            attrName = l_attr.getLocalName(i);
-            attrValue = l_attr.getValue(i);
-            attrType = l_attr.getType(i);
+            attrName = attr.getLocalName(i);
+            attrValue = attr.getValue(i);
+            attrType = attr.getType(i);
             if (attrValue != null) {
-                l_attr.removeAttribute(i);
                 l_attr.addAttribute(EMPTY_NS, attrName, attrName, attrType, attrValue);
             }
         }
