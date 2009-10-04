@@ -26,10 +26,10 @@
   <packaging>jar</packaging>  
   
   <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
+    <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <version>8</version>
+    <relativePath>../../../parent/pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-serializers-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
@@ -47,14 +47,33 @@
     <docs.version>1.0</docs.version>
   </properties>
   
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Cocoon-Block-Name>${pom.artifactId}</Cocoon-Block-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-serializers-charsets</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

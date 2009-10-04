@@ -19,7 +19,6 @@ package org.apache.cocoon.components.serializers.util;
 import java.io.CharArrayWriter;
 
 import org.apache.cocoon.components.serializers.encoding.XMLEncoder;
-import org.apache.commons.lang.SystemUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,7 +33,7 @@ public class XMLSerializer extends EncodingSerializer {
 
     private static final XMLEncoder XML_ENCODER = new XMLEncoder();
 
-    private static final char S_EOL[] = SystemUtils.LINE_SEPARATOR.toCharArray();
+    private static final char S_EOL[] = System.getProperty("line.separator").toCharArray();
 
     private static final char S_DOCUMENT_1[] = "<?xml version=\"1.0".toCharArray();
     private static final char S_DOCUMENT_2[] = "\" encoding=\"".toCharArray();

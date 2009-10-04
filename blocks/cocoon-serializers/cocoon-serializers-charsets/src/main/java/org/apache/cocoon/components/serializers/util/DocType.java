@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,12 +16,10 @@
  */
 package org.apache.cocoon.components.serializers.util;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * The <code>DocType</code> class encapsulates informations regarding
  * the document type public and system IDs and root element name.
- * 
+ *
  * @version $Id$
  */
 public class DocType {
@@ -32,7 +30,7 @@ public class DocType {
     private static final char S_DOCTYPE_4[] = " SYSTEM \"".toCharArray();
     private static final char S_DOCTYPE_5[] = "\">".toCharArray();
     private static final char S_DOCTYPE_6[] = ">".toCharArray();
-    
+
     /** The name of the root element. */
     protected String root_name;
     /** The configured system identifier. */
@@ -42,16 +40,16 @@ public class DocType {
 
     /**
      * Create a new <code>DocType</code> instance.
-     * 
+     *
      * @param root_name The document root element name.
      */
     public DocType(String root_name) {
         this(root_name, null, null);
     }
-    
+
     /**
      * Create a new <code>DocType</code> instance.
-     * 
+     *
      * @param root_name The document root element name.
      * @param system_id The document type system identifier.
      */
@@ -61,7 +59,7 @@ public class DocType {
 
     /**
      * Create a new <code>DocType</code> instance.
-     * 
+     *
      * @param root_name The document root element name.
      * @param public_id The document type public identifier.
      * @param system_id The document type system identifier.
@@ -129,6 +127,16 @@ public class DocType {
         return(buf.toString());
     }
 
+    private boolean equals(final String a, final String b) {
+        if ( a == null && b == null ) {
+            return true;
+        }
+        if ( a != null ) {
+            return a.equals(b);
+        }
+        return false;
+    }
+
     /**
      * Check if the specified object is equal to this <code>DocType</code>
      * instance.
@@ -140,8 +148,8 @@ public class DocType {
         if (!(object instanceof DocType)) return(false);
         DocType doctype = (DocType)object;
 
-        if (StringUtils.equals(this.public_id, doctype.public_id)
-            && StringUtils.equals(this.system_id, doctype.system_id)
+        if (equals(this.public_id, doctype.public_id)
+            && equals(this.system_id, doctype.system_id)
             && this.root_name.equals(doctype.root_name)) {
             return true;
         }
