@@ -33,7 +33,7 @@
   </parent>
   <artifactId>cocoon-serializers-charsets</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Cocoon Serializers Charsets</name>
+  <name>Apache Cocoon Serializers Charsets</name>
   
   <distributionManagement>
     <site>
@@ -63,6 +63,7 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
+            <Bundle-DocURL>http://cocoon.apache.org/blocks/serializers/${docs.version}/</Bundle-DocURL>
             <Export-Package>
               org.apache.cocoon.components.serializers.encoding;version=${pom.version},
               org.apache.cocoon.components.serializers.util;version=${pom.version}
