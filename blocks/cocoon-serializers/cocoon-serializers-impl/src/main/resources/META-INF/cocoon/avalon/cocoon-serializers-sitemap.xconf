@@ -30,7 +30,7 @@
     <map:serializer name="exhtml"
                     logger="sitemap.serializer.exhtml"
                     src="org.apache.cocoon.components.serializers.XHTMLSerializer"
-                    mime-type="text/xhtml">
+                    mime-type="application/xhtml+xml">
       <encoding>UTF-8</encoding>
       <omit-xml-declaration>no</omit-xml-declaration>
     </map:serializer>
