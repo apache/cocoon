@@ -32,7 +32,7 @@
     <relativePath>../../../parent/pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-serializers-impl</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <name>Cocoon Serializers Block Implementation</name>
   
   <distributionManagement>
@@ -99,12 +99,5 @@
         </plugins>
       </build>      
     </profile>
-  </profiles>  
-  
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-serializers-impl/cocoon-serializers-impl-1.0.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-serializers-impl/cocoon-serializers-impl-1.0.0</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-serializers-impl/cocoon-serializers-impl-1.0.0</url>
-  </scm>
+  </profiles>
 </project>
