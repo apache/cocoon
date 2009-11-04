@@ -79,7 +79,7 @@ public class ReloadingServletFilter implements Filter {
         try {
             Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.context));
 
-            // Inlitialize the actual filter
+            // Initialize the actual filter
             this.filter.init(config);
         } finally {
             Thread.currentThread().setContextClassLoader(old);
