@@ -453,7 +453,7 @@ public class PrepareWebappMojo extends AbstractMojo {
             FileUtils.copyDirectory(this.customWebappDirectory, webAppBaseDir);
         } catch (IOException e) {
             throw new MojoExecutionException("Can't copy custom webapp files (directory: '" + this.customWebappDirectory
-                            + ") to the web application in preparation.");
+                            + ") to the web application in preparation.", e);
         }
     }
 
