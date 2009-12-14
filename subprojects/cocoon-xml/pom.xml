@@ -31,7 +31,7 @@
   <artifactId>cocoon-xml</artifactId>
   <version>2.0.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
-  <name>Cocoon XML Utilities</name>
+  <name>Apache Cocoon XML Utilities</name>
   <description>Various XML utilities classes.</description>
   <url>http://cocoon.apache.org/${docs.m.xml-util.relPath}</url>    
   
@@ -79,11 +79,24 @@
           <instructions>
             <Export-Package>
               org.apache.cocoon.xml.sax,
-              org.apache.cocoon.xml.dom
+              org.apache.cocoon.xml.dom;version=2.0
             </Export-Package>
           </instructions>
         </configuration>
       </plugin>
     </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+      <directory>.</directory>
+      <targetPath>META-INF</targetPath>
+      <includes>
+        <include>LICENSE*</include>
+        <include>NOTICE*</include>
+      </includes>
+    </resource>
+  </resources>
   </build>
 </project>
