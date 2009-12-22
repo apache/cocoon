@@ -98,20 +98,19 @@
       <property name="defaultPort" value="8888"/>
       <property name="defaultSecurePort" value="443"/>
     </bean>
-
-  <!--+
-      |  This is the profile manager using pipelines to load the various parts.
+    <!--+
+      | This is the service profile manager using pipelines to load the various parts.
       |
       +-->
-  <bean name="org.apache.cocoon.portal.profile.ProfileManager"
-        class="org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager"
-        parent="org.apache.cocoon.portal.util.AbstractBean"
-        scope="singleton">
-    <property name="aspectChain" ref="org.apache.cocoon.portal.profile.ProfileManager.aspects"/>
-    <property name="profileStore" ref="org.apache.cocoon.portal.profile.ProfileStore"/>
-    <property name="copletTypesMap" ref="org.apache.cocoon.portal.om.CopletTypeMap"/>
-    <property name="rendererMap" ref="org.apache.cocoon.portal.layout.renderer.RendererMap"/>
-  </bean>
+	<bean name="org.apache.cocoon.portal.services.ProfileManager"
+	        class="org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager"
+	        parent="org.apache.cocoon.portal.util.AbstractBean"
+	        scope="singleton">
+	    <property name="aspectChain" ref="org.apache.cocoon.portal.profile.ProfileManager.aspects"/>
+	    <property name="profileStore" ref="org.apache.cocoon.portal.profile.ProfileStore"/>
+	    <property name="copletTypesMap" ref="org.apache.cocoon.portal.om.CopletTypeMap"/>
+	    <property name="rendererMap" ref="org.apache.cocoon.portal.om.RendererMap"/>
+	</bean>
 
   <!--+
       | This is the map based profile store.

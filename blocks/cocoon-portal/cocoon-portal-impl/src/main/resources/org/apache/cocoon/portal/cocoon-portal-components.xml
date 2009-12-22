@@ -277,8 +277,8 @@
       | Renderer map
       |
       +-->
-    <configurator:bean-map id="org.apache.cocoon.portal.layout.renderer.RendererMap"
-                           type="org.apache.cocoon.portal.layout.renderer.Renderer"/>
+    <configurator:bean-map id="org.apache.cocoon.portal.om.RendererMap"
+                           type="org.apache.cocoon.portal.om.Renderer"/>
 
   <!--+
       | Coplet Adapter map
