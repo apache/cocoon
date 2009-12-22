@@ -26,7 +26,7 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
                            http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
   
-  <bean id="org.apache.cocoon.portal.layout.renderer.Renderer.column"
+  <bean id="org.apache.cocoon.portal.om.Renderer.column"
         class="org.apache.cocoon.portal.layout.renderer.impl.AspectRenderer"
         parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton">
     <property name="aspectChain">
