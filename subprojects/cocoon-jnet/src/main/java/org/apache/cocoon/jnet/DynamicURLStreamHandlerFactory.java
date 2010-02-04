@@ -24,7 +24,7 @@ import java.util.List;
 
 public class DynamicURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
-    private static final ThreadLocal FACTORIES = new InheritableThreadLocal();
+    private static final ThreadLocal<List<URLStreamHandlerFactory>> FACTORIES = new InheritableThreadLocal<List<URLStreamHandlerFactory>>();
 
     public static void pop() {
         getList().remove(0);
@@ -34,11 +34,11 @@ public class DynamicURLStreamHandlerFactory implements URLStreamHandlerFactory {
         getList().add(0, factory);
     }
 
-    private static List getList() {
-        List list = (List) FACTORIES.get();
+    private static List<URLStreamHandlerFactory> getList() {
+        List<URLStreamHandlerFactory> list = FACTORIES.get();
 
         if (list == null) {
-            list = new LinkedList();
+            list = new LinkedList<URLStreamHandlerFactory>();
             FACTORIES.set(list);
         }
 
@@ -51,10 +51,10 @@ public class DynamicURLStreamHandlerFactory implements URLStreamHandlerFactory {
      * @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String)
      */
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        List list = getList();
+        List<URLStreamHandlerFactory> list = getList();
 
-        for (Iterator i = list.iterator(); i.hasNext();) {
-            URLStreamHandler handler = ((URLStreamHandlerFactory)i.next()).createURLStreamHandler(protocol);
+        for (Iterator<URLStreamHandlerFactory> i = list.iterator(); i.hasNext();) {
+            URLStreamHandler handler = i.next().createURLStreamHandler(protocol);
 
             if (handler != null) {
                 return handler;

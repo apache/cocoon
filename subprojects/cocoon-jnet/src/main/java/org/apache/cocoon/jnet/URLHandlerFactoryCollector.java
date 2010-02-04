@@ -27,38 +27,39 @@ import org.aspectj.lang.ProceedingJoinPoint;
 
 public class URLHandlerFactoryCollector {
 
-    private Map urlHandlerFactories = Collections.EMPTY_MAP;
+    private Map<String, URLStreamHandlerFactory> urlHandlerFactories = Collections.emptyMap();
 
     private boolean urlStreamHandlerInstalled;
 
     public Object installURLHandlers(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         try {
-            pushUrlHandlerFactories();
+            this.pushUrlHandlerFactories();
             return proceedingJoinPoint.proceed();
         } finally {
-            popUrlHandlerFactories();
+            this.popUrlHandlerFactories();
         }
     }
-    
+
     public void pushUrlHandlerFactories() throws Exception {
         if (!this.urlStreamHandlerInstalled) {
             URLStreamHandlerFactoryInstaller.setURLStreamHandlerFactory(new DynamicURLStreamHandlerFactory());
             this.urlStreamHandlerInstalled = true;
         }
 
-        for (Iterator i = this.urlHandlerFactories.values().iterator(); i.hasNext();) {
-            URLStreamHandlerFactory streamHandlerFactory = (URLStreamHandlerFactory) i.next();
+        for (Iterator<URLStreamHandlerFactory> i = this.urlHandlerFactories.values().iterator(); i.hasNext();) {
+            URLStreamHandlerFactory streamHandlerFactory = i.next();
             DynamicURLStreamHandlerFactory.push(streamHandlerFactory);
         }
     }
-    
+
     public void popUrlHandlerFactories() {
-        for (Iterator i = this.urlHandlerFactories.values().iterator(); i.hasNext(); i.next()) {
+        for (Iterator<URLStreamHandlerFactory> i = this.urlHandlerFactories.values().iterator(); i.hasNext(); i
+                .next()) {
             DynamicURLStreamHandlerFactory.pop();
         }
     }
 
-    public void setUrlHandlerFactories(Map urlHandlerFactories) {
+    public void setUrlHandlerFactories(Map<String, URLStreamHandlerFactory> urlHandlerFactories) {
         this.urlHandlerFactories = urlHandlerFactories;
     }
 }
