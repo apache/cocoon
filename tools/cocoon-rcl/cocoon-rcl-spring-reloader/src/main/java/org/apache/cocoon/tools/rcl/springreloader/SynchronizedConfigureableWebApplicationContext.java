@@ -17,6 +17,7 @@
 package org.apache.cocoon.tools.rcl.springreloader;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.Locale;
 import java.util.Map;
 
@@ -55,8 +56,7 @@ public class SynchronizedConfigureableWebApplicationContext implements Configura
 
     public SynchronizedConfigureableWebApplicationContext() throws BeansException {
         try {
-            appContext = (ConfigurableWebApplicationContext)
-                    BeanUtils.instantiateClass(XmlWebApplicationContext.class);
+            appContext = BeanUtils.instantiateClass(XmlWebApplicationContext.class);
         } catch (BeanInstantiationException e) {
             throw new RuntimeException("Can't create Spring application context.", e);
         }
@@ -65,8 +65,7 @@ public class SynchronizedConfigureableWebApplicationContext implements Configura
     public synchronized void reload() {
         ConfigurableWebApplicationContext newAppContext = null;
         try {
-            newAppContext = (ConfigurableWebApplicationContext)
-                BeanUtils.instantiateClass(XmlWebApplicationContext.class);
+            newAppContext = BeanUtils.instantiateClass(XmlWebApplicationContext.class);
         } catch (BeanInstantiationException e) {
             throw new RuntimeException("Can't create Spring application context.", e);
         }
@@ -97,7 +96,7 @@ public class SynchronizedConfigureableWebApplicationContext implements Configura
         return appContext.getAutowireCapableBeanFactory();
     }
 
-    public synchronized Object getBean(String arg0, Class arg1) throws BeansException {
+    public <T> T getBean(String arg0, Class<T> arg1) throws BeansException {
         return appContext.getBean(arg0, arg1);
     }
 
@@ -105,11 +104,8 @@ public class SynchronizedConfigureableWebApplicationContext implements Configura
         return appContext.getBean(arg0);
     }
 
-    // Make the class compilable with Spring 2.1
-    // FIXME: delegate to appContext, when updating to Spring 2.1
-    public Object getBean(String arg0, Object[] arg1) throws BeansException {
-        throw new UnsupportedOperationException();
-        //return appContext.getBean(arg0, arg1);
+    public Object getBean(String arg0, Object... arg1) throws BeansException {
+        return appContext.getBean(arg0, arg1);
     }
 
     public synchronized int getBeanDefinitionCount() {
@@ -128,11 +124,11 @@ public class SynchronizedConfigureableWebApplicationContext implements Configura
         return appContext.getBeanNamesForType(arg0);
     }
 
-    public synchronized Map getBeansOfType(Class arg0, boolean arg1, boolean arg2) throws BeansException {
+    public <T> Map<String, T> getBeansOfType(Class<T> arg0, boolean arg1, boolean arg2) throws BeansException {
         return appContext.getBeansOfType(arg0, arg1, arg2);
     }
 
-    public synchronized Map getBeansOfType(Class arg0) throws BeansException {
+    public <T> Map<String, T> getBeansOfType(Class<T> arg0) throws BeansException {
         return appContext.getBeansOfType(arg0);
     }
 
@@ -280,5 +276,21 @@ public class SynchronizedConfigureableWebApplicationContext implements Configura
 
     public String getId() {
         return appContext.getId();
+    }
+
+    public <A extends Annotation> A findAnnotationOnBean(String arg0, Class<A> arg1) {
+        return appContext.findAnnotationOnBean(arg0, arg1);
+    }
+
+    public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> arg0) throws BeansException {
+        return appContext.getBeansWithAnnotation(arg0);
+    }
+
+    public void setId(String arg0) {
+        appContext.setId(arg0);
+    }
+
+    public <T> T getBean(Class<T> requiredType) throws BeansException {
+        return appContext.getBean(requiredType);
     }
 }
