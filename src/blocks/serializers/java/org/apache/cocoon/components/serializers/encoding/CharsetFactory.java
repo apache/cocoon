@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
@@ -126,6 +127,9 @@ public final class CharsetFactory {
             String mtch = file.substring(file.indexOf('!'));
             file = file.substring(5, file.indexOf('!'));
             mtch = mtch.substring(2, mtch.lastIndexOf('/') + 1) + "cs_";
+            
+            // COCOON-2286 allow special characters in path (mainly spaces)
+            file = URLDecoder.decode(file, "UTF-8");
     
             ZipFile zip = new ZipFile(file);
             Enumeration enumeration = zip.entries();
