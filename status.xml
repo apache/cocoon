@@ -187,6 +187,9 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="SW" type="fix" fixes-bug="COCOON-2286" due-to="Cédric Damioli" due-to-email="cedric.damioli@anyware-services.com">
+      Serializer block: charset data won't load if there's a space in the path to the jar file (e.g "C:\Program Files\MyApp\...")
+    </action>
     <action dev="JSJ" type="fix" fixes-bug="COCOON-2257">
       JCR block: Missing modCount attribute in JCR sample content.
     </action>
