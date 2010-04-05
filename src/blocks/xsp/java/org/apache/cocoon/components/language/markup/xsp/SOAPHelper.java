@@ -26,6 +26,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.excalibur.source.SourceUtil;
 import org.xml.sax.InputSource;
 
@@ -72,13 +73,14 @@ public class SOAPHelper {
 
             String host = this.url.getHost();
             int port = this.url.getPort();
+            Protocol protocol = Protocol.getProtocol(this.url.getProtocol());
 
             if (System.getProperty("http.proxyHost") != null) {
                 String proxyHost = System.getProperty("http.proxyHost");
                 int proxyPort = Integer.parseInt(System.getProperty("http.proxyPort"));
-                conn = new HttpConnection(proxyHost, proxyPort, host, port);
+                conn = new HttpConnection(proxyHost, proxyPort, host, null, port, protocol);
             } else {
-                conn = new HttpConnection(host, port);
+                conn = new HttpConnection(host, port, protocol);
             }
 
             PostMethod method = new PostMethod(this.url.getFile());
