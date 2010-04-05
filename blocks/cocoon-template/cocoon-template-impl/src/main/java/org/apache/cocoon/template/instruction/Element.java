@@ -42,7 +42,7 @@ public class Element extends Instruction {
     public static  final String XML_ELEM_NAME_BLANK = "parameter: \"name\" is required";
     public static final String XML_ELEM_NAME_INVALID = "parameter: \"name\" is an invalid XML element name";
     public static final String XML_PREFIX_NAME_INVALID = "parameter: \"prefix\" is an Invalid XML prefix";
-    public static final String XML_PREFIX_MISSING_NAMESPACE = "parameter: \"namespace\" must be specified if \"prefix\" is specified";
+    public static final String XML_PREFIX_MISSING_NAMESPACE = "parameter: \"uri\" must be specified if \"prefix\" is specified";
 
     public Element(ParsingContext parsingContext, StartElement raw, Attributes attrs, Stack stack) throws SAXException {
 
