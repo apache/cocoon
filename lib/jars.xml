@@ -435,8 +435,19 @@
       the XSL recommendation and then turns it into a PDF document.
     </description>
     <used-by>FOP serializer (fop block)</used-by>
-    <lib>optional/fop-0.20.5.jar</lib>
+    <lib>optional/fop-0.95.jar</lib>
     <homepage>http://xml.apache.org/fop/</homepage>
+  </file>
+
+  <file>
+    <title>XML Graphics Commons</title>
+    <description>
+      Apache XML Graphics Commons is a library that consists of several reusable components
+      used by Apache Batik and Apache FOP.
+    </description>
+    <used-by>FOP serializer (fop block)</used-by>
+    <lib>optional/xmlgraphics-commons-1.3.1.jar</lib>
+    <homepage>http://xmlgraphics.apache.org/commons/</homepage>
   </file>
 
   <file>
