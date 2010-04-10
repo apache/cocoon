@@ -100,7 +100,7 @@ public class SourceRepositoryImpl extends AbstractLogEnabled
             
             int status;
             if (exists) {
-                status = STATUS_OK;
+                status = STATUS_NO_CONTENT;
             }
             else {
                 status = STATUS_CREATED;
