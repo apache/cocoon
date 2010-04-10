@@ -187,6 +187,9 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="JSJ" type="fix" fixes-bug="COCOON-2041" due-to="Edward Riede" due-to-email="edriede@yahoo.com">
+      Repository block: WebDAV Returns improper status on PUT
+    </action>
     <action dev="JSJ" type="update" fixes-bug="COCOON-2289" due-to="Cédric Damioli" due-to-email="cedric.damioli@anyware-services.com">
       FOP block: Backport from FOPNGSerializer (C2.2) to FOPSerializer. Upgraded FOP dependency from 0.20.5 to 0.95.
     </action>
