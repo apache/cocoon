@@ -24,6 +24,11 @@
   -->
 <document>
   <body>
+    <release version="1.2.0" date="TBD" description="unreleased">
+      <action dev="jreijn" type="fix" issue="COCOON-2035" due-to="Gustavo N. Fernandes" due-to-email="gustavonalle@gmail.com">
+        Fix NPE in the RepeaterJXPathSorter caused by null values.
+      </action>
+    </release>
     <release version="1.1.1" date="TBD" description="unreleased">
       <action dev="felixk" type="fix" issue="COCOON-1822" due-to="Karen Torres &amp; Rafael Márquez" due-to-email="ktorres@agssa.net &amp; rmarquez@agssa.net">
         Forms: MultiValueField list-type="double-listbox" does not work correctly in ajax enabled forms.
