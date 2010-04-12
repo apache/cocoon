@@ -16,18 +16,11 @@
  */
 package org.apache.cocoon.forms.binding;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.cocoon.forms.formmodel.Repeater.RepeaterRow;
-
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+
+import java.util.*;
 
 /**
  * @version $Id$
@@ -67,7 +60,7 @@ public class RepeaterJXPathAdapter implements RepeaterAdapter {
 		}
 		String path = findPathFor(field);
 		if (path == null) throw new IllegalStateException("Cannot find a path for sorting on widget " + field);
-		RepeaterSorter sort = new RepeaterJXPathSorter(path, field);
+		RepeaterSorter sort = new RepeaterJXPathSorter(path, field, false);
 		if (sortedItems == null) {
 			List tsortedItems = new ArrayList();
 			int i = 0;
@@ -150,14 +143,27 @@ public class RepeaterJXPathAdapter implements RepeaterAdapter {
 
 	}
 
+
+    /**
+     * Sorter for JXPath based repeaters
+     */
 	static class RepeaterJXPathSorter implements RepeaterSorter {
 
 		private String path;
 		private String field;
+        private boolean nullsAreHigher;
 
-		public RepeaterJXPathSorter(String path, String field) {
+        /**
+         * JXPath based sorter for repeater
+         * @param path the path of the field to sort on
+         * @param field the name of the field to sort on
+         * @param nullsAreHigher indicates if null values are seen as higher then other values.
+         * When this value is set to false, it  means that nulls are lower than anything else.
+         */
+        public RepeaterJXPathSorter(String path, String field, boolean nullsAreHigher) {
 			this.path = path;
 			this.field = field;
+            this.nullsAreHigher = nullsAreHigher;
 		}
 
 		public void setCollection(Collection c) {
@@ -181,6 +187,13 @@ public class RepeaterJXPathAdapter implements RepeaterAdapter {
 				val2 = i2.getContext().getValue(path);
 			}
 
+			if(val1 == null) {
+                return (this.nullsAreHigher ? 1 : -1);
+            }
+	        if(val2 == null) {
+                return (this.nullsAreHigher ? -1 : 1);
+            }
+			
             if (val1 instanceof Comparable) {
                 return ((Comparable) val1).compareTo(val2);
             }
