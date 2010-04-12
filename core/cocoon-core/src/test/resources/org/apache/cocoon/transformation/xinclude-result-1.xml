@@ -21,7 +21,7 @@
   <p>P1</p>
   <p>P2</p>
 
-<root-include>
+<root-include xml:base="resource://org/apache/cocoon/transformation/xinclude-incl.xml">
   <br/>
   <p>include 1</p>
   <p>include 2</p>
