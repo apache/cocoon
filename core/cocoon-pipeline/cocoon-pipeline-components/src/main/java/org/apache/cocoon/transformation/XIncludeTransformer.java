@@ -56,6 +56,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Implementation of an XInclude transformer. It supports xml:base attributes,
@@ -78,7 +79,10 @@ public class XIncludeTransformer extends AbstractTransformer
     protected ServiceManager manager;
     private XIncludePipe xIncludePipe;
 
+    public static final String XMLBASE_NAMESPACE_URI = javax.xml.XMLConstants.XML_NS_URI;
+    public static final String XMLBASE_NAMESPACE_PREFIX = javax.xml.XMLConstants.XML_NS_PREFIX;
     public static final String XMLBASE_ATTRIBUTE = "base";
+    public static final String XMLBASE_ATTRIBUTE_TYPE = "CDATA";
 
     public static final String XINCLUDE_NAMESPACE_URI = "http://www.w3.org/2001/XInclude";
     public static final String XINCLUDE_INCLUDE_ELEMENT = "include";
@@ -184,6 +188,18 @@ public class XIncludeTransformer extends AbstractTransformer
          * XIncludePipe. Used to detect loop inclusions.
          */
         private String xpointer;
+        
+        /**
+         * Value of the current element level. Used to determine when to insert
+         * xml:base attributes for base URI fixup.
+         */
+        private int level = 0;
+
+        /**
+         * Base URI of the parent of the current element. Used to determine
+         * if base URI fixup is necessary.
+         */
+        private String parentBaseURI = null;
 
         private XIncludePipe parent;
 
@@ -229,7 +245,9 @@ public class XIncludeTransformer extends AbstractTransformer
 
         public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
             // Track xml:base context:
+            parentBaseURI = xmlBaseSupport.getCurrentBase();
             xmlBaseSupport.startElement(uri, name, raw, attr);
+            this.level++;
             // Handle elements in xinclude namespace:
             if (XINCLUDE_NAMESPACE_URI.equals(uri)) {
                 // Handle xi:include:
@@ -259,15 +277,56 @@ public class XIncludeTransformer extends AbstractTransformer
                     throw new SAXException("Unknown XInclude element " + raw + " at " + getLocation());
                 }
             } else if (isEvaluatingContent()) {
-                // Copy other elements through when appropriate:
-                super.startElement(uri, name, raw, attr);
+                // Copy other elements through when appropriate,
+                // performing base URI fixup when necessary.
+                if(mustAddBaseAttr())
+                    super.startElement(uri, name, raw, addBaseURI(attr));
+                else
+                    super.startElement(uri, name, raw, attr);
             }
+        }
+       
+        private boolean mustAddBaseAttr(){
+            if(level != 1)
+                return false;
+            if(this.parent == null)
+                return false;
+            String parentBase = this.parent.parentBaseURI;
+            String currentBase = xmlBaseSupport.getCurrentBase();
+            if(currentBase == null)
+                return false;
+            if(parentBase == null || !parentBase.equals(currentBase))
+                return true;
+            return false;
+        }
+
+        /**
+         * Adds xml:base attribute as per the XInclude spec.
+         */
+        private Attributes addBaseURI(Attributes oldAttr) throws SAXException {          
+            String currentBaseURI = xmlBaseSupport.getCurrentBase();
+
+            AttributesImpl fixedAttr = new AttributesImpl(oldAttr);
+                
+            // Old xml:base attributes are removed.
+            int xmlBaseAttrIdx = fixedAttr.getIndex(XMLBASE_NAMESPACE_URI, XMLBASE_ATTRIBUTE);
+            if(xmlBaseAttrIdx != -1)
+                fixedAttr.removeAttribute(xmlBaseAttrIdx);
+            
+            fixedAttr.addAttribute(
+                    XMLBASE_NAMESPACE_URI, XMLBASE_ATTRIBUTE,
+                    XMLBASE_NAMESPACE_PREFIX + ":" + XMLBASE_ATTRIBUTE,
+                    XMLBASE_ATTRIBUTE_TYPE,
+                    currentBaseURI
+            );
+            return fixedAttr;
         }
 
         public void endElement(String uri, String name, String raw) throws SAXException {
             // Track xml:base context:
             xmlBaseSupport.endElement(uri, name, raw);
-
+            this.level--;
+            
             // Handle elements in xinclude namespace:
             if (XINCLUDE_NAMESPACE_URI.equals(uri)) {
                 // Handle xi:include:
