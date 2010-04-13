@@ -187,6 +187,9 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="JSJ" type="fix" fixes-bug="COCOON-2104" due-to="Andrew Cave" due-to-email="ajcave@ualberta.ca">
+      Add base URI fixup support to XIncludeTransformer
+    </action>
     <action dev="JSJ" type="fix" fixes-bug="COCOON-2041" due-to="Edward Riede" due-to-email="edriede@yahoo.com">
       Repository block: WebDAV Returns improper status on PUT
     </action>

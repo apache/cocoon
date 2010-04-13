@@ -117,7 +117,10 @@ public class XMLBaseSupport {
         return resolve(getCurrentBase(), spec);
     }
 
-    private String getCurrentBase() {
+    /**
+     * Returns the base URI currently in effect, or null if unknown.
+     */
+    public String getCurrentBase() {
         if (bases.size() > 0) {
             BaseInfo baseInfo = (BaseInfo)bases.peek();
             return baseInfo.getUrl();
