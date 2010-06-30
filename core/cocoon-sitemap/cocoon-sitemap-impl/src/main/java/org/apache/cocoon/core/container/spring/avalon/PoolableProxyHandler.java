@@ -20,6 +20,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -31,13 +33,16 @@ import org.springframework.web.context.request.RequestContextHolder;
  */
 public class PoolableProxyHandler implements InvocationHandler, Runnable {
 
+    /** Logger (we use the same logging mechanism as Spring!) */
+	private final Log log = LogFactory.getLog(getClass());
+
     private final ThreadLocal componentHolder = new ThreadLocal();
     private final PoolableFactoryBean handler;
     private final String attributeName;
 
     public PoolableProxyHandler(PoolableFactoryBean handler) {
         this.handler = handler;
-        this.attributeName = PoolableProxyHandler.class.getName() + '/' + this.handler.hashCode();
+        this.attributeName = PoolableProxyHandler.class.getName() + '/' + this.hashCode(); // see https://issues.apache.org/jira/browse/COCOON-2259
     }
 
     /**
@@ -66,6 +71,9 @@ public class PoolableProxyHandler implements InvocationHandler, Runnable {
         if ( this.componentHolder.get() == null ) {
             this.componentHolder.set(this.handler.getFromPool());
             RequestContextHolder.currentRequestAttributes().registerDestructionCallback(this.attributeName, this, RequestAttributes.SCOPE_REQUEST);
+            if (log.isDebugEnabled()) {
+            	log.debug("getFromPool attributeName=" + attributeName + " class=" + componentHolder.get().getClass());
+            }
         }
         try {
             return method.invoke(this.componentHolder.get(), args);
@@ -81,6 +89,13 @@ public class PoolableProxyHandler implements InvocationHandler, Runnable {
         final Object o = this.componentHolder.get();
         if ( o != null ) {
             this.handler.putIntoPool(o);
+            if (log.isDebugEnabled()) {
+            	log.debug("putIntoPool attributeName=" + attributeName + " class=" + componentHolder.get().getClass());
+            }
+        } else {
+        	if (log.isDebugEnabled()) {
+        		log.debug("no object to put into pool  attributeName=" + attributeName);
+        	}
         }
         this.componentHolder.set(null);
     }
