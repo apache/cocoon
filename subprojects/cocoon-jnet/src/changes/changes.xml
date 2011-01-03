@@ -28,6 +28,9 @@
   </properties>
   <body>
     <release version="1.2.0-SNAPSHOT" date="2009-00-00" description="unreleased">
+      <action dev="reinhard" type="update" issue="COCOON-2277">
+        Fix potential NPE in DynamicURLStreamHandlerFactory.
+      </action>
       <action dev="reinhard" type="update">
         Use Java 5 language features throughout the codebase.
       </action>
