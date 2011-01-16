@@ -18,6 +18,7 @@ package org.apache.cocoon.jnet;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class DynamicURLStreamHandlerFactory implements URLStreamHandlerFactory {
         List<URLStreamHandlerFactory> list = FACTORIES.get();
 
         if (list == null) {
-            list = new LinkedList<URLStreamHandlerFactory>();
+            list = Collections.synchronizedList(new LinkedList<URLStreamHandlerFactory>());
             FACTORIES.set(list);
         }
 
