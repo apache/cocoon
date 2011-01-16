@@ -1,0 +1,101 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+select, input {
+    color: #626262;
+}
+/* code is equal to pre in site.css */
+code {
+    border: 1px solid #aaaaaa;
+    background: #efefef;
+    font-size: 110%;
+    padding: 10px;
+}
+
+li code, td code {
+    border: 0px;
+    font-size: 110%;
+    background: transparent;
+    padding: 0px;
+}
+
+#legend li.externalLink {
+    background: url(../images/external.png) left top no-repeat;
+    padding-left: 18px;
+}
+
+a.externalLink, a.externalLink:link, a.externalLink:visited, a.externalLink:active, a.externalLink:hover {
+    background: url(../images/external.png) right center no-repeat;
+    padding-right: 18px;
+}
+
+#legend li.newWindow {
+    background: url(../images/newwindow.png) left top no-repeat;
+    padding-left: 18px;
+}
+
+a.newWindow, a.newWindow:link, a.newWindow:visited, a.newWindow:active, a.newWindow:hover {
+    background: url(../images/newwindow.png) right center no-repeat;
+    padding-right: 18px;
+}
+
+p {
+    margin: 0.4em 0em 0.5em 0em;
+    line-height: 1.35em;
+}
+
+table.bodyTable th {
+    background: #0086b3;
+    color: #fff;
+}
+
+table.bodyTable tr.b {
+    background: #cce7f0;
+}
+
+.subsectionTitle {
+    font-size: 13px;
+    font-weight: bold;
+    color: #666;
+}
+
+.pl-version-small {
+    font-size: 70%;
+}
+
+.errormark, .warningmark, .donemark, .infomark {
+    margin: 10px 0;
+    padding: 0 0 0 45px;
+    border: 1px solid #9bcd52;
+}
+
+.errormark {
+    background: url(../images/errors.gif) no-repeat 10px 7px;
+}
+
+.warningmark {
+    background: url(../images/warning.gif) no-repeat 10px 7px;
+}
+
+.donemark {
+    background: url(../images/icon_success_sml.gif) no-repeat 10px 7px;
+}
+
+.infomark {
+    background: url(../images/note.gif) no-repeat 10px 7px;
+}
