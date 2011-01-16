@@ -31,7 +31,7 @@
   </parent>
 
   <artifactId>cocoon-jnet</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1-SNAPSHOT</version>
   <name>Cocoon JNet</name>
   <description>Dynamically register URLStreamHandler factories with your JVM.</description>
   <url>http://cocoon.apache.org/${docs.m.jnet.relPath}</url>
@@ -154,10 +154,4 @@
       </build>
     </profile>
   </profiles>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-jnet/cocoon-jnet-1.2.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-jnet/cocoon-jnet-1.2.0</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-jnet/cocoon-jnet-1.2.0</url>
-  </scm>
 </project>
