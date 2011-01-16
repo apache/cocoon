@@ -28,14 +28,7 @@
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-thien-maven-site-skin</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <name>Cocoon Maven Skin</name>
   <description>The Cocoon Maven skin developed by Thien</description>
-
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thien-maven-site-skin/cocoon-thien-maven-site-skin-1.0.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thien-maven-site-skin/cocoon-thien-maven-site-skin-1.0.0</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thien-maven-site-skin/cocoon-thien-maven-site-skin-1.0.0</url>
-  </scm>
 </project>
