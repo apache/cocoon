@@ -34,20 +34,20 @@
   <version>1.2.0-SNAPSHOT</version>
   <name>Cocoon JNet</name>
   <description>Dynamically register URLStreamHandler factories with your JVM.</description>
-  <url>http://cocoon.apache.org/${docs.m.jnet.relPath}</url>  
-  
+  <url>http://cocoon.apache.org/${docs.m.jnet.relPath}</url>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.jnet.version}</docs.version>
-    <docs.urlRelativizer>../../../</docs.urlRelativizer>    
-  </properties>  
-  
+    <docs.urlRelativizer>../../../</docs.urlRelativizer>
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.jnet.relPath}</url>
     </site>
-  </distributionManagement>     
+  </distributionManagement>
 
   <dependencies>
     <dependency>
@@ -81,6 +81,7 @@
       <artifactId>aspectjweaver</artifactId>
       <optional>true</optional>
     </dependency>
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
@@ -113,7 +114,7 @@
       </resource>
     </resources>
   </build>
-  
+
   <reporting>
     <plugins>
       <plugin>
@@ -147,9 +148,9 @@
               <collection>cdocs-jnet</collection>
               <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
             </configuration>
-          </plugin> 
+          </plugin>
         </plugins>
-      </build>      
-    </profile>   
+      </build>
+    </profile>
   </profiles>
 </project>
