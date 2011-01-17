@@ -29,7 +29,7 @@
     <version>8</version>
   </parent>
   <artifactId>cocoon-maven-plugin</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <name>Cocoon Maven 2 Plugin</name>
 
   <dependencies>
@@ -154,10 +154,4 @@
       </build>
     </profile>
   </profiles>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-maven-plugin/cocoon-maven-plugin-1.0.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-maven-plugin/cocoon-maven-plugin-1.0.0</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-maven-plugin/cocoon-maven-plugin-1.0.0</url>
-  </scm>
 </project>
