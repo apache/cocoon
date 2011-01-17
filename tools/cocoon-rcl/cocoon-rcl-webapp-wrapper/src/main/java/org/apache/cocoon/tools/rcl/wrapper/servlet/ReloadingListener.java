@@ -36,19 +36,12 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
- * This listener can be used as a wrapper around "real" listeners to
- * support the reloading class loader.
- *
+ * This listener can be used as a wrapper around "real" listeners to support the reloading class loader.
+ * 
  * @version $Id$
  */
-public class ReloadingListener
-    implements HttpSessionListener,
-               ServletContextListener,
-               HttpSessionActivationListener,
-               HttpSessionAttributeListener,
-               HttpSessionBindingListener,
-               ServletContextAttributeListener,
-               ServletRequestListener {
+public class ReloadingListener implements HttpSessionListener, ServletContextListener, HttpSessionActivationListener,
+HttpSessionAttributeListener, HttpSessionBindingListener, ServletContextAttributeListener, ServletRequestListener {
 
     private static final String SERVLET_CONTEXT_CREATED = "CLC";
 
@@ -98,102 +91,46 @@ public class ReloadingListener
 
     protected ServletContext context;
 
-    protected void init(ServletContext context) {
-        this.context = context;
-        // Create the listeners
-        final ClassLoader old = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.context));
-            final String listenersConfig = context.getInitParameter(ReloadingListener.class.getName());
-            if ( listenersConfig != null ) {
-                final StringTokenizer st = new StringTokenizer(listenersConfig, " \t\r\n\f;,", false);
-                while ( st.hasMoreTokens() ) {
-                    final String className = st.nextToken();
-                    try {
-                        ClassLoader cl = ReloadingClassloaderManager.getClassLoader(this.context);
-                        Class listenerClass = cl.loadClass(className);
-                        final Object listener = listenerClass.newInstance();
-                        if ( listener instanceof HttpSessionListener ) {
-                            this.httpSessionListeners.add(listener);
-                        }
-                        if ( listener instanceof ServletContextListener ) {
-                            this.servletContextListeners.add(listener);
-                        }
-                        if ( listener instanceof HttpSessionActivationListener ) {
-                            this.httpSessionActivationListeners.add(listener);
-                        }
-                        if ( listener instanceof HttpSessionAttributeListener ) {
-                            this.httpSessionAttributeListeners.add(listener);
-                        }
-                        if ( listener instanceof HttpSessionBindingListener ) {
-                            this.httpSessionBindingListeners.add(listener);
-                        }
-                        if ( listener instanceof ServletContextAttributeListener ) {
-                            this.servletContextAttributeListeners.add(listener);
-                        }
-                        if ( listener instanceof ServletRequestListener ) {
-                            this.servletRequestListeners.add(listener);
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException("Cannot load listener " + className, e);
-                    }
-                }
-            }
-        } finally {
-            Thread.currentThread().setContextClassLoader(old);
-        }
+    /**
+     * @see javax.servlet.http.HttpSessionAttributeListener#attributeAdded(javax.servlet.http.HttpSessionBindingEvent)
+     */
+    public void attributeAdded(HttpSessionBindingEvent event) {
+        this.invoke(this.httpSessionAttributeListeners, ReloadingListener.ATTR_ADDED, event);
     }
 
-    protected void invoke(List listeners, String identifier, Object event) {
-        if ( ReloadingClassloaderManager.getClassLoader(this.context) != null ) {
-            final ClassLoader old = Thread.currentThread().getContextClassLoader();
-            try {
-                Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.context));
-                final Iterator i = listeners.iterator();
-                while ( i.hasNext() ) {
-                    final Object listener = i.next();
-                    try {
-                        if ( ReloadingListener.SERVLET_CONTEXT_CREATED.equals(identifier) ) {
-                            ((ServletContextListener)listener).contextInitialized((ServletContextEvent)event);
-                        } else if ( ReloadingListener.SERVLET_CONTEXT_DESTROYED.equals(identifier) ) {
-                            ((ServletContextListener)listener).contextDestroyed((ServletContextEvent)event);
-                        } else if ( ReloadingListener.SESSION_CREATED.equals(identifier) ) {
-                            ((HttpSessionListener)listener).sessionCreated((HttpSessionEvent)event);
-                        } else if ( ReloadingListener.SESSION_DESTROYED.equals(identifier) ) {
-                            ((HttpSessionListener)listener).sessionDestroyed((HttpSessionEvent)event);
-                        } else if ( ReloadingListener.VALUE_BOUND.equals(identifier) ) {
-                            ((HttpSessionBindingListener)listener).valueBound((HttpSessionBindingEvent)event);
-                        } else if ( ReloadingListener.VALUE_UNBOUND.equals(identifier) ) {
-                            ((HttpSessionBindingListener)listener).valueUnbound((HttpSessionBindingEvent)event);
-                        } else if ( ReloadingListener.ATTR_ADDED.equals(identifier) ) {
-                            ((HttpSessionAttributeListener)listener).attributeAdded((HttpSessionBindingEvent)event);
-                        } else if ( ReloadingListener.ATTR_REMOVED.equals(identifier) ) {
-                            ((HttpSessionAttributeListener)listener).attributeRemoved((HttpSessionBindingEvent)event);
-                        } else if ( ReloadingListener.ATTR_REPLACED.equals(identifier) ) {
-                            ((HttpSessionAttributeListener)listener).attributeReplaced((HttpSessionBindingEvent)event);
-                        } else if ( ReloadingListener.CONTEXT_ATTR_ADDED.equals(identifier) ) {
-                            ((ServletContextAttributeListener)listener).attributeAdded((ServletContextAttributeEvent)event);
-                        } else if ( ReloadingListener.CONTEXT_ATTR_REMOVED.equals(identifier) ) {
-                            ((ServletContextAttributeListener)listener).attributeRemoved((ServletContextAttributeEvent)event);
-                        } else if ( ReloadingListener.CONTEXT_ATTR_REPLACED.equals(identifier) ) {
-                            ((ServletContextAttributeListener)listener).attributeReplaced((ServletContextAttributeEvent)event);
-                        } else if ( ReloadingListener.SESSION_ACTIVATED.equals(identifier) ) {
-                            ((HttpSessionActivationListener)listener).sessionDidActivate((HttpSessionEvent)event);
-                        } else if ( ReloadingListener.SESSION_PASSIVATE.equals(identifier) ) {
-                            ((HttpSessionActivationListener)listener).sessionWillPassivate((HttpSessionEvent)event);
-                        } else if ( ReloadingListener.REQUEST_DESTROYED.equals(identifier) ) {
-                            ((ServletRequestListener)listener).requestDestroyed((ServletRequestEvent)event);
-                        } else if ( ReloadingListener.REQUEST_INITIALIZED.equals(identifier) ) {
-                            ((ServletRequestListener)listener).requestInitialized((ServletRequestEvent)event);
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException("Cannot invoke listener " + listener, e);
-                    }
-                }
-            } finally {
-                Thread.currentThread().setContextClassLoader(old);
-            }
-        }
+    /**
+     * @see javax.servlet.ServletContextAttributeListener#attributeAdded(javax.servlet.ServletContextAttributeEvent)
+     */
+    public void attributeAdded(ServletContextAttributeEvent event) {
+        this.invoke(this.servletContextAttributeListeners, ReloadingListener.CONTEXT_ATTR_ADDED, event);
+    }
+
+    /**
+     * @see javax.servlet.http.HttpSessionAttributeListener#attributeRemoved(javax.servlet.http.HttpSessionBindingEvent)
+     */
+    public void attributeRemoved(HttpSessionBindingEvent event) {
+        this.invoke(this.httpSessionAttributeListeners, ReloadingListener.ATTR_REMOVED, event);
+    }
+
+    /**
+     * @see javax.servlet.ServletContextAttributeListener#attributeRemoved(javax.servlet.ServletContextAttributeEvent)
+     */
+    public void attributeRemoved(ServletContextAttributeEvent event) {
+        this.invoke(this.servletContextAttributeListeners, ReloadingListener.CONTEXT_ATTR_REMOVED, event);
+    }
+
+    /**
+     * @see javax.servlet.http.HttpSessionAttributeListener#attributeReplaced(javax.servlet.http.HttpSessionBindingEvent)
+     */
+    public void attributeReplaced(HttpSessionBindingEvent event) {
+        this.invoke(this.httpSessionAttributeListeners, ReloadingListener.ATTR_REPLACED, event);
+    }
+
+    /**
+     * @see javax.servlet.ServletContextAttributeListener#attributeReplaced(javax.servlet.ServletContextAttributeEvent)
+     */
+    public void attributeReplaced(ServletContextAttributeEvent event) {
+        this.invoke(this.servletContextAttributeListeners, ReloadingListener.CONTEXT_ATTR_REPLACED, event);
     }
 
     /**
@@ -214,6 +151,20 @@ public class ReloadingListener
     }
 
     /**
+     * @see javax.servlet.ServletRequestListener#requestDestroyed(javax.servlet.ServletRequestEvent)
+     */
+    public void requestDestroyed(ServletRequestEvent event) {
+        this.invoke(this.servletRequestListeners, ReloadingListener.REQUEST_DESTROYED, event);
+    }
+
+    /**
+     * @see javax.servlet.ServletRequestListener#requestInitialized(javax.servlet.ServletRequestEvent)
+     */
+    public void requestInitialized(ServletRequestEvent event) {
+        this.invoke(this.servletRequestListeners, ReloadingListener.REQUEST_INITIALIZED, event);
+    }
+
+    /**
      * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
      */
     public void sessionCreated(HttpSessionEvent event) {
@@ -225,41 +176,6 @@ public class ReloadingListener
      */
     public void sessionDestroyed(HttpSessionEvent event) {
         this.invoke(this.httpSessionListeners, ReloadingListener.SESSION_DESTROYED, event);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
-     */
-    public void valueBound(HttpSessionBindingEvent event) {
-        this.invoke(this.httpSessionBindingListeners, ReloadingListener.VALUE_BOUND, event);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
-     */
-    public void valueUnbound(HttpSessionBindingEvent event) {
-        this.invoke(this.httpSessionBindingListeners, ReloadingListener.VALUE_UNBOUND, event);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpSessionAttributeListener#attributeAdded(javax.servlet.http.HttpSessionBindingEvent)
-     */
-    public void attributeAdded(HttpSessionBindingEvent event) {
-        this.invoke(this.httpSessionAttributeListeners, ReloadingListener.ATTR_ADDED, event);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpSessionAttributeListener#attributeRemoved(javax.servlet.http.HttpSessionBindingEvent)
-     */
-    public void attributeRemoved(HttpSessionBindingEvent event) {
-        this.invoke(this.httpSessionAttributeListeners, ReloadingListener.ATTR_REMOVED, event);
-    }
-
-    /**
-     * @see javax.servlet.http.HttpSessionAttributeListener#attributeReplaced(javax.servlet.http.HttpSessionBindingEvent)
-     */
-    public void attributeReplaced(HttpSessionBindingEvent event) {
-        this.invoke(this.httpSessionAttributeListeners, ReloadingListener.ATTR_REPLACED, event);
     }
 
     /**
@@ -277,37 +193,114 @@ public class ReloadingListener
     }
 
     /**
-     * @see javax.servlet.ServletContextAttributeListener#attributeAdded(javax.servlet.ServletContextAttributeEvent)
+     * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
      */
-    public void attributeAdded(ServletContextAttributeEvent event) {
-        this.invoke(this.servletContextAttributeListeners, ReloadingListener.CONTEXT_ATTR_ADDED, event);
+    public void valueBound(HttpSessionBindingEvent event) {
+        this.invoke(this.httpSessionBindingListeners, ReloadingListener.VALUE_BOUND, event);
     }
 
     /**
-     * @see javax.servlet.ServletContextAttributeListener#attributeRemoved(javax.servlet.ServletContextAttributeEvent)
+     * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
      */
-    public void attributeRemoved(ServletContextAttributeEvent event) {
-        this.invoke(this.servletContextAttributeListeners, ReloadingListener.CONTEXT_ATTR_REMOVED, event);
+    public void valueUnbound(HttpSessionBindingEvent event) {
+        this.invoke(this.httpSessionBindingListeners, ReloadingListener.VALUE_UNBOUND, event);
     }
 
-    /**
-     * @see javax.servlet.ServletContextAttributeListener#attributeReplaced(javax.servlet.ServletContextAttributeEvent)
-     */
-    public void attributeReplaced(ServletContextAttributeEvent event) {
-        this.invoke(this.servletContextAttributeListeners, ReloadingListener.CONTEXT_ATTR_REPLACED, event);
+    protected void init(ServletContext context) {
+        this.context = context;
+        // Create the listeners
+        final ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.context));
+            final String listenersConfig = context.getInitParameter(ReloadingListener.class.getName());
+            if (listenersConfig != null) {
+                final StringTokenizer st = new StringTokenizer(listenersConfig, " \t\r\n\f;,", false);
+                while (st.hasMoreTokens()) {
+                    final String className = st.nextToken();
+                    try {
+                        ClassLoader cl = ReloadingClassloaderManager.getClassLoader(this.context);
+                        Class listenerClass = cl.loadClass(className);
+                        final Object listener = listenerClass.newInstance();
+                        if (listener instanceof HttpSessionListener) {
+                            this.httpSessionListeners.add(listener);
+                        }
+                        if (listener instanceof ServletContextListener) {
+                            this.servletContextListeners.add(listener);
+                        }
+                        if (listener instanceof HttpSessionActivationListener) {
+                            this.httpSessionActivationListeners.add(listener);
+                        }
+                        if (listener instanceof HttpSessionAttributeListener) {
+                            this.httpSessionAttributeListeners.add(listener);
+                        }
+                        if (listener instanceof HttpSessionBindingListener) {
+                            this.httpSessionBindingListeners.add(listener);
+                        }
+                        if (listener instanceof ServletContextAttributeListener) {
+                            this.servletContextAttributeListeners.add(listener);
+                        }
+                        if (listener instanceof ServletRequestListener) {
+                            this.servletRequestListeners.add(listener);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException("Cannot load listener " + className, e);
+                    }
+                }
+            }
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
     }
 
-    /**
-     * @see javax.servlet.ServletRequestListener#requestDestroyed(javax.servlet.ServletRequestEvent)
-     */
-    public void requestDestroyed(ServletRequestEvent event) {
-        this.invoke(this.servletRequestListeners, ReloadingListener.REQUEST_DESTROYED, event);
-    }
-
-    /**
-     * @see javax.servlet.ServletRequestListener#requestInitialized(javax.servlet.ServletRequestEvent)
-     */
-    public void requestInitialized(ServletRequestEvent event) {
-        this.invoke(this.servletRequestListeners, ReloadingListener.REQUEST_INITIALIZED, event);
+    protected void invoke(List listeners, String identifier, Object event) {
+        if (ReloadingClassloaderManager.getClassLoader(this.context) != null) {
+            final ClassLoader old = Thread.currentThread().getContextClassLoader();
+            try {
+                Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.context));
+                final Iterator i = listeners.iterator();
+                while (i.hasNext()) {
+                    final Object listener = i.next();
+                    try {
+                        if (ReloadingListener.SERVLET_CONTEXT_CREATED.equals(identifier)) {
+                            ((ServletContextListener) listener).contextInitialized((ServletContextEvent) event);
+                        } else if (ReloadingListener.SERVLET_CONTEXT_DESTROYED.equals(identifier)) {
+                            ((ServletContextListener) listener).contextDestroyed((ServletContextEvent) event);
+                        } else if (ReloadingListener.SESSION_CREATED.equals(identifier)) {
+                            ((HttpSessionListener) listener).sessionCreated((HttpSessionEvent) event);
+                        } else if (ReloadingListener.SESSION_DESTROYED.equals(identifier)) {
+                            ((HttpSessionListener) listener).sessionDestroyed((HttpSessionEvent) event);
+                        } else if (ReloadingListener.VALUE_BOUND.equals(identifier)) {
+                            ((HttpSessionBindingListener) listener).valueBound((HttpSessionBindingEvent) event);
+                        } else if (ReloadingListener.VALUE_UNBOUND.equals(identifier)) {
+                            ((HttpSessionBindingListener) listener).valueUnbound((HttpSessionBindingEvent) event);
+                        } else if (ReloadingListener.ATTR_ADDED.equals(identifier)) {
+                            ((HttpSessionAttributeListener) listener).attributeAdded((HttpSessionBindingEvent) event);
+                        } else if (ReloadingListener.ATTR_REMOVED.equals(identifier)) {
+                            ((HttpSessionAttributeListener) listener).attributeRemoved((HttpSessionBindingEvent) event);
+                        } else if (ReloadingListener.ATTR_REPLACED.equals(identifier)) {
+                            ((HttpSessionAttributeListener) listener).attributeReplaced((HttpSessionBindingEvent) event);
+                        } else if (ReloadingListener.CONTEXT_ATTR_ADDED.equals(identifier)) {
+                            ((ServletContextAttributeListener) listener).attributeAdded((ServletContextAttributeEvent) event);
+                        } else if (ReloadingListener.CONTEXT_ATTR_REMOVED.equals(identifier)) {
+                            ((ServletContextAttributeListener) listener).attributeRemoved((ServletContextAttributeEvent) event);
+                        } else if (ReloadingListener.CONTEXT_ATTR_REPLACED.equals(identifier)) {
+                            ((ServletContextAttributeListener) listener).attributeReplaced((ServletContextAttributeEvent) event);
+                        } else if (ReloadingListener.SESSION_ACTIVATED.equals(identifier)) {
+                            ((HttpSessionActivationListener) listener).sessionDidActivate((HttpSessionEvent) event);
+                        } else if (ReloadingListener.SESSION_PASSIVATE.equals(identifier)) {
+                            ((HttpSessionActivationListener) listener).sessionWillPassivate((HttpSessionEvent) event);
+                        } else if (ReloadingListener.REQUEST_DESTROYED.equals(identifier)) {
+                            ((ServletRequestListener) listener).requestDestroyed((ServletRequestEvent) event);
+                        } else if (ReloadingListener.REQUEST_INITIALIZED.equals(identifier)) {
+                            ((ServletRequestListener) listener).requestInitialized((ServletRequestEvent) event);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException("Cannot invoke listener " + listener, e);
+                    }
+                }
+            } finally {
+                Thread.currentThread().setContextClassLoader(old);
+            }
+        }
     }
 }

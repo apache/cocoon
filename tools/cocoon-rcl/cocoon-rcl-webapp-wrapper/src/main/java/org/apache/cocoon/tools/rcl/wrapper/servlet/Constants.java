@@ -27,5 +27,4 @@ public interface Constants {
     String RELOADING_SPRING_ENABLED = "reloading.spring.enabled";
 
     String RELOADING_CLASSLOADER_ENABLED = "reloading.classloader.enabled";
-
 }

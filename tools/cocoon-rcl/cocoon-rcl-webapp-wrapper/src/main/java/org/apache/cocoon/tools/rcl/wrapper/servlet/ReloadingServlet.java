@@ -26,26 +26,48 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 
 /**
- * This servlet builds a classloading sandbox and runs another servlet inside
- * that sandbox. The purpose is to use the reloading classloader to load the
- *
+ * This servlet builds a classloading sandbox and runs another servlet inside that sandbox. The purpose is to use the
+ * reloading classloader.
+ * 
  * <p>
- * This servlet propagates all initialisation parameters to the sandboxed
- * servlet, and requires the parameter <code>servlet-class</code>.
+ * This servlet propagates all initialisation parameters to the sandboxed servlet, and requires the parameter
+ * <code>servlet-class</code>.
  * <ul>
  * <li><code>servlet-class</code> defines the sandboxed servlet class.</li>
  * </ul>
- *
+ * 
  * @version $Id$
  */
 public class ReloadingServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
 
     protected Servlet servlet;
     protected ServletConfig config;
 
     /**
+     * Destroy the actual servlet
+     */
+    @Override
+    public void destroy() {
+        if (this.servlet != null) {
+            final ClassLoader old = Thread.currentThread().getContextClassLoader();
+
+            try {
+                Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.config.getServletContext()));
+                this.servlet.destroy();
+            } finally {
+                Thread.currentThread().setContextClassLoader(old);
+            }
+        }
+
+        super.destroy();
+    }
+
+    /**
      * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
      */
+    @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         this.config = config;
@@ -82,12 +104,14 @@ public class ReloadingServlet extends HttpServlet {
     /**
      * Service the request by delegating the call to the real servlet
      */
+    @Override
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
         final ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.config.getServletContext()));
 
             CocoonReloadingListener.enableConsoleOutput();
+
             this.servlet.service(request, response);
         } catch(Throwable t) {
             t.printStackTrace();
@@ -95,21 +119,5 @@ public class ReloadingServlet extends HttpServlet {
         finally {
             Thread.currentThread().setContextClassLoader(old);
         }
-    }
-
-    /**
-     * Destroy the actual servlet
-     */
-    public void destroy() {
-        if (this.servlet != null) {
-            final ClassLoader old = Thread.currentThread().getContextClassLoader();
-            try {
-                Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.config.getServletContext()));
-                this.servlet.destroy();
-            } finally {
-                Thread.currentThread().setContextClassLoader(old);
-            }
-        }
-        super.destroy();
     }
 }
