@@ -38,6 +38,21 @@ public class ReloadingServletFilter implements Filter {
     protected ServletContext context;
 
     /**
+     * @see javax.servlet.Filter#destroy()
+     */
+    public void destroy() {
+        if (this.filter != null) {
+            final ClassLoader old = Thread.currentThread().getContextClassLoader();
+            try {
+                Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.context));
+                this.filter.destroy();
+            } finally {
+                Thread.currentThread().setContextClassLoader(old);
+            }
+        }
+    }
+
+    /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -67,7 +82,6 @@ public class ReloadingServletFilter implements Filter {
 
         // Create the filter
         try {
-
             Class filterClass = ReloadingClassloaderManager.getClassLoader(this.context).loadClass(filterName);
             this.filter = (Filter) filterClass.newInstance();
 
@@ -83,21 +97,6 @@ public class ReloadingServletFilter implements Filter {
             this.filter.init(config);
         } finally {
             Thread.currentThread().setContextClassLoader(old);
-        }
-    }
-
-    /**
-     * @see javax.servlet.Filter#destroy()
-     */
-    public void destroy() {
-        if (this.filter != null) {
-            final ClassLoader old = Thread.currentThread().getContextClassLoader();
-            try {
-                Thread.currentThread().setContextClassLoader(ReloadingClassloaderManager.getClassLoader(this.context));
-                this.filter.destroy();
-            } finally {
-                Thread.currentThread().setContextClassLoader(old);
-            }
         }
     }
 }

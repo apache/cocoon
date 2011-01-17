@@ -45,19 +45,23 @@ public class ReloadingSpringFilter implements Filter {
 
     private FilterConfig config;
 
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException,
-            ServletException {
+    public void destroy() {
+        // do nothing
+    }
 
-        if(isReloadingEnabled() && CocoonReloadingListener.isReload()) {
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException,
+    ServletException {
+
+        if(this.isReloadingEnabled() && CocoonReloadingListener.isReload()) {
             synchronized (this) {
-                log.info("Performing a reload of the Spring application context.");
+                this.log.info("Performing a reload of the Spring application context.");
                 // load the spring context loader from the reloading classloader
-                ClassLoader cl = ReloadingClassloaderManager.getClassLoader(config.getServletContext());
+                ClassLoader cl = ReloadingClassloaderManager.getClassLoader(this.config.getServletContext());
                 Object reloader = null;
                 try {
                     reloader = cl.loadClass("org.apache.cocoon.tools.rcl.springreloader.SpringReloader").newInstance();
                     Method reloadMethod = reloader.getClass().getMethod("reload", new Class[]{ServletContext.class} );
-                    reloadMethod.invoke(reloader, new Object[]{config.getServletContext()});
+                    reloadMethod.invoke(reloader, new Object[]{this.config.getServletContext()});
                 } catch (Exception e) {
                     throw new ServletException("Can't use SpringReloader.", e);
                 }
@@ -65,9 +69,6 @@ public class ReloadingSpringFilter implements Filter {
         }
         // continue processing the request
         filterChain.doFilter(req, res);
-    }
-
-    public void destroy() {
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -80,5 +81,4 @@ public class ReloadingSpringFilter implements Filter {
         String reloadingEnabled = rclProps.getProperty(Constants.RELOADING_SPRING_ENABLED, "true");
         return reloadingEnabled.trim().toLowerCase().equals("true");
     }
-
 }

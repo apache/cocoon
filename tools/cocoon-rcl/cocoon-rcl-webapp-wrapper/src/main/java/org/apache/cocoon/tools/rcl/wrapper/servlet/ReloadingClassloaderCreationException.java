@@ -17,7 +17,9 @@
 package org.apache.cocoon.tools.rcl.wrapper.servlet;
 
 public class ReloadingClassloaderCreationException extends RuntimeException {
-    
+
+    private static final long serialVersionUID = 1L;
+
     public ReloadingClassloaderCreationException(String msg) {
         super(msg);
     }
@@ -25,5 +27,4 @@ public class ReloadingClassloaderCreationException extends RuntimeException {
     public ReloadingClassloaderCreationException(String msg, Exception e) {
         super(msg, e);
     }
-
 }
