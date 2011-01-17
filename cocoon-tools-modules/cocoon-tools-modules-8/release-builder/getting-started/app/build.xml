@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements. See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership. The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License. You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<project default="run">
+
+  <property name="lib.dir" value="./lib" />
+
+  <!-- Build all blocks here -->
+  <target name="build-blocks">
+    <build-block block.name="custom-block" />
+  </target>
+
+  <!-- Build a Cocoon based web application that uses the blocks from above here -->
+  <target name="webapp" depends="build-blocks">
+    <property name="src.webapp.dir" value="./webapp" />
+    <property name="target.dir" value="./target" />
+    <property name="target.webapp.dir" value="${target.dir}/webapp" />
+    <property name="target.webapp.web-inf.lib.dir" value="${target.webapp.dir}/WEB-INF/lib" />
+
+    <mkdir dir="${target.webapp.dir}" />
+
+    <!-- Copy all configuration files for a Java web application to the target directory -->
+    <copy todir="${target.webapp.dir}">
+      <fileset dir="${src.webapp.dir}/src/main/webapp" />
+    </copy>
+
+    <mkdir dir="${target.webapp.web-inf.lib.dir}" />
+    <copy todir="${target.webapp.web-inf.lib.dir}">
+      <fileset dir="${lib.dir}" />
+      <!-- That's definitly a hack: copy all block JAR files into the WEB-INF/lib directory -->
+      <fileset dir="custom-block/target">
+        <include name="*.jar" />
+      </fileset>
+    </copy>
+
+  </target>
+
+  <macrodef name="build-block">
+    <attribute name="block.name" />
+    <sequential>
+      <property name="block.dir" value="@{block.name}" />
+      <property name="block.src.main.java" value="${block.dir}/src/main/java" />
+      <property name="block.src.main.resources" value="${block.dir}/src/main/resources" />
+      <property name="block.target.dir" value="${block.dir}/target" />
+      <property name="block.target.classes.dir" value="${block.target.dir}/classes" />
+
+      <!-- Create the classpath to compile a block -->
+      <path id="classpath">
+        <pathelement path="${classpath}" />
+        <fileset dir="${lib.dir}">
+          <include name="*.jar" />
+        </fileset>
+      </path>
+
+      <!-- Compile the block -->
+      <mkdir dir="${block.target.classes.dir}" />
+      <javac srcdir="${block.src.main.java}" destdir="${block.target.classes.dir}" classpathref="classpath" />
+
+      <!-- Package the block and set the block name as attribute to the manifest file -->
+      <jar destfile="${block.target.dir}/@{block.name}.jar">
+        <fileset dir="${block.target.classes.dir}" />
+        <fileset dir="${block.src.main.resources}" />
+        <manifest>
+          <attribute name="Cocoon-Block-Name" value="@{block.name}" />
+        </manifest>
+      </jar>
+    </sequential>
+  </macrodef>
+
+  <!-- Use Jetty to run the web application -->
+  <target name="run" depends="webapp">
+    <property name="jetty.home" value="../jetty" />
+    <java jar="${jetty.home}/jetty-start-6.1.7.jar" fork="true" dir="${jetty.home}">
+      <jvmarg value="-Dfile.encoding=UTF-8" />
+      <arg value="${jetty.home}/getting-started.xml" />
+    </java>
+  </target>
+
+</project>
