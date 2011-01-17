@@ -75,9 +75,9 @@ import org.xml.sax.SAXException;
  */
 public class PrepareWebappMojo extends AbstractMojo {
 
-    private static final String LIB_VERSION_WRAPPER = "1.0.0";
+    private static final String LIB_VERSION_WRAPPER = "1.0.1-SNAPSHOT";
 
-    private static final String LIB_VERSION_SPRING_RELOADER = "1.0.0";
+    private static final String LIB_VERSION_SPRING_RELOADER = "1.0.1-SNAPSHOT";
 
     private static final String WEB_INF_WEB_XML = "WEB-INF/web.xml";
 

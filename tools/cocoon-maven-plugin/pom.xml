@@ -26,7 +26,7 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>8</version>
+    <version>5-SNAPSHOT</version>
   </parent>
   <artifactId>cocoon-maven-plugin</artifactId>
   <version>1.0.1-SNAPSHOT</version>
