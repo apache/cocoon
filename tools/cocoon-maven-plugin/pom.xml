@@ -21,14 +21,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
+  <packaging>maven-plugin</packaging>
+
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>5-SNAPSHOT</version>
+    <version>8</version>
   </parent>
   <artifactId>cocoon-maven-plugin</artifactId>
   <version>1.0.0-RC1-SNAPSHOT</version>
-  <packaging>maven-plugin</packaging>
   <name>Cocoon Maven 2 Plugin</name>
 
   <dependencies>
