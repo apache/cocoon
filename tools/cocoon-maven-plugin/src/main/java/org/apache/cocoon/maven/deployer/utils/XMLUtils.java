@@ -50,6 +50,53 @@ import org.xml.sax.SAXException;
  */
 public class XMLUtils {
 
+    public static Element getChildNode(Element parent, String nodeName) {
+        final List children = getChildNodes(parent, nodeName);
+        if (children.size() > 0) {
+            return (Element) children.get(0);
+        }
+
+        return null;
+    }
+
+    public static List getChildNodes(Element parent, String nodeName) {
+        final List nodes = new ArrayList();
+
+        if (parent != null && nodeName != null) {
+            final NodeList children = parent.getChildNodes();
+            if (children != null) {
+                for (int i = 0; i < children.getLength(); i++) {
+                    if (nodeName.equals(children.item(i).getLocalName())) {
+                        nodes.add(children.item(i));
+                    }
+                }
+            }
+        }
+
+        return nodes;
+    }
+
+    public static String getValue(Element node) {
+        if (node != null) {
+            if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+                return node.getNodeValue();
+            }
+
+            node.normalize();
+            NodeList childs = node.getChildNodes();
+            int i = 0;
+            int length = childs.getLength();
+            while (i < length) {
+                if (childs.item(i).getNodeType() == Node.TEXT_NODE) {
+                    return childs.item(i).getNodeValue().trim();
+                }
+
+                i++;
+            }
+        }
+        return null;
+    }
+
     public static Document parseXml(File file) throws IOException, SAXException {
         InputStream is = null;
         try {
@@ -64,7 +111,6 @@ public class XMLUtils {
                 }
             }
         }
-
     }
 
     public static Document parseXml(InputStream source) throws IOException, SAXException {
@@ -77,9 +123,9 @@ public class XMLUtils {
             // allows to deploy the application offline
             docBuilder.setEntityResolver(new EntityResolver() {
                 public InputSource resolveEntity(String publicId, String systemId) throws SAXException,
-                        java.io.IOException {
+                java.io.IOException {
                     if (systemId.equals("http://java.sun.com/dtd/web-app_2_3.dtd")) {
-                        return new InputSource(getClass().getResourceAsStream("web-app_2_3.dtd"));
+                        return new InputSource(this.getClass().getResourceAsStream("web-app_2_3.dtd"));
                     }
                     return null;
                 }
@@ -91,70 +137,6 @@ public class XMLUtils {
         }
     }
 
-    public static void write(Document node, OutputStream out) throws TransformerFactoryConfigurationError, TransformerException {
-        final Properties format = new Properties();
-        format.put(OutputKeys.METHOD, "xml");
-        format.put(OutputKeys.OMIT_XML_DECLARATION, "no");
-        format.put(OutputKeys.INDENT, "yes");
-        if (node.getDoctype() != null) {
-            if (node.getDoctype().getPublicId() != null) {
-                format.put(OutputKeys.DOCTYPE_PUBLIC, node.getDoctype().getPublicId());
-            }
-            if (node.getDoctype().getSystemId() != null) {
-                format.put(OutputKeys.DOCTYPE_SYSTEM, node.getDoctype().getSystemId());
-            }
-        }
-        Transformer transformer;
-        transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.setOutputProperties(format);
-        transformer.transform(new DOMSource(node), new StreamResult(out));
-    }
-
-    public static List getChildNodes(Element parent, String nodeName) {
-        final List nodes = new ArrayList();
-        if (parent != null && nodeName != null) {
-            final NodeList children = parent.getChildNodes();
-            if (children != null) {
-                for (int i = 0; i < children.getLength(); i++) {
-                    if (nodeName.equals(children.item(i).getLocalName())) {
-                        nodes.add(children.item(i));
-                    }
-                }
-            }
-        }
-        return nodes;
-    }
-
-    public static Element getChildNode(Element parent, String nodeName) {
-        final List children = getChildNodes(parent, nodeName);
-        if (children.size() > 0) {
-            return (Element) children.get(0);
-        }
-
-        return null;
-    }
-
-    public static String getValue(Element node) {
-        if (node != null) {
-            if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-                return node.getNodeValue();
-            } else {
-                node.normalize();
-                NodeList childs = node.getChildNodes();
-                int i = 0;
-                int length = childs.getLength();
-                while (i < length) {
-                    if (childs.item(i).getNodeType() == Node.TEXT_NODE) {
-                        return childs.item(i).getNodeValue().trim();
-                    } else {
-                        i++;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
     public static void setValue(Element node, String value) {
         if (node != null) {
             // remove all children
@@ -163,5 +145,26 @@ public class XMLUtils {
             }
             node.appendChild(node.getOwnerDocument().createTextNode(value));
         }
+    }
+
+    public static void write(Document node, OutputStream out) throws TransformerFactoryConfigurationError, TransformerException {
+        final Properties format = new Properties();
+        format.put(OutputKeys.METHOD, "xml");
+        format.put(OutputKeys.OMIT_XML_DECLARATION, "no");
+        format.put(OutputKeys.INDENT, "yes");
+
+        if (node.getDoctype() != null) {
+            if (node.getDoctype().getPublicId() != null) {
+                format.put(OutputKeys.DOCTYPE_PUBLIC, node.getDoctype().getPublicId());
+            }
+            if (node.getDoctype().getSystemId() != null) {
+                format.put(OutputKeys.DOCTYPE_SYSTEM, node.getDoctype().getSystemId());
+            }
+        }
+
+        Transformer transformer;
+        transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperties(format);
+        transformer.transform(new DOMSource(node), new StreamResult(out));
     }
 }
