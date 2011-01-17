@@ -32,100 +32,16 @@ public class RwmProperties {
 
     private static final String COB_INF_DIR = "src/main/resources/COB-INF";
     private static final String BLOCK_CONTEXT_URL_PARAM = "/contextPath";
-    private static final String CLASSES_DIR = "%classes-dir"; 
-    private static final String EXCLUDE_LIB = "%exclude-lib"; 
+    private static final String CLASSES_DIR = "%classes-dir";
+    private static final String EXCLUDE_LIB = "%exclude-lib";
     private static final String TARGET_CLASSES_DIR = "target/classes";
-    
+
     private Configuration props;
     private File basedir;
-    
+
     public RwmProperties(File propsFile, File basedir) throws ConfigurationException {
         this.props = new PropertiesConfiguration(propsFile);
         this.basedir = basedir;
-    }
-    
-    public Set getClassesDirs() throws MojoExecutionException {
-        Set returnSet = new HashSet();
-        for (Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
-            String key = (String) rclIt.next();
-            if (key.endsWith(CLASSES_DIR)) {
-                String[] values = this.props.getStringArray(key);
-                for (int i = 0; i < values.length; i++) {
-                    String path = values[i];
-                    String url = null;
-                    try {
-                        url = getUrlAsString(path);
-                    } catch (MalformedURLException e) {
-                        throw new MojoExecutionException("Can't create URL to  " + path, e);
-                    }
-                    returnSet.add(url);
-                }
-            }
-        }        
-        return returnSet;
-    }
-    
-    public Set getExcludedLibProps() throws MojoExecutionException {
-        Set returnSet = new HashSet();
-        for (Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
-            String key = (String) rclIt.next();
-            if (key.endsWith(EXCLUDE_LIB)) {
-                String[] values = this.props.getStringArray(key);
-                for (int i = 0; i < values.length; i++) {
-                    returnSet.add(values[i]);
-                }
-            }
-        }        
-        return returnSet;
-    }    
-    
-    public Properties getSpringProperties() throws MojoExecutionException {
-        Properties springProps = new Properties();
-        for(Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
-            String key = (String) rclIt.next();
-            
-            // a [block-id]/COB-INF property was set explicitly
-            if(key.endsWith(BLOCK_CONTEXT_URL_PARAM)) {
-                String path = null;
-                try {
-                    path = this.getUrlAsString(this.props.getString(key));
-                } catch (MalformedURLException e) {
-                    throw new MojoExecutionException("Can't create URL to  " + path, e);
-                }            
-                springProps.put(key, path);
-            }
-            
-            // a %CLASSES_DIR property --> generate a */COB-INF property out of it
-            else if(key.endsWith(CLASSES_DIR) && !CLASSES_DIR.equals(key)) {
-                String path = null;
-                try {
-                    path = this.getUrlAsString(this.props.getString(key));
-                } catch (MalformedURLException e) {
-                    throw new MojoExecutionException("Can't create URL to  " + this.props.getString(key), e);
-                }  
-                
-                if(path.endsWith(TARGET_CLASSES_DIR)) {
-                    path = path + "/";
-                }
-                
-                if(!path.endsWith(TARGET_CLASSES_DIR + "/")) {
-                    throw new MojoExecutionException("A */" + CLASSES_DIR + 
-                            " property can only point to a directory that ends with " + TARGET_CLASSES_DIR + ".");
-                }
-                
-                path = calcRootDir(path);
-                
-                String newKey = key.substring(0, key.length() - CLASSES_DIR.length()) + BLOCK_CONTEXT_URL_PARAM;                
-                springProps.put(newKey, path + COB_INF_DIR);
-            }
-            
-            // copy all other properties
-            else if(!key.endsWith(CLASSES_DIR) && key.indexOf('/') > -1) {
-                springProps.put(key, this.props.getString(key));
-            }
-            
-        } 
-        return springProps;
     }
 
     public static String calcRootDir(String path) {
@@ -135,11 +51,34 @@ public class RwmProperties {
         }
         path = path.substring(0, path.length() - "target/classes".length());
         return path;
-    }    
+    }
+
+    public Set getClassesDirs() throws MojoExecutionException {
+        Set returnSet = new HashSet();
+
+        for (Iterator rclIt = this.props.getKeys(); rclIt.hasNext();) {
+            String key = (String) rclIt.next();
+            if (key.endsWith(CLASSES_DIR)) {
+                String[] values = this.props.getStringArray(key);
+                for (int i = 0; i < values.length; i++) {
+                    String path = values[i];
+                    String url = null;
+                    try {
+                        url = this.getUrlAsString(path);
+                    } catch (MalformedURLException e) {
+                        throw new MojoExecutionException("Can't create URL to  " + path, e);
+                    }
+                    returnSet.add(url);
+                }
+            }
+        }
+
+        return returnSet;
+    }
 
     public Properties getCocoonProperties() {
         Properties cocoonProps = new Properties();
-        for(Iterator rclIt = props.getKeys(); rclIt.hasNext();) {
+        for(Iterator rclIt = this.props.getKeys(); rclIt.hasNext();) {
             String key = (String) rclIt.next();
             if(key.indexOf(CLASSES_DIR) == -1 &&
                     key.indexOf(EXCLUDE_LIB) == -1 &&
@@ -149,7 +88,70 @@ public class RwmProperties {
         }
         return cocoonProps;
     }
-    
+
+    public Set getExcludedLibProps() throws MojoExecutionException {
+        Set returnSet = new HashSet();
+        for (Iterator rclIt = this.props.getKeys(); rclIt.hasNext();) {
+            String key = (String) rclIt.next();
+            if (key.endsWith(EXCLUDE_LIB)) {
+                String[] values = this.props.getStringArray(key);
+                for (int i = 0; i < values.length; i++) {
+                    returnSet.add(values[i]);
+                }
+            }
+        }
+        return returnSet;
+    }
+
+    public Properties getSpringProperties() throws MojoExecutionException {
+        Properties springProps = new Properties();
+        for(Iterator rclIt = this.props.getKeys(); rclIt.hasNext();) {
+            String key = (String) rclIt.next();
+
+            // a [block-id]/COB-INF property was set explicitly
+            if(key.endsWith(BLOCK_CONTEXT_URL_PARAM)) {
+                String path = null;
+                try {
+                    path = this.getUrlAsString(this.props.getString(key));
+                } catch (MalformedURLException e) {
+                    throw new MojoExecutionException("Can't create URL to  " + path, e);
+                }
+                springProps.put(key, path);
+            }
+
+            // a %CLASSES_DIR property --> generate a */COB-INF property out of it
+            else if(key.endsWith(CLASSES_DIR) && !CLASSES_DIR.equals(key)) {
+                String path = null;
+                try {
+                    path = this.getUrlAsString(this.props.getString(key));
+                } catch (MalformedURLException e) {
+                    throw new MojoExecutionException("Can't create URL to  " + this.props.getString(key), e);
+                }
+
+                if(path.endsWith(TARGET_CLASSES_DIR)) {
+                    path = path + "/";
+                }
+
+                if(!path.endsWith(TARGET_CLASSES_DIR + "/")) {
+                    throw new MojoExecutionException("A */" + CLASSES_DIR +
+                            " property can only point to a directory that ends with " + TARGET_CLASSES_DIR + ".");
+                }
+
+                path = calcRootDir(path);
+
+                String newKey = key.substring(0, key.length() - CLASSES_DIR.length()) + BLOCK_CONTEXT_URL_PARAM;
+                springProps.put(newKey, path + COB_INF_DIR);
+            }
+
+            // copy all other properties
+            else if(!key.endsWith(CLASSES_DIR) && key.indexOf('/') > -1) {
+                springProps.put(key, this.props.getString(key));
+            }
+
+        }
+        return springProps;
+    }
+
     private String getUrlAsString(String path) throws MalformedURLException {
         // find out if the path is relative or absolute
         boolean absolute = false;
@@ -164,5 +166,5 @@ public class RwmProperties {
         }
         return p.toURI().toASCIIString();
     }
-    
-}    
+
+}
