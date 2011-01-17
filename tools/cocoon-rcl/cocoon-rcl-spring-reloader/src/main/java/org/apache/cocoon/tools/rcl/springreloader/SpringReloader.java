@@ -36,5 +36,4 @@ public class SpringReloader {
                 WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
         ac.reload();
     }
-
 }
