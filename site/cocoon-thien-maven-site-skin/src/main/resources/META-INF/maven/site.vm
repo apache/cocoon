@@ -117,7 +117,7 @@
   #if ( $project.getProperties().get("docs.urlRelativizer") == "" || $project.getProperties().get("docs.urlRelativizer") == "./"  )
     <li class="menuVersions">Versions
       <ul>
-        <li><a href="$project.getProperties().get("docs.urlRelativizer")3.0/">Cocoon 3.0 <span class="pl-version-small">[alpha]</span></a></li>
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")3.0/">Cocoon 3.0</a></li>
         <li><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></li>
         <li><a href="$project.getProperties().get("docs.urlRelativizer")2.1/">Cocoon 2.1</a></li>
         <li><a href="$project.getProperties().get("docs.urlRelativizer")2.0/">Cocoon 2.0</a></li>
@@ -256,13 +256,13 @@
                 <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Core <span class="pl-version-small">2.2</span></a></li>
                 <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Blocks <span class="pl-version-small">2.2</span></a></li>
                 <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins <span class="pl-version-small">2.2</span></a></li>
-                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")/3.0/">Cocoon 3.0 <span class="pl-version-small">[alpha]</span></a></em></strong></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")/3.0/">Cocoon 3.0</a></em></strong></li>
                 <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></strong></li>
               </ul>
            #else
               <ul class="projectList">
                 <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></em></strong></li>
-                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")3.0/">Cocoon 3.0 <span class="pl-version-small">[alpha]</span></a></em></strong></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")3.0/">Cocoon 3.0</a></em></strong></li>
                 <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")subprojects/">Subprojects</a></strong></li>
               </ul>
            #end
