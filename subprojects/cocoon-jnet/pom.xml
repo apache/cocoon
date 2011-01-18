@@ -40,6 +40,7 @@
     <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.jnet.version}</docs.version>
     <docs.urlRelativizer>../../../</docs.urlRelativizer>
+    <docs.breadcrumb>subproject</docs.breadcrumb>
   </properties>
 
   <distributionManagement>
