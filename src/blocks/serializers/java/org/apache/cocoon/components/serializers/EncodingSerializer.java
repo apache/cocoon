@@ -46,6 +46,7 @@ import org.xml.sax.SAXException;
  * &lt;serializer class="org.apache.cocoon.components.serializers..." ... &gt;
  *   &lt;encoding&gt;myencoding&lt;/encoding&gt;
  *   &lt;indent&gt;myindenting&lt;/indent&gt;
+ *   &lt;setContentLength&gt;false&lt;/setContentLength&gt;
  * &lt;/serializer&gt;
  * </pre>
  * 
@@ -56,6 +57,10 @@ import org.xml.sax.SAXException;
  * 
  * <p>The value indicated by <i>myindenting</i> will control the indenting
  * level for each element.<p>
+ * 
+ * <p>The value indicated by <em>setContentLength</em> determines if the serializer
+ * sets the <code>Content-Length</code> HTTP header. The parameter is optional, the
+ * default value is <em>false</em>.
  *
  * @version CVS $Id$
  */
@@ -116,6 +121,9 @@ public abstract class EncodingSerializer implements Serializer, Locator, Recycla
     protected int indentPerLevel = 0;
     /* ====================================================================== */
 
+    /** Determine if the serializer should set the Content-Length HTTP header. */
+    private boolean setContentLength;
+
     /**
      * Create a new instance of this <code>EncodingSerializer</code>
      */
@@ -131,7 +139,7 @@ public abstract class EncodingSerializer implements Serializer, Locator, Recycla
      * Test if the component wants to set the content length.
      */
     public boolean shouldSetContentLength() {
-        return(false);
+        return this.setContentLength;
     }
 
     /**
@@ -175,6 +183,8 @@ public abstract class EncodingSerializer implements Serializer, Locator, Recycla
         if (indentPerLevel > 0) {
             assureIndentBuffer(indentPerLevel * 6);
         }
+        
+        this.setContentLength = conf.getChild("setContentLength").getValueAsBoolean(false);
     }
 
     /* ====================================================================== */
