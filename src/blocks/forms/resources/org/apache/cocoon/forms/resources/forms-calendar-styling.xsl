@@ -62,7 +62,7 @@
         </xsl:when>
         <xsl:otherwise>
         <!-- regular input -->
-	      <input id="{@id}:input" name="{@id}" value="{fi:value}" title="{normalize-space(fi:hint)}" type="text" dojoType="forms:dropdownDateTimePicker" pattern="{$format}" variant="{$variant}">
+	      <input id="{@id}:input" name="{@id}" value="{fi:value}" title="{normalize-space(fi:hint)}" type="text" dojoType="forms:dropdownDateTimePicker" cPattern="{$format}" variant="{$variant}">
 	        <xsl:apply-templates select="." mode="styling"/>
 	      </input>
         <!-- common stuff -->
