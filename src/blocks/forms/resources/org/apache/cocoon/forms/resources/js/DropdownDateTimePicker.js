@@ -32,7 +32,7 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
     {
         variant: "date", /* date, time or datetime */
 
-        pattern: "yyyy-MM-dd",
+        cPattern: "yyyy-MM-dd",
 
         showInputSample: "false", /* should a sample date entry be shown next to the input field? */
 
@@ -224,11 +224,11 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
 
             if (this.variant == "date") {
                 // pure date mode, assume pattern is only for dates
-                this.datePattern = this.pattern;
+                this.datePattern = this.cPattern;
                 return;
             } else if (this.variant == "time") {
                 // pure time mode, assume patter is only for times
-                this.timePattern = this.pattern;
+                this.timePattern = this.cPattern;
                 return;
             }
 
@@ -236,27 +236,27 @@ dojo.widget.defineWidget("cocoon.forms.DropdownDateTimePicker", dojo.widget.Html
             // http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns
             var timeFormattingChars = ["a", "h", "H", "K", "k", "m", "s", "S", "A", "z", "Z"];
 
-            var pattern = this.pattern;
-            if (pattern == null || pattern == "")
+            var cPattern = this.cPattern;
+            if (cPattern == null || cPattern == "")
                 return;
 
-            // search position of first time pattern character
+            // search position of first time cPattern character
             var beginTimePattern = -1;
-            for (var i = 0; i < pattern.length; i++) {
-                var c = pattern.charAt(i);
+            for (var i = 0; i < cPattern.length; i++) {
+                var c = cPattern.charAt(i);
                 if (dojo.lang.inArray(timeFormattingChars, c)) {
                     beginTimePattern = i;
                     break;
                 }
             }
 
-            // split pattern in date and time component
+            // split cPattern in date and time component
             if (beginTimePattern == -1) {
-                // pure date pattern
-                this.datePattern = pattern;
+                // pure date cPattern
+                this.datePattern = cPattern;
             } else {
-                this.datePattern = dojo.string.trimEnd(pattern.substr(0, beginTimePattern));
-                this.timePattern = pattern.substr(beginTimePattern, pattern.length);
+                this.datePattern = dojo.string.trimEnd(cPattern.substr(0, beginTimePattern));
+                this.timePattern = cPattern.substr(beginTimePattern, cPattern.length);
             }
         },
 
