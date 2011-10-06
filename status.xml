@@ -187,6 +187,9 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="AG" type="update">
+      Core: Update xercesImpl to 2.11.0 and xml-apis to 1.4.01.
+    </action>
     <action dev="JSJ" type="fix" fixes-bug="COCOON-2104" due-to="Andrew Cave" due-to-email="ajcave@ualberta.ca">
       Add base URI fixup support to XIncludeTransformer
     </action>
