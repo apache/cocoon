@@ -51,7 +51,7 @@
     <name>The Apache Software Foundation</name>
     <url>http://www.apache.org/</url>
   </organization>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -66,19 +66,19 @@
       <id>daisy</id>
       <build>
         <plugins>
-	  <plugin>
-	    <groupId>org.apache.cocoon</groupId>
-	    <artifactId>cocoon-sitemaptags2daisy-plugin</artifactId>
-	    <executions>
-	      <execution>
-	        <phase>install</phase>
-		<goals>
-		  <goal>sitemaptags2daisy</goal>
-		</goals>
-	      </execution>
-	    </executions>
-	  </plugin>
-	</plugins>
+          <plugin>
+            <groupId>org.apache.cocoon</groupId>
+            <artifactId>cocoon-sitemaptags2daisy-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>install</phase>
+                <goals>
+                  <goal>sitemaptags2daisy</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
   </profiles>
