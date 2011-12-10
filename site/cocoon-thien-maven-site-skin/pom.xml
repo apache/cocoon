@@ -27,8 +27,28 @@
     <version>6-SNAPSHOT</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
+
   <artifactId>cocoon-thien-maven-site-skin</artifactId>
   <version>1.0.1-SNAPSHOT</version>
   <name>Cocoon Maven Skin</name>
   <description>The Cocoon Maven skin developed by Thien</description>
+
+  <!-- Workaround for SUREFIRE-300 -->
+  <properties>
+    <maven.test.skip>true</maven.test.skip>
+  </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>.</directory>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>NOTICE.txt</include>
+          <include>LICENSE.txt</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+
 </project>
