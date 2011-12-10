@@ -268,7 +268,7 @@
     <div id="content">
        #mainMenu( $decoration.body.menus )
        <div class="main">
-         $bodyContent.replaceAll( "<div class=\"source\"><pre>", "<div class=\"source\"><pre class=\"prettyprint linenums\">" )
+         $bodyContent.replaceAll( "<div class=\"source\"><pre>", "<div class=\"source\"><pre class=\"prettyprint\">" )
        </div>
     </div>
 
