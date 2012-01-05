@@ -2611,7 +2611,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-jnet</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>1.2.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -2868,7 +2868,7 @@
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-serializers-impl</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -3246,10 +3246,10 @@
         <configuration>
           <maxmemory>512m</maxmemory>
           <links>
-            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+            <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
             <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
             <link>http://excalibur.apache.org/apidocs/</link>
-            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+            <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
             <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
             <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
             <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
@@ -3523,7 +3523,7 @@
       <repositories>
         <repository>
           <id>cocoon-dev.org</id>
-          <url>http://cocoondev.org/repository2</url>
+          <url>http://daisycms.org/maven/maven2/deploy</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -3535,7 +3535,7 @@
       <pluginRepositories>
         <pluginRepository>
           <id>cocoon-dev.org</id>
-          <url>http://cocoondev.org/repository2</url>
+          <url>http://daisycms.org/maven/maven2/deploy/</url>
           <releases>
             <enabled>true</enabled>
           </releases>
