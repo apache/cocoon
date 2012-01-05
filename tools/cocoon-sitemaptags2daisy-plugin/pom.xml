@@ -39,7 +39,7 @@
     <repository>
       <id>cocoondev</id>
       <name>Cocoondev Maven Repository</name>
-      <url>http://cocoondev.org/repository</url>
+      <url>http://daisycms.org/maven/maven1/deploy</url>
       <layout>legacy</layout>
     </repository>
     <repository>
