@@ -1,0 +1,474 @@
+<?xml version="1.0"?>
+<!--
+This Apache Ant build.xml snippet contains targets for helping out 
+managing the Cocoon dependencies of your project.
+It assumes that you have Ant version 1.6.x or later that supports the 
+<import> task.
+
+Usage: [full automatic, for fresh projects starts]
+1) Copy this file to the root of your project
+   (e.g. to ./build-cocoon.targets.xml)
+   and edit this file and replace "YourCocoonBasedProject" with your project name
+
+2) ant -buildfile build-cocoon-targets.xml -Dcocoon.distro.home=/...abs_path_to_cocoon_src_distro...
+
+  this will generate a typical directory-structure containing:
+  ./build.xml  (minimal version to be completed to project needs)
+  ./user.properties (ready pointing to cocoon.distro.home)
+  ./src/cocoon/local.build.properties
+  ./src/cocoon/webapp
+  ./src/cocoon/xconf
+  .cvsignore (ignoring build and tools/cocoon/*)
+  
+  You manually start changing these as you go allong with your project.
+
+  The script will not overwrite files that already exist.
+
+Usage: [manual, for existing build.xml files]
+1) Copy this file to the root of your project
+   (e.g. to ./build-cocoon.targets.xml)
+   and edit this file and replace "YourCocoonBasedProject" with your project name
+
+2) Add the following to the top-level of your project's Ant build.xml script (possibly adjusting the path):
+   
+   <property name="cocoon.targets" value="./build-cocoon.targets.xml">
+   <import file="${cocoon.targets}">
+
+3) Add in various properties assumed to be available (change the paths to your own liking)
+
+   <property file="user.properties">
+   <property name="src" value="./src" />
+   <property name="src.cocoon" value="${src}/cocoon" />
+   <property name="cocoon.build.properties" value="${src.cocoon}/local.build.properties">
+   <property name="cocoon.xconf.dir" value="${src.cocoon}/xconf">
+   <property name="cocoon.tool.dir" value="tools/cocoon">
+
+
+How it works:
+
+All targets in this build file snippet depend upon 
+the following properties being set
+  1. cocoon.distro.home
+       location of src distribution of cocoon to use
+  2. cocoon.build.properties
+       property file with specific cocoon build settings
+       (selecting which blocks, samples,...)
+       typically src/cocoon/local.build.properties
+  3. cocoon.xconf.dir
+       location where the appropriate patch files can be found
+       typically src/cocoon/xconf
+  4. cocoon.tool.dir
+       where cocoon is build inside your project
+       typically this is tools/cocoon
+
+Updates and Background:
+http://wiki.cocoondev.org/Wiki.jsp?page=YourCocoonBasedProject
+-->
+<project name="YourCocoonBasedProject" default="seed" >
+
+  <!-- if not set yet... -->
+  <property file="user.properties" />
+  <property name="src" value="./src" />
+  <property name="src.cocoon" value="${src}/cocoon" />
+  <property name="cocoon.build.properties" value="${src.cocoon}/local.build.properties" />
+  <property name="cocoon.xconf.dir" value="${src.cocoon}/xconf" />
+  <property name="cocoon.tool.dir" value="tools/cocoon" />
+  <property name="cocoon.unpatched" value="${cocoon.tool.dir}/unpatched"/>
+
+  <!--
+    sets some essential properties for these targets
+  --> 
+  <target name="-cocoon:init">
+    <mkdir dir="${cocoon.tool.dir}" />
+    <property name="cocoon.webapp" value="${cocoon.tool.dir}/webapp" />
+    <property name="cocoon.tasks" value="${cocoon.tool.dir}/taskdefs" />
+    <property name="cocoon.lib" value="${cocoon.webapp}/WEB-INF/lib" />    
+  </target>
+
+  <!--
+    checks what kind of OS this is running on
+  -->
+  <target name="-cocoon:oscheck" >
+    <condition property="isWindows">
+      <os family="windows" />
+    </condition>
+  </target>
+    
+  <!--
+    creates Windows batch files for cocoon dependencies
+  -->
+  <target name="-cocoon:bat" if="isWindows"
+          depends="-cocoon:init, -cocoon:oscheck" >
+    <echo>Building batch files for support on windows OS</echo>
+    <property name="shbat" value="bat" />
+
+    <echo file="${cocoon.tool.dir}/getc2.${shbat}"><![CDATA[@echo off 
+if "%COCOON_HOME%"=="" then echo You haven't set the COCOON_HOME environment variable.
+echo GOING TO %COCOON_HOME%
+cd /d %COCOON_HOME%
+echo Running build.bat -propertyfile "%PROJECT_PROPERTIES%" clean webapp -Dbuild.webapp="%PROJECT_WEBAPP%" -Dtools.tasks.dest="%PROJECT_TASKDEFS%"
+build.bat -propertyfile "%PROJECT_PROPERTIES%" clean webapp -Dbuild.webapp="%PROJECT_WEBAPP%" -Dtools.tasks.dest="%PROJECT_TASKDEFS%"
+]]></echo>
+
+    <echo file="${cocoon.tool.dir}/runc2.${shbat}"><![CDATA[@echo off
+set JETTY_WEBAPP=%PROJECT_WEBAPP%
+cd /d %COCOON_HOME%
+cocoon.bat servlet-debug
+]]></echo>
+  </target>
+
+  <!--
+    creates shell scripts for cocoon dependencies
+  -->
+  <target name="-cocoon:sh" unless="isWindows"
+          depends="-cocoon:init, -cocoon:oscheck" >
+
+    <echo>Building shell scripts for support on non-windows</echo>
+    <property name="shbat" value="sh" />
+
+    <echo file="${cocoon.tool.dir}/getc2.${shbat}"><![CDATA[#!/bin/bash
+cd $COCOON_HOME
+echo running /build.sh -propertyfile $PROJECT_PROPERTIES clean webapp -Dbuild.webapp=$PROJECT_WEBAPP -Dtools.tasks.dest=$PROJECT_TASKDEFS
+./build.sh -propertyfile $PROJECT_PROPERTIES clean webapp -Dbuild.webapp=$PROJECT_WEBAPP -Dtools.tasks.dest=$PROJECT_TASKDEFS
+]]></echo>
+       <chmod file="${cocoon.tool.dir}/getc2.${shbat}" perm="u+x"/>
+
+    <echo file="${cocoon.tool.dir}/runc2.${shbat}"><![CDATA[#!/bin/bash
+export COCOON_WEBAPP_HOME=$PROJECT_WEBAPP
+echo COCOON_WEBAPP_HOME=$COCOON_WEBAPP_HOME
+
+#LD_LIBRARY_PATH=/usr/lib/mps/secv1:$LD_LIBRARY_PATH
+#export LD_LIBRARY_PATH
+
+#AM_LIBS=/etc/opt/SUNWam/config:/opt/SUNWam/lib/am_logging.jar:/opt/SUNWam/lib/dom.jar:/usr/share/lib/mps/secv1/jss4.jar:/opt/SUNWam/lib/servlet.jar:/opt/SUNWam/lib/am_sdk.jar:/opt/SUNWam/lib/amclientsdk.jar:/opt/SUNWam/lib/am_services.jar:/opt/SUNWam/locale:/opt/SUNWam/lib/mail.jar
+AM_LIBS=/opt/e-govDT-RA/jes/SUNWam/config:/opt/SUNWam/lib/amclientsdk.jar:/opt/SUNWam/lib/servlet.jar
+echo AM_LIBS=$AM_LIBS
+
+LOADER_LIB="${COCOON_HOME}/tools/loader:${AM_LIBS}"
+export LOADER_LIB
+
+JAVA_OPTIONS="-server -Xbootclasspath/a:${JAVA_HOME}/jre/lib/rt.jar:/opt/SUNWam/lib/jdk_logging.jar -Djava.protocol.handler.pkgs=com.iplanet.services.comm"
+export JAVA_OPTIONS
+echo JAVA_OPTIONS=$JAVA_OPTIONS
+
+cd $COCOON_HOME
+#./cocoon.sh servlet-debug
+./cocoon.sh servlet
+]]></echo>
+        <chmod file="${cocoon.tool.dir}/runc2.${shbat}" perm="u+x"/>
+    </target>    
+
+  <!--
+    creates as needed batch files or shell scripts
+  -->
+  <target name="-cocoon:shbat" depends="-cocoon:bat, -cocoon:sh" />
+
+  <!--
+    checks if the cocoon dependency is holding what we expect 
+    sets a variable if all is ok
+  -->
+  <target name="-cocoon:test" depends="-cocoon:init">
+    <condition property="cocoon.ok" value="true">
+      <and>
+        <available type="dir" file="${cocoon.lib}" />
+        <available classname="XConfToolTask" 
+                   classpath="${cocoon.tasks}"/>
+      </and>
+    </condition>
+  </target>
+
+  <!--
+    fails the build if the cocoon dependency is not met
+  -->
+  <target name="-cocoon:check" depends="-cocoon:test" unless="cocoon.ok">
+    <fail>No cocoon available. Run 'ant cocoon.get' first.</fail>
+  </target>
+
+
+  <target name="-cocoon:patch">
+    <echo>Patching ${cocoon.patch.target} with 
+${cocoon.xconf.dir}/*.${cocoon.patch.src-extension} ...</echo>
+    <xpatch 
+      file="${cocoon.patch.target}"
+      srcdir="${cocoon.xconf.dir}" 
+      includes="**/*.${cocoon.patch.src-extension}"/>
+    </target>
+
+  <!-- 
+      applies the patch files in the ${cocoon.xconf.dir} 
+      on the various cocoon conf files
+  -->
+  <target name="cocoon:xconf" depends="-cocoon:check">
+    <path id="cocoon.tasks.cp">
+      <pathelement path="${cocoon.tasks}" />
+      <path>
+        <fileset dir="${cocoon.lib}">
+          <include name="xalan*.jar" />
+          <include name="xerces*.jar" />
+          <include name="xml*.jar" />
+        </fileset>
+      </path>
+    </path>
+
+    <taskdef 
+        name="xpatch" 
+        classname="XConfToolTask" 
+        classpathref="cocoon.tasks.cp"/>  
+
+    <xpatch file="${cocoon.webapp}/WEB-INF/cocoon.xconf" srcdir="">
+      <include name="${cocoon.xconf.dir}/*.xconf"/>
+    </xpatch>
+
+    <antcall target="-cocoon:patch" >
+      <param name="cocoon.patch.target" 
+           value="${cocoon.webapp}/WEB-INF/cocoon.xconf" />
+      <param name="cocoon.patch.src-extension" 
+           value="xconf" />
+    </antcall>
+
+    <antcall target="-cocoon:patch" >
+      <param name="cocoon.patch.target" 
+           value="${cocoon.webapp}/WEB-INF/logkit.xconf" />
+      <param name="cocoon.patch.src-extension" 
+           value="xlog" />
+    </antcall>
+
+    <antcall target="-cocoon:patch" >
+      <param name="cocoon.patch.target" 
+           value="${cocoon.webapp}/sitemap.xmap" />
+      <param name="cocoon.patch.src-extension" 
+           value="xmap" />
+    </antcall>
+
+    <antcall target="-cocoon:patch" >
+      <param name="cocoon.patch.target" 
+           value="${cocoon.webapp}/WEB-INF/web.xml" />
+      <param name="cocoon.patch.src-extension" 
+           value="xweb" />
+    </antcall>
+  </target>
+
+  <target name="cocoon:unpatch">
+    <copy todir="${cocoon.webapp}" overwrite="true" >
+      <fileset dir="${cocoon.unpatched}">
+        <include name="WEB-INF/web.xml" />
+        <include name="WEB-INF/cocoon.xconf" />
+        <include name="WEB-INF/logkit.xconf" />
+        <include name="sitemap.xmap" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="cocoon:get" depends="-cocoon:shbat" description="Get cocoon into this project">
+      <mkdir dir="${cocoon.webapp}" />
+      <exec executable="${cocoon.tool.dir}/getc2.${shbat}" >
+        <env key="COCOON_HOME" file="${cocoon.distro.home}" />
+        <env key="PROJECT_PROPERTIES" file="${cocoon.build.properties}" />
+        <env key="PROJECT_WEBAPP" file="${cocoon.webapp}" />
+        <env key="PROJECT_TASKDEFS" file="${cocoon.tasks}" />
+      </exec>
+      <mkdir dir="${cocoon.unpatched}" />
+      <copy todir="${cocoon.unpatched}">
+        <fileset dir="${cocoon.webapp}" >
+          <include name="WEB-INF/web.xml" />
+          <include name="WEB-INF/cocoon.xconf" />
+          <include name="WEB-INF/logkit.xconf" />
+          <include name="sitemap.xmap" />
+        </fileset>
+      </copy>
+  </target>
+
+  <target name="cocoon:run" depends="-cocoon:shbat, -cocoon:check" description="Run cocoon on the built-in jetty to test">
+      <exec executable="${cocoon.tool.dir}/runc2.${shbat}" >
+        <env key="COCOON_HOME" file="${cocoon.distro.home}" />
+        <env key="PROJECT_WEBAPP" file="${cocoon.webapp}" />
+      </exec>
+  </target>
+
+
+  <!-- 
+  Below are some targets that build a default project-setting which allows you to 
+  make use of the reusable targets declared in this build-script.
+
+  You can launch the 'seed' target to start-off your project.
+  -->
+  <target name="seed-check">
+    <available property="cocoonHomeOk" file="${cocoon.distro.home}" />
+    <fail unless="cocoonHomeOk" >
+    This script needs a property $${cocoon.distro.home} to be set and 
+    pointing to an existing directory containing a cocoon 2.1.x distro.
+    You can set it either by providing a -D flag to ant, or 
+    by adding it to a local ./user.properties.
+    </fail>
+
+    <available property="existsBuild" file="build.xml" />
+    <available property="existsLocalProps" file="${cocoon.build.properties}" />
+    <available property="existsUserProps" file="user.properties" />
+    <available property="existsCvsIgnore" file=".cvsignore" />
+  </target>
+
+  <target name="msg-seed-build" if="existsBuild">
+    <echo>build.xml exists. This script cannot overwrite it.
+    If you want to regenerate the build.xml then manually delete it prior to running the seed target again.</echo>
+  </target>
+
+  <target name="seed-build" depends="msg-seed-build" unless="existsBuild">
+    <echo>Creating build.xml...</echo>
+    <echo file="build.xml"><![CDATA[<?xml version="1.0"?>
+<!-- 
+  File automatically generated by ant script for ${ant.project.name}.
+  Manually extend it to your own needs.
+  -->
+<project name="${ant.project.name}" default="init">
+  <property file="user.properties" />
+
+  <property name="src"              value="src" />
+  <property name="src.java"         value="${src}/java" />
+  <property name="src.cocoon"       value="${src}/cocoon" />
+  <property name="src.webapp"       value="${src.cocoon}/webapp" />
+  
+  <property name="build"            value="build" />
+  <property name="build.classes"    value="${build}/classes" />
+  <property name="zipfile"          value="${build}/$${ant.project.name}.zip" />
+  <property name="warfile"          value="${build}/$${ant.project.name}.war" />
+
+  <property name="lib"            value="lib" />
+
+  <property name="cocoon-build.properties" value="${src.cocoon}/local.build.properties" />
+  <property name="cocoon-xconf.dir" value="${src.cocoon}/xconf" />
+  <property name="cocoon-tool.dir"  value="tools/cocoon" />
+  <property name="cocoon.webapp"    value="${cocoon-tool.dir}/webapp" />
+  <property name="cocoon.lib"       value="${cocoon.webapp}/WEB-INF/lib" />
+  <property name="cocoon.classes"   value="${cocoon.webapp}/WEB-INF/classes" />
+
+  <property name="cocoon-targets" value="${ant.file}" />
+  <!-- insert properties here to override defaults in the import cocoon-targets script -->
+  <import file="$${cocoon-targets}" />
+
+  <path id="all.cp">
+    <pathelement location="${build.classes}" />
+    <fileset dir="${cocoon.lib}">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${lib}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+  
+  <target name="init">
+    <mkdir dir="${build.classes}" />
+  </target>
+  
+  <target name="compile" depends="init,-cocoon:check" >
+    <javac srcdir="${src.java}" destdir="${build.classes}" debug="true" >
+      <classpath refid="all.cp"/>
+      <include name="**/*.java"/>
+    </javac>
+  </target>
+
+  <target name="webapp" depends="compile, cocoon:xconf"
+          description="configure the webapp">
+    <copy todir="${cocoon.lib}">
+      <fileset dir="${lib}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <copy todir="${cocoon.classes}">
+      <fileset dir="${build.classes}" />
+    </copy>
+    <copy todir="${cocoon.webapp}">
+      <fileset dir="${src.webapp}" />
+    </copy>          
+  </target>  
+
+  <target name="zip" depends="init">
+    <zip zipfile="${zipfile}" basedir="." excludes="**/build/**, tools/**" />
+  </target>
+
+  <target name="war" depends="webapp" >
+    <jar destfile="${warfile}" basedir="${cocoon.webapp}" />
+  </target>
+  
+</project>
+    ]]></echo>
+  </target>
+  
+  <target name="seed-dirs">
+    <mkdir dir="${src.cocoon}" />
+    <mkdir dir="${src.cocoon}/webapp" />
+    <mkdir dir="${cocoon.xconf.dir}" />
+    <mkdir dir="${cocoon.tool.dir}" />
+    <mkdir dir="${cocoon.tool.dir}/webapp" />
+    <mkdir dir="src/java" />
+    <mkdir dir="lib" />
+  </target>
+  
+  <target name="msg-seed-userprops" if="existsUserProps">
+    <echo>user.properties already exists. This script cannot overwrite it.
+    If you want to regenerate the user.properties then manually delete it prior to running the seed target again.</echo>
+  </target>
+
+  <target name="seed-userprops" depends="msg-seed-userprops" unless="existsUserProps">
+    <echo file="user.properties">#
+# File automatically generated by ant script for ${ant.project.name}.
+# Manually extend it to your own needs.
+#
+cocoon.distro.home=${cocoon.distro.home}</echo>
+  </target>
+
+  <target name="msg-seed-cvsignore" if="existsCvsIgnore">
+    <echo>.cvsignore already exists. This script cannot overwrite it.
+    If you want to regenerate the .cvsignore then manually delete it prior to running the seed target again.</echo>
+  </target>
+
+  <target name="seed-cvsignore" depends="msg-seed-cvsignore" unless="existsCvsIgnore">
+    <echo file=".cvsignore">build
+tools
+user.properties</echo>
+  </target>
+
+  <target name="msg-seed-localprops" if="existsLocalProps" >
+    <echo>${cocoon.build.properties} already exists. This script cannot overwrite it.
+    If you want to regenerate the ${cocoon.build.properties} then manually delete it prior to running the seed target again.</echo>
+  </target>
+
+  <target name="seed-localprops" 
+          depends="msg-seed-localprops, seed-dirs" 
+          unless="existsLocalProps" >
+    <concat destfile="${cocoon.build.properties}" >
+      <fileset dir="${cocoon.distro.home}">
+        <include name="build.properties" />
+        <include name="blocks.properties" />
+      </fileset>
+    </concat>
+  </target>
+
+  <target name="seed" depends="seed-check, seed-localprops, seed-cvsignore, seed-userprops, seed-build">
+    <echo>Done.
+       
+    The directory src/cocoon/webapp is created to hold your cocoon 
+    webapp resources.
+    The directory src/cocoon/xconf is created to hold XConfPatch files 
+    to (optionally) modify the cocoon.xconf log.xconf web.xml and 
+    (root) sitemap.xmap
+
+    From here:
+    ---------
+    You should now edit the file ${cocoon.build.properties} to select 
+    only those optional components of Cocoon that your project needs.
+    IMPORTANT: Remove the path-entries from that file!
+    
+    The build.xml can freely be extended for your project needs.
+
+    To build a fresh Cocoon base for this project 
+    (when you updated the distro pointed to by -Dcocoon.distro.home)
+        > ant cocoon:get
+
+    To blend in your own project resources and classes:
+        > ant webapp
+
+    To test-run using the Jetty container:
+        > ant cocoon:run
+    </echo>
+  </target>
+</project>
