@@ -130,16 +130,14 @@ public class JavadocsScriptGeneratorReport extends AbstractMavenReport {
                         project.getArtifactId() + "/" + project.getVersion() + "/$f\n");
         sb.append("dl=0\n");
         sb.append("\n");
-        sb.append("if [ -f $f ]\n");
+        sb.append("if [ ! -f $f ]\n");
         sb.append("then\n");
-        sb.append("else\n");
         sb.append("  wget --header \"User-Agent: Mozilla/5.0 Firefox/2.0.0.7\" http://repo1.maven.org/maven2/$jd\n");
         sb.append("  dl=1\n");
         sb.append("fi\n");
         sb.append("\n");
-        sb.append("if [ -f $f ]\n");
+        sb.append("if [ ! -f $f ]\n");
         sb.append("then\n");
-        sb.append("else\n");
         sb.append("  wget --header \"User-Agent: Mozilla/5.0 Firefox/2.0.0.7\" http://people.apache.org/builds/cocoon/$jd\n");
         sb.append("  dl=1\n");
         sb.append("fi\n");
@@ -150,6 +148,7 @@ public class JavadocsScriptGeneratorReport extends AbstractMavenReport {
         sb.append("  exit 0\n");
         sb.append("else\n");
         sb.append("  unzip -qo $f\n");
+        sb.append("  rm -f $f\n");
         sb.append("fi\n");
         sb.append("\n");
         sb.append("exit 0\n");
