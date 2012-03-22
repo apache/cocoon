@@ -35,6 +35,7 @@ import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
+import org.apache.cocoon.environment.PermanentRedirector;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
@@ -300,8 +301,15 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         if ( facade != null ) {
             newEnv = facade.getDelegate();
         }
-        if ( ((ForwardEnvironmentWrapper)newEnv).getRedirectURL() != null ) {
-            environment.redirect( false, ((ForwardEnvironmentWrapper)newEnv).getRedirectURL() );
+        
+        ForwardEnvironmentWrapper forwardEnv = (ForwardEnvironmentWrapper) newEnv;
+        if (forwardEnv.hasRedirected()) {
+            if (forwardEnv.isPermanentRedirection() && environment instanceof PermanentRedirector) {
+                ((PermanentRedirector )environment).permanentRedirect(false, forwardEnv.getRedirectURL());
+            }
+            else {
+                environment.redirect( false, forwardEnv.getRedirectURL() );
+            }
         }
         return result;
     }
