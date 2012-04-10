@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - How to create documentation for a deployment unit (e.g. a block)?</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">How to create documentation for a deployment unit (e.g. a block)?</h1><p>In Cocoon 2.2 each block has its own release cycle and also its own
+documentation set. This set is created through a separate site in Daisy. Each
+set has its own collection which is used by the Daisy export plugin in Maven to
+build the complete site, either locally at your hard disk, or at the official
+site.</p><p>The following steps outline the process to go through to create a block site.
+As an example we use the CForms block.</p><h1>Create the collection</h1><p>In Daisy, open Administration -&gt; Manage collections.<br/>
+Add a new collection for the block. The name should be
+<tt>cdocs-blockname</tt>, where <tt>blockname</tt> is the part of the name of
+the block after cocoon. Example: when the block is named <tt>cocoon-forms</tt>,
+the name of the collection should be <em>cdocs-forms</em>. <br/>
+Note the id of the collection (in this case <em>7</em>).</p><h1>Create the navigation document</h1><p>Each block has its own navigation document, which simplifies the packaging of
+the documation strictly for that block.</p><ol type="1">
+<li>In Daisy, create a New Document and choose type <tt>Book Definition</tt>.
+</li>
+<li>Set the name of the document to <tt>&lt;user friendly name&gt; Block
+[navigation]</tt>. For the CForms block that would be <em>Forms Block
+[navigation]</em>.</li>
+<li>Go to the Misc tab and add the proper collection, in this case cdocs-forms.
+</li>
+<li>Underneath the root, add the toplevel folder for this block, by adding a new
+section node. Set the title to a user friendly name of the block. For the CForms
+block that would be <em>Forms</em>.</li>
+<li>Underneath this folder, add two documents, one is called
+<strong>Introduction</strong>, one is called <strong>Samples</strong>. You can
+create the documents by adding a new section node, and then select the "link to
+new document" button (second button after the document ID). Make sure these
+documents are also part of the proper collection, i.e. the
+<em>cdocs-forms</em>.</li>
+<li>Publish the document (mark a checkbox 'Publish changes immediately').</li>
+</ol>Note the id of the navigation document (in this case <em>1152</em>).<h1>Create a new Daisy site</h1>Each block gets its own site in Daisy. Before adding documentation about the
+block, the site should be selected. This way all documents will automatically be
+in the proper collection.The steps below describe how to create a new Daisy site.<ol type="1">
+<li>Log in to cocoon.zones.apache.org with your username and password</li>
+<li>change to user daisy: <tt>sudo su - daisy</tt></li>
+<li><tt>cd daisywikidata/sites</tt></li>
+<li>copy another block to the new block with blockname equal to the collection
+name. Example: <tt>cp -R cdocs-fop cdocs-forms</tt></li>
+<li>cd into the new folder: <tt>cd cdocs-forms</tt></li>
+<li>modify the siteconf.xml file:
+<ul>
+<li>change the <tt>title</tt> to match the name of the navigation document
+(without the [navigation] part), e.g. <em>Forms Block</em></li>
+<li>change the <tt>description</tt> to match the block name, e.g.<em>
+Documentation of the Forms Block<br/>
+</em></li>
+<li>change the <tt>navigationDocId</tt> to the id of the navigation document (in
+this case <em>1152</em>)</li>
+<li>change the <tt>homepageDocId</tt> to the id of the introduction document (in
+this case <em>489</em>)</li>
+<li>change the <tt>collectionId</tt> to the id of the new collection (in this
+case <em>7</em>)</li>
+</ul>
+</li>
+<li>save the file and logout of the server.</li>
+</ol><h1>Add the navigation to the master navigation file</h1>To show the block documentation in the total Cocoon documentation site, which
+is the source for the official documentation, you need to add the navigation
+document to the master navigation file. Do this step <strong>after</strong>
+creating the site, as a reminder that the site should be created as well.<br/>
+These are the steps to take:<ol type="1">
+<li>In Daisy, go to the <tt>cdocs: Apache Cocoon</tt> site</li>
+<li>Select <tt>Administration</tt> in the <em>navigation menu</em> (so not on
+top!!!)</li>
+<li>You should now see a tree that represents the navigation tree of the cdocs
+site. This page is here only to provide convenient links to all the navigation
+documents.</li>
+<li>Edit the document to add the links to the navigation document. Make sure the
+block names are in alphabetical order and reflect the actual menu hierarchy.
+</li>
+<li>Save the document and select the <tt>Cocoon Book</tt> link.</li>
+<li>Edit the navigation document and add a <tt>new import navigation node</tt>
+with the id of the navigation document (in this case <em>1152</em>)</li>
+</ol><div class="note"><div><strong>Note: </strong>When adding documentation for the block, be sure you select the
+proper site first!</div></div><h1>Configuring the Maven pom files</h1>With the Daisy Maven plugin the information can be extracted from Daisy and
+built into the official site, either locally or at the official Cocoon
+documentation site.The steps below configure the Maven pom files to make this happen.<section name="Configure the root pom.xml" style="background:none;padding:0;"/>Create two properties in trunk/parent/pom.xml. This is makes it easier to
+maintain these two pieces of information throughout the documentation generation
+process:<pre>&lt;properties&gt;
+  [...] 
+  &lt;docs.m.forms.version&gt;1.0&lt;/docs.m.forms.version&gt;
+  &lt;docs.m.forms.relPath&gt;blocks/forms/${docs.m.forms.version}/&lt;/docs.m.forms.relPath&gt;     
+&lt;/properties&gt;
+</pre>Open the pom.xml in the root and find the plugin with artifactId
+daisy-maven-plugin. Under <tt>collections</tt> add<pre> &lt;collection&gt;
+    &lt;name&gt;cdocs-forms&lt;/name&gt;
+    &lt;path&gt;${docs.m.forms.relPath}&lt;/path&gt;
+  &lt;/collection&gt;</pre>Try to keep the collections in alphabetical order as well.<section name="Configure the block pom.xml" style="background:none;padding:0;"/><ul>
+<li>Open the <tt>pom.xml</tt> file of the block, e.g.
+<em>cocoon-forms-impl/pom.xml</em></li>
+<li>Open a pom.xml file of a block that is already configured, e.g. cocoon-fop
+and copy the plugin with the groupID <tt>org.daisycms </tt>and artifactId<tt>
+daisy-maven-plugin</tt></li>
+<li>Add this to your pom file under &lt;build&gt;, &lt;plugins&gt;, if necessary
+create these tags. The build section should look like this (at least containing
+the daisy-maven-plugin part)</li>
+</ul><ol type="1"> 
+</ol><pre>    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.daisycms&lt;/groupId&gt;
+                &lt;artifactId&gt;daisy-maven-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;navDocId&gt;1152&lt;/navDocId&gt;
+                    &lt;collection&gt;cdocs-forms&lt;/collection&gt;                   
+                    &lt;skipFirstNavigationDocumentLevel&gt;true&lt;/skipFirstNavigationDocumentLevel&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;</pre><ul>
+<li>Change the <tt>navDocId</tt> to the id of the navigation document, in this
+case <em>1152</em></li>
+<li>Change the <tt>collection</tt> to the name of the collection, in this case
+<em>cdocs-forms</em></li>
+<li>Add the distributionManagment part and the properties as well at the same
+level as the build tag.</li>
+</ul><pre>  &lt;distributionManagement&gt;
+    &lt;site&gt;
+      &lt;id&gt;website&lt;/id&gt;
+      &lt;url&gt;${docs.deploymentBaseUrl}/${docs.m.forms.relPath}&lt;/url&gt;
+    &lt;/site&gt;
+  &lt;/distributionManagement&gt;
+  &lt;properties&gt;
+    &lt;docs.name&gt;<strong>Cocoon Forms</strong>&lt;/docs.name&gt;    
+    &lt;docs.version&gt;${docs.m.forms.version}&lt;/docs.version&gt;
+  &lt;/properties&gt;
+</pre><ul>
+<li>Change the path in the <tt>url</tt> to match the block name, here
+<em>forms</em></li>
+<li>Change the property <tt>docs.name</tt> to match the user friendly name of
+the block, here <em>Cocoon Forms</em></li>
+<li>Set the <tt>docs.version</tt> property to 1.0 initially and update it to
+reflect the documentation version.</li>
+</ul><section name="Configure the site pom.xml" style="background:none;padding:0;"/>Open the pom.xml in the site and add a module to the section Cocoon Blocks:
+<pre>    &lt;module&gt;../blocks/cocoon-forms/cocoon-forms-impl&lt;/module&gt;
+</pre>Keep the modules in alphabetical order to ease maintenance.</div></div>
+       </body></document>

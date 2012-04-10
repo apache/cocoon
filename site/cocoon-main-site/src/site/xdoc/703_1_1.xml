@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Live Sites - 2.1.6</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Live Sites - 2.1.6</h1><p>This is a list of live sites proudly powered by Apache Cocoon.</p><h1>Cocoon 2.1.6</h1><section name="Polska Strefa" style="background:none;padding:0;"/><p><em>Date added: 2005-10-24</em></p><p>Polish website with classified ads.</p><p><strong>URL:</strong>
+<a href="http://www.classifieds.pl/">http://www.classifieds.pl</a><br/>
+<strong>Contact</strong>: goliatus AT polzone.nl</p><h4>Additional information</h4><h5>How much time did it take to build the site from design to publication?</h5><p>2 months, but it is still under developement. New important improvements are
+still pending.</p><h5>How much traffic does this site handle?</h5><p>About 40.000 sessions each day.</p><h5>What made you choose Cocoon to build the site?</h5><ol type="1">
+<li>Java</li>
+<li>XML</li>
+</ol><h5>What other information do you want to disclose (e.g. how does it work, how
+did you build it, what parts of Cocoon did you use)?</h5>didn't use Flow, CForms, Portal Framework, SQLTransformer or Database Actions
+etc. It is based on my own Actions, Generators, Readers. Cron Scheduler is an
+important part there. I decided to use PostgreSQL as database engine.<section name="Other sites" style="background:none;padding:0;"/><ul>
+<li><a href="http://linux.org.mt/">Malta Linux User Group</a></li>
+<li><a href="http://www.maltagayrights.org/">Malta Gay Rights Movement</a></li>
+<li><a href="http://www.kyverneio.gr/">Cafe Bar Kyverneio</a> (Greek)</li>
+<li><a href="http://www.e-informatyka.pl/">e-Informatyka.pl</a> - software
+engineering journal (Polish)</li>
+<li><a href="http://www.form4oracle.com/">Form4Oracle.com</a> - provides
+real-time insider trading information and tools</li>
+</ul></div></div>
+       </body></document>

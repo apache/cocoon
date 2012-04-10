@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Live Site Template</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Live Site Template</h1><section name="TitleOfTheSite" style="background:none;padding:0;"/><p><em>Date added: &lt;yyyy-mm-dd to avoid any misunderstandings in date
+format&gt;</em></p><p>Short summary comes here</p><p><strong>URL:</strong> http://urlOfSite &lt;clickable link&gt;<br/>
+<strong>Contact</strong>: &lt;spam-prone email here&gt;</p><h4>Additional information</h4><div class="note"><div><strong>Note: </strong>Note to committer: please remove any unanswered questions. And
+this note of course. ;-)</div></div><h5>How much time did it take to build the site from design to publication?</h5><p>&lt;answer here&gt;</p><h5>How many people were involved in the project?</h5><p>&lt;answer here&gt;</p><h5>How much traffic does this site handle?</h5><p>&lt;answer here&gt;</p><h5>What made you choose Cocoon to build the site?</h5><p>&lt;answer here&gt;</p><h5>What other information do you want to disclose (e.g. how does it work, how
+did you build it, what parts of Cocoon did you use)?</h5><p>&lt;answer here&gt;</p></div></div>
+       </body></document>

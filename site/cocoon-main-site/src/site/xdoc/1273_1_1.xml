@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - How to contribute?</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">How to contribute?</h1><h1>Code</h1><p>TBD</p><h1>General documentation</h1><p>These instructions only work if you have an active account in our Daisy CMS
+and got the doc editor role assigned. If you haven't, create your account at
+<a href="http://cocoon.zones.apache.org/daisy/registration">http://cocoon.zones.apache.org/daisy/registration</a>
+and ask at dev[_at_]cocoon.apache.org for editing rights.</p><div class="note"><div><strong>Note: </strong>Doc editors are not allowed to publish a document. This can only
+be done by Apache Cocoon committers.</div></div><section name="Editing a document" style="background:none;padding:0;"/><p>Simply follow the "Edit" link at the bottom of a page, login in and select
+<em>Page Actions - Edit</em> from the menu.</p><section name="Adding a document" style="background:none;padding:0;"/><p>Go to http://cocoon.zones.apache.org/daisy/, login and select the
+documentation site where you want to add your new document. Select <em>New
+Document</em> from the menu. The recommended document type is <em>Cocoon
+document</em>.<br/>
+If you want to make your new document appear in a navigation menu, click on
+<em>Go to navigation</em> document below the navigation menu and select
+<em>Page Actions - Edit</em>.</p><section name="What happens once I've added or edited a document?" style="background:none;padding:0;"/><p>The moment you submit a new or changed document an email is sent to docs at
+cocoon dot apache dot org.  An entry is also added to the list on the Daisy
+<a href="NO_LINK">Cocoon Site Overview</a> page.  A Cocoon committer should
+then see the change, review it and make it live.</p><h1>Sitemap component documentation</h1><p>For documenting sitemap components, we use a system whereby certain parts of
+the documentation are extracted automatically from the Java sources using a tool
+called sitemaptags2daisy.</p><p>If you are not a committer, make sure that you have checked out the latest
+version of the Java source file from SVN, make your changes and create a patch
+file. Create a new patch issue in JIRA and add your diff file.</p><section name="Editing the documentation of a sitemap component" style="background:none;padding:0;"/><p>Only edit the content of the the Long Description part in Daisy. The short
+description and the value of the fields are automatically assigned from the Java
+sources, so if you change them in Daisy, these changes will get overwritten the
+next time the sitemaptags2daisy tool is run.</p><section name="Adding documentation for a new sitemap component" style="background:none;padding:0;"/><p>If running the sitemaptags2daisy tool is not an option (no time, no
+privileges, ...) then create manually a document of type "Sitemap Component". In
+the JavaClass field, enter the fully qualified name of the implementation class.
+Leave the other fields and the Short Description part empty, they will be
+assigned the next time the sitemaptags2daisy tool runs. Enter the documentation
+in the Long Description part.</p><section name="Adding javadoc tags" style="background:none;padding:0;"/><p>The following special javadoc tags are supported (none of these are strictly
+required by the sitemaptags2daisy tool):</p><ul>
+<li>@cocoon.sitemap.component.name<br/>
+default name with which this component is declared in the sitemap</li>
+<li>@cocoon.sitemap.component.documentation.disabled<br/>
+excludes the component from the documentation</li>
+<li>@cocoon.sitemap.component.documentation<br/>
+A short (one-paragraph) description of the component. Can contain HTML markup
+(preferably only inline tags).</li>
+<li>@cocoon.sitemap.component.documentation.caching<br/>
+A comment about the caching of this component. The cacheability of the component
+is figured out automatially by its implemented interfaces, but this tag allows
+to provide a short comment on the chaching conditions. This is mapped to a field
+in Daisy, thus should not contain HTML markup.</li>
+</ul>Next to these, the @deprecated tag is also synced with the Daisy document.
+<section name="Running the sitemaptags2daisy tool" style="background:none;padding:0;"/>TODO, see the README.txt in the sources for now.</div></div>
+       </body></document>

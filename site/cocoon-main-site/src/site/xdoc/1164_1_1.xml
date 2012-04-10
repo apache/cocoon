@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - How to solve Maven 2 problems</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">How to solve Maven 2 problems</h1><p>If you have problems to build Cocoon with Maven 2, please follow these
+instructions. If they don't solve your problem, report your problems to
+<a href="http://issues.apache.org/jira/browse/COCOON">http://issues.apache.org/jira/browse/COCOON</a>.
+An error report should contain your Maven version (<tt>mvn --version</tt>), the
+revision number of you working copy of Cocoon and the complete error report
+(e.g. <tt>mvn install -X -e</tt>).</p><section name="Cleanup your local repository" style="background:none;padding:0;"/><p>It helps to zap your local repo every now and then. There is no way as of yet
+to force maven to redownload poms it has already (MNG-1258).
+Poms<strong> are</strong> being updated without version number increment even
+though they shouldn't. If the problem might exist with Cocoon artifacts only,
+removing [local-maven-repository]/org/apache/cocooon should be enough.</p><p>Maven repository usually is located in the folder:</p><pre>[Win]  C:\Documents and Settings\&lt;Your Login Name&gt;\.m2\repository
+[Unix] ~/.m2/repository
+</pre><p>or different locations can be configured in <tt>~/.m2/settings.xml.</tt></p><section name="Remove a configured Mirror" style="background:none;padding:0;"/><p>If you're using a mirror (see the section below where to look for the
+configuration) try removing it. The Maven central repository at
+http://repo1.maven.org is the most reliable one and should be fast enough in the
+meantime.</p><section name="Configure a mirror" style="background:none;padding:0;"/><p>Maven relys on public repositories. From time to time they are not accessible
+mostly because of heavy load. To solve this problem, use one of the mirrors in
+<tt>~/.m2/settings.xml</tt>:</p><pre>&lt;settings&gt;
+  &lt;mirrors&gt;
+    &lt;mirror&gt;
+      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+      &lt;id&gt;ibiblioEuropeanMirror&lt;/id&gt;
+      &lt;url&gt;http://mirrors.dotsrc.org/maven2&lt;/url&gt;
+    &lt;/mirror&gt;
+    &lt;!-- 
+    &lt;mirror&gt;
+      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+      &lt;id&gt;ibiblioAustralianMirror&lt;/id&gt;
+      &lt;url&gt;http://public.planetmirror.com/pub/maven2&lt;/url&gt;
+    &lt;/mirror&gt;    
+     --&gt;
+  &lt;/mirrors&gt;
+&lt;/settings&gt;</pre><p>For more information check the page on
+<a href="http://maven.apache.org/guides/mini/guide-mirror-settings.html">configuring
+mirrors</a>.</p><h1>Common Maven errors</h1><section name="java.lang.OutOfMemoryError: Java heap space" style="background:none;padding:0;"/><p>It occurs when you try whole Cocoon sources, especially
+<a href="2.2/blocks/1.0/1252_1_1.html">serializers block</a>. The problem lays in code of this
+block that demands more than 64mb of memory in order to compile. Solution is
+simple - give Maven more memory by setting environment variable:</p><pre>[Win] set MAVEN_OPTS=-Xmx256m
+[Unix] MAVEN_OPTS='-Xmx256m'
+</pre><p>And then fire your <tt>mvn</tt> command as before. It should work now.</p><h1>And when your build works</h1><section name="Run Maven in offline mode" style="background:none;padding:0;"/><p>You shouldn't  get any problems anymore as long as you don't update your
+local repo. To switch on the offline mode, append the -o parameter. e.g.</p><pre>mvn clean -o</pre><section name="Setup a company internal proxy repository" style="background:none;padding:0;"/><p>If you don't want to rely on external repositories, you can setup a company
+internal <a href="http://maven-proxy.codehaus.org/">proxy repository</a>. The
+Codehaus wiki contains
+<a href="http://docs.codehaus.org/display/MAVENUSER/Creating+a+Maven+proxy">more
+information</a> about the setup process</p></div></div>
+       </body></document>

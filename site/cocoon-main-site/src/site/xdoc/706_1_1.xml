@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Live Sites - 2.2</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Live Sites - 2.2</h1><p>This is a list of live sites proudly powered by Apache Cocoon.</p><h1>Cocoon 2.2-dev</h1><ul>
+<li><a href="http://www.indoqa.com">{Indoqa.com}</a> - Company website</li>
+<li><a href="http://www.lovo.cc">Lovo.cc</a> - A life-style guide offering
+<em>location based services</em></li>
+<li><a href="http://www.mindquarry.org">Mindquarry Open Source Project</a> - Web
+site hosting the development of an Open Source collaborative software suite,
+running on itself, and fully Cocoon-based</li>
+<li><a href="http://www.spokanestreetracing.com/">Spokane Street Racing</a> -
+Web site for local amateur motorsports community.</li>
+<li><a href="http://juntadeandalucia.es/">Portal de la Junta de Andalucia </a>-
+Official portal of the regional government of Andalucia, Spain. High traffic
+site which is using the dispatcher block from Apache forrest as templating
+engine and uses the content from multiple independent administrational
+application as input.</li>
+</ul><h1>Cocoon 2.2-dev (through Forrest)</h1><ul>
+<li><a href="http://cyriaque.dupoirieux.free.fr/accueil.html">A mon avis vous
+faites erreur ...</a> - Family site</li>
+</ul></div></div>
+       </body></document>

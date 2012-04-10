@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - How to build the site locally</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">How to build the site locally</h1><p>This page explains how to build the Cocoon 2.2 documentation site with Maven2
+and the daisy-maven-plugin.</p><p>This plugin assumes that each block has its own collection and navigation
+document.</p><h1>Configure settings.xml</h1><p>The documents can only be exported by a user with admin rights to the Daisy
+repository. We have created such a user <tt>daisy-export</tt>. The password for
+this user is available in a <tt>daisy-export-user-<tt>password.txt</tt>
+</tt>file in the home directory of the daisy user. If you want to use your own
+Daisy user, make sure that you have administration rights.</p><p>Open the <tt>~/.m2/setting.xml</tt> and add the following:</p><pre>&lt;settings&gt;
+
+ [...]
+
+ &lt;profiles&gt;
+    &lt;profile&gt;
+       &lt;id&gt;localDocs&lt;/id&gt;
+       &lt;properties&gt;
+          &lt;docs.deploymentBaseUrl&gt;file:///cocoon-site&lt;/docs.deploymentBaseUrl&gt;
+       &lt;/properties&gt;
+     &lt;/profile&gt;
+ &lt;/profiles&gt;  
+  
+ &lt;servers&gt;
+    &lt;server&gt;
+       &lt;id&gt;cocoon-daisy&lt;/id&gt;
+       &lt;username&gt;daisy-export&lt;/username&gt;
+       &lt;password&gt;<strong>SECRET PASSWORD HERE</strong>&lt;/password&gt;
+    &lt;/server&gt;
+ &lt;/servers&gt;
+
+&lt;/settings&gt; 
+</pre><h1>Build all modules required for the site generation</h1><pre>cd trunk
+mvn install -P daisy</pre><h1>Build the site</h1><pre>cd trunk/site
+mvn site -o -P daisy,docs-sites
+</pre><div class="note"><div><strong>Note: </strong>You don't have to build the complete site for every module every
+time. You can also go to a module, that is configured to provide docs, of your
+choice and build its docs only if this fits your needs.</div></div><h1>Deploy the site locally</h1><p>Deploy the site using the "localDocs" profile.</p><pre>mvn site:deploy -o -P daisy,docs-sites,localDocs
+</pre><p>If you want to checkin the local docs build to SVN in order to publish them,
+make sure that the profile above (localDocs) points to a local directory which
+is a checkout of our docs from SVN
+(<a href="http://svn.apache.org/repos/asf/cocoon/site/site/">http://svn.apache.org/repos/asf/cocoon/site/site/</a>).
+<br/>
+There is a guide with additional information about <a href="1418_1_1.html">how to
+publish our docs</a>.</p></div></div>
+       </body></document>

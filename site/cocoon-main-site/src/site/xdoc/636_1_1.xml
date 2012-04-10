@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Apache Cocoon Tests</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Apache Cocoon Tests</h1><h1>Overview of testing procedures</h1><p>Since Apache Cocoon <a href="2.2/1159_1_1.html">uses Apache Maven</a> automatic unit
+testing is very tighly integrated with build process. We also
+<a href="http://vmbuild.apache.org/continuum">use Continuum</a> to ensure that
+Apache Cocoon can run properly on your particular computing platform and that
+the components do function properly.</p><p>You can build upon this infrastructure to add your own tests, and to ensure
+that development work proceeds smoothly. The tests for each module (block) are
+located in the <tt>src/test/</tt> directory.</p><h1>JUnit Tests</h1><p>If you run <tt>mvn install</tt> JUnit test cases are executed automatically
+and build procedure will fail if any test fails.  JUnit test cases cover:</p><ul>
+<li>testing various pipeline/sitemap components (including trasformers, matcher,
+generators, sources, etc.)</li>
+<li>testing the methods for getting platform-dependent filesystem pathnames;
+etc.</li>
+</ul><div class="note"><div><strong>Note: </strong>It is important to pay attention to class'es package and name
+because test's configuration setup seekes for files that follow convention. In
+order to set up all needed components and execute test as expected you need to
+follow proper directory structure that is shown in an example below.</div></div><section name="How to add more JUnit tests for Avalon-managed class" style="background:none;padding:0;"/>As there is already a nice junit framework available, it is not that
+difficult to add junit tests for any class. The process will be explained
+step-by-step getting as an example
+<tt>org.apache.cocoon.template.JXTemplateGenerator</tt> class from
+<tt>cocoon-template-impl</tt> module.<h3>Component configuration</h3>You must create <tt>JXTemplateGeneratorTestCase.xtest</tt> file and put it at
+<tt>src/test/resources/og/apache/cocoon/template</tt>. The file will contain
+configuration for components that tested generator needs to work with. Example
+file may look like this:<pre>&lt;testcase&gt;
+    &lt;roles&gt;
+        &lt;role name="org.apache.cocoon.generation.GeneratorSelector" shorthand="generators"
+              default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/&gt;
+        &lt;role name="org.apache.excalibur.store.Store/TransientStore" shorthand="store" default-class="org.apache.excalibur.store.impl.MemoryStore"/&gt;
+        &lt;role name="org.apache.cocoon.template.expression.StringTemplateParserSelector" shorthand="string-template-parsers"
+              default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/&gt;
+    &lt;/roles&gt;
+    &lt;components&gt;
+        &lt;generators logger="test"&gt;
+            &lt;component-instance class="org.apache.cocoon.template.JXTemplateGenerator" name="jx"/&gt;
+        &lt;/generators&gt;
+        &lt;component role="org.apache.cocoon.template.script.ScriptManager" class="org.apache.cocoon.template.script.DefaultScriptManager"/&gt;
+        &lt;component role="org.apache.cocoon.template.script.InstructionFactory" class="org.apache.cocoon.template.script.DefaultInstructionFactory"/&gt;
+        &lt;string-template-parsers&gt;
+          &lt;component-instance class="org.apache.cocoon.template.expression.JXTGStringTemplateParser" name="jxtg"/&gt;
+          &lt;component-instance class="org.apache.cocoon.template.expression.DefaultStringTemplateParser" name="default"/&gt;
+        &lt;/string-template-parsers&gt;
+    &lt;/components&gt;
+&lt;/testcase&gt;</pre><p>As you can see, several components and generator itself are set up.</p><h3>Java test-case</h3><p>Now you must create <tt>JXTemplateGeneratorTestCase.java</tt> file and put it
+at <tt>src/test/java/org/apache/cocoon/template</tt>. The class should extend
+<tt>org.apache.cocoon.SitemapComponentTestCase</tt> from <tt>cocoon-core</tt>
+module so the Avalon's ServiceManager is set up properly and you can use lots of
+helper methods. Next step is writing actual testing methods, example method
+would look like:</p><pre>public void testGenerate() throws Exception {
+  String inputURI = docBase + "generate.xml";
+
+  assertEqual(load(inputURI), generate(JX, inputURI, EMPTY_PARAMS));
+}
+</pre><p>This simple method tests if generator reads simple input file (generate.xml)
+and emits all SAX events properly.</p><div class="note"><div><strong>Note: </strong>It useful to check <tt>S</tt><tt>itemapComponentTestCase</tt>
+and <tt>CocoonTestCase</tt> source code (or Javadocs) to find out what methods
+are already provided for your convenience.<br/>
+For example, very convient method for use is <tt>lookup()</tt> that enables you
+to look up for a new instance of Avalon component properly initialized according
+to Avalon's lifecycle management.</div></div><h3 id="execute-test-avalon">Execute the test</h3><p>As stated earlier Maven will execute all tests every time the build is
+performed so if you want to check if everything is working you can go to root
+directory of <tt>cocoon-template-impl</tt> and execute:</p><pre>mvn clean install
+</pre><p>As the output you should get something like this:</p><pre>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.apache.cocoon.template.jxtg.JXTemplateGeneratorTestCase
+[DEBUG] XMLizer: Default parser is 'org.apache.excalibur.xml.sax.SAXParser'.
+[DEBUG] Resolved to systemID : resource://org/apache/cocoon/template/jxtg/generate.xml
+[DEBUG] Creating source object for resource://org/apache/cocoon/template/jxtg/generate.xml
+[DEBUG] JaxpParser: validating: false, namespace-prefixes: false, reuse parser: true, stop on warning: true, stop on recoverable-error: true, saxParserFactory: javax.xml.parsers.SAXParserFactory, documentBuilderFactory: javax.xml.parsers.DocumentBuilderFactory, resolver hint: null
+[DEBUG] Releasing source object for resource://org/apache/cocoon/template/jxtg/generate.xml
+[DEBUG] Resolving 'resource://org/apache/cocoon/template/jxtg/generate.xml' with base 'null' in context 'file:/home/grek/asf/cocoon-trunk/blocks/cocoon-template/cocoon-template-impl/'
+[DEBUG] Resolved to systemID : resource://org/apache/cocoon/template/jxtg/generate.xml
+[DEBUG] Creating source object for resource://org/apache/cocoon/template/jxtg/generate.xml
+[DEBUG] Releasing source object for resource://org/apache/cocoon/template/jxtg/generate.xml
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.524 sec
+</pre><p>Which indicates that everything went just fine.</p><section name="How to add more JUnit tests for Spring-managed class" style="background:none;padding:0;"/><p>I suggest to read a section above describing how to write tests for Avalon
+components because I will show only focus on differences in particular steps.
+This time, we will examine how to write test for classes handling expression
+evaluation from <tt>cocoon-expression-language-impl</tt>. Let's assume we create
+test named "Expression".</p><h3>Components configuration</h3><p>Instead of creating <tt>*.xtest</tt> file you must create
+<tt>*.spring.xml</tt> file to configure Spring beans. First we create
+<tt>ExpressionTestCase.spring.xml</tt> file with contents like this:</p><pre>&lt;beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"&gt;
+  
+  &lt;import resource="classpath:META-INF/cocoon/spring/DefaultExpressionFactory.xml"/&gt;
+  &lt;import resource="classpath:META-INF/cocoon/spring/JavaScriptCompiler.xml"/&gt;
+  &lt;import resource="classpath:META-INF/cocoon/spring/JexlCompiler.xml"/&gt;
+  &lt;import resource="classpath:META-INF/cocoon/spring/JXPathCompiler.xml"/&gt;
+  
+&lt;/beans&gt;
+</pre><p>As you can see we only import other configuration files that are, in a fact,
+ordinar configuration files used in development. This approach is much cleaner
+than one used for Avalon class testing because you have to configure particular
+bean only one time and reuse this configuration while testing.</p><h3>Java test-case</h3><p>As writing test-case class for Spring bean is not much different from writing
+corresponding class for Avalon component I'm not going to describe it in detail.
+</p><p>The only difference that I would like to point out is how you should get an
+instance of Spring bean. Instead of using lookup method you should use
+<tt>getFactoryBean().getBean()</tt> method.</p><p>Take a look at this method as an example:</p><pre>public void testFactoryJexl() throws ExpressionException {
+  ExpressionFactory factory = (ExpressionFactory) this.getBeanFactory().getBean(ExpressionFactory.ROLE);
+  assertNotNull("Test lookup of expression factory", factory);
+
+  Expression expression = factory.getExpression("jexl", "1+2");
+  assertNotNull("Test expression compilation", expression);
+
+  assertEquals(new Long(3), expression.evaluate(new ExpressionContext()));
+}
+</pre><h3>Execute the test</h3><p>Tests for Spring beans should be executed exactly the same way that tests for
+Avalon components are executed so I point you to instructions
+<a href="#execute-test-avalon">above</a>.</p><h1>htmlunit Tests</h1><div class="fixme"><div><strong>Fixme: </strong>I do not know what is the status of htmlunit tests in trunk,
+JIRA issue
+<a href="https://issues.apache.org/jira/browse/COCOON-1488">COCOON-1488</a>
+contains more information</div></div><h1>Other tests</h1><p>Samples web application can be used to perform manual testing. Of course,
+<strong>contributions to automate these tests are welcome!</strong></p></div></div>
+       </body></document>
