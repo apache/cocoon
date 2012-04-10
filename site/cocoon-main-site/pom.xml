@@ -17,9 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    +-->
+<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
@@ -50,54 +48,53 @@
   </distributionManagement>
 
   <scm>
-<!-- repeated here so that maven-site is not appended -->
+    <!-- repeated here so that maven-site is not appended -->
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
     <url>http://svn.apache.org/viewcvs/cocoon/trunk</url>
   </scm>  
   
-  <reporting>
-    <excludeDefaults>true</excludeDefaults>
+  <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>project-team</report>
-              <report>mailing-list</report>
-              <report>cim</report>
-              <report>issue-tracking</report>
-              <report>license</report>
-            </reports>
-          </reportSet>
-        </reportSets>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <locales>en</locales>
+          <reportPlugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+              <version>2.4</version>
+              <configuration>
+                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>summary</report>                    
+                    <report>project-team</report>
+                    <report>mailing-list</report>
+                    <report>issue-tracking</report>
+                    <report>license</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
+          </reportPlugins>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-descriptor</id>
+            <goals>
+              <goal>attach-descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
-  </reporting> 
-  
-  <profiles>
-    <profile>
-      <id>daisy</id>
-      <build>
-        <plugins>
-		      <plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-site-plugin</artifactId>
-		      </plugin>          
-          <plugin>
-            <groupId>org.daisycms</groupId>
-            <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>
-              <navDocId>1203</navDocId>
-              <collection>cdocs-site-main</collection>
-              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>                   
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles> 
+  </build>
   
 </project>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Live Sites - 2.1.4</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Live Sites - 2.1.4</h1><p>This is a list of live sites proudly powered by Apache Cocoon.</p><h1>Cocoon 2.1.4</h1><ul>
+<li><a href="http://www.eti.pg.gda.pl/">Faculty of Electronics,
+Telecommunications and Informatics</a> (Gdansk University of Technology)</li>
+<li><a href="http://www.olympic-plaza.com.ua/">Olympic Plaza Megamall, Kiev,
+Ukraine</a> (English, Russian)</li>
+<li><a href="http://www.xmlmill.com/">XMLMill</a> - High volume xml-xsl to PDF
+Generation by Pecunia Data Systems</li>
+<li><a href="http://www.scriptorium.ro/">Scriptorium</a> - digital library
+project (Romanian, index page also in English and French)</li>
+<li><a href="http://www.conficio.com/">Conficio</a> - publisher of streaming
+multimedia format Plan-B for software application demonstration (offline
+generated)</li>
+<li><a href="http://www.grumpykitty.com/">Grumpy Kitty</a> (offline generated)
+</li>
+<li><a href="http://www.starline-net.de/">StarLine Webhosting</a> (German)</li>
+<li><a href="http://www.bethe1.com/">Bethe1</a> - The employment specialist in
+fashion, beauty and retail (French, English, Japanese)</li>
+<li><a href="http://www.ormaz.it/">Ormaz s.r.l.</a></li>
+<li><a href="http://www.geologie.bayern.de/">Bayerisches Geologisches
+Landesamt</a> - realized with a Cocoon-based CMS by projectinter.net (German)
+</li>
+<li><a href="http://vivacs.de/">Vivacs biotech company</a> - realized with a
+Cocoon-based CMS by projectinter.net</li>
+</ul></div></div>
+       </body></document>

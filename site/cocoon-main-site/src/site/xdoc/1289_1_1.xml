@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Books</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Books</h1><h1>Cocoon 2.1</h1><ul>
+<li><a href="http://www.galileocomputing.de/672?GPP=cocoon">Cocoon 2 und
+Tomcat</a> (Stephan Niedermeier)<br/>
+<strong>Availability:</strong> April 2004<br/>
+<strong>Hardcover:</strong> 900 pages, CD-ROM<br/>
+<strong>Publisher:</strong> Galileo Computing / Galileo Press<br/>
+<strong>ISBN:</strong> 3898424391<br/>
+Please note that you can download several free chapters and order the book at
+the <a href="http://www.galileocomputing.de/672?GPP=cocoon">Galileo Computing
+web site</a>.</li>
+</ul><h1>Cocoon 2.0</h1><ul>
+<li><a href="http://www.amazon.com/exec/obidos/ASIN/0782141315/">Cocoon 2
+Programming: Web Publishing with XML and Java</a> (Bill Brogden, Conrad D'Cruz,
+Mark Gaither)<br/>
+<strong>Availability:</strong> October 2002<br/>
+<strong>Paperback:</strong> 368 pages<br/>
+<strong>Publisher:</strong> Sybex<br/>
+<strong>ISBN:</strong> 0782141315</li>
+<li><a href="http://www.amazon.com/exec/obidos/ASIN/0672322579/">Cocoon
+Developer's Handbook</a> (Jeremy Aston, Lajos Moczar)<br/>
+<strong>Availability:</strong> September 2002<br/>
+<strong>Paperback:</strong> 500 pages<br/>
+<strong>Publisher:</strong> Sams<br/>
+<strong>ISBN:</strong> 0672322579</li>
+<li>
+<a href="http://www.newriders.com/books/product.asp?product_id=%7BC3C05052-BE3B-4E06-A60A-13FB40AF58F6%7D">Cocoon:
+Building XML Applications</a> (Carsten Ziegeler, Matthew Langham)<br/>
+<strong>Availability:</strong> July 2002<br/>
+<strong>Paperback:</strong> 504 pages<br/>
+<strong>Publisher:</strong> New Riders Publishing<br/>
+<strong>ISBN:</strong> 0735712352<br/>
+Please note that you can download several
+<a href="http://www.newriders.com/books/product.asp?product_id=%7BC3C05052-BE3B-4E06-A60A-13FB40AF58F6%7D">free
+chapters</a> at the New Riders web site. You can also download
+<a href="http://www.s-und-n.de/sunshine/ccos/CBA-Chapter1.pdf">chapter 1 (An
+Introduction to Internet Applications)</a> and
+<a href="http://www.s-und-n.de/sunshine/ccos/CBA-Chapter6.pdf">chapter 6 (A
+User's Look at the Cocoon Architecture)</a> from the S&amp;N website.</li>
+</ul></div></div>
+       </body></document>

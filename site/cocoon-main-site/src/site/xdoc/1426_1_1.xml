@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Apache Cocoon 2.1.11 Released</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Apache Cocoon 2.1.11 Released</h1><pre>Apache Cocoon 2.1.11 Released
+
+
+
+  The Apache Cocoon Community is proud to announce the new release
+
+  of Apache Cocoon.
+
+
+
+  Apache Cocoon is a web development framework built around the concept
+
+  of separation of concerns (that is: allowing people to do their job
+
+  without having to step on each other toes) and component-oriented web
+
+  RAD.
+
+
+
+  The latest version is downloadable from
+
+  <a href="http://cocoon.apache.org/mirror.cgi">http://cocoon.apache.org/mirror.cgi</a>
+
+  (Please use the mirrors to download the release - it might take
+
+  a little bit more time until the latest release is available on
+
+  all mirrors, so give the mirrors some time - approx. 24h to update.)
+
+
+
+  This release includes many bug fixes and smaller enhancements.
+
+
+
+  For more information about Apache Cocoon 2.1.10, please go to
+
+  <a href="http://cocoon.apache.org">http://cocoon.apache.org</a>. You'll find the whole list of changes at
+
+  <a href="http://cocoon.apache.org/2.1/changes.html">http://cocoon.apache.org/2.1/changes.html</a>.
+
+
+
+The Apache Cocoon Project
+
+
+For more information about Apache Cocoon 2.1.11, please go to
+<a href="http://cocoon.apache.org">http://cocoon.apache.org</a>
+
+Changes with Apache Cocoon 2.1.11
+
+*) Created XPathXMLFileModule to address issus with XMLFileModule. XPathXMLFileModule supports variable 
+replacement and caching of documents in ehcache and expressions as soft references. [RG]
+
+*) Forms: Allow Ajax submission of forms with empty upload field. [AG]
+
+*) Portal: New SiteProfileManager providing the same profile to several users based on a configured key. [CZ]
+
+*) Portal: Some memory consumption improvements for the user profiles. [CZ]
+
+*) Core: Update xalan to 2.7.1. [AG]
+
+*) Sitemap: Redirect to cocoon:/foo did not work in sub-sitemap when it is in same directory as the root sitemap. [AN]
+
+*) Core: Update xercesImpl to 2.9.1. [AG]
+
+*) Event Cache Block: Restore serializability of persistent cache when using event-aware cache. [JH]
+
+*) Mail Block: Fix setting of URL message body. [VG]
+
+*) &lt;map:serialize status-code="{}"/&gt; supports variable resolution. [JH]
+
+*) XMLDB Block: Fix collection URLs in XMLDBSource. Fixes URL resolution and 'Mount DB' sample. [VG]
+
+*) XMLDB Block: Update Xindice to 1.1 release. [VG]
+
+*) POI Block: Color string normalization. [AG]
+
+*) build.sh: Allow for quoted shell arguments containing spaces. [AN]
+
+*) CForms: Handling of empty responses in AJAX Forms with IFrame transport. [AG]
+
+*) Ajax: ajax/common.js makes use of deprecated dojo.animation.Timer [AG]
+
+*) XSP block: Upgrade Eclipse compiler to version 3.1.0 to allow the use of Java5 syntax in XSPs.
+(Latest released Eclipse version is 3.2.2 but use 3.1.0 to be consistent with the version picked up by the Maven build in trunk). [AN]
+
+*) Core, QDox: Fixed getInputStream() in XModuleSource and QDoxSource: Set up XMLSerializer in a component way, i.e. retrieve it from ServiceManager. [JH]
+
+*) Dojo toolkit upgraded to 0.4.3 version. It contains fix for security bug. See <a href="http://dojotoolkit.org/releaseNotes/0.4.3">http://dojotoolkit.org/releaseNotes/0.4.3</a>. [GK]
+
+*) I18n (ParamSaxBuffer): when substitution params like {0} are split over multiple character events, do not write out extra garbage characters. [JJ]
+
+*) Portal: Marked PreparePortalAction, CopletSetDataAction, and ObjectModelAction ThreadSafe [RG]
+
+*) Core: Update log4j to 1.2.14, commons-io to 1.3.1, commons-lang to 2.3 and jakarta-regexp to 1.5. [AG]
+
+*) CForms: MultivalueEditorWithSuggestion doesn't add values to the listbox on Internet Explorer. [AG]
+
+*) CForms: Submit widget now inherits validate attribute value from the ancestor widget, if it is specified. [VG]
+
+*) Serializers block: Correctly handle content of script and style tag as cdata for html. [CZ]
+
+*) CForms: MultivalueEditorWithSuggestion, extended multivalueeditor widget with suggestion list. [AG]
+
+*) CForms: CFormsSuggest widget does not implement the onValueChanged event. [AG]
+
+*) Core: EHCache now uses the configured cache directory instead of using the default of java.io.tempdir. [CZ]
+
+*) Core: Update ehcache to 1.2.3. [CZ]
+
+*) Template block: Add missing toString implementation to TemplateObjectModelHelper.ParametersMap. [CZ]
+
+*) Portal block: CocoonPortlet needs to allow overriding servlet-path parameter with preferences. [CZ]
+
+*) CForms: Fix "Serialization parameter {indent} must have the value yes or no" error in Form.prototype.saveXML() when using Saxon. [JJ]
+
+*) Core: Exipres caching pipeline can now cache the content forever (by setting cache-expires to a negative value). [CZ]
+
+*) Core: In store janitor, add an option to cleanup all stores on each janitor run. Default behavior is to cleanup one store at a time. [VG]
+
+*) Core: Fix deadlock in caching pipeline when used in combination with include transformer. [AN]
+
+*) CForms: introduce a new dojo-based popup-picker for dates, times and datetimes. 
+For correct localization, supply a "dojo-locale" parameter to the forms styling XSLT (see samples). [BRD]
+
+*) CForms: add support for a "timeStyle" attribute on the formatting date convertor, 
+so that the time style can (optionally) be specified independently from the date style. [BRD]
+
+*) Portal block: Fix truncation of included portlets in html include serializer. [CZ]
+
+*) Auth block: Fix checking of double logins for the same security handler. [CZ]
+
+*) HSQLDB block: Fix startup problems with newer HSQLDB versions and upgrade to 1.8.0.7. [CZ]
+
+*) Core: Check for reloading of javascript files loaded by cocoon.load(). [CZ]
+
+*) Forms block: Add method to create binding from DOM tree. [JH]
+
+*) Core: Fix threading issue with internal cache in ResourceReader. [JH]
+
+*) POI Block: Prevent NPE in ElementProcessorSerializer on characters before first startElement. [JH]
+
+*) Updating Dojo to 0.4.1. use namespaces for loading widgets cleanup of client-side libraries into
+cocoon.forms.common deprecation and replacement of functions in forms_lib.js cocoon.js CFormsForm.js
+all cforms forms now use a dojo widget (forms:SimpleForm or forms:AjaxForm) [JQ]
+
+*) Portal Block: Applied and improved patch for reloading bookmarks based on their (file) validity. [CZ]
+
+*) Portal Block: Fix handling of missing special parameters for forms in NewEventLinkTransformer. [CZ]
+
+*) Auth Block: Make isUserInRole a static method. [CZ]
+
+*) Fixes to forms and ajax samples. [JQ]
+</pre></div></div>
+       </body></document>

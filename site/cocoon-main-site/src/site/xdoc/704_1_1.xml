@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Live Sites - 2.1.7</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Live Sites - 2.1.7</h1><p>This is a list of live sites proudly powered by Apache Cocoon.</p><h1>Cocoon 2.1.7</h1><section name="MW-Import Werkzeuge" style="background:none;padding:0;"/><p><em>Date added: 2006-06-29</em></p><p>A German Web shop selling measurement tools imported from Asia.</p><p><strong>URL:</strong>
+<a href="http://www.mw-import.de/">http://www.mw-import.de/</a><br/>
+<strong>Contact</strong>: wang [AT] mw-import [DOT] de</p><h4>Additional information</h4><h5>How much time did it take to build the site from design to publication?</h5><p>6 months.</p><h5>How many people were involved in the project?</h5><p>one Java Developer and one Designer.</p><h5>How much traffic does this site handle?</h5><p>100 User a day / 1500 Pages</p><h5>What made you choose Cocoon to build the site?</h5><p>The main reason to that Cocoon let us follow the MVC pattern and separate
+concerns. The Web designer was able to develop the style sheet totally
+independent of the application logic. All business logic could be encapsulated
+in services and tested with Junit outside the web container. At least the flow
+provide as facility to bind the web application together. As a bonus we easily
+can create Order documents in pdf. <br/>
+Beside the fact that Cocoon is cool framework one of our partners used Cocoon in
+former project.</p><h5>What other information do you want to disclose (e.g. how does it work, how
+did you build it, what parts of Cocoon did you use)?</h5><p>Main Parts used: Cocoon Form, Flow with Continuation, and FOP</p><section name="Polarbear's family site" style="background:none;padding:0;"/><p><em>Date added: 2005-10-25</em></p><p>Offline generated, multilingual site. MySql blogs, automatic menu generation
+from file system. Administration of users, blogs and comments.</p><p><strong>URL:</strong>
+<a href="http://milan.port5.com/">http://milan.port5.com/</a></p><p><strong>Contact</strong>: milan.andrejevic AT ceetel.co.yu</p><h4>Additional information</h4><h5>How much time did it take to build the site from design to publication?</h5><p>Several months. Cocoon user 3 years now.</p><h5>What made you choose Cocoon to build the site?</h5><p>I tried asp, php, plone, but I found Cocoon most appropriate for the job.</p><h5>What other information do you want to disclose (e.g. how does it work, how
+did you build it, what parts of Cocoon did you use)?</h5><p>I use file, status, search, jx, forms, directory, xsp, calendar generators;
+xslt (saxon with xslt 2.0 support), i18n, linkrewriter, paginator, cinclude,
+write-source transformers; preemptive action; html, links, fo2pdf serializers.
+Site implements authentication framework, cforms and server-side javascript
+control flow. Database connection through flow.</p><section name="Origami Society Netherlands" style="background:none;padding:0;"/><p><em>Date added: 2005-10-05</em></p><p>A bilingual (NL and EN) website on origami and the Origami Society
+Netherlands. It holds information for both members and non-members.</p><p><strong>URL:</strong>
+<a href="http://www.origami-osn.nl">http://www.origami-osn.nl</a><br/>
+<strong>Contact</strong>: osnbeheer AT gmail.com</p><h4>Additional information</h4><h5>How much time did it take to build the site from design to publication?</h5><p>3 months, 1 person in spare time.</p><h5>How many people were involved in the project?</h5><p>1</p><h5>How much traffic does this site handle?</h5><p>+/- 6000 hits/day</p><h5>What made you choose Cocoon to build the site?</h5><p>Several reasons:</p><ul>
+<li>I already knew how to use Cocoon from a different project</li>
+<li>I didn't manage to tweak a preinstalled PHP-based CMS to do what I wanted in
+a short amount of time</li>
+<li>I have complete control over all aspects of the website</li>
+</ul><h5>What other information do you want to disclose (e.g. how does it work, how
+did you build it, what parts of Cocoon did you use)?</h5>The site contains a search engine for folding models that were published in
+the OSN's magazines Orison and Minori. This search engine uses an XMLRPC query
+call to an externally running eXist database.<br/>
+Currently the pages are almost all XML files (i.e. for each page an XML file
+with content in both languages exists), there are plans to move to a
+(Cocoon-based) CMS to allow others to update the site.<br/>
+It uses CForms + flowscript for all forms.<section name="Other sites" style="background:none;padding:0;"/><ul>
+<li><a href="http://www.rynekmedyczny.pl/">Rynekmedyczny.pl</a> - health care
+institution portal (in 4 languages)</li>
+<li><a href="http://www.nouvo.ch/">nouvo.ch</a>, Swiss multimedia magazine (in
+French), also at wap.nouvo.ch for mobile phones.</li>
+<li><a href="http://archives.tsr.ch">TSR archives </a>- Video archives of the
+Swiss french-speaking television network.
+<a href="http://www.tsrdecouverte.ch">TSR découverte</a> and
+<a href="http://www.histoiredelatsr.ch">Histoire de la TSR</a> are from the same
+TV network and use the same Cocoon application.</li>
+<li><a href="http://www.gopubmed.org/">GoPubMed</a> - Ontology-based literature
+search</li>
+<li><a href="http://www.ihop-net.org/UniPub/iHOP/">Information Hyperlinked over
+Proteins</a> - By employing genes and proteins as hyperlinks between sentences
+and abstracts, the information in PubMed can be converted into one navigable
+resource. iHOP is an online service that provides this gene guided network as a
+natural way of accessing the more than twelve million abstracts in PubMed and
+brings all the advantages of the internet to scientific literature research. The
+actual network provided in iHOP contains two million sentences and 30000
+different genes from human, mouse, Drosophila, C. elegans, zebrafish,
+Arabidopsis, yeast and E. coli.</li>
+<li><a href="http://www.tanakhml.org/">TanakhML Project</a> - Hebrew text of the
+Bible and online related tools: Hebrew/English text browser, verse accentual
+structure analyser, form concordancer.</li>
+<li><a href="http://www.plauditdesign.com/">Plaudit Design</a> - Minneapolis web
+site design company</li>
+<li><a href="http://www.lamiz.de/">Arabische und ägyptische Kochrezepte auf
+lamiz.de - Der Geschmack des Orients</a> - German website providing Egyptian and
+Arab recipes and Information about Egyptian culture.</li>
+<li><a href="http://www.gamedev.pl/">Warsztat</a> - Polish site in early stage
+of development that aims at keeping polish game programming community together
+and provide some useful resources.</li>
+</ul></div></div>
+       </body></document>

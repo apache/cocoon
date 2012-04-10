@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Debugging Cocoon in Eclipse</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Debugging Cocoon in  Eclipse</h1><p>This tutorial describes how you can run Cocoon in debug mode in Eclipse. Make
+sure that you have a working Cocoon web application. These two tutorials </p><ul>
+<li><a href="2.2/1159_1_1.html">Your first Cocoon application using Maven 2</a></li>
+<li><a href="2.2/maven-plugins/maven-plugin/1.0/1297_1_1.html">Reloading classloader</a></li>
+</ul>help you to get one.<div class="note"><div><strong>Note: </strong>This tutorial describes how the Jetty Launcher can be used to
+run Cocoon. At the time of writing this, the Jetty Launcher doesn't support
+Jetty 6. If you prefer using it, find some instructions in the "Using Jetty 6"
+section.</div></div><h1>Using the Jetty Launcher</h1><ol type="1">
+<li>
+<a href="http://help.eclipse.org/help31/index.jsp?topic=/org.eclipse.platform.doc.user/tasks/tasks-34.htm">Install</a>
+the <a href="http://jettylauncher.sourceforge.net/">Jetty Launcher</a> Eclipse
+plugin using the plugin
+<a href="http://jettylauncher.sourceforge.net/updates">update link</a>.</li>
+<li>After that, you have to
+<a href="http://sourceforge.net/project/showfiles.php?group_id=7322&amp;package_id=132252">download
+Jetty 5.1.x</a> and extract it to a directory of your choice.</li>
+<li>Then follow the excellent
+<a href="http://jettylauncher.sourceforge.net/docs/quickstart.html">Quick Start
+guide</a> that comes with the Eclipse plugin.</li>
+</ol><div class="note"><div><strong>Note: </strong>Jetty 5.1 does not support all of the Servlet 2.4 API, in
+particular the RequestAttributeListener which is used by Cocoon.  In order to
+run with the Jetty Launcher using Jetty 5.1, you must do the following
+additional steps:</div></div><ol type="1">
+<li>Copy etc/webdefault.xml from your Jetty 5.1 distribution to somewhere (e.g.,
+the root directory of your webapp Maven module)</li>
+<li>Edit webdefault.xml, un-comment the JSR154 section at the end; this will
+enable Jetty's grudging support of RequestAttributeListener :-)</li>
+<li>In the Eclipse Jetty Launcher setup dialog, check the "Use a custom
+webdefaults config file" and enter the path to your webdefaults.xml</li>
+</ol><ol type="1"> 
+</ol>If you want to be able to debug code that is in one of your libraries,  you
+either have to add the source code to the dependency (if you use Maven 2 try
+<tt>mvn eclipse:eclipse -DdownloadSources</tt>) or if it is available as Eclipse
+project, add it as <em>Project Reference</em> / <em>Java Build Path -
+Project</em> reference. The second option together with the
+<a href="2.2/maven-plugins/maven-plugin/1.0/1297_1_1.html">Reloading Classloader plugin</a>, makes it possible to work
+in several projects while all changes take effect immediatly.<h1>Using Jetty 6</h1>Using the Jetty launcher is much simpler  and you don't have to
+create a Java project for each Cocoon application that you want to debug.If you prefer using Jetty 6, you can start Jetty as Java application from
+within Eclipse. For this purpose<ul>
+<li><a href="http://dist.codehaus.org/jetty/">download</a> Jetty 6</li>
+<li>and extract it into a directory of choice. You only have to make sure that
+it is not a subdirectory of an Eclipse project that is added to your Eclispe
+workspace.</li>
+<li>now create a new Java project (e.g. "Jetty6") in your workspace and add
+jetty-6.x.jar, jetty-util-6.x.jar,  servlet-api.2.5.x.jar and start.jar as
+library dependencies (all 4 files are part of the official Jetty distribution)
+</li>
+<li>add the project(s) that you want to debug as <em>Project References</em>
+and as <em>Java Build Path - Projects</em> references. This makes it necessary
+that these projects are added to the current workspace.</li>
+<li>provide a minimal Jetty configuration file <tt>jetty-debug-cocoon.xml</tt>,
+e.g. in the root directory of your "Jetty6" project</li>
+</ul><pre>&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd"&gt;
+&lt;Configure id="Server" class="org.mortbay.jetty.Server"&gt;
+    &lt;Set name="ThreadPool"&gt;
+      &lt;New class="org.mortbay.thread.BoundedThreadPool"&gt;
+        &lt;Set name="minThreads"&gt;2&lt;/Set&gt;
+        &lt;Set name="lowThreads"&gt;2&lt;/Set&gt;
+        &lt;Set name="maxThreads"&gt;10&lt;/Set&gt;
+      &lt;/New&gt;
+    &lt;/Set&gt;
+    &lt;Call name="addConnector"&gt;
+      &lt;Arg&gt;
+          &lt;New class="org.mortbay.jetty.nio.SelectChannelConnector"&gt;
+            &lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" default="8080"/&gt;&lt;/Set&gt;
+            &lt;Set name="maxIdleTime"&gt;30000&lt;/Set&gt;
+            &lt;Set name="Acceptors"&gt;2&lt;/Set&gt;
+            &lt;Set name="confidentialPort"&gt;8443&lt;/Set&gt;
+          &lt;/New&gt;
+      &lt;/Arg&gt;
+    &lt;/Call&gt;
+    &lt;Set name="handler"&gt;
+      &lt;New id="handlers" class="org.mortbay.jetty.handler.HandlerCollection"&gt;
+        &lt;Set name="handlers"&gt;
+         &lt;Array type="org.mortbay.jetty.Handler"&gt;
+           &lt;Item&gt;
+             &lt;New id="contexts" class="org.mortbay.jetty.handler.ContextHandlerCollection"/&gt;
+           &lt;/Item&gt;
+           &lt;Item&gt;
+             &lt;New id="defaultHandler" class="org.mortbay.jetty.handler.DefaultHandler"/&gt;
+           &lt;/Item&gt;
+           &lt;Item&gt;
+             &lt;New id="requestLog" class="org.mortbay.jetty.handler.RequestLogHandler"/&gt;
+           &lt;/Item&gt;
+         &lt;/Array&gt;
+        &lt;/Set&gt;
+      &lt;/New&gt;
+    &lt;/Set&gt; 
+    &lt;New id="cocoon" class="org.mortbay.jetty.webapp.WebAppContext"&gt;
+      &lt;Arg&gt;&lt;Ref id="contexts"/&gt;&lt;/Arg&gt;
+      &lt;Arg&gt;<strong>[path to the webapp root directory]</strong>&lt;/Arg&gt;
+      &lt;Arg&gt;/&lt;/Arg&gt;
+    &lt;/New&gt;
+
+    &lt;!-- =========================================================== --&gt;
+    &lt;!-- extra options                                               --&gt;
+    &lt;!-- =========================================================== --&gt;
+    &lt;Set name="stopAtShutdown"&gt;true&lt;/Set&gt;
+    &lt;!-- ensure/prevent Server: header being sent to browsers        --&gt;
+    &lt;Set name="sendServerVersion"&gt;true&lt;/Set&gt;
+
+&lt;/Configure&gt;</pre><ul>
+<li>open "Run - Debug" and add a new Java Application as debugging target</li>
+<ul>
+<li>name it e.g. "Debugging Cocoon"</li>
+</ul>
+
+<ul>
+<li>select the new project as <em>Project</em></li>
+<li>select org.mortbay.start.Main as <em>Main class </em>(check "<em>Include
+libraries when searching for a main class</em>")</li>
+<li>add <tt>jetty-debug-cocoon.xml </tt>as <em>Programm argument</em></li>
+<li>add
+<tt>-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
+-Dorg.apache.cocoon.mode=dev</tt> as <em>VM Arguments</em></li>
+</ul>
+
+<li>hit the <em>Debug</em> button</li>
+<li>open http://localhost:8080/[block-name] in your favorite web browser</li>
+</ul></div></div>
+       </body></document>

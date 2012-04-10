@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - History</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">History</h1><h1>The early years</h1><p>Cocoon started simply enough. In 1998 Jon Stevens -- of Apache JServ,
+Turbine, Velocity, Anakia, and Tigris Scarab fame -- and I created scripts that
+managed the automatic update of the java.apache.org site. The scripts were dead
+simple: iterate over all the CVS modules that java.apache.org had under the
+/docs and copy them to the right place.</p><p>The problem was that people were continously messing up the docs. Few people
+want to write documentation for open source projects; when they do, you thank
+them and don't complain about coherence of style and stuff like that. Or you
+won't have any docs at all.</p><p>The solution was obvious: we needed a way to separate style from content. In
+late 1998 the first XSL working draft was released and IBM made a Java XSL
+processor, LotusXSL, available. I downloaded both and started to play around
+with what was later called XSLT. While playing with this stuff, I quickly grew
+tired of typing a command line, moving to the browser to see the result, over
+and over. I wanted a less tedious change-transform-reload cycle.</p><p>So I wrote a servlet that handled the tedious bits for me; I could modify the
+stylesheet, hit reload on the browser, and the servlet would handle everything.
+This was at the very end of 1998 and Ron Howard's movie Cocoon was playing on
+the television, which explains the weird name only partially. I believed at the
+time that these technologies were a key part of the future of the Web, so a
+cocoon was just what was needed to allow them to incubate and grow stronger.</p><p>Apache Cocoon 1.0 was a servlet, about 100 lines of code, that used XML4J
+(later Apache Xerces) and LotusXSL (later Apache Xalan) to transform an XML file
+with an XSL stylesheet. At that time, XSLT, XPath and XSL:FO were still part of
+one big spec. I didn't think it was very useful for anyone else so I kept it on
+my disk for a few months. Then, around March 1999, on the jserv-dev mail list
+somebody was asking about XSL, and I said that I'd written a servlet that did
+all that transformation on the server side. Many people asked for it, so I
+requested a formal vote and the Apache Cocoon project was started under the
+java.apache.org umbrella.</p><p>The 1.0 version contained very little code, but lots of examples and some
+simple docs that explained what XSL was and why I thought it was important to
+learn it. After its release, people started joining active development, and we
+turned a small servlet into a full XML-based publishing system, which is now
+used in many production sites around the world.</p><p>But Cocoon 1.x was designed when the XML world was very young and experience
+was very small and it was based under several design choices that turned to be
+very limiting. So, around November 1999, I expressed the intention to work on
+the next generation (what people started calling Cocoon2 or simply C2) to solve
+all those architectural issues.</p><p>It took two years and three different project leaders to finish Cocoon 2.0
+but we made it. It's an XML framework that raises the usage of XML and XSLT
+technologies for server applications to a new level. Designed for performance
+and scalability around pipelined SAX processing, Cocoon offers a flexible
+environment based on the separation of concerns between content, logic and
+style. A centralized configuration system and sophisticated caching enable you
+to create, deploy, and maintain rock-solid XML server applications.</p><p>Cocoon was designed as an abstract engine that could be connected to almost
+anything, but it ships with servlet and command line connectors. The servlet
+connector allows you to call Cocoon from your favorite servlet engine or
+application server. You can install it beside your existing servlets or JSPs.
+The command line interface allows you to generate static content as a batch
+process. It can be useful to pre-generate those parts of your site that are
+static, some of which may be easier to create by using Cocoon functionalities
+than directly (say, SVG rasterization or applying stylesheets). For example, the
+Cocoon documentation and web site are all generated by Cocoon from the command
+line.</p><p>The history will continue here...</p><p>by Stefano Mazzocchi</p><h1>Cocoon 2.1</h1><p>Cocoon 2.1 tried to overcome the flaws of 2.0 and simplify the sitemap.</p><div class="fixme"><div><strong>Fixme: </strong>More overview info here</div></div><h1>Cocoon 2.2</h1><p>Currently Cocoon 2.2 is under development. Some major changes have happened
+between 2.1 and 2.2: the build process moved from Ant to Maven2 and the
+underlying Avalon framework was replaced by Spring. The change in build system
+also allowed a separation of the Cocoon blocks into separate projects, each with
+their own build cycle. This in turn should allow for binary releases again.</p></div></div>
+       </body></document>

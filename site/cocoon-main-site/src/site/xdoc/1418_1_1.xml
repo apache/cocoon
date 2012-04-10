@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - How to publish docs to cocoon.apache.org</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">How to publish docs to cocoon.apache.org</h1><p>If you want to publish the Cocoon docs you can follow one of those two paths:
+</p><ul>
+<li>use the nightly build on cocoon.zones.apache.org</li>
+<li>build the docs at your local machine</li>
+</ul><h1>Use the nightly build</h1>There is a nightly build (runs at 2am and 2pm UTC) of our docs available at
+cocoon.zones.apache.org. Login via ssh and use the 'maven' user:<pre>sudo su - maven</pre>Then change to<pre>cd ~/svn-site-generation</pre><p>There you will find a directory <tt>svn-docs</tt>. It contains a recent
+checkout (= part of the nightly docs build) and the result of the docs
+generation process copied over. If you want to see the docs online, point your
+browser to
+<a href="http://cocoon.zones.apache.org/nightly-docs/">http://cocoon.zones.apache.org/nightly-docs/</a>.
+</p><div class="note"><div><strong>Note: </strong>There is a second job which builds the docs once a day too. In
+addition to the first one it adds a couple of reports (Findbugs, SVN reports,
+etc.). See
+<a href="http://cocoon.zones.apache.org/dev-docs/">http://cocoon.zones.apache.org/dev-docs/</a>.
+</div></div><p>Using</p><pre>svn st svn-docs</pre><p>will show you all the differences.</p><p>If you want to add all the newly generated docs run</p><pre>svn st | grep "\?" | awk '{print $2}' | xargs svn add
+</pre><p>which will recursivly add all new documents.</p><p>Then run</p><pre>svn ci [path] --no-auth-cache --username [username]</pre><p>for all the docs that you want to publish.</p><p>That's it. When the docs are committed to the SVN, they will be published
+within the next 60 minutes.</p><h1>Build the docs locally</h1><p>Actually it's the same as using the nightly build. The only difference is
+that you have to build the docs yourself. The <a href="1256_1_1.html">How to build
+the docs locally guide</a> explains how you can do  this. Then follow the steps
+from above.</p></div></div>
+       </body></document>
