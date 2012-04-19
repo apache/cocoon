@@ -60,17 +60,17 @@
       <section id="caching">
         <h2>Caching</h2>
         <ul>
-  	      <li><a href="caching-pipeline/off">Non-Caching pipeline</a>: The pipeline doesn't cache (although it's components support it)</li>
-  	      <li><a href="caching-pipeline/on">Caching pipeline</a>: The result of the pipeline is cached for 1.5 seconds. The next request that occurs
-	        after the cached response has expires, triggers a reexecution of the pipeline in the same thread.</li>
-  	      <li><a href="async-caching-pipeline/on">Async-Caching pipeline</a>: The result of the pipeline is cached for 1.5 seconds. The next request that occurs
-	        after the cached response has expires, triggers a reexecution of the pipeline in a separate thread.</li>
-  	      <li><a href="/expires/caching-pipeline/on">Expires-Caching pipeline</a>: The pipeline returns a cached result for defined period,
-	        independently from whether components used in the pipeline support caching or not. The pipeline result is cached for 2 seconds. The
-	        recreation of the pipeline result is done in the same thread as the servlet request.</li>
-  	      <li><a href="/expires/async-caching-pipeline/on">Expires-Async-Caching pipeline</a>: The pipeline returns a cached result for defined period,
-	        independently from whether components used in the pipeline support caching or not. The pipeline result is cached for 2 seconds. The recreation of the
-	        pipeline result is done in a separate thread than the servlet request.</li>
+          <li><a href="caching-pipeline/off">Non-Caching pipeline</a>: The pipeline doesn't cache (although it's components support it)</li>
+          <li><a href="caching-pipeline/on">Caching pipeline</a>: The result of the pipeline is cached for 1.5 seconds. The next request that occurs
+            after the cached response has expires, triggers a reexecution of the pipeline in the same thread.</li>
+          <li><a href="async-caching-pipeline/on">Async-Caching pipeline</a>: The result of the pipeline is cached for 1.5 seconds. The next request that occurs
+            after the cached response has expires, triggers a reexecution of the pipeline in a separate thread.</li>
+          <li><a href="/expires/caching-pipeline/on">Expires-Caching pipeline</a>: The pipeline returns a cached result for defined period,
+            independently from whether components used in the pipeline support caching or not. The pipeline result is cached for 2 seconds. The
+            recreation of the pipeline result is done in the same thread as the servlet request.</li>
+          <li><a href="/expires/async-caching-pipeline/on">Expires-Async-Caching pipeline</a>: The pipeline returns a cached result for defined period,
+            independently from whether components used in the pipeline support caching or not. The pipeline result is cached for 2 seconds. The recreation of the
+            pipeline result is done in a separate thread than the servlet request.</li>
         </ul>
       </section>
       <section id="error-handling">
@@ -85,6 +85,8 @@
         <h2>Servlet-Service-Components and servlet: protocol</h2>
         <ul>
           <li><a href="ssf/local">servlet:/</a>: Using a local servlet service.</li>
+          <li><a href="internal-only/simple-xml">ResourceNotFound/</a>: Try to access directly an internal-only pipeline.</li>
+          <li><a href="ssf/local-internal-only">servlet:/</a>: Using a local servlet service provided by an internal-only pipeline.</li>
           <li><a href="ssf/calling-a-transformer-servlet-service">Servlet service transformer</a>: Call another pipeline that performs a transformation.</li>
           <li><a href="ssf/calling-a-serializer-servlet-service">Servlet service serializer</a>: Call another pipeline that performs the serialization step.</li>
         </ul>
@@ -155,7 +157,7 @@
         <ul>
           <li><a href="controller/abc/foo?reqparam=1">GET request</a>: Invoke a controller and pass two parameters</li>
           <li><a href="controller/conditional-get/abc/foo?reqparam=1">Conditional GET request </a>: A controller that implements the o.a.c.rest.controller.method.ConditionalGet
-	       interface and provides a cache key.</li>
+            interface and provides a cache key.</li>
         </ul>
       </section>
       <section id="jaxrs-rest-controller">
@@ -167,28 +169,28 @@
       <section id="fop">
         <h2>FOP</h2>
         <ul>
-  	      <li><a href="fop/test.pdf">PDF</a>: Create a PDF document by using Apache FOP.</li>
+          <li><a href="fop/test.pdf">PDF</a>: Create a PDF document by using Apache FOP.</li>
         </ul>
       </section>
       <section id="encoding-serializers">
         <h2>Encoding Serializers</h2>
         <ul>
-  	      <li><a href="serializers/exml">eXML</a>: A XML serializer not relying on the JAXP API.</li>
-  	      <li><a href="serializers/exhtml">eXHTML</a>: A pedantinc XHTML serializer encoding all recognized entities with their proper HTML names.</li>
-  	      <li><a href="serializers/ehtml">eHTML</a>: A serializer converting XHTML into plain old HTML.</li>
+          <li><a href="serializers/exml">eXML</a>: A XML serializer not relying on the JAXP API.</li>
+          <li><a href="serializers/exhtml">eXHTML</a>: A pedantinc XHTML serializer encoding all recognized entities with their proper HTML names.</li>
+          <li><a href="serializers/ehtml">eHTML</a>: A serializer converting XHTML into plain old HTML.</li>
         </ul>
       </section>
       <section id="cocoon-wicket-integration">
         <h2>Cocoon-Wicket integration</h2>
         <ul>
-  	      <li><a href="wicket/">Wicket Reader</a>: A reader defers redirects a request to a Wicket application.</li>
+          <li><a href="wicket/">Wicket Reader</a>: A reader defers redirects a request to a Wicket application.</li>
         </ul>
       </section>
       <section id="stringtemplate">
         <h2>StringTemplate</h2>
         <ul>
-  	      <li><a href="string-template/generator">StringTemplateGenerator</a>: A generator using <a href="http://www.stringtemplate.org/">StringTemplate</a> template engine.</li>
-  	      <li><a href="string-template/transformer">StringTemplateTransformer</a>: A transformer using <a href="http://www.stringtemplate.org/">StringTemplate</a> template engine.</li>
+          <li><a href="string-template/generator">StringTemplateGenerator</a>: A generator using <a href="http://www.stringtemplate.org/">StringTemplate</a> template engine.</li>
+          <li><a href="string-template/transformer">StringTemplateTransformer</a>: A transformer using <a href="http://www.stringtemplate.org/">StringTemplate</a> template engine.</li>
         </ul>
       </section>
     </article>
