@@ -51,4 +51,10 @@ public class ErrorThrowingAction implements Action {
     public String toString() {
         return "ErrorThrowingAction";
     }
+
+    @Override
+    public void setConfiguration(Map<String, ? extends Object> configuration) {
+        // nothing to do
+        
+    }
 }
