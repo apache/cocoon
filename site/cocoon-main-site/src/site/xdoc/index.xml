@@ -126,64 +126,44 @@
               <br/>
               <a href="1284_1_1.html">Version 2.2.0</a>
             </div>
-            <div class="moreDownload">Other releases are on the
-              <a href="1284_1_1.html">download page</a>.
+            <div class="moreDownload">Other releases are on the <a href="1284_1_1.html">download page</a>.
             </div>
           </div>
         </div>
         <h1>News</h1>
         <div class="news">
           <dl class="news">
-            <dt>Apache Cocoon 3</dt>
-            <dd> Corona was accepted by the Cocoon PMC to become Apache Cocoon 3. The Cocoon 3 website has more details. A first ALPHA release will follow soon.
-              [<a href="1487_1_1.html">more</a>] 
+            <dt>Looking for samples?</dt>
+            <dd>In case you have been wondering where the good old Cocoon samples were gone, we have just restored 
+            <a href="http://cocoon.zones.apache.org">our jail</a>, currently with Cocoon 3.0 and Cocoon 2.1 samples.
             </dd>
-            <dd class="newsMeta">submitted by Reinhard Pötz, 8/14/08 7:23:55 AM</dd>
+            <dd class="newsMeta">submitted by Francesco Chicchiriccò, 03/20/11 13:12:00 GMT</dd>
           </dl>
           <dl class="news">
-            <dt>Apache Cocoon 2.2.0 Released</dt>
-            <dd> Apache Cocoon 2.2.0 Released The Apache Cocoon Community is proud to announce the release of Cocoon 2.2.0. Apache Cocoon is a Spring-based framework (since version 2.2 of Cocoon) built around the concepts of separation of concerns and component-based development. Cocoon implements these concepts...
-              [<a href="1445_1_1.html">more</a>] 
+            <dt>Apache Cocoon 3.0.0-alpha-3 Released</dt>
+            <dd>The Apache Cocoon Community is proud to announce the release of Cocoon 3.0.0-alpha-3.
+              Apache Cocoon 3 is a major rewrite of Cocoon 2.2.
+              Like Cocoon 2 it is based around the concept of pipelines and sitemaps and it is very
+              similar to Cocoon 2.2 in many respects but is slimmed down and
+              designed to be *easily usable from within any Java environment*.
+              [<a href="news-c3-alpha-3-released.html">more</a>] 
             </dd>
-            <dd class="newsMeta">submitted by Reinhard Pötz, 5/15/08 5:19:52 AM</dd>
+            <dd class="newsMeta">submitted by Simone Tripodi, 07/01/11 09:35:37 GMT</dd>
           </dl>
           <dl class="news">
-            <dt>Apache Cocoon 2.1.11 Released</dt>
-            <dd> Apache Cocoon 2.1.11 Released   The Apache Cocoon Community is proud to announce the new release   of Apache Cocoon.   Apache Cocoon is a web development framework built around the concept   of separation of concerns (that is: allowing people to do their job without having to step on each other...
-              [<a href="1426_1_1.html">more</a>] 
+            <dt>Apache Cocoon 3.0.0-alpha-1 Released</dt>
+            <dd>The Apache Cocoon Community is proud to announce the release of Cocoon 3.0.0-alpha-1.
+              Apache Cocoon 3 is a major rewrite of Cocoon 2.2.
+              Like Cocoon 2 it is based around the concept of pipelines and sitemaps and it is very
+              similar to Cocoon 2.2 in many respects but is slimmed down and
+              designed to be *easily usable from within any Java environment*.
+              [<a href="news-c3-alpha-1-released.html">more</a>] 
             </dd>
-            <dd class="newsMeta">submitted by Grzegorz Kossakowski, 1/9/08 6:57:35 PM</dd>
-          </dl>
-          <dl class="news">
-            <dt>Apache Cocoon 2.2-RC2 Released</dt>
-            <dd> Apache Cocoon 2.2-RC2 Released The Apache Cocoon Community is proud to announce the second release candidate of Cocoon 2.2. Apache Cocoon is a Spring-based framework (since version 2.2) built around the concepts of separation of concerns and component-based development. Cocoon implements these c...
-              [<a href="1421_1_1.html">more</a>] 
-            </dd>
-            <dd class="newsMeta">submitted by Reinhard Pötz, 10/29/07 7:23:01 AM</dd>
-          </dl>
-          <dl class="news">
-            <dt>Cocoon GetTogether 2007 in Rome</dt>
-            <dd> After being three times in Gent, twice in Amsterdam the this year Cocoon GetTogether edition took place iin Rome from Oct 3rd to 5th. Again it was a great event that started with a two days Hackathon followed by a conference day. Most of the presentations are available at our Wiki.  A few folks ...
-              [<a href="1417_1_1.html">more</a>] 
-            </dd>
-            <dd class="newsMeta">submitted by Reinhard Pötz, 10/11/07 8:06:43 AM</dd>
-          </dl>
-          <dl class="news">
-            <dt>Relaunch of cocoon.apache.org</dt>
-            <dd> We are pleased to announce the publishing of the new website of Apache Cocoon. This relaunch comprises a new design for the main site and the Cocoon 2.2 documentation. The new documentation reflects the new structure of Cocoon 2.2 with a  small core which is based on the subprojects "Cocoon Conf... 
-              [<a href="1416_1_1.html">more</a>] 
-            </dd>
-            <dd class="newsMeta">submitted by Reinhard Pötz, 10/2/07 8:01:22 AM</dd>
-          </dl>
-          <dl class="news">
-            <dt>[Cocoon GetTogether 2007 - Rome] The program is out!</dt>
-            <dd> The CocoonGT team is pleased to announce the conference schedule has been finalized and is available at http://www.cocoongt.org/PROGRAM.html  As usual, we had a great number of high-quality submissions. In keeping with the tradition of having a conference day packed full with great content, we m...
-              [<a href="1414_1_1.html">more</a>] 
-            </dd>
-            <dd class="newsMeta">submitted by Reinhard Pötz, 9/28/07 2:20:11 PM</dd>
+            <dd class="newsMeta">submitted by Reinhard Pötz, 01/24/09 12:53:55 GMT</dd>
           </dl>
         </div>
         <a href="1279_1_1.html">News Archive</a>
+        <br/><br/><br/>
         <div class="includedDoc">
           <div id="contentBody">
             <div id="bodyText">
