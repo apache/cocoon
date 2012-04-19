@@ -34,7 +34,6 @@
   <name>Cocoon Subprojects [modules]</name>
 
   <modules>
-    <module>cocoon-jnet</module>
     <module>cocoon-block-deployment</module>
     <module>cocoon-servlet-service/cocoon-servlet-service-impl</module>
     <module>cocoon-servlet-service/cocoon-servlet-service-impl-sample</module>
