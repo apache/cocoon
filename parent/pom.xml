@@ -24,37 +24,16 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>4</version>
+    <version>10</version>
+    <relativePath/>
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>6-SNAPSHOT</version>
+  <version>9-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
-
-  <repositories>
-    <repository>
-      <id>central</id>
-      <name>Maven central repository</name>
-      <url>http://repo1.maven.org/maven2</url>
-      <releases>
-        <enabled>true</enabled>
-        <!-- only look for jars here when they are not present locally -->
-        <updatePolicy>never</updatePolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <!-- This is temporary repository -->
-    <repository>
-      <id>gkossakowski-maven2</id>
-      <name>gkossakowski-maven2</name>
-      <url>http://people.apache.org/~gkossakowski/maven2/repository</url>
-    </repository>
-  </repositories>
 
   <organization>
     <name>The Apache Software Foundation</name>
@@ -2215,11 +2194,6 @@
         <version>1.2.1.1</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-plugin-api</artifactId>
-        <version>2.0</version>
-      </dependency>
-      <dependency>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty</artifactId>
         <version>6.1.6</version>
@@ -3135,7 +3109,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.3</version>
+          <version>2.12</version>
         </plugin>
         <plugin>
           <artifactId>maven-site-plugin</artifactId>
