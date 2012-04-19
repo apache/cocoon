@@ -1118,18 +1118,6 @@
   </scm>
 
   <distributionManagement>
-    <repository>
-      <id>cocoon-staging-repo</id>
-      <name>staging release repository</name>
-      <!-- available via http: http://people.apache.org/builds/cocoon -->
-      <url>scpexe://people.apache.org/www/people.apache.org/builds/cocoon</url>
-    </repository>
-    <snapshotRepository>
-      <id>apache-maven-snapshot</id>
-      <name>snapshot repository</name>
-      <url>scpexe://dev.indoqa.com/daten/repo.indoqa.com/maven2/snapshots</url>
-      <uniqueVersion>true</uniqueVersion>
-    </snapshotRepository>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}</url>
