@@ -114,12 +114,7 @@
         <module>../blocks/cocoon-serializers/cocoon-serializers-impl</module>
     
         <!-- Subprojects -->
-        <module>../subprojects/cocoon-configuration/cocoon-configuration-api</module>
-        <module>../subprojects/cocoon-configuration/cocoon-spring-configurator</module>
-        <module>../subprojects/cocoon-servlet-service/cocoon-servlet-service-impl</module>
         <module>../core/cocoon-servlet-service/cocoon-servlet-service-components</module>
-        <module>../subprojects/cocoon-jnet</module>
-        <module>../subprojects/cocoon-block-deployment</module>
     
         <!-- Maven plugins -->
         <module>../tools/cocoon-maven-plugin</module>
