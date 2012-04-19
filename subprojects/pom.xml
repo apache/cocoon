@@ -33,8 +33,4 @@
   <version>6-SNAPSHOT</version>
   <name>Cocoon Subprojects [modules]</name>
 
-  <modules>
-    <module>cocoon-servlet-service/cocoon-servlet-service-impl-sample</module>
-  </modules>
-  
 </project>
