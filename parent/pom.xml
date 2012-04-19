@@ -3101,7 +3101,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-site-plugin</artifactId>
-          <version>2.0-beta-5</version>
+          <version>3.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
@@ -3130,14 +3130,6 @@
         </plugin>        
       </plugins>
     </pluginManagement>
-
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ssh-external</artifactId>
-        <version>1.0-alpha-6</version>
-      </extension>
-    </extensions>
 
     <plugins>
       <plugin>
