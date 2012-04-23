@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon 2.2 Site - Your first Cocoon application using Maven 2</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Your first Cocoon application using Maven 2</h1><p>In this tutorial, you will:</p><ol type="1">
+<li>Create a Cocoon block (the application resources and logic)</li>
+<li>Import the block as a project in Eclipse</li>
+<li>Start the block as a web application and access it from your browser</li>
+</ol><div class="note"><div><strong>Note: </strong>First, make sure that you have Maven 2.0.9 or above installed.
+You can check this by calling <tt>mvn --version</tt> from the command line. If
+this doesn't work for you, read the
+<a href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">Maven
+in 5 Minutes</a> tutorial.</div></div><h1>Creating a Cocoon block</h1>Create a new directory which will be the root directory of your Cocoon
+application and change into it. For this tutorial, let's name it
+<tt>getting-started-app</tt>.The next step is to create a Cocoon block to contain your custom application.
+The development of any Cocoon web application should be done within one or more 
+blocks.  Cocoon blocks are little different to other Maven blocks except they
+have a particular expected <a href="../2.2/core-modules/core/2.2/1263_1_1.html">directory and file
+structure</a>.<div class="note"><div><strong>Note: </strong>You could manually create your blocks, but a simpler and less
+error-prone process is to use Maven's 'archetype' plugin.  This allows you to
+select from a list of block types and have Maven create them for you.  By
+default, the list of Maven archetypes is quite large.  For convenience, a
+catalog of Cocoon specific archetypes is available on the Cocoon web site and
+you will make use of this in the following instructions.</div></div>Run the following Maven command:<pre>mvn archetype:generate -DarchetypeCatalog=http://cocoon.apache.org
+</pre><p>Maven will generate some output and then interactively ask you for some
+information:</p><pre>Choose archetype:
+1: remote -&gt; cocoon-22-archetype-block-plain (Creates an empty Cocoon block; useful
+ if you want to add another block to a Cocoon application)
+2: remote -&gt; cocoon-22-archetype-block (Creates a Cocoon block containing some small
+ samples)
+3: remote -&gt; cocoon-22-archetype-webapp (Creates a web application configured to
+ host Cocoon blocks. Just add the block dependencies)
+Choose a number:  (1/2/3): <strong>2</strong>
+</pre><p>Maven first asks which archetype you want to create.  Item 2 in this list is
+the standard Cocoon block with some small sample files already in place.</p><pre>Define value for groupId: : <strong>com.mycompany</strong>
+Define value for artifactId: : <strong>myBlock1</strong>
+Define value for version:  1.0-SNAPSHOT: : <strong>1.0.0</strong>
+Define value for package: : <strong>com.mycompany.myBlock1</strong><strong><strong>
+</strong></strong></pre><p>Maven then asks a few more questions.  Just enter the details as shown
+above.  The groupId is a label that you can use to group all the blocks in your
+application.  The artifactId is the unique label that will identify this block
+from all others.  It is also the name of the directory that will be created to
+contain the block's files.  The package is the Java package that any Java files
+in the block will be assigned to.</p><div class="note"><div><strong>Note: </strong>If you are using a cocoon binary build from svn trunk then you
+probably want to change the archetypeVersion to the most recent one, matching
+the svn trunk. (see
+<tt>[<tt>c</tt></tt><tt>ocoon-svn]/tools/archetypes/cocoon-22-archetype-block/pom.xml</tt>)
+</div></div><p>Looking at the filesystem, you should find following directory structure:</p><pre>getting-started-app
+<tt> +-</tt><tt>myBlock1
+    +-pom.xml
+    +-src
+       +-[...]
+</tt></pre><h1>Import the block in Eclipse</h1><div class="note"><div><strong>Note: </strong>Cocoon is not tied to Eclipse IDE by any means. This step only
+describes what can be done to avoid tedious work of setting up project in
+Eclipse manually.<br/>
+If you don't use Eclipse, you can either skip this step or find a similar
+procedure to load the block in the IDE of your choice.</div></div><p>Change into the <tt>myBlock1</tt> directory and call</p><pre>mvn eclipse:eclipse</pre><p>This will create the necessary project descriptors for Eclipse. In Eclipse
+you can import the project into your workspace: <em>File &gt;  Import... &gt;
+Existing Projects into Workspace</em></p><p>If that's the first time you use Eclipse together with a project created by
+Maven 2, we recommend you read the
+<a href="http://maven.apache.org/guides/mini/guide-ide-eclipse.html">Maven Guide
+using Eclipse with Maven 2.x</a>.</p><h1>Run the block as Java web application</h1><p>After creating the Cocoon block you probably want to run it. For this purpose
+there is a Maven plugin that generates a minimal web application that loads your
+block. The pom.xml of your block already contains the necessary settings.</p><pre>mvn jetty:run</pre><p>and point your browser at <tt>http://localhost:8888/myBlock1/</tt> and get a
+hello world page.</p><div class="note"><div><strong>Note: </strong>The mentioned minimal web application is automatically created,
+when <tt>mvn jetty:run</tt> is invoked. This happens because the rcl goal of the
+Cocoon plugin is bound to the Maven build lifecycle which is invoked too, when
+the jetty:run goal is executed. See the block's <tt>pom.xml </tt>for details.
+</div></div><div class="note"><div><strong>Note: </strong>This process can be manually triggered with <tt>mvn
+cocoon:prepare</tt> too.</div></div><h1>Conclusion and further information</h1><p>So far you have created a Cocoon block and been able to run it in Jetty. 
+This is only the first step to creating a full-blown Cocoon application.  If you
+would like to know  more read the following tutorials:</p><ul>
+<li><a href="1290_1_1.html">Your first XML pipeline</a><br/>
+Cocoon is well known for its XML pipelines.  In this tutorial you will learn how
+to setup your first pipeline and discover the power of Cocoon sitemaps.</li>
+<li><a href="1291_1_1.html">Adding a second block</a><br/>
+This tutorial creates a web application that has a dependency on another block.
+There are use cases that require more than one block, e.g. you want to have all
+style specific resources within a single block that can be easily exchanged at
+deployment time (aka skinning).</li>
+<li><a href="../2.2/maven-plugins/maven-plugin/1.0/1297_1_1.html">Usage of the reloading classloader plugin</a><br/>
+The reloading classloader plugin enables rapid development of Cocoon
+applications since you don't have to restart the servlet container whenever one
+of your Java classes changes. Additionally, it enables the reloading of Cocoon
+resources too if they change.</li>
+<li><a href="1362_1_1.html">Deploying a Cocoon application<br/>
+</a>Eventually, you will probably need to create a Java web application (war
+file) in order to deploy your application to a servlet container such as Tomcat
+or Jetty, etc.  This tutorial shows you how.<a href="../2.2/core-modules/core/2.2/1263_1_1.html"><br/>
+</a></li>
+</ul>For the time being, we <em>recommend</em> you use <em>Maven 2</em> as your
+build system (though there is no hard dependency on it). This has the advantage
+that the build system is standardized and Cocoon web applications can reuse the
+toolset (create Eclipse configuration files, create releases, produce
+documentation, etc.). More information about Maven 2 can be found at the project
+<a href="http://maven.apache.org">website</a>.  We especially recommend reading:
+<ul>
+<li>
+<a href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">Maven
+in 5 minutes</a> and the</li>
+<li><a href="http://maven.apache.org/guides/getting-started/index.html">Getting
+started guide</a></li>
+</ul></div></div>
+       </body></document>

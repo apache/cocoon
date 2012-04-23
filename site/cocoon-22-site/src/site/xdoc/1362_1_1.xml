@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon 2.2 Site - Deploying a Cocoon application</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Deploying a Cocoon application</h1><p>This tutorial is based on the
+<a href="1159_1_1.html">Your
+first Cocoon application using Maven 2</a> which shows how to bootstrap a Cocoon
+project and <a href="1291_1_1.html">Modularize Cocoon apps</a> which shows how
+inter-block communication works. If you haven't followed the latter tutorial,
+you can go through this tutorial nonetheless but you have to skip everything
+that refers to <tt>myBlock2</tt>.</p><p>In this tutorial, you will:</p><ol type="1">
+<li>Connect blocks to the webapp and run it</li>
+<li>Create a parent Maven POM for the webapp and block <br/>
+(a convenience which allows you to trigger cascading builds of both maven
+modules from a single command)</li>
+<li>Change the block mount point so that it is mounted at the root level context
+(typical for a web application's "main block")</li>
+</ol><h1>Creating a Cocoon web application</h1>For this tutorial you will use the Cocoon web application archetype to create
+a Cocoon block suitable for generating a war file which can be deployed on a
+servlet container such as Tomcat or Websphere etc.  Change into the
+getting-started-app folder and type the following command: -<pre>mvn archetype:generate -DarchetypeCatalog=http://cocoon.apache.org
+</pre>Choose the web application archetype:<pre>Choose archetype:
+1: remote -&gt; cocoon-22-archetype-block-plain (Creates an empty Cocoon block; useful
+ if you want to add another block to a Cocoon application)
+2: remote -&gt; cocoon-22-archetype-block (Creates a Cocoon block containing some small
+ samples)
+3: remote -&gt; cocoon-22-archetype-webapp (Creates a web application configured to
+ host Cocoon blocks. Just add the block dependencies)
+Choose a number:  (1/2/3): <strong>3
+</strong></pre>Then respond to the other questions as follows:<pre>Define value for groupId: : <strong>com.mycompany</strong>
+Define value for artifactId: : <strong>myCocoonWebApp</strong>
+Define value for version:  1.0-SNAPSHOT: : <strong>1.0.0</strong>
+Define value for package: : <strong>com.mycompany.myCocoonWebApp</strong> 
+</pre><p>Looking at the filesystem, you should find following directory structure:</p><pre>getting-started-app
+<tt> +-</tt><tt>myBlock1
+ |  +-pom.xml
+ |  +-src
+ |     +-[...]
+</tt><tt> +-</tt><tt>myBlock2
+ |  +-pom.xml
+ |  +-src
+ |     +-[...]</tt>
+<tt> +-</tt><tt><tt>myCocoonWebapp</tt></tt><tt>    
+    +-pom.xml
+    +-src
+       +-[...]</tt>
+</pre><h1>Using a block within the web application</h1><p>In order to use blocks as dependencies you need to <em>install</em> them into
+Maven's local repository. First go to <tt>myBlock1/</tt> directory and execute
+following command:</p><pre>mvn install
+</pre><p>Then go to <tt>myBlock2/</tt> and execute the same command. This way both
+blocks will get installed into local repository where Maven stores all artifacts
+that can be used as dependencies.</p><p>So far the web application <tt>myCocoonWebapp</tt> doesn't have any
+information about the existense of the block <tt>myBlock1</tt> and
+<tt>myBlock2</tt>. Change this by opening
+<tt>getting-started-app/myCocoonWebapp/pom.xml</tt> and add the block as
+dependency:</p><pre>&lt;project&gt;
+  [...]
+    &lt;dependencies&gt;
+      &lt;dependency&gt;
+<strong>        &lt;groupId&gt;<strong><tt>com.mycompany</tt></strong>&lt;/groupId&gt;
+        &lt;artifactId&gt;<strong>myBlock1</strong>&lt;/artifactId&gt;
+        &lt;version&gt;<strong>1.0-SNAPSHOT</strong>&lt;/version&gt;</strong>
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+<strong>        &lt;groupId&gt;<strong><tt>com.mycompany</tt></strong>&lt;/groupId&gt;
+        &lt;artifactId&gt;<strong>myBlock2</strong>&lt;/artifactId&gt;
+        &lt;version&gt;<strong>1.0-SNAPSHOT</strong>&lt;/version&gt;</strong>
+      &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+  [...]
+&lt;/project&gt;</pre><p>That's it. Now it's time to run the web application. Move into
+<tt>getting-started-app/myCocoonWebapp</tt> and call</p><pre>mvn package jetty:run</pre><p>from there.<br/>
+Open your favorite web browser and call</p><pre>http://localhost:8888/myBlock1/</pre><p>That's it!</p><h1>Creating a parent pom</h1><p>For your convenience you can create a parent pom for the three Maven modules.
+Create a file <tt>getting-started-app/pom.xml</tt> with following content:</p><pre>&lt;project xmlns="http://maven.apache.org/POM/4.0.0" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;packaging&gt;pom&lt;/packaging&gt;
+  
+  &lt;groupId&gt;com.mycompany&lt;/groupId&gt;
+  &lt;artifactId&gt;getting-started-app&lt;/artifactId&gt;
+  &lt;version&gt;1-SNAPSHOT&lt;/version&gt;
+  
+  &lt;name&gt;Cocoon Getting Stared application [parent]&lt;/name&gt;
+  
+  &lt;modules&gt;
+    &lt;module&gt;<strong><tt>myCocoonWebapp</tt></strong>&lt;/module&gt;
+    &lt;module&gt;<strong>myBlock1</strong>&lt;/module&gt;
+    &lt;module&gt;<strong>myBlock2</strong>&lt;/module&gt;
+  &lt;/modules&gt;
+&lt;/project&gt;
+</pre><p>Having a parent pom file, you can trigger a reactor build from root, e.g. you
+can call mvn install from root which will compile, package and install the
+webapp and the block. Maven also takes care that the modules are build,
+according to the dependency graph, in the correct order.</p><p>If you want to inherit information (e.g. plugin configurations, properties,
+etc.) from the new parent pom to its child modules, you have to add the parent
+element to <tt>getting-started-app/myCocoonWebapp/pom.xml</tt> ,
+<tt>getting-started-app/myBlock1/pom.xml</tt> and
+<tt>getting-started-app/myBlock2/pom.xml</tt>:</p><pre>&lt;project xmlns="http://maven.apache.org/POM/4.0.0" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+
+  [...]
+<strong>  &lt;parent&gt;
+    &lt;groupId&gt;com.mycompany&lt;/groupId&gt;
+    &lt;artifactId&gt;getting-started-app&lt;/artifactId&gt;
+    &lt;version&gt;1-SNAPSHOT&lt;/version&gt;
+  &lt;/parent&gt;</strong>
+  [...]
+
+&lt;/project&gt;</pre><h1>Mounting your block at the root level</h1><p>You can mount your block at the root level in the application URI space, so
+that instead of using (for example) the URI
+<tt>http://localhost:8888/myBlock1/foo/bar</tt> to request a page, you would
+request it at <tt>http://localhost:8888/foo/bar</tt>.</p><p>To do this, edit
+<tt>myBlock1/src/main/resources/META-INF/cocoon/spring/blockServlet.xml </tt>,
+and change the element</p><pre>    &lt;property name="mountPath" value="/myBlock1"/&gt;
+</pre><p>to</p><pre>    &lt;property name="mountPath" value=""/&gt;
+</pre><p>and then run:</p><pre> <tt>mvn install</tt></pre></div></div>
+       </body></document>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon 2.2 Site - Screencasts</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Screencasts</h1><h1>Cocoon reloading class Maven plug-in - rapid development</h1><p>The following screencast demonstrates how Rapid Application (Block more
+precisely) Development is achieved with <a href="../2.2/maven-plugins/maven-plugin/1.0/1295_1_1.html">Maven's RCL</a>
+(AKA Cocoon) plug-in.</p><p>Some initial steps leading to creation of a basic block are taken from
+"<a href="1159_1_1.html">Your first Cocoon application using Maven 2</a>" tutorial.
+</p><div class="note"><div><strong>Note: </strong>During the screencast old version (1.0.0-RC2) of archetype is
+being used for initial block creation. You should use always use the latest
+available version which can be checked <a href="../2.2/maven-plugins/1208_1_1.html">here</a>.</div></div><div class="includedDoc"><object height="725" width="1008" type="application/x-shockwave-flash" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0"><param name="movie" value="flash/1452_1_1.swf"/><param name="Play" value="true"/><param name="Loop" value="false"/><param name="Autoplay" value="false"/><param name="Autostart" value="false"/><embed src="flash/1452_1_1.swf" height="725" width="1008" play="true" loop="false" autoplay="false" autostart="false"/></object><br/></div></div></div>
+       </body></document>
