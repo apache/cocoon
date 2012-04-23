@@ -38,7 +38,6 @@
     <module>archetypes/cocoon-22-archetype-block-plain</module>    
     <module>archetypes/cocoon-22-archetype-webapp</module>    
     <module>cocoon-maven-reports</module>
-    <module>cocoon-maven-plugin</module>
     <module>cocoon-maven-docs-cleaner-plugin</module>
     <module>cocoon-maven-javadocs-script-report</module>
     <module>cocoon-rcl/cocoon-rcl-webapp-wrapper</module>
