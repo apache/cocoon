@@ -26,13 +26,15 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../parent/pom.xml</relativePath>
+    <version>9-SNAPSHOT</version>
+    <relativePath/>
   </parent>
   
   <artifactId>cocoon-core-site</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Core Modules Site</name>
+  <packaging>pom</packaging>
+  
   <url>http://cocoon.apache.org/${docs.m.site-core-modules.relPath}</url>
   
   <properties>
@@ -53,29 +55,37 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
+        <version>3.0</version>
         <configuration>
-          <navDocId>1212</navDocId>
-          <collection>cdocs-site-core-modules</collection>
-          <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>     
-          <siteXmlContent>
-            &lt;project&gt;
-            &lt;skin&gt;
-            &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
-            &lt;artifactId&gt;cocoon-thien-maven-site-skin&lt;/artifactId&gt;
-            &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
-            &lt;/skin&gt;
-            &lt;body&gt;
-            &lt;!-- @daisy-start@ --&gt;&lt;!-- @daisy-end@ --&gt;
-            &lt;/body&gt;
-            &lt;/project&gt;
-          </siteXmlContent>                    
+          <locales>en</locales>
+          <reportPlugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+              <version>2.4</version>
+              <configuration>
+                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>summary</report>                    
+                    <report>project-team</report>
+                    <report>mailing-list</report>
+                    <report>issue-tracking</report>
+                    <report>license</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
+          </reportPlugins>
         </configuration>
-      </plugin>   
+      </plugin>
     </plugins>
   </build>
   
+  <modules>
+    <module>core</module>
+  </modules>
 </project>

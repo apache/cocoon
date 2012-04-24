@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Error Handling</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Error Handling</h1><h1>Error Handling</h1><p>During the execution of a Cocoon pipeline exceptions may occur within the
+involved components like generators, transformers etc. There are two
+possibilities to deal with them: The one would be not to handle them explicitly
+in the sitemap, which causes them to be logged and a default Cocoon error page
+to be displayed in the browser. The second is to define an error handling by
+using the sitemap tag &lt;map:handle-errors&gt;. Therein you are able to define
+any pipeline, that is executed in case of an exception occurred and displays an
+appropriate page.</p><section name="ExceptionSelector" style="background:none;padding:0;"/><p>The ExceptionSelector allows to realize conditional error handling within
+&lt;map:handle-errors&gt;-tags depending on the type of the occurred exception.
+Each exception is configured centrally at the selector in the sitemap by
+associating a symbolic name to its class.</p><p>Furthermore it is possible to define, what exceptions are to be "unrolled".
+This means, that if an exception has been rethrown embedded in another
+exception, this original exception can be considered for choosing the correct
+error handling.</p><p>Example:</p><pre>          
+&lt;map:selector name="exception" src="org.apache.cocoon.selection.ExceptionSelector"&gt;
+  &lt;exception name="processing" class="ProcessingException" unroll="true"/&gt;
+  &lt;exception name="sax" class="SAXException"/&gt;
+  &lt;exception name="application" class="ApplicationException"/&gt;
+&lt;/map:selector&gt;
+...
+&lt;map:pipeline&gt;
+  &lt;map:match pattern="resource"&gt;
+    ...
+  &lt;/map:match&gt;
+  &lt;map:handle-errors&gt;
+    &lt;map:select type="exception"&gt;
+      &lt;map:when test="processing"&gt;...&lt;/map:when&gt;
+      &lt;map:when test="sax"&gt;...&lt;/map:when&gt;
+      &lt;map:when test="application"&gt;...&lt;/map:when&gt;
+    &lt;/map:select&gt;
+  &lt;/map:handle-errors&gt;
+&lt;/map:pipeline&gt;
+          
+        </pre><p>Let's consider the following nested exceptions to occur:</p><ol type="1">
+<li>ProcessingException ( ApplicationException ): The ProcessingException is
+unrolled, so the error pipeline for "application" will be executed.</li>
+<li>ProcessingException ( ValidationException ): Since ValidationException is
+not configured at all and therefore unknown, the ProcessingException is not
+unrolled even if unrolling is enabled. Therefore the pipeline for "processing"
+will be executed.</li>
+<li>SAXException ( ApplicationException ): The unrolling is not enabled for
+SAXException, so the pipeline for "sax" will be executed.</li>
+</ol>Please notice that the selector configuration is processed from top to bottom
+and stops at the first matching exception. Therefore the most specific classes
+must be configured first. This behaviour is the same as with Java catch
+statements.<section name="XPathExceptionSelector" style="background:none;padding:0;"/>The XPathExceptionSelector is an extension to the standard selector described
+above. It adds the possibility to configure additional conditions for each
+exception type by using JXPath expressions, that operate on the exception
+object. This configuration is also done centrally at the selector in the
+sitemap, where symbolic names are defined for all specific error situations.
+Example:<pre>          
+&lt;map:selector name="exception" src="org.apache.cocoon.selection.XPathExceptionSelector"&gt;
+  &lt;exception name="Denied" class="AuthenticationFailure"&gt;
+    &lt;xpath name="PasswordWrong" test="authCode=10"/&gt;
+    &lt;xpath name="PasswordExpired" test="errorCode=11"/&gt;
+    &lt;xpath name="AccessForbidden" test="errorCode&amp;gt;11"/&gt;
+  &lt;/exception&gt;
+&lt;/map:selector&gt;
+...
+&lt;map:pipeline&gt;
+  &lt;map:match pattern="login"&gt;
+    ...
+  &lt;/map:match&gt;
+  &lt;map:handle-errors&gt;
+    &lt;map:select type="exception"&gt;
+      &lt;map:when test="PasswordWrong"&gt;...&lt;/map:when&gt;
+      &lt;map:when test="PasswordExpired"&gt;...&lt;/map:when&gt;
+      &lt;map:when test="AccessForbidden"&gt;...&lt;/map:when&gt;
+      &lt;map:when test="Denied"&gt;...&lt;/map:when&gt;
+      &lt;map:otherwise&gt;...&lt;/map:otherwise&gt;
+    &lt;/map:select&gt;
+  &lt;/map:handle-errors&gt;
+&lt;/map:pipeline&gt;
+          
+        </pre><p>In this example the exception AuthenticationFailure is configured under name
+"Denied". Additionally three further conditions "PasswordWrong",
+"PasswordExpired" and "AccessForbidden" are defined by using JXPath expressions.
+Therefore instances of AuthenticationFailure are expected to have methods
+getAuthCode() and getErrorCode(). Now the error handler defined for resource
+"login" has five branches: If situation "PasswordWrong" occurs, which means that
+an AuthenticationFailure exception with auth code 10 has been thrown, the first
+error pipeline is executed. If the error code equals to 11 the second pipeline
+is executed, if it is greater that 11 the third one and all other
+AuthenticationFailure errors are handled by the fourth one. In any other error
+situation the fifth branch would be chosen.</p><p>Please notice that the selector stops when it finds the first JXPath
+expression in the configuration that matches:</p><p>Example:</p><pre>          
+  &lt;map:selector name="exception" src="org.apache.cocoon.selection.XPathExceptionSelector"&gt;
+    &lt;exception name="application" class="ApplicationException"&gt;
+      &lt;xpath name="error3" test="errorCode&amp;gt;3"/&gt;
+      &lt;xpath name="error6" test="errorCode&amp;gt;6"/&gt;
+    &lt;/exception&gt;
+  &lt;/map:selector&gt;
+  ...
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="processForm"&gt;
+      ...
+    &lt;/map:match&gt;
+    &lt;map:handle-errors&gt;
+      &lt;map:select type="exception"&gt;
+        &lt;map:when test="error6"&gt;...&lt;/map:when&gt; &lt;!-- handler 1 --&gt;
+        &lt;map:when test="error3"&gt;...&lt;/map:when&gt; &lt;!-- handler 2 --&gt;
+      &lt;/map:select&gt;
+    &lt;/map:handle-errors&gt;
+  &lt;/map:pipeline&gt;
+          
+        </pre><p>If an ApplicationException with error code 9 occurs, handler 2 is executed
+since error situation "error3" is configured before "error6" at the selector
+even if the expression for "error6" also evaluates to "true".</p><section name="Error Handler Hierarchy" style="background:none;padding:0;"/><p>The tag &lt;map:handle-errors&gt; may be attached to any &lt;map:pipeline&gt;
+or the &lt;map:pipelines&gt; tag of the root sitemap or a subsitemap. Therefore
+it is possible to define two kinds of error handlers: A default handler may be
+defined within &lt;map:pipelines&gt; for applying to all resources of a sitemap.
+Alternatively individual handlers may be configured for sets of resources within
+&lt;map:pipeline&gt;.</p><p>Example:</p><pre>          
+&lt;map:pipelines&gt;
+  &lt;map:pipeline name="pipe1"&gt;
+    &lt;map:match pattern="res1"&gt;
+      ...
+    &lt;/map:match&gt;
+    &lt;map:handle-errors&gt;
+      &lt;!-- this is an individual handler for pipe1 --&gt;
+    &lt;/map:handle-errors&gt;
+  &lt;/map:pipeline&gt;
+  &lt;map:pipeline name="pipe2"&gt;
+    &lt;map:match pattern="res2"&gt;
+      ...
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+  &lt;map:pipeline name="pipe3"&gt;
+    &lt;map:match pattern="res3"&gt;
+      ...
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+  &lt;map:handle-errors&gt;
+    &lt;!-- this is the default handler for the whole sitemap --&gt;
+  &lt;/map:handle-errors&gt;
+&lt;/map:pipelines&gt;
+          
+        </pre><p>In conjunction with the ExceptionSelector resp. the XPathExceptionSelector it
+is possible to define a hierarchy of error handlers for an application. The
+behaviour then is the following: If an error occurs within a pipeline, Cocoon at
+first checks if an individual handler for this pipeline is defined. If so and it
+is able to handle the error due to its selection the processing terminates.
+Otherwise Cocoon looks for a default handler of the current sitemap. If one is
+found it is called. Now there is the same behaviour as above: If it can handle
+the exception the processing terminates otherwise the searching proceeds within
+the pipeline where the subsitemap is mounted. This goes on until the default
+handler of the root sitemap has been considered. If an error could not be
+handled at all, it is processed by the Cocoon engine in the end.</p><p>Please notice that a &lt;map:otherwise&gt; breaks the hierarchy since all
+errors will be handled on this level. Therefore all levels above will be called
+never.</p><p>Example:</p><pre>          
+Root sitemap:
+&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:mount uri-prefix="sub" src="sub/"/&gt;
+    &lt;map:handle-errors&gt;
+      &lt;map:select type="exception"&gt;
+        &lt;map:when test="resourceNotFound"&gt;...&lt;/map:when&gt;
+      &lt;/map:select&gt;
+    &lt;/map:handle-errors&gt;
+  &lt;/map:pipeline&gt;
+  &lt;map:handle-errors&gt;
+    &lt;map:generate src="generalerror.htm"/&gt;
+    &lt;map:serialize/&gt;
+  &lt;/map:handle-errors&gt;
+&lt;/map:pipelines&gt;
+
+Subsitemap:
+&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="processForm"&gt;
+      ...
+    &lt;/map:match&gt;
+    &lt;map:handle-errors&gt;
+      &lt;map:select type="exception"&gt;
+        &lt;map:when test="validation"&gt;...&lt;/map:when&gt;
+      &lt;/map:select&gt;
+    &lt;/map:handle-errors&gt;
+  &lt;/map:pipeline&gt;
+  &lt;map:handle-errors&gt;
+    &lt;map:select type="exception"&gt;
+      &lt;map:when test="application"&gt;...&lt;/map:when&gt;
+    &lt;/map:select&gt;
+  &lt;/map:handle-errors&gt;
+&lt;/map:pipelines&gt;
+          
+        </pre><p>Let's consider four situations concerning the above example:</p><ol type="1">
+<li>A ValidationException occurs, because for instance the user entered an
+invalid value: The defined pipeline's handler is called. Since it has a matching
+&lt;map:when&gt;-section it is able to handle such an exception and therefore
+the processing is finished.</li>
+<li>An ApplicationException occurs, because for instance a database connection
+has failed: The pipeline's handler is not able to handle the exception, so next
+the subsitemap's default handler is called. It has a matching
+&lt;map:when&gt;-section and is therefore able to handle the exception.</li>
+<li>A ResourceNotFoundException occurs, because for instance some file is
+missing. Both the pipeline's and the subsitemaps' handlers are not able to
+handle it. Now Cocoon proceeds after the mount point of the subsitemap and finds
+its pipeline's handler next. It is able to handle a ResourceNotFoundException
+and therefore produces the output in this case.</li>
+<li>A NullPointerException occurs, because something went completely wrong in
+the application: All handlers are not configured for such an exception and so
+the root sitemaps default handler will apply to it showing a general error page.
+</li>
+</ol>When handling exceptions in error handlers one has to take care about
+recursion when working with redirects. Consider the following sitemap:Example:<pre>          
+&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="resource"&gt;
+      ...
+      &lt;map:transformer type="foo"/&gt;
+      ...
+    &lt;/map:match&gt;
+    &lt;map:match pattern="error"&gt;
+      ...
+      &lt;map:transformer type="foo"/&gt;
+      ...
+    &lt;/map:match&gt;
+    &lt;map:handle-errors&gt;
+      &lt;map:select type="exception"&gt;
+        &lt;map:when test="connection"&gt;
+          &lt;map:act type="redirect" src="cocoon:/error"/&gt;
+        &lt;/map:when&gt;
+      &lt;/map:select&gt;
+    &lt;/map:handle-errors&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+          
+        </pre>This configuration may lead to an infinite loop: Imagine to call "resource"
+where the FooTransformer throws a ConnectionException, because the connection to
+a backend system has broken. The defined error handler will handle it and the
+used action internally redirects to resource "error". This resource itself uses
+the FooTransformer to get some data from the backend, which of cause also causes
+a ConnectionException. This is handled by the error handler, which redirects to
+resource "error" and so on. Such an infinite loop may also occur when using
+several "nested" redirects, i.e. the error handler redirects to a resource,
+which redirects to another resource, which might produce the original exception.
+When defining error handlers for an application such situation must be
+avoided. An easy rule would be: An error handling routine must never redirect to
+a resource for which the routine itself is responsible and which might produce
+the same error as just handled.</div></div>
+       </body></document>

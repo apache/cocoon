@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Redirection</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Redirection</h1><h1>Introduction</h1><p>A Redirector allows the sitemap to pass a request for one URI on to another,
+whether that other URI is handled by Cocoon or not.</p><p>To redirect from <tt>page1.html</tt> to <tt>page2.html</tt>, you can use the
+following:</p><pre>  &lt;map:match pattern="page1.html"&gt;
+    &lt;map:redirect-to uri="page2.html"/&gt;
+  &lt;/map:match&gt;
+
+        </pre><h1>HTTP redirects and how they work</h1><p>If the URI specified does not use the Cocoon: protocol, then an HTTP redirect
+will occur. The new URI is sent back to the client, which will then request the
+page from this new location.</p><p>Therefore, directory handling in redirect URIs works differently from other
+sitemap components.</p><p>If the new URI is relative, then it will be relative to the directory of the
+page that called it, not relative to the URI of the sitemap containing it. Thus,
+the following is incorrect:</p><pre>  &lt;map:match pattern="folder/page1.html"&gt;
+    &lt;map:redirect-to uri="folder/page2.html"/&gt;
+  &lt;/map:match&gt;
+
+</pre><p>This will in fact redirect the user to folder/folder/page2.html, which is
+probably not intended. The correct version is:</p><pre>  &lt;map:match pattern="folder/page1.html"&gt;
+    &lt;map:redirect-to uri="page2.html"/&gt;
+  &lt;/map:match&gt;
+    
+</pre><h1>Internal Redirects Using the Cocoon Protocol</h1><p>A redirection URI can make use of the <tt>cocoon:</tt> protocol to return
+content from another Cocoon pipeline. In this case, the redirection happens
+internally. The content from the redirected URI is returned to the client as if
+it came from the original URI.</p><p>Directory handling is the same here as for other sitemap components. So that:
+</p><pre>  &lt;map:match pattern="folder/page1.html"&gt;
+    &lt;map:redirect-to uri="cocoon:/folder/page2.html"/&gt;
+  &lt;/map:match&gt;
+
+</pre><p>will return the content of <tt>page2.html</tt> to the client in response to
+the request for <tt>page1.html</tt>.</p><p>Note: when the <tt>cocoon:</tt> protocol is used, an HTTP redirect is not
+used.</p><h1>Session Management with Redirects</h1><p>By setting the <tt>session</tt> attribute to <tt>yes</tt>, the current
+session will be maintained during the redirect.</p><h1>Temporary and Permanent Redirects</h1><p>By default, an HTTP redirect sends a code of <tt>SC_MOVED_TEMPORARILY</tt>,
+(<tt>302</tt>). This instructs the user agent to use the new URI, but not to
+cache the resulting page, as it may well soon revert back to the old URI.</p><p>This can be a problem for pages that have been moved permanently, as the new
+page will never be cached, placing additional load on both the browser and on
+the server.</p><p>This can be avoided using a permanent redirect, using a code of
+<tt>SC_MOVED_PERMANENTLY</tt> (<tt>301</tt>). A permanent redirect can be
+specified as:</p><pre>  &lt;map:match pattern="page1.html"&gt;
+    &lt;map:redirect-to uri="page2.html" permanent="yes"/&gt;
+  &lt;/map:match&gt;
+
+        </pre><p>This results in the user agent caching the redirected page, and thus saves
+resources both on the server and for the client's browser.</p><h1>Redirects in Pipelines</h1><p>A redirect must stand alone in a pipeline - it cannot occur after a
+generator. If a redirect needs to be generated conditionally by a pipeline, then
+a <tt>&lt;meta&gt;</tt> tag redirect should be added into the
+<tt>&lt;head&gt;</tt> of the HTML page. The syntax for this is:</p><pre>  
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta http-equiv="refresh" content="0;URL=page2.html"/&gt;
+    ...
+  &lt;/head&gt;
+  ...
+&lt;/html&gt;
+
+        </pre><h1>Global Redirects</h1><p>When an aggregator accesses a source that includes a redirection, it will
+aggregate the document specified by the redirection URI.</p><p>Alternatively, if a redirection that has the <tt>global</tt> attribute is set
+(to <tt>yes</tt> or <tt>true</tt>) occurs within an aggregation, the aggregation
+is cancelled and the redirect is sent back to the client.</p><h1>Redirecting to Resources</h1><p>Specifiying a <tt>resource</tt> attribute allows the redirection to a sitemap
+resource. This usage has been deprecated. <tt>map:call</tt> should be used
+instead.</p></div></div>
+       </body></document>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - ExpiresCachingProcessingPipeline</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">ExpiresCachingProcessingPipeline</h1><h1>Summary</h1><p>No summary available. The summary needs to be defined using the
+            <tt>@cocoon.sitemap.component.documentation</tt> annotation in the Java source file for this component.</p><h1>Basic information</h1><table class="bodyTable"><tbody><tr class="a"><th>Component type</th><td>Pipe</td></tr><tr class="b"><th>Cocoon block</th><td>core</td></tr><tr class="a"><th>Java class</th><td>org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline</td></tr><tr class="b"><th>Name in Sitemap</th><td/></tr><tr class="a"><th>Cacheable</th><td/></tr></tbody></table><h1>Documentation</h1><h1>Intro</h1><p>This pipeline implementation caches the complete content for a defined period
+of time (expires). You use this caching strategy, when you know your result is
+valid for example at least an hour. Since cocoon 2.1.9 (before this version,
+despite the fact that the ExpiresCachingProcessingPipeline only has to take its
+own cachekey and expiresValidity into account, it checked all cachekeys and
+validities of pipelines it used), this is by far the fastest caching strategy,
+because you define the exact cache key to be used by the expires pipeline AND
+you define how long it is valid after the first call: This means, and this only
+holds for the ExpiresCachingProcessingPipeline, that the validities and cache
+keys of other pipelines that it includes with map:part/map:generate won't have
+to evaluated.</p><h1>Declaration</h1><p>Make sure you declare the ExpiresCachingProcessingPipeline in your sitemap's
+component section in map:pipes:</p><pre>&lt;map:pipe name="expires"
+    src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline"&gt;
+  &lt;parameter name="cache-expires" value="180"/&gt; &lt;!-- Expires in seconds --&gt;
+&lt;/map:pipe&gt;</pre><p>The value can also be written like:</p><pre>access plus 1 minutes
+access plus 1 hours
+access plus 1 month
+access plus 4 weeks
+access plus 30 days
+access plus 1 month 15 days 2 hours</pre><p>The value of the parameter is in a format borrowed from the Apache HTTP
+module mod_expires.</p><h1>Usage</h1><p>In cocoon, you can define a different cache strategy for every pipeline.
+After adding the declaration above, you can use the "expires" pipeline:</p><pre>&lt;map:pipeline <strong>type="expires"</strong>&gt;
+  &lt;map:match pattern="foo"&gt;
+    &lt;map:generate src="bar.xml" type="jx"&gt;
+      &lt;map:parameter name="time" value="{date:yyyyMMddHHmmss}"/&gt;
+    &lt;/map:generate&gt;
+    &lt;map:serialize type="xml"/&gt;
+  &lt;/map:match&gt;
+&lt;/map:pipeline&gt;</pre><p>If bar.xml would look like
+&lt;time&gt;${cocoon.parameters.time}&lt;/time&gt;, and you would refresh it
+again and again, you would get the same output for 3 minutes (180 seconds from
+the declaration in map:components). After 3 minutes, it would result in a new
+output, again caching it for 3 minutes. The above map:pipeline is the most basic
+example.</p><p>If you want to have different cache-expires in different map:pipelines, then
+you add a map:parameter with name cache-expires directly under the map:pipeline
+of type expires:</p><pre>&lt;map:pipeline type="expires"&gt;
+  <strong>&lt;map:parameter name="cache-expires" value="60"/&gt;</strong>
+  &lt;map:match pattern="foo2"&gt;
+    &lt;map:generate src="bar.xml" type="jx"&gt;
+      &lt;map:parameter name="time" value="{date:yyyyMMddHHmmss}"/&gt;
+    &lt;/map:generate&gt;
+    &lt;map:serialize type="xml"/&gt;
+  &lt;/map:match&gt;
+&lt;/map:pipeline&gt;</pre><p>The match "foo2" will be cached for 1 minute.</p><p>With the example above, all urls "/foo", "/foo?bar=1", "foo?bar=1&amp;foo=2"
+will be expired under the same cache key. So having the following sitemap block,
+</p><pre>&lt;map:pipeline type="expires"&gt;
+  &lt;map:parameter name="cache-expires" value="60"/&gt;
+  &lt;map:match pattern="foo2"&gt;
+    &lt;map:generate src="bar.xml" type="jx"&gt;
+      &lt;map:parameter name="time" value="{date:yyyyMMddHHmmss}"/&gt;
+      &lt;map:parameter name="bar" value="{request-param:bar}"/&gt;
+    &lt;/map:generate&gt;
+    &lt;map:serialize type="xml"/&gt;
+  &lt;/map:match&gt;
+&lt;/map:pipeline&gt;</pre><p>and bar.xml
+&lt;time&gt;${cocoon.parameters.time}-${cocoon.parameters.bar}&lt;/time&gt;,
+would have the same result for three minutes for every link above. This is
+because the cache-key of the expires pipeline, is by DEFAULT the sitemap uri!
+But, you can define how your cache-key is constructed for every the
+map:pipeline:</p><pre>&lt;map:pipeline type="expires"&gt;
+  &lt;map:parameter name="cache-expires" value="60"/&gt;
+  <strong>&lt;map:parameter name="cache-key" value="{0}"/&gt;</strong>
+    .......
+&lt;/map:pipeline&gt;</pre><p>The above, is how it behaves by default, since {0} refers to the sitemap uri.
+But, you can also construct your cache-key like:</p><pre>&lt;map:pipeline  type="expires" internal-only="false"&gt;
+  &lt;map:parameter name="cache-expires" value="60"/&gt;
+  <strong>&lt;map:parameter name="cache-key" value="{0}{request-param:bar}{session-attr:locale}"/&gt;</strong>
+       .......
+&lt;/map:pipeline&gt;</pre><p>Now, your cache-key is different for different locale sessions and parameters
+bar.</p><h1>Purging your cache</h1><p>The last thing about this caching mechanism, is that you can you can use
+purge-cache parameter. This is particularly useful, when you want for example a
+very large cache-expires value, and purge the cache only when a specific request
+comes in. Then, for example, you could use</p><pre>&lt;map:pipeline  type="expires" internal-only="false"&gt;
+    &lt;map:parameter name="cache-expires" value="600000"/&gt; &lt;!--very long--&gt;
+    &lt;map:parameter name="cache-key" value="{0}{request-param:bar}{session-attr:locale}"/&gt;
+    <strong>&lt;map:parameter name="purge-cache" value="{request-param:purge}"/&gt;</strong>
+       .......
+&lt;/map:pipeline&gt;</pre><p>Now, if a request comes in with  a parameter purge=true, the specific cache
+related to the cache-key is purged, and the content is re-evaluated</p></div></div>
+       </body></document>

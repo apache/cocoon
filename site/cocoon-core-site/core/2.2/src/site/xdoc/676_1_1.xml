@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Creating an Action</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Creating an Action</h1><h1>Creating an Action</h1><p>Actions are unique in the world of Sitemap components. They don't implement
+the SitemapModelComponent and they merely exist to perform processing. For most
+business level processing, flowscript usually works better. However there are
+some systemic things we can implement using actions quite nicely. Actions are
+also unique in the sense that they do not need to be pooled. There is nothing in
+the contract that requires you to call multiple methods or do things in a
+certain order. Now a ThreadSafe component has its own challenges to ensure that
+the action is not a choke-point. Things to look out for are the use of
+<tt>synchronized</tt> when it is not necessary or trying to do too much in the
+action. Actions can be chained so keep things simple.</p><p>Actions have only one method to worry about. The sitemap invokes the method
+supplying several pieces of information and expects the return result of a
+<tt>java.util.Map</tt>. There are three outcomes from processing an action: the
+action succeeds and returns a java.util.Map, the action fails and return
+<tt>null</tt>, or the action throws an Exception. In the sitemap, an Action is
+invoked like this:</p><pre>&lt;map:act type="my-action" src="foo"&gt;
+  &lt;map:generate src="{actionval}.xml"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:act&gt;
+</pre><p>The sitemap only executes the elements internal to the <tt>map:act</tt>
+element when the Action returns a Map. If the Action returns null, that snippet
+is skipped. Using this to your knowledge you can provide confirmation pages that
+only show up when everything is processed successfully, otherwise we fall
+through to the remainder of the sitemap. Obviously we don't want to throw an
+exception if we can help it.</p><section name="What the Sitemap Provides" style="background:none;padding:0;"/><p>The sitemap provides the following elements:</p><ul>
+<li>Redirector--to perform redirects within the Action based on your logic.</li>
+<li>SourceResolver--to find resources.</li>
+<li>Object Model--to gain access to the request, context, and session objects.
+</li>
+<li>Source--the string defined in the "src" attribute in the Sitemap.</li>
+<li>Parameters--the parameters defined in the Sitemap at runtime.</li>
+</ul>Most of these items were covered in the
+<a href="673_1_1.html">SitemapModelComponent Contracts</a> documentation. The only
+item not covered so far is the Redirector. The
+<a href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/environment/Redirector.html">org.apache.cocoon.environment.Redirector</a>
+provides an interface to send a redirect so tha the browser requests a new
+document and we stop processing this one.<div class="fixme"><div><strong>Fixme: </strong>We need more information on when to call which method on the
+Redirector</div></div><section name="Creating the Action" style="background:none;padding:0;"/>It's not too hard to create an Action, but it can be difficult to keep track
+of what you are expecting the Sitemap to give you and what you give the Sitemap.
+As long as the purpose for your action is small and focused we can keep
+everything straight. What we are going to do here is create a "theming" action.
+The responsibility of the action is to select the stylesheet for the theme, but
+if the source is "xml" then we don't apply a stylesheet at all. It's actually
+not too difficult to perform. First let's set up our Sitemap:<pre>&lt;map:choose pattern="**.xhtml"
+  &lt;map:generate src="{1}.xml"/&gt;
+  &lt;map:act type="theme"&gt;
+    &lt;map:transform src="{theme}2xhtml.xsl"/&gt;
+  &lt;/map:act&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:choose/&gt;
+</pre>The plan is to use a parameter passed in to determine the theme. That means
+we aren't going to need the Source or SourceResolver parameters to perform our
+processing. We will need to extract the request parameter "theme" and interpret
+it. If "theme" has the value "xml" we don't do any transformations. If "theme"
+doesn't exist, we will provide a default value. And lastly, we will copy the
+request parameter "theme" to the returned Map so it is accessible inside.First the boiler plate code:<pre>import java.util.Map;
+import java.util.HashMap;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.acting.Action;
+
+public class ThemeAction implements Action, ThreadSafe
+{
+    private static final DEFAULT_THEME = "default";
+
+    public Map act( Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters params )
+        throws Exception
+    {
+        // .... the contents will be called out specifically below.
+    }
+}
+</pre>Now we can concentrate on the method itself. First things first, we need to
+get the "theme" request parameter. We do this by accessing the Request object
+from the object model:<pre>Request request = ObjectModelHelper.getRequest( objectModel );
+String theme = request.getParameter("theme");
+</pre><p>Ok, so we have the theme from the request object. Now lets check if it is
+empty and provide a default value if it is empty..</p><pre>if ( null == theme || theme.length() == 0 )
+{
+    theme = DEFAULT_THEME;
+}
+</pre><p>Next, let's check to see if the theme is the "xml" theme. We'll do it in a
+way that does not matter what case the "xml" value is. We return <tt>null</tt>
+in this case so that the transformer in the sitemap snippet above does not get
+added to the pipeline.</p><pre>if ( "xml".equalsIgnoreCase(theme.trim()) )
+{
+    return null;
+}
+</pre><p>Now we can assume that the value we have in the parameter "theme" is the name
+of a valid theme. We aren't going to do validation here, that's something you
+can have if you have inclination.</p><pre>Map returnValues = new HashMap();
+returnValues.put("theme", theme);
+
+return returnValues;
+</pre><p>That's it! We're done. We have an action that does not have to be pooled,
+selects a theme, provides a default, and does not apply formatting if the theme
+is "xml".</p></div></div>
+       </body></document>

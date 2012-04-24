@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - XIncludeTransformer</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">XIncludeTransformer</h1><h1>Summary</h1><p>Implementation of an XInclude transformer.</p><h1>Basic information</h1><table class="bodyTable"><tbody><tr class="a"><th>Component type</th><td>Transformer</td></tr><tr class="b"><th>Cocoon block</th><td>core</td></tr><tr class="a"><th>Java class</th><td>org.apache.cocoon.transformation.XIncludeTransformer</td></tr><tr class="b"><th>Name in Sitemap</th><td>xinclude</td></tr><tr class="a"><th>Cacheable</th><td>Yes - Yes</td></tr></tbody></table><h1>Documentation</h1><p>This transformer works according to the XInclude specification.</p><p>For more information refer to the
+<a href="http://www.w3.org/TR/xinclude">XInclude specification</a>.</p><p>You can include either simple text, or xml content. Including xml content --
+which is the default -- gives you the option to define an xpointer in the href
+attribute. Some quick xinclude examples should reveal the possibilities of
+xinclude.</p><ul>
+<li>Include an xml content as-is: <tt>&lt;xi:include
+href="include.xml"/&gt;</tt></li>
+<li>Include an xml content but pick the strong element only: <tt>&lt;xi:include
+href="include.xml#xpointer(/p/strong)"/&gt;</tt></li>
+<li>Include text content: <tt>&lt;xi:include parse="text"
+href="include.txt"/&gt;</tt></li>
+</ul>Note that the URL in the href attribute must be relative to the XML document.
+You can use any Cocoon source here, the <tt>file:</tt> protocol is standard like
+in the examples above, but <tt>cocoon:</tt>, <tt>servlet:</tt> and maybe your
+own custom excalibur source implementations will work as well. For example
+<tt>servlet:resources:/html-footer.html</tt> might include your standard footer
+located in a resources-block into your HTML page.A simple example using xinclude might help to use this transfomer
+effectively:Add the XIncludetransfomer to the components in your sitemap.xmap<pre>...
+&lt;map:components&gt;
+...
+  &lt;map:transformers default="xslt"&gt;
+  ...
+    &lt;map:transformer name="xinclude"
+      src="org.apache.cocoon.transformation.XIncludeTransformer"/&gt;
+  ...
+</pre><p>Next define in your pipeline to use the XIncludeTransformer</p><pre>&lt;map:match pattern="xinc/simple-xinc"&gt;
+  &lt;map:generate src="xinc/simple-xinc.xml"/&gt;
+  &lt;map:transform type="xinclude"/&gt;
+  &lt;map:transform src="stylesheets/page/simple-page2html.xsl"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre><p>In this example pipeline it assumed that simple-xinc.xml contains the include
+element. As well as defining the include element, it defines the namespace URI
+"http://www.w3.org/2001/XInclude". This helps the XIncludeTransformer to find
+the include element to get replaced by the included content. The simple-xinc.xml
+may look like this:</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;page 
+  xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
+  &lt;title&gt;Hello&lt;/title&gt;
+  &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page!&lt;/para&gt;
+    &lt;xi:include href="include.xml"/&gt;
+  &lt;/content&gt;
+&lt;/page&gt;
+</pre><p>Next you should define the include.xml file which is included. A simple
+include.xml might look like this:</p><pre>&lt;?xml version="1.0"?&gt;
+&lt;p&gt;
+  I am &lt;strong&gt;included&lt;/strong&gt; by XIncludeTransformer.
+  I come from "include.xml".
+&lt;/p&gt;
+</pre><p>Now finally we have everything put together the xml content after the
+XIncludeTransformer processing will look like this:</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;page 
+  xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
+  &lt;title&gt;Hello&lt;/title&gt;
+  &lt;content&gt;
+    &lt;para&gt;This is my first Cocoon page!&lt;/para&gt;
+      &lt;p&gt;
+       I am &lt;strong&gt;included&lt;/strong&gt; by XIncludeTransformer.
+       I come from "include.xml".
+      &lt;/p&gt;
+  &lt;/content&gt;
+&lt;/page&gt;
+</pre></div></div>
+       </body></document>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Block structure</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Block structure</h1><p>Technically, a block is a Java Archive (jar) file following a particular
+directory structure:</p><table class="bodyTable">
+<tbody>
+<tr class="a">
+<th>
+<p>Path</p>
+</th>
+<th>
+<p>Patterns</p>
+</th>
+<th>
+<p>Description</p>
+</th>
+</tr>
+<tr class="b">
+<td><tt>/</tt><tt>COB-INF/sitemap.xmap</tt></td>
+<td><tt>-</tt></td>
+<td>
+<p>If the blocks uses  the SitemapServlet service, this is the default location
+of  the sitemap.</p>
+</td>
+</tr>
+<tr class="a">
+<td><tt>/COB-INF/config/spring/</tt></td>
+<td><tt>*.xml<br/>
+*.properties<br/>
+</tt></td>
+<td>
+<p>Configuration files for Spring beans, that are only available within this
+block. There is no way to access them from other blocks.</p>
+</td>
+</tr>
+<tr class="b">
+<td><tt>/COB-INF/config/properties/</tt></td>
+<td><tt>*.properties</tt></td>
+<td>
+<p>Properties available within the sitemap.</p>
+</td>
+</tr>
+<tr class="a">
+<td><tt>/COB-INF/</tt></td>
+<td>
+<p>*.*</p>
+</td>
+<td>
+<p>Cocoon resources</p>
+</td>
+</tr>
+<tr class="b">
+<td><tt>/META-INF/cocoon/spring/</tt></td>
+<td><tt>*.xml<br/>
+*.properties<br/>
+</tt></td>
+<td>
+<p>Configuration files for Spring beans, that are globally available. Make sure
+that the bean ids are unique.</p>
+</td>
+</tr>
+<tr class="a">
+<td><tt>/META-INF/cocoon/avalon/</tt></td>
+<td><tt>*.xconf<br/>
+*.xmap<br/>
+</tt></td>
+<td>
+<p>Avalon-style component configurations, that are globally available.</p>
+</td>
+</tr>
+<tr class="b">
+<td><tt>/META-INF/cocoon/properties/</tt></td>
+<td><tt>*.properties</tt></td>
+<td>
+<p>Default values for properties.</p>
+</td>
+</tr>
+<tr class="a">
+<td><tt>/META-INF/cocoon/properties/[running-mode]/</tt></td>
+<td><tt>*.properties</tt></td>
+<td>
+<p>Properties valid for particular running modes.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p>/</p>
+</td>
+<td>
+<p>*.*</p>
+</td>
+<td>
+<p>Java classes and resources</p>
+</td>
+</tr>
+</tbody>
+</table></div></div>
+       </body></document>
