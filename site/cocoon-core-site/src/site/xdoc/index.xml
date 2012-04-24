@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core Modules Site - List of Core Modules</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">List of Core Modules</h1><p>The core functionality of Cocoon was divided into several parts for reuse
+(see the detailed list below), however, the documentation of Cocoon core has
+been kept at one place:</p><table class="bodyTable">
+<tbody>
+<tr class="a">
+<th>
+<p><strong>Name</strong></p>
+</th>
+<th>
+<p><strong>Versions</strong></p>
+</th>
+<th>
+<p>Description</p>
+</th>
+</tr>
+<tr class="b">
+<td>
+<p><a href="core/2.2/">Core</a></p>
+</td>
+<td><a href="core/2.2/">2.2</a></td>
+<td>
+<p>The '<strong>cocoon-core</strong>' module is some kind of wrapper, that keeps
+all dependencies together in order to make it easier to use Cocoon as web
+application framework. For now the complete documentation of all core modules
+can be found in Cocoon core.</p>
+</td>
+</tr>
+</tbody>
+</table><h1>Core modules in detail</h1><div class="note"><div><strong>Note: </strong>The way how Cocoon Core is divided into sub modules is
+considered experimental at the moment. So don't rely on it. If  want to be on
+the safe side and use Maven 2, always use Cocoon core as dependency and rely on
+Maven's transitive dependencies mechanism.</div></div><table class="bodyTable">
+<tbody>
+<tr class="a">
+<th>
+<p>Name</p>
+</th>
+<th>
+<p>Versions</p>
+</th>
+<th>
+<p>Description</p>
+</th>
+</tr>
+<tr class="b">
+<td><a href="expression-language-api/1.0/index.html">Expression
+Language API</a></td>
+<td><a href="expression-language-api/1.0/index.html">1.0</a></td>
+<td>
+<p>Interfaces for expression language and object model.</p>
+</td>
+</tr>
+<tr class="a">
+<td><a href="expression-language-impl/1.0/index.html">Expression
+Language Impl</a></td>
+<td><a href="expression-language-impl/1.0/index.html">1.0</a></td>
+<td>
+<p>Implementation of several expressions languages like: JXPath, JEXL,
+Javascript and implementation of unified Object Model.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="pipeline-api/1.0/index.html">Pipeline API</a></p>
+</td>
+<td>
+<p><a href="pipeline-api/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Interfaces for SAX pipelines: ProcessingPipeline, sitemap components and
+basic XML interfaces, the environment abstraction, caching interfaces and needed
+exceptions.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="pipeline-components/1.0/index.html">Pipeline Components</a></p>
+</td>
+<td>
+<p><a href="pipeline-components/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Implementations of a number of basic generators, transformers, serializers,
+and readers that are needed in most Cocoon webapps as well as some basic sources
+and the XPointer and XSLT components.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="pipeline-impl/1.0/index.html">Pipeline Implementation</a></p>
+</td>
+<td>
+<p><a href="pipeline-impl/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Several implementations of the ProcessingPipeline interface together with
+needed classes and components. Abstract classes for making it easier to write
+sitemap components.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="sitemap-api/1.0/index.html">Sitemap API</a></p>
+</td>
+<td>
+<p><a href="sitemap-api/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Interfaces for the sitemap: Processor, actions, modules, flow, matching,
+selection and some support interfaces for classloading, notification, processing
+and various support interfaces.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="sitemap-components/1.0/index.html">Sitemap Components</a></p>
+</td>
+<td>
+<p><a href="sitemap-components/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Implementation of basic actions, modules, some sources, matchers and
+selectors that are used in most Cocoon webapps.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="sitemap-impl/1.0/index.html">Sitemap Implementation</a></p>
+</td>
+<td>
+<p><a href="sitemap-impl/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>The tree processor implementation of the sitemap with dependencies. The
+Spring packages for Avalon support. Abstract base classes and support classes
+for making it easier to write sitemap components.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="store-impl/1.0/index.html">Store Implementation</a></p>
+</td>
+<td>
+<p><a href="store-impl/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Several components implementing of the Excalibur Store interface</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="thread-api/1.0/index.html">Thread API</a></p>
+</td>
+<td>
+<p><a href="thread-api/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Interfaces for thread factories and pools and for execution of background
+tasks.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="thread-impl/1.0/index.html">Thread Implementation</a></p>
+</td>
+<td>
+<p><a href="thread-impl/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Implementation of thread pool and factory components. Implementation of a
+component for execution of background tasks.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="util/1.0/index.html">Util</a></p>
+</td>
+<td>
+<p><a href="util/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Utility classes.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="xml-api/1.0/index.html">XML API</a></p>
+</td>
+<td>
+<p><a href="xml-api/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>DOMParser and SAXParser interface</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="xml-impl/1.0/index.html">XML Implementation</a></p>
+</td>
+<td>
+<p><a href="xml-impl/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>Implementation of the DOMParser and SAXParser.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="xml-resolver/1.0/index.html">XML Resolver</a></p>
+</td>
+<td>
+<p><a href="xml-resolver/1.0/index.html">1.0</a></p>
+</td>
+<td>
+<p>The Cocoon system resolver component together with default enteties.</p>
+</td>
+</tr>
+<tr class="a">
+<td><a href="xml-util/1.0/index.html">XML Util</a></td>
+<td><a href="xml-util/1.0/index.html">1.0</a></td>
+<td>
+<p>Various XML utility classes.</p>
+</td>
+</tr>
+</tbody>
+</table></div></div>
+       </body></document>

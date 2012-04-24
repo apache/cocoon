@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - InputModuleAction</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">InputModuleAction</h1><h1>Summary</h1><p>Simple helper action to allow passing sitemap variables to InputModules.</p><h1>Basic information</h1><table class="bodyTable"><tbody><tr class="a"><th>Component type</th><td>Action</td></tr><tr class="b"><th>Cocoon block</th><td>core</td></tr><tr class="a"><th>Java class</th><td>org.apache.cocoon.acting.InputModuleAction</td></tr><tr class="b"><th>Name in Sitemap</th><td/></tr><tr class="a"><th>Cacheable</th><td/></tr></tbody></table><h1>Documentation</h1><p>Sitemap evaluation of input modules using the curly bracket syntax e.g.<br/>
+{defaults:skin} suffers from the fact that it is not<br/>
+possible to use a sitemap variable as part of the invocation like<br/>
+{defaults:{1}}. This action takes three parameters, the name<br/>
+of the input module, the attribute name, and whether to call getAttribute() or
+<br/>
+getAttributeValues(). Thus the above becomes</p><p>&lt;map:act type="inputmodule"&gt;<br/>
+  &lt;map:parameter name="module" value="defaults"/&gt;<br/>
+  &lt;map:parameter name="attribute" value="{1}"/&gt;<br/>
+  &lt;map:parameter name="single-value" value="false"/&gt;</p><p>      &lt;!-- do something with the result: "{1}" --&gt;</p><p>&lt;/map:act&gt;</p><p>The action invokes the <br/>
+{@link
+org.apache.cocoon.components.modules.input.InputModule#getAttributeValues(String,
+Configuration, Map) getAttributeValues()}<br/>
+method and returns all results numbered from "0". If no result exists,<br/>
+"null" is returned and the nested block is skipped.<br/>
+The name of the input module to use may be preconfigured when<br/>
+declaring the action in your sitemap:</p><p>&lt;map:action name="inputmodule" <br/>
+                  src="org.apache.cocoon.acting.InputModuleAction" <br/>
+                  logger="sitemap.action.inputmodule"&gt;<br/>
+  &lt;module&gt;defaults&lt;/module&gt;<br/>
+  &lt;single-value&gt;false&lt;/single-value&gt;<br/>
+&lt;/map:action&gt;</p></div></div>
+       </body></document>

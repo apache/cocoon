@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Sitemap Evaluation</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Sitemap Evaluation</h1><h1>Introduction</h1><p>While you can probably understand the basics of a simple sitemap just by
+looking at it, for some constructs it is essential to have some understanding of
+how the sitemap is evaluated by Cocoon. Here we will have a deeper look into
+this.</p><h1>What you already knew</h1><p>When a request enters Cocoon, Cocoon uses a <em>sitemap</em> to determine
+what should be done. The sitemap is an XML file. There is one root sitemap
+called sitemap.xmap which is located in the root of the Cocoon web application.
+The root sitemap can mount other sitemaps, allowing modularization of
+Cocoon-based applications.</p><h1>Sitemap evaluation result</h1><p>To decide how a request should be handled, first Cocoon looks for the
+map:pipelines element in the sitemap file. Usually, Cocoon will look for this
+element in the root sitemap, with an exception of <em>internal requests</em>,
+which can be evaluated by Cocoon relative to the <em>current sitemap</em>.</p><p>Skipping the details of the sitemap evaluation for a moment, the final result
+of the evaluation of a sitemap must always be one of the following:</p><ul>
+<li>an XML-based pipeline is executed (one map:generator or map:aggregate,
+series of map:transform's, one map:serialize)</li>
+<li>a reader is executed (map:reader) (a reader's purpose is to serve binary
+content without using an XML pipeline)</li>
+<li>a flow controller is called to:</li>
+<ul>
+<li>start a new flow (<tt>&lt;map:call function="..."/&gt;</tt>)</li>
+<li>continue an existing flow (<tt>&lt;map:call continuation="..."/&gt;</tt>)
+</li>
+</ul>
+
+<li>a redirect is performed (map:redirect-to), which can be:</li>
+<ul>
+<li>an HTTP redirect (a redirect response is sent to the browser to point the
+browser to a new URL)</li>
+<li>an internal Cocoon redirect (does not involve HTTP)</li>
+</ul>
+
+<li>none of the above, in which case Cocoon will give the error message "No
+pipeline matched request".</li>
+</ul><h1>The simplest pipeline</h1>The simplest pipeline specification is the one that does nothing:<pre>&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+</pre>Suppose you have a sitemap containing this. Now when a request enters Cocoon,
+Cocoon evaluates the content of the map:pipelines element to decide what to do.
+However, here we have specified nothing, thus Cocoon will respond with the error
+"No pipeline matched request".<h1>Matchers and readers</h1>To determine how a request should be handled, one of the more important tools
+available in the sitemap is the matcher. A matcher typically tests on some
+aspect of the request, most commonly the requested URL path.For example:<pre>&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="mydoc.pdf"&gt;
+      &lt;map:read src="blabla/mydoc.pdf"/&gt;
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+</pre>Lets see what happens now if a user request the mydoc.pdf file by entering an
+URL like 'http://somehost/mydoc.pdf' in the location bar of the browser.
+Remember that a reader was one of the 'final evaluation results' mentioned
+above. When Cocoon encounters the reader, it knows all it has to know to finish
+of this request (which is asking the reader to do its thing) so it does not look
+anymore at the rest of the sitemap.Suppose the sitemap would have looked like this:<pre>&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="mydoc.pdf"&gt;
+      &lt;map:read src="blabla/mydoc.pdf"/&gt;
+      &lt;map:read src="anotherfile.pdf"/&gt;
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+</pre>Notice the second map:read element. Since Cocoon will stop evaluating the
+sitemap once it encounters the first map:read, it will do nothing with, nor
+complain about, the presence of the second map:read element.<h1>XML pipelines</h1>Cocoon is all about generating pages using XML-processing-pipelines (to be
+technically correct, it are SAX-processing-pipelines). In the examples till now,
+we have each time seen the map:pipeline(s) element, and they didn't really
+define an XML-pipeline. Instead,<br/>
+the map:pipelines element can describe how an XML-pipeline can be composed, it
+is not the pipeline itself. When the word pipeline is used in Cocoon context, it
+usually refers to the XML-pipeline, not to the map:pipelines sitemap element.
+Lets look at an example of the specification of an XML-pipeline in the
+sitemap:<pre>&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="page.html"&gt;
+      &lt;map:generate src="page.xml"/&gt;
+      &lt;map:transform src="page2html.xsl"/&gt;
+      &lt;map:serialize/&gt;
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+</pre><p>This could be interpreted as follows: when a request is done for the
+'page.html', execute the described generator-transform-serialize pipeline.</p><p>In reality, this is how Cocoon looks at it:</p><ul>
+<li>At the start of the sitemap evaluation, Cocoon creates an empty pipeline
+object</li>
+<li>The first matcher matches, so Cocoon will look at its child elements</li>
+<li>A map:generate element is encountered: put it aside in the pipeline object
+</li>
+<li>Then a map:transform element is encountered: put it aside in the pipeline
+object</li>
+<li>Then a map:serialize element is encountered: put it aside in the pipeline
+object</li>
+<li>Once a serializer is encountered, Cocoon knows enough to finish of this
+request (it can execute the XML-pipeline), so it doesn't look further to the
+rest of the pipeline.</li>
+</ul>For the simple example above, this reasoning might seem overkill, but it is
+essential to more complex sitemaps. One important thing is that when an element
+such as a generator or transformer is encountered, these aren't executed
+immediately. First a complete pipeline must be found, up to the serializer,
+before Cocoon can execute it.Here is another pipeline, which will do exactly the same as the example
+above:<pre>&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="page.html"&gt;
+      &lt;map:generate src="page.xml"/&gt;
+      &lt;map:transform src="page2html.xsl"/&gt;
+    &lt;/map:match&gt;
+
+    &lt;map:match pattern="page.html"&gt;
+      &lt;map:serialize/&gt;
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+</pre>Of course, it serves no purpose (here) to write the pipeline like this.Another example of a pipeline which does exactly the same when page.html is
+request, but not when page.pdf is requested:<pre>&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="page.html"&gt;
+      &lt;map:generate src="page.xml"/&gt;
+      &lt;map:transform src="page2html.xsl"/&gt;
+    &lt;/map:match&gt;
+
+    &lt;map:match pattern="page.pdf"&gt;
+      &lt;map:read src="page.pdf"/&gt;
+    &lt;/map:match&gt;
+
+    &lt;map:match pattern="page.html"&gt;
+      &lt;map:serialize/&gt;
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+</pre>When page.html is requested, first the first matcher will match, and the
+generator and transformer will be put aside in the pipeline object. The second
+matcher does not match so its content is ignored. The third matcher matches
+again, a serialize element is encountered thus the collected pipeline will be
+executed, and the remainder of the sitemap is ignored (if any).Another example:<pre>&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="page.html"&gt;
+      &lt;map:generate src="page.xml"/&gt;
+      &lt;map:transform src="page2html.xsl"/&gt;
+      &lt;map:read src="page.xml"/&gt;
+      &lt;map:serialize/&gt;
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+</pre><p>What will Cocoon do in this case? Well lets follow the usual reasoning:</p><ul>
+<li>start evaluation at top of the map:pipelines element</li>
+<li>a matcher is encountered which matches</li>
+<li>map:generate is encountered: put it aside in the pipeline object</li>
+<li>map:transform is encountered: put it aside in the pipeline object</li>
+<li>map:read is encountered. When encountering a reader, Cocoon knows enough to
+finish of this request (namely by executing this reader), so it doesn't look any
+further at the rest of the sitemap. The generator and transformer put aside in
+the pipeline object are ignored.</li>
+</ul>It is an error to have more then one generator in a pipeline, or to have a
+pipeline with only a serializer and no generator. Thus when Cocoon encounters a
+second generator when a generator has already been set, it will give the error
+"Generator already set.". When a map:serialize is encountered before a
+generator, it will give the error "Must set a generator before setting
+serializer".<div class="note"><div><strong>Note: </strong>Everywhere we talk about map:generate or generators, you can
+substitute this by map:aggregate, which is just a special kind of generator.</div></div><h1>Actions</h1>A sitemap action, map:act, is simply some Java code that can be called. The
+action implementation can return either null or a map. When it returns null, the
+child elements of the map:act will not be considered, thus a map:act can also
+serve as an 'if'.To go back to our topic at hand, sitemap evaluation, it is important to note
+that when a map:act is encountered, it is executed immediately. This makes that
+the following to pipeline definitions are equivalent:<pre>&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="page.html"&gt;
+      &lt;map:act type="something"/&gt;
+      &lt;map:generate src="page.xml"/&gt;
+      &lt;map:transform src="page2html.xsl"/&gt;
+      &lt;map:serialize/&gt;
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+</pre>and<pre>&lt;map:pipelines&gt;
+  &lt;map:pipeline&gt;
+    &lt;map:match pattern="page.html"&gt;
+      &lt;map:generate src="page.xml"/&gt;
+      &lt;map:act type="something"/&gt;
+      &lt;map:transform src="page2html.xsl"/&gt;
+      &lt;map:serialize/&gt;
+    &lt;/map:match&gt;
+  &lt;/map:pipeline&gt;
+&lt;/map:pipelines&gt;
+</pre>Remember that when Cocoon encounters map:generate during the evaluation of
+the sitemap, it does not execute the generator immediately, but puts it aside in
+a pipeline object.</div></div>
+       </body></document>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - XPathTraversableGenerator</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">XPathTraversableGenerator</h1><h1>Summary</h1><p>Generates an XML collection listing performing XPath queries on XML sources.
+</p><h1>Basic information</h1><table class="bodyTable"><tbody><tr class="a"><th>Component type</th><td>Generator</td></tr><tr class="b"><th>Cocoon block</th><td>core</td></tr><tr class="a"><th>Java class</th><td>org.apache.cocoon.generation.XPathTraversableGenerator</td></tr><tr class="b"><th>Name in Sitemap</th><td/></tr><tr class="a"><th>Cacheable</th><td>Yes - Yes</td></tr></tbody></table><h1>Documentation</h1><p>It will perform an XPath query on every XML resource, where "xml resource"
+is, by default, any resource ending with ".xml", which can be overriden by
+setting the (regexp) pattern <tt>xmlFiles</tt> (this has the effect of
+increasing, not limiting, the scope of the search) as a sitemap parameter, or
+where the name of the resource has a container-wide mime-type mapping to
+'text/xml' such as specified by mime-mapping elements in a web.xml descriptor
+file. The XPath can be specified in two ways:</p><ol type="1">
+<li>By using an XPointerish syntax in the URL: everything following the pound
+sign (possiby preceding query string arguments) will be treated as the XPath;
+</li>
+<li>Specifying it as a sitemap parameter named "xpath"</li>
+</ol><div class="note"><div><strong>Note: </strong>Since XPathTraversableGemerator is a subclass of
+TraversableGenerator,  it uses the same set of parameters ( adding some of its
+own though). Please reer to the TraversableGenerator documentation for an
+explanation on the use of <tt>depth</tt>, <tt>exclude</tt>, <tt>include</tt>,
+etc. parameters.</div></div><h3><strong> Sample usage:</strong></h3><pre><strong>Sitemap:</strong>
+&lt;map:match pattern="documents/**"&gt;
+	&lt;map:generate type="xpathtraversable" src="docs/{1}#/article/title|/article/abstract" &gt;
+     		&lt;map:parameter name="xmlFiles" value="\.xml$"/&gt;
+	&lt;/map:generate&gt;
+	&lt;map:serialize type="xml"/&gt; 
+&lt;/map:match&gt;
+
+<strong>Request:</strong>
+   http://www.some.host/documents/test
+
+<strong>Result:</strong>
+ &lt;collection:collection
+   name="test" lastModified="1010400942000"
+   date="1/7/02 11:55 AM" requested="true"
+   xmlns:collection="http://apache.org/cocoon/collection/1.0"&gt;
+   &lt;collection:collection name="subdirectory" lastModified="1010400942000" date="1/7/02 11:55 AM" /&gt;
+   &lt;collection:resource name="test.xml" lastModified="1011011579000" date="1/14/02 1:32 PM"&gt;
+     &lt;collection:xpath docid="test.xml" query="/article/title"&gt;
+       &lt;title&gt;This is a test document&lt;/title&gt;
+       &lt;abstract&gt;
+         &lt;para&gt;Abstract of my test article&lt;/para&gt;
+       &lt;/abstract&gt;
+     &lt;/collection:xpath&gt;
+   &lt;/collection:resource&gt;
+   &lt;collection:resource name="test.gif" lastModified="1011011579000" date="1/14/02 1:32 PM"&gt;
+ &lt;/collection:collection&gt;
+</pre><div class="note"><div><strong>Note: </strong>If you need to use namespaces, you can set them as sitemap
+parameters in the form:<br/>
+<tt>&lt;map:parameter name="xmlns:<em>your prefix</em>"
+value="nsURI"/**"&gt;</tt></div></div><h3><strong>Another </strong><strong>sample usage:</strong></h3><pre>      &lt;map:match pattern="pages.xml"&gt;
+        &lt;map:generate type="xpathtraversable" src="blockcontext:/"&gt;
+          &lt;map:parameter name="depth" value="4"/&gt;
+          &lt;map:parameter name="exclude" value="xslt$|xmap$"/&gt;
+          &lt;map:parameter name="xmlFiles" value="\.jx$"/&gt; 
+          &lt;map:parameter name="xpath" value="/*/content/title"/&gt;
+        &lt;/map:generate&gt;
+        &lt;map:serialize type="xml"/&gt;
+      &lt;/map:match&gt;
+</pre>This sitemap fragment will execute the "<tt>/*/content/title</tt>" XPath
+expression for all XML files (including the ones ending with "<tt>.jx</tt>" but
+excluding the ones ending with "<tt>xslt</tt>" or "<tt>xmap</tt>") for a depth
+of 4 nesting across every block defined in the current block.</div></div>
+       </body></document>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - CacheableProcessingComponent Contracts</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">CacheableProcessingComponent Contracts</h1><h1>CacheableProcessingComponent Contracts</h1><p>Just about everything can be cached, so it makes sense to provide some
+controls to make sure that the user always gets valid results. There are two
+aspects to a cacheable component: the key and the validition. The key is used to
+determine within the component's scheme of things whether a result is unique.
+For example, if your generator provides dynamic information based on an ID and a
+user, you want to combine the two elements into one key. That way Cocoon can
+determine whether to use the cached information for the given ID/User
+combination or create it from scratch.</p><p>The CachingPipeline will check the component's key to see if it even has the
+information cached to begin with. Next, it will check the validity of the cached
+value if there is one. If the cache has the resource and it is valid, the
+CachingPipeline will return the cached results. If either condition is false,
+then the CachingPipeline will generate the results and cache it for later use.
+It is important to realize that only the CachingPipeline will respect the
+contracts outlined in this document.</p><section name="The Cache Key" style="background:none;padding:0;"/><p>The cache key is the single most important part of the caching
+implementation. If you don't get it right, you can introduce more load on the
+caching engine than is necessary. It is important that the cache key has the
+following attributes:</p><ul>
+<li>It must be Serializable (part of the contract of the <tt>getKey()</tt>
+method).</li>
+<li>It must be Immutable--the key is used as a lookup value.</li>
+<li>It must be Unique within the space of the component (i.e. the key "1" for
+<tt>MyCacheableComponent </tt>must be for the same resource every time, but we
+don't have to worry about the key "1" for YourCacheableComponent).</li>
+<li>The <tt>equals()</tt> and <tt>hashCode()</tt> methods must
+be consistent (i.e. if two keys are equal, the hashCode must also be equal).
+</li>
+</ul>Thankfully there is a perfectly suitable object that satisfies these
+obligations from Java's core: <tt>java.lang.String</tt>. You can also use your
+own specific key objects provided they respect those contracts.If the cache key is <tt>null</tt> then your component will not be cached at
+all. You can use this to your advantage to cache some things but not others.
+<section name="The Source Validity" style="background:none;padding:0;"/>The caching contracts use the Excalibur SourceValidity interface to determine
+whether a resource is valid or not. The validity can be a compound check that
+incorporates time since creation, parameter values, etc. As long as the sitemap
+can determine whether the cached resource is valid or not. More information is
+available on the
+<a href="http://excalibur.apache.org/sourceresolve/index.html">Apache Excalibur
+site</a>. Alternatively you can use the built in CacheValidity objects in the
+<tt>org.apache.cocoon.caching</tt> package and then use the
+<a href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/caching/CacheValidityToSourceValidity.html">CacheValidityToSourceValidity</a>
+adaptor object.The SourceValidity interface provides two <tt>isValid()</tt> methods, which
+are used to check the validity of a source. The first call is to the version
+without parameters, which the SourceValidity will return
+<tt>SourceValidity.VALID</tt>, <tt>SourceValidity.UNKNOWN</tt>, or
+<tt>SourceValidity.INVALID</tt>. If the first call responds with
+<tt>SourceValidity.UNKNOWN</tt>, then a new SourceValidity object is obtained
+from the CacheableProcessingComponent and that is passed into the
+<tt>isValid(SourceValidity)</tt> method. That can return the same set of
+responses. At this point, if the second comparison returns
+<tt>SourceValidity.UNKNOWN</tt> the action taken depends largely on the cache's
+algorithm. It may play conservative and invalidate the entry, or it may play
+loose and use it anyway. The general contract is that the new SourceValidity
+object is considered unusable. The contract is that a SourceValidity object will
+only be able to validate against another object of the same type. For example, a
+TimestampValidity object can validate against another TimestampValidity object
+but not a NOPValidity object.<p>The available SourceValidity objects provided by the Excalibur SourceResolver
+component are (in the order of commonality):</p><ul>
+<li><tt>NOPValidity</tt>--always valid</li>
+<li><tt>TimeStampValidity</tt>--valid until a newer timestamp is found
+(System.currentTimeMillis())</li>
+<li><tt>ExpiresValidity</tt>--valid until the expiration date is reached
+(System.currentTimeMillis() + time)</li>
+<li><tt>FileTimestampValidity</tt>--valid until the referenced file changes</li>
+<li><tt>AggregatedValidity</tt>--a compound validity object that is valid as
+long as all the encapsulated validity objects are valid</li>
+<li><tt>DeferredAggregatedValidity</tt>--a compound validity object that only
+gets validity objects if they are needed.</li>
+</ul><h3>NOPValidity</h3>Use the NOPValidity if you want to manually invalidate the cache entry for an
+item, or if you have an object that is created once and simply reused. It has
+limited use, but it is the easiest to set up. Just implement the
+<tt>getValidity()</tt> method like this:<pre>public SourceValidity getValidity()
+{
+    return NOPValidity.SHARED_INSTANCE;
+}
+</pre><h3>TimeStampValidity</h3>The TimeStampValidity object is most commonly used with blobs retrieved from
+the database, or some other information that only needs to be refreshed when a
+newer version exists. The TimeStampValidity will always return
+<tt>SourceValidity.UNKNOWN</tt> until it is compared against a new
+TimeStampValidity object so that it can compare the dates. You can use this
+validity object like this:<pre>SourceValidity validity = new TimeStampValidity(timestamp.getTime());
+
+public SourceValidity getValidity()
+{
+    return validity;
+}
+</pre><h3>ExpiresValidity</h3>The ExpiresValidity object is used for items you want to keep around for a
+while, but you know they will change within a certain amount of time. One
+example would be a clock snippet generator for your site. The clock is not going
+to change for the granularity that you are displaying. If the clock is
+displaying the hour and minute, then you could set the expiration time to
+System.currentTimeMillis() plus one minute. All calls during that minute would
+reuse the same information. While I doubt we would have a component that only
+generates the time of day, you get the general idea. You would set it up like
+this:<pre>SourceValidity validity = new ExpiresValidity(System.currentTimeMillis() + (60 * 1000));
+
+public SourceValidity getValidity()
+{
+    return validity;
+}
+</pre><h3>FileTimeStampValidity</h3>The FileTimeStampValidity is used most often by components that depend on an
+external file to produce its output. The most common examples would be your
+FileGenerator and the XSLTransformer components. The FileTimeStampValidity
+always checks the source file itself and uses the file system's timestamp to
+verify if the entry is still valid. You have three ways of setting it up:
+passing in the File reference, passing in the filename as a string, and passing
+in a combination of the File and the original timestamp. The
+FileTimeStampValidity is commonly used by the FileSource object. Below is an
+example of using the validity object:<pre>SourceValidity validity = new FileTimeStampValidity( sourceFile );
+
+public SourceValidity getValidity()
+{
+    return validity;
+}
+</pre><h3>AggregatedValidity</h3>The AggregatedValidity is the mechanism that you would usually use to combine
+any of the above validity types together and validate against all of them. For
+example, let's assume your Generator depends on a source file, but it also
+depends on some time dependant information that needs to be calculated every
+minute. We would set it up like this:<pre>AggregatedValidity validity = new AggregatedValidity();
+validity.add( fileSource.getValidity() );
+validity.add( new ExpiresValidity( System.currentTimeMillis() + (60 * 1000) ) );
+
+public SourceValidity getValidity()
+{
+    return validity;
+}
+</pre><h3>DefferedAggregatedValidity</h3>We usually don't use this validity object directly for Sitemap components,
+but it is referenced for the sake of completeness. It is used just like the
+AggregatedValidity object, only it adds an additional method to add
+DeferredValidity objects. The purpose is presumably to perform lazy
+initialization on some expensive validity objects so that the normal validity
+objects are evaluated first, and the other validity objects are created on
+demand. There are no stock DeferredValidity object implementations that I know
+of, so this is of little more than academic value for Cocoon components.</div></div>
+       </body></document>

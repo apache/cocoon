@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Creating a Generator</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Creating a Generator</h1><h1>Creating a Generator</h1><p>One of the most common types of components to create in Cocoon is to create a
+Generator. Whether you realize it or not, every time you write an XSP page, you
+are creating a Generator. XSP pages do a number of things for you, but there is
+a considerable amount of overhead involved with compiling and debugging. After
+all, when your XSP page isn't rendering like you expect and the XML is
+well-formed, where do you turn? You can examine the Java code that is generated
+from the XSP, but that can have its own set of challenges. I had a perfectly
+valid Java source file generated for Java 5's javac program, but it wouldn't
+compile in Cocoon. Why? The default compiler included with Cocoon doesn't
+support Java 5.</p><p>Sometimes our needs are so simple and so narrowly defined that it would be
+much easier for us to create our Generator right in our own IDE using all of the
+creature features that are included. Eclipse and IDEA are both wonderfully rich
+environments to develop Java code. Generators are much simpler beasts than your
+transformers and your serializers, so it makes creating them directly even more
+enticing. Cocoon does have some wonderful generators like the
+JXTemplateGenerator and others, but we are going to delve into the world of
+creating our own.</p><section name="How the Sitemap Treats a Generator" style="background:none;padding:0;"/><p>In the eyes of the Sitemap, all XML pipelines start with the Generator. By
+definition, a Generator is the first <a href="689_1_1.html">XMLProducer</a> in the
+pipeline. It is the source of all SAX events that the pipeline handles. It is
+also a <a href="673_1_1.html">SitemapModelComponent</a>, so it must follow those
+contracts as well. Lastly, it can be a
+<a href="675_1_1.html">CacheableProcessingComponent</a> satisfying those contracts
+as well. As usual, the order of contracts honored starts with the
+SitemapModelComponent, then the CacheableProcessingComponent contracts, and
+lastly the XMLProducer contracts. If the results of the Generator can be cached,
+Cocoon will attempt use the cache and bypass the Generator altogether if
+possible. The Caching mechanism can take the place of the Generator because it
+can recreate a SAX stream on demand as an XMLProducer.</p><p>In the big scheme of things, the Sitemap will <tt>setup()</tt> the Generator,
+and then assemble the XML pipeline. After Cocoon assembles the pipeline,
+chaining all XMLProducers to XMLConsumers (remember that an XMLPipe is both),
+Cocoon will call the <tt>generate()</tt> method on the Generator. That is the
+signal to start producing results, so send out the SAX events and have fun.</p><section name="Building our Own Generator" style="background:none;padding:0;"/><p>We are going to keep things easy for our generator. As usual, we will make
+the results cacheable because that is just good policy. In the spirit of trying
+to be useful, as well as trying to keep things manageably simple, let's create a
+BeanGenerator. The XML generated will be very simple, utilizing the JavaBean
+contracts and creating an element for each property, and embedding the value of
+the property within that element. There won't be any attributes, and the
+namespace will match the the JavaBean's fully qualified class name. If a
+property has something other than a primitive type, a String or an equivalent
+(like Integer and Boolean) as its value, that object will be treated as a Bean.
+</p><p>To realize these requirements we have to find a bean, and then "render it".
+In this case the XML rendering of the bean will be recursive. The general
+approach will use Java's reflection mechanisms, and only worry about properties.
+There will be a certain amount of risk involved with a complex bean that
+includes references to other beans in that if you have two beans referring to
+each other you will have an infinite loop. Detecting these is outside the scope
+of what we are trying to do, and that is generally bad design anyway so we won't
+worry too much about it. Yes there is overhead with the beans Introspector but
+we are writing for the general case.</p><p>To set up our generator, we need to use a serializer that shows us what the
+results are, so we will set up our sitemap to use our generator like this:</p><pre>&lt;map:match pattern="bean/*.xml"&gt;
+  &lt;map:generate type="bean" src="{1}"/&gt;
+  &lt;map:serialize type="xml"/&gt;
+&lt;/map:match&gt;
+</pre><p>Even though it is generally bad design to have a static anything in a Cocoon
+application we are going to use a helper class called "BeanPool" with the get()
+and put() methods that are familiar from the HashMap. So that it is easier for
+you to change the behavior of the BeanGenerator, we will provide a nice
+protected method called <tt>findBean()</tt> which is meant to be overridden with
+something more robust.</p><h3>The Skeleton</h3><p>Our skeleton code will look like this:</p><pre>import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.generation.AbstractGenerator;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.NOPValidity;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+
+import java.beans.Introspector;
+import java.beans.BeanInfo;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.io.IOException;
+import java.io.Serializable;
+
+public class BeanGenerator extends AbstractGenerator implements CacheableProcessingComponent
+{
+    private static final Attributes ATTR = new AttributesImpl();
+    private Object m_bean;
+
+    protected Object findBean(String key)
+    {
+        // replace this with something more robust.
+        return BeanPool.get(key);
+    }
+
+    public void setup( SourceResolver sourceResolver, Map model, String src, Parameters params )
+        throws IOException, ProcessingException, SAXException
+    {
+        // ... skip setup code for now
+    }
+
+    public void generate() throws IOException, SAXException, ProcessingException
+    {
+        // ... skip generate code for now
+    }
+
+    // ... skip other methods later.
+}
+</pre><p>As you can see, we have our simplified <tt>findBean()</tt> method which can
+be replaced with something more robust later. All you need to do to populate the
+BeanPool is to call the <tt>BeanPool.put(String key, Object bean)</tt> method
+from somewhere else.</p><h3>Setting up to Generate</h3><p>Before we can generate anything let's start with the <tt>setup()</tt> code:
+</p><pre>    super.setup( sourceResolver, model, src, params );
+    m_bean = findBean(src);
+
+    if ( null == m_bean )
+    {
+        throw new ResourceNotFoundException(String.format("Could not find bean: %s", source));
+    }
+</pre><p>What we did is call the setup method from AbstractGenerator which populates
+some class fields for us (like the <tt>source</tt> field), then we tried to find
+the bean using the key provided. If the bean is <tt>null</tt>, then we follow
+the principle of least surprise and throw the <tt>ResourceNotFoundException
+</tt>so the Sitemap knows that we simply don't have the bean available instead
+of generating some lame 500 server error. That's all we have to do to set up
+this particular Generator. Oh, and since we do have the <tt>m_bean</tt> field
+populated we do want to clean up after ourselves properly. Let's add the
+recycle() method from Recyclable so that we don't give an old result when a bean
+can't be found:</p><pre>   @Override
+   public void recycle()
+   {
+      super.recycle();
+      m_bean = null;
+   }
+</pre><h3>The Caching Clues</h3><p>We are going to make the caching for the BeanGenerator really simple. Ideally
+we would have something that listens for changes and invalidates the
+SourceValidity if there is a change to the bean we are rendering. Unfortunately
+that is outside our scope, and we will set up the key so that it never expires
+unless it is done manually. Since we are using the source property from the
+Sitemap as our key, let's just use that as our cache key:</p><pre>    public Serializable getKey()
+    {
+        return source;
+    }
+</pre><p>And lastly, our brain-dead validity implementation:</p><pre>    public SourceValidity getValidity()
+    {
+        return NOPValidity.SHARED_INSTANCE;
+    }
+</pre><p>Using this approach is a bit naive in the sense that it is very possible that
+the beans will have changed. We could use an ExpiresValidity instead to make
+things a bit more resilient to change, but that is an excersize for you, dear
+reader.</p><h3>Generating Output</h3><p>Now that we have our bean, we are ready to generate our output. The
+AbstractXMLProducer base class (AbstractGenerator inherits from that) stores the
+target in a class field named <tt>contentHandler</tt>. Simple enough. We'll
+start by implementing the generate() method, but we already know we need to
+handle beans differently than the standard String and primitive types. So let's
+stub out the method we will use for recursive serialization. Here we go:</p><pre>    public void generate()
+    {
+        contentHandler.startDocument();
+
+        renderBean(source, m_bean);
+
+        contentHandler.endDocument();
+    }
+</pre><p>All we did was call the start and end document for the whole XML Document.
+That is enough for a basic XML document with no content. The
+<tt>renderBean()</tt> method is where the magic happens:</p><pre>    public void renderBean(String root, Object bean)
+    {
+        String namespace = String.format( "java:%s", bean.getClass().getName() );
+        qName = String.format( "%s:%s", root,root );
+
+        contentHandler.startPrefixMapping( root, namespace );
+        contentHandler.startElement( namespace, root, qName, ATTR );
+
+        BeanInfo info = Introspector.getBeanInfo(bean.getClass());
+        PropertyDescriptor[] descriptors = info.getPropertyDescriptors();
+
+        for ( PropertyDescriptor property : descriptors )
+        {
+            renderProperty( namespace, root, property );
+        }
+
+        contentHandler.endElement( namespace, root, qName );
+        contentHandler.endNamespace( root );
+    }
+</pre><p>So far we created the root element and started iterating over the properties.
+Our root element consists of a namespace a name and a qName. Our implementation
+is using the <tt>source</tt> for the initial root element so as long as we never
+have any special characters like a colon (':') we should be OK. Without going
+through the individual properties, a java.awt.Dimension object with a source of
+"dim" will be redered like this:</p><pre>&lt;dim:dim xmlns:dim="java:java.awt.Dimension"/&gt;
+</pre><p>Now for the properties:</p><pre>    private void renderProperty( String namespace, String root, PropertyDescriptor property )
+    {
+        Method reader = property.getReadMethod();
+        Class&lt;?&gt; type = property.getPropertyType();
+
+        // only output if there is something to read, and it is not an indexed type
+        if ( null != reader &amp;&amp; null != type )
+        {
+            String name = property.getName();
+            String qName = String.format( "%s:%s", root,name );
+            Object value = reader.invoke( m_bean );
+
+            contentHandler.startElement( namespace, name, qName, ATTR );
+
+            if ( isBean(type) )
+            {
+                renderBean( name, value )
+            }
+            else if ( null != value )
+            {
+                char[] chars = String.valueOf(value).toCharArray();
+                contentHandler.characters(chars, 0, chars.length);
+            }
+
+            contentHandler.endElement( namespace, name, qName );
+        }
+    }
+</pre><p>This method is a little more complex in that we have to figure out if the
+property is readable, and is a type we can handle. In this case, we don't read
+indexed properties (if you want to support that, you'll have to extend this code
+to do that), and we don't read any properties where there is no read method. We
+use the property name for the elements surrouding the property values. We get
+the value, and then we call the start and end elements for the property. Inside
+of the calls, we determine if the item is a bean, and if so we render the bean
+using the renderBean method (the recursive aspect); otherwise we render the
+content as text as long as it is not null. Once the <tt>isBean()</tt> method is
+implemented, our Dimension example above will produce the following result:</p><pre>&lt;dim:dim xmlns:dim="java:java.awt.Dimension"&gt;
+  &lt;dim:width&gt;32&lt;/dim:width&gt;
+  &lt;dim:height&gt;32&lt;/dim:height&gt;
+&lt;/dim:dim&gt;
+</pre><p>Ok, now for the last method to determine if a value is a bean or not:</p><pre>    private boolean isBean(Class&lt;?&gt; klass)
+    {
+        if ( Boolean.TYPE.equals( klass ) ) return false;
+        if ( Byte.TYPE.equals( klass ) ) return false;
+        if ( Character.TYPE.equals( klass ) ) return false;
+        if ( Double.TYPE.equals( klass ) ) return false;
+        if ( Float.TYPE.equals( klass ) ) return false;
+        if ( Integer.TYPE.equals( klass ) ) return false;
+        if ( Long.TYPE.equals( klass ) ) return false;
+        if ( Short.TYPE.equals( klass ) ) return false;
+        if ( java.util.Date.class.equals( klass ) ) return false; // treat dates as value objects
+        if ( klass.getName().startsWith( "java.lang" ) ) return false;
+
+        return true;
+    }
+</pre><p>The isBean() method will treat all primitives, Strings, Dates, and anything
+in "java.lang" as value objects. This captures the boxed versions of primitives
+as well as the unboxed versions. Everything else is treated as a bean.</p><section name="Summary" style="background:none;padding:0;"/><p>Generators aren't too difficult to write, but the tricky parts are there due
+to namespaces. As long as you are familiar with the SAX API you should not have
+any problems. The complexity in our generator is really from the reflection
+logic used to discover how to render an object. You might ask why we didn't use
+the XMLEncoder in the java.beans package. The answer has to do with the fact
+that the facility is based on IO streams, and can't be easily adapted to XML
+streams. At any rate, we have something that can work with a wide range of
+classes. Our XML is easy to understand. Here is a snippet from a more complex
+example:</p><pre>&lt;line:line xmlns:line="java:com.mycompany.shapes.Line"&gt;
+  &lt;line:name&gt;This line has a name&lt;/line:name&gt;
+  &lt;line:topLeft&gt;
+    &lt;topLeft:topLeft xmlns:topLeft="java:java.awt.Point"&gt;
+      &lt;topLeft:x&gt;1&lt;/topLeft:x&gt;
+      &lt;topLeft:y&gt;1&lt;/topLeft:y&gt;
+    &lt;/topLeft:topLeft&gt;
+  &lt;/line:topLeft&gt;
+  &lt;line:bottomRight&gt;
+    &lt;bottomRight:bottomRight xmlns:bottomRight="java:java.awt.Point"&gt;
+      &lt;bottomRight:x&gt;20&lt;/bottomRight:x&gt;
+      &lt;bottomRight:y&gt;20&lt;/bottomRight:y&gt;
+    &lt;/bottomRight:topLeft&gt;
+  &lt;/bottomRight:topLeft&gt;
+&lt;/line:line&gt;
+</pre><p>Our theoretical line object contained a name and two java.awt.Point objects
+which in turn had an x and a y property. It is easier to understand when you
+have domain specific beans that are backed to a database. Nevertheless, we have
+a generator that satisfies a general purpose and can be extended later on to
+support our needs as they change.</p></div></div>
+       </body></document>

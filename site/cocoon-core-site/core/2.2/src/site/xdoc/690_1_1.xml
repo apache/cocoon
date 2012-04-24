@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Writing Cache Efficient Components</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Writing Cache Efficient Components</h1><h1>Writing Cache Efficient Components</h1><p>The bulk of this document is based heavily on documentation that Sylvain
+Wallez wrote on
+<a href="http://wiki.apache.org/cocoon/WritingForCacheEfficiency">Writing for
+Cache Efficiency</a>. We're just reorganizing the information in a way that's
+easier to digest. As you recall, to enable caching for a sitemap component you
+have to implement the <a href="675_1_1.html">CacheableProcessingComponent
+contracts</a>. Unfortunately, that does not give you an idea of how to minimize
+the impact of verifying the cache validity of a component. The general strategy
+that works best for cacheable components is lazy evaluation, or wait until the
+last possible moment before you do your calculations--because you may not need
+them.</p><section name="Understanding the Order of Calls" style="background:none;padding:0;"/><p>In order to know when to actually do the complex set up for any given
+resource, it helps to know the exact order of calls as it relates to that
+component.  From the perspective of this document you can assume the pipeline
+has already been set up, and we are now getting the components ready.  Cocoon is
+deterministic in the sense that the call order is the same every time.  Making
+your caching more efficient requires that you take advantage of this knowledge. 
+First the sequence of events:</p><ol type="1">
+<li>Cocoon calls <tt>setup()</tt>--which includes serializers that implement
+SitemapModelComponent.</li>
+<li>Cocoon calls <tt>getMimeType()</tt> on the serializer (or reader).</li>
+<li>Cocoon calls <tt>getKey()</tt> on all CacheableProcessingComponents.</li>
+<li>Cocoon checks the cache for any Validity objects matching that key.</li>
+<li>If there is an entry matching, Cocoon validates the Validity object;
+otherwise we jump to step 7.</li>
+<li>If the Validity object is still valid, Cocoon uses the cached entry in place
+of calling your component; or if the Validity object is invalid, Cocoon will
+then call your component; otherwise, Cocoon falls through to the next step.</li>
+<li>If we have gotten to this point, Cocoon will call the <tt>getValidity()</tt>
+method on your CacheableProcessingComponent.  Cocoon will then compare the
+previous validity object against the new one, or if this is the first call to
+<tt>getValidity()</tt> then we validate the returned validity object.  If the
+cache entry is valid Cocoon uses the cached results, otherwise we call the
+component.</li>
+<li>If the validity still can't be determined the next step is dependant on the
+cache component (i.e. default to better performance with the risk of stale data
+or default to safety and fresh data).</li>
+<li>Assuming we have gotten this far and the key is either not in the cache or
+the entry is stale, Cocoon calls <tt>setXMLConsumer()</tt> on all the
+XMLProducer components (typically generators and transformers), and
+<tt>setOutputStream()</tt> on the Serializer or Reader.</li>
+<li>Cocoon calls the <tt>generate()</tt> method on the Generator or Reader.</li>
+</ol>That's a lot of steps, providing as many opportunities to use a cache as
+possible.  It also provides the opportunity to delay when we incur certain
+checks until the last possible moment.<div class="note"><div><strong>Note: </strong>The Cocoon team has been working on an adaptive cache which
+performs cost calculations.  It measures the cost of generating/transforming a
+result, the cost of determining its cache validity, and its own influence on the
+system.  The bottom line is that just because something may be a valid entry, it
+may still be cheaper to generate the resource in terms of that cost function
+than to use the cached value.  The only guarantees that you have for when
+something is going to be called are the methods from the sitemap interfaces and
+the big component interfaces (i.e. the Generator, Transformer, Serializer, and
+Reader).  Don't perform any critical setup inside a CacheableProcessingComponent
+method.</div></div><section name="Case Study: Improving the TraxTransformer" style="background:none;padding:0;"/>Back in 2003, the TraxTransformer performed all caching and heavy payload
+setup within the <tt>setup()</tt> method.  What this meant was that the
+TransformerHandler object was being created for the XSLT file at the same time
+the FileValidity object for that file was set up.  The TransformerHandler object
+is heavy, and there is alot of work in setting that thing up.  The affect is
+that the TraxTransformer incurred the cost of setting up the TransformerHandler
+whether it was used or not.  When the pipeline pulled from the cache, the
+TransformerHandler was created and discarded.  You have the overhead of the
+garbage collection along with unused objects.Sylvain saw the problem, and delayed creating the TransformerHandler until
+Cocoon called the <tt>setXMLConsumer()</tt> method.  This ensured that every
+opportunity was given to check cache validity and we only incurred the cost of
+creating the TransformerHandler when Cocoon was really going to use it.  Another
+safe place to put the completed setup code is on the <tt>startDocument()</tt>
+SAX method.  At this point it is clear we are currently using the
+TransformerHandler, so it will also work.After everything was said and done, the TraxTransformer performed between 5%
+to 30% better depending on the complexity of the TransformerHandler.  The key
+was delaying the heavy lifting until it was actually needed.<section name="AggregateValidity and DelayedAggregateValidity" style="background:none;padding:0;"/>Some components like the DirectoryGenerator and the TraxTransformer rely on
+the validity of other factors than just a template or a set of files.  These
+components often can't determine the validity at setup time.  The solution is to
+use the AggregateValidity and more specifically the DelayedAggregateValidity. 
+The aggregated validity object provides an interface for you to add additional
+validity components inside and returns the result of the set (typically if one
+validity object is undertermined or invalid the whole set is).  You can add to
+the aggregated validity object as the pipeline is executed.  Every time the
+TraxTransformer includes another XML document using the <tt>document()</tt>
+function in XSLT, it's FileValidity is added to the aggregated validity object.
+The DirectoryGenerator relies on an internal pipeline to be run, and because
+we don't know the validity until after the pipeline is run, it is impossible to
+set up the validity objects ahead of time.  The solution in this case is to use
+the DelayedAggregateValidity object.  Placeholders are given using the
+DelayedValidity interface, and when the solid validity object is ready it can be
+used.  Essentially the full validity object is assembled as the pipeline is
+run.  The next time the aggregated validity object is inspected it is set up
+already.While these are possible solutions to a complex problem, they do incur their
+own overhead.  Done well, the overhead is still less than creating the content
+fresh every time--but care should be taken that we don't have a huge validity
+object tree by having aggregate validity objects including aggregate validity
+objects that include aggregate validity objects.  In short, you have to keep it
+simple.  The general rule of thumb is that if you can't write a simple unit test
+for it, you probably need to start looking to simplify.  Cocoon has many tools
+for caching and cache control, understanding how things work will help you write
+more efficient components.</div></div>
+       </body></document>

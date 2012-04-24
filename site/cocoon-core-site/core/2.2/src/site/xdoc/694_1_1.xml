@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Creating a Transformer</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Creating a Transformer</h1><h1>Creating a Transformer</h1><p>In 90% of all cases XSLT will perform all your transformation needs better
+than anything else out there.  I'll be completely blunt and say that creating a
+transformer that does anything truly substantial is not for the faint of heart. 
+The issue has to do with using SAX event streams to process the XML.  SAX vs.
+DOM was a design tradeoff to favor scalability over ease of use.  A particularly
+large DOM tree can cripple a web application and you lose all the benefit of
+such a powerful architecture like Cocoon.</p><p>The transformer we are going to create in this tutorial is actually very
+trivial.  You'll have to take the lessons from this and expand them if you want
+to do something more exciting.  We will be using a transformer to insert a
+timestamp when we see an element called "time-stamp" in a specified namespace. 
+Along the way we will look at some ways of lowering the impact of having your
+transformer in the pipeline.  To use our transformer we will have a sitemap
+snippet similar to the following:</p><pre>&lt;map:match pattern="timed-hello.xml"&gt;
+  &lt;map:generate src="hello.xml"/&gt;
+  &lt;map:transformer type="time"/&gt;
+  &lt;map:serialize/&gt;
+&lt;/map:match&gt;
+</pre><p>Notice that we didn't have a "src" attribute for our transformer?  In this
+case our example is so trivial that we really don't need one.  If we wanted to
+add a little more functionality we could pass in a format using the src
+attribute, but that could also be done by modifying our markup.  Just so we are
+complete in what we expect to do, we want to take the following XML:</p><pre>&lt;ts:time xmlns:ts="unc:time"/&gt;
+</pre><p>into the current date and time ending with the minute (ex. Sep. 16, 2005
+12:59 PM).</p><section name="How the Sitemap Treats a Transformer" style="background:none;padding:0;"/><p>All Transformer components are SitemapModelComponents and XMLPipelines, in
+addition they can be CacheableProcessingComponents.  All of those contracts have
+been covered in depth already.  Once the sitemap determines that we need to pass
+results through your transformer (i.e. there are no cached entries for the
+pipeline up to this point), the <tt>setXMLConsumer()</tt> method is called, and
+you know the pipeline is being processed as soon as you receive the
+<tt>startDocument()</tt> event.</p><section name="AbstractTransformer: A Good Start" style="background:none;padding:0;"/><p>The AbstractTransformer has everything you need to pass SAX events through
+unmolested.  You have the different objects from the setup method accessible as
+fields in the class, and the XMLPipeline contract is already set up to pass
+through the SAX events to the XMLConsumer.  We will only need to do a couple
+things to set up caching properly.  In fact because our input doesn't rely on
+any external source of information we can have a constant for the cache key: the
+namespace we are transforming.</p><h3>The Transformer Skeleton</h3><p>The skeleton code does nothing more than set up the cache validity object we
+will be using.  You might be thinking that we can't cache anything so dynamic as
+the time of day, but we can cache it for as long as the shortest amount of time
+we are displaying.  If you are being slammed with 150 simultaneous users a
+second all asking for something that has the time of day inserted, we should be
+able to generate it once and reuse the results until the clock advances.</p><pre>import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.transformation.AbstractTransformer;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.ExpiresValidity;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.text.SimpleDateFormatter;
+
+public class TimeTransformer extends AbstractTransformer implements CacheableProcessingComponent
+{
+    private static final String FORMAT = "MMM d, YYYY hh:mm a";
+    private static final String NAMESPACE = "unc:time";
+    private static final long MINUTE = 60 * 1000;
+    private SourceValidity cacheValidity = null;
+    private final SimpleDateFormatter formatter = null;
+
+    public void setup( SourceResolver sourceResolver, Map model, String src, Parameters params )
+        throws IOException, ProcessingException, SAXException
+    {
+        super.setup( sourceResolver, model, src, params );
+        cacheValidity = new ExpiresValidity(System.currentTimeMillis() + MINUTE);
+    }
+
+    // ... skip other methods later.
+}</pre><p>We set up some constants that will be used later such as our time format, the
+namespace we are checking, and the number of milliseconds that make up a
+minute.  The other two instance fields are the cacheValidity object and the date
+formatter.  Because by definition none of the formatters are threadsafe, we have
+to create a new one for each instance of this transformer.  Technically speaking
+we could make it a ThreadLocal object, but we wanted to keep things simple here.
+</p><h3>The Cache Clues</h3><p>Since the caching aspect of this component is really simple, let's just get
+it out of the way here.  First thing is that the key for this transformer should
+not change with the time of day, so let's use the namespace we are checking as
+the cache key:</p><pre>    public Serializable getKey()
+    {
+        return NAMESPACE;
+    }</pre><p>And finally, we already set up our validity object in the <tt>setup()</tt>
+call in the skeleton code.  Let's just pass it back.</p><pre>    public SourceValidity getValidity()
+    {
+        return cacheValidity;
+    }
+</pre><h3>Performing the Transformation</h3><p>At this point the only thing we didn't do yet is set up our date formatter. 
+We have two choices: delayed evaluation or structured evaluation.  With delayed
+evaluation we wait until we actually have a <tt>ts:time</tt> element to
+transform before we set up the formatter.  With structured evaluation we take
+advantage of the fact that <tt>startDocument()</tt> is called before anything
+else and we do it then.  The actual solution to the problem depends on the
+liklihood of always having an element to transform and the cost of creating the
+objects you need to work with.  Because our case is really simple, its a
+tossup.  We'll go with structured evaluation just because it's clearer code:</p><pre>    public void startDocument()
+    {
+        super.startDocument();
+        formatter = new SimpleDateFormatter(FORMAT);
+    }
+
+    public void endDocument()
+    {
+        super.endDocument();
+        formatter = null; // just cleanup for the garbage collector's sake
+    }
+</pre><p>All that's left is to actually perform the transformation.  Again, we need to
+override two methods because of the <tt>startElement()</tt> and
+<tt>endElement()</tt> pairing.  To make things more interesting we will even add
+some simple validation to our code.  There should be no embedded text inside the
+element we are listening for, so we will include a new field which is a boolean
+flag for whether we are in the timestamp element or not:</p><pre>    private boolean isInTimeElement = false;
+
+    public void startElement(String namespace, String name, String qName, Attributes attrib)
+    {
+        if ( isInTimeElement ) throw new SAXException("Cannot have embedded elements");
+
+        if ( NAMESPACE.equals( namespace ) )
+        {
+            if ( "time".equals(name) )
+            {
+                isInTimeElement = true;
+                String formattedDate = formatter.format( new Date() );
+                contentHandler.characters(formattedDate.toCharArray(), 0, formattedDate.length());
+
+                return;
+            }
+            else
+            {
+                throw new SAXException("Only the \"time\" element is valid");
+            }
+        }
+
+        super.startElement(namespace, name, qName, attrib);
+    }
+</pre><p>Before we move on to the characters() evaluation, let's spend some time with
+the code above.  First we check if it is legal to have sub-elements, which of
+course only happens when we are not in a time element.  Next, we check if the
+element we recieved is one we have to worry about.  If we are in the right
+namespace, we check the element name and throw an exception if the element name
+is anything other than "time".  Assuming we have the time element in our
+namespace we substitute the <tt>startElement()</tt> call with the coresponding
+<tt>characters</tt><tt>()</tt> call, turn on the <tt>isInTimeElement</tt> flag,
+and finally return immediately.  Otherwise we will simply forward on the
+<tt>startElement()</tt> call as usual.  Another thing to note is that we called
+the <tt>characters()</tt> event directly on the content handler instead of
+calling our own transformer.  We did that to make sure that our validation code
+doesn't reject the date string we want to pass on.  Now to validate our own
+<tt>characters()</tt> method:</p><pre>    public void characters(char[] chars, int start, int end)
+    {
+        if ( isInTimeElement ) throw new SAXException("Cannot have embedded text");
+
+        super.characters(chars, start, end);
+    }
+</pre><p>The <tt>characters()</tt> event is really simple, and we only throw an
+exception if the user tried to embed characters inside the timestamp element. 
+Now for the endElement() so that we can turn of the <tt>isInTimeElement</tt>
+flag and swallow the matching <tt>endElement()</tt> event for our timestamp
+element:</p><pre>    public void endElement(String namespace, String name, String qName)
+    {
+        if ( NAMESPACE.equals(namespace) &amp;&amp; "time".equals(name) )
+        {
+            isInTimeElement = false;
+            return;
+        }
+
+        super.endElement(namespace, name, qName)
+    }
+</pre><p>Now we are done with the component.</p><section name="Additional Things to Consider for Transformers" style="background:none;padding:0;"/><p>There are a couple things to keep in mind when dealing with SAX streams and
+designing your transformers.  First, it takes more time to iterate through a set
+of attributes for every element looking for an attribute in your namespace than
+it does to look for an element with the namespace you desire.  In short,
+elements are faster to evaluate than attributes.  Use them when you can. 
+Secondly, remember to evaluate namespaces/name combinations and not QNames.  A
+QName (or Qualified Name in XML speak) is name including the prefix matching a
+namespace.  The only time you should look at the QName is if you need to treat
+different "contexts" of transformation for the namespace.  In other words unless
+you need to treat "ts:time" separate from "nt:time" ignore the QName--most of
+the time you just care whether or not you are dealing with a particular
+namespace.</p><p>Lastly, validation is a tricky thing.  Many times you want validation in
+development but not in production because it is expensive to do.  In our example
+we included validation but never provided a way to turn it off.  For this case
+the validation is so trivial that it's acceptable to keep the logic in
+production--but it does make the code a bit more complex.  Sometimes the
+validation code can be a source of errors.  Test your validation code, but
+assume that you are receiving valid XML.  After all this is a transformer.  The
+Generator should have been tested to make sure that the XML generated is valid.
+</p><p>As a final measure to ensure your transformer isn't turning previously valid
+XML into invalid XML.  A quick test is to take a valid XML document and
+transform it using your transformer--serializing to a stream and feeding that
+into a validating XML parser.  It seems weird, but it is a simple test to set up
+for all transformers to make sure they don't introduce errors of their own.</p></div></div>
+       </body></document>
