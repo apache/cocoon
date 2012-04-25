@@ -29,11 +29,8 @@ XSLT that produces HTML as output</li>
 the XML, <a href="../2.2/core-modules/core/2.2/851_1_1.html"><strong>tranformers</strong> </a>can alter the
 stream of SAX events and a
 <a href="../2.2/core-modules/core/2.2/849_1_1.html"><strong>serializ<strong>e</strong></strong><strong>r</strong></a>
-finally creates an output stream which is sent to the client.The image above shows the 3 most popular components:<ul>
-<li>file generator</li>
-<li>XSLT transformer</li>
-<li>HTML serializer</li>
-</ul><strong>Sitemaps</strong> are used to define those pipelines and connect them
+finally creates an output stream which is sent to the client.
+<strong>Sitemaps</strong> are used to define those pipelines and connect them
 with requests. These connections are defined by some kind of rules. In the
 context  of Cocoon  those rules are named matchers. Whenever one of those rules
 (<em>matcher</em>) matches, a pipeline is executed.<h1>Create a pipeline in the sitemap</h1>First, open <tt>src\main\resources\COB-INF\sitemap.xmap</tt> in your favorite
