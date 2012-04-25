@@ -24,7 +24,7 @@ project.</p><p>In this tutorial you will</p><ol type="1">
 <li>enhance this first pipeline by adding an XML transformation step based on
 XSLT that produces HTML as output</li>
 <li>write a pipeline that creates a PDF document</li>
-</ol><h1>Overview</h1>Cocoon is based around the concept of pipelines:<img width="713" height="223" name="pipeline" alt="pipeline" src="NO_LINK"/>If a request comes in, a <a href="../2.2/core-modules/core/2.2/850_1_1.html"><strong>generator</strong>
+</ol><h1>Overview</h1><img src="images/pipeline.gif" alt="pipeline" /><br/>Cocoon is based around the concept of pipelines: If a request comes in, a <a href="../2.2/core-modules/core/2.2/850_1_1.html"><strong>generator</strong>
 </a>produces <a href="http://www.saxproject.org/">SAX events</a> that represent
 the XML, <a href="../2.2/core-modules/core/2.2/851_1_1.html"><strong>tranformers</strong> </a>can alter the
 stream of SAX events and a
