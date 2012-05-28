@@ -3100,7 +3100,8 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
-      <plugin>
+      <!-- Assembly generation disabled: parent POM only -->
+<!--      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.3</version>
         <configuration>
@@ -3108,7 +3109,7 @@
           <outputDirectory>target</outputDirectory>
           <workDirectory>target/assembly</workDirectory>
         </configuration>
-      </plugin>
+      </plugin>-->
       <plugin>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>1.0.1</version>
@@ -3116,7 +3117,7 @@
           <execution>
             <id>enforce-maven</id>
             <goals>
-              <goal>enforce-once</goal>
+              <goal>enforce</goal>
             </goals>
             <configuration>
               <rules>
