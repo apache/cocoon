@@ -498,16 +498,16 @@
       <timezone />
     </developer>
     <developer>
-	    <id>jasha</id>
-	    <name>Jasha Joachimsthal</name>
-	    <email>jasha@apache.org</email>
-	    <organization>ASF</organization>
-	    <organizationUrl>http://www.apache.org</organizationUrl>
-			<roles>
-				<role>PMC Member</role>
-				<role>Committer</role>
-			</roles>	    
-			<timezone>+1</timezone>
+      <id>jasha</id>
+      <name>Jasha Joachimsthal</name>
+      <email>jasha@apache.org</email>
+      <organization>ASF</organization>
+      <organizationUrl>http://www.apache.org</organizationUrl>
+      <roles>
+        <role>PMC Member</role>
+        <role>Committer</role>
+      </roles>	    
+      <timezone>+1</timezone>
     </developer>
     <developer>
       <id>jjohnston</id>
@@ -1044,19 +1044,6 @@
     <url>https://issues.apache.org/jira/browse/COCOON</url>
   </issueManagement>
 
-  <ciManagement>
-    <system>continuum</system>
-    <url>http://cocoon.zones.apache.org:12000/continuum/servlet/continuum</url>
-    <notifiers>
-      <notifier>
-        <type>mail</type>
-        <configuration>
-          <address>dev@cocoon.apache.org</address>
-        </configuration>
-      </notifier>
-    </notifiers>
-  </ciManagement>
-
   <mailingLists>
     <mailingList>
       <name>Cocoon User List</name>
@@ -1112,9 +1099,9 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-5</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-5</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-5</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/parent</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/parent</developerConnection>
+    <url>http://svn.apache.org/viewvc/cocoon/trunk/parent</url>
   </scm>
 
   <distributionManagement>
@@ -1465,56 +1452,6 @@
         <groupId>concurrent</groupId>
         <artifactId>concurrent</artifactId>
         <version>1.3.4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.outerj.daisy</groupId>
-        <artifactId>daisy-htmlcleaner</artifactId>
-        <version>1.4.1</version>
-      </dependency>
-      <dependency>
-        <groupId>daisy</groupId>
-        <artifactId>daisy-htmlcleaner</artifactId>
-        <version>1.5-dev</version>
-      </dependency>
-      <dependency>
-        <groupId>daisy</groupId>
-        <artifactId>daisy-jmsclient-api</artifactId>
-        <version>1.5-dev</version>
-      </dependency>
-      <dependency>
-        <groupId>daisy</groupId>
-        <artifactId>daisy-repository-api</artifactId>
-        <version>1.5-dev</version>
-      </dependency>
-      <dependency>
-        <groupId>daisy</groupId>
-        <artifactId>daisy-repository-client-impl</artifactId>
-        <version>1.5-dev</version>
-      </dependency>
-      <dependency>
-        <groupId>daisy</groupId>
-        <artifactId>daisy-repository-common-impl</artifactId>
-        <version>1.5-dev</version>
-      </dependency>
-      <dependency>
-        <groupId>daisy</groupId>
-        <artifactId>daisy-repository-spi</artifactId>
-        <version>1.5-dev</version>
-      </dependency>
-      <dependency>
-        <groupId>daisy</groupId>
-        <artifactId>daisy-repository-xmlschema-bindings</artifactId>
-        <version>1.5-dev</version>
-      </dependency>
-      <dependency>
-        <groupId>daisy</groupId>
-        <artifactId>daisy-util</artifactId>
-        <version>5.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.daisycms</groupId>
-        <artifactId>daisy-maven-plugin</artifactId>
-        <version>1.0.0-alpha-2</version>
       </dependency>
       <dependency>
         <groupId>ojb</groupId>
@@ -1876,7 +1813,7 @@
         <artifactId>maven-project</artifactId>
         <version>2.0.1</version>
       </dependency>
-       <dependency>
+      <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-settings</artifactId>
         <version>2.0.5</version>
@@ -3112,9 +3049,8 @@
           <version>2.4.2</version>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>rat-maven-plugin</artifactId>
-          <version>1.0-alpha-3</version>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
           <configuration>
             <excludes>
               <exclude>.externalToolBuilders/Maven_Ant_Builder.launch</exclude>
@@ -3217,8 +3153,8 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>rat-maven-plugin</artifactId>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
@@ -3254,10 +3190,9 @@
   </reporting>
 
   <properties>
-    <!-- General Daisy plugin properties -->
+    <!-- General doc properties -->
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.urlRelativizer>../../../../</docs.urlRelativizer>
-    <docs.repoUrl>http://cocoon.zones.apache.org:9263</docs.repoUrl>
     <docs.breadcrumb>cocoon22</docs.breadcrumb>
     <!-- Path and version properties: sites -->
     <docs.m.site-main.relPath />
@@ -3272,7 +3207,7 @@
     <!-- Path and version properties: core -->
     <docs.m.core.version>2.2</docs.m.core.version>
     <docs.m.core.relPath>2.2/core-modules/core/${docs.m.core.version}/</docs.m.core.relPath>
-    <!-- Path and version properties: Submodules of core without Daisy documentation -->
+    <!-- Path and version properties: Submodules of core -->
     <docs.m.expression-language-api.version>1.0</docs.m.expression-language-api.version>
     <docs.m.expression-language-api.relPath>2.2/core-modules/expression-language-api/${docs.m.expression-language-api.version}/</docs.m.expression-language-api.relPath>
     <docs.m.expression-language-impl.version>1.0</docs.m.expression-language-impl.version>
@@ -3366,7 +3301,7 @@
     <docs.m.portal.relPath>2.2/blocks/${docs.m.portal.version}/</docs.m.portal.relPath>
     <docs.m.serializers.version>1.0</docs.m.serializers.version>
     <docs.m.serializers.relPath>2.2/blocks/${docs.m.serializers.version}/</docs.m.serializers.relPath>
-    <!-- Path and version properties: Blocks without Daisy documentation -->
+    <!-- Path and version properties: Blocks -->
     <docs.m.hsqldb-server.version>1.0</docs.m.hsqldb-server.version>
     <docs.m.hsqldb-server.relPath>2.2/blocks/hsqldb-server/${docs.m.hsqldb-server.version}/</docs.m.hsqldb-server.relPath>
     <docs.m.hsqldb-client.version>1.0</docs.m.hsqldb-client.version>
@@ -3387,7 +3322,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.0-alpha-3</version>
+            <version>1.4</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -3399,8 +3334,8 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>rat-maven-plugin</artifactId>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
             <executions>
               <execution>
                 <phase>verify</phase>
@@ -3466,262 +3401,6 @@
             <version>1.0.0-M1-SNAPSHOT</version>
           </plugin>
         </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>daisy</id>
-      <modules>
-        <module>../tools/cocoon-daisy-export-strategy</module>
-        <module>../site/cocoon-thien-maven-site-skin</module>
-      </modules>
-      <repositories>
-        <repository>
-          <id>cocoon-dev.org</id>
-          <url>http://daisycms.org/maven/maven2/deploy</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>cocoon-dev.org</id>
-          <url>http://daisycms.org/maven/maven2/deploy/</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.daisycms</groupId>
-              <artifactId>daisy-maven-plugin</artifactId>
-              <version>1.0.0-SNAPSHOT</version>
-              <configuration>
-                <repoUrl>${docs.repoUrl}</repoUrl>
-                <editUrl>http://cocoon.zones.apache.org/daisy/cdocs/</editUrl>
-                <daisyServerId>cocoon-daisy</daisyServerId>
-                <cleanSiteXml>true</cleanSiteXml>
-                <author>The Cocoon Community</author>
-                <navDocId>0</navDocId>
-                <collections>
-                  <!-- sites -->
-                  <collection>
-                    <name>cdocs-site-main</name>
-                    <path>${docs.m.site-main.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-site-blocks</name>
-                    <path>${docs.m.site-blocks.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-site-core-modules</name>
-                    <path>${docs.m.site-core-modules.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-site-subprojects</name>
-                    <path>${docs.m.site-subprojects.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-site-maven-plugins</name>
-                    <path>${docs.m.site-maven-plugins.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-site-servlet-service</name>
-                    <path>${docs.m.site-servlet-service.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-site-configuration</name>
-                    <path>${docs.m.site-configuration.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-site-22</name>
-                    <path>${docs.m.site-22.relPath}</path>
-                  </collection>
-                  <!-- core -->
-                  <collection>
-                    <name>cdocs-core</name>
-                    <path>${docs.m.core.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-expression-language</name>
-                    <path>${docs.m.expression-language-impl.relPath}</path>
-                  </collection>
-                  <!-- subprojects -->
-                  <collection>
-                    <name>cdocs-configuration-api</name>
-                    <path>${docs.m.configuration-api.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-spring-configurator</name>
-                    <path>${docs.m.spring-configurator.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-servlet-service-impl</name>
-                    <path>${docs.m.servlet-service-impl.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-servlet-service-components</name>
-                    <path>${docs.m.servlet-service-components.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-jnet</name>
-                    <path>${docs.m.jnet.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-block-deployment</name>
-                    <path>${docs.m.block-deployment.relPath}</path>
-                  </collection>
-                  <!-- blocks -->
-                  <collection>
-                    <name>cdocs-ajax</name>
-                    <path>${docs.m.ajax.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-apples</name>
-                    <path>${docs.m.apples.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-auth</name>
-                    <path>${docs.m.auth.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-batik</name>
-                    <path>${docs.m.batik.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-captcha</name>
-                    <path>${docs.m.captcha.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-eventcache</name>
-                    <path>${docs.m.eventcache.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-flowscript</name>
-                    <path>${docs.m.flowscript.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-fop</name>
-                    <path>${docs.m.fop.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-forms</name>
-                    <path>${docs.m.forms.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-javaflow</name>
-                    <path>${docs.m.javaflow.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-jcr</name>
-                    <path>${docs.m.jcr.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-jms</name>
-                    <path>${docs.m.jms.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-lucene</name>
-                    <path>${docs.m.lucene.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-mail</name>
-                    <path>${docs.m.mail.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-portal</name>
-                    <path>${docs.m.portal.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-profiler</name>
-                    <path>${docs.m.profiler.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-serializers</name>
-                    <path>${docs.m.serializers.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-template</name>
-                    <path>${docs.m.template.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-html</name>
-                    <path>${docs.m.html.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-linkrewriter</name>
-                    <path>${docs.m.linkrewriter.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-databases</name>
-                    <path>${docs.m.databases.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-databases-bridge</name>
-                    <path>${docs.m.databases-bridge.relPath}</path>
-                  </collection>
-                  <!-- Maven plugins -->
-                  <collection>
-                    <name>cdocs-maven-plugin</name>
-                    <path>${docs.m.maven-plugin.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-it-fw</name>
-                    <path>${docs.m.it-fw.relPath}</path>
-                  </collection>
-                  <collection>
-                    <name>cdocs-it</name>
-                    <path>${docs.m.it.relPath}</path>
-                  </collection>
-                </collections>
-                <siteXmlContent> &lt;project&gt; &lt;skin&gt;
-                  &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
-                  &lt;artifactId&gt;cocoon-thien-maven-site-skin&lt;/artifactId&gt;
-                  &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
-                  &lt;/skin&gt; &lt;body&gt; &lt;!-- @daisy-start@
-                  --&gt;&lt;!-- @daisy-end@ --&gt; &lt;menu ref="reports" /&gt;
-                  &lt;/body&gt; &lt;/project&gt; </siteXmlContent>
-                <exportStrategyClass>org.apache.cocoon.tools.maven.daisy.export.strategy.CocoonExportStrategy</exportStrategyClass>
-              </configuration>
-              <dependencies>
-                <dependency>
-                  <groupId>org.apache.cocoon</groupId>
-                  <artifactId>cocoon-daisy-export-strategy</artifactId>
-                  <version>1.0.0-SNAPSHOT</version>
-                </dependency>
-              </dependencies>
-              <executions>
-                <execution>
-                  <phase>pre-site</phase>
-                  <goals>
-                    <goal>export</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.cocoon</groupId>
-              <artifactId>cocoon-sitemaptags2daisy-plugin</artifactId>
-              <version>1.0.0-SNAPSHOT</version>
-              <!-- the plugins default configuration
-              <configuration>
-                <simulateInput>false</simulateInput>
-                <daisyServerId>cocoon-daisy</daisyServerId>
-                <repoUrl>http://cocoon.zones.apache.org:9263</repoUrl>
-              </configuration>
-              -->
-            </plugin>
-          </plugins>
-        </pluginManagement>
       </build>
     </profile>
     <profile>
