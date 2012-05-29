@@ -3246,8 +3246,7 @@
     <docs.m.servlet-service-impl.relPath>${docs.m.site-servlet-service.relPath}servlet-service-impl/${docs.m.servlet-service-impl.version}/</docs.m.servlet-service-impl.relPath>
     <docs.m.servlet-service-components.version>1.0</docs.m.servlet-service-components.version>
     <docs.m.servlet-service-components.relPath>${docs.m.site-servlet-service.relPath}servlet-service-components/${docs.m.servlet-service-components.version}/</docs.m.servlet-service-components.relPath>
-    <docs.m.configuration-api.version>1.0</docs.m.configuration-api.version>
-    <docs.m.configuration-api.relPath>${docs.m.site-configuration.relPath}configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>
+    <docs.m.configuration-api.relPath>${docs.m.site-configuration.relPath}configuration-api/</docs.m.configuration-api.relPath>
     <docs.m.spring-configurator.version>2.1</docs.m.spring-configurator.version>
     <docs.m.spring-configurator.relPath>${docs.m.site-configuration.relPath}spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>
     <docs.m.jnet.relPath>subprojects/jnet/</docs.m.jnet.relPath>
