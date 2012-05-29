@@ -77,7 +77,6 @@
         <module>cocoon-core-site</module>
         <module>cocoon-subprojects-site</module>
         <module>cocoon-maven-plugins-site</module>
-        <module>cocoon-servlet-service-site</module>
         <module>cocoon-configuration-site</module>
       </modules>      
     </profile>

@@ -21,7 +21,7 @@ describing loggin configuration. Is there any valuable information to grab or
 could we remove this document?</div></div><p>Cocoon uses <a href="http://jakarta.apache.org/commons/logging/">Commons
 Logging</a> by default and provides support for using Log4j (through commons
 logging). The usual Cocoon web application sets up Log4j through the
-<a href="../../../../subprojects/configuration/1.0/spring-configurator/2.0/1303_1_1.html">Cocoon Spring Configurator</a>.</p><p>The default configuration for Log4j is in the global application context
+<a href="../../../../subprojects/configuration/spring-configurator/index.html">Cocoon Spring Configurator</a>.</p><p>The default configuration for Log4j is in the global application context
 definition. Cocoon loads <em>WEB-INF/cocoon/log4j.xconf</em> as the
 configuration for Log4J. If you want to make any changes to the configuration
 file, it is advisable to not alter this default file but instead use your own

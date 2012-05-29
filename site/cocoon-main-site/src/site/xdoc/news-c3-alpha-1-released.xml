@@ -36,7 +36,7 @@ The Apache Cocoon Community is proud to announce the release of Cocoon 3.0.0-alp
   Here is an example of a pipeline that uses SAX components:
 
     Pipeline pipeline = new NonCachingPipeline();
-    pipeline.addComponent(new StringGenerator("<x></x>"));
+    pipeline.addComponent(new StringGenerator("&lt;x&gt;&lt;/x&gt;"));
     pipeline.addComponent(new XSLTTransformer(
         this.getClass().getResource("/test1.xslt")));
     pipeline.addComponent(new XSLTTransformer(

@@ -73,7 +73,7 @@
     
     There are no dependencies on Cocoon core libraries at all.
 
-    http://cocoon.apache.org/subprojects/servlet-service/1.0/
+    http://cocoon.apache.org/subprojects/servlet-service/servlet-service-impl/
 
   * Cocoon Configuration 1.0.2
     The Cocoon Configuration subproject provides basic support for
@@ -83,7 +83,7 @@
     
     There are no dependencies on Cocoon core libraries at all.
 
-    http://cocoon.apache.org/subprojects/configuration/1.0/
+    http://cocoon.apache.org/subprojects/configuration/
 
   Additional Cocoon 2.2.0 BLOCKS
   ------------------------------

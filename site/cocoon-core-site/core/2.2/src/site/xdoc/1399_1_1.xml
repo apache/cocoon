@@ -29,7 +29,7 @@ dumped to log files:</p><ul>
 <tt>ERROR</tt> or <tt>FATAL_ERROR</tt> so only very important events are logged
 (like crashes). While developing an application you would probably like to see
 much more. It's up to you to choose an approporiate log level; little
-experimantation will give you sense of each setting.<h1>Tweaking the configuration</h1>Configuration in Cocoon is handled by <a href="../../../../subprojects/configuration/1.0/spring-configurator/2.0/1304_1_1.html">Spring
+experimantation will give you sense of each setting.<h1>Tweaking the configuration</h1>Configuration in Cocoon is handled by <a href="../../../../subprojects/configuration/spring-configurator/index.html">Spring
 configurator</a>, go there for general information.<section name="How to set up a log level" style="background:none;padding:0;"/><div class="note"><div><strong>Note: </strong>Instructions put below assume that you have created a block
 according to this <a href="../../../../2.2/1159_1_1.html">tutorial</a>. Please refer to it, first.
 </div></div>Steps that you need to perform:<ol type="1">

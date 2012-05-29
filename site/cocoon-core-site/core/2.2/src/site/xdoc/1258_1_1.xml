@@ -73,7 +73,7 @@ features of Spring 2.0:</p><pre>&lt;beans xmlns="http://www.springframework.org/
 &lt;/beans&gt;
 </pre><p>The two elements shown above are required to get Cocoon up and running inside
 your web application. The first one, <tt>configurator:settings</tt>, initializes
-the <a href="../../../../subprojects/configuration/1.0/spring-configurator/2.0/1304_1_1.html">Cocoon Spring-Configurator.</a> The second element,
+the <a href="../../../../subprojects/configuration/spring-configurator/index.html">Cocoon Spring-Configurator.</a> The second element,
 <tt>avalon:bridge</tt>, sets up the Spring-Avalon-Bridge. This bridge allows you
 to run Avalon-based components in a Spring container; these Avalon components
 are configured using the well-known Avalon-configuration files. And that's it.
@@ -83,6 +83,6 @@ context is up and running, Cocoon is ready as well. You can either use the
 provided servlets to map requests to Cocoon or you can integrate Cocoon into
 your web application framework by getting the Cocoon beans from the Spring
 application context.</p><p>For more information on how to configure Cocoon, we suggest to read the
-documentation about the <a href="../../../../subprojects/configuration/1.0/spring-configurator/2.0/1304_1_1.html">Cocoon Spring Configurator</a>
+documentation about the <a href="../../../../subprojects/configuration/spring-configurator/index.html">Cocoon Spring Configurator</a>
 first and then continue with the other configuration documents.</p></div></div>
        </body></document>
