@@ -3202,7 +3202,7 @@
     <docs.m.site-core-modules.relPath>2.2/core-modules/</docs.m.site-core-modules.relPath>
     <docs.m.site-maven-plugins.relPath>2.2/maven-plugins/</docs.m.site-maven-plugins.relPath>
     <docs.m.site-subprojects.relPath>subprojects/</docs.m.site-subprojects.relPath>
-    <docs.m.site-configuration.relPath>subprojects/configuration/1.0/</docs.m.site-configuration.relPath>
+    <docs.m.site-configuration.relPath>subprojects/configuration/</docs.m.site-configuration.relPath>
     <docs.m.site-servlet-service.version>1.0</docs.m.site-servlet-service.version>
     <docs.m.site-servlet-service.relPath>subprojects/servlet-service/${docs.m.site-servlet-service.version}/</docs.m.site-servlet-service.relPath>
     <!-- Path and version properties: core -->
