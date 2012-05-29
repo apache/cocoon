@@ -22,10 +22,10 @@ Cocoon. This relaunch comprises a new design for the main site and the Cocoon
 The new documentation reflects the new structure of <a href="2.2/1327_1_1.html">Cocoon
 2.2</a> with a</p><ul>
 <li>small <a href="2.2/core-modules/core/2.2/1270_1_1.html">core</a></li>
-<li>which is based on the <a href="subprojects/1306_1_1.html">subprojects</a>
-"<a href="subprojects/configuration/1.0/1329_1_1.html">Cocoon Configuration</a>" and
-"<a href="subprojects/servlet-service/1.0/1325_1_1.html">Cocoon Servlet-Service Framework</a>"</li>
-<li><a href="2.2/blocks/1204_1_1.html">blocks </a>with additional functionality (e.g. PDF or
+<li>which is based on the <a href="subprojects/">subprojects</a>
+"<a href="subprojects/configuration/">Cocoon Configuration</a>" and
+"<a href="subprojects/servlet-service/servlet-service-impl/">Cocoon Servlet-Service Framework</a>"</li>
+<li><a href="2.2/blocks/1204_1_1.html">blocks</a> with additional functionality (e.g. PDF or
 SVG creation, form frameworks, etc.)</li>
 <li>and <a href="2.2/maven-plugins/1208_1_1.html">Maven 2 plugins</a>.</li>
 </ul>The content was also cleaned up so that information which had become

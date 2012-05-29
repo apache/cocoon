@@ -67,7 +67,7 @@
     which can communicate with each other. The current implementation is based on
     Spring 2.0. There are no dependencies on Cocoon core libraries at all.
 
-    http://cocoon.apache.org/subprojects/servlet-service/1.0/
+    http://cocoon.apache.org/subprojects/servlet-service/servlet-service-impl/
 
   * Cocoon Configuration 1.0.1
     The Cocoon Configuration subproject provides basic support for configuring
@@ -75,7 +75,7 @@
     useful component providing support in common configuration issues when using the
     Spring framework. There are no dependencies on Cocoon core libraries at all.
 
-    http://cocoon.apache.org/subprojects/configuration/1.0/
+    http://cocoon.apache.org/subprojects/configuration/
 
   BLOCKS
   ------

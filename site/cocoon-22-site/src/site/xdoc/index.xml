@@ -39,9 +39,9 @@
           both can be reused outside of Cocoon Core.
           <br/>
           The 
-          <a href="../subprojects/configuration/1.0/1329_1_1.html">Spring Configurator</a> provides basic support for
+          <a href="../subprojects/configuration/index.html">Spring Configurator</a> provides basic support for
           configuring web applications that make use of Spring. The
-          <a href="../subprojects/servlet-service/1.1/1325_1_1.html">Servlet Service Framework</a> enables modularization based
+          <a href="../subprojects/servlet-service/servlet-service-impl/index.html">Servlet Service Framework</a> enables modularization based
           on the 
           <tt>javax.servlet.Servlet</tt> interface. Those servlet services are
           <a href="http://en.wikipedia.org/wiki/Polymorphism_in_object-oriented_programming">polymorphic</a>.

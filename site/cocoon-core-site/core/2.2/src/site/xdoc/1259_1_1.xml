@@ -20,8 +20,8 @@
 of components (the cocoon.xconf), the later versions support to split this
 configuration file into several files using an include mechanism. You can refer
 to properties from within your configuration files and Cocoon will replace these
-accordingly.</p><h1>Spring Configuration</h1><p>Spring configurations are supported through the <a href="../../../../subprojects/configuration/1.0/spring-configurator/2.0/1304_1_1.html">Spring
-Configurator</a>. Have a look at the <a href="../../../../subprojects/configuration/1.0/spring-configurator/2.0/1312_1_1.html">documentation</a> for
+accordingly.</p><h1>Spring Configuration</h1><p>Spring configurations are supported through the <a href="../../../../subprojects/configuration/spring-configurator/index.html">Spring
+Configurator</a>. Have a look at the <a href="../../../../subprojects/configuration/spring-configurator/index.html">documentation</a> for
 more information.</p><h1>Legacy Configuration</h1><p>Although Cocoon is moving away from the Avalon framework (which is of course
 still supported for compatibility), still the main part of Cocoon is configured
 by using the Avalon configuration file format. By default all configuration

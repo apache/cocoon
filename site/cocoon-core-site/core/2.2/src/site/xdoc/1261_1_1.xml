@@ -23,7 +23,7 @@ without changing the files itself you can define properties to which you can
 refer to from within the configuration files (and sitemaps and your own code).
 In addition, Cocoon provides integrated support for the Spring property override
 mechanism.</p><p>Cocoon uses the Cocoon Spring Configurator for these features. You can find a
-complete description <a href="../../../../subprojects/configuration/1.0/spring-configurator/2.0/1304_1_1.html">here</a>. In short, you can define
+complete description <a href="../../../../subprojects/configuration/spring-configurator/index.html">here</a>. In short, you can define
 various property files and have different ways of configuring these properties.
 You can refer to the values of a property by using the common
 <tt>${PROPERTY_NAME}</tt> syntax in your configuration files or sitemaps. You
