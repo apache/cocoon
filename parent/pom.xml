@@ -3242,8 +3242,7 @@
     <docs.m.xml-util.version>1.0</docs.m.xml-util.version>
     <docs.m.xml-util.relPath>2.2/core-modules/xml-util/${docs.m.xml-util.version}/</docs.m.xml-util.relPath>
     <!-- Path and version properties: subprojects -->
-    <docs.m.servlet-service-impl.version>1.2</docs.m.servlet-service-impl.version>
-    <docs.m.servlet-service-impl.relPath>${docs.m.site-servlet-service.relPath}servlet-service-impl/${docs.m.servlet-service-impl.version}/</docs.m.servlet-service-impl.relPath>
+    <docs.m.servlet-service-impl.relPath>${docs.m.site-servlet-service.relPath}servlet-service-impl/</docs.m.servlet-service-impl.relPath>
     <docs.m.servlet-service-components.version>1.0</docs.m.servlet-service-components.version>
     <docs.m.servlet-service-components.relPath>${docs.m.site-servlet-service.relPath}servlet-service-components/${docs.m.servlet-service-components.version}/</docs.m.servlet-service-components.relPath>
     <docs.m.configuration-api.relPath>${docs.m.site-configuration.relPath}configuration-api/</docs.m.configuration-api.relPath>
