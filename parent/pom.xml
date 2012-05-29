@@ -3250,8 +3250,7 @@
     <docs.m.configuration-api.relPath>${docs.m.site-configuration.relPath}configuration-api/${docs.m.configuration-api.version}/</docs.m.configuration-api.relPath>
     <docs.m.spring-configurator.version>2.1</docs.m.spring-configurator.version>
     <docs.m.spring-configurator.relPath>${docs.m.site-configuration.relPath}spring-configurator/${docs.m.spring-configurator.version}/</docs.m.spring-configurator.relPath>
-    <docs.m.jnet.version>1.1</docs.m.jnet.version>
-    <docs.m.jnet.relPath>subprojects/jnet/${docs.m.jnet.version}/</docs.m.jnet.relPath>
+    <docs.m.jnet.relPath>subprojects/jnet/</docs.m.jnet.relPath>
     <docs.m.block-deployment.version>1.1</docs.m.block-deployment.version>
     <docs.m.block-deployment.relPath>subprojects/block-deployment/${docs.m.block-deployment.version}/</docs.m.block-deployment.relPath>    
     <!-- Path and version properties: blocks -->
