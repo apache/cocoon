@@ -26,8 +26,8 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../parent/pom.xml</relativePath>
+    <version>9-SNAPSHOT</version>
+    <relativePath/>
   </parent>
   
   <artifactId>cocoon-blocks-site</artifactId>
@@ -48,35 +48,44 @@
     </site>
   </distributionManagement>
   
-  <profiles>
-    <profile>
-      <id>daisy</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.daisycms</groupId>
-            <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>
-              <navDocId>1205</navDocId>
-              <collection>cdocs-site-blocks</collection>
-              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>         
-              <siteXmlContent>
-                &lt;project&gt;
-                &lt;skin&gt;
-                &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
-                &lt;artifactId&gt;cocoon-thien-maven-site-skin&lt;/artifactId&gt;
-                &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
-                &lt;/skin&gt;
-                &lt;body&gt;
-                &lt;!-- @daisy-start@ --&gt;&lt;!-- @daisy-end@ --&gt;
-                &lt;/body&gt;
-                &lt;/project&gt;
-              </siteXmlContent>                   
-            </configuration>
-          </plugin>   
-        </plugins>
-      </build>      
-    </profile>
-  </profiles>  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <locales>en</locales>
+          <reportPlugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+              <version>2.4</version>
+              <configuration>
+                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>summary</report>
+                    <report>license</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
+          </reportPlugins>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-descriptor</id>
+            <goals>
+              <goal>attach-descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   
 </project>
