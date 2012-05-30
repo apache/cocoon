@@ -20,7 +20,7 @@
 <!-- $Id$ -->
 <project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd"
-         name="Cocoon Subprojects">
+         name="Cocoon">
 
   <skin>
     <groupId>org.apache.cocoon</groupId>
@@ -29,7 +29,7 @@
   </skin>
     
   <body>
-    <menu name="Available Blocks">
+    <menu name="Available Plugins">
       <item name="List" href="./index.html"/>
     </menu>
   </body>
