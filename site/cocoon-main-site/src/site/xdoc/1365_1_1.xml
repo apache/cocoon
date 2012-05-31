@@ -65,7 +65,7 @@
         <section name="Hippo Cocoon Toolkit" style="background:none;padding:0;"/>
         <p>
           The 
-          <a href="https://forge.onehippo.org/gf/project/hct/">Hippo Cocoon Toolkit</a> provides an alternative,
+          <a href="http://tirasa.github.com/HippoCocoonToolkit/">Hippo Cocoon Toolkit</a> provides an alternative,
           Cocoon 3.0 based, toolkit for building front-end web sites while relying upon Hippo 7.x CMS and Repository.
         </p>
         <p>Hippo Cocoon Toolkit is licensed under the Apache License 2.0.</p>
