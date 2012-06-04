@@ -1026,6 +1026,7 @@
     <developer>
       <id>ilgrosso</id>
       <name>Francesco Chicchiriccò</name>
+      <email>ilgrosso@apache.org</email>
       <organization>Tirasa</organization>
       <organizationUrl>http://www.tirasa.net/</organizationUrl>
       <roles>
@@ -1034,6 +1035,7 @@
         <role>Committer</role>
       </roles>
       <url>http://people.apache.org/~ilgrosso/</url>
+      <timezone>+1</timezone>
     </developer>
 
   </developers>
