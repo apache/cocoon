@@ -1023,6 +1023,19 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>ilgrosso</id>
+      <name>Francesco Chicchiriccò</name>
+      <organization>Tirasa</organization>
+      <organizationUrl>http://www.tirasa.net/</organizationUrl>
+      <roles>
+        <role>ASF member</role>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <url>http://people.apache.org/~ilgrosso/</url>
+    </developer>
+
   </developers>
 
   <contributors>
@@ -2153,7 +2166,7 @@
       </dependency>
 
       <!-- Cocoon SNAPSHOT dependencies -->
-      <dependency>
+      <!--<dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
         <version>1.1.0-SNAPSHOT</version>
@@ -3011,7 +3024,7 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>javaflow</artifactId>
         <version>1.0-SNAPSHOT</version>
-      </dependency>
+      </dependency>-->
     </dependencies>
   </dependencyManagement>
 
@@ -3100,16 +3113,6 @@
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
-      <!-- Assembly generation disabled: parent POM only -->
-<!--      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.3</version>
-        <configuration>
-          <descriptor>assembly.xml</descriptor>
-          <outputDirectory>target</outputDirectory>
-          <workDirectory>target/assembly</workDirectory>
-        </configuration>
-      </plugin>-->
       <plugin>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>1.0.1</version>
