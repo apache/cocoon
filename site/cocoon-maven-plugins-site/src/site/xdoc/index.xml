@@ -38,9 +38,9 @@ started guide</a></li>
 </tr>
 <tr class="b">
 <td>
-<p><strong><a href="../../2.2/maven-plugins/maven-plugin/1.0/1295_1_1.html">Cocoon Maven Plugin</a></strong></p>
+<p><strong><a href="maven-plugin/1.0/">Cocoon Maven Plugin</a></strong></p>
 </td>
-<td><a href="maven-plugins/rcl/1.0/">1.0</a></td>
+<td><a href="maven-plugin/1.0/">1.0</a></td>
 <td>
 <p>The Cocoon Maven plugin contains several goals that make the life of software
 developers easier, e.g. support for running blocks as webapps or support for
