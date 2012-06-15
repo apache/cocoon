@@ -33,7 +33,7 @@
 <td>
 <p><a href="configuration-api/index.html">Configuration API</a></p>
 </td>
-<td><a href="configuration-api/index.html">1.0</a></td>
+<td><a href="configuration-api/index.html">1.0.4</a></td>
 <td>
 <p>The Configuration API is a simple but powerful API for handling configuration
 issues inside your application. It provides a standard mechanism for getting
@@ -45,7 +45,7 @@ configuration values inside your application code.</p>
 <p><a href="spring-configurator/index.html">Spring Configurator</a></p>
 </td>
 <td>
-<p><a href="spring-configurator/index.html">2.1 </a></p>
+<p><a href="spring-configurator/index.html">2.0 </a></p>
 </td>
 <td>
 <p>The Spring Configurator is a useful component providing support in common
@@ -71,6 +71,30 @@ configuration issues when using the Spring framework</p>
 </tr>
 <tr class="a">
 <td>
+<p><strong>Cocoon Configuration 1.0.4</strong></p>
+</td>
+<td>
+<p>Contains the Configuration API and the Spring Configurator sources</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.cgi/cocoon/subprojects/configuration/configuration-api/1.0.4/cocoon-configuration-api-1.0.4-source-release.zip">
+cocoon-configuration-api-1.0.4-source-release.zip </a>
+</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/configuration-api/1.0.4/cocoon-configuration-api-1.0.4-source-release.zip.asc">
+pgp </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/configuration-api/1.0.4/cocoon-configuration-api-1.0.4-source-release.zip.md5">
+md5 </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/configuration-api/1.0.4/cocoon-configuration-api-1.0.4-source-release.zip.sha1">
+sha1 </a>
+</p>
+</td>
+</tr>
+<tr class="a">
+<td>
 <p><strong>Cocoon Configuration 1.0.2</strong></p>
 </td>
 <td>
@@ -80,7 +104,7 @@ binaries, javadocs, docs</p>
 <td>
 <p>
 <a href="http://www.apache.org/dyn/closer.cgi/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.zip">
-cocoon-configuration-1.0.2.zip </a> <br/>
+cocoon-configuration-1.0.2.zip </a>
 <a href="http://www.apache.org/dyn/closer.cgi/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.tar.gz">
 cocoon-configuration-1.0.2.tar.gz </a></p>
 </td>
