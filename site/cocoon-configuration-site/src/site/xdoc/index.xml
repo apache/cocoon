@@ -45,7 +45,7 @@ configuration values inside your application code.</p>
 <p><a href="spring-configurator/index.html">Spring Configurator</a></p>
 </td>
 <td>
-<p><a href="spring-configurator/index.html">2.0 </a></p>
+<p><a href="spring-configurator/index.html">2.2.1</a></p>
 </td>
 <td>
 <p>The Spring Configurator is a useful component providing support in common
@@ -128,6 +128,31 @@ sha1 </a></p>
 </tr>
 <tr class="a">
 <td>
+<p><strong>Cocoon Spring Configurator 2.2.1</strong></p>
+</td>
+<td>
+<p>Contains the Spring Configurator sources<br/>
+(the Configuration API hasn't changed since 1.0.2)</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.cgi/cocoon/subprojects/configuration/spring-configurator/2.2.1/cocoon-spring-configurator-2.2.1-source-release.zip">
+cocoon-spring-configurator-2.2.1-source-release.zip</a>
+</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/spring-configurator/2.2.1/cocoon-spring-configurator-2.2.1-source-release.zip.asc">
+pgp </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/spring-configurator/2.2.1/cocoon-spring-configurator-2.2.1-source-release.zip.md5">
+md5 </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/spring-configurator/2.2.1/cocoon-spring-configurator-2.2.1-source-release.zip.sha1">
+sha1 </a>
+</p>
+</td>
+</tr>
+<tr class="a">
+<td>
 <p><strong>Cocoon Spring Configurator 2.0.0</strong></p>
 </td>
 <td>
@@ -163,7 +188,7 @@ sha1 </a></p>
 </table><h1>Maven 2 Dependency</h1><p>Add following dependency to your pom.xml file:</p><pre>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
   &lt;artifactId&gt;cocoon-spring-configurator&lt;/artifactId&gt;
-  &lt;version&gt;2.1.0&lt;/version&gt;
+  &lt;version&gt;2.2.1&lt;/version&gt;
 &lt;/dependency&gt;
 </pre></div></div>
        </body></document>
