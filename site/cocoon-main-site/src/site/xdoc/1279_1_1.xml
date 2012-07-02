@@ -27,6 +27,17 @@
       <div id="bodyText">
         <h1 class="docTitle">News archive</h1>
           <dl class="news">
+            <dt>Apache Cocoon 3.0.0-alpha-1 Released</dt>
+            <dd>The Apache Cocoon Community is proud to announce the release of Cocoon 3.0.0-alpha-1.
+              Apache Cocoon 3 is a major rewrite of Cocoon 2.2.
+              Like Cocoon 2 it is based around the concept of pipelines and sitemaps and it is very
+              similar to Cocoon 2.2 in many respects but is slimmed down and
+              designed to be *easily usable from within any Java environment*.
+              [<a href="news-c3-alpha-1-released.html">more</a>] 
+            </dd>
+            <dd class="newsMeta">submitted by Reinhard Pötz, 01/24/09 12:53:55 GMT</dd>
+          </dl>
+          <dl class="news">
             <dt>Apache Cocoon 3</dt>
             <dd>Corona was accepted by the Cocoon PMC to become Apache Cocoon 3. The Cocoon 3 website has more details. A first ALPHA release will follow soon.
               [<a href="1487_1_1.html">more</a>] 

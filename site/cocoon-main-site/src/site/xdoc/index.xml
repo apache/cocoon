@@ -133,11 +133,21 @@
         <h1>News</h1>
         <div class="news">
           <dl class="news">
+            <dt>Apache Cocoon Subprojects New Releases</dt>
+            <dd>During the last weeks the Apache Cocoon Community released a new version of each one of 11 subprojects
+            currently managed.
+            Subprojects are libraries, shared by different Apache Cocoon versions, that can be used independently from 
+            the rest of Cocoon (1.x, 2.x 3.x), or any of its parts (such as sitemap, pipelines, blocks, etc.).
+            [<a href="news-subprojects-new-release.html">more</a>] 
+            </dd>
+            <dd class="newsMeta">submitted by Francesco Chicchiriccò, 07/02/12 09:30:00 CET</dd>
+          </dl>
+          <dl class="news">
             <dt>Looking for samples?</dt>
             <dd>In case you have been wondering where the good old Cocoon samples were gone, we have just restored 
             <a href="http://cocoon.zones.apache.org">our jail</a>, currently with Cocoon 3.0 and Cocoon 2.1 samples.
             </dd>
-            <dd class="newsMeta">submitted by Francesco Chicchiriccò, 03/20/11 13:12:00 GMT</dd>
+            <dd class="newsMeta">submitted by Francesco Chicchiriccò, 03/20/12 13:12:00 GMT</dd>
           </dl>
           <dl class="news">
             <dt>Apache Cocoon 3.0.0-alpha-3 Released</dt>
@@ -149,17 +159,6 @@
               [<a href="news-c3-alpha-3-released.html">more</a>] 
             </dd>
             <dd class="newsMeta">submitted by Simone Tripodi, 07/01/11 09:35:37 GMT</dd>
-          </dl>
-          <dl class="news">
-            <dt>Apache Cocoon 3.0.0-alpha-1 Released</dt>
-            <dd>The Apache Cocoon Community is proud to announce the release of Cocoon 3.0.0-alpha-1.
-              Apache Cocoon 3 is a major rewrite of Cocoon 2.2.
-              Like Cocoon 2 it is based around the concept of pipelines and sitemaps and it is very
-              similar to Cocoon 2.2 in many respects but is slimmed down and
-              designed to be *easily usable from within any Java environment*.
-              [<a href="news-c3-alpha-1-released.html">more</a>] 
-            </dd>
-            <dd class="newsMeta">submitted by Reinhard Pötz, 01/24/09 12:53:55 GMT</dd>
           </dl>
         </div>
         <a href="1279_1_1.html">News Archive</a>
