@@ -60,10 +60,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-thread-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-util</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <!--  Commons -->
     <dependency>

@@ -28,6 +28,11 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon: Documentation: tool to sync the sitemap component info to the Daisy CMS</name>
+
+  <properties>
+    <daisy.version>2.4.1</daisy.version>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -56,20 +61,6 @@ java org.apache.cocoon.documentation.daisy.SitemapTagsToDaisy
       </plugin>
     </plugins>
   </build>
-  <repositories>
-    <!-- The cocoondev repository contains the needed Daisy artifacts -->
-    <repository>
-      <id>cocoondev</id>
-      <name>Cocoondev Maven Repository</name>
-      <url>http://daisycms.org/maven/maven1/deploy</url>
-      <layout>legacy</layout>
-    </repository>
-    <repository>
-      <id>maven-snapshot</id>
-      <name>Maven snapshot Repository</name>
-      <url>http://snapshots.maven.codehaus.org/maven2/</url>
-    </repository>
-  </repositories>
   <!-- Seemingly long list of dependencies, but most are runtime dependencies.
        If/when Daisy is build using maven2 itself, transitive dependencies
        will probably allow to clean up this list -->
@@ -77,34 +68,34 @@ java org.apache.cocoon.documentation.daisy.SitemapTagsToDaisy
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-api</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-xmlschema-bindings</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-client-impl</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-common-impl</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-spi</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-jmsclient-api</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -145,12 +136,12 @@ java org.apache.cocoon.documentation.daisy.SitemapTagsToDaisy
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-htmlcleaner</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-util</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -195,4 +186,12 @@ java org.apache.cocoon.documentation.daisy.SitemapTagsToDaisy
       <scope>runtime</scope>
     </dependency>
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>daisy</id>
+      <url>http://daisycms.org/maven/maven2/deploy/</url>
+    </repository>
+  <repositories>
+
 </project>

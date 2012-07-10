@@ -31,7 +31,7 @@ import junit.framework.TestCase;
  *
  * @version $Id$
  */
-public class AbstractTestCase
+public abstract class AbstractTestCase
     extends TestCase {
 
     //~ Instance fields --------------------------------------------------------

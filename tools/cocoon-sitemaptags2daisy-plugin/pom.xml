@@ -35,52 +35,45 @@
   <name>Cocoon Sitemap Tags to Daisy Plugin</name>
 
   <repositories>
-    <!-- The cocoondev repository contains the needed Daisy artifacts -->
     <repository>
-      <id>cocoondev</id>
-      <name>Cocoondev Maven Repository</name>
-      <url>http://daisycms.org/maven/maven1/deploy</url>
-      <layout>legacy</layout>
-    </repository>
-    <repository>
-      <id>maven-snapshot</id>
-      <name>Maven snapshot Repository</name>
-      <url>http://snapshots.maven.codehaus.org/maven2/</url>
+      <id>daisy</id>
+      <url>http://daisycms.org/maven/maven2/deploy/</url>
     </repository>
   </repositories>
+
   <dependencies>
     <!-- utility libs -->
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-api</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-xmlschema-bindings</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-client-impl</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-common-impl</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-repository-spi</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-jmsclient-api</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -121,12 +114,12 @@
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-htmlcleaner</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
     </dependency>
     <dependency>
       <groupId>daisy</groupId>
       <artifactId>daisy-util</artifactId>
-      <version>1.5-dev</version>
+      <version>${daisy.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -141,7 +134,7 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>nekodtd</groupId>
+      <groupId>nekohtml</groupId>
       <artifactId>nekodtd</artifactId>
       <version>0.1.11</version>
       <scope>runtime</scope>
@@ -204,6 +197,8 @@
   </reporting>
 
   <properties>
+    <daisy.version>2.4.1</daisy.version>
+
     <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.maven-sitemaptags2daisy-plugin.version}</docs.version>
   </properties>
@@ -233,4 +228,5 @@
       </build>
     </profile>
   </profiles>
+
 </project>

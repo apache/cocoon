@@ -41,8 +41,6 @@
     <module>commons</module>
     <module>core</module>
     <module>dists</module>
-    <!-- sub projects -->
-    <module>subprojects</module>
     <module>core/cocoon-servlet-service/cocoon-servlet-service-components</module>
     <module>core/cocoon-servlet-service/cocoon-servlet-service-components-sample</module>
   </modules>
