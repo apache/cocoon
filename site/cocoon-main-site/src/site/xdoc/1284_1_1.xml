@@ -20,7 +20,9 @@
 2.2 and how to use it together with Maven 2 is the <a href="2.2/1159_1_1.html">Getting
 started tutorial</a>. If you follow that path, Maven 2 will take care of
 downloading all (transitive) dependencies.</p><p>However, there is also a <em>Getting Started package</em> that contains a
-simple Cocoon 2.2 based application that uses Apache Ant as build system.</p><table class="bodyTable">
+simple Cocoon 2.2 based application that uses Apache Ant as build system.</p>
+<p>It is good practice to <a href="#Verifying_Releases">verify the integrity</a> of the distribution files.</p></div></div>
+<table class="bodyTable">
 <tbody>
 <tr class="a">
 <th>
@@ -53,14 +55,14 @@ cocoon-2.2.0.tar.gz</a></p>
 </td>
 <td>
 <p>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-2.2.0.zip.asc">pgp</a>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-2.2.0.zip.md5">md5</a>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-2.2.0.zip.sha1">sha1</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.zip.asc">pgp</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.zip.md5">md5</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.zip.sha1">sha1</a>
 <br/>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-2.2.0.tar.gz.asc">
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.tar.gz.asc">
 pgp</a>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-2.2.0.tar.gz.md5">md5</a>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-2.2.0.tar.gz.sha1">sha1</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.tar.gz.md5">md5</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.tar.gz.sha1">sha1</a>
 </p>
 </td>
 </tr>
@@ -81,14 +83,14 @@ cocoon-getting-started-2.2.0.tar.gz</a></p>
 </td>
 <td>
 <p>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip.asc">pgp</a>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip.md5">md5</a>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip.sha1">sha1</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip.asc">pgp</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip.md5">md5</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip.sha1">sha1</a>
 <br/>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz.asc">
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz.asc">
 pgp</a>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz.md5">md5</a>
-<a href="http://www.apache.org/dyn/closer.cgi/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz.sha1">sha1</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz.md5">md5</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz.sha1">sha1</a>
 </p>
 </td>
 </tr>
@@ -97,9 +99,50 @@ pgp</a>
 goes beyond what Cocoon provides in its core modules (Spring integration,
 sitemap and pipeline implementation) is provided as block. Blocks can be
 downloaded separately. In order to get an overview of what blocks are available,
-use the <a href="2.2/blocks/1204_1_1.html">list of blocks</a>.</p><section name="Cocoon 2.1 (stable)" style="background:none;padding:0;"/><p>The latest stable release of Cocoon 2.1.x  is 2.1.11.
+use the <a href="2.2/blocks/1204_1_1.html">list of blocks</a>.</p>
+<section name="Cocoon 2.1 (stable)" style="background:none;padding:0;"/><p>The latest stable release of Cocoon 2.1.x  is 2.1.11.
 <a href="http://cocoon.apache.org/mirror.cgi">Downloads</a> and
 <a href="http://cocoon.apache.org/2.1/">documentation</a> are available.</p><section name="Previous versions" style="background:none;padding:0;"/><p>Older versions of Cocoon are <a href="2.0/">2.0</a> and
 <a href="1.x/">1.x</a>. It is not recommended to start a new project based on
-one of them.</p></div></div>
+one of them.</p>
+    <section name="Verifying Releases">
+      <p>We strongly recommend you verify the integrity of the downloaded files with both PGP and MD5.</p>
+      
+      <p>The PGP signatures can be verified using <a href="http://www.pgpi.org/">PGP</a> or 
+      <a href="http://www.gnupg.org/">GPG</a>. 
+      First download the <a href="http://www.apache.org/dist/cocoon/KEYS">KEYS</a> as well as the 
+      <tt>*.asc</tt> signature file for the particular distribution. Make sure you get these files from the main 
+      distribution directory, rather than from a mirror. Then verify the signatures using one of the following sets of
+      commands:
+      
+        <source>$ pgpk -a KEYS
+$ pgpv cocoon-*.tar.gz.asc
+$ pgpv cocoon-*.zip.asc</source>
+        
+        <source>$ pgp -ka KEYS
+$ pgp cocoon-*.tar.gz.asc
+$ pgp cocoon-*.zip.asc</source>
+      
+        <source>$ gpg --import KEYS
+$ gpg --verify cocoon-*.tar.gz.asc
+$ gpg --verify cocoon-*.zip.asc</source>
+       </p>
+    <p>Alternatively, you can verify the MD5 signature on the files. A Unix/Linux program called  
+      <code>md5</code> or 
+      <code>md5sum</code> is included in most distributions.  It is also available as part of
+      <a href="http://www.gnu.org/software/textutils/textutils.html">GNU Textutils</a>.
+      Windows users can get binary md5 programs from these (and likely other) places:
+      <ul>
+        <li>
+          <a href="http://www.md5summer.org/">http://www.md5summer.org/</a>
+        </li>
+        <li>
+          <a href="http://www.fourmilab.ch/md5/">http://www.fourmilab.ch/md5/</a>
+        </li>
+        <li>
+          <a href="http://www.pc-tools.net/win32/md5sums/">http://www.pc-tools.net/win32/md5sums/</a>
+        </li>
+      </ul>
+    </p>
+    </section>
        </body></document>
