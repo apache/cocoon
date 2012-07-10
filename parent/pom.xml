@@ -2168,7 +2168,7 @@
       </dependency>
 
       <!-- Cocoon SNAPSHOT dependencies -->
-      <!--<dependency>
+      <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
         <version>1.1.0-SNAPSHOT</version>
@@ -3026,7 +3026,7 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>javaflow</artifactId>
         <version>1.0-SNAPSHOT</version>
-      </dependency>-->
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
