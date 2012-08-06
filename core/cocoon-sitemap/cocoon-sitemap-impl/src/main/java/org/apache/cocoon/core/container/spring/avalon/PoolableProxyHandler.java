@@ -97,6 +97,6 @@ public class PoolableProxyHandler implements InvocationHandler, Runnable {
         		log.debug("no object to put into pool  attributeName=" + attributeName);
         	}
         }
-        this.componentHolder.set(null);
+        this.componentHolder.remove();
     }
 }
