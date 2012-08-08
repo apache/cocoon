@@ -25,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.environment.mock.MockSession;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * JUnit-based tests for {@link LocaleAction} class.
@@ -107,7 +108,13 @@ public class LocaleActionTestCase extends SitemapComponentTestCase {
         session.setAttribute("locale", "th_TH_TH");
         result = act("locale3", null, parameters);
         assertNotNull("Action should always succeed", result);
-        assertEquals("Test for locale", "th_TH_TH", result.get("locale"));
+        // see http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html#special_cases_constructor
+        if(SystemUtils.isJavaVersionAtLeast(1.7f)) {
+            assertEquals("Test for locale", "th_TH_TH_#u-nu-thai", result.get("locale"));
+        } else {
+            assertEquals("Test for locale", "th_TH_TH", result.get("locale"));
+        }
+
         assertEquals("Test for language", "th", result.get("language"));
         assertEquals("Test for country", "TH", result.get("country"));
         assertEquals("Test for variant", "TH", result.get("variant"));
