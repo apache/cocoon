@@ -76,6 +76,10 @@
       +-->
   <bean name="org.apache.cocoon.core.xml.SAXParser"
         class="org.apache.cocoon.core.xml.impl.JaxpSAXParser" scope="singleton">
-    <property name="validate" value="false"/>
+      <property name="validate" value="${org.apache.cocoon.core.xml.SAXParser/validate}"/>
+      <property name="nsPrefixes" value="${org.apache.cocoon.core.xml.SAXParser/nsPrefixes}"/>
+      <property name="stopOnWarning" value="${org.apache.cocoon.core.xml.SAXParser/stopOnWarning}"/>
+      <property name="stopOnRecoverableError" value="${org.apache.cocoon.core.xml.SAXParser/stopOnRecoverableError}"/>
+<!--      <property name="saxParserFactory" value="${org.apache.cocoon.core.xml.SAXParser/saxParserFactory}"/>-->
   </bean>
 </beans>
