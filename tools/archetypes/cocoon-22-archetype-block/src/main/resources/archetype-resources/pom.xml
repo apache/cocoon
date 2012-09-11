@@ -59,19 +59,32 @@
 
   <build>
     <plugins>
-      <plugin>
+      <plugin> 
         <groupId>org.apache.cocoon</groupId>
-        <artifactId>cocoon-maven-plugin</artifactId>
-        <version>1.0.2</version>
-        <executions>
-          <execution>
-            <id>prepare</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>prepare</goal>
-            </goals>
-          </execution>
-        </executions>
+        <artifactId>cocoon-maven-plugin</artifactId> 
+        <version>1.0.0</version> 
+        <dependencies> 
+          <!-- RCL --> 
+          <dependency> 
+            <groupId>org.apache.cocoon</groupId> 
+            <artifactId>cocoon-rcl-spring-reloader</artifactId> 
+            <version>1.0.0</version> 
+          </dependency> 
+          <dependency> 
+            <groupId>org.apache.cocoon</groupId>
+            <artifactId>cocoon-rcl-webapp-wrapper</artifactId>
+            <version>1.0.0</version> 
+          </dependency> 
+        </dependencies> 
+        <executions> 
+          <execution> 
+            <id>prepare</id> 
+            <phase>compile</phase> 
+            <goals> 
+              <goal>prepare</goal> 
+            </goals> 
+          </execution> 
+        </executions> 
       </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
