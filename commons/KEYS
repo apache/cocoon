@@ -8,8 +8,8 @@ Users: pgp < KEYS
 Developers:
         pgp -kxa <your name> and append it to this file.
         (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
-        (gpg --list-sigs <your name>
-             && gpg --armor --export <your name>) >> this file.
+        (gpg --list-sigs <your name> >> this file
+             && gpg --armor --export <your name> >> this file).
 
 -----------------------------------------------------------------------------------
 pub   1024D/E41EDC7E 2003-09-26
@@ -955,4 +955,62 @@ niquivoyoZQAFOlEA9Sm/q9ckHspvApUvGXiBTNt+rVUOYhJBBgRAgAJBQJLqkRj
 AhsMAAoJEMr17FkZ/qJ9vzwAn0vGmShhBzWDSkLjTQ+qW8VXLee2AKCCqsqCN9eL
 dcC0KEtNPufKywDTzA==
 =vtxx
+-----END PGP PUBLIC KEY BLOCK-----
+pub   4096R/7C14EEE5 2012-09-11
+uid                  Thorsten Scherler (ASF member) <thorsten@apache.org>
+sig 3        7C14EEE5 2012-09-11  Thorsten Scherler (ASF member) <thorsten@apache.org>
+sub   4096R/FB003A3E 2012-09-11
+sig          7C14EEE5 2012-09-11  Thorsten Scherler (ASF member) <thorsten@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+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
+LIDSu1DWBBT0HPiM1zjfMT5ZiQ==
+=MjiJ
 -----END PGP PUBLIC KEY BLOCK-----
