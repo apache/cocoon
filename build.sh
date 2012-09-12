@@ -23,7 +23,7 @@
 
 # Java compiler requires at least 128m of memory for cocoon-serializers block,
 # plus another 128m for maven itself to fit its dependency tree.
-MAVEN_OPTS="-Xmx256m"
+MAVEN_OPTS="-Xmx512m"
 
 # Parse command line
 ARGS=""
