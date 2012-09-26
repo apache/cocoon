@@ -504,8 +504,8 @@
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
-        <role>PMC Member</role>
-        <role>Committer</role>
+        <role>Emeritus PMC Member</role>
+        <role>Emeritus Committer</role>
       </roles>	    
       <timezone>+1</timezone>
     </developer>
@@ -875,8 +875,8 @@
       <organizationUrl>http://www.apache.org</organizationUrl>
       <timezone>+1</timezone>
       <roles>
-        <role>PMC member</role>
-        <role>Committer</role>
+        <role>Emeritus PMC member</role>
+        <role>Emeritus Committer</role>
       </roles>
     </developer>
     <developer>
