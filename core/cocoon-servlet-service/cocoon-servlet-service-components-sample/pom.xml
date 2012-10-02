@@ -40,7 +40,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Cocoon-Block-Name>${pom.artifactId}</Cocoon-Block-Name>
+              <Cocoon-Block-Name>${project.artifactId}</Cocoon-Block-Name>
             </manifestEntries>
           </archive>
         </configuration>
