@@ -192,6 +192,6 @@ java org.apache.cocoon.documentation.daisy.SitemapTagsToDaisy
       <id>daisy</id>
       <url>http://daisycms.org/maven/maven2/deploy/</url>
     </repository>
-  <repositories>
+  </repositories>
 
 </project>
