@@ -41,7 +41,7 @@
               <maxIdleTime>30000</maxIdleTime>
             </connector>
           </connectors>
-          <webAppSourceDirectory>${project.build.directory}/${pom.artifactId}-${pom.version}</webAppSourceDirectory>
+          <webAppSourceDirectory>${project.build.directory}/${project.artifactId}-${pom.version}</webAppSourceDirectory>
           <contextPath>/</contextPath>
         </configuration>
       </plugin>
