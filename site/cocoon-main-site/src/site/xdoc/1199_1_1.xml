@@ -42,13 +42,8 @@ people.apache.org, configure it at ~/.m2/settings.xml.</li>
 &lt;/settings&gt;</pre><div class="note"><div><strong>Note: </strong>Point to an empty local repository. This ensures that you don't
 introduce dependencies that can only be fullfilled within your local build
 environment or after doing the release which puts all created artifacts into
-your local repository.</div></div><h3>Win32 based systems</h3><div class="fixme"><div><strong>Fixme: </strong>TBD</div></div><section name="Daisy" style="background:none;padding:0;"/>It's also a good idea to publish our docs while preparing a release. The
-reason for this is that when a release is created, the information about
-versions (Javadocs, dependencies overview, etc.) exactly reflects the content of
-the released artifact.<br/>
-For that purpose configure your <tt>settings.xml</tt> as explained in
-<a href="1256_1_1.html">How to build the site locally</a> and give it a dry-run as
-explained in this document before you do the actual release<h1>Step 2: Releasing POM artifacts</h1><ol type="1">
+your local repository.</div></div><h3>Win32 based systems</h3><div class="fixme"><div><strong>Fixme: </strong>TBD</div></div>
+<h1>Step 2: Releasing POM artifacts</h1><ol type="1">
 <li>refer to an already released parent in pom.xml</li>
 <li><tt>mvn -N -Dusername=[svn-user-name] -Dpassword=******** release:prepare
 -Darguments="-N"<br/>

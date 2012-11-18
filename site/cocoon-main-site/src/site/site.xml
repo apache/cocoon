@@ -68,7 +68,6 @@
     <menu name="Getting involved">
       <item href="1273_1_1.html" name="How to contribute?"/>
       <item href="1275_1_1.html" name="Communication tools that we use"/>
-      <item href="1276_1_1.html" name="Other tools that we use"/>
       <item collapse="true" href="1199_1_1.html" name="Committer's and contributor's section">
         <item href="1199_1_1.html" name="Releasing Cocoon"/>
         <item href="798_1_1.html" name="Working with Cocoon from SVN">
