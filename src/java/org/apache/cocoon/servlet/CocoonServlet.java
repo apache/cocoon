@@ -177,17 +177,17 @@ public class CocoonServlet extends HttpServlet {
     /**
      * Allow processing of upload requests (mime/multipart)
      */
-    private boolean enableUploads;
-    private boolean autoSaveUploads;
-    private boolean allowOverwrite;
-    private boolean silentlyRename;
-    private int maxUploadSize;
+    protected boolean enableUploads;
+    protected boolean autoSaveUploads;
+    protected boolean allowOverwrite;
+    protected boolean silentlyRename;
+    protected int maxUploadSize;
 
-    private File uploadDir;
-    private File workDir;
-    private File cacheDir;
-    private String containerEncoding;
-    private String defaultFormEncoding;
+    protected File uploadDir;
+    protected File workDir;
+    protected File cacheDir;
+    protected String containerEncoding;
+    protected String defaultFormEncoding;
 
     protected ServletContext servletContext;
 
@@ -488,15 +488,23 @@ public class CocoonServlet extends HttpServlet {
 
         this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
 
-        this.requestFactory = new RequestFactory(this.autoSaveUploads,
-                                                 this.uploadDir,
-                                                 this.allowOverwrite,
-                                                 this.silentlyRename,
-                                                 this.maxUploadSize,
-                                                 this.containerEncoding);
+        createRequestFactory();
+
         // Add the servlet configuration
         this.appContext.put(CONTEXT_SERVLET_CONFIG, conf);
         this.createCocoon();
+    }
+
+    /**
+     * Creates the {@link RequestFactory}.
+     */
+    protected void createRequestFactory(){
+        this.requestFactory = new RequestFactory(this.autoSaveUploads,
+                this.uploadDir,
+                this.allowOverwrite,
+                this.silentlyRename,
+                this.maxUploadSize,
+                this.containerEncoding);
     }
 
     /**
