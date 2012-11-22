@@ -49,6 +49,8 @@ import org.xml.sax.SAXException;
  *   <dd>The XHTML 1.0 Transitional document type.</dd> 
  *   <dt>"<code>frameset</code>"</dt>
  *   <dd>The XHTML 1.0 Frameset document type.</dd>
+ *   <dt>"<code>xhtml5</code>"</dt>
+ *   <dd>The XHTML5 document type.</dd>
  * </dl> 
  *
  * @version CVS $Id$
@@ -73,6 +75,9 @@ public class XHTMLSerializer extends XMLSerializer {
     public static final DocType XHTML1_DOCTYPE_FRAMESET = new DocType(
             "html", "-//W3C//DTD XHTML 1.0 Frameset//EN",
             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd");
+
+    /** A representation of the XHTML5 document type. */
+    public static final DocType XHTML5_DOCTYPE = new DocType("html");
 
     /* ====================================================================== */
 
@@ -130,6 +135,8 @@ public class XHTMLSerializer extends XMLSerializer {
             this.doctype_default = XHTML1_DOCTYPE_TRANSITIONAL;
         } else if ("frameset".equalsIgnoreCase(doctype)) {
             this.doctype_default = XHTML1_DOCTYPE_FRAMESET;
+        } else if ("xhtml5".equalsIgnoreCase(doctype)) {
+            this.doctype_default = XHTML5_DOCTYPE;
         } else {
             /* Default is transitional */
             this.doctype_default = XHTML1_DOCTYPE_TRANSITIONAL;
