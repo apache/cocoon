@@ -48,6 +48,7 @@ import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
+import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.transformation.Transformer;
@@ -431,6 +432,59 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         } finally {
             if (serializer!=null) {
                 selector.release(serializer);
+            }
+
+            if (selector!=null) {
+                this.release(selector);
+            }
+
+            if (inputsource!=null) {
+                resolver.release(inputsource);
+            }
+
+            if (resolver!=null) {
+                this.release(resolver);
+            }
+        }
+
+        return document.toByteArray();
+    }
+    
+    public final byte[] read(String type, Parameters parameters, String source) throws SAXException, IOException, ProcessingException {
+        ServiceSelector selector = null;
+        Reader reader = null;
+        SourceResolver resolver = null;
+        Source inputsource = null;
+
+        assertNotNull("Test for component manager", this.getManager());
+
+        ByteArrayOutputStream document = null;
+
+        try {
+            selector = (ServiceSelector) this.lookup(Reader.ROLE+
+                "Selector");
+            assertNotNull("Test lookup of serializer selector", selector);
+
+            resolver = (SourceResolver) this.lookup(SourceResolver.ROLE);
+            assertNotNull("Test lookup of source resolver", resolver);
+
+            assertNotNull("Test if reader name is not null", type);
+            reader = (Reader) selector.select(type);
+            assertNotNull("Test lookup of reader", reader);
+            
+            reader.setup(new SourceResolverAdapter(resolver, getManager()),
+                    this.getObjectModel(), source, parameters);
+
+            document = new ByteArrayOutputStream();
+            reader.setOutputStream(document);
+
+            reader.generate();
+        } catch (ServiceException ce) {
+            getLogger().error("Could not retrieve serializer", ce);
+            fail("Could not retrieve serializer:"+ce.toString());
+        } finally {
+            if (reader!=null) {
+                selector.release(reader);
             }
 
             if (selector!=null) {
