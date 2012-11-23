@@ -170,7 +170,7 @@ public class HTMLTransformer
 
             // Extract the document using JTidy and stream it.
             ByteArrayInputStream bais =
-                new ByteArrayInputStream(text.getBytes());
+                new ByteArrayInputStream(text.getBytes("UTF-8"));
             org.w3c.dom.Document doc =
                 tidy.parseDOM(new BufferedInputStream(bais), null);
 
