@@ -472,7 +472,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             reader = (Reader) selector.select(type);
             assertNotNull("Test lookup of reader", reader);
             
-            reader.setup(new SourceResolverAdapter(resolver, getManager()),
+            reader.setup(new SourceResolverAdapter(resolver),
                     this.getObjectModel(), source, parameters);
 
             document = new ByteArrayOutputStream();
