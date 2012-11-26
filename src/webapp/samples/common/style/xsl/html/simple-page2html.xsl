@@ -32,7 +32,7 @@
        <title><xsl:value-of select="title"/></title>
        <link rel="stylesheet" href="{$contextPath}/styles/main.css" title="Default Style"/>
        <!-- copy local CSS, if any -->
-       <xsl:copy-of select="*[not(name() = 'content')]"/>
+       <xsl:copy-of select="*[not(name() = 'content') and not(name() = 'resources')]"/>
      </head>
      <body>
        <xsl:call-template name="resources"/>
