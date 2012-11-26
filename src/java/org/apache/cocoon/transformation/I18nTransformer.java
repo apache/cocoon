@@ -905,6 +905,9 @@ public class I18nTransformer extends AbstractTransformer
 
     // Date and number elements and params formatting attributes with values.
     private HashMap formattingParams;
+    
+    // The namespaces and their prefixes 
+    private Map namespaces;
 
     /**
      * Returns the current locale setting of this transformer instance.
@@ -1108,6 +1111,7 @@ public class I18nTransformer extends AbstractTransformer
         this.indexedParams      = new HashMap(3);
         this.formattingParams   = null;
         this.strBuffer          = null;
+        this.namespaces			= new HashMap(5);
 
         // give the catalogue variable its value -- first look if it's locally overridden
         // and otherwise use the component-wide defaults.
@@ -1133,6 +1137,31 @@ public class I18nTransformer extends AbstractTransformer
     //
     // Standard SAX event handlers
     //
+    
+    /**
+     * Process the SAX event.
+     * @see org.xml.sax.ContentHandler#startPrefixMapping
+     */
+    public void startPrefixMapping(String prefix, String uri)
+    throws SAXException {
+        // consume i18n prefix mappings
+        namespaces.put(prefix,uri);
+        if (!I18nUtils.matchesI18nNamespace(uri)) {
+            super.startPrefixMapping(prefix, uri);
+        }
+    }
+
+    /**
+     * Process the SAX event.
+     * @see org.xml.sax.ContentHandler#endPrefixMapping
+     */
+    public void endPrefixMapping(String prefix)
+    throws SAXException {
+        if (!I18nUtils.matchesI18nNamespace((String)namespaces.get(prefix))) {
+            super.endPrefixMapping(prefix);
+        }
+        namespaces.remove(prefix);
+    }
 
     public void startElement(String uri, String name, String raw,
                              Attributes attr)
@@ -2192,6 +2221,7 @@ public class I18nTransformer extends AbstractTransformer
         this.untranslatedRecorder = null;
         this.catalogue = null;
         this.objectModel = null;
+        this.namespaces.clear();
 
         // Release catalogues which were selected for current locale
         Iterator i = catalogues.values().iterator();
