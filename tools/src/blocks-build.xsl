@@ -31,6 +31,12 @@
         <fileset dir="${{lib.endorsed}}">
           <include name="*.jar"/>
         </fileset>
+        <fileset dir="${{lib.local}}">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${{lib.optional}}">
+          <include name="*.jar"/>
+        </fileset>
         <!-- Currently, we have no JVM dependent libraries
           <fileset dir="${{lib.core}}/jvm${{target.vm}}">
              <include name="*.jar"/>
