@@ -74,6 +74,7 @@
   <person name="Marcus Crafter" email="crafterm@apache.org" id="MC"/>
   <person name="David Crossley" email="crossley@apache.org" id="DC"/>
   <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
+  <person name="C&#233;dric Damioli" email="cdamioli@apache.org" id="CD"/>
   <person name="Bertrand Delacr&#233;taz" email="bdelacretaz@apache.org" id="BD"/>
   <person name="Bruno Dumon" email="bruno@apache.org" id="BRD"/>
   <person name="Daniel Fagerstrom" email="danielf@apache.org" id="DF"/>
@@ -186,6 +187,21 @@
     <!-- Leave this entry about raising minimum Java to 1.4 at the top for 2.1.12! -->
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
+    </action>
+    <action dev="CD" type="fix" fixes-bug="COCOON-1529" due-to="Johannes Textor">
+      I18nTranformer should consume and stop propagating start/endPrefixMapping of its namespace
+    </action>
+    <action dev="CD" type="fix" fixes-bug="COCOON-2069" due-to="Jeroen Reijn">
+      Cocoon 2.1 is not initialized when building without samples
+    </action>
+    <action dev="CD" fixes-bug="COCOON-2310" type="update">
+      Serializers block: Added support of XHTML5 in the XHTMLSerializer
+    </action>
+    <action dev="CD" fixes-bug="COCOON-2307" type="fix">
+      Core: When interrupted, the ResourceReader may store incomplete data in the cache
+    </action>
+    <action dev="CD" fixes-bug="COCOON-2314" type="update">
+      Core: Allow to override the upload parameters in CocoonServlet
     </action>
     <action dev="AG" type="update">
       Core: Update xercesImpl to 2.11.0 and xml-apis to 1.4.01.
