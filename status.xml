@@ -188,6 +188,9 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="CD" type="add" fixes-bug="COCOON-2288" due-to="Laurent Medioni" due-to-email="lmedioni@temenos.com">
+      Allow usage of SLF4J for traces
+    </action>
     <action dev="CD" type="fix" fixes-bug="COCOON-1529" due-to="Johannes Textor">
       I18nTranformer should consume and stop propagating start/endPrefixMapping of its namespace
     </action>
