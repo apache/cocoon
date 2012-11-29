@@ -76,6 +76,9 @@
     <zip zipfile="${dist.target}/${dist.name}-src.zip"
          basedir="${dist.root}"
          includes="${dist.name}/**">
+        <exclude name="${dist.name}/lib/**"/>
+        <exclude name="${dist.name}/tools/lib/**"/>
+        <exclude name="${dist.name}/tools/jetty/lib/**"/>
     </zip>
 
     <tar tarfile="${dist.target}/${dist.name}-src.tar"
@@ -85,6 +88,9 @@
              <exclude name="${dist.name}/cocoon.sh"/>
              <exclude name="${dist.name}/build.sh"/>
              <exclude name="${dist.name}/tools/bin/antRun"/>
+             <exclude name="${dist.name}/lib/**"/>
+             <exclude name="${dist.name}/tools/lib/**"/>
+             <exclude name="${dist.name}/tools/jetty/lib/**"/>
          </tarfileset>
          <tarfileset dir="${dist.root}" mode="755">
              <include name="${dist.name}/cocoon.sh"/>
@@ -94,6 +100,24 @@
     </tar>
     <gzip zipfile="${dist.target}/${dist.name}-src.tar.gz" src="${dist.target}/${dist.name}-src.tar"/>
     <delete file="${dist.target}/${dist.name}-src.tar"/>
+  	
+    <zip zipfile="${dist.target}/${dist.name}-deps.zip"
+         basedir="${dist.root}">
+        <include name="${dist.name}/lib/**"/>
+        <include name="${dist.name}/tools/lib/**"/>
+        <include name="${dist.name}/tools/jetty/lib/**"/>
+    </zip>
+
+    <tar tarfile="${dist.target}/${dist.name}-deps.tar"
+         longfile="gnu">
+         <tarfileset dir="${dist.root}">
+            <include name="${dist.name}/lib/**"/>
+            <include name="${dist.name}/tools/lib/**"/>
+            <include name="${dist.name}/tools/jetty/lib/**"/>
+         </tarfileset>
+    </tar>
+    <gzip zipfile="${dist.target}/${dist.name}-deps.tar.gz" src="${dist.target}/${dist.name}-deps.tar"/>
+    <delete file="${dist.target}/${dist.name}-deps.tar"/>
   </target>
 
   <target name="clean-dist" depends="clean" description="Cleans everything and brings back to original 'SVN checkout' state">
