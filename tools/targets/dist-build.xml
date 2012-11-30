@@ -100,7 +100,7 @@
     </tar>
     <gzip zipfile="${dist.target}/${dist.name}-src.tar.gz" src="${dist.target}/${dist.name}-src.tar"/>
     <delete file="${dist.target}/${dist.name}-src.tar"/>
-  	
+
     <zip zipfile="${dist.target}/${dist.name}-deps.zip"
          basedir="${dist.root}">
         <include name="${dist.name}/lib/**"/>
