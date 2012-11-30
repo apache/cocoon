@@ -30,9 +30,8 @@
       </p>
       <p>
         See documentation for
-        <a href="../../docs/userdocs/generators/imagedirectory-generator.html">Image
-        Directory Generator</a> and
-        <a href="../../docs/userdocs/readers/image-reader.html">Image Reader</a>
+        <a href="http://cocoon.apache.org/2.1/userdocs/imagedirectory-generator.html">Image Directory Generator</a> and
+        <a href="http://cocoon.apache.org/2.1/userdocs/core/image-reader.html">Image Reader</a>
       </p>
     </body></html>
   </xsl:template>
