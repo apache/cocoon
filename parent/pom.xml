@@ -1841,12 +1841,12 @@
       <dependency>
         <groupId>myfaces</groupId>
         <artifactId>myfaces-api</artifactId>
-        <version>r233484</version>
+        <version>1.1.1</version>
       </dependency>
       <dependency>
         <groupId>myfaces</groupId>
         <artifactId>myfaces-impl</artifactId>
-        <version>r233484</version>
+        <version>1.1.1</version>
       </dependency>
       <!-- TODO: Next two have same artifactId but different groupId ?? -->
       <dependency>

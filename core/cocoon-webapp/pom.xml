@@ -230,10 +230,10 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-captcha-sample</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-chaperon-sample</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-cron-sample</artifactId>
@@ -242,10 +242,10 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-databases-sample</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-deli-sample</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-eventcache-sample</artifactId>
@@ -294,10 +294,10 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jcr-sample</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jfor-sample</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jsp-sample</artifactId>
@@ -404,10 +404,10 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-webdav-sample</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-xmldb-sample</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-xsp-sample</artifactId>

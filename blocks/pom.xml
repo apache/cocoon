@@ -134,8 +134,8 @@
         <module>cocoon-bsf/cocoon-bsf-sample</module>
         <module>cocoon-captcha/cocoon-captcha-impl</module>
         <module>cocoon-captcha/cocoon-captcha-sample</module>        
-        <module>cocoon-chaperon/cocoon-chaperon-impl</module>
-        <module>cocoon-chaperon/cocoon-chaperon-sample</module>
+        <!--<module>cocoon-chaperon/cocoon-chaperon-impl</module>
+        <module>cocoon-chaperon/cocoon-chaperon-sample</module>-->
         <module>cocoon-cron/cocoon-cron-impl</module>
         <module>cocoon-cron/cocoon-cron-sample</module>
         <module>cocoon-databases/cocoon-databases-impl</module>
@@ -147,8 +147,8 @@
         <module>cocoon-databases/cocoon-databases-odbc-client</module>
         <module>cocoon-databases/cocoon-databases-oracle-client</module>
         <module>cocoon-databases/cocoon-databases-postgresql-client</module>
-        <module>cocoon-deli/cocoon-deli-impl</module>
-        <module>cocoon-deli/cocoon-deli-sample</module>
+        <!--<module>cocoon-deli/cocoon-deli-impl</module>
+        <module>cocoon-deli/cocoon-deli-sample</module>-->
         <module>cocoon-eventcache/cocoon-eventcache-impl</module>
         <module>cocoon-eventcache/cocoon-eventcache-sample</module>
         <module>cocoon-faces/cocoon-faces-impl</module>
@@ -167,8 +167,8 @@
         <!--<module>cocoon-javaflow/cocoon-javaflow-impl</module>
         <module>cocoon-javaflow/cocoon-javaflow-sample</module>-->
         <module>cocoon-jcr</module>
-        <module>cocoon-jfor/cocoon-jfor-impl</module>
-        <module>cocoon-jfor/cocoon-jfor-sample</module>
+        <!--<module>cocoon-jfor/cocoon-jfor-impl</module>
+        <module>cocoon-jfor/cocoon-jfor-sample</module>-->
         <module>cocoon-jms/cocoon-jms-impl</module>
         <!--module>cocoon-jms/cocoon-jms-sample</module-->
         <module>cocoon-jsp/cocoon-jsp-impl</module>
@@ -203,7 +203,6 @@
         <module>cocoon-repository/cocoon-repository-impl</module>
         <module>cocoon-scratchpad/cocoon-scratchpad-impl</module>
         <module>cocoon-scratchpad/cocoon-scratchpad-sample</module>
-        <module>cocoon-serializers/cocoon-serializers-charsets</module>
         <module>cocoon-serializers/cocoon-serializers-impl</module>
         <module>cocoon-session-fw/cocoon-session-fw-impl</module>
         <module>cocoon-session-fw/cocoon-session-fw-sample</module>
@@ -220,8 +219,8 @@
         <module>cocoon-velocity</module>
         <module>cocoon-web3</module>
         <module>cocoon-webdav</module>
-        <module>cocoon-xmldb/cocoon-xmldb-impl</module>
-        <module>cocoon-xmldb/cocoon-xmldb-sample</module>
+        <!--<module>cocoon-xmldb/cocoon-xmldb-impl</module>-->
+        <!--<module>cocoon-xmldb/cocoon-xmldb-sample</module>-->
         <module>cocoon-xsp/cocoon-xsp-impl</module>
         <module>cocoon-xsp/cocoon-xsp-sample</module>
       </modules>
