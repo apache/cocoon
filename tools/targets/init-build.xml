@@ -198,10 +198,9 @@
       	    <echo>====================================================================
       	          WARNING : dependencies not found
 ====================================================================
-      	 Third party librairies needs to be present in order to
-      	 build Cocoon.
+      	 Third party libraries must be present in order to build Cocoon.
       	 You may download the cocoon-${version}-deps.jar and unzip
-      	 its content in this directory to get these librairies.
+      	 its content in this directory to get these libraries.
 ====================================================================</echo>
   			<fail message="dependencies not found"/>
   	      </then>
