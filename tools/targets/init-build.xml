@@ -105,7 +105,7 @@
 
     <!-- Alias for the loglevel -->
     <property name="loglevel" value="${build.webapp.loglevel}"/>
-  	
+
     <!-- Set classpath -->
     <path id="classpath">
       <fileset dir="${lib.local}">
@@ -187,24 +187,22 @@
 
   <!-- Prepare the build directory -->
   <target name="prepare" depends="init-tasks">
-  	
     <!-- Test presence of libs -->
-  	
     <if>
-        <not>
-            <available file="${lib}"/>
-  	    </not>
-  		<then>
-      	    <echo>====================================================================
-      	          WARNING : dependencies not found
+      <not>
+        <available file="${lib}"/>
+      </not>
+      <then>
+        <echo>====================================================================
+          WARNING : dependencies not found
 ====================================================================
-      	 Third party libraries must be present in order to build Cocoon.
-      	 You may download the cocoon-${version}-deps.jar and unzip
-      	 its content in this directory to get these libraries.
+          Third party libraries must be present in order to build Cocoon.
+          You may download the cocoon-${version}-deps.jar and unzip
+          its content in this directory to get these libraries.
 ====================================================================</echo>
-  			<fail message="dependencies not found"/>
-  	      </then>
-  	</if>
+        <fail message="dependencies not found"/>
+      </then>
+    </if>
 
     <echo>====================================================================
                  ${fullname} ${version} [${year}]
