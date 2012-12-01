@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cocoon.apache.org/schema/servlet
+                           http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
+  
+  <!-- A Cocoon-Sitemap based servlet-service. -->
+  <bean id="org.apache.cocoon.sample.servlet" class="org.apache.cocoon.servlet.XMLSitemapServlet">
+    <servlet:context mount-path="" context-path="classpath:/COB-INF/" />      
+  </bean>
+  
+  <!-- A servlet-service that exposes JAX-RS REST endpoints. -->
+  <bean id="org.apache.cocoon.sample.rest.servlet" class="org.apache.cocoon.rest.jaxrs.container.CocoonJAXRSServlet">
+    <servlet:context mount-path="/jax-rs" context-path="blockcontext:/cocoon-sample/">
+      <servlet:connections>
+        <entry key="sample" value-ref="org.apache.cocoon.sample.servlet" />
+      </servlet:connections>      
+    </servlet:context>
+    
+    <property name="restResourcesList">
+      <list>
+        <ref bean="org.apache.cocoon.sample.rest.resource.one" />
+        <ref bean="org.apache.cocoon.sample.rest.resource.two" />
+      </list>
+    </property>
+  </bean>
+
+</beans>
