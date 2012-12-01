@@ -32,7 +32,7 @@
   </group>
 
   <group name="SQL Transformer">
-     <sample name="Documentation" href="../../../docs/userdocs/transformers/sql-transformer.html">
+     <sample name="Documentation" href="http://cocoon.apache.org/2.1/userdocs/sql-transformer.html">
        Documentation for this component.
      </sample>
      <sample name="SQL Transformer" href="transform/sql-page" xlink:role="dynamic">
@@ -48,7 +48,7 @@
   </group>
 
   <group name="XSP">
-     <sample name="Documentation" href="../../../docs/userdocs/xsp/esql.html">
+     <sample name="Documentation" href="http://cocoon.apache.org/2.1/userdocs/logicsheets/esql.html">
        Documentation for this component.
      </sample>
      <sample name="ESQL Logicsheet" href="xsp/esql" xlink:role="dynamic">
@@ -62,7 +62,7 @@
        are based on Cocoon's input and output modules to read and write data from
        and to many more places than request attributes and parameters.
      </note>
-     <sample name="Documentation" href="../../../docs/userdocs/actions/database-actions.html">
+     <sample name="Documentation" href="http://cocoon.apache.org/2.1/userdocs/database-actions.html">
        Documentation for this component.
      </sample>
      <sample name="Manage Users and Groups" href="mod-db/user-list">
@@ -80,7 +80,7 @@
        These examples are created around the original database actions and the
        use of ESQL.
      </note>
-     <sample name="Documentation" href="../../../docs/userdocs/actions/database-actions.html">
+     <sample name="Documentation" href="http://cocoon.apache.org/2.1/userdocs/database-actions.html">
        Documentation for this component.
      </sample>
      <sample name="Manage Employees" href="org-db/employee" xlink:role="dynamic">
