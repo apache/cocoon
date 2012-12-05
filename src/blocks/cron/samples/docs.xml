@@ -23,7 +23,7 @@
         
             <p>
                 This implementation of the Java interface 
-                <link href="/api/java/org/apache/cocoon/components/cron/JobScheduler.html">
+                <link href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/components/cron/JobScheduler.html">
                 <code>JobScheduler</code></link> 
                 is based on the <link href="http://www.opensymphony.com/quartz/">Quartz</link>
                 job scheduling project and the 
@@ -31,13 +31,13 @@
             </p>
             
             <p style="background-color: yellow">
-                <strong>WARNING:</strong> Consider the <link href="/api/java/org/apache/cocoon/components/cron/JobScheduler.html">
+                <strong>WARNING:</strong> Consider the <link href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/components/cron/JobScheduler.html">
                 <code>JobScheduler</code></link> interface as beta in terms of defined functionality as it will be 
                 extended with additional requirements in the near future (i.e. getJobList). 
             </p>
         
             <p>
-                This <link href="/api/java/org/apache/cocoon/components/cron/QuartzJobScheduler.html">
+                This <link href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/components/cron/QuartzJobScheduler.html">
                 <code>QuartzJobScheduler</code></link> implementation is written as a standard 
                 <link href="http://excalibur.apache.org/framework/index.html">Avalon</link> component. So, its definition you'll find in the
                 <code>cocoon.xconf</code> file of Cocoon if you've included the cron-block in your build (see 
@@ -179,12 +179,12 @@
                 <title>Job Components</title>
                 <p>
                     The 
-                    <link href="/api/java/org/apache/cocoon/components/cron/CronJob.html"><code>CronJob</code></link> 
+                    <link href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/components/cron/CronJob.html"><code>CronJob</code></link> 
                     object doing your work can be defined in the <code>cocoon.xconf</code> 
                     file as a regular Avalon components. The <code>role</code> attribute given to this component is 
                     refered to by the <code>target</code> attribute in the <code>&lt;trigger&gt;</code> element above.
                     Below is the sample for the 
-                    <link href="/api/java/org/apache/cocoon/components/cron/TestCronJob.html">
+                    <link href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/components/cron/TestCronJob.html">
                     <code>TestCronJob</code></link> component.
                 </p>
                 <source>
