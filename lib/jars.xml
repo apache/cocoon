@@ -1235,4 +1235,14 @@
     <homepage>http://dojotoolkit.org/</homepage>
   </file>
 
+  <file>
+    <title>SLF4J</title>
+    <description>
+      Simple Logging Facade for Java
+    </description>
+    <used-by>Core</used-by>
+    <lib>core/slf4j-api-1.6.4.jar</lib>
+    <homepage>http://www.slf4j.org/</homepage>
+  </file>
+
 </jars>
