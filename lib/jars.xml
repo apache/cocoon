@@ -754,7 +754,7 @@
     <homepage>http://castor.codehaus.org/</homepage>
   </file>
 
-  <!-- Build uses this jar from tools/lib/jing-20030619.jar -->
+  <!-- Build also uses this jar from tools/lib/jing-*.jar -->
   <file>
     <title>Jing</title>
     <description>RELAX NG validator</description>
