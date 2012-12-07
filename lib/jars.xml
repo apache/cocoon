@@ -758,8 +758,8 @@
   <file>
     <title>Jing</title>
     <description>RELAX NG validator</description>
-    <used-by>JARV transformer (validation block) and build</used-by>
-    <lib>optional/jing-20030619.jar</lib>
+    <used-by>JARV transformer (validation block) and core build</used-by>
+    <lib>optional/jing-20091111.jar</lib>
     <homepage>http://www.thaiopensource.com/relaxng/jing.html</homepage>
   </file>
 
