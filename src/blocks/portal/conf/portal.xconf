@@ -148,8 +148,11 @@
       <!-- Uncomment the following when using PageLabels
       <aspect type="page-label"/>
       -->
-      <!-- Comment the following out if you don't need WSRP: -->
+      <!-- Uncomment the following if need WSRP: -->
+      <!-- (and see COCOON-2069) -->
+      <!--
       <aspect type="wsrp"/>
+      -->
       <aspect type="request-parameter">
         <!-- Uncomment the following when marshalling JSR168 portlet events
         <parameter name="parameter-name" value="cocoon-portal-event,url"/>
@@ -191,7 +194,11 @@
       <!-- JSR-168 support: -->
       <aspect adapter="portlet"/>
       <!-- wsrp support: -->
+      <!-- Uncomment the following if need WSRP: -->
+      <!-- (and see COCOON-2069) -->
+      <!--
       <aspect adapter="wsrp"/>
+      -->
     </aspects>
     <fullScreenNav>true</fullScreenNav>
   </component>
