@@ -754,12 +754,12 @@
     <homepage>http://castor.codehaus.org/</homepage>
   </file>
 
-  <!-- Build also uses this jar from tools/lib/jing-*.jar -->
+  <!-- Build uses this jar from tools/lib/jing-20030619.jar -->
   <file>
     <title>Jing</title>
     <description>RELAX NG validator</description>
-    <used-by>JARV transformer (validation block) and core build</used-by>
-    <lib>optional/jing-20091111.jar</lib>
+    <used-by>JARV transformer (validation block) and build</used-by>
+    <lib>optional/jing-20030619.jar</lib>
     <homepage>http://www.thaiopensource.com/relaxng/jing.html</homepage>
   </file>
 
