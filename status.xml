@@ -188,9 +188,6 @@
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
-    <action dev="DC" type="update">
-      Upgrade Jing from jing-20030619 to jing-20091111
-    </action>
     <action dev="CD" type="add" fixes-bug="COCOON-2288" due-to="Laurent Medioni" due-to-email="lmedioni@temenos.com">
       Allow usage of SLF4J for traces
     </action>
