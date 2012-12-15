@@ -603,7 +603,7 @@
       entity sets, but can be used for other resources too.
     </description>
     <used-by>Cocoon Role entity-resolver</used-by>
-    <lib>core/xml-commons-resolver-1.1.jar</lib>
+    <lib>core/xml-commons-resolver-1.2.jar</lib>
     <homepage>http://xerces.apache.org/xml-commons/</homepage>
   </file>
 
