@@ -47,6 +47,15 @@ developers easier, e.g. support for running blocks as webapps or support for
 paching the web.xml at deployment time.</p>
 </td>
 </tr>
+<tr class="b">
+<td>
+<p><strong><a href="it-fw/1.0/">Cocoon Integration Test Framework</a></strong></p>
+</td>
+<td><a href="it-fw/1.0/">1.0</a></td>
+<td>
+<p>The Cocoon Integration Test Framework provides support for running integration tests.</p>
+</td>
+</tr>
 <tr class="a">
 <td>
 <p><strong>Block Archetype</strong></p>
