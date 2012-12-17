@@ -133,6 +133,14 @@
         <h1>News</h1>
         <div class="news">
           <dl class="news">
+            <dt>Apache Cocoon Integration Test Framework 1.0.1 and Servlet Service Implementation 1.3.2</dt>
+            <dd>The Apache Cocoon team is pleased to announce the release of subprojects Cocoon Integration Test 
+              Framework 1.0.1 and Servlet Service Implementation 1.3.2.
+            [<a href="news-cocoon-it-fw_cocoon-servlet-service-impl_new-release.html">more</a>] 
+            </dd>
+            <dd class="newsMeta">submitted by Francesco Chicchiriccò, 12/17/12 12:30:00 CET</dd>
+          </dl>
+          <dl class="news">
             <dt>Apache Cocoon Subprojects New Releases</dt>
             <dd>During the last weeks the Apache Cocoon Community released a new version of each one of 11 subprojects
             currently managed.
