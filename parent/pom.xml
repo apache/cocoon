@@ -1071,6 +1071,7 @@
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-user</otherArchive>
         <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.user</otherArchive>
         <otherArchive>http://cocoon.markmail.org/search/list:org.apache.cocoon.users</otherArchive>
+        <otherArchive>http://cocoon.10839.n7.nabble.com/Cocoon-Users-f3.html</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -1084,6 +1085,7 @@
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-dev</otherArchive>
         <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.dev</otherArchive>
         <otherArchive>http://cocoon.markmail.org/search/list:org.apache.cocoon.dev</otherArchive>
+        <otherArchive>http://cocoon.10839.n7.nabble.com/Cocoon-Dev-f20869.html</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -1097,6 +1099,7 @@
         <otherArchive>http://marc.theaimsgroup.com/?l=xml-cocoon-docs</otherArchive>
         <otherArchive>http://news.gmane.org/gmane.text.xml.cocoon.docs</otherArchive>
         <otherArchive>http://cocoon.markmail.org/search/list:org.apache.cocoon.docs</otherArchive>
+        <otherArchive>http://cocoon.10839.n7.nabble.com/Cocoon-Doc-f51084.html</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
