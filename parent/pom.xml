@@ -24,8 +24,8 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>12</version>
-    <relativePath />
+    <version>13</version>
+    <relativePath/>
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
