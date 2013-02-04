@@ -197,7 +197,7 @@
           WARNING : dependencies not found
 ====================================================================
           Third party libraries must be present in order to build Cocoon.
-          You may download the cocoon-${version}-deps.jar and unzip
+          You may download the cocoon-${version}-deps.zip and unzip
           its content in this directory to get these libraries.
 ====================================================================</echo>
         <fail message="dependencies not found"/>

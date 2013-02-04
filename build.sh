@@ -38,6 +38,18 @@ OLD_ANT_OPTS="$ANT_OPTS"
 ANT_OPTS="-Xms32M -Xmx512M -Djava.endorsed.dirs=lib/endorsed"
 export ANT_HOME ANT_OPTS
 
+if [ ! -f "$ANT_HOME/lib/ant.jar" ]
+then
+    echo ====================================================================
+    echo                WARNING : dependencies not found
+    echo ====================================================================
+    echo  Third party libraries must be present in order to build Cocoon.
+    echo  You may download the cocoon-2.1.12-deps.zip and unzip
+    echo  its content in this directory to get these libraries.
+    echo ====================================================================
+    exit
+fi
+
 "$ANT_HOME/bin/ant" -logger org.apache.tools.ant.NoBannerLogger --noconfig -emacs "$@"
 ERR=$?
 
