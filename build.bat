@@ -29,6 +29,8 @@ rem ----- Use Ant shipped with Cocoon. Ignore installed in the system Ant
 set OLD_ANT_HOME=%ANT_HOME%
 set ANT_HOME=tools
 
+if not exist "%ANT_HOME%\lib\ant.jar" goto noAntLib
+
 call %ANT_HOME%\bin\ant -Djava.endorsed.dirs=lib\endorsed -logger org.apache.tools.ant.NoBannerLogger -emacs %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem ----- Restore ANT_HOME and ANT_OPTS
@@ -38,3 +40,15 @@ set OLD_ANT_HOME=
 rem ----- Restore CLASSPATH
 set CLASSPATH=%OLD_CLASSPATH%
 set OLD_CLASSPATH=
+goto end
+
+:noAntLib
+echo ====================================================================
+echo                WARNING : dependencies not found
+echo ====================================================================
+echo  Third party libraries must be present in order to build Cocoon.
+echo  You may download the cocoon-2.1.12-deps.zip and unzip
+echo  its content in this directory to get these libraries.
+echo ====================================================================
+
+:end
