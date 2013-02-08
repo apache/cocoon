@@ -45,58 +45,6 @@ The initial code of the official Cocoon authentication block (CAuth)
 evolved from the CoWarp donation made by Carsten Ziegeler (cziegeler@osoco.org).
 
 
- Credits of included software
- ----------------------------
-
-This product includes software developed by the Apache Software Foundation 
-(http://www.apache.org/).
-
-This product includes software developed by the XML:DB Initiative 
-(http://www.xmldb.org/).
-
-This product includes software developed by the IronSmith Project 
-(http://www.ironsmith.org/).
-
-This product includes software developed by the jfor Project 
-(http://www.jfor.org).
-
-This product includes software developed by the JDOM Project 
-(http://www.jdom.org/).
-
-This product includes software developed by the OpenORB Community Project 
-(http://sourceforge.net/projects/openorb/).
-
-This product includes software developed by the Chaperon Project
-(http://www.sourceforge.net/projects/chaperon/).
-
-This product includes software developed by the Exolab Project
-(http://www.exolab.org/).
-
-This product includes software developed by ANTLR Project
-(http://www.antlr.org/)
-
-
-Portions are Copyright (c) 2001 Tivano Software GmbH
-(http://www.tivano.de). All Rights Reserved.
-
-Portions are Copyright (c) 1998-2000 World Wide Web Consortium 
-(Massachusetts Institute of Technology, Institut National de Recherche en
-Informatique et en Automatique, Keio University). All Rights Reserved.
-
-Portions are Copyright (c) 2001 Scott Robert Ladd. All rights reserved.
-
-Portions are Copyright (c) 2001, 2002 Thai Open Source Software Center Ltd.
-All rights reserved.
-
-Portions are Copyright (c) Mort Bay Consulting Pty. Ltd. All rights reserved.
-
-Portions are Copyright (c) Hewlett-Packard Company 2002. All rights reserved.
-
-Schematron portions are Copyright (c) 2000,2001 Rick Jelliffe and Academia
-Sinica Computing Center, Taiwan
-
-
-
 
                                                  The Apache Cocoon Community
                                                   http://cocoon.apache.org/
