@@ -200,6 +200,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+Apache Cocoon includes a number of accompanying products with separate
+copyright notices and license terms. Your use of the source code for
+these products is subject to the terms and conditions of the relevant
+licenses. For more information, see: http://www.apache.org/legal/
+
 Includes software from other Apache Software Foundation projects:
 
   - Apache Ant
