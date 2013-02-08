@@ -231,7 +231,7 @@ Includes software from other Apache Software Foundation projects:
   - Apache Xindice
   - Apache XMLGraphics-commons
 
-The Apache Software License, Version 2.0 also applies to the following librairies:
+The Apache Software License, Version 2.0 also applies to the following libraries:
 
   - daisy-htmlcleaner.jar
   - daisy-util.jar
