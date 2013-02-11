@@ -103,24 +103,29 @@
     <gzip zipfile="${dist.target}/${dist.name}-src.tar.gz" src="${dist.target}/${dist.name}-src.tar"/>
     <delete file="${dist.target}/${dist.name}-src.tar"/>
 
-    <zip zipfile="${dist.target}/${dist.name}-deps.zip"
-         basedir="${dist.root}">
-        <include name="${dist.name}/NOTICE.txt"/>
-        <include name="${dist.name}/lib/**"/>
-        <include name="${dist.name}/tools/lib/**"/>
-        <include name="${dist.name}/tools/jetty/lib/**"/>
-        <include name="${dist.name}/legal/**"/>
+    <zip zipfile="${dist.target}/${dist.name}-deps.zip">
+    	<fileset dir="${dist.root}">
+            <include name="${dist.name}/lib/**"/>
+            <include name="${dist.name}/tools/lib/**"/>
+            <include name="${dist.name}/tools/jetty/lib/**"/>
+    	</fileset>
+        <zipfileset dir="${dist.root}/${dist.name}/legal" prefix="${dist.name}/">
+            <include name="NOTICE.txt"/>
+            <include name="LICENSE.txt"/>
+        </zipfileset>
     </zip>
 
     <tar tarfile="${dist.target}/${dist.name}-deps.tar"
          longfile="gnu">
-         <tarfileset dir="${dist.root}">
-            <include name="${dist.name}/NOTICE.txt"/>
+        <tarfileset dir="${dist.root}">
             <include name="${dist.name}/lib/**"/>
             <include name="${dist.name}/tools/lib/**"/>
             <include name="${dist.name}/tools/jetty/lib/**"/>
-            <include name="${dist.name}/legal/**"/>
-         </tarfileset>
+        </tarfileset>
+        <tarfileset dir="${dist.root}/${dist.name}/legal" prefix="${dist.name}/">
+            <include name="NOTICE.txt"/>
+            <include name="LICENSE.txt"/>
+        </tarfileset>
     </tar>
     <gzip zipfile="${dist.target}/${dist.name}-deps.tar.gz" src="${dist.target}/${dist.name}-deps.tar"/>
     <delete file="${dist.target}/${dist.name}-deps.tar"/>
