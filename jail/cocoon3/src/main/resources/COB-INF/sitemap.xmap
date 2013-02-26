@@ -10,13 +10,13 @@
 
       http://www.apache.org/licenses/LICENSE-2.0
 
-  Unless required by applicable law or agreed to in writing,
-  software distributed under the License is distributed on an
-  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  KIND, either express or implied.  See the License for the
-  specific language governing permissions and limitations
-  under the License.
- -->
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
 <!-- $Id$ -->
 <map:sitemap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://apache.org/cocoon/sitemap"
              xmlns:servlet="http://apache.org/cocoon/servlet" xmlns:controller="http://apache.org/cocoon/controller">
@@ -48,7 +48,7 @@
     </map:pipeline>
 
     <!-- ~~~~~~~~~~~~~~~~ sax pipelines ~~~~~~~~~~~~~~~ -->
-    <map:pipeline jmx-group-name="sax">
+    <map:pipeline jmx-group-name="sax" type="noncaching">
       <map:match equals="sax-pipeline/simple">
         <map:generate src="sax-pipeline/simple.xml" />
         <map:transform src="sax-pipeline/simple.xslt">
@@ -79,6 +79,13 @@
           <map:parameter name="myParam" value="3-{jexl:cocoon.request.ssf}" />
         </map:transform>
         <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="sax-pipeline/simple-txt">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="3-{jexl:cocoon.request.ssf}" />
+        </map:transform>
+        <map:serialize type="txt" />
       </map:match>
       <map:match equals="sax-pipeline/simple-xsd">
         <map:generate src="sax-pipeline/simple.xml" />
@@ -233,7 +240,7 @@
     </map:pipeline>
 
     <!-- ~~~~~~~~~~~~~~~~ advanced matching (when/otherwise) ~~~~~~~~~~~~~~~ -->
-    <map:pipeline>
+    <map:pipeline type="noncaching">
       <map:match pattern="advanced-matching">
         <map:select value="{jexl:cocoon.request.myparam}">
           <map:when equals="11">
@@ -386,7 +393,9 @@
       </map:match>
       <map:match equals="aggregation/xinclude-transformer">
         <map:generate src="aggregation/xinclude.xml" />
-        <map:transform type="xinclude" />
+        <map:transform type="xinclude">
+          <map:parameter name="cacheKey" value="{map:0}"/>
+        </map:transform>
         <map:serialize type="xml" />
       </map:match>
       <map:match equals="aggregation/sub-request">
@@ -557,6 +566,21 @@
           <map:parameter name="myParam" value="2" />
         </map:transform>
         <map:serialize type="ehtml" encoding="iso-8859-1"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- JSON -->
+    <map:pipeline>
+      <map:match equals="json/xml2json">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="1" />
+        </map:transform>
+        <map:serialize type="json"/>
+      </map:match>
+      <map:match equals="json/json2xml">
+        <map:generate type="json" src="servlet:/json/xml2json" />
+        <map:serialize/>
       </map:match>
     </map:pipeline>
 

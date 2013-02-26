@@ -26,9 +26,7 @@
                            http://www.springframework.org/schema/util/spring-util.xsd
                            http://cocoon.apache.org/schema/configurator
                            http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
-  
-  <bean class="org.apache.cocoon.sample.classpath.ClasspathURLStreamHandlerFactory"/>
-  
+    
   <!-- Activate Cocoon Spring Configurator -->
   <configurator:settings>
     <configurator:property name="org.apache.cocoon.logback.loglevel" value="ERROR"/>
@@ -36,8 +34,8 @@
 
   <!-- Configure Logback -->
   <bean name="org.apache.cocoon.spring.configurator.logback"
-          class="org.apache.cocoon.spring.configurator.logback.LogbackConfigurator"
-          scope="singleton">
+        class="org.apache.cocoon.spring.configurator.logback.LogbackConfigurator"
+        scope="singleton">
     <property name="settings" ref="org.apache.cocoon.configuration.Settings"/>
     <property name="resource" value="/WEB-INF/classes/logback.xml"/>
   </bean>
