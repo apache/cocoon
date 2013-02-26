@@ -17,34 +17,26 @@
 -->
 <!-- $Id$ -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
         http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-        version="2.5">
+         version="2.5">
 
   <!-- Servlet Context Listener ======================================= -->
 
   <!--
-    - Declare a context listener that installs all blocks.
-    -->
-  <listener>
-    <description>Declare a context listener that installs all blocks.</description>
-    <listener-class>org.apache.cocoon.blockdeployment.BlockDeploymentServletContextListener</listener-class>
-  </listener>
-
-  <!--
-    - Declare Spring context listener which sets up the Spring Application Context
-    - containing all Cocoon components (and user defined beans as well).
-    -->
+  - Declare Spring context listener which sets up the Spring Application Context
+  - containing all Cocoon components (and user defined beans as well).
+  -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
   <!--
-    - Declare Spring request listener which sets up the required RequestAttributes
-    - to support Springs and Cocoon custom bean scopes like the request scope or the
-    - session scope.
-    -->
+  - Declare Spring request listener which sets up the required RequestAttributes
+  - to support Springs and Cocoon custom bean scopes like the request scope or the
+  - session scope.
+  -->
   <listener>
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
@@ -52,8 +44,8 @@
   <!-- Servlet Configuration ========================================== -->
 
   <!--
-    - Servlet that dispatches requests to the Spring managed block servlets
-    -->
+  - Servlet that dispatches requests to the Spring managed block servlets
+  -->
   <servlet>
     <description>Cocoon blocks dispatcher</description>
     <display-name>DispatcherServlet</display-name>
@@ -65,11 +57,11 @@
   <!-- URL space mappings ============================================= -->
 
   <!--
-    - The Servlet-Service framework handles all the URL space assigned to the webapp using its sitemap.
-    - It is recommended to leave it unchanged. Under some circumstances though
-    - (like integration with proprietary webapps or servlets) you might have
-    - to change this parameter.
-    -->
+  - The Servlet-Service framework handles all the URL space assigned to the webapp using its sitemap.
+  - It is recommended to leave it unchanged. Under some circumstances though
+  - (like integration with proprietary webapps or servlets) you might have
+  - to change this parameter.
+  -->
   <servlet-mapping>
     <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>/*</url-pattern>

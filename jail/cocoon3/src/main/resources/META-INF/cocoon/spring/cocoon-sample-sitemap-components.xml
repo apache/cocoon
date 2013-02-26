@@ -10,22 +10,27 @@
 
       http://www.apache.org/licenses/LICENSE-2.0
 
-  Unless required by applicable law or agreed to in writing,
-  software distributed under the License is distributed on an
-  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  KIND, either express or implied.  See the License for the
-  specific language governing permissions and limitations
-  under the License.
- -->
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
 <!-- $Id$ -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-  <import
-    resource="classpath:META-INF/cocoon/spring/cocoon-stax-components.xml" />
-  <bean name="action:error-throwing" class="org.apache.cocoon.sample.action.ErrorThrowingAction" scope="prototype" />
+  <import resource="classpath:META-INF/cocoon/spring/cocoon-stax-components.xml" />
+  <bean name="action:error-throwing" 
+        class="org.apache.cocoon.sample.action.ErrorThrowingAction" 
+        scope="prototype" />
   
-  <bean name="generator:timestamp-caching" class="org.apache.cocoon.sample.generation.CachingTimestampGenerator" scope="prototype" />
+  <bean name="generator:timestamp-caching" 
+        class="org.apache.cocoon.sample.generation.CachingTimestampGenerator" 
+        scope="prototype" />
   
-  <bean name="generator:timestamp-noncaching" class="org.apache.cocoon.sample.generation.TimestampGenerator" scope="prototype" />
+  <bean name="generator:timestamp-noncaching" 
+        class="org.apache.cocoon.sample.generation.TimestampGenerator" 
+        scope="prototype" />
 </beans>
