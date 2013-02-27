@@ -109,7 +109,9 @@ http://logging.apache.org/log4j/
 
 L: lib/core/servlet_2_2.jar
 F: N: 
-R: 
+R: servlet-2.3.jar
+http://jetty.codehaus.org/
+U: Done
 
 L: lib/core/slf4j-api-1.6.4.jar
 F: O: slf4j-api-1.5.11

@@ -18,9 +18,11 @@ package javax.servlet.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
@@ -97,6 +99,10 @@ public class HttpServletRequestWrapper implements HttpServletRequest {
     public String getRequestURI() {
         return null;
     }
+    
+    public StringBuffer getRequestURL() {
+        return null;
+    }
 
     public String getServletPath() {
         return null;
@@ -145,6 +151,9 @@ public class HttpServletRequestWrapper implements HttpServletRequest {
     public String getCharacterEncoding() {
         return null;
     }
+    
+    public void setCharacterEncoding(String string) throws UnsupportedEncodingException {
+    }
 
     public int getContentLength() {
         return 0;
@@ -175,6 +184,10 @@ public class HttpServletRequestWrapper implements HttpServletRequest {
     }
 
     public String[] getParameterValues(String arg0) {
+        return null;
+    }
+    
+    public Map getParameterMap() {
         return null;
     }
 

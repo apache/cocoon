@@ -609,10 +609,10 @@
 
   <file>
     <title>Servlet API</title>
-    <description>Servlet API Version 2.2</description>
+    <description>Servlet API Version 2.3</description>
     <used-by>Cocoon</used-by>
-    <lib>core/servlet_2_2.jar</lib>
-    <homepage>http://tomcat.apache.org/</homepage>
+    <lib>core/servlet-2.3.jar</lib>
+    <homepage>http://jetty.codehaus.org/</homepage>
   </file>
 
   <file>
