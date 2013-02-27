@@ -137,7 +137,7 @@ goto cliLoop
 
 :cliLoopEnd
 
-"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" "-Dloader.class.path=lib\core\servlet_2_2.jar;%COCOON_HOME%\build\webapp\WEB-INF\classes" -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.Main Loader %param%
+"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" "-Dloader.class.path=lib\core\servlet-2.3.jar;%COCOON_HOME%\build\webapp\WEB-INF\classes" -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.Main Loader %param%
 goto end
 
 :: ----- Precompile ------------------------------------------------------------
@@ -153,7 +153,7 @@ goto PrecompileLoop
 
 :PrecompileLoopEnd
 
-"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" "-Dloader.class.path=lib\core\servlet_2_2.jar;%COCOON_HOME%\build\webapp\WEB-INF\classes" -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.bean.XSPPrecompileWrapper Loader %param%
+"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" "-Dloader.class.path=lib\core\servlet-2.3.jar;%COCOON_HOME%\build\webapp\WEB-INF\classes" -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.bean.XSPPrecompileWrapper Loader %param%
 goto end
 
 :: ----- Servlet ---------------------------------------------------------------

@@ -55,7 +55,7 @@
 #
 # CLI_CLASSPATH
 #   The additional classpath for cli and precompile, defaults to
-#   lib/core/servlet_2_2.jar:$COCOON_WEBAPP_HOME/WEB-INF/classes
+#   lib/core/servlet-2.3.jar:$COCOON_WEBAPP_HOME/WEB-INF/classes
 #
 
 
@@ -170,7 +170,7 @@ fi
 CLI="-Dloader.main.class=org.apache.cocoon.Main"
 CLI_LIBRARIES="-Dloader.jar.repositories=$COCOON_LIB"
 if [ "$CLI_CLASSPATH" = "" ] ; then
-	CLI_CLASSPATH="lib/core/servlet_2_2.jar:$COCOON_WEBAPP_HOME/WEB-INF/classes"
+	CLI_CLASSPATH="lib/core/servlet-2.3.jar:$COCOON_WEBAPP_HOME/WEB-INF/classes"
 fi
 CLI_VERBOSE="-Dloader.verbose=false"
 CLI_PROPERTIES="$CLI_LIBRARIES -Dloader.class.path=$CLI_CLASSPATH $CLI_VERBOSE"
@@ -185,7 +185,7 @@ JETTY_WEBAPP="-Dwebapp=$COCOON_WEBAPP_HOME"
 JETTY_HOME="-Dhome=$COCOON_HOME"
 JETTY_PORT_ARGS="-Djetty.port=$JETTY_PORT"
 JETTY_ADMIN_ARGS="-Djetty.admin.port=$JETTY_ADMIN_PORT"
-JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib${PATHSEP}${ENDORSED_LIBS}"
+JETTY_LIBRARIES="-Dloader.jar.repositories=$COCOON_HOME/tools/jetty/lib${PATHSEP}${ENDORSED_LIBS} -Dloader.class.path=lib/core/servlet-2.3.jar"
 
 # ----- Do the action ----------------------------------------------------------
 
