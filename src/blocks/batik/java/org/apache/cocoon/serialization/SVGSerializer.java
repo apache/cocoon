@@ -17,8 +17,10 @@
 package org.apache.cocoon.serialization;
 
 import java.awt.Color;
-import java.io.OutputStream;
 import java.io.Serializable;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpUtils;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -30,7 +32,6 @@ import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.TranscodingHints;
-import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.util.ParsedURL;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -38,23 +39,27 @@ import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
 import org.apache.cocoon.components.transcoder.TranscoderFactory;
 import org.apache.cocoon.components.url.ParsedContextURLProtocolHandler;
 import org.apache.cocoon.components.url.ParsedResourceURLProtocolHandler;
+import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.xml.dom.SVGBuilder;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * A <a href="http://xml.apache.org/batik/">Batik</a> based Serializer for generating PNG/JPEG images
+ * 
+ * sitemap parameter: documentURL (by default httprequest.requestURL is used). The documentURI is used by Batik
+ * to select script interpreters.  If the URI is invalid script interpretation will fail.
+ * (See batik 1.7 BridgeContext.java line 96-100) 
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
  * @version $Id$
  */
-public class SVGSerializer extends SVGBuilder
-implements Serializer, Configurable, CacheableProcessingComponent, Contextualizable {
+public class SVGSerializer extends AbstractDOMSerializer 
+implements Serializer, Configurable, CacheableProcessingComponent, Contextualizable, SitemapModelComponent {
 
     /**
      * Get the context
@@ -65,10 +70,7 @@ implements Serializer, Configurable, CacheableProcessingComponent, Contextualiza
         ParsedURL.registerHandler(new ParsedContextURLProtocolHandler());
         ParsedURL.registerHandler(new ParsedResourceURLProtocolHandler());
     }
-
-    /** The current <code>OutputStream</code>. */
-    private OutputStream output;
-
+    
     /** The current <code>mime-type</code>. */
     private String mimetype;
 
@@ -78,32 +80,9 @@ implements Serializer, Configurable, CacheableProcessingComponent, Contextualiza
     /** The Transcoder Factory to use */
     TranscoderFactory factory = ExtendableTranscoderFactory.getTranscoderFactoryImplementation();
     
-//    private ServiceManager manager;
-
-//    private SourceResolver resolver;
-
     /**
-     * Set the <code>OutputStream</code> where the XML should be serialized.
-     */
-    public void setOutputStream(OutputStream out) {
-        this.output = out;
-        
-        // Give the source resolver to Batik
-        //SourceProtocolHandler.setup(this.resolver);
-    }
-    
-/*    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-    }
-
-    public void dispose() {
-        this.manager.release(this.resolver);
-    }
-*/
-    /**
-     * Set the configurations for this serializer.
-     */
+    * Set the configurations for this serializer.
+    */
     public void configure(Configuration conf) throws ConfigurationException {
         this.mimetype = conf.getAttribute("mime-type");
         if (getLogger().isDebugEnabled()) {
@@ -195,34 +174,18 @@ implements Serializer, Configurable, CacheableProcessingComponent, Contextualiza
     }
 
     /**
-     * Receive notification of a successfully completed DOM tree generation.
+     * Receive DOM Document to transcode.
      */
-    public void notify(Document doc) throws SAXException {
-        
-        try {
-            TranscoderInput transInput = new TranscoderInput(doc);
+    public void serialize(Document doc) throws Exception {
+        TranscoderInput transInput = new TranscoderInput(doc);
+        HttpServletRequest req = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+        String documentUrl = parameters.getParameter("documentUrl", 
+                req == null ? null : HttpUtils.getRequestURL(req).toString());
+        transInput.setURI(documentUrl);
 
-            // Buffering is done by the pipeline (See shouldSetContentLength)
-            TranscoderOutput transOutput = new TranscoderOutput(this.output);
-            transcoder.transcode(transInput, transOutput);
-        } catch (TranscoderException ex) {
-            if (ex.getException() != null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Got transcoder exception writing image, rethrowing nested exception", ex);
-                }
-                throw new SAXException("Exception writing image", ex.getException());
-            }
-
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Got transcoder exception writing image, rethrowing", ex);
-            }
-            throw new SAXException("Exception writing image", ex);
-        } catch (Exception ex) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Got exception writing image, rethrowing", ex);
-            }
-            throw new SAXException("Exception writing image", ex);
-        }
+        // Buffering is done by the pipeline (See shouldSetContentLength)
+        TranscoderOutput transOutput = new TranscoderOutput(this.output);
+        transcoder.transcode(transInput, transOutput);
     }
 
     /**

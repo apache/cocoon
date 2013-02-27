@@ -309,13 +309,25 @@
   </file>
 
   <file>
+    <title>The XML APIs - External component</title>
+    <description>
+      The External Components portion of xml-commons contains interfaces
+      that are defined by external standards organizations.
+    </description>
+    <ant-target>external</ant-target>
+    <used-by>Cocoon</used-by>
+    <lib>endorsed/xml-apis-ext-1.4.01.jar</lib>
+    <homepage>http://xml.apache.org/commons/</homepage>
+  </file>
+
+  <file>
     <title>Batik</title>
     <description>
       Batik is a Java based toolkit for applications which handle images in
       the Scalable Vector Graphics (SVG) format for various purposes, such as
       viewing, generation or manipulation.</description>
     <used-by>SVG serializer (batik block)</used-by>
-    <lib>optional/batik-all-1.6.jar</lib>
+    <lib>optional/batik-all-1.7.jar</lib>
     <homepage>http://xmlgraphics.apache.org/batik/</homepage>
   </file>
 
@@ -435,7 +447,7 @@
       the XSL recommendation and then turns it into a PDF document.
     </description>
     <used-by>FOP serializer (fop block)</used-by>
-    <lib>optional/fop-0.95.jar</lib>
+    <lib>optional/fop-1.1.jar</lib>
     <homepage>http://xml.apache.org/fop/</homepage>
   </file>
 
@@ -446,7 +458,7 @@
       used by Apache Batik and Apache FOP.
     </description>
     <used-by>FOP serializer (fop block)</used-by>
-    <lib>optional/xmlgraphics-commons-1.3.1.jar</lib>
+    <lib>optional/xmlgraphics-commons-1.5.jar</lib>
     <homepage>http://xmlgraphics.apache.org/commons/</homepage>
   </file>
 
