@@ -166,7 +166,7 @@ L: lib/optional/batik-all-1.6.jar
 F: C:
 R: batik-1.7
 http://xmlgraphics.apache.org/batik/
-U: To be done.
+U: Done.
 
 L: lib/optional/bsf-2.4.0.jar
 F: X:
@@ -239,9 +239,9 @@ R: excalibur-datasource-2.1
 
 L: lib/optional/fop-0.95.jar
 F: C:
-R: fop-1.0 (J: 4)
+R: fop-1.1 (J: 4)
 http://xmlgraphics.apache.org/fop/
-U: To be done.
+U: Done.
 
 L: lib/optional/geronimo-spec-activation-1.0.2-rc4.jar
 F: X:
@@ -419,7 +419,7 @@ L: lib/optional/xmlgraphics-commons-1.3.1.jar
 F: C:
 R: xmlgraphics-commons-1.5
 http://xmlgraphics.apache.org/commons/
-U: To be done.
+U: Done.
 
 L: lib/optional/xmlrpc-1.1.jar
 F: X:
