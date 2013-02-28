@@ -163,6 +163,7 @@
              debug="${{compiler.debug}}"
              optimize="${{compiler.optimize}}"
              deprecation="${{compiler.deprecation}}"
+             source="${{source.vm}}"
              target="${{target.vm}}"
              nowarn="${{compiler.nowarn}}"
              compiler="${{compiler}}">
@@ -235,6 +236,7 @@
              debug="${{compiler.debug}}"
              optimize="${{compiler.optimize}}"
              deprecation="${{compiler.deprecation}}"
+             source="${{source.vm}}"
              target="${{target.vm}}"
              nowarn="${{compiler.nowarn}}"
              compiler="${{compiler}}">
@@ -439,6 +441,7 @@
                      optimize="${{compiler.optimize}}"
                      deprecation="${{compiler.deprecation}}"
                      target="${{target.vm}}"
+                     source="${{source.vm}}"
                      nowarn="${{compiler.nowarn}}"
                      compiler="${{compiler}}">
                 <src path="@{{dir}}/test/org/apache"/>
@@ -499,6 +502,7 @@
                      optimize="${{compiler.optimize}}"
                      deprecation="${{compiler.deprecation}}"
                      target="${{target.vm}}"
+                     source="${{source.vm}}"
                      nowarn="${{compiler.nowarn}}"
                      compiler="${{compiler}}">
                 <src path="@{{dir}}/test/htmlunit"/>

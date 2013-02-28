@@ -55,7 +55,7 @@
        so we have to do it here "by hand" -->
   <target name="compile" unless="unless.exclude.webapp.samples">
     <javac compiler="${compiler}" nowarn="${compiler.nowarn}"
-           target="${target.vm}" deprecation="${compiler.deprecation}"
+           target="${target.vm}" source="${source.vm}" deprecation="${compiler.deprecation}"
            optimize="${compiler.optimize}" debug="${compiler.debug}"
            destdir="${build.blocks.ojb.samples}">
       <src path="${blocks}/ojb/java"/>
