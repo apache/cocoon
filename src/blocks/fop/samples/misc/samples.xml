@@ -58,7 +58,7 @@
     </group>
 
     <group name="Resources">
-        <sample name="FOP web site" href="http://xml.apache.org/fop">
+        <sample name="Apache FOP web site" href="http://xmlgraphics.apache.org/fop/">
             FOP reference information
         </sample>
     </group>
