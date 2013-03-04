@@ -239,7 +239,7 @@ R: excalibur-datasource-2.1
 
 L: lib/optional/fop-0.95.jar
 F: C:
-R: fop-1.1 (J: 4)
+R: fop-1.0 (J: 4)
 http://xmlgraphics.apache.org/fop/
 U: Done.
 
