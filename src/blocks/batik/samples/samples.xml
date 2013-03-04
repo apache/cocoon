@@ -79,7 +79,7 @@
     <sample name="SVG Specification" href="http://www.w3.org/TR/SVG/">
       Scalable Vector Graphics (SVG) 1.0 Specification
     </sample>
-    <sample name="Batik web site" href="http://xml.apache.org/batik">
+    <sample name="Apache Batik web site" href="http://xmlgraphics.apache.org/batik/">
       Links and reference information, SVG browser
     </sample>
     <sample name="Adobe SVG Viewer" href="http://www.adobe.com/svg/viewer/install/main.html">
