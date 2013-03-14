@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd ="http://www.w3.org/2001/XMLSchema">
+
+  <!--
+    XML Schema for User Agent Profile (UAProf) datatypes
+    Version: 1.0
+    Last Modified: 2003-02-26
+
+    Submit comments to: mailto:technical-comments@mail.openmobilealliance.org
+    -->
+
+ <xsd:simpleType name="Boolean">
+   <!--
+       Boolean datatype
+    -->
+   <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="Yes"/>
+     <xsd:enumeration value="No"/>
+   </xsd:restriction>
+ </xsd:simpleType>
+
+ <xsd:simpleType name="Dimension">
+   <!--
+       Dimension datatype
+    -->
+   <xsd:restriction base="xsd:string">
+     <xsd:pattern value="[0-9]+x[0-9]+"/>
+   </xsd:restriction>
+ </xsd:simpleType>
+
+ <xsd:simpleType name="Literal">
+   <!--
+       Literal datatype
+    -->
+   <xsd:restriction base="xsd:string">
+     <xsd:pattern value="[A-Za-z0-9/.\-_]+"/>
+   </xsd:restriction>
+ </xsd:simpleType>
+
+ <xsd:simpleType name="Number">
+   <!--
+       Number datatype
+    -->
+   <xsd:restriction base="xsd:nonNegativeInteger"/>
+ </xsd:simpleType>
+
+
+ <xsd:simpleType name="ResolutionRule">
+   <!--
+       ResolutionRule - NOTE this is NOT a datatype per se but
+       is used by the schema for UAProf's resolution rules.
+    -->
+   <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="Append"/>
+     <xsd:enumeration value="Locked"/>
+     <xsd:enumeration value="Override"/>
+   </xsd:restriction>
+ </xsd:simpleType>
+
+</xsd:schema>

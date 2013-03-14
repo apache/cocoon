@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- $Id$ -->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:components>
+    <map:generators default="increment">
+      <map:generator name="increment" src="org.apache.cocoon.generation.IncrementGenerator"/>
+      <map:generator name="context" src="org.apache.cocoon.generation.ContextGenerator"/>
+    </map:generators>
+
+    <map:transformers default="increment">
+      <map:transformer name="increment" src="org.apache.cocoon.transformation.IncrementTransformer"/>
+    </map:transformers>
+
+    <map:actions>
+      <map:action name="reset-counter" src="org.apache.cocoon.acting.ResetCounterAction"/>
+    </map:actions>
+  </map:components>
+
+  <map:pipelines>
+    <map:pipeline type="@pipeline.type@">
+      <map:match pattern="a1">
+        <map:generate pipeline-hints="caching-point">
+          <map:parameter name="key" value="a"/>
+        </map:generate>
+        <map:transform>
+          <map:parameter name="key" value="a1"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="a2">
+        <map:generate pipeline-hints="caching-point">
+          <map:parameter name="key" value="a"/>
+        </map:generate>
+        <map:transform>
+          <map:parameter name="key" value="a2"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline type="noncaching">
+      <map:match pattern="check">
+        <map:generate type="context"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="clear-cache">
+        <map:act type="clear-cache">
+          <map:read src="success.txt"/>
+        </map:act>
+      </map:match>
+
+      <map:match pattern="reset">
+        <map:act type="reset-counter">
+          <map:read src="success.txt"/>
+        </map:act>
+      </map:match>
+
+      <map:match pattern="status">
+        <map:generate type="status"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

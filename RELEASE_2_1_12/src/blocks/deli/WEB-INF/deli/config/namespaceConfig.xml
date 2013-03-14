@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<namespaceConfig>
+
+ <namespaceDeclaration>
+
+<namespace>
+    <uri>http://www.openmobilealliance.org/tech/profiles/UAPROF/ccppschema-20030226#</uri>
+    <schemaVocabularyFile>deli/config/vocab/ccppschema-20030226.rdfs</schemaVocabularyFile>
+    <datatypeUri>http://www.openmobilealliance.org/tech/profiles/uaprof/xmlschema-20030226</datatypeUri>
+    <datatypeFile>deli/config/vocab/xmlschema-20030226.xsd</datatypeFile>
+   </namespace>   
+ 
+   <namespace>
+    <uri>http://www.openmobilealliance.org/tech/profiles/UAPROF/ccppschema-20021212#</uri>
+    <schemaVocabularyFile>deli/config/vocab/ccppschema-20021212.rdfs</schemaVocabularyFile>
+   </namespace>
+ 
+   <namespace>
+    <uri>http://www.wapforum.org/UAPROF/ccppschema-20020710#</uri>
+    <aliasUri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20020710#</aliasUri>
+    <schemaVocabularyFile>deli/config/vocab/ccppschema-20020710.rdfs</schemaVocabularyFile>
+   </namespace>
+ 
+   <namespace>
+    <uri>http://www.wapforum.org/profiles/MMS/ccppschema-20010111#</uri>
+    <schemaVocabularyFile>deli/config/vocab/ccppschema-20010111.rdfs</schemaVocabularyFile>
+   </namespace>
+ 
+   <namespace>
+    <uri>http://www.wapforum.org/UAPROF/ccppschema-20000405#</uri>
+    <aliasUri>http://www.wapforum.org/profiles/ccppschema-20000405#</aliasUri>
+    <aliasUri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20000405#</aliasUri>
+    <schemaVocabularyFile>deli/config/vocab/ccppschema-20000405.rdfs</schemaVocabularyFile>
+   </namespace>
+   
+   <namespace>
+    <uri>http://www.wapforum.org/UAPROF/ccppschema-20010330#</uri>
+    <aliasUri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20010330#</aliasUri>   
+    <aliasUri>http://www.wapforum.org/UAPROF/ccppschema-19991014#</aliasUri>
+    <schemaVocabularyFile>deli/config/vocab/ccppschema-20010330.rdfs</schemaVocabularyFile>
+   </namespace>
+ 
+   <namespace>
+    <uri>http://www.wapforum.org/UAPROF/ccppschema-20010430#</uri>
+    <aliasUri>http://www.wapforum.org/profiles/UAPROF/ccppschema-20010430#</aliasUri>
+    <schemaVocabularyFile>deli/config/vocab/ccppschema-20010430.rdfs</schemaVocabularyFile>
+   </namespace>
+    
+  </namespaceDeclaration> 
+ 
+</namespaceConfig>

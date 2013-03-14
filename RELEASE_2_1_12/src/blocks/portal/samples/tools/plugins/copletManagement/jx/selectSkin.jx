@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+<div style="spacing:3px; padding:5px;" xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+	<b><i18n:text key="copletManagement.selectSkin"/></b>
+	<table>
+		<jx:forEach select="#{skins}">
+		<tr style="spacing:3px; padding:5px;">
+			<td>
+				<a href="tools/plugins/copletManagement/selectSkin?id=#{./name}"><img src="tools/plugins/copletManagement/selectSkinThumb/#{./name}" border="0"/></a>
+			</td>
+			<td>
+				<a href="tools/plugins/copletManagement/selectSkin?id=#{./name}">#{./name}</a>
+			</td>
+		</tr>
+		</jx:forEach>
+	</table>
+</div>
+</jx:template>

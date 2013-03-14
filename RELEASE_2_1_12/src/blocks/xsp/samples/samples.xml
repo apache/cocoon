@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id$ -->
+
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="XSP Block Samples">
+
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
+
+  <group name="Hello, XSP">
+   <sample name="Hello Page" href="java/hello">
+    Dynamically generated hello page.
+   </sample>
+   <sample name="Logicsheet" href="java/logicsheet">
+    Greetings page with logic separated into logicsheet.
+   </sample>
+   <sample name="Logicsheet2" href="java/logicsheet2">
+    Different XSP using same logicsheet.
+   </sample>
+   <sample name="Cacheable" href="java/cacheable">
+    Cacheable XSP page.
+   </sample>
+  </group>
+
+  <group name="eXtensible Server Pages in Java">
+   <sample name="Hello Stripped" href="java/stripped">
+    Hello page with stripped empty spaces
+   </sample>
+   <sample name="Interpolation" href="java/interpolation">
+    Using attribute and text interpolation.
+   </sample>
+   <sample name="Simple XSP" href="java/simple">
+    Simple XSP example showing usage of several logicsheets.
+   </sample>
+   <sample name="Session XSP" href="java/sessionpage" xlink:role="dynamic">
+    Sample Session XSP to illustrate session handling.
+   </sample>
+   <sample name="File Uploads" href="java/upload" xlink:role="dynamic">
+    Sample to illustrate file uploads.
+   </sample>
+   <sample name="Request" href="java/request" xlink:role="dynamic">
+    Request logicsheet tests.
+   </sample>
+   <sample name="Response" href="java/response" xlink:role="dynamic">
+    Response logicsheet tests.
+   </sample>
+   <sample name="Session" href="java/session" xlink:role="dynamic">
+    Session logicsheet tests.
+   </sample>
+   <sample name="Cookie" href="java/cookie" xlink:role="dynamic">
+    Cookies logicsheet tests.
+   </sample>
+   <sample name="Util" href="java/resolver" xlink:role="dynamic">
+    Util logicsheet tests.
+   </sample>
+   <sample name="Escaping" href="java/escaping" xlink:role="dynamic">
+    Escaping of non-ASCII characters.
+   </sample>
+   <sample name="Zipping" href="java/zipping.zip" xlink:role="dynamic">
+    On-the-fly zipping of filtered files.
+   </sample>
+   <sample name="Java5" href="java/java5" xlink:role="dynamic">
+    Java5 syntax allowed, if running under a 1.5+ JVM.
+   </sample>
+  </group>
+
+  <group name="eXtensible Server Pages in Javascript">
+   <sample name="Hello" href="js/hello">
+    Hello in Javascript
+   </sample>
+   <sample name="Hello Stripped" href="js/stripped">
+    Hello with stripped empty spaces
+   </sample>
+   <sample name="Simple" href="js/simple" xlink:role="dynamic">
+    Another simple XSP example.
+   </sample>
+   <sample name="Request" href="js/request" xlink:role="dynamic">
+    Request logicsheet tests (same as in Java).
+   </sample>
+   <sample name="Response" href="js/response" xlink:role="dynamic">
+    Response logicsheet tests (same as in Java).
+   </sample>
+   <sample name="Session" href="js/session" xlink:role="dynamic">
+    Session logicsheet tests (same as in Java).
+   </sample>
+  </group>
+
+  <group name="eXtensible Server Pages in Python">
+   <note>
+    This example requires python block, and jython.jar from www.jython.org.
+    Tested with versions 2.1 and 2.0
+   </note>
+   <sample name="Hello" href="python/hello">
+    Hello in Python
+   </sample>
+   <sample name="Hello Stripped" href="python/stripped">
+    Hello with stripped empty spaces
+   </sample>
+  </group>
+
+  <group name="More examples">
+    <sample href="soap/" name="SOAP">
+      Cocoon ships with facilities for immediate connection to SOAP resources.
+      These examples show you how to connect to any web service with a few
+      lines of XML markup using SOAP XSP Logicsheet. See also axis block that
+      integrates Axis into Cocoon.
+    </sample>
+  </group>
+
+
+</samples>
