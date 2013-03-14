@@ -183,7 +183,7 @@
   </todo>
 
   <changes>
-  <release version="2.1.12" date="TBD">
+  <release version="2.1.12" date="March 14 2013">
     <!-- Leave this entry about raising minimum Java to 1.4 at the top for 2.1.12! -->
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
