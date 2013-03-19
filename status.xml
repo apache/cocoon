@@ -183,6 +183,11 @@
   </todo>
 
   <changes>
+  <release version="2.1.13" date="TBD">
+    <action dev="XXX" type="add">
+      DUMMY
+    </action>
+  </release>
   <release version="2.1.12" date="March 14 2013">
     <!-- Leave this entry about raising minimum Java to 1.4 at the top for 2.1.12! -->
     <action dev="all" type="update">
