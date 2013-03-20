@@ -133,6 +133,13 @@
         <h1>News</h1>
         <div class="news">
           <dl class="news">
+            <dt>Apache Cocoon 2.1.12 Released</dt>
+            <dd>The Apache Cocoon Community is proud to announce the new release of Apache Cocoon, 2.1.12. 
+            [<a href="news-c2-1-12-released.html">more</a>] 
+            </dd>
+            <dd class="newsMeta">submitted by Cédric Damioli, 03/20/13 15:41:00 CET</dd>
+          </dl>
+          <dl class="news">
             <dt>Apache Cocoon Integration Test Framework 1.0.1 and Servlet Service Implementation 1.3.2</dt>
             <dd>The Apache Cocoon team is pleased to announce the release of subprojects Cocoon Integration Test 
               Framework 1.0.1 and Servlet Service Implementation 1.3.2.
