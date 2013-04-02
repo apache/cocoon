@@ -1037,6 +1037,18 @@
       <url>http://people.apache.org/~ilgrosso/</url>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>cdamioli</id>
+      <name>Cédric Damioli</name>
+      <email>cdamioli@apache.org</email>
+      <organization>Anyware Services</organization>
+      <organizationUrl>http://www.anyware-services.com</organizationUrl>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
 
   </developers>
 
