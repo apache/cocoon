@@ -26,6 +26,21 @@
       <div id="bodyText">
         <h1 class="docTitle">Products</h1>
         <p>These are products that use Apache Cocoon:</p>
+        <section name="Ametys" style="background:none;padding:0;"/>
+        <p>
+          <a href="http://www.ametys.org">Ametys</a>  is a java-based open source web content management system. 
+          Its features include in a unified platform through an easy-to-use and intuitive interface for beginners : 
+        </p>
+        <ul>
+	        <li>Web-based administration,</li>
+	        <li>Microsoft Word-like interface,</li>
+	        <li>Multi-tab authoring tool,</li>
+	        <li>Content versioning,</li>
+	        <li>WAI standards,</li>
+	        <li>Open social gadgets,</li>
+	        <li>Powerful plugins : UGC, maps, newsletters, online survey</li>
+	        <li>and much more...</li>
+        </ul>
         <section name="Apache Lenya" style="background:none;padding:0;"/>
         <p>
           <a href="http://lenya.apache.org">Apache Lenya</a> is an Open Source Java/XML
