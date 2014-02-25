@@ -132,7 +132,7 @@ public class ExcaliburDataSourceFactory implements DataSourceFactory {
          * Required by JDK1.7.
          */
         public Logger getParentLogger() {
-	    throw new SQLException("Feature not supported");
+	    throw new IllegalArgumentException("Feature not supported");
 	}
     }
 }
