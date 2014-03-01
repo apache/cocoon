@@ -22,6 +22,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.AbstractEnvironment;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.Map;
 
 /**
  * This environment is used to save the requested file to disk.
@@ -43,6 +45,8 @@ import java.net.MalformedURLException;
 public abstract class AbstractCommandLineEnvironment
 extends AbstractEnvironment
 implements Redirector {
+  
+    public static final String CLI_REQUEST_ID = "clirequest-id";
 
     protected String contentType;
     protected int contentLength;
@@ -56,11 +60,36 @@ implements Redirector {
                                           Logger log)
     throws MalformedURLException {
         super(uri, view, context);
-        this.enableLogging(log);
-        this.outputStream = stream;
-        this.statusCode = 0;
+        initCliEnvironment(stream, log);
+        
     }
+    private void initCliEnvironment(OutputStream stream, Logger log) {
+      this.enableLogging(log);
+      this.outputStream = stream;
+      this.statusCode = 0;
+    }
+    public AbstractCommandLineEnvironment(String uri,
+        Map attributes,
+        Map parameters,
+        Map headers,
+        String view,
+        File context,
+        CommandLineContext cliContext,
+        OutputStream stream,
+        Logger log)
+    throws MalformedURLException {
+      super(uri, view, context);
+      initCliEnvironment(stream, log);
+      CommandLineRequest request = new CommandLineRequest(this, null, uri, null, attributes, parameters, headers);
+      this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT,
+          request);
+      this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
+          new CommandLineResponse());
+      this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT,
+          cliContext);
+      this.objectModel.put(CLI_REQUEST_ID, new String(uri));
 
+    }
     /**
      * Redirect the client to a new URL
      */

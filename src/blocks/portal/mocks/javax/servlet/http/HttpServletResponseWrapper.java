@@ -136,4 +136,7 @@ public class HttpServletResponseWrapper implements HttpServletResponse {
 
     public void setLocale(Locale arg0) {
     }
+
+    public void resetBuffer() {
+    }
 }

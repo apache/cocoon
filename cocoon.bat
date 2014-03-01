@@ -137,7 +137,7 @@ goto cliLoop
 
 :cliLoopEnd
 
-"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" "-Dloader.class.path=lib\core\servlet_2_2.jar;%COCOON_HOME%\build\webapp\WEB-INF\classes" -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.Main Loader %param%
+"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" "-Dloader.class.path=lib\core\servlet-2.3.jar;%COCOON_HOME%\build\webapp\WEB-INF\classes" -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.Main Loader %param%
 goto end
 
 :: ----- Precompile ------------------------------------------------------------
@@ -153,13 +153,13 @@ goto PrecompileLoop
 
 :PrecompileLoopEnd
 
-"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" "-Dloader.class.path=lib\core\servlet_2_2.jar;%COCOON_HOME%\build\webapp\WEB-INF\classes" -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.bean.XSPPrecompileWrapper Loader %param%
+"%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" -Djava.endorsed.dirs=lib\endorsed "-Dloader.jar.repositories=%COCOON_LIB%" "-Dloader.class.path=lib\core\servlet-2.3.jar;%COCOON_HOME%\build\webapp\WEB-INF\classes" -Dloader.verbose=false -Dloader.main.class=org.apache.cocoon.bean.XSPPrecompileWrapper Loader %param%
 goto end
 
 :: ----- Servlet ---------------------------------------------------------------
 
 :doServlet
-%EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" "-Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed" "-Dwebapp=%JETTY_WEBAPP%" -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% "-Dhome=%COCOON_HOME%" "-Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib;%COCOON_HOME%\lib\endorsed" -Dloader.main.class=org.mortbay.jetty.Server Loader "%COCOON_HOME%\tools\jetty\conf\main.xml"
+%EXEC% "%JAVA_HOME%\bin\java.exe" %JAVA_OPTIONS% -classpath "%CP%" "-Dloader.class.path=lib\core\servlet-2.3.jar" "-Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed" "-Dwebapp=%JETTY_WEBAPP%" -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% "-Dhome=%COCOON_HOME%" "-Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib;%COCOON_HOME%\lib\endorsed" -Dloader.main.class=org.mortbay.jetty.Server Loader "%COCOON_HOME%\tools\jetty\conf\main.xml"
 goto end
 
 :: ----- Servlet with Administration Web Interface -----------------------------

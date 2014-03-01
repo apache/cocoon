@@ -76,7 +76,13 @@
     <zip zipfile="${dist.target}/${dist.name}-src.zip"
          basedir="${dist.root}"
          includes="${dist.name}/**">
+        <exclude name="${dist.name}/lib/**"/>
+        <exclude name="${dist.name}/tools/lib/**"/>
+        <exclude name="${dist.name}/tools/jetty/lib/**"/>
+        <exclude name="${dist.name}/legal/**"/>
     </zip>
+    <checksum file="${dist.target}/${dist.name}-src.zip" algorithm="md5"/>
+    <checksum file="${dist.target}/${dist.name}-src.zip" algorithm="sha1"/>
 
     <tar tarfile="${dist.target}/${dist.name}-src.tar"
          longfile="gnu">
@@ -85,6 +91,10 @@
              <exclude name="${dist.name}/cocoon.sh"/>
              <exclude name="${dist.name}/build.sh"/>
              <exclude name="${dist.name}/tools/bin/antRun"/>
+             <exclude name="${dist.name}/lib/**"/>
+             <exclude name="${dist.name}/tools/lib/**"/>
+             <exclude name="${dist.name}/tools/jetty/lib/**"/>
+             <exclude name="${dist.name}/legal/**"/>
          </tarfileset>
          <tarfileset dir="${dist.root}" mode="755">
              <include name="${dist.name}/cocoon.sh"/>
@@ -94,6 +104,39 @@
     </tar>
     <gzip zipfile="${dist.target}/${dist.name}-src.tar.gz" src="${dist.target}/${dist.name}-src.tar"/>
     <delete file="${dist.target}/${dist.name}-src.tar"/>
+    <checksum file="${dist.target}/${dist.name}-src.tar.gz" algorithm="md5"/>
+    <checksum file="${dist.target}/${dist.name}-src.tar.gz" algorithm="sha1"/>
+
+    <zip zipfile="${dist.target}/${dist.name}-deps.zip">
+    	<fileset dir="${dist.root}">
+            <include name="${dist.name}/lib/**"/>
+            <include name="${dist.name}/tools/lib/**"/>
+            <include name="${dist.name}/tools/jetty/lib/**"/>
+    	</fileset>
+        <zipfileset dir="${dist.root}/${dist.name}/legal" prefix="${dist.name}/">
+            <include name="NOTICE.txt"/>
+            <include name="LICENSE.txt"/>
+        </zipfileset>
+    </zip>
+    <checksum file="${dist.target}/${dist.name}-deps.zip" algorithm="md5"/>
+    <checksum file="${dist.target}/${dist.name}-deps.zip" algorithm="sha1"/>
+
+    <tar tarfile="${dist.target}/${dist.name}-deps.tar"
+         longfile="gnu">
+        <tarfileset dir="${dist.root}">
+            <include name="${dist.name}/lib/**"/>
+            <include name="${dist.name}/tools/lib/**"/>
+            <include name="${dist.name}/tools/jetty/lib/**"/>
+        </tarfileset>
+        <tarfileset dir="${dist.root}/${dist.name}/legal" prefix="${dist.name}/">
+            <include name="NOTICE.txt"/>
+            <include name="LICENSE.txt"/>
+        </tarfileset>
+    </tar>
+    <gzip zipfile="${dist.target}/${dist.name}-deps.tar.gz" src="${dist.target}/${dist.name}-deps.tar"/>
+    <delete file="${dist.target}/${dist.name}-deps.tar"/>
+    <checksum file="${dist.target}/${dist.name}-deps.tar.gz" algorithm="md5"/>
+    <checksum file="${dist.target}/${dist.name}-deps.tar.gz" algorithm="sha1"/>
   </target>
 
   <target name="clean-dist" depends="clean" description="Cleans everything and brings back to original 'SVN checkout' state">

@@ -43,7 +43,6 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
         popupUri: "",
         popupSize: "",
         popupLinkText: "",
-        resourcesUri: cocoon.resourcesUri,
         templatePath: cocoon.resourcesUri + "/forms/js/templates/MultiValueEditorWithSuggestion.html",
 
         _setUpDataUrl: function() {
@@ -112,6 +111,8 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
                     dojo.event.browser.stopEvent(event);
                     this.entry.setValue("");
                     this.entry.setSelectedValue("");
+                    this._selectAll();
+                    this.select.onchange();
                     break;
             }
         },
@@ -174,6 +175,12 @@ dojo.widget.defineWidget("cocoon.forms.MultiValueEditorWithSuggestion",
                 this.popupWindow.setUrl(this.popupUri);
             }
             this.popupWindow.showPopup(this.linkButton.id);
+        },
+
+        _deleteValues: function(event) {
+        	cocoon.forms.MultiValueEditorWithSuggestion.superclass._deleteValues.call(this, event);
+        	this._selectAll();
+          this.select.onchange();
         }
     }
 );

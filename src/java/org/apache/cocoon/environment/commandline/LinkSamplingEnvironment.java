@@ -29,7 +29,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
  * This environment is sample the links of the resource.
@@ -50,16 +49,10 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
                                    CommandLineContext cliContext,
                                    Logger log)
     throws MalformedURLException, IOException {
-        super(uri, Constants.LINK_VIEW, contextFile, new ByteArrayOutputStream(), log);
+        super(uri, attributes, parameters, headers, Constants.LINK_VIEW, contextFile, cliContext, new ByteArrayOutputStream(), log);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("uri = " + uri);
         }
-        this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT,
-                             new CommandLineRequest(this, null, uri, null, attributes, parameters, headers));
-        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
-                             new CommandLineResponse());
-        this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT,
-                             cliContext);
     }
 
     /**

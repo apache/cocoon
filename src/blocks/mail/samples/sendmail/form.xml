@@ -20,8 +20,8 @@
           xmlns:xsp-request="http://apache.org/xsp/request/2.0">
 <page>
   <resources>
-    <resource type="doc" href="userdocs/actions/sendmail-action.html">Actions</resource>
-    <resource type="doc" href="userdocs/xsp/sendmail.html">Logicsheet</resource>
+    <resource type="doc" href="http://cocoon.apache.org/2.1/userdocs/optional/sendmail-action.html">Actions</resource>
+    <resource type="doc" href="http://cocoon.apache.org/2.1/userdocs/logicsheets/sendmail.html">Logicsheet</resource>
   </resources>
 
   <title>Send EMail</title>

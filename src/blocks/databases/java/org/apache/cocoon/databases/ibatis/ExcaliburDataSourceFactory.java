@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -126,5 +127,12 @@ public class ExcaliburDataSourceFactory implements DataSourceFactory {
         public boolean isWrapperFor(Class iface) throws SQLException {
             return false;
         }
+
+        /**
+         * Required by JDK1.7.
+         */
+        public Logger getParentLogger() {
+	    throw new IllegalArgumentException("Feature not supported");
+	}
     }
 }

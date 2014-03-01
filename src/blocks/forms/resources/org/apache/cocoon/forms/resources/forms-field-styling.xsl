@@ -170,6 +170,9 @@
         <xsl:when test="local-name() = 'booleanfield' or fi:styling/@list-type = 'radio' or fi:styling/@list-type = 'checkbox'">
           <xsl:attribute name="onclick">cocoon.forms.submitForm(this)</xsl:attribute>
         </xsl:when>
+        <xsl:when test="fi:styling/@type = 'suggest'">
+          <xsl:attribute name="onchange">cocoon.forms.submitForm(this.domNode, this.name);</xsl:attribute>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:attribute name="onchange">cocoon.forms.submitForm(this)</xsl:attribute>
         </xsl:otherwise>

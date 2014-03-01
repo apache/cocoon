@@ -55,7 +55,7 @@
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/commons-cli-1.0.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/cli/</homepage>
+    <homepage>http://commons.apache.org/cli/</homepage>
   </file>
 
   <file>
@@ -250,7 +250,7 @@
     <description>Common implementations of collection classes.</description>
     <used-by>Cocoon, OJB</used-by>
     <lib>core/commons-collections-3.2.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/collections/</homepage>
+    <homepage>http://commons.apache.org/collections/</homepage>
   </file>
 
   <file>
@@ -292,7 +292,7 @@
     <description>Xerces is an XML parser.</description>
     <used-by>Cocoon</used-by>
     <ant-target>jars</ant-target>
-    <lib>endorsed/xercesImpl-2.9.1.jar</lib>
+    <lib>endorsed/xercesImpl-2.11.0.jar</lib>
     <homepage>http://xerces.apache.org/xerces2-j/</homepage>
   </file>
 
@@ -304,7 +304,19 @@
     </description>
     <ant-target>external</ant-target>
     <used-by>Cocoon</used-by>
-    <lib>endorsed/xml-apis-1.3.04.jar</lib>
+    <lib>endorsed/xml-apis-1.4.01.jar</lib>
+    <homepage>http://xml.apache.org/commons/</homepage>
+  </file>
+
+  <file>
+    <title>The XML APIs - External component</title>
+    <description>
+      The External Components portion of xml-commons contains interfaces
+      that are defined by external standards organizations.
+    </description>
+    <ant-target>external</ant-target>
+    <used-by>Cocoon</used-by>
+    <lib>endorsed/xml-apis-ext-1.4.01.jar</lib>
     <homepage>http://xml.apache.org/commons/</homepage>
   </file>
 
@@ -315,8 +327,8 @@
       the Scalable Vector Graphics (SVG) format for various purposes, such as
       viewing, generation or manipulation.</description>
     <used-by>SVG serializer (batik block)</used-by>
-    <lib>optional/batik-all-1.6.jar</lib>
-    <homepage>http://xml.apache.org/batik/</homepage>
+    <lib>optional/batik-all-1.7.jar</lib>
+    <homepage>http://xmlgraphics.apache.org/batik/</homepage>
   </file>
 
   <file>
@@ -392,7 +404,7 @@
     </description>
     <used-by>Cocoon</used-by>
     <lib>core/commons-io-1.3.1.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/io/</homepage>
+    <homepage>http://commons.apache.org/io/</homepage>
   </file>
 
   <file>
@@ -417,7 +429,7 @@
     </description>
     <used-by>Jakarta Commons HttpClient, Chaperon</used-by>
     <lib>core/commons-logging-1.0.4.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/logging/</homepage>
+    <homepage>http://commons.apache.org/logging/</homepage>
   </file>
 
   <file>
@@ -435,8 +447,19 @@
       the XSL recommendation and then turns it into a PDF document.
     </description>
     <used-by>FOP serializer (fop block)</used-by>
-    <lib>optional/fop-0.20.5.jar</lib>
+    <lib>optional/fop-1.0.jar</lib>
     <homepage>http://xml.apache.org/fop/</homepage>
+  </file>
+
+  <file>
+    <title>XML Graphics Commons</title>
+    <description>
+      Apache XML Graphics Commons is a library that consists of several reusable components
+      used by Apache Batik and Apache FOP.
+    </description>
+    <used-by>FOP serializer (fop block)</used-by>
+    <lib>optional/xmlgraphics-commons-1.5.jar</lib>
+    <homepage>http://xmlgraphics.apache.org/commons/</homepage>
   </file>
 
   <file>
@@ -448,7 +471,7 @@
     </description>
     <used-by>RTF serializer (jfor block)</used-by>
     <lib>optional/jfor-0.7.1.jar</lib>
-    <homepage>http://www.jfor.org</homepage>
+    <homepage>http://sourceforge.net/projects/jfor/</homepage>
   </file>
 
   <file>
@@ -592,16 +615,16 @@
       entity sets, but can be used for other resources too.
     </description>
     <used-by>Cocoon Role entity-resolver</used-by>
-    <lib>core/xml-commons-resolver-1.1.jar</lib>
-    <homepage>http://xml.apache.org/commons/</homepage>
+    <lib>core/xml-commons-resolver-1.2.jar</lib>
+    <homepage>http://xerces.apache.org/xml-commons/</homepage>
   </file>
 
   <file>
     <title>Servlet API</title>
-    <description>Servlet API Version 2.2</description>
+    <description>Servlet API Version 2.3</description>
     <used-by>Cocoon</used-by>
-    <lib>core/servlet_2_2.jar</lib>
-    <homepage>http://tomcat.apache.org/</homepage>
+    <lib>core/servlet-2.3.jar</lib>
+    <homepage>http://jetty.codehaus.org/</homepage>
   </file>
 
   <file>
@@ -667,7 +690,7 @@
     <description>XPath interpreter. Work with JavaBeans and DOM nodes</description>
     <used-by>Flow, JXPath logicsheet</used-by>
     <lib>core/commons-jxpath-1.2.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/jxpath/</homepage>
+    <homepage>http://commons.apache.org/jxpath/</homepage>
   </file>
 
   <file>
@@ -675,7 +698,7 @@
     <description>JSTL Expression Language</description>
     <used-by>JXTemplateGenerator</used-by>
     <lib>core/commons-jexl-1.0.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/jexl/</homepage>
+    <homepage>http://commons.apache.org/jexl/</homepage>
   </file>
 
   <file>
@@ -807,7 +830,7 @@
     <description>Implementations of common encoders and decoders</description>
     <used-by>WebDAV block</used-by>
     <lib>optional/commons-codec-1.3.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/codec/</homepage>
+    <homepage>http://commons.apache.org/codec/</homepage>
   </file>
 
   <file>
@@ -896,7 +919,7 @@
     </description>
     <used-by>Cocoon, OJB</used-by>
     <lib>core/commons-lang-2.4.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/lang/</homepage>
+    <homepage>http://commons.apache.org/lang/</homepage>
   </file>
 
   <file>
@@ -989,7 +1012,7 @@
     </description>
     <used-by>OJB</used-by>
     <lib>optional/commons-dbcp-1.2.1.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/dbcp/</homepage>
+    <homepage>http://commons.apache.org/dbcp/</homepage>
   </file>
 
   <file>
@@ -1222,6 +1245,16 @@
     <used-by>Ajax block</used-by>
     <lib>optional/dojo-rsrc-1.1.1.jar</lib>
     <homepage>http://dojotoolkit.org/</homepage>
+  </file>
+
+  <file>
+    <title>SLF4J</title>
+    <description>
+      Simple Logging Facade for Java
+    </description>
+    <used-by>Core</used-by>
+    <lib>core/slf4j-api-1.6.4.jar</lib>
+    <homepage>http://www.slf4j.org/</homepage>
   </file>
 
 </jars>

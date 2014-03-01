@@ -141,8 +141,9 @@
     <depend project="xml-fop-maintenance"/>
     <depend project="cocoon-block-batik"/>
     <depend project="cocoon-block-xsp" type="samples"/>
-    
+
     <library name="fop"/>
+    <library name="xmlgraphics-commons"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>

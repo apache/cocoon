@@ -72,7 +72,7 @@ import org.apache.excalibur.instrument.ValueInstrument;
  * this setting for web applications. Set "session-bound-continuations"
  * configuration option to true to activate this mode.</li>
  * </ul>
- * 
+ *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu </a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem </a>
  * @since March 19, 2002
@@ -83,7 +83,7 @@ public class ContinuationsManagerImpl
         extends AbstractLogEnabled
         implements ContinuationsManager, Component, Configurable,
                    ThreadSafe, Instrumentable, Serviceable, Contextualizable {
-    
+
     private static final int CONTINUATION_ID_LENGTH = 20;
 
     /**
@@ -141,7 +141,7 @@ public class ContinuationsManagerImpl
     }
 
     public void contextualize(Context context) throws ContextException {
-        this.context = context;        
+        this.context = context;
     }
 
     public void service(ServiceManager manager) throws ServiceException {
@@ -152,12 +152,12 @@ public class ContinuationsManagerImpl
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
         this.isContinuationSharingBugCompatible = config.getAttributeAsBoolean("continuation-sharing-bug-compatible", false);
         this.bindContinuationsToSession = config.getAttributeAsBoolean( "session-bound-continuations", false );
-        
+
         // create a global ContinuationsHolder if this the "session-bound-continuations" parameter is set to false
         if (!this.bindContinuationsToSession) {
             this.continuationsHolder = new WebContinuationsHolder();
         }
-        
+
         // create a thread that invalidates the continuations
         final Configuration expireConf = config.getChild("expirations-check");
         final long initialDelay = expireConf.getChild("offset", true).getValueAsLong(180000);
@@ -200,7 +200,7 @@ public class ContinuationsManagerImpl
     public WebContinuation createWebContinuation(Object kont,
                                                  WebContinuation parent,
                                                  int timeToLive,
-                                                 String interpreterId, 
+                                                 String interpreterId,
                                                  ContinuationsDisposer disposer) {
         int ttl = timeToLive == 0 ? defaultTimeToLive : timeToLive;
 
@@ -226,22 +226,22 @@ public class ContinuationsManagerImpl
         if (continuationsHolder == null) {
             return null;
         }
-        
+
         WebContinuation kont = continuationsHolder.get(id);
         if (kont == null) {
-            return null;            
+            return null;
         }
-        
+
         if (kont.hasExpired()) {
             removeContinuation(continuationsHolder, kont);
             return null;
         }
-            
+
         if (!kont.interpreterMatches(interpreterId)) {
             if (getLogger().isWarnEnabled()) {
-                getLogger().warn("WK: Continuation (" + kont.getId() 
-                                 + ") lookup for wrong interpreter. Bound to: " 
-                                 + kont.getInterpreterId() + ", looked up for: " 
+                getLogger().warn("WK: Continuation (" + kont.getId()
+                                 + ") lookup for wrong interpreter. Bound to: "
+                                 + kont.getInterpreterId() + ", looked up for: "
                                  + interpreterId);
             }
 
@@ -449,17 +449,21 @@ public class ContinuationsManagerImpl
      * continuationsHolder.
      */
     protected void invalidateContinuations(WebContinuationsHolder continuationsHolder) {
+        // It's not possible to just iterate over continuationsHolder.holder since _invalidate(..)
+        // calls remove(..) on the map leading to ConcurrentModification at the end.
+        WebContinuation[] continuations;
         synchronized (continuationsHolder.holder) {
-            for (Iterator iter = continuationsHolder.holder.values().iterator(); iter.hasNext();) {
-                WebContinuation wk = (WebContinuation) iter.next();
-                _detach(wk);
-                _invalidate(continuationsHolder, wk);
-            }
+            continuations = new WebContinuation[continuationsHolder.holder.size()];
+            continuations = (WebContinuation[]) continuationsHolder.holder.values().toArray(continuations);
+        }
+        for (int i = 0; i < continuations.length; i++) {
+            _detach(continuations[i]);
+            _invalidate(continuationsHolder, continuations[i]);
         }
     }
 
     /**
-     * Lookup a proper web continuations holder. 
+     * Lookup a proper web continuations holder.
      * @param createNew
      *            should the manager create a continuations holder in session
      *            when none found?
@@ -468,7 +472,7 @@ public class ContinuationsManagerImpl
         //there is only one holder if continuations are not bound to session
         if (!this.bindContinuationsToSession)
             return this.continuationsHolder;
-        
+
         //if continuations bound to session lookup a proper holder in the session
         Map objectModel = ContextHelper.getObjectModel(this.context);
         Request request = ObjectModelHelper.getRequest(objectModel);
@@ -477,7 +481,7 @@ public class ContinuationsManagerImpl
             return null;
 
         Session session = request.getSession(true);
-        WebContinuationsHolder holder = 
+        WebContinuationsHolder holder =
             (WebContinuationsHolder) session.getAttribute(
                     WebContinuationsHolder.CONTINUATIONS_HOLDER);
         if (!createNew)
@@ -503,7 +507,7 @@ public class ContinuationsManagerImpl
                 rootWebContinuations.add(webContinuation);
             }
         }
-        
+
         Set clonedRootWebContinuations = new HashSet();
         for (Iterator iter = rootWebContinuations.iterator(); iter.hasNext();) {
             WebContinuation rootContinuation = (WebContinuation) iter.next();
@@ -514,7 +518,7 @@ public class ContinuationsManagerImpl
 
     /**
      * Get a list of all web continuations (data only)
-     * 
+     *
      * @deprecated
      */
     public List getWebContinuationsDataBeanList() {
@@ -535,7 +539,7 @@ public class ContinuationsManagerImpl
      */
     protected void displayExpireSet() {
         StringBuffer wkSet = new StringBuffer("\nWK; Expire set size: ");
-        
+
         synchronized (this.expirations) {
             wkSet.append(this.expirations.size());
             for (Iterator i = this.expirations.iterator(); i.hasNext();) {
@@ -555,7 +559,7 @@ public class ContinuationsManagerImpl
     /**
      * Dump to Log file all <code>WebContinuation</code>s
      * in the system.
-     * 
+     *
      * This method will be changed to be an internal method solely for debugging
      * purposes just like {@link #displayExpireSet()}.
      */
@@ -572,11 +576,11 @@ public class ContinuationsManagerImpl
     /**
      * A holder for WebContinuations. When bound to session notifies the
      * continuations manager of session invalidation.
-     * 
+     *
      * For thread-safe access you have to synchronize on the Map {@link #holder}!
      */
     protected class WebContinuationsHolder implements HttpSessionBindingListener {
-        
+
         private final static String CONTINUATIONS_HOLDER = "o.a.c.c.f.SCMI.WebContinuationsHolder";
 
         private Map holder = Collections.synchronizedMap(new HashMap());
@@ -593,14 +597,10 @@ public class ContinuationsManagerImpl
             this.holder.remove(wk.getId());
         }
 
-        public Set getContinuationIds() {
-            return holder.keySet();
-        }
-        
         public boolean contains(String continuationId) {
             return this.holder.containsKey(continuationId);
         }
-        
+
         public boolean contains(WebContinuation wk) {
             return contains(wk.getId());
         }

@@ -30,7 +30,7 @@
   </group>
 
   <group name="web3">
-    <sample name="Documentation" href="../../../docs/developing/web3.html">
+    <sample name="Documentation" href="http://cocoon.apache.org/2.1/developing/web3.html">
       Documentation for this component.
     </sample>
     <sample name="Connect to SAP R/3" href="info.html">
