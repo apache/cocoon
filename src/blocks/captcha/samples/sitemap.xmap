@@ -30,7 +30,9 @@
     </map:generators>
   </map:components>
   
-  <map:flow language="javascript" />
+  <map:flow language="javascript">
+    <map:script src="flow/captcha.js"/>
+  </map:flow>
 
   <map:pipelines>
     <map:pipeline type="caching">
