@@ -26,7 +26,7 @@
     <sample name="WebDAV" href="http://wiki.cocoondev.org/Wiki.jsp?page=WebDAVBlock">
       How to How to build a poor men's CMS with Cocoon and WebDAV
     </sample>
-    <sample name="Setting up mod_dav" href="http://httpd.apache.org/docs-2.0/mod/mod_dav.html">
+    <sample name="Setting up mod_dav" href="http://httpd.apache.org/docs/2.0/mod/mod_dav.html">
       How to setup the Apache Web server as a WebDAV server
     </sample>
   </group>

@@ -75,8 +75,14 @@ public class HttpEnvironment extends AbstractEnvironment
         super(uri, null, root, null);
 
         this.request = new HttpRequest(req, this);
-        this.request.setCharacterEncoding(defaultFormEncoding);
-        this.request.setContainerEncoding(containerEncoding);
+
+        if (req.getCharacterEncoding() == null) { // use the value from web.xml
+            this.request.setContainerEncoding(containerEncoding != null ? containerEncoding : "ISO-8859-1");
+        } else { // use what we have been given
+            this.request.setContainerEncoding(req.getCharacterEncoding());
+        }
+        this.request.setCharacterEncoding(defaultFormEncoding != null ? defaultFormEncoding : "UTF-8");
+        
         this.response = new HttpResponse(res);
         this.webcontext = context;
 

@@ -342,7 +342,9 @@ public class ResourceReader extends AbstractReader
                 documents.put(request.getRequestURI(), inputSource.getURI());
             }
         } catch (IOException e) {
+            // COCOON-2307: if the client severed the connection, no matter for it that we rethrow the exception as it will never receive it
             getLogger().debug("Received an IOException, assuming client severed connection on purpose");
+            throw e;
         }
     }
 

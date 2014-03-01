@@ -25,14 +25,15 @@ import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.Random;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 
 /**
  * <p>The {@link CaptchaReader} is a simple tool generating JPEG images for the text
@@ -297,14 +298,16 @@ public class CaptchaReader extends AbstractReader {
         warped = null;
 
         /* Write the processed image as a JPEG image */
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(buffer);
-        JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(result);
-        param.setQuality(quality, true);
-        encoder.encode(result, param);
-        buffer.flush();
-        buffer.close();
-        this.out.write(buffer.toByteArray());
+        Iterator writers = ImageIO.getImageWritersByFormatName("jpeg");
+        ImageOutputStream ios = ImageIO.createImageOutputStream(out);
+        ImageWriter writer = (ImageWriter) writers.next();
+        writer.setOutput(ios);
+        ImageWriteParam p = writer.getDefaultWriteParam();
+        p.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        p.setCompressionQuality(quality);
+        writer.write(result);
+        
+        ios.flush();
         this.out.flush();
     }
 }

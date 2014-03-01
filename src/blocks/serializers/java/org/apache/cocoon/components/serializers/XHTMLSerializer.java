@@ -23,7 +23,7 @@ import org.apache.cocoon.components.serializers.util.DocType;
 import org.xml.sax.SAXException;
 
 /**
- * <p>A pedantinc XHTML serializer encoding all recognized entities with their
+ * <p>A pedantic XHTML serializer encoding all recognized entities with their
  * proper HTML names.</p> 
  * 
  * <p>For configuration options of this serializer, please look at the
@@ -42,13 +42,15 @@ import org.xml.sax.SAXException;
  * 
  * <dl>
  *   <dt>"<code>none</code>"</dt>
- *   <dd>Not to emit any dococument type declaration.</dd> 
+ *   <dd>Not to emit any document type declaration.</dd> 
  *   <dt>"<code>strict</code>"</dt>
  *   <dd>The XHTML 1.0 Strict document type.</dd> 
  *   <dt>"<code>loose</code>"</dt>
  *   <dd>The XHTML 1.0 Transitional document type.</dd> 
  *   <dt>"<code>frameset</code>"</dt>
  *   <dd>The XHTML 1.0 Frameset document type.</dd>
+ *   <dt>"<code>xhtml5</code>"</dt>
+ *   <dd>The XHTML5 document type.</dd>
  * </dl> 
  *
  * @version CVS $Id$
@@ -74,10 +76,15 @@ public class XHTMLSerializer extends XMLSerializer {
             "html", "-//W3C//DTD XHTML 1.0 Frameset//EN",
             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd");
 
+    /** A representation of the XHTML5 document type. */
+    public static final DocType XHTML5_DOCTYPE = new DocType("html");
+
     /* ====================================================================== */
 
     private static final XHTMLEncoder XHTML_ENCODER = new XHTMLEncoder();
 
+    protected boolean encodeCharacters = true;
+    
     /* ====================================================================== */
 
     /** The <code>DocType</code> instance representing the document. */
@@ -128,6 +135,8 @@ public class XHTMLSerializer extends XMLSerializer {
             this.doctype_default = XHTML1_DOCTYPE_TRANSITIONAL;
         } else if ("frameset".equalsIgnoreCase(doctype)) {
             this.doctype_default = XHTML1_DOCTYPE_FRAMESET;
+        } else if ("xhtml5".equalsIgnoreCase(doctype)) {
+            this.doctype_default = XHTML5_DOCTYPE;
         } else {
             /* Default is transitional */
             this.doctype_default = XHTML1_DOCTYPE_TRANSITIONAL;
@@ -181,6 +190,11 @@ public class XHTMLSerializer extends XMLSerializer {
                                  String namespaces[][], String attributes[][])
     throws SAXException {
         if (uri.length() == 0) uri = XHTML1_NAMESPACE;
+        
+        if (isCdataElement(local)) {
+            this.encodeCharacters = false;
+        }
+
         super.startElementImpl(uri, local, qual, namespaces, attributes);
     }
 
@@ -202,7 +216,7 @@ public class XHTMLSerializer extends XMLSerializer {
                 this.closeElement(false);
             } else if (local.equalsIgnoreCase("head")) {
                 String loc = "meta";
-                String qua = namespaces.qualify(XHTML1_NAMESPACE, loc, "meta");
+                String qua = this.namespaces.qualify(XHTML1_NAMESPACE, loc, "meta");
                 String nsp[][] = new String[0][0];
                 String att[][] = new String[2][ATTRIBUTE_LENGTH];
 
@@ -217,7 +231,33 @@ public class XHTMLSerializer extends XMLSerializer {
                 this.endElementImpl(XHTML1_NAMESPACE, loc, qua);
             }
         }
+        
+        if (isCdataElement(local)) {
+            this.encodeCharacters = true;
+        }
+
         super.endElementImpl(uri, local, qual);
     }
     
+    /**
+     * script and style are CDATA sections by default, so no encoding
+     * @param localName The local name of the element.
+     * @return If the element should be serialized without encoding.
+     */
+    protected boolean isCdataElement(String localName) {
+        String upperCase = localName.toUpperCase();
+        return "SCRIPT".equals(upperCase) || "STYLE".equals(upperCase);
+    }
+    
+    /**
+     * Encode and write a specific part of an array of characters.
+     */
+    protected void encode(char data[], int start, int length)
+    throws SAXException {
+        if (this.encodeCharacters) {
+            super.encode(data, start, length);
+        } else {
+            this.write(data, start, length);
+        }
+    }
 }

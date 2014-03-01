@@ -38,8 +38,8 @@
     <resources>
       <resource type="file" href="employee.xml?cocoon-view=pretty-content">Descriptor</resource>
       <resource type="file" href="../schema.sql">Schema</resource>
-      <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
-      <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>
+      <resource type="doc" href="http://cocoon.apache.org/2.1/userdocs/database-actions.html">Actions</resource>
+      <resource type="doc" href="http://cocoon.apache.org/2.1/userdocs/logicsheets/esql.html">ESQL</resource>
     </resources>
 
     <title><xsp:expr>process</xsp:expr> Department Processed</title>

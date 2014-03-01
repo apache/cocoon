@@ -31,6 +31,12 @@
         <fileset dir="${{lib.endorsed}}">
           <include name="*.jar"/>
         </fileset>
+        <fileset dir="${{lib.local}}">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${{lib.optional}}">
+          <include name="*.jar"/>
+        </fileset>
         <!-- Currently, we have no JVM dependent libraries
           <fileset dir="${{lib.core}}/jvm${{target.vm}}">
              <include name="*.jar"/>
@@ -157,6 +163,7 @@
              debug="${{compiler.debug}}"
              optimize="${{compiler.optimize}}"
              deprecation="${{compiler.deprecation}}"
+             source="${{source.vm}}"
              target="${{target.vm}}"
              nowarn="${{compiler.nowarn}}"
              compiler="${{compiler}}">
@@ -229,6 +236,7 @@
              debug="${{compiler.debug}}"
              optimize="${{compiler.optimize}}"
              deprecation="${{compiler.deprecation}}"
+             source="${{source.vm}}"
              target="${{target.vm}}"
              nowarn="${{compiler.nowarn}}"
              compiler="${{compiler}}">
@@ -433,6 +441,7 @@
                      optimize="${{compiler.optimize}}"
                      deprecation="${{compiler.deprecation}}"
                      target="${{target.vm}}"
+                     source="${{source.vm}}"
                      nowarn="${{compiler.nowarn}}"
                      compiler="${{compiler}}">
                 <src path="@{{dir}}/test/org/apache"/>
@@ -493,6 +502,7 @@
                      optimize="${{compiler.optimize}}"
                      deprecation="${{compiler.deprecation}}"
                      target="${{target.vm}}"
+                     source="${{source.vm}}"
                      nowarn="${{compiler.nowarn}}"
                      compiler="${{compiler}}">
                 <src path="@{{dir}}/test/htmlunit"/>

@@ -42,7 +42,7 @@ public class XHTMLEncoder extends XMLEncoder {
     }
     
     /**
-     * Return true or false wether this encoding can encode the specified
+     * Return true or false whether this encoding can encode the specified
      * character or not.
      * <p>
      * This method will return true for the following character range:

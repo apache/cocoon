@@ -21,7 +21,7 @@
   <resources>
     <resource type="file" href="descriptors/auth.xml?cocoon-view=pretty-content">Authenticator</resource>
     <resource type="file" href="descriptors/params.xml?cocoon-view=pretty-content">Validator</resource>
-    <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
+    <resource type="doc" href="http://cocoon.apache.org/2.1/userdocs/database-actions.html">Actions</resource>
   </resources>
   <title>Protected area</title>
   <content>

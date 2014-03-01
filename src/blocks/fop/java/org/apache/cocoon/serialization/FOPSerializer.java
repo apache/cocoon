@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,60 +16,53 @@
  */
 package org.apache.cocoon.serialization;
 
-import java.io.File;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.util.Map;
-import java.util.HashMap;
-
-import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.components.renderer.ExtendableRendererFactory;
-import org.apache.cocoon.components.renderer.RendererFactory;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
-import org.apache.fop.apps.Driver;
-import org.apache.fop.apps.Options;
-import org.apache.fop.configuration.ConfigurationParser;
-import org.apache.fop.messaging.MessageHandler;
-import org.apache.fop.render.Renderer;
+import org.apache.fop.apps.FOPException;
+import org.apache.fop.apps.FOUserAgent;
+import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopFactory;
+
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author ?
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id$
+ * FOP 0.93 (and newer) based serializer.
+ *
+ * @version $Id$
  */
-public class FOPSerializer extends AbstractSerializer implements
-  Configurable, CacheableProcessingComponent, Serviceable/*, Disposable */{
+public class FOPSerializer extends AbstractSerializer
+                             implements Configurable, CacheableProcessingComponent,
+                                        Serviceable, URIResolver, Disposable {
 
-    //protected SourceResolver resolver;
-
-    /**
-     * The Renderer Factory to use
-     */
-    protected final static RendererFactory factory = ExtendableRendererFactory.getRendererFactoryImplementation();
+    protected SourceResolver resolver;
 
     /**
-     * The <code>Driver</code> which is FOP.
+     * Factory to create fop objects
      */
-    protected Driver driver;
+    protected FopFactory fopfactory = FopFactory.newInstance();
 
     /**
-     * The current <code>Renderer</code>.
+     * The FOP instance.
      */
-    protected Renderer renderer;
+    protected Fop fop;
 
     /**
      * The current <code>mime-type</code>.
@@ -77,85 +70,34 @@ public class FOPSerializer extends AbstractSerializer implements
     protected String mimetype;
 
     /**
-     * The renderer name if configured
-     */
-    protected String rendererName;
-
-    /**
      * Should we set the content length ?
      */
     protected boolean setContentLength = true;
 
     /**
-     * This logger is used for FOP
-     */
-    protected Logger logger;
-
-    /**
-     * It is used to make sure that default Options loaded only once.
-     */
-    private static boolean configured = false;
-
-    /**
      * Manager to get URLFactory from.
      */
     protected ServiceManager manager;
+    private Map rendererOptions;
+
 
     /**
      * Set the component manager for this serializer.
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        //this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
     }
-/*
-    public void dispose() {
-        this.manager.release(this.resolver);
-    }
-*/
+
     /**
      * Set the configurations for this serializer.
      */
     public void configure(Configuration conf) throws ConfigurationException {
-
-        this.logger = getLogger().getChildLogger("fop");
-        MessageHandler.setScreenLogger(this.logger);
-
-        // FIXME: VG: Initialize static FOP configuration with defaults, only once.
-        // FOP has static config, but that's going to change in the near future.
-        // Then this code should be reviewed.
-        synchronized (FOPSerializer.class) {
-            if (!configured) {
-                try {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Loading default configuration");
-                    }
-                    new Options();
-                } catch (Exception e) {
-                    getLogger().error("Cannot load default configuration. Proceeding.", e);
-                }
-                configured = true;
-            }
-        }
-
+        //should the content length be set
         this.setContentLength = conf.getChild("set-content-length").getValueAsBoolean(true);
 
-        // Old syntax: Attribute src of element user-config contains file
-        String configUrl = conf.getChild("user-config").getAttribute("src", null);
-        if (configUrl != null) {
-            getLogger().warn("Attribute src of user-config element is deprecated. "
-                             + "Provide Cocoon URI as value of the element instead");
-            try {
-                // VG: Old version of serializer supported only files
-                configUrl = new File(configUrl).toURL().toExternalForm();
-            } catch (MalformedURLException e) {
-                getLogger().warn("Can not load config file " + configUrl, e);
-                configUrl = null;
-            }
-        } else {
-            // New syntax: Element user-config contains URL
-            configUrl = conf.getChild("user-config").getValue(null);
-        }
+        String configUrl = conf.getChild("user-config").getValue(null);
+
 
         if (configUrl != null) {
             Source configSource = null;
@@ -166,7 +108,9 @@ public class FOPSerializer extends AbstractSerializer implements
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Loading configuration from " + configSource.getURI());
                 }
-                SourceUtil.toSAX(configSource, new ConfigurationParser());
+                SAXConfigurationHandler configHandler = new SAXConfigurationHandler();
+                SourceUtil.toSAX(configSource, configHandler);
+                fopfactory.setUserConfig(configHandler.getConfiguration());
             } catch (Exception e) {
                 getLogger().warn("Cannot load configuration from " + configUrl);
                 throw new ConfigurationException("Cannot load configuration from " + configUrl, e);
@@ -178,55 +122,45 @@ public class FOPSerializer extends AbstractSerializer implements
             }
         }
 
+        fopfactory.setURIResolver(this);
+
         // Get the mime type.
         this.mimetype = conf.getAttribute("mime-type");
 
-        // Iterate through the parameters, looking for a renderer reference
-        Configuration[] parameters = conf.getChildren("parameter");
-        for (int i = 0; i < parameters.length; i++) {
-            String name = parameters[i].getAttribute("name");
-            if ("renderer".equals(name)) {
-                this.rendererName = parameters[i].getAttribute("value");
-                try {
-                    this.renderer = (Renderer)ClassUtils.newInstance(rendererName);
-                } catch (Exception ex) {
-                    getLogger().error("Cannot load  class " + rendererName, ex);
-                    throw new ConfigurationException("Cannot load class " + rendererName, ex);
-                }
-            }
-        }
-        if (this.renderer == null) {
-            // Using the Renderer Factory, get the default renderer
-            // for this MIME type.
-            this.renderer = factory.createRenderer(mimetype);
-        }
-
-        // Do we have a renderer yet?
-        if (this.renderer == null ) {
-            throw new ConfigurationException(
-                "Could not autodetect renderer for FOPSerializer and "
-                + "no renderer was specified in the sitemap configuration."
-            );
-        }
-
         Configuration confRenderer = conf.getChild("renderer-config");
         if (confRenderer != null) {
-            parameters = confRenderer.getChildren("parameter");
+            Configuration[] parameters = confRenderer.getChildren("parameter");
             if (parameters.length > 0) {
-                Map rendererOptions = new HashMap(); 
+                rendererOptions = new HashMap();
                 for (int i = 0; i < parameters.length; i++) {
                     String name = parameters[i].getAttribute("name");
                     String value = parameters[i].getAttribute("value");
-                
+
                     if (getLogger().isDebugEnabled()) {
-                    	getLogger().debug("renderer " + String.valueOf(name) + " = " + String.valueOf(value));
+                        getLogger().debug("renderer " + String.valueOf(name) + " = " + String.valueOf(value));
                     }
-                    rendererOptions.put(name,value);
                 }
-                this.renderer.setOptions(rendererOptions);
             }
         }
     }
+
+    /**
+     * Recycle serializer by removing references
+     */
+    public void recycle() {
+        super.recycle();
+        this.fop = null;
+    }
+
+    public void dispose() {
+        if (this.resolver != null) {
+            this.manager.release(this.resolver);
+            this.resolver = null;
+        }
+        this.manager = null;
+    }
+
+    // -----------------------------------------------------------------
 
     /**
      * Return the MIME type.
@@ -238,30 +172,24 @@ public class FOPSerializer extends AbstractSerializer implements
     /**
      * Create the FOP driver
      * Set the <code>OutputStream</code> where the XML should be serialized.
+     * @throws IOException
      */
-    public void setOutputStream(OutputStream out) {
-        
+    public void setOutputStream(OutputStream out) throws IOException {
+
         // Give the source resolver to Batik which is used by FOP
         //SourceProtocolHandler.setup(this.resolver);
 
-        // load the fop driver
-        this.driver = new Driver();
-        this.driver.setLogger(this.logger);
-        if (this.rendererName == null) {
-            this.renderer = factory.createRenderer(mimetype);
-        } else {
-            try {
-                this.renderer = (Renderer)ClassUtils.newInstance(this.rendererName);
-            } catch (Exception e) {
-                if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("Cannot load class " + this.rendererName, e);
-                }
-                throw new CascadingRuntimeException("Cannot load class " + this.rendererName, e);
-            }
+        FOUserAgent userAgent = fopfactory.newFOUserAgent();
+        if (this.rendererOptions != null) {
+            userAgent.getRendererOptions().putAll(this.rendererOptions);
         }
-        this.driver.setRenderer(this.renderer);
-        this.driver.setOutputStream(out);
-        setContentHandler(this.driver.getContentHandler());
+        try {
+            this.fop = fopfactory.newFop(getMimeType(), userAgent, out);
+            setContentHandler(this.fop.getDefaultHandler());
+        } catch (FOPException e) {
+            getLogger().error("FOP setup failed", e);
+            throw new IOException("Unable to setup fop: " + e.getLocalizedMessage());
+        }
     }
 
     /**
@@ -289,19 +217,129 @@ public class FOPSerializer extends AbstractSerializer implements
     }
 
     /**
-     * Recycle serializer by removing references
-     */
-    public void recycle() {
-        super.recycle();
-        this.driver = null;
-        this.renderer = null;
-    }
-
-    /**
      * Test if the component wants to set the content length
      */
     public boolean shouldSetContentLength() {
         return this.setContentLength;
     }
 
+    //From URIResolver, copied from TraxProcessor
+    public javax.xml.transform.Source resolve(String href, String base) throws TransformerException {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("resolve(href = " + href + ", base = " + base + "); resolver = " + resolver);
+        }
+
+        StreamSource streamSource = null;
+        Source source = null;
+        try {
+            if (base == null || href.indexOf(":") > 1) {
+                // Null base - href must be an absolute URL
+                source = resolver.resolveURI(href);
+            } else if (href.length() == 0) {
+                // Empty href resolves to base
+                source = resolver.resolveURI(base);
+            } else {
+                // is the base a file or a real m_url
+                if (!base.startsWith("file:")) {
+                    int lastPathElementPos = base.lastIndexOf('/');
+                    if (lastPathElementPos == -1) {
+                        // this should never occur as the base should
+                        // always be protocol:/....
+                        return null; // we can't resolve this
+                    } else {
+                        source = resolver.resolveURI(base.substring(0, lastPathElementPos) + "/" + href);
+                    }
+                } else {
+                    File parent = new File(base.substring(5));
+                    File parent2 = new File(parent.getParentFile(), href);
+                    source = resolver.resolveURI(parent2.toURI().toURL().toExternalForm());
+                }
+            }
+
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("source = " + source + ", system id = " + source.getURI());
+            }
+
+            streamSource = new StreamSource(new ReleaseSourceInputStream(source.getInputStream(), source, resolver), source.getURI());
+        } catch (SourceException e) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Failed to resolve " + href + "(base = " + base + "), return null", e);
+            }
+
+            // CZ: To obtain the same behaviour as when the resource is
+            // transformed by the XSLT Transformer we should return null here.
+            return null;
+        } catch (java.net.MalformedURLException mue) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Failed to resolve " + href + "(base = " + base + "), return null", mue);
+            }
+
+            return null;
+        } catch (IOException ioe) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Failed to resolve " + href + "(base = " + base + "), return null", ioe);
+            }
+
+            return null;
+        } finally {
+            // If streamSource is not null, the source should only be released when the input stream
+            // is not needed anymore.
+            if (streamSource == null)
+                resolver.release(source);
+        }
+        return streamSource;
+    }
+
+    /**
+     * An InputStream which releases the Cocoon/Avalon source from which the InputStream
+     * has been retrieved when the stream is closed.
+     */
+    public static class ReleaseSourceInputStream extends InputStream {
+        private InputStream delegate;
+        private Source source;
+        private SourceResolver sourceResolver;
+
+        private ReleaseSourceInputStream(InputStream delegate, Source source, SourceResolver sourceResolver) {
+            this.delegate = delegate;
+            this.source = source;
+            this.sourceResolver = sourceResolver;
+        }
+
+        public void close() throws IOException {
+            delegate.close();
+            sourceResolver.release(source);
+        }
+
+        public int read() throws IOException {
+            return delegate.read();
+        }
+
+        public int read(byte b[]) throws IOException {
+            return delegate.read(b);
+        }
+
+        public int read(byte b[], int off, int len) throws IOException {
+            return delegate.read(b, off, len);
+        }
+
+        public long skip(long n) throws IOException {
+            return delegate.skip(n);
+        }
+
+        public int available() throws IOException {
+            return delegate.available();
+        }
+
+        public synchronized void mark(int readlimit) {
+            delegate.mark(readlimit);
+        }
+
+        public synchronized void reset() throws IOException {
+            delegate.reset();
+        }
+
+        public boolean markSupported() {
+            return delegate.markSupported();
+        }
+    }
 }

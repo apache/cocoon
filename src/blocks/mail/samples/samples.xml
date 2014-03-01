@@ -43,10 +43,10 @@
   </group>
 
   <group name="Documentation">
-    <sample name="Action documentation" href="/docs/userdocs/actions/sendmail-action.html">
+    <sample name="Action documentation" href="http://cocoon.apache.org/2.1/userdocs/optional/sendmail-action.html">
       Documentation for the Sendmail action component.
     </sample>
-    <sample name="Logicsheet documentation" href="/docs/userdocs/xsp/sendmail.html">
+    <sample name="Logicsheet documentation" href="http://cocoon.apache.org/2.1/userdocs/logicsheets/sendmail.html">
       Documentation for the Sendmail logicsheet component.
     </sample>
   </group>

@@ -58,7 +58,12 @@ public class Messages extends AbstractWidget {
 
     public void readFromRequest(FormContext formContext) {
         if (getCombinedState().isAcceptingInputs()) {
+            boolean changed = messages.size() > 0;
             messages.clear();
+            if (changed) {
+                getForm().addWidgetUpdate(this);
+            }
+
         }
     }
 

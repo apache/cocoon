@@ -21,7 +21,7 @@
 
   <resources>
     <resource type="file" href="../schema.sql">Schema</resource>
-    <resource type="doc" href="userdocs/transformers/sql-transformer.html">SQL Transformer</resource>
+    <resource type="doc" href="http://cocoon.apache.org/2.1/userdocs/sql-transformer.html">SQL Transformer</resource>
   </resources>
 
   <content>

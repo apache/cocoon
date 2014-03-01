@@ -16,12 +16,13 @@
  */
 package org.apache.cocoon.selection;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.environment.ObjectModelHelper;
 
-import java.util.Map;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
  * A <code>Selector</code> that matches a string from within the host parameter
@@ -67,6 +68,6 @@ public class HostSelector extends NamedPatternsSelector {
             return false;
         }
 
-        return checkPatterns(expression, host);
+        return checkPatterns(expression, host, false);
     }
 }

@@ -74,6 +74,7 @@
   <person name="Marcus Crafter" email="crafterm@apache.org" id="MC"/>
   <person name="David Crossley" email="crossley@apache.org" id="DC"/>
   <person name="Torsten Curdt" email="tcurdt@apache.org" id="TC"/>
+  <person name="C&#233;dric Damioli" email="cdamioli@apache.org" id="CD"/>
   <person name="Bertrand Delacr&#233;taz" email="bdelacretaz@apache.org" id="BD"/>
   <person name="Bruno Dumon" email="bruno@apache.org" id="BRD"/>
   <person name="Daniel Fagerstrom" email="danielf@apache.org" id="DF"/>
@@ -91,6 +92,7 @@
   <person name="Geoff Howard" email="ghoward@apache.org" id="GH"/>
   <person name="Bernhard Huber" email="huber@apache.org" id="BH"/>
   <person name="Ivelin Atanasoff Ivanov" email="ivelin@apache.org" id="IAI"/>
+  <person name="Jasha Joachimsthal" email="jasha@apache.org" id="JSJ"/>
   <person name="Jason Johnston" email="jjohnston@apache.org" id="JJ"/>
   <person name="Grzegorz Kossakowski" email="gkossakowski@apache.org" id="GK"/>
   <person name="Matthew Langham" email="mlangham@apache.org" id="ML"/>
@@ -181,13 +183,72 @@
   </todo>
 
   <changes>
-  <release version="2.1.12" date="TBD">
+  <release version="2.1.13" date="TBD">
+    <action dev="XXX" type="add">
+      DUMMY
+    </action>
+  </release>
+  <release version="2.1.12" date="March 14 2013">
     <!-- Leave this entry about raising minimum Java to 1.4 at the top for 2.1.12! -->
     <action dev="all" type="update">
       Starting with 2.1.12 the minimum required Java version will be 1.4.2.
     </action>
+    <action dev="DC" type="update" fixes-bug="COCOON-2333">
+      Core: Update xml-commons-resolver to 1.2
+    </action>
+    <action dev="CD" type="add" fixes-bug="COCOON-2288" due-to="Laurent Medioni" due-to-email="lmedioni@temenos.com">
+      Allow usage of SLF4J for traces
+    </action>
+    <action dev="CD" type="fix" fixes-bug="COCOON-1529" due-to="Johannes Textor">
+      I18nTranformer should consume and stop propagating start/endPrefixMapping of its namespace
+    </action>
+    <action dev="CD" type="fix" fixes-bug="COCOON-2069" due-to="Jeroen Reijn">
+      Cocoon 2.1 is not initialized when building without samples
+    </action>
+    <action dev="CD" fixes-bug="COCOON-2310" type="update">
+      Serializers block: Added support of XHTML5 in the XHTMLSerializer
+    </action>
+    <action dev="CD" fixes-bug="COCOON-2307" type="fix">
+      Core: When interrupted, the ResourceReader may store incomplete data in the cache
+    </action>
+    <action dev="CD" fixes-bug="COCOON-2314" type="update">
+      Core: Allow to override the upload parameters in CocoonServlet
+    </action>
+    <action dev="AG" type="update">
+      Core: Update xercesImpl to 2.11.0 and xml-apis to 1.4.01.
+    </action>
+    <action dev="JSJ" type="fix" fixes-bug="COCOON-2104" due-to="Andrew Cave" due-to-email="ajcave@ualberta.ca">
+      Add base URI fixup support to XIncludeTransformer
+    </action>
+    <action dev="JSJ" type="fix" fixes-bug="COCOON-2041" due-to="Edward Riede" due-to-email="edriede@yahoo.com">
+      Repository block: WebDAV Returns improper status on PUT
+    </action>
+    <action dev="JSJ" type="update" fixes-bug="COCOON-2289" due-to="Cédric Damioli" due-to-email="cedric.damioli@anyware-services.com">
+      FOP block: Backport from FOPNGSerializer (C2.2) to FOPSerializer. Upgraded FOP dependency from 0.20.5 to 0.95.
+    </action>
+    <action dev="JSJ" type="add" fixes-bug="COCOON-2278" due-to="Nico Verwer" due-to-email="nverwer@email.com">
+      XSP block: Make SOAPHelper use https, not just http
+    </action>
+    <action dev="SW" type="fix" fixes-bug="COCOON-2286" due-to="Cédric Damioli" due-to-email="cedric.damioli@anyware-services.com">
+      Serializer block: charset data won't load if there's a space in the path to the jar file (e.g "C:\Program Files\MyApp\...")
+    </action>
+    <action dev="JSJ" type="fix" fixes-bug="COCOON-2257">
+      JCR block: Missing modCount attribute in JCR sample content.
+    </action>
+    <action dev="AG" type="update">
+      Updated ant to 1.7.1. This ant detects correctly java 1.6.
+    </action>
+    <action dev="JH" type="update" fixes-bug="COCOON-1887" due-to="Andrew Stevens" due-to-email="stevensa@users.sourceforge.net">
+      Change HostSelector to be case-insensitive according to RFC3986 section 3.2.2.
+    </action>
+    <action dev="JH" type="add" fixes-bug="COCOON-2243" due-to="Benjamin Boksa" due-to-email="benjamin@boksa.de">
+      Handle case in ApplicationUtil.isUserInRole(..) when User is null.
+    </action>
     <action dev="AG" type="fix" fixes-bug="COCOON-1822" due-to="Karen Torres &amp; Rafael Márquez" due-to-email="ktorres@agssa.net &amp; rmarquez@agssa.net">
       Forms: MultiValueField list-type="double-listbox" does not work correctly in ajax enabled forms.
+    </action>
+    <action dev="JSJ" type="fix" fixes-bug="COCOON-2228">
+      StripNameSpacesTransformer does not strip namespace prefix of attributes
     </action>
     <action dev="AN" type="fix" fixes-bug="COCOON-2169" due-to="Mark Lundquist" due-to-email="lundquist.mark@gmail.com">
       ImageOp block: If parameter width or height in resize operation is zero, use the original image size.

@@ -88,7 +88,10 @@ public class ApplicationUtil
      * @return This returns true, if the user has the role; otherwise false is returned.
      */
     public static boolean isUserInRole(final User user, final String role, final Map objectModel) {
-        boolean result = user.isUserInRole(role);
+        boolean result = false;
+        if (user != null) {
+            result = user.isUserInRole(role);
+        }
         if ( !result ) {
             final Request req = ObjectModelHelper.getRequest(objectModel);
             result = req.isUserInRole(role);

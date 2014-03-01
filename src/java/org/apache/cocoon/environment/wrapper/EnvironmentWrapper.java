@@ -29,6 +29,8 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.PermanentRedirector;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.util.BufferedOutputStream;
@@ -42,7 +44,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version $Id$
  */
-public class EnvironmentWrapper extends AbstractEnvironment {
+public class EnvironmentWrapper extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
     /** The wrapped environment */
     protected Environment environment;
@@ -52,7 +54,7 @@ public class EnvironmentWrapper extends AbstractEnvironment {
 
     /** The redirect url */
     protected String redirectURL;
-
+    
     /** The request object */
     protected Request request;
 
@@ -62,6 +64,10 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     protected String contentType;
 
     protected boolean internalRedirect = false;
+
+    protected boolean hasRedirected;
+
+    protected boolean permanentRedirection;
 
     /**
      * Constructs an EnvironmentWrapper object from a Request
@@ -267,12 +273,38 @@ public class EnvironmentWrapper extends AbstractEnvironment {
     public void redirect(boolean sessionmode, String newURL)
     throws IOException {
         this.redirectURL = newURL;
+        this.hasRedirected = true;
 
         // check if session mode shall be activated
         if (sessionmode) {
             // get session from request, or create new session
             request.getSession(true);
         }
+    }
+
+    /**
+     * Permanentlty redirect the client to a new URL is not allowed
+     */
+    public void permanentRedirect(boolean sessionmode, String newURL)
+    throws IOException {
+        this.redirect(sessionmode, newURL);
+        this.permanentRedirection = true;
+    }
+    
+    public boolean hasRedirected() {
+        return this.hasRedirected;
+    }
+    
+    /**
+     * Has a permanent redirection been asked
+     */
+    public boolean isPermanentRedirection() {
+        return this.permanentRedirection;
+    }
+    
+    public void sendStatus(int sc) {
+        this.setStatus(sc);
+        this.hasRedirected = true;
     }
 
     /**

@@ -26,7 +26,7 @@
     <title>A Database Driven XSP Page</title>
     <resources>
       <resource type="file" href="../schema.sql">Schema</resource>
-      <resource type="doc" href="userdocs/xsp/esql">ESQL</resource>
+      <resource type="doc" href="http://cocoon.apache.org/2.1/userdocs/logicsheets/esql.html">ESQL</resource>
     </resources>
 
     <content>

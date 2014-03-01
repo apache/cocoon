@@ -442,7 +442,7 @@ sig 3       2C312D2F 2005-07-21   Rodent of Unusual Size <coar@OpenSource.Org>
 sig 3       302DA568 2005-07-21   Rodent of Unusual Size (DSA) <coar@Apache.Org>
 sig 3       E04F9A89 2005-07-22   Roy T. Fielding <fielding@gbiv.com>
 sig 3       5F6B8B72 2005-07-22   Stefan Bodewig <bodewig@apache.org>
-sig 3       87315C31 2005-07-23   Raphaël Luta <raphael.luta@aptiwan.com>
+sig 3       87315C31 2005-07-23   Raphaï¿½l Luta <raphael.luta@aptiwan.com>
 sig 3       F39B3750 2005-07-24   Colm MacCarthaigh <colm.maccarthaigh@heanet.ie>
 sig 3       40581837 2005-07-24   Nick Kew <nick@webthing.com>
 sig 3       9C85222B 2005-07-24   Henning Schmiedehausen <hps@intermeta.de>
@@ -477,7 +477,7 @@ sig 3       2C312D2F 2005-07-21   Rodent of Unusual Size <coar@OpenSource.Org>
 sig 3       302DA568 2005-07-21   Rodent of Unusual Size (DSA) <coar@Apache.Org>
 sig 3       E04F9A89 2005-07-22   Roy T. Fielding <fielding@gbiv.com>
 sig 3       5F6B8B72 2005-07-22   Stefan Bodewig <bodewig@apache.org>
-sig 3       87315C31 2005-07-23   Raphaël Luta <raphael.luta@aptiwan.com>
+sig 3       87315C31 2005-07-23   Raphaï¿½l Luta <raphael.luta@aptiwan.com>
 sig 3       F39B3750 2005-07-24   Colm MacCarthaigh <colm.maccarthaigh@heanet.ie>
 sig 3       40581837 2005-07-24   Nick Kew <nick@webthing.com>
 sig 3       9C85222B 2005-07-24   Henning Schmiedehausen <hps@intermeta.de>
@@ -810,4 +810,62 @@ qOCDp+OAdJ+1c2cgEIgYJiCPXFOuQ9mrCMdfW1J3mPDvcP/qkqklyNTWoJyISQQY
 EQIACQUCSE4y6gIbDAAKCRDIyQiPQGZBQdtoAJ9V0VRezudWbtt6uANzXdbWDcBc
 bACeJy/ums/+DMvyWkRhptgIi8mIWU0=
 =lQBb
+-----END PGP PUBLIC KEY BLOCK-----
+pub   4096R/DD478570 2012-11-27
+uid                  CÃ©dric Damioli (CODE SIGNING) <cdamioli@apache.org>
+sig 3        DD478570 2012-11-27  CÃ©dric Damioli (CODE SIGNING) <cdamioli@apache.org>
+sub   4096R/F909DA37 2012-11-27
+sig          DD478570 2012-11-27  CÃ©dric Damioli (CODE SIGNING) <cdamioli@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.12 (Cygwin)
+
+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
+5pz7ducD1Du5Kr3zCNFz0nCadw==
+=M19C
 -----END PGP PUBLIC KEY BLOCK-----

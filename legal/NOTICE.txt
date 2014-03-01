@@ -1,0 +1,58 @@
+Apache Cocoon
+Copyright 1999-2013 The Apache Software Foundation.
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+This product includes software developed by the Ant-Contrib project 
+(http://sourceforge.net/projects/ant-contrib).
+
+This product includes software developed by ANTLR Project
+(http://www.antlr.org/)
+
+This product includes software developed by the ExoLab Project
+(http://www.exolab.org/).
+
+This product includes software developed by Chaperon 
+(http://www.sourceforge.net/projects/chaperon/).
+
+This product includes software developed by The Codehaus
+(http://groovy.codehaus.org).
+
+This product includes software developed by the JDOM Project 
+(http://www.jdom.org/).
+
+This product includes software developed by the jfor Project 
+(http://www.jfor.org).
+
+The MIDI file parsing parts of the "midi" block classes are based
+on code from the XMidi project, written by Peter Arthur Loeb
+(http://www.palserv.com/XMidi/).
+
+This product includes software developed by Andy Clark.
+(http://nekohtml.sourceforge.net/).
+
+This product includes software developed by the IronSmith Project 
+(http://www.ironsmith.org/).
+
+This product includes software developed by the XML:DB Initiative 
+(http://www.xmldb.org/).
+
+Portions are Copyright (c) 2001 Tivano Software GmbH
+(http://www.tivano.de). All Rights Reserved.
+
+Portions are Copyright (c) 1998-2000 World Wide Web Consortium 
+(Massachusetts Institute of Technology, Institut National de Recherche en
+Informatique et en Automatique, Keio University). All Rights Reserved.
+
+Portions are Copyright (c) 2001 Scott Robert Ladd. All rights reserved.
+
+Portions are Copyright (c) 2001, 2002 Thai Open Source Software Center Ltd.
+All rights reserved.
+
+Portions are Copyright (c) Mort Bay Consulting Pty. Ltd. All rights reserved.
+
+Portions are Copyright (c) Hewlett-Packard Company 2002. All rights reserved.
+
+Schematron portions are Copyright (c) 2000,2001 Rick Jelliffe and Academia
+Sinica Computing Center, Taiwan
