@@ -184,8 +184,8 @@
 
   <changes>
   <release version="2.1.13" date="TBD">
-    <action dev="XXX" type="add">
-      DUMMY
+    <action dev="DC" type="fix">
+      Enable 'java' to be found by the build and run shell scripts on a modern Mac OS X.
     </action>
   </release>
   <release version="2.1.12" date="March 14 2013">
