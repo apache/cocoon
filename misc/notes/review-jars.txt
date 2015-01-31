@@ -94,7 +94,7 @@ L: lib/core/jcs-1.2.5-dev-20050313.jar
 F: C:
 R:
 
-L: lib/core/jdtcore-3.1.0.jar
+L: lib/core/org.eclipse.jdt.core_3.10.0.v20140902-0626.jar
 F: C:
 R:
 
