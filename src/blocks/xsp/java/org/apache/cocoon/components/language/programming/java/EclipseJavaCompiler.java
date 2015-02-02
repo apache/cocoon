@@ -340,8 +340,8 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
         // Set the sourceCodeVersion
         switch (this.compilerComplianceLevel) {
             case 180:
-                settings.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_8);
-                settings.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_8);
+                settings.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7);
+                settings.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_7);
                 break;
             case 170:
                 settings.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7);
@@ -364,7 +364,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
         // Set the target platform
         switch (SystemUtils.JAVA_VERSION_INT) {
             case 180:
-                settings.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_8);
+                settings.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_7);
                 break;
             case 170:
                 settings.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_7);
