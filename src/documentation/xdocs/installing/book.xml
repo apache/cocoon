@@ -25,7 +25,7 @@
   </menu>
 
   <menu label="Installation">
-    <external  label="Download" href="http://cocoon.apache.org/mirror.cgi"/>
+    <external  label="Download" href="http://cocoon.apache.org/mirror.html"/>
 
     <menu-item label="Intro" href="index.html"/>
     <menu-item label="Requirements" href="requirements.html"/>

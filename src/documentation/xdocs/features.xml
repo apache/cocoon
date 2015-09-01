@@ -86,7 +86,7 @@
         <li>
           To get started see the <link href="tracks/first-steps-track.html">"first steps" 
           documentation track</link>. 
-          Basically you only need to <link href="http://cocoon.apache.org/mirror.cgi">download</link> 
+          Basically you only need to <link href="http://cocoon.apache.org/mirror.html">download</link> 
           Cocoon, unpack it and follow the simple INSTALL.txt instructions. 
           A minimal version of the Jetty servlet container is included with Cocoon.
         </li>
