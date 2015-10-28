@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>10-SNAPSHOT</version>
+    <version>10-COCOON-2347-SNAPSHOT</version>
     <relativePath>../parent</relativePath>
   </parent>
   <artifactId>cocoon-dists-modules</artifactId>
