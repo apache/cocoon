@@ -24,13 +24,13 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>13</version>
+    <version>17</version>
     <relativePath/>
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>10-SNAPSHOT</version>
+  <version>10-COCOON-2347-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
@@ -1357,7 +1357,7 @@
       <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
-        <version>1.3</version>
+        <version>1.10</version>
       </dependency>
       <dependency>
         <groupId>commons-dbcp</groupId>
@@ -1372,7 +1372,7 @@
       <dependency>
         <groupId>commons-collections</groupId>
         <artifactId>commons-collections</artifactId>
-        <version>3.2</version>
+        <version>3.2.1</version>
       </dependency>
       <dependency>
         <groupId>commons-configuration</groupId>
@@ -1382,27 +1382,27 @@
       <dependency>
         <groupId>commons-discovery</groupId>
         <artifactId>commons-discovery</artifactId>
-        <version>0.2</version>
+        <version>0.5</version>
       </dependency>
       <dependency>
         <groupId>commons-httpclient</groupId>
         <artifactId>commons-httpclient</artifactId>
-        <version>3.0.1</version>
+        <version>3.1</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>1.3.1</version>
+        <version>2.4</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-jci-core</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-jci-fam</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
       </dependency>
       <dependency>
         <groupId>commons-jelly</groupId>
@@ -1412,12 +1412,12 @@
       <dependency>
         <groupId>commons-jexl</groupId>
         <artifactId>commons-jexl</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
       </dependency>
       <dependency>
         <groupId>commons-jxpath</groupId>
         <artifactId>commons-jxpath</artifactId>
-        <version>1.2</version>
+        <version>1.3</version>
         <exclusions>
           <exclusion>
             <artifactId>ant-optional</artifactId>
@@ -1452,12 +1452,12 @@
       <dependency>
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
-        <version>2.3</version>
+        <version>2.6</version>
       </dependency>
       <dependency>
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
         <exclusions>
           <exclusion>
             <artifactId>logkit</artifactId>
@@ -1476,7 +1476,7 @@
       <dependency>
         <groupId>commons-transaction</groupId>
         <artifactId>commons-transaction</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
       </dependency>
       <dependency>
         <groupId>concurrent</groupId>
@@ -1683,7 +1683,7 @@
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>fop</artifactId>
-        <version>0.93</version>
+        <version>0.95-1</version>
         <exclusions>
           <exclusion>
             <groupId>org.apache.avalon.framework</groupId>
@@ -1717,7 +1717,7 @@
       <dependency>
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
-        <version>1.8.0.7</version>
+        <version>1.8.0.10</version>
       </dependency>
       <dependency>
         <groupId>com.ibm.icu</groupId>
@@ -1748,7 +1748,7 @@
       <dependency>
         <groupId>jdom</groupId>
         <artifactId>jdom</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
       </dependency>
       <dependency>
         <groupId>eclipse</groupId>
@@ -1800,18 +1800,18 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.4</version>
+        <version>4.12</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
-        <version>1.2.14</version>
+        <version>1.2.17</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-simple</artifactId>
-        <version>1.4.3</version>
+        <version>1.7.12</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
@@ -1826,32 +1826,32 @@
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-artifact</artifactId>
-        <version>2.0.1</version>
+        <version>${maven.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-model</artifactId>
-        <version>2.0.1</version>
+        <version>${maven.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-plugin-api</artifactId>
-        <version>2.0.1</version>
+        <version>${maven.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-project</artifactId>
-        <version>2.0.1</version>
+        <version>${maven.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-settings</artifactId>
-        <version>2.0.5</version>
+        <version>${maven.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.0.2</version>
+        <version>2.6</version>
       </dependency>
       <dependency>
         <groupId>myfaces</groupId>
@@ -1949,17 +1949,7 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-aop</artifactId>
-        <version>2.5.5</version>
-        <exclusions>
-          <exclusion>
-            <groupId>avalon-framework</groupId>
-            <artifactId>avalon-framework</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>logkit</groupId>
-            <artifactId>logkit</artifactId>
-          </exclusion>
-        </exclusions>
+        <version>${spring.version}</version>
       </dependency>
       <dependency>
         <groupId>org.aspectj</groupId>
@@ -1974,68 +1964,48 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-beans</artifactId>
-        <version>2.5.5</version>
-        <exclusions>
-          <exclusion>
-            <groupId>avalon-framework</groupId>
-            <artifactId>avalon-framework</artifactId>
-          </exclusion>
-        </exclusions>
+        <version>${spring.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
-        <version>2.5.5</version>
-        <exclusions>
-          <exclusion>
-            <groupId>avalon-framework</groupId>
-            <artifactId>avalon-framework</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>logkit</groupId>
-            <artifactId>logkit</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-          </exclusion>
-        </exclusions>
+        <version>${spring.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context-support</artifactId>
-        <version>2.5.5</version>
+        <version>${spring.version}</version>
       </dependency>          
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
-        <version>2.5.5</version>
+        <version>${spring.version}</version>
       </dependency>    
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>
-        <version>2.5.5</version>
+        <version>${spring.version}</version>
       </dependency>  
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jms</artifactId>
-        <version>2.5.5</version>
+        <version>${spring.version}</version>
       </dependency>        
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
-        <version>2.5.5</version>
+        <version>${spring.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-web</artifactId>
-        <version>2.5.5</version>
+        <version>${spring.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-tx</artifactId>
-        <version>2.5.5</version>
+        <version>${spring.version}</version>
       </dependency> 
       <dependency>
         <groupId>stax</groupId>
@@ -2178,7 +2148,7 @@
       <dependency>
         <groupId>xmlunit</groupId>
         <artifactId>xmlunit</artifactId>
-        <version>1.1</version>
+        <version>1.6</version>
         <scope>test</scope>
       </dependency>
 
@@ -3064,19 +3034,22 @@
       <plugins>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.12</version>
+          <version>2.19</version>
+          <configuration>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.0</version>
+          <version>3.4</version>
         </plugin>
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.2</version>
+          <version>2.6</version>
         </plugin>
         <plugin>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>2.9</version>
+          <version>3.4</version>
         </plugin>
         <plugin>
           <groupId>org.apache.rat</groupId>
@@ -3100,39 +3073,38 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5</version>
+        <version>3.3</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>${targetJdk}</source>
+          <target>${targetJdk}</target>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.9</version>
+        <version>2.10</version>
       </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>2.4.1</version>
+        <version>2.6.1</version>
       </plugin>
       <plugin>
         <artifactId>maven-idea-plugin</artifactId>
-        <version>2.2</version>
+        <version>2.2.1</version>
         <configuration>
-          <!-- Cocoon 2.2 requires JDK 1.5 -->
-          <jdkName>1.5</jdkName>
-          <jdkLevel>1.5</jdkLevel>
+          <jdkName>${targetJdk}</jdkName>
+          <jdkLevel>${targetJdk}</jdkLevel>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.2.2</version>
+        <version>2.5.2</version>
         <configuration>
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.0.1</version>
+        <version>1.4</version>
         <executions>
           <execution>
             <id>enforce-maven</id>
@@ -3151,16 +3123,15 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.8.1</version>
+        <version>2.10.3</version>
         <!-- keep this in-sync with the configuration in /project/profiles/profile[id='javadocs']
-                 (unfortunatly this has to be set twice) -->
+        (unfortunatly this has to be set twice) -->
         <configuration>
           <maxmemory>512m</maxmemory>
           <links>
-            <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
+            <link>http://docs.oracle.com/javase/6/docs/api//</link>
             <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
             <link>http://excalibur.apache.org/apidocs/</link>
-            <link>http://docs.oracle.com/javase/1.5.0/docs/api/</link>
             <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
             <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
             <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
@@ -3184,7 +3155,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.0.1</version>
+        <version>2.8</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -3198,7 +3169,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-changes-plugin</artifactId>
-        <version>2.0-beta-2</version>
+        <version>2.11</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -3211,6 +3182,10 @@
   </reporting>
 
   <properties>
+    <targetJdk>1.6</targetJdk>
+    <maven.version>2.0.11</maven.version>
+    <spring.version>2.5.5</spring.version>
+
     <!-- General doc properties -->
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
     <docs.urlRelativizer>../../../../</docs.urlRelativizer>
@@ -3383,14 +3358,13 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>2.2</version>
             <!-- keep this in-sync with the configuration in /project/build/plugins/plugin[id='maven-javadoc-plugin']
-                 (unfortunatly this has to be set twice) -->
+            (unfortunatly this has to be set twice) -->
             <configuration>
               <maxmemory>512m</maxmemory>
               <links>
-                <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-                <link>http://static.springframework.org/spring/docs/2.0.x/api/</link>
+                <link>http://docs.oracle.com/javase/6/docs/api//</link>
+                <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
                 <link>http://excalibur.apache.org/apidocs/</link>
-                <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
                 <link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
                 <link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
                 <link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
@@ -3535,81 +3509,6 @@
           <url>http://snapshots.maven.codehaus.org/maven2</url>
         </pluginRepository>
       </pluginRepositories>
-    </profile>
-    <profile>
-      <id>spring-2.1</id>
-      <dependencyManagement>
-        <dependencies>
-          <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>2.1-m3</version>
-            <exclusions>
-              <exclusion>
-                <groupId>avalon-framework</groupId>
-                <artifactId>avalon-framework</artifactId>
-              </exclusion>
-              <exclusion>
-                <groupId>logkit</groupId>
-                <artifactId>logkit</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>2.1-m3</version>
-            <exclusions>
-              <exclusion>
-                <groupId>avalon-framework</groupId>
-                <artifactId>avalon-framework</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>2.1-m3</version>
-            <exclusions>
-              <exclusion>
-                <groupId>avalon-framework</groupId>
-                <artifactId>avalon-framework</artifactId>
-              </exclusion>
-              <exclusion>
-                <groupId>logkit</groupId>
-                <artifactId>logkit</artifactId>
-              </exclusion>
-              <exclusion>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-          <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>2.1-m3</version>
-          </dependency>
-          <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-            <version>2.1-m3</version>
-            <scope>test</scope>
-          </dependency>
-          <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>2.1-m3</version>
-          </dependency>
-        </dependencies>
-      </dependencyManagement>
-      <repositories>
-        <repository>
-          <id>i21-s3-maven-repo</id>
-          <name>i21 S3 milestone repo</name>
-          <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
-        </repository>
-      </repositories>
     </profile>
   </profiles>
 </project>
