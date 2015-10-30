@@ -36,44 +36,46 @@ public class ConfigurationInfo {
     protected String rootLogger;
 
     /** Map for shorthand to role mapping. */
-    private final Map shorthands;
+    private final Map<String, String> shorthands;
 
-    /** Map for role to default classname mapping. 
+    /** Map for role to default classname mapping.
      * As soon as a component is configured for this role, the info
      * will be removed from this map.
+     *
      * @see #allRoles */
-    private final Map currentRoles;
+    private final Map<String, ComponentInfo> currentRoles;
 
     /** Map for role to default classname mapping. This map contains
      * all definitions to be available for maps in child containers.
+     *
      * @see #currentRoles
      */
-    private final Map allRoles;
+    private final Map<String, ComponentInfo> allRoles;
 
     /** Map for role->key to classname mapping. */
-    private final Map keyClassNames;
+    private final Map<String, Map<String, ComponentInfo>> keyClassNames;
 
     /** List of components. */
-    private final Map components = new HashMap();
+    private final Map<String, ComponentInfo> components = new HashMap<String, ComponentInfo>();
 
     /** List of imports for spring configurations. */
-    private final List imports = new ArrayList();
+    private final List<String> imports = new ArrayList<String>();
 
     public ConfigurationInfo() {
-        this.shorthands = new HashMap();
-        this.currentRoles = new HashMap();
-        this.keyClassNames = new HashMap();
-        this.allRoles = new HashMap();
+        this.shorthands = new HashMap<String, String>();
+        this.currentRoles = new HashMap<String, ComponentInfo>();
+        this.keyClassNames = new HashMap<String, Map<String, ComponentInfo>>();
+        this.allRoles = new HashMap<String, ComponentInfo>();
     }
 
     public ConfigurationInfo(ConfigurationInfo parent) {
-        this.shorthands = new HashMap(parent.shorthands);
-        this.currentRoles = new HashMap();
-        this.keyClassNames = new HashMap(parent.keyClassNames);
-        this.allRoles = new HashMap(parent.allRoles);
+        this.shorthands = new HashMap<String, String>(parent.shorthands);
+        this.currentRoles = new HashMap<String, ComponentInfo>();
+        this.keyClassNames = new HashMap<String, Map<String, ComponentInfo>>(parent.keyClassNames);
+        this.allRoles = new HashMap<String, ComponentInfo>(parent.allRoles);
     }
 
-    public Map getComponents() {
+    public Map<String, ComponentInfo> getComponents() {
         return components;
     }
 
@@ -89,7 +91,7 @@ public class ConfigurationInfo {
         this.components.put(info.getRole(), info);
     }
 
-    public Collection getRoles() {
+    public Collection<ComponentInfo> getRoles() {
         return this.currentRoles.values();
     }
 
@@ -99,9 +101,9 @@ public class ConfigurationInfo {
     }
 
     public ComponentInfo getRole(String role) {
-        ComponentInfo info = (ComponentInfo) this.currentRoles.get(role);
-        if (info == null ) {
-            info = (ComponentInfo) this.allRoles.get(role);
+        ComponentInfo info = this.currentRoles.get(role);
+        if (info == null) {
+            info = this.allRoles.get(role);
         }
         return info;
     }
@@ -114,11 +116,11 @@ public class ConfigurationInfo {
         this.currentRoles.clear();
     }
 
-    public Map getShorthands() {
+    public Map<String, String> getShorthands() {
         return this.shorthands;
     }
 
-    public Map getKeyClassNames() {
+    public Map<String, Map<String, ComponentInfo>> getKeyClassNames() {
         return this.keyClassNames;
     }
 
@@ -126,12 +128,12 @@ public class ConfigurationInfo {
         this.imports.add(uri);
     }
 
-    public List getImports() {
+    public List<String> getImports() {
         return this.imports;
     }
 
     public String getRoleForName(String alias) {
-        final String value = (String) this.shorthands.get(alias);
+        final String value = this.shorthands.get(alias);
         if (value != null) {
             return value;
         }
