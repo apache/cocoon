@@ -22,14 +22,14 @@ import org.springframework.beans.factory.config.Scope;
 
 /**
  * Pipeline component scope that scopes objects per one pipeline component.
- * 
+ *
  * @version $Id$
  * @since 2.2
  */
 public final class PipelineComponentScope implements Scope {
-    
+
     private PipelineComponentScopeHolder holder;
-    
+
     public PipelineComponentScopeHolder getHolder() {
         return holder;
     }
@@ -39,16 +39,18 @@ public final class PipelineComponentScope implements Scope {
     }
 
     /* (non-Javadoc)
-     * @see org.springframework.beans.factory.config.Scope#get(java.lang.String, org.springframework.beans.factory.ObjectFactory)
+     * @see org.springframework.beans.factory.config.Scope#get(java.lang.String,
+     * org.springframework.beans.factory.ObjectFactory)
      */
-    public Object get(String name, ObjectFactory objectFactory) {
+    @Override
+    public Object get(String name, ObjectFactory<?> objectFactory) {
         Object bean = holder.getBeans().get(name);
         if (bean == null) {
             bean = objectFactory.getObject();
             holder.getBeans().put(name, bean);
             if (bean instanceof ObjectModel && holder.getInScope()) {
                 //FIXME: This should be moved to separate BeanPostProcessor
-                ((ObjectModel)bean).setParent((ObjectModel)holder.getParentBeans().get(name));
+                ((ObjectModel) bean).setParent((ObjectModel) holder.getParentBeans().get(name));
             }
         }
         return bean;
@@ -57,14 +59,17 @@ public final class PipelineComponentScope implements Scope {
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.config.Scope#getConversationId()
      */
+    @Override
     public String getConversationId() {
         // There is no conversation id concept for the pipeline component scope
         return null;
     }
 
     /* (non-Javadoc)
-     * @see org.springframework.beans.factory.config.Scope#registerDestructionCallback(java.lang.String, java.lang.Runnable)
+     * @see org.springframework.beans.factory.config.Scope#registerDestructionCallback(java.lang.String,
+     * java.lang.Runnable)
      */
+    @Override
     public void registerDestructionCallback(String name, Runnable callback) {
         holder.getDestructionCallbacks().put(name, callback);
     }
@@ -72,8 +77,9 @@ public final class PipelineComponentScope implements Scope {
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.config.Scope#remove(java.lang.String)
      */
+    @Override
     public Object remove(String name) {
-        Object bean = holder.getBeans().get(name); 
+        Object bean = holder.getBeans().get(name);
         if (bean != null) {
             holder.getBeans().remove(name);
             holder.getDestructionCallbacks().remove(name);
@@ -81,4 +87,8 @@ public final class PipelineComponentScope implements Scope {
         return bean;
     }
 
+    @Override
+    public Object resolveContextualObject(String key) {
+        return null;
+    }
 }
