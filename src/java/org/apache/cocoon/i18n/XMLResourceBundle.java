@@ -369,6 +369,13 @@ public class XMLResourceBundle extends AbstractLogEnabled
     }
 
     /**
+     * Sets the validity of the bundle.
+     */
+    public void setValidity(SourceValidity validity) {
+        this.validity = validity;
+    }
+
+    /**
      * Get an instance of the {@link ParamSaxBuffer} associated with the key.
      *
      * @param key the key
