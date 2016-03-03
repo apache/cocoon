@@ -17,6 +17,7 @@
 package org.apache.cocoon.i18n;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
@@ -254,6 +255,16 @@ public class XMLResourceBundle extends AbstractLogEnabled
      * @return true if reloaded successfully
      */
     protected boolean reload(SourceResolver resolver, long interval) {
+        return reload(null, resolver, interval);
+    }
+        
+        
+    /**
+     * (Re)Loads the XML bundle if necessary, based on the source URI.
+     * @return true if reloaded successfully
+     */
+    protected boolean reload(ServiceManager manager, SourceResolver resolver, long interval) {
+
         Source newSource = null;
         Map newValues;
 
@@ -266,7 +277,11 @@ public class XMLResourceBundle extends AbstractLogEnabled
 
                 if (valid == SourceValidity.INVALID || this.validity.isValid(newValidity) != SourceValidity.VALID) {
                     newValues = new HashMap();
-                    SourceUtil.toSAX(newSource, new SAXContentHandler(newValues));
+                    if (manager != null) {
+                        SourceUtil.toSAX(manager, newSource, null, new SAXContentHandler(newValues));
+                    } else {
+                        SourceUtil.toSAX(newSource, null, new SAXContentHandler(newValues));
+                    }
                     synchronized (this) {
                         // Update source validity and values
                         if (interval > 0 && newValidity != null) {
