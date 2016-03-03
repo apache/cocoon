@@ -286,7 +286,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
 
         XMLResourceBundle bundle = new XMLResourceBundle(sourceURI, locale, parent);
         bundle.enableLogging(getLogger());
-        bundle.reload(this.resolver, this.interval);
+        bundle.reload(this.manager, this.resolver, this.interval);
         return bundle;
     }
 
@@ -411,7 +411,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
         if (bundle != null && this.interval != -1) {
             // Reload this bundle and all parent bundles, as necessary
             for (XMLResourceBundle b = bundle; b != null; b = (XMLResourceBundle) b.parent) {
-                b.reload(this.resolver, this.interval);
+                b.reload(this.manager, this.resolver, this.interval);
             }
         }
 
