@@ -61,6 +61,7 @@ public class ParamSaxBuffer extends SaxBuffer {
     /**
      * Parses text and extracts <code>{name}</code> parameters for later
      * substitution.
+     * '{' is escaped with a preceding '\'.
      */
     public void characters(char ch[], int start, int length) throws SAXException {
 
@@ -77,7 +78,23 @@ public class ParamSaxBuffer extends SaxBuffer {
 
         final int end = start + length;
         for (int i = start; i < end; i++) {
-            if (ch[i] == '{') {
+            if (ch[i] == '\\') {
+                if (i + 1 == end) {
+                    // if '\' is the last char, flush chars and let's wait to see if a '{' or '\' will come next
+                    addBit(new Characters(ch, start, i - start));
+                    previous_ch = new char[]{ch[i]};
+                    return;
+                }
+                if (ch[i + 1] == '{' || ch[i + 1] == '\\') {
+                    // Encountered "\{" or "\\", meaning that the next char should be escaped
+                    addBit(new Characters(ch, start, i - start));
+                    addBit(new Characters(new char[]{ch[i + 1]}, 0, 1));
+                    i++;
+                    start = i + 1;
+                    continue;
+                }
+            }
+            else if (ch[i] == '{') {
                 // Send any collected characters so far
                 if (i > start) {
                     addBit(new Characters(ch, start, i - start));
