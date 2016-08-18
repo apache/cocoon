@@ -93,7 +93,7 @@ implements SourceFactory,
 
             // Remove the protocol and the first '/'
             final int pos = location.indexOf(":/");
-            final String path = location.substring(pos+1);
+            final String path = location.substring(pos+2);
             
             // fix for #24093, we don't give access to files outside the context:
             if ( path.indexOf("../") != -1 ) {
