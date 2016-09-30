@@ -104,7 +104,7 @@ class Workbook {
      * @param name the new name for the sheet
      */
     void renameSheet(final int index, final String name) {
-        _workbook.setSheetName(index, name, HSSFWorkbook.ENCODING_UTF_16);
+        _workbook.setSheetName(index, name);
     }
 
     /**

@@ -17,8 +17,7 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-import org.apache.poi.hssf.util.RangeAddress;
-import org.apache.poi.hssf.util.Region;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.IOException;
 
@@ -54,25 +53,9 @@ public class EPMerge extends BaseElementProcessor {
      * @exception IOException
      */
     public void endProcessing() throws IOException {
-        RangeAddress rangeAddress = new RangeAddress(getCellRange());
         Sheet sheet = this.getSheet();
-
-        //subtracting one since rangeaddress starts at 1,1 where rows/cols
-        // start at 0,0
-        short fromCol =
-            (short) (rangeAddress.getXPosition(rangeAddress.getFromCell()) - 1);
-        int fromRow = rangeAddress.getYPosition(rangeAddress.getFromCell()) - 1;
-        short toCol =
-            (short) (rangeAddress.getXPosition(rangeAddress.getToCell()) - 1);
-        int toRow = rangeAddress.getYPosition(rangeAddress.getToCell()) - 1;
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Merging Range: Row (" + fromRow + ") Col ("
-                    + fromCol + ")" + " to Row (" + toRow + ") Col (" + toCol
-                    + ")");
-        }
-        Region region = new Region(fromRow, fromCol, toRow, toCol);
-        sheet.addMergedRegion(region);
+        CellRangeAddress range = CellRangeAddress.valueOf(getCellRange());
+        sheet.addMergedRegion(range);
     }
 
 } // end public class EPMerge
