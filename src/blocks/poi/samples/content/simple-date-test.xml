@@ -118,11 +118,7 @@
         <gmr:Cell Col="1" Row="17">=date(year(now()), month(now()) + 3, day(now()))</gmr:Cell>
         <gmr:Cell Col="0" Row="18" ValueType="60">today minus 2 years:</gmr:Cell>
         <gmr:Cell Col="1" Row="18">=date(year(now()) - 2, month(now()), day(now()))</gmr:Cell>
-        <gmr:Cell Col="0" Row="19" ValueType="60">Tets Merge cell range</gmr:Cell>
       </gmr:Cells>
-      <gmr:MergedRegions>
-      </gmr:MergedRegions>
-      <Merge>A20:B20</Merge>
     </gmr:Sheet>
   </gmr:Sheets>
 </gmr:Workbook>

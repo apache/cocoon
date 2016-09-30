@@ -44,12 +44,16 @@ class Cell {
 
     /**
      * Constructor Cell.
+     * Only a hack as long as the POI stuff is not maintained in the POI CVS:
+     * Setting the encoding to UTF-16 for internationalization
+     * (<a href="http://jakarta.apache.org/poi/javadocs/org/apache/poi/hssf/usermodel/HSSFCell.html#getEncoding()">POI API</a>).
      *
      * @param cell
      */
     Cell(final HSSFCell cell, final int cellType) {
         _cell = cell;
         _celltype = cellType;
+        _cell.setEncoding(HSSFCell.ENCODING_UTF_16);
     }
 
     /**
