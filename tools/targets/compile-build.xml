@@ -103,6 +103,7 @@
     <path id="test.classpath">
       <path refid="classpath"/>
       <pathelement location="${build.dest}" />
+      <pathelement location="${build.blocks}/serializers/dest" />
        <!-- FIXME Resolver tests depend on deprecated stuff -->
       <pathelement location="${build.deprecated}" />
       <pathelement location="${build.test}" />
