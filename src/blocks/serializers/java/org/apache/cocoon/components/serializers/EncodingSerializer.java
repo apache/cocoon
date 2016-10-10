@@ -26,6 +26,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.components.serializers.encoding.XMLEncoder;
 import org.apache.cocoon.components.serializers.encoding.Charset;
 import org.apache.cocoon.components.serializers.encoding.CharsetFactory;
 import org.apache.cocoon.components.serializers.encoding.Encoder;
@@ -151,6 +152,7 @@ public abstract class EncodingSerializer implements Serializer, Locator, Recycla
         this.locator = null;
         this.out = null;
         this.prolog = true;
+        if (this.encoder instanceof XMLEncoder) ((XMLEncoder) this.encoder).reset();
     }
 
     /**
