@@ -31,6 +31,8 @@ public class XMLEncoder extends CompiledEncoder {
     private static final char ENCODE_LT[]   = "&lt;".toCharArray();
     private static final char ENCODE_GT[]   = "&gt;".toCharArray();
 
+    private Character highSurrogate = null;
+    
     /**
      * Create a new instance of this <code>XMLEncoder</code>.
      */
@@ -86,6 +88,18 @@ public class XMLEncoder extends CompiledEncoder {
      * specified character.
      */
     public char[] encode(char c) {
+        if (highSurrogate != null) {
+            if (!Character.isLowSurrogate(c)) {
+                throw new IllegalArgumentException("Expected low surrogate char");
+            }
+            int codePoint = Character.toCodePoint(highSurrogate.charValue(), c);
+            highSurrogate = null;
+            return new char[] {(char) codePoint};
+        } else if (Character.isHighSurrogate(c)) {
+            highSurrogate = Character.valueOf(c);
+            return new char[0];
+        }
+        
         switch (c) {
             case 0x22: return(ENCODE_QUOT); // (") [&quot;]
             case 0x26: return(ENCODE_AMP);  // (&) [&amp;]
