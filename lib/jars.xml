@@ -496,7 +496,7 @@
       document objects.
     </description>
     <used-by>MS Excel serializer (poi block)</used-by>
-    <lib>optional/poi-3.0.2-FINAL-20080204.jar</lib>
+    <lib>optional/poi-3.10-FINAL.jar</lib>
     <homepage>http://jakarta.apache.org/poi/</homepage>
   </file>
 
@@ -829,7 +829,7 @@
     <title>Jakarta Commons Codec</title>
     <description>Implementations of common encoders and decoders</description>
     <used-by>WebDAV block</used-by>
-    <lib>optional/commons-codec-1.3.jar</lib>
+    <lib>optional/commons-codec-1.5.jar</lib>
     <homepage>http://commons.apache.org/codec/</homepage>
   </file>
 
