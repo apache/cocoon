@@ -33,6 +33,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hssf.util.Region;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  * internal representation of a Sheet
@@ -128,7 +129,8 @@ class Sheet extends AbstractLogEnabled {
      * @return default column width (in 1/256ths of a character width)
      */
     short getDefaultColumnWidth() {
-        return _sheet.getDefaultColumnWidth();
+        Integer objColWidth = new Integer(_sheet.getDefaultColumnWidth());
+        return objColWidth.shortValue();
     }
 
     /**
@@ -234,6 +236,14 @@ class Sheet extends AbstractLogEnabled {
      */
     void addMergedRegion(Region region) {
         this._sheet.addMergedRegion(region);
+    }
+
+    /**
+     * Flag a certain region of cells to be merged
+     * @param range the cell range to create as merged
+     */
+    void addMergedRegion(CellRangeAddress range) {
+        this._sheet.addMergedRegion(range);
     }
 
     /**

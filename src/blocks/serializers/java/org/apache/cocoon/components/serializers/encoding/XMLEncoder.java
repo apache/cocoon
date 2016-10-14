@@ -50,6 +50,10 @@ public class XMLEncoder extends CompiledEncoder {
         super(name);
     }
     
+    public void reset() {
+        this.highSurrogate = null;
+    }
+    
     /**
      * Return true or false wether this encoding can encode the specified
      * character or not.
