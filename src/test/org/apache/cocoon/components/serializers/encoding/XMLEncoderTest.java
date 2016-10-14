@@ -25,8 +25,9 @@ public class XMLEncoderTest extends TestCase {
     private XMLEncoder encoder = new XMLEncoder();
     
     public void testEncodingSurrogatePairs() {
-        assertTrue(encoder.encode('\uD83C').length == 0);
+        char[] expectedValue = encoder.encode((char) 127808);
         
-        assertTrue(Arrays.equals(new char[] {(char) 127808}, encoder.encode('\uDF40')));
+        assertTrue(encoder.encode('\uD83C').length == 0);
+        assertTrue(Arrays.equals(expectedValue, encoder.encode('\uDF40')));
     }
 }

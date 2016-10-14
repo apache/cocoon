@@ -94,7 +94,7 @@ public class XMLEncoder extends CompiledEncoder {
             }
             int codePoint = Character.toCodePoint(highSurrogate.charValue(), c);
             highSurrogate = null;
-            return new char[] {(char) codePoint};
+            return encode((char) codePoint);
         } else if (Character.isHighSurrogate(c)) {
             highSurrogate = Character.valueOf(c);
             return new char[0];
