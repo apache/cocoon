@@ -37,8 +37,9 @@ public class XMLEncoderTestCase extends TestCase {
      * Test COCOON-2352: XMLEncoder doesn't support Unicode surrogate pairs.
      */
     public void testEncodingSurrogatePairs() {
+        char[] expectedValue = encoder.encode((char) 127808);
+
         assertTrue(encoder.encode('\uD83C').length == 0);
-        
-        assertTrue(Arrays.equals(new char[] {(char) 127808}, encoder.encode('\uDF40')));
+        assertTrue(Arrays.equals(expectedValue, encoder.encode('\uDF40')));
     }
 }
