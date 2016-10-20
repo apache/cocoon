@@ -98,12 +98,15 @@ public class XMLEncoder extends CompiledEncoder {
             }
             int codePoint = Character.toCodePoint(highSurrogate.charValue(), c);
             highSurrogate = null;
-            return encode((char) codePoint);
+            return encode(codePoint);
         } else if (Character.isHighSurrogate(c)) {
             highSurrogate = Character.valueOf(c);
             return new char[0];
         }
-        
+        return encode((int) c);
+    }
+    
+    private char[] encode(int c) {
         switch (c) {
             case 0x22: return(ENCODE_QUOT); // (") [&quot;]
             case 0x26: return(ENCODE_AMP);  // (&) [&amp;]
@@ -111,6 +114,16 @@ public class XMLEncoder extends CompiledEncoder {
             case 0x3c: return(ENCODE_LT);   // (<) [&lt;]
             case 0x3e: return(ENCODE_GT);   // (>) [&gt;]
             default: {
+                if (c > 0xffff) {
+                    char ret[] = { '&', '#', 'x',
+                        ENCODE_HEX[c >> 0x10 & 0xf],
+                        ENCODE_HEX[c >> 0xc & 0xf],
+                        ENCODE_HEX[c >> 0x8 & 0xf],
+                        ENCODE_HEX[c >> 0x4 & 0xf],
+                        ENCODE_HEX[c & 0xf], ';'
+                    };
+                    return(ret);
+                }
                 if (c > 0xfff) {
                     char ret[] = { '&', '#', 'x',
                         ENCODE_HEX[c >> 0xc & 0xf],
