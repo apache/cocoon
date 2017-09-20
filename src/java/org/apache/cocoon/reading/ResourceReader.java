@@ -275,17 +275,23 @@ public class ResourceReader extends AbstractReader
         long contentLength = inputSource.getContentLength();
 
         if (byteRange != null) {
+            ByteRange actualByteRange = byteRange;
             String entityLength;
             String entityRange;
             if (contentLength != -1) {
                 entityLength = "" + contentLength;
-                entityRange = byteRange.intersection(new ByteRange(0, contentLength)).toString();
+                actualByteRange = byteRange.intersection(new ByteRange(0, contentLength - 1));
+                entityRange = actualByteRange.toString();
             } else {
                 entityLength = "*";
                 entityRange = byteRange.toString();
             }
 
-            response.setHeader("Content-Range", entityRange + "/" + entityLength);
+            response.setHeader("Content-Range", "bytes " + entityRange + "/" + entityLength);
+            
+            if (actualByteRange.length() != -1) {
+                response.setHeader("Content-Length", String.valueOf(actualByteRange.length()));
+            }
             if (response instanceof HttpResponse) {
                 // Response with status 206 (Partial content)
                 ((HttpResponse)response).setStatus(206);

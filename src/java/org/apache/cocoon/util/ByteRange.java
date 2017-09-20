@@ -67,6 +67,9 @@ final public class ByteRange {
 
     
     public long length() {
+        if (this.start == Long.MIN_VALUE || this.end == Long.MAX_VALUE) {
+            return -1;
+        }
         return this.end - this.start + 1;
     }
 
