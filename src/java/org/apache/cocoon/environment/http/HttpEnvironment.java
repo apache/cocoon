@@ -198,6 +198,19 @@ public class HttpEnvironment extends AbstractEnvironment
     public void setContentLength(int length) {
         this.response.setContentLength(length);
     }
+    
+    public void commitResponse() throws IOException
+    {
+        if (this.secureOutputStream != null) {
+            // COCOOON-2358: for an HEAD request, it is wrong to set the content length to the actual response body size
+            if (this.secureOutputStream.isResettable() && !request.getMethod().equals("HEAD")) {
+                this.setContentLength(this.secureOutputStream.getCount());
+            }
+            this.secureOutputStream.flush();
+        } else if (this.outputStream != null) {
+            this.outputStream.flush();
+        }
+    }
 
     /**
      * Check if the response has been modified since the same
