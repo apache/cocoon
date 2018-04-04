@@ -18,7 +18,7 @@ package org.apache.cocoon.el.objectmodel;
 
 import java.util.Map;
 
-import org.apache.commons.collections.MultiMap;
+import org.apache.cocoon.el.util.MultiMap;
 
 /**
  * ObjectModel is a special {@link Map} that cannot be modified using standard {@link Map} methods, except
@@ -38,7 +38,7 @@ public interface ObjectModel extends Map {
      * @return a {@link MultiMap} that contains all stored values in all context in LIFO-compliant order.
      *         Returned {@link MultiMap} is {@link org.apache.commons.collections.Unmodifiable}.
      */
-    MultiMap getAll();
+    org.apache.cocoon.el.util.MultiMap getAll();
 
     /**
      * Works exactly the same way as {@link Map#put(Object, Object)} but previous value associated to <code>key</code>

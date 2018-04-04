@@ -1,3 +1,13 @@
+This branch tries to implement migration to
+- Spring 4
+- JDK 1.8
+
+as described in 
+https://issues.apache.org/jira/browse/COCOON-2347
+
+
+============================
+
 This is some quick info about the Mavenization (m10n) of Cocoon 2.2.
 
 There are also some Daisy documentation pages about this, for more "stable" information:

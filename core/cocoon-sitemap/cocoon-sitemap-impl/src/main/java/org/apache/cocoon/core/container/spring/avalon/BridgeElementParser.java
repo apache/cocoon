@@ -254,9 +254,8 @@ public class BridgeElementParser extends AbstractElementParser {
             if ( current.getDestroyMethodName() != null ) {
                 beanDef.setDestroyMethodName(current.getDestroyMethodName());
             }
-            if (singleton) {
-                beanDef.setScope(BeanDefinition.SCOPE_SINGLETON);
-            }
+            beanDef.setScope( singleton ? BeanDefinition.SCOPE_SINGLETON : BeanDefinition.SCOPE_PROTOTYPE );
+            
             beanDef.setLazyInit(singleton && current.isLazyInit());
             if ( isSelector ) {
                 beanDef.getConstructorArgumentValues().

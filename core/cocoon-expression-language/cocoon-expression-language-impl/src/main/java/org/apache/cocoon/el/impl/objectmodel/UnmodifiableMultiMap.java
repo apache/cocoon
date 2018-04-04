@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.cocoon.el.util.MultiMap;
 import org.apache.commons.collections.IterableMap;
 import org.apache.commons.collections.MapIterator;
-import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.Unmodifiable;
 import org.apache.commons.collections.collection.UnmodifiableCollection;
 import org.apache.commons.collections.iterators.EntrySetMapIterator;
@@ -103,7 +103,7 @@ public class UnmodifiableMultiMap extends AbstractMapDecorator implements MultiM
         throw new UnsupportedOperationException();
     }
     
-    public Object remove(Object key, Object item) {
+    public boolean remove(Object key, Object item) {
         throw new UnsupportedOperationException();
     }
 
