@@ -18,7 +18,7 @@ package org.apache.cocoon.el.objectmodel;
 
 import java.util.Map;
 
-import org.apache.commons.collections.MultiMap;
+import org.apache.cocoon.el.util.MultiMap;
 
 /**
  * ObjectModel is a special {@link Map} that cannot be modified using standard {@link Map} methods, except

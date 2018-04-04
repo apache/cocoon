@@ -16,6 +16,6 @@
   limitations under the License.
 -->
 <root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-	<date locale="pl_PL">01 styczeń 1979</date>
+	<date locale="de_DE">01 Januar 1979</date>
 	<date locale="sv_SE">01 januari 1979</date>
 </root>
