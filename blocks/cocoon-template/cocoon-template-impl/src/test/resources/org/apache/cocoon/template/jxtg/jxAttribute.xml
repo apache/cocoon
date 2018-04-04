@@ -30,6 +30,6 @@
 		<abc>def</abc>
 	</three>
 	<nestedjx>
-		<jx:attribute name="value"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="pl_PL"/></jx:attribute>
+		<jx:attribute name="value"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="de_DE"/></jx:attribute>
 	</nestedjx>
 </root>
