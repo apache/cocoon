@@ -38,7 +38,7 @@ public interface ObjectModel extends Map {
      * @return a {@link MultiMap} that contains all stored values in all context in LIFO-compliant order.
      *         Returned {@link MultiMap} is {@link org.apache.commons.collections.Unmodifiable}.
      */
-    org.apache.cocoon.el.util.MultiMap getAll();
+    MultiMap getAll();
 
     /**
      * Works exactly the same way as {@link Map#put(Object, Object)} but previous value associated to <code>key</code>
