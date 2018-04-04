@@ -153,6 +153,11 @@ public abstract class AbstractTestCase extends TestCase {
 
         MockWebApplicationContext ctx = new MockWebApplicationContext(this.beanFactory, getContext());
         getContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx);
+        
+        // COCOON-2374
+        // needed to avoid problem with 
+        // java.lang.IllegalStateException: org.apache.cocoon.MockWebApplicationContext@7d898981 has not been refreshed yet
+        ctx.refresh();
     }
 
     protected void createBeanFactory() throws Exception {

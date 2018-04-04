@@ -16,6 +16,6 @@
   limitations under the License.
 -->
 <root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
-	<date locale="pl_PL"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="pl_PL"/></date>
+	<date locale="de_DE"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="de_DE"/></date>
 	<date locale="sv_SE"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="sv_SE"/></date>
 </root>
