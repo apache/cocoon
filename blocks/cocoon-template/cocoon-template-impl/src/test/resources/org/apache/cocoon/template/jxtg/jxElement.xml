@@ -24,7 +24,7 @@
     <jx:element name="ElementWithValue">value</jx:element>
 	<jx:element name="OneFixedValueChildNode"><ChildNode>Test</ChildNode></jx:element>
 	<jx:element name="WithChildGeneratedNode"><ChildNode><jx:out value="${a}"/></ChildNode></jx:element>
-	<jx:element name="${elem}"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="pl_PL"/></jx:element>
+	<jx:element name="${elem}"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="de_DE"/></jx:element>
     <jx:element name="WithAttribute"><jx:attribute name="attribute" value="attr"/></jx:element>	
 	<jx:element name="AttributeAndChildNode">
 	  <jx:attribute name="attribute" value="attr"/>

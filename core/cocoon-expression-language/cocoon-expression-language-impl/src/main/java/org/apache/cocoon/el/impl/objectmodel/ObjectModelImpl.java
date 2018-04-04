@@ -23,15 +23,15 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.apache.cocoon.el.util.MultiMap;
+import org.apache.cocoon.el.util.MultiValueMap;
 import org.apache.cocoon.el.objectmodel.ObjectModel;
 import org.apache.cocoon.el.objectmodel.ObjectModelProvider;
 import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.collections.KeyValue;
-import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.iterators.ReverseListIterator;
 import org.apache.commons.collections.keyvalue.DefaultKeyValue;
 import org.apache.commons.collections.map.AbstractMapDecorator;
-import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;

@@ -272,4 +272,8 @@ public class AvalonBeanPostProcessor extends AbstractLogEnabled
         }
         ContainerUtil.dispose(bean);
     }
+    
+    public boolean requiresDestruction(Object bean) {
+    	return true;
+    }
 }
