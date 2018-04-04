@@ -92,7 +92,7 @@ public class AspectsBeanDefinitionParser extends AbstractElementParser {
             }
         }
         try {
-            beanDef.getConstructorArgumentValues().addIndexedArgumentValue(0, ClassUtils.forName(this.baseClass));
+            beanDef.getConstructorArgumentValues().addIndexedArgumentValue(0, ClassUtils.forName(this.baseClass, getClass().getClassLoader()));
         } catch (ClassNotFoundException e) {
             throw new BeanDefinitionStoreException("Unable to load aspect class: " + this.baseClass, e);
         }
@@ -105,7 +105,7 @@ public class AspectsBeanDefinitionParser extends AbstractElementParser {
 
             List aliases = new ArrayList();
             if (StringUtils.hasLength(nameAttr)) {
-                String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, BeanDefinitionParserDelegate.BEAN_NAME_DELIMITERS);
+                String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, BeanDefinitionParserDelegate.MULTI_VALUE_ATTRIBUTE_DELIMITERS);
                 aliases.addAll(Arrays.asList(nameArr));
             }
 
