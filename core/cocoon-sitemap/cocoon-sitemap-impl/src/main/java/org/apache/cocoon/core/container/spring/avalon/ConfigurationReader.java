@@ -61,7 +61,7 @@ public class ConfigurationReader {
     protected final ConfigurationInfo configInfo;
 
     /** All component configurations. */
-    protected final List componentConfigs = new ArrayList();
+    protected final List<Configuration> componentConfigs = new ArrayList<Configuration>();
 
     /** Is this the root context? */
     protected final boolean isRootContext;
@@ -126,9 +126,9 @@ public class ConfigurationReader {
         if (parentInfo != null) {
             this.configInfo = new ConfigurationInfo(parentInfo);
 
-            final Iterator i = parentInfo.getComponents().values().iterator();
+            final Iterator<ComponentInfo> i = parentInfo.getComponents().values().iterator();
             while (i.hasNext()) {
-                final ComponentInfo current = (ComponentInfo) i.next();
+                final ComponentInfo current = i.next();
                 if (current.isSelector()) {
                     this.configInfo.addRole(current.getRole(), current.copy());
                 }
@@ -218,7 +218,7 @@ public class ConfigurationReader {
      *
      * @param rsrc Resource for the input source
      * @return Input source
-     * @throws Exception if resource URL is not valid or input stream is not available
+     * @throws IOException if resource URL is not valid or input stream is not available
      */
     protected InputSource getInputSource(Resource rsrc)
     throws IOException {
@@ -288,7 +288,7 @@ public class ConfigurationReader {
         this.configInfo.setRootLogger(config.getAttribute("logger", null));
 
         // and load configuration with a empty list of loaded configurations
-        final Set loadedConfigs = new HashSet();
+        final Set<String> loadedConfigs = new HashSet<String>();
         // what is it?
         if ("role-list".equals(config.getName()) || "roles".equals(config.getName())) {
             configureRoles(config);
@@ -321,9 +321,9 @@ public class ConfigurationReader {
         processComponents();
 
         // add roles as components
-        final Iterator i = this.configInfo.getRoles().iterator();
+        final Iterator<ComponentInfo> i = this.configInfo.getRoles().iterator();
         while (i.hasNext()) {
-            final ComponentInfo current = (ComponentInfo) i.next();
+            final ComponentInfo current = i.next();
             if (!current.hasConfiguredLazyInit()) {
                 current.setLazyInit(true);
             }
@@ -334,7 +334,7 @@ public class ConfigurationReader {
 
     protected void parseConfiguration(final Configuration configuration,
                                       String              contextURI,
-                                      Set                 loadedURIs)
+                                      Set<String>                 loadedURIs)
     throws ConfigurationException {
         final Configuration[] configurations = configuration.getChildren();
 
@@ -361,9 +361,9 @@ public class ConfigurationReader {
 
     protected void processComponents()
     throws ConfigurationException {
-        final Iterator i = this.componentConfigs.iterator();
+        final Iterator<Configuration> i = this.componentConfigs.iterator();
         while (i.hasNext()) {
-            final Configuration componentConfig = (Configuration) i.next();
+            final Configuration componentConfig = i.next();
             final String componentName = componentConfig.getName();
 
             // Find the role
@@ -371,7 +371,7 @@ public class ConfigurationReader {
             String alias = null;
             if (role == null) {
                 // Get the role from the role manager if not explicitely specified
-                role = (String) this.configInfo.getShorthands().get(componentName);
+                role = this.configInfo.getShorthands().get(componentName);
                 alias = componentName;
                 if (role == null) {
                     // Unknown role
@@ -434,7 +434,8 @@ public class ConfigurationReader {
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Duplicate component definition for role " + role +
                                       " at " + componentConfig.getLocation() + ". Component " +
-                                      "has already been defined at " + ((ComponentInfo) this.configInfo.getComponents().get(role)).getConfiguration().getLocation());
+                                      "has already been defined at " + 
+                            this.configInfo.getComponents().get(role).getConfiguration().getLocation());
                 }
             }
 
@@ -458,14 +459,15 @@ public class ConfigurationReader {
                     }
                     componentRole += '/';
                     Configuration[] children = info.getConfiguration().getChildren();
-                    final Map hintConfigs = (Map) this.configInfo.getKeyClassNames().get(role);
+                    final Map<String, ComponentInfo> hintConfigs = this.configInfo.getKeyClassNames().get(role);
                     for (int j = 0; j < children.length; j++) {
                         final Configuration current = children[j];
                         final ComponentInfo childInfo = new ComponentInfo();
                         childInfo.fill(current);
                         childInfo.setConfiguration(current);
-                        final ComponentInfo hintInfo = hintConfigs == null ? null
-                                                                           : (ComponentInfo) hintConfigs.get(current.getName());
+                        final ComponentInfo hintInfo = hintConfigs == null 
+                                ? null
+                                : hintConfigs.get(current.getName());
                         if (current.getAttribute(classAttribute, null) != null || hintInfo == null) {
                             childInfo.setComponentClassName(current.getAttribute(classAttribute));
                         } else {
@@ -488,7 +490,7 @@ public class ConfigurationReader {
      * @throws ConfigurationException
      */
     protected void handleInclude(final String        contextURI,
-                                 final Set           loadedURIs,
+                                 final Set<String>           loadedURIs,
                                  final Configuration includeStatement)
     throws ConfigurationException {
         final String includeURI = includeStatement.getAttribute("src", null);
@@ -526,7 +528,8 @@ public class ConfigurationReader {
             if (load) {
                 final String pattern = includeStatement.getAttribute("pattern", null);
                 try {
-                    Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
+                    Resource[] resources = this.resolver.getResources(
+                            this.getUrl(directoryURI + '/' + pattern, contextURI));
                     if (resources != null) {
                         Arrays.sort(resources, ResourceUtils.getResourceComparator());
                         for (int i = 0; i < resources.length; i++) {
@@ -534,14 +537,15 @@ public class ConfigurationReader {
                         }
                     }
                 } catch (Exception e) {
-                    throw new ConfigurationException("Cannot load from directory '" + directoryURI + "' at " + includeStatement.getLocation(), e);
+                    throw new ConfigurationException("Cannot load from directory '" + directoryURI 
+                            + "' at " + includeStatement.getLocation(), e);
                 }
             }
         }
     }
 
     protected void loadURI(final Resource      src,
-                           final Set           loadedURIs,
+                           final Set<String>   loadedURIs,
                            final Configuration includeStatement)
     throws ConfigurationException, IOException {
         // If already loaded: do nothing
@@ -612,7 +616,8 @@ public class ConfigurationReader {
             if ( dirResource.exists() ) {
                 final String pattern = includeStatement.getAttribute("pattern", null);
                 try {
-                    Resource[] resources = this.resolver.getResources(this.getUrl(directoryURI + '/' + pattern, contextURI));
+                    Resource[] resources = this.resolver.getResources(
+                            this.getUrl(directoryURI + '/' + pattern, contextURI));
                     if ( resources != null ) {
                         Arrays.sort(resources, ResourceUtils.getResourceComparator());
                         for(int i=0; i < resources.length; i++) {
@@ -652,7 +657,8 @@ public class ConfigurationReader {
                 continue;
             }
             if (!"role".equals(role.getName())) {
-                throw new ConfigurationException("Unexpected '" + role.getName() + "' element at " + role.getLocation());
+                throw new ConfigurationException(
+                        "Unexpected '" + role.getName() + "' element at " + role.getLocation());
             }
 
             final String roleName = role.getAttribute("name");
@@ -682,7 +688,8 @@ public class ConfigurationReader {
                 } else {
                     // Check that it's consistent with the existing info
                     if (!defaultClassName.equals(info.getComponentClassName())) {
-                        throw new ConfigurationException("Invalid redeclaration: default class already set to " + info.getComponentClassName() +
+                        throw new ConfigurationException(
+                                "Invalid redeclaration: default class already set to " + info.getComponentClassName() +
                                                          " for role " + roleName + " at " + role.getLocation());
                     }
                     //FIXME: should check also other ServiceInfo members
@@ -691,9 +698,9 @@ public class ConfigurationReader {
 
             final Configuration[] keys = role.getChildren("hint");
             if (keys.length > 0) {
-                Map keyMap = (Map) this.configInfo.getKeyClassNames().get(roleName);
+                Map<String, ComponentInfo> keyMap = this.configInfo.getKeyClassNames().get(roleName);
                 if (keyMap == null) {
-                    keyMap = new HashMap();
+                    keyMap = new HashMap<String, ComponentInfo>();
                     this.configInfo.getKeyClassNames().put(roleName, keyMap);
                 }
 
@@ -703,7 +710,7 @@ public class ConfigurationReader {
                     final String shortHand = key.getAttribute("shorthand").trim();
                     final String className = key.getAttribute("class").trim();
 
-                    ComponentInfo info = (ComponentInfo) keyMap.get(shortHand);
+                    ComponentInfo info = keyMap.get(shortHand);
                     if (info == null) {
                         info = new ComponentInfo();
                         info.setComponentClassName(className);
@@ -714,7 +721,8 @@ public class ConfigurationReader {
                     } else {
                         // Check that it's consistent with the existing info
                         if (!className.equals(info.getComponentClassName())) {
-                            throw new ConfigurationException("Invalid redeclaration: class already set to " + info.getComponentClassName() +
+                            throw new ConfigurationException(
+                                    "Invalid redeclaration: class already set to " + info.getComponentClassName() +
                                                              " for hint " + shortHand + " at " + key.getLocation());
                         }
                         //FIXME: should check also other ServiceInfo members

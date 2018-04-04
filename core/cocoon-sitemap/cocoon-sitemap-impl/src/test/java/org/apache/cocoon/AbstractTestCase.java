@@ -25,7 +25,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -42,6 +41,8 @@ import org.apache.cocoon.spring.configurator.impl.ServletContextFactoryBean;
 import org.apache.cocoon.spring.configurator.impl.SettingsBeanFactoryPostProcessor;
 
 import junit.framework.TestCase;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 
 /**
  * This class sets up all necessary environment information to implement own test cases.
@@ -52,15 +53,17 @@ import junit.framework.TestCase;
 public abstract class AbstractTestCase extends TestCase {
 
     private MockRequest request;
+
     private MockResponse response;
+
     private MockContext context;
-    private Map objectmodel;
+
+    private Map<String, Object> objectmodel;
 
     private MockRequestAttributes requestAttributes;
 
     /** The bean factory. */
     private DefaultListableBeanFactory beanFactory;
-
 
     public final MockRequest getRequest() {
         return this.request;
@@ -74,7 +77,7 @@ public abstract class AbstractTestCase extends TestCase {
         return this.context;
     }
 
-    public final Map getObjectModel() {
+    public final Map<String, Object> getObjectModel() {
         return this.objectmodel;
     }
 
@@ -86,6 +89,7 @@ public abstract class AbstractTestCase extends TestCase {
     /**
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -111,6 +115,7 @@ public abstract class AbstractTestCase extends TestCase {
     /**
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         if (this.requestAttributes != null) {
             this.requestAttributes.requestCompleted();
@@ -148,14 +153,20 @@ public abstract class AbstractTestCase extends TestCase {
 
         MockWebApplicationContext ctx = new MockWebApplicationContext(this.beanFactory, getContext());
         getContext().setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx);
+        
+        // COCOON-2374
+        // needed to avoid problem with 
+        // java.lang.IllegalStateException: org.apache.cocoon.MockWebApplicationContext@7d898981 has not been refreshed yet
+        ctx.refresh();
     }
 
     protected void createBeanFactory() throws Exception {
+        this.beanFactory = new DefaultListableBeanFactory();
+
         ClassPathResource cpr = new ClassPathResource(getClass().getName().replace('.', '/') + ".spring.xml");
         if (cpr.exists()) {
-            this.beanFactory = new XmlBeanFactory(cpr);
-        } else {
-            this.beanFactory = new DefaultListableBeanFactory();
+            XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this.beanFactory);
+            reader.loadBeanDefinitions(cpr);
         }
 
         File base = new File("target");
@@ -178,7 +189,7 @@ public abstract class AbstractTestCase extends TestCase {
     protected void addSettings() {
         RootBeanDefinition def = new RootBeanDefinition();
         def.setBeanClass(SettingsBeanFactoryPostProcessor.class);
-        def.setSingleton(true);
+        def.setScope(BeanDefinition.SCOPE_SINGLETON);
         def.setLazyInit(false);
         def.setInitMethodName("init");
         BeanDefinitionHolder holder = new BeanDefinitionHolder(def, Settings.ROLE);
@@ -188,7 +199,7 @@ public abstract class AbstractTestCase extends TestCase {
     protected void addProcessingInfoProvider() {
         RootBeanDefinition def = new RootBeanDefinition();
         def.setBeanClass(MockProcessInfoProvider.class);
-        def.setSingleton(true);
+        def.setScope(BeanDefinition.SCOPE_SINGLETON);
         def.setLazyInit(false);
         def.getPropertyValues().addPropertyValue("objectModel", getObjectModel());
         def.getPropertyValues().addPropertyValue("request", new MockProcessInfoProvider.StubRequest(getRequest()));
@@ -212,8 +223,8 @@ public abstract class AbstractTestCase extends TestCase {
         return new MockResponse();
     }
 
-    protected Map createObjectModel() {
-        return new HashMap();
+    protected Map<String, Object> createObjectModel() {
+        return new HashMap<String, Object>();
     }
 
     protected MockContext createContext() {

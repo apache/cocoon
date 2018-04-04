@@ -26,12 +26,6 @@ import java.util.Map;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
-import org.springframework.beans.factory.support.*;
-import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.core.io.ResourceLoader;
 
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
@@ -48,6 +42,16 @@ import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.spring.configurator.impl.AbstractElementParser;
 import org.apache.cocoon.transformation.Transformer;
+
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionReader;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.core.io.ResourceLoader;
 
 import org.w3c.dom.Element;
 
@@ -68,6 +72,7 @@ public class BridgeElementParser extends AbstractElementParser {
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(Element, ParserContext)
      */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         final ResourceLoader resourceLoader = parserContext.getReaderContext().getReader().getResourceLoader();
 
@@ -118,12 +123,12 @@ public class BridgeElementParser extends AbstractElementParser {
         addLogger(registry, info.getRootLogger());
 
         // handle includes of spring configurations
-        final Iterator includeIter = info.getImports().iterator();
+        final Iterator<String> includeIter = info.getImports().iterator();
         while ( includeIter.hasNext() ) {
             if ( reader == null ) {
                 throw new Exception("Import of spring configuration files not supported. (Reader is null)");
             }
-            final String uri = (String)includeIter.next();
+            final String uri = includeIter.next();
             reader.loadBeanDefinitions(resourceLoader.getResource(uri));
         }
 
@@ -135,18 +140,24 @@ public class BridgeElementParser extends AbstractElementParser {
 
         // and finally add avalon bean post processor
         final RootBeanDefinition beanDef = createBeanDefinition(AvalonBeanPostProcessor.class, "init", true);
-        beanDef.getPropertyValues().addPropertyValue("context", new RuntimeBeanReference(AvalonUtils.CONTEXT_ROLE));
-        beanDef.getPropertyValues().addPropertyValue("configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
-        beanDef.getPropertyValues().addPropertyValue("resourceLoader", resourceLoader);
-        beanDef.getPropertyValues().addPropertyValue("location", this.getConfigurationLocation());
+        beanDef.getPropertyValues().addPropertyValue(
+                "context", new RuntimeBeanReference(AvalonUtils.CONTEXT_ROLE));
+        beanDef.getPropertyValues().addPropertyValue(
+                "configurationInfo", new RuntimeBeanReference(ConfigurationInfo.class.getName()));
+        beanDef.getPropertyValues().addPropertyValue(
+                "resourceLoader", resourceLoader);
+        beanDef.getPropertyValues().addPropertyValue(
+                "location", this.getConfigurationLocation());
         this.register(beanDef, AvalonBeanPostProcessor.class.getName(), registry);
 
         final RootBeanDefinition resolverDef = new RootBeanDefinition();
         resolverDef.setBeanClassName("org.apache.cocoon.components.treeprocessor.variables.PreparedVariableResolver");
         resolverDef.setLazyInit(false);
         resolverDef.setScope("prototype");
-        resolverDef.getPropertyValues().addPropertyValue("manager", new RuntimeBeanReference("org.apache.avalon.framework.service.ServiceManager"));
-        this.register(resolverDef, "org.apache.cocoon.components.treeprocessor.variables.VariableResolver", null, registry);
+        resolverDef.getPropertyValues().addPropertyValue(
+                "manager", new RuntimeBeanReference("org.apache.avalon.framework.service.ServiceManager"));
+        this.register(
+                resolverDef, "org.apache.cocoon.components.treeprocessor.variables.VariableResolver", null, registry);
     }
 
     protected ConfigurationInfo readConfiguration(String location, ResourceLoader resourceLoader)
@@ -181,14 +192,14 @@ public class BridgeElementParser extends AbstractElementParser {
     public void createConfig(ConfigurationInfo      info,
                              BeanDefinitionRegistry registry) 
     throws Exception {
-        final Map components = info.getComponents();
-        final List pooledRoles = new ArrayList();
+        final Map<String, ComponentInfo> components = info.getComponents();
+        final List<String> pooledRoles = new ArrayList<String>();
 
         // Iterate over all definitions
-        final Iterator i = components.entrySet().iterator();
+        final Iterator<Map.Entry<String, ComponentInfo>> i = components.entrySet().iterator();
         while ( i.hasNext() ) {
-            final Map.Entry entry = (Map.Entry)i.next();
-            final ComponentInfo current = (ComponentInfo)entry.getValue();
+            Map.Entry<String, ComponentInfo> entry = i.next();
+            final ComponentInfo current = entry.getValue();
             final String role = current.getRole();
     
             String className = current.getComponentClassName();
@@ -213,9 +224,13 @@ public class BridgeElementParser extends AbstractElementParser {
                             current.setModel(ComponentInfo.MODEL_PRIMITIVE);
                         }
                     } catch (NoClassDefFoundError ncdfe) {
-                        throw new ConfigurationException("Unable to create class for component with role " + current.getRole() + " with class: " + className, ncdfe);
+                        throw new ConfigurationException(
+                                "Unable to create class for component with role " + current.getRole() 
+                                        + " with class: " + className, ncdfe);
                     } catch (ClassNotFoundException cnfe) {
-                        throw new ConfigurationException("Unable to create class for component with role " + current.getRole() + " with class: " + className, cnfe);
+                        throw new ConfigurationException(
+                                "Unable to create class for component with role " + current.getRole() 
+                                        + " with class: " + className, cnfe);
                     }
                 }
                 if ( current.getModel() == ComponentInfo.MODEL_POOLED ) {
@@ -239,10 +254,13 @@ public class BridgeElementParser extends AbstractElementParser {
             if ( current.getDestroyMethodName() != null ) {
                 beanDef.setDestroyMethodName(current.getDestroyMethodName());
             }
-            beanDef.setSingleton(singleton);
+            
+            beanDef.setScope( singleton ? BeanDefinition.SCOPE_SINGLETON : BeanDefinition.SCOPE_PROTOTYPE );
+            
             beanDef.setLazyInit(singleton && current.isLazyInit());
             if ( isSelector ) {
-                beanDef.getConstructorArgumentValues().addGenericArgumentValue(role.substring(0, role.length()-8), "java.lang.String");
+                beanDef.getConstructorArgumentValues().
+                        addGenericArgumentValue(role.substring(0, role.length()-8), "java.lang.String");
                 if ( current.getDefaultValue() != null ) {
                     beanDef.getPropertyValues().addPropertyValue("default", current.getDefaultValue());
                 }
@@ -253,12 +271,14 @@ public class BridgeElementParser extends AbstractElementParser {
                 // add the factory for poolables
                 final RootBeanDefinition poolableBeanDef = new RootBeanDefinition();
                 poolableBeanDef.setBeanClass(PoolableFactoryBean.class);
-                poolableBeanDef.setSingleton(true);
+                poolableBeanDef.setScope(BeanDefinition.SCOPE_SINGLETON);
                 poolableBeanDef.setLazyInit(false);
                 poolableBeanDef.setInitMethodName("initialize");
                 poolableBeanDef.setDestroyMethodName("dispose");
-                poolableBeanDef.getConstructorArgumentValues().addIndexedArgumentValue(0, beanName, "java.lang.String");
-                poolableBeanDef.getConstructorArgumentValues().addIndexedArgumentValue(1, className, "java.lang.String");
+                poolableBeanDef.getConstructorArgumentValues().
+                        addIndexedArgumentValue(0, beanName, "java.lang.String");
+                poolableBeanDef.getConstructorArgumentValues().
+                        addIndexedArgumentValue(1, className, "java.lang.String");
                 if ( current.getConfiguration() != null ) {
                     // we treat poolMax as a string to allow property replacements
                     final String poolMax = current.getConfiguration().getAttribute("pool-max", null);
@@ -268,10 +288,12 @@ public class BridgeElementParser extends AbstractElementParser {
                     }
                 }
                 if ( current.getPoolInMethodName() != null ) {
-                    poolableBeanDef.getPropertyValues().addPropertyValue("poolInMethodName", current.getPoolInMethodName());
+                    poolableBeanDef.getPropertyValues().
+                            addPropertyValue("poolInMethodName", current.getPoolInMethodName());
                 }
                 if ( current.getPoolOutMethodName() != null ) {
-                    poolableBeanDef.getPropertyValues().addPropertyValue("poolOutMethodName", current.getPoolOutMethodName());
+                    poolableBeanDef.getPropertyValues().
+                            addPropertyValue("poolOutMethodName", current.getPoolOutMethodName());
                 }
                 this.register(poolableBeanDef, role, registry);
                 pooledRoles.add(role);
@@ -279,10 +301,10 @@ public class BridgeElementParser extends AbstractElementParser {
         }
 
         // now change roles for pooled components (from {role} to {role}Pooled
-        final Iterator prI = pooledRoles.iterator();
+        final Iterator<String> prI = pooledRoles.iterator();
         while ( prI.hasNext() ) {
-            final String role = (String)prI.next();
-            final Object pooledInfo = components.remove(role);
+            final String role = prI.next();
+            final ComponentInfo pooledInfo = components.remove(role);
             components.put(role + "Pooled", pooledInfo);
         }
     }
@@ -307,7 +329,7 @@ public class BridgeElementParser extends AbstractElementParser {
         if (!registry.containsBeanDefinition(PipelineComponentInfo.ROLE)) {
             final RootBeanDefinition beanDef = new RootBeanDefinition();
             beanDef.setBeanClass(PipelineComponentInfoFactoryBean.class);
-            beanDef.setSingleton(true);
+            beanDef.setScope(BeanDefinition.SCOPE_SINGLETON);
             beanDef.setLazyInit(false);
             beanDef.setInitMethodName("init");
             this.register(beanDef, PipelineComponentInfo.ROLE, registry);
@@ -315,7 +337,7 @@ public class BridgeElementParser extends AbstractElementParser {
         BeanDefinitionBuilder initDefBuilder =
             BeanDefinitionBuilder.rootBeanDefinition(PipelineComponentInfoInitializer.class);
         initDefBuilder.addPropertyReference("info", PipelineComponentInfo.ROLE);
-        initDefBuilder.setSingleton(true);
+        initDefBuilder.setScope(BeanDefinition.SCOPE_SINGLETON);
         initDefBuilder.setLazyInit(false);
         initDefBuilder.setInitMethodName("init");
         initDefBuilder.addPropertyValue("data", info.getData());
@@ -324,7 +346,7 @@ public class BridgeElementParser extends AbstractElementParser {
 
         final RootBeanDefinition ciBeanDef = new RootBeanDefinition();
         ciBeanDef.setBeanClass(ConfigurationInfoFactoryBean.class);
-        ciBeanDef.setSingleton(true);
+        ciBeanDef.setScope(BeanDefinition.SCOPE_SINGLETON);
         ciBeanDef.setLazyInit(false);
         ciBeanDef.getPropertyValues().addPropertyValue("configurationInfo", configInfo);
         this.register(ciBeanDef, ConfigurationInfo.class.getName(), registry);
@@ -333,7 +355,7 @@ public class BridgeElementParser extends AbstractElementParser {
     protected static void prepareSelector(PipelineComponentInfo info,
                                           ConfigurationInfo configInfo,
                                           String category) {
-        final ComponentInfo component = (ComponentInfo) configInfo.getComponents().get(category + "Selector");
+        final ComponentInfo component = configInfo.getComponents().get(category + "Selector");
         if (component != null) {
             info.setDefaultType(category, component.getDefaultValue());
         }

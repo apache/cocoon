@@ -21,24 +21,24 @@ import java.util.Map;
 public interface PipelineComponentScopeHolder {
     //FIXME: This interface needs redesign
 
-    public Map getBeans();
+    public Map<String, Object> getBeans();
 
-    public void setBeans(Map beans);
-    
-    public Map getParentBeans();
-    
-    public void setParentBeans(Map parentBeans);
+    public void setBeans(Map<String, Object> beans);
 
-    public Map getDestructionCallbacks();
+    public Map<String, Object> getParentBeans();
 
-    public void setDestructionCallbacks(Map destructionCallbacks);
-    
-    public Map getParentDestructionCallbacks();
+    public void setParentBeans(Map<String, Object> parentBeans);
 
-    public void setParentDestructionCallbacks(Map destructionCallbacks);
-    
+    public Map<String, Object> getDestructionCallbacks();
+
+    public void setDestructionCallbacks(Map<String, Object> destructionCallbacks);
+
+    public Map<String, Object> getParentDestructionCallbacks();
+
+    public void setParentDestructionCallbacks(Map<String, Object> destructionCallbacks);
+
     public void setInScope(boolean inScope);
-    
+
     public boolean getInScope();
 
 }

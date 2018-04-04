@@ -20,7 +20,7 @@
 	<ElementWithValue>value</ElementWithValue>
 	<OneFixedValueChildNode><ChildNode>Test</ChildNode></OneFixedValueChildNode>	
 	<WithChildGeneratedNode><ChildNode>dd</ChildNode></WithChildGeneratedNode>	
-	<DynamicElement>01 styczeń 1979</DynamicElement>	
+	<DynamicElement>01 Januar 1979</DynamicElement>	
 	<WithAttribute attribute="attr"/>
 	<AttributeAndChildNode attribute="attr"><ChildNode>A</ChildNode></AttributeAndChildNode>
 	<MixedContent attribute="attr">A<B/></MixedContent>

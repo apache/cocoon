@@ -36,18 +36,20 @@ import org.springframework.core.io.Resource;
 public class SourceResource implements Resource {
 
     protected Source source;
-    protected SourceResolver resolver;
-    protected boolean open;
 
+    protected SourceResolver resolver;
+
+    protected boolean open;
 
     public SourceResource(Source s, SourceResolver r) {
         this.source = s;
-        this.resolver =r;
+        this.resolver = r;
     }
 
     /**
      * @see org.springframework.core.io.InputStreamSource#getInputStream()
      */
+    @Override
     public InputStream getInputStream() throws IOException {
         this.open = true;
         return new SourceIOInputStream(this.resolver, this.source);
@@ -56,14 +58,17 @@ public class SourceResource implements Resource {
     /**
      * @see org.springframework.core.io.Resource#createRelative(java.lang.String)
      */
+    @Override
     public Resource createRelative(String uri) throws IOException {
         int pos = this.source.getURI().lastIndexOf('/');
-        return new SourceResource(this.resolver.resolveURI(uri, this.source.getURI().substring(0, pos), null), this.resolver);
+        return new SourceResource(
+                this.resolver.resolveURI(uri, this.source.getURI().substring(0, pos), null), this.resolver);
     }
 
     /**
      * @see org.springframework.core.io.Resource#exists()
      */
+    @Override
     public boolean exists() {
         return this.source.exists();
     }
@@ -71,6 +76,7 @@ public class SourceResource implements Resource {
     /**
      * @see org.springframework.core.io.Resource#getDescription()
      */
+    @Override
     public String getDescription() {
         return "Source: " + this.source;
     }
@@ -78,6 +84,7 @@ public class SourceResource implements Resource {
     /**
      * @see org.springframework.core.io.Resource#getFile()
      */
+    @Override
     public File getFile() throws IOException {
         return SourceUtil.getFile(this.source);
     }
@@ -85,6 +92,7 @@ public class SourceResource implements Resource {
     /**
      * @see org.springframework.core.io.Resource#getFilename()
      */
+    @Override
     public String getFilename() {
         int pos = this.source.getURI().lastIndexOf('/');
         return this.source.getURI().substring(pos + 1);
@@ -93,6 +101,7 @@ public class SourceResource implements Resource {
     /**
      * @see org.springframework.core.io.Resource#getURL()
      */
+    @Override
     public URL getURL() throws IOException {
         return new URL(this.source.getURI());
     }
@@ -104,15 +113,17 @@ public class SourceResource implements Resource {
     /**
      * @see org.springframework.core.io.Resource#isOpen()
      */
+    @Override
     public boolean isOpen() {
         return this.open;
     }
+
+    @Override
     public URI getURI() throws IOException {
         try {
             return new URI(this.source.getURI());
         } catch (URISyntaxException e) {
-            IOException ioe = new IOException("Exception because of the URI syntax.");
-            ioe.initCause(e);
+            IOException ioe = new IOException("Exception because of the URI syntax.", e);
             throw ioe;
         }
     }
@@ -120,12 +131,19 @@ public class SourceResource implements Resource {
     /**
      * @see org.springframework.core.io.Resource#isReadable()
      */
+    @Override
     public boolean isReadable() {
         return this.source.exists();
     }
 
-	public long lastModified() throws IOException {
-		return this.source.getLastModified();
-	}
+    @Override
+    public long lastModified() throws IOException {
+        return this.source.getLastModified();
+    }
+
+    @Override
+    public long contentLength() throws IOException {
+        return this.source.getContentLength();
+    }
 
 }
