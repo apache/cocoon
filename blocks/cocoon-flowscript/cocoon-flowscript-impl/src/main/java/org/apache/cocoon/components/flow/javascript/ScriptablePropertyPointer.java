@@ -160,7 +160,7 @@ public class ScriptablePropertyPointer extends DynamicPropertyPointer {
         return buffer.toString();
     }
 
-    private String escape(String string){
+    protected String escape(String string){
         int index = string.indexOf('\'');
         while (index != -1){
             string = string.substring(0, index) + "&apos;" + string.substring(index + 1);
