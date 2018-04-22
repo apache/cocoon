@@ -258,7 +258,7 @@ public class DateSelector extends AbstractSwitchSelector
         }
         // let SelectorContext do the work
         DateSelectorContext csc = (DateSelectorContext)selectorContext;
-        return csc.select(expression);
+        return csc.contains(expression);
     }
     
     /**
@@ -375,7 +375,7 @@ public class DateSelector extends AbstractSwitchSelector
          * @param expression a symbolic name which may match member of set
          * @return true iff expression is member of set
          */
-        public boolean select( String expression ) {
+        public boolean contains( String expression ) {
             return this.set.contains( expression );
         }
     }
