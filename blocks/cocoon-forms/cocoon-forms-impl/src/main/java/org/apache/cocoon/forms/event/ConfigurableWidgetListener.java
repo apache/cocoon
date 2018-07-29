@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.event;
 import org.w3c.dom.Element;
 
 /**
- * A {@link WidgetListener} that can recieve a configuration {@link Element}
+ * A {@link WidgetListener} that can receive a configuration {@link Element}
  * 
  * @version $Id$
  */

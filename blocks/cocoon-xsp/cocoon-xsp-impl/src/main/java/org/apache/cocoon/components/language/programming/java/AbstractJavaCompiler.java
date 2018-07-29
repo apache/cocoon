@@ -63,7 +63,7 @@ public abstract class AbstractJavaCompiler extends AbstractLogEnabled
     protected String encoding;
 
     /**
-     * The version of the JVM for wich the code was written.
+     * The version of the JVM for which the code was written.
      * i.e: 130 = Java 1.3, 140 = Java 1.4 and 150 = Java 1.5
      */
     protected int compilerComplianceLevel;
