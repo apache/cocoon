@@ -145,7 +145,7 @@ import java.util.StringTokenizer;
  *   <li><i>translations/client/</i><strong>messages</strong>_<i>en</i>_<i>AU</i>.xml
  *   <li><i>translations/</i><strong>messages</strong>_<i>en</i>_<i>AU</i>.xml
  *   <li><i>translations/client/</i><strong>messages</strong>_<i>en</i>.xml
- *   <li><i>translations/</i><strong>messages</strong>_<i>en</i.xml
+ *   <li><i>translations/</i><strong>messages</strong>_<i>en</i>.xml
  *   <li><i>translations/client/</i><strong>messages</strong>.xml
  *   <li><i>translations/</i><strong>messages</strong>.xml
  * </ul>

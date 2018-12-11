@@ -56,7 +56,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
     /**
      * Root directory to all bundle names
      */
-    private String directory;
+    protected String directory;
 
     /**
      * Reload check interval in milliseconds.
@@ -64,7 +64,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
      * disable reloads and <code>0</code> to check for modifications
      * on each catalogue request.
      */
-    private long interval;
+    protected long interval;
 
     /**
      * Service Manager
@@ -258,7 +258,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
 
                     // Create this bundle (if source exists) and pass parent to it.
                     final String sourceURI = getSourceURI(directories[index - 1], name, locale);
-                    bundle = _create(sourceURI, locale, parent);
+                    bundle = create(sourceURI, locale, parent);
                     updateCache(cacheKey, bundle);
                 }
             }
@@ -277,7 +277,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
      * @param parent      parent bundle, if any
      * @return            the bundle
      */
-    private XMLResourceBundle _create(String sourceURI,
+    protected XMLResourceBundle create(String sourceURI,
                                       Locale locale,
                                       XMLResourceBundle parent) {
         if (getLogger().isDebugEnabled()) {
@@ -286,7 +286,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
 
         XMLResourceBundle bundle = new XMLResourceBundle(sourceURI, locale, parent);
         bundle.enableLogging(getLogger());
-        bundle.reload(this.resolver, this.interval);
+        bundle.reload(this.manager, this.resolver, this.interval);
         return bundle;
     }
 
@@ -411,7 +411,7 @@ public class XMLResourceBundleFactory extends AbstractLogEnabled
         if (bundle != null && this.interval != -1) {
             // Reload this bundle and all parent bundles, as necessary
             for (XMLResourceBundle b = bundle; b != null; b = (XMLResourceBundle) b.parent) {
-                b.reload(this.resolver, this.interval);
+                b.reload(this.manager, this.resolver, this.interval);
             }
         }
 

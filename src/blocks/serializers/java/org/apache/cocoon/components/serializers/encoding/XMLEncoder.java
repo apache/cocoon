@@ -31,6 +31,8 @@ public class XMLEncoder extends CompiledEncoder {
     private static final char ENCODE_LT[]   = "&lt;".toCharArray();
     private static final char ENCODE_GT[]   = "&gt;".toCharArray();
 
+    private Character highSurrogate = null;
+    
     /**
      * Create a new instance of this <code>XMLEncoder</code>.
      */
@@ -46,6 +48,10 @@ public class XMLEncoder extends CompiledEncoder {
      */
     protected XMLEncoder(String name) {
         super(name);
+    }
+    
+    public void reset() {
+        this.highSurrogate = null;
     }
     
     /**
@@ -86,6 +92,21 @@ public class XMLEncoder extends CompiledEncoder {
      * specified character.
      */
     public char[] encode(char c) {
+        if (highSurrogate != null) {
+            if (!Character.isLowSurrogate(c)) {
+                throw new IllegalArgumentException("Expected low surrogate char");
+            }
+            int codePoint = Character.toCodePoint(highSurrogate.charValue(), c);
+            highSurrogate = null;
+            return encode(codePoint);
+        } else if (Character.isHighSurrogate(c)) {
+            highSurrogate = Character.valueOf(c);
+            return new char[0];
+        }
+        return encode((int) c);
+    }
+    
+    private char[] encode(int c) {
         switch (c) {
             case 0x22: return(ENCODE_QUOT); // (") [&quot;]
             case 0x26: return(ENCODE_AMP);  // (&) [&amp;]
@@ -93,6 +114,16 @@ public class XMLEncoder extends CompiledEncoder {
             case 0x3c: return(ENCODE_LT);   // (<) [&lt;]
             case 0x3e: return(ENCODE_GT);   // (>) [&gt;]
             default: {
+                if (c > 0xffff) {
+                    char ret[] = { '&', '#', 'x',
+                        ENCODE_HEX[c >> 0x10 & 0xf],
+                        ENCODE_HEX[c >> 0xc & 0xf],
+                        ENCODE_HEX[c >> 0x8 & 0xf],
+                        ENCODE_HEX[c >> 0x4 & 0xf],
+                        ENCODE_HEX[c & 0xf], ';'
+                    };
+                    return(ret);
+                }
                 if (c > 0xfff) {
                     char ret[] = { '&', '#', 'x',
                         ENCODE_HEX[c >> 0xc & 0xf],

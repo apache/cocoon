@@ -23,6 +23,17 @@ chmod u+x ./tools/bin/ant
 S=":";
 case "`uname`" in
    CYGWIN*) S=";" ;;
+   Darwin*) darwin=true
+           if [ -z "$JAVA_HOME" ] ; then
+             if [ -x '/usr/libexec/java_home' ] ; then
+               JAVA_HOME=`/usr/libexec/java_home`
+             elif [ -d "/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home" ]; then
+               JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home
+             else
+               JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
+             fi
+           fi
+           ;;
 esac
 
 # ----- Ignore system CLASSPATH variable

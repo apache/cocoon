@@ -28,7 +28,7 @@
     <menu-item label="Features" href="features.html"/>
     <external label="News" href="http://cocoon.apache.org/news/"/>
     <menu-item label="License" href="license.html"/>
-    <external label="Download" href="http://cocoon.apache.org/mirror.cgi"/>
+    <external label="Download" href="http://cocoon.apache.org/mirror.html"/>
   </menu>
 
   <menu label="Documentation">
@@ -64,7 +64,7 @@
   <menu label="Project">
     <external label="Bug Database" href="http://issues.apache.org/jira/browse/COCOON"/>
     <external label="Code Repository" href="http://svn.apache.org/viewcvs.cgi/cocoon/branches/BRANCH_2_1_X/?root=Apache-SVN"/>
-    <external label="Dev Snapshots" href="http://cocoon.apache.org/mirror.cgi#nightly"/>
+    <external label="Dev Snapshots" href="http://cocoon.apache.org/mirror.html#nightly"/>
   </menu>
 
   <menu label="Links">
