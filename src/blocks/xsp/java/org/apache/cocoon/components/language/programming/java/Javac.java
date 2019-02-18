@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,14 +20,15 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import org.apache.cocoon.components.language.programming.CompilerError;
-import org.apache.commons.lang.SystemUtils;
+
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 
 /**
  * This class wraps the Sun's Javac Compiler.
@@ -50,17 +51,13 @@ public class Javac extends AbstractJavaCompiler {
    * @exception IOException If an error occurs during compilation
    */
   public boolean compile() throws IOException {
-      
+
     ByteArrayOutputStream err = new ByteArrayOutputStream();
-    
-    boolean result;
-    if (!SystemUtils.IS_JAVA_1_3) { // For Java 1.4 and 1.5
-        PrintWriter pw = new PrintWriter(err);
-        result = com.sun.tools.javac.Main.compile(toStringArray(fillArguments(new ArrayList())), pw) == 0;
-    } else {
-        sun.tools.javac.Main compiler = new sun.tools.javac.Main(err, "javac");
-        result = compiler.compile(toStringArray(fillArguments(new ArrayList())));
-    }
+    String[] args = toStringArray(fillArguments(new ArrayList<String>()));
+
+    JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
+    int rc = javac.run(null, null, err, args);
+    boolean result = rc == 0;
     this.errors = new ByteArrayInputStream(err.toByteArray());
     return result;
   }
@@ -73,16 +70,14 @@ public class Javac extends AbstractJavaCompiler {
    * @return The list of compiler error messages
    * @exception IOException If an error occurs during message collection
    */
-  protected List parseStream(BufferedReader input) throws IOException {
-    List errors = new ArrayList();
-    String line = null;
-    StringBuffer buffer = null;
+  protected List<CompilerError> parseStream(BufferedReader input) throws IOException {
+    List<CompilerError> errors = new ArrayList<CompilerError>();
 
     while (true) {
-      // cleanup the buffer
-      buffer = new StringBuffer(); // this is quicker than clearing it
+      StringBuilder buffer = new StringBuilder();
 
       // most errors terminate with the '^' char
+      String line;
       do {
         if ((line = input.readLine()) == null) {
             if (buffer.length() > 0) {
@@ -110,7 +105,8 @@ public class Javac extends AbstractJavaCompiler {
     StringTokenizer tokens = new StringTokenizer(error, ":");
     try {
       String file = tokens.nextToken();
-      if (file.length() == 1) file = new StringBuffer(file).append(":").append(tokens.nextToken()).toString();
+      if (file.length() == 1)
+        file = file + ":" + tokens.nextToken();
       int line = Integer.parseInt(tokens.nextToken());
 
       String message = tokens.nextToken("\n").substring(1);
