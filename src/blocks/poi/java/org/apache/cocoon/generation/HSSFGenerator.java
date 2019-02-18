@@ -170,7 +170,7 @@ public class HSSFGenerator extends AbstractGenerator
                 while (cells.hasNext()) {
                     final HSSFCell cell = (HSSFCell) cells.next();
                     attribute("Row", Integer.toString(row.getRowNum()));
-                    attribute("Col", Short.toString(cell.getCellNum()));
+                    attribute("Col", Integer.toString(cell.getColumnIndex()));
                     attribute("ValueType", getValueType(cell.getCellType()));
                     start("Cell");
                     data(getValue(cell));
@@ -266,8 +266,8 @@ public class HSSFGenerator extends AbstractGenerator
                 cell = (HSSFCell) cells.next();
                 attribute("startRow", Integer.toString(row.getRowNum()));
                 attribute("endRow", Integer.toString(row.getRowNum()));
-                attribute("startCol", Short.toString(cell.getCellNum()));
-                attribute("endCol", Short.toString(cell.getCellNum()));
+                attribute("startCol", Integer.toString(cell.getColumnIndex()));
+                attribute("endCol", Integer.toString(cell.getColumnIndex()));
                 start("StyleRegion");
                 HSSFCellStyle style = cell.getCellStyle();
                 attribute("HAlign", Integer.toString(style.getAlignment()));

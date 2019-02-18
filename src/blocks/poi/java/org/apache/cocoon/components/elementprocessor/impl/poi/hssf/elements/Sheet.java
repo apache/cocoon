@@ -109,7 +109,7 @@ class Sheet extends AbstractLogEnabled {
      * @param number the column number
      * @return column width in characters
      */
-    short getColumnWidth(short number) {
+    int getColumnWidth(short number) {
         return _sheet.getColumnWidth(number);
     }
 
@@ -222,20 +222,6 @@ class Sheet extends AbstractLogEnabled {
 
     private boolean isValidColumnPoints(double points) {
         return (points >= 0 && points <= ((Short.MAX_VALUE + 0.5) / 48));
-    }
-
-    /*
-     * this method doesn't appear to be used private boolean
-     * isValidCharacters(double characters) { return ((characters >= 0) &&
-     * (characters <= ((Short.MAX_VALUE + 0.5) / 256)));
-     */
-
-    /**
-     * Flag a certain region of cells to be merged
-     * @param region the region to create as merged
-     */
-    void addMergedRegion(Region region) {
-        this._sheet.addMergedRegion(region);
     }
 
     /**

@@ -439,7 +439,7 @@
      The Logging package is an ultra-thin bridge between different logging libraries.
     </description>
     <used-by>Jakarta Commons HttpClient, Chaperon</used-by>
-    <lib>core/commons-logging-1.0.4.jar</lib>
+    <lib>core/commons-logging-1.2.jar</lib>
     <homepage>http://commons.apache.org/logging/</homepage>
   </file>
 
@@ -498,17 +498,62 @@
   </file>
 
   <file>
-    <title>Create proprietary file formats</title>
+    <title>Apache POI - the Java API for Microsoft Documents</title>
     <description>
-      The POI project is the master project for developing pure Java ports
-      of file formats based on Microsoft's OLE 2 Compound Document Format.
-      OLE 2 Compound Document Format is used by Microsoft Office Documents,
-      as well as by programs using MFC property sets to serialize their
-      document objects.
+      The Apache POI Project's mission is to create and maintain Java APIs
+      for manipulating various file formats based upon the Office Open XML
+      standards (OOXML).
     </description>
     <used-by>MS Excel serializer (poi block)</used-by>
-    <lib>optional/poi-3.10-FINAL.jar</lib>
+    <lib>optional/poi-3.14.jar</lib>
     <homepage>http://jakarta.apache.org/poi/</homepage>
+  </file>
+
+  <file>
+    <title>Apache POI - the Java API for Microsoft Documents</title>
+    <description>
+      The Apache POI Project's mission is to create and maintain Java APIs
+      for manipulating various file formats based upon the Office Open XML
+      standards (OOXML).
+    </description>
+    <used-by>MS Excel serializer (poi block)</used-by>
+    <lib>optional/poi-ooxml-3.14.jar</lib>
+    <homepage>http://jakarta.apache.org/poi/</homepage>
+  </file>
+
+  <file>
+    <title>Apache POI - the Java API for Microsoft Documents</title>
+    <description>
+      The Apache POI Project's mission is to create and maintain Java APIs
+      for manipulating various file formats based upon the Office Open XML
+      standards (OOXML).
+    </description>
+    <used-by>MS Excel serializer (poi block)</used-by>
+    <lib>optional/poi-ooxml-schemas-3.14.jar</lib>
+    <homepage>http://jakarta.apache.org/poi/</homepage>
+  </file>
+
+  <file>
+    <title>Apache POI - the Java API for Microsoft Documents</title>
+    <description>
+      The Apache POI Project's mission is to create and maintain Java APIs
+      for manipulating various file formats based upon the Office Open XML
+      standards (OOXML).
+    </description>
+    <used-by>MS Excel serializer (poi block)</used-by>
+    <lib>optional/xmlbeans-3.0.2.jar</lib>
+    <homepage>http://jakarta.apache.org/poi/</homepage>
+  </file>
+
+  <file>
+    <title>Java implementation of various mathematical curve</title>
+    <description>
+      Java implementation of various mathematical curves that define
+      themselves over a set of control points.
+    </description>
+    <used-by>MS Excel serializer (poi block)</used-by>
+    <lib>optional/curvesapi-1.06.jar</lib>
+    <homepage>https://github.com/virtuald/curvesapi</homepage>
   </file>
 
   <file>
@@ -614,7 +659,7 @@
     <title>Log4j</title>
     <description>Logging for java</description>
     <used-by>Core and DELI (deli block)</used-by>
-    <lib>core/log4j-1.2.14.jar</lib>
+    <lib>core/log4j-1.2.17.jar</lib>
     <homepage>http://logging.apache.org/log4j/</homepage>
   </file>
 
@@ -840,7 +885,7 @@
     <title>Jakarta Commons Codec</title>
     <description>Implementations of common encoders and decoders</description>
     <used-by>WebDAV block</used-by>
-    <lib>optional/commons-codec-1.5.jar</lib>
+    <lib>optional/commons-codec-1.10.jar</lib>
     <homepage>http://commons.apache.org/codec/</homepage>
   </file>
 

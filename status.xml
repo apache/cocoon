@@ -185,6 +185,9 @@
   <changes>
   <release version="2.1.13" date="TBD">
     <action dev="AN" type="update">
+      Update to poi-3.14
+    </action>
+    <action dev="AN" type="update">
       Update to fop-1.1
     </action>
     <action dev="AN" type="update">
