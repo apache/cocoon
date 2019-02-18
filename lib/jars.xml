@@ -283,7 +283,18 @@
     </description>
     <ant-target>jar</ant-target>
     <used-by>Cocoon</used-by>
-    <lib>endorsed/xalan-2.7.1.jar</lib>
+    <lib>endorsed/xalan-2.7.2.jar</lib>
+    <homepage>http://xml.apache.org/xalan-j/</homepage>
+  </file>
+
+  <file>
+    <title>The XSLT serializer</title>
+    <description>
+      Serializer split off Xalan since 2.7.2.
+    </description>
+    <ant-target>jar</ant-target>
+    <used-by>Xalan</used-by>
+    <lib>endorsed/serializer-2.7.2.jar</lib>
     <homepage>http://xml.apache.org/xalan-j/</homepage>
   </file>
 

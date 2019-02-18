@@ -184,6 +184,9 @@
 
   <changes>
   <release version="2.1.13" date="TBD">
+    <action dev="AN" type="update">
+      Core: Update to xalan-2.7.2 and add serializer-2.7.2
+    </action>
     <action dev="DC" type="fix">
       Enable 'java' to be found by the build and run shell scripts on a modern Mac OS X.
     </action>
