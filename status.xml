@@ -185,7 +185,7 @@
   <changes>
   <release version="2.1.13" date="TBD">
     <action dev="AN" type="update">
-      Use javax.tools.JavaCompiler interface (available since Java 6).
+      XSP: Remove alternative Javac because there is no common API for Java 5 to 8.
     </action>
     <action dev="AN" type="update">
       Core: Update to xalan-2.7.2 and add serializer-2.7.2
