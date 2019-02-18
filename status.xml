@@ -185,6 +185,9 @@
   <changes>
   <release version="2.1.13" date="TBD">
     <action dev="AN" type="update">
+      Update to commons-httpclient-3.1
+    </action>
+    <action dev="AN" type="update">
       XSP: Remove alternative Javac because there is no common API for Java 5 to 8.
     </action>
     <action dev="AN" type="update">

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,6 +44,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -138,7 +139,7 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
 
     /**
      * Forwards the request and returns the response.
-     * 
+     *
      * The rest is probably out of date:
      * Will use a UrlGetMethod to benefit the cacheing mechanism
      * and intermediate proxy servers.
@@ -148,7 +149,7 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
      * @return byte[] XML response
      */
     public byte[] fetch() throws ProcessingException {
-        HttpMethod method = null;
+        final HttpMethod method;
 
         // check which method (GET or POST) to use.
         if (this.configuredHttpMethod.equalsIgnoreCase(METHOD_POST)) {
@@ -167,13 +168,13 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
         // copy request parameters and merge with URL parameters
         Request request = ObjectModelHelper.getRequest(objectModel);
 
-        ArrayList paramList = new ArrayList();
-        Enumeration enumeration = request.getParameterNames();
+        List<NameValuePair> paramList = new ArrayList<NameValuePair>();
+        Enumeration<String> enumeration = (Enumeration<String>) request.getParameterNames();
         while (enumeration.hasMoreElements()) {
-            String pname = (String)enumeration.nextElement();
+            String pname = enumeration.nextElement();
             String[] paramsForName = request.getParameterValues(pname);
-            for (int i = 0; i < paramsForName.length; i++) {
-                NameValuePair pair = new NameValuePair(pname, paramsForName[i]);
+            for (String value : paramsForName) {
+                NameValuePair pair = new NameValuePair(pname, value);
                 paramList.add(pair);
             }
         }
@@ -189,17 +190,17 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
             String submitQryString = method.getQueryString();
 
             // set final web service query string
-            
+
             // sometimes the querystring is null here...
             if (null == urlQryString) {
                 method.setQueryString(submitQryString);
             } else {
-                method.setQueryString(urlQryString + "&" + submitQryString);	
+                method.setQueryString(urlQryString + "&" + submitQryString);
             }
-            
+
         } // if there are submit parameters
 
-        byte[] response = null;
+        final byte[] response;
         try {
             int httpStatus = httpClient.executeMethod(method);
             if (httpStatus < 400) {
@@ -209,6 +210,7 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
             } else {
                 throw new ProcessingException("The remote returned error " + httpStatus + " when attempting to access remote URL:" + method.getURI());
             }
+            response = method.getResponseBody();
         } catch (URIException e) {
             throw new ProcessingException("There is a problem with the URI: " + this.source, e);
         } catch (IOException e) {
@@ -222,7 +224,6 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
              * connection regardless of whether the server returned an error or not.
              * {@link http://jakarta.apache.org/commons/httpclient/tutorial.html}
              */
-            response = method.getResponseBody();
             method.releaseConnection();
         }
 
@@ -230,11 +231,9 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
     } // fetch
 
     /**
-     * Create one per client session. 
+     * Create one per client session.
      */
     protected HttpClient getHttpClient() throws ProcessingException {
-        URI uri = null;
-        String host = null;
         Request request = ObjectModelHelper.getRequest(objectModel);
         Session session = request.getSession(true);
         HttpClient httpClient = null;
@@ -242,15 +241,16 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
             httpClient = (HttpClient)session.getAttribute(HTTP_CLIENT);
         }
         if (httpClient == null) {
+            final URI uri;
+            final String host;
             httpClient = new HttpClient();
             HostConfiguration config = httpClient.getHostConfiguration();
             if (config == null) {
                 config = new HostConfiguration();
             }
-            
-            
+
             /* TODO: fixme!
-             * When the specified source sent to the wsproxy is not "http" 
+             * When the specified source sent to the wsproxy is not "http"
              * (e.g. "cocoon:/"), the HttpClient throws an exception.  Does the source
              * here need to be resolved before being set in the HostConfiguration?
              */
@@ -282,7 +282,7 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
                     // computer.example.com?  it seems to be a very common
                     // idiom for the nonProxyHosts, in that case then we want
                     // to change "^" to "^.*"
-                    RE re = null;
+                    final RE re;
                     try {
                         re = new RE("^" + nonProxiableHost + "$");
                     }
@@ -310,6 +310,4 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
         }
         return httpClient;
     }
-
-
-} // class
+}

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
@@ -65,9 +66,9 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
     /** The base HTTP URL for requests. */
     private HttpURL url = null;
     /** The list of request parameters for the request */
-    private ArrayList reqParams = null;
+    private List<NameValuePair> reqParams = null;
     /** The list of query parameters for the request */
-    private ArrayList qryParams = null;
+    private List<NameValuePair> qryParams = null;
     /** Wether we want a debug output or not */
     private boolean debug = false;
 
@@ -142,9 +143,10 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
          * (one for the body, one for the query string, otherwise it's going
          * to be the same one, as all parameters are passed on the query string
          */
-        ArrayList req = new ArrayList();
-        ArrayList qry = req;
-        if (this.method instanceof PostMethod) qry = new ArrayList();
+        List<NameValuePair> req = new ArrayList<NameValuePair>();
+        List<NameValuePair> qry = req;
+        if (this.method instanceof PostMethod)
+            qry = new ArrayList<NameValuePair>();
         req.addAll(this.reqParams);
         qry.addAll(this.qryParams);
 
@@ -152,9 +154,8 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
          * Parameter handling: complete or override the configured parameters with
          * those specified in the pipeline.
          */
-        String names[] = parameters.getNames();
-        for (int x = 0; x < names.length; x++) {
-            String name = names[x];
+        String[] names = parameters.getNames();
+        for (String name : names) {
             String value = parameters.getParameter(name, null);
             if (value == null) continue;
 
@@ -191,8 +192,8 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
         /* And now process the query string (from the parameters above) */
         if (qry.size() > 0) {
             String qs = this.method.getQueryString();
-            NameValuePair nvpa[] = new NameValuePair[qry.size()];
-            this.method.setQueryString((NameValuePair []) qry.toArray(nvpa));
+            NameValuePair[] nvpa = new NameValuePair[qry.size()];
+            this.method.setQueryString(qry.toArray(nvpa));
             if (qs != null) {
                 this.method.setQueryString(qs + "&" + this.method.getQueryString());
             }
@@ -201,8 +202,8 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
         /* Finally process the body parameters */
         if ((this.method instanceof PostMethod) && (req.size() > 0)) {
             PostMethod post = (PostMethod) this.method;
-            NameValuePair nvpa[] = new NameValuePair[req.size()];
-            post.setRequestBody((NameValuePair []) req.toArray(nvpa));
+            NameValuePair[] nvpa = new NameValuePair[req.size()];
+            post.setRequestBody(req.toArray(nvpa));
         }
 
         /* Check the debugging flag */
@@ -292,7 +293,8 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
         super.xmlConsumer.startElement("", "request", "request", attributes);
 
         if (this.method instanceof PostMethod) {
-            String body = ((PostMethod) this.method).getRequestBodyAsString();
+            byte[] bodyBytes = this.method.getResponseBody();
+            String body = new String(bodyBytes, "utf-8");
 
             attributes.clear();
             attributes.addAttribute("", "name", "name", "CDATA", "Content-Type");
@@ -315,7 +317,6 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
         super.xmlConsumer.endElement("", "request", "request");
 
         super.xmlConsumer.endDocument();
-        return;
     }
 
     /**
@@ -326,14 +327,13 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
      * @return A <code>List</code> of <code>NameValuePair</code> elements.
      * @throws ConfigurationException If a parameter doesn't specify a name.
      */
-    private ArrayList getParams(Configuration configurations[])
+    private List<NameValuePair> getParams(Configuration[] configurations)
     throws ConfigurationException {
-        ArrayList list = new ArrayList();
+        List<NameValuePair> list = new ArrayList<NameValuePair>();
 
         if (configurations.length < 1) return (list);
 
-        for (int x = 0; x < configurations.length; x++) {
-            Configuration configuration = configurations[x];
+        for (Configuration configuration : configurations) {
             String name = configuration.getAttribute("name", null);
             if (name == null) {
                 throw new ConfigurationException("No name specified for parameter at "
@@ -343,14 +343,14 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
             String value = configuration.getAttribute("value", null);
             if (value != null) list.add(new NameValuePair(name, value));
 
-            Configuration subconfigurations[] = configuration.getChildren("value");
-            for (int y = 0; y < subconfigurations.length; y++) {
-                value = subconfigurations[y].getValue(null);
+            Configuration[] subconfigurations = configuration.getChildren("value");
+            for (Configuration subconfiguration : subconfigurations) {
+                value = subconfiguration.getValue(null);
                 if (value != null) list.add(new NameValuePair(name, value));
             }
         }
 
-        return (list);
+        return list;
     }
 
     /**
@@ -362,10 +362,10 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
      * @param value The new parameter value.
      * @return The same <code>List</code> of <code>NameValuePair</code> elements.
      */
-    private ArrayList overrideParams(ArrayList list, String name, String value) {
-        Iterator iterator = list.iterator();
+    private List<NameValuePair> overrideParams(List<NameValuePair> list, String name, String value) {
+        Iterator<NameValuePair> iterator = list.iterator();
         while (iterator.hasNext()) {
-            NameValuePair param = (NameValuePair) iterator.next();
+            NameValuePair param = iterator.next();
             if (param.getName().equals(name)) {
                 iterator.remove();
                 break;
@@ -375,4 +375,3 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
         return (list);
     }
 }
-
