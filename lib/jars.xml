@@ -458,7 +458,7 @@
       the XSL recommendation and then turns it into a PDF document.
     </description>
     <used-by>FOP serializer (fop block)</used-by>
-    <lib>optional/fop-1.0.jar</lib>
+    <lib>optional/fop-1.1.jar</lib>
     <homepage>http://xml.apache.org/fop/</homepage>
   </file>
 
