@@ -41,7 +41,6 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,7 +92,8 @@ public class ResourceReader extends AbstractReader
     /**
      * The list of generated documents
      */
-    private static final Map documents = Collections.synchronizedMap(new HashMap());
+    private static final Map documents = new HashMap();
+    private static final Object documentsLock = new Object();
 
     protected long configuredExpires;
     protected boolean configuredQuickTest;
@@ -235,12 +235,14 @@ public class ResourceReader extends AbstractReader
             return inputSource.getLastModified();
         }
 
-        final String systemId = (String) documents.get(request.getRequestURI());
-        if (systemId == null || inputSource.getURI().equals(systemId)) {
-            return inputSource.getLastModified();
-        }
+        synchronized (documentsLock) {
+            final String systemId = (String) documents.get(request.getRequestURI());
+            if (systemId == null || inputSource.getURI().equals(systemId)) {
+                return inputSource.getLastModified();
+            }
 
-        documents.remove(request.getRequestURI());
+            documents.remove(request.getRequestURI());
+        }
         return 0;
     }
 
@@ -288,7 +290,7 @@ public class ResourceReader extends AbstractReader
             }
 
             response.setHeader("Content-Range", "bytes " + entityRange + "/" + entityLength);
-            
+
             if (actualByteRange.length() != -1) {
                 response.setHeader("Content-Length", String.valueOf(actualByteRange.length()));
             }
@@ -345,7 +347,9 @@ public class ResourceReader extends AbstractReader
             if (!quickTest) {
                 // if everything is ok, add this to the list of generated documents
                 // (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=102921894301915 )
-                documents.put(request.getRequestURI(), inputSource.getURI());
+                synchronized (documentsLock) {
+                    documents.put(request.getRequestURI(), inputSource.getURI());
+                }
             }
         } catch (IOException e) {
             // COCOON-2307: if the client severed the connection, no matter for it that we rethrow the exception as it will never receive it

@@ -184,6 +184,9 @@
 
   <changes>
   <release version="2.1.13" date="TBD">
+    <action dev="AN" type="fix">
+      Unsynchronized HashMap.put in ResourceReader and GeneratorSelector may lead to infinite loop.
+    </action>
     <action dev="AN" type="update">
       Update to poi-3.14
     </action>
