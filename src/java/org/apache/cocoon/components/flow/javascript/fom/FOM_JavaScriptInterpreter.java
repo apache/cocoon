@@ -41,9 +41,6 @@ import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.regexp.RE;
-import org.apache.regexp.RECompiler;
-import org.apache.regexp.REProgram;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
@@ -78,6 +75,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Interface with the JavaScript interpreter.
@@ -122,14 +121,14 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     // FIXME: Does not belong here, should be moved into the sitemap or even higher?
     private CompilingClassLoader classLoader;
-    private MyClassRepository javaClassRepository = new MyClassRepository();
+    private final MyClassRepository javaClassRepository = new MyClassRepository();
     private String[] javaSourcePath;
 
     /**
      * List of <code>String</code> objects that represent files to be
      * read in by the JavaScript interpreter.
      */
-    private List topLevelScripts = new ArrayList();
+    private List<String> topLevelScripts = new ArrayList<String>();
 
     private JSErrorReporter errorReporter;
     private boolean enableDebugger;
@@ -143,19 +142,19 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     }
 
     class MyClassRepository implements CompilingClassLoader.ClassRepository {
-        Map javaSource = new HashMap();
-        Map javaClass = new HashMap();
-        Map sourceToClass = new HashMap();
-        Map classToSource = new HashMap();
+        Map<String, SourceValidity> javaSource = new HashMap<String, SourceValidity>();
+        Map<String, byte[]> javaClass = new HashMap<String, byte[]>();
+        Map<String, Set<String>> sourceToClass = new HashMap<String, Set<String>>();
+        Map<String, String> classToSource = new HashMap<String, String>();
 
         public synchronized void addCompiledClass(String className, Source src,
                     byte[] contents) {
             javaSource.put(src.getURI(), src.getValidity());
             javaClass.put(className, contents);
             String uri = src.getURI();
-            Set set = (Set)sourceToClass.get(uri);
+            Set<String> set = sourceToClass.get(uri);
             if (set == null) {
-                set = new HashSet();
+                set = new HashSet<String>();
                 sourceToClass.put(uri, set);
             }
             set.add(className);
@@ -163,18 +162,17 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
 
         public synchronized byte[] getCompiledClass(String className) {
-            return (byte[])javaClass.get(className);
+            return javaClass.get(className);
         }
 
         public synchronized boolean upToDateCheck() throws Exception {
             SourceResolver sourceResolver = (SourceResolver)
                 getServiceManager().lookup(SourceResolver.ROLE);
             try {
-                List invalid = new LinkedList();
-                for (Iterator i = javaSource.entrySet().iterator(); i.hasNext();) {
-                    Map.Entry e = (Map.Entry) i.next();
-                    String uri = (String) e.getKey();
-                    SourceValidity validity = (SourceValidity) e.getValue();
+                List<String> invalid = new LinkedList<String>();
+                for (Map.Entry<String, SourceValidity> entry : javaSource.entrySet()) {
+                    String uri = entry.getKey();
+                    SourceValidity validity = entry.getValue();
                     int valid = validity.isValid();
                     if (valid == SourceValidity.UNKNOWN) {
                         Source newSrc = null;
@@ -194,12 +192,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     }
                 }
 
-                for (Iterator i = invalid.iterator(); i.hasNext();) {
-                    String uri = (String) i.next();
-                    Set set = (Set) sourceToClass.get(uri);
-                    Iterator ii = set.iterator();
-                    while (ii.hasNext()) {
-                        String className = (String) ii.next();
+                for (String uri : invalid) {
+                    Set<String> set = sourceToClass.get(uri);
+                    for (String className : set) {
                         sourceToClass.remove(className);
                         javaClass.remove(className);
                         classToSource.remove(className);
@@ -348,11 +343,11 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      *
      * @return a <code>ThreadScope</code> value
      */
-    private ThreadScope getSessionScope() throws Exception {
+    private ThreadScope getSessionScope() {
         final String scopeID = USER_GLOBAL_SCOPE + getInterpreterID();
         final Request request = ContextHelper.getRequest(this.avalonContext);
 
-        ThreadScope scope = null;
+        ThreadScope scope;
 
         // Get/create the scope attached to the current context
         Session session = request.getSession(false);
@@ -378,7 +373,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      *
      * @param scope a <code>ThreadScope</code> value
      */
-    private void setSessionScope(ThreadScope scope) throws Exception {
+    private void setSessionScope(ThreadScope scope) {
         if (scope.useSession) {
             final String scopeID = USER_GLOBAL_SCOPE + getInterpreterID();
             final Request request = ContextHelper.getRequest(this.avalonContext);
@@ -410,7 +405,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         /**
          * Initializes new top-level scope.
          */
-        public ThreadScope(Global scope) throws Exception {
+        public ThreadScope(Global scope) {
             final Context context = Context.getCurrentContext();
 
             final String[] names = { "importClass" };
@@ -436,7 +431,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             super.put("cocoon", this, cocoon);
 
             defineProperty(LAST_EXEC_TIME,
-                           new Long(0),
+                           0L,
                            ScriptableObject.DONTENUM | ScriptableObject.PERMANENT);
         }
 
@@ -451,7 +446,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         public void put(String name, Scriptable start, Object value) {
             //Allow setting values to existing variables, or if this is a
             //java class (used by importClass & importPackage)
-            if (this.locked && !has(name, start) && !(value instanceof NativeJavaClass) && !(value instanceof Function)) {
+            if (this.locked && !has(name, start) && !(value instanceof Function)) {
                 // Need to wrap into a runtime exception as Scriptable.put has no throws clause...
                 throw new WrappedException (new JavaScriptException("Implicit declaration of global variable '" + name +
                   "' forbidden. Please ensure all variables are explicitely declared with the 'var' keyword"));
@@ -472,7 +467,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         // Invoked after script execution
         void onExec() {
             this.useSession = false;
-            super.put(LAST_EXEC_TIME, this, new Long(System.currentTimeMillis()));
+            super.put(LAST_EXEC_TIME, this, System.currentTimeMillis());
         }
 
         /** Override importClass to allow reloading of classes */
@@ -480,11 +475,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                                        Scriptable thisObj,
                                        Object[] args,
                                        Function funObj) {
-            for (int i = 0; i < args.length; i++) {
-                Object clazz = args[i];
+            for (Object clazz : args) {
                 if (!(clazz instanceof NativeJavaClass)) {
-                    throw Context.reportRuntimeError("Not a Java class: " +
-                                                     Context.toString(clazz));
+                    throw Context.reportRuntimeError("Not a Java class: " + Context.toString(clazz));
                 }
                 String s = ((NativeJavaClass) clazz).getClassObject().getName();
                 String n = s.substring(s.lastIndexOf('.') + 1);
@@ -492,7 +485,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             }
         }
 
-        public void setupPackages(ClassLoader cl) throws Exception {
+        public void setupPackages(ClassLoader cl) {
             final String JAVA_PACKAGE = "JavaPackage";
             if (classLoader != cl) {
                 classLoader = cl;
@@ -500,8 +493,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 newPackages.setParentScope(this);
                 newPackages.setPrototype(ScriptableObject.getClassPrototype(this, JAVA_PACKAGE));
                 super.put("Packages", this, newPackages);
-                for (int i = 0; i < BUILTIN_PACKAGES.length; i++) {
-                    String pkgName = BUILTIN_PACKAGES[i];
+                for (String pkgName : BUILTIN_PACKAGES) {
                     Scriptable pkg = new NativeJavaPackage(pkgName, cl);
                     pkg.setParentScope(this);
                     pkg.setPrototype(ScriptableObject.getClassPrototype(this, JAVA_PACKAGE));
@@ -515,7 +507,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
     }
 
-    private ThreadScope createThreadScope() throws Exception {
+    private ThreadScope createThreadScope() {
         return new ThreadScope(scope);
     }
 
@@ -547,8 +539,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         // same global scope.
 
         FOM_Cocoon cocoon = (FOM_Cocoon) thrScope.get("cocoon", thrScope);
-        long lastExecTime = ((Long) thrScope.get(LAST_EXEC_TIME,
-                                                 thrScope)).longValue();
+        long lastExecTime = (Long) thrScope.get(LAST_EXEC_TIME, thrScope);
         boolean needsRefresh = false;
         if (reloadScripts) {
             long now = System.currentTimeMillis();
@@ -568,7 +559,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
-            List execList = new ArrayList();
+            List<String> execList = new ArrayList<String>();
             // If we've never executed scripts in this scope or
             // if reload-scripts is true and the check interval has expired
             // or if new scripts have been specified in the sitemap,
@@ -584,10 +575,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             }
             // Compile all the scripts first. That way you can set breakpoints
             // in the debugger before they execute.
-            for (int i = 0, size = execList.size(); i < size; i++) {
-                String sourceURI = (String)execList.get(i);
-                ScriptSourceEntry entry =
-                    (ScriptSourceEntry)compiledScripts.get(sourceURI);
+            for (String sourceURI : execList) {
+                ScriptSourceEntry entry = compiledScripts.get(sourceURI);
                 if (entry == null) {
                     Source src = this.sourceresolver.resolveURI(sourceURI);
                     entry = new ScriptSourceEntry(src);
@@ -597,10 +586,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 entry.getScript(context, this.scope, needsRefresh, this);
             }
             // Execute the scripts if necessary
-            for (int i = 0, size = execList.size(); i < size; i++) {
-                String sourceURI = (String) execList.get(i);
-                ScriptSourceEntry entry =
-                    (ScriptSourceEntry) compiledScripts.get(sourceURI);
+            for (String sourceURI : execList) {
+                ScriptSourceEntry entry = compiledScripts.get(sourceURI);
                 long lastMod = 0;
                 if (reloadScripts && lastExecTime != 0) {
                     lastMod = entry.getSource().getLastModified();
@@ -625,9 +612,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         Source src = this.sourceresolver.resolveURI(fileName);
         if (src != null) {
             synchronized (compiledScripts) {
-                ScriptSourceEntry entry =
-                    (ScriptSourceEntry)compiledScripts.get(src.getURI());
-                Script compiledScript = null;
+                ScriptSourceEntry entry = compiledScripts.get(src.getURI());
+                Script compiledScript;
                 if (entry == null) {
                     compiledScripts.put(src.getURI(),
                             entry = new ScriptSourceEntry(src));
@@ -650,20 +636,19 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             String encoding = findEncoding(is);
             Reader reader = encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding);
             reader = new BufferedReader(reader);
-            Script compiledScript = cx.compileReader(scope, reader,
-                    src.getURI(), 1, null);
-            return compiledScript;
+            return cx.compileReader(scope, reader, src.getURI(), 1, null);
         } finally {
             is.close();
         }
     }
-    
+
     // A charset name can be up to 40 characters taken from the printable characters of US-ASCII
     // (see http://www.iana.org/assignments/character-sets). So reading 100 bytes should be more than enough.
     private final static int ENCODING_BUF_SIZE = 100;
+
     // Match 'encoding = xxxx' on the first line
-    REProgram encodingRE = new RECompiler().compile("^.*encoding\\s*=\\s*([^\\s]*)");
-    
+    private final Pattern pattern = Pattern.compile("^.*encoding\\s*=\\s*([^\\s]*)");
+
     /**
      * Find the encoding of the stream, or null if not specified
      */
@@ -673,12 +658,12 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         int len = is.read(buffer, 0, buffer.length);
         // and push them back
         is.unread(buffer, 0, len);
-        
+
         // Interpret them as an ASCII string
         String str = new String(buffer, 0, len, "ASCII");
-        RE re = new RE(encodingRE);
-        if (re.match(str)) {
-            return re.getParen(1);
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.matches()) {
+            return matcher.group(1);
         }
         return null;
     }
@@ -691,7 +676,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      *
      * @param funName a <code>String</code> value
      * @param params a <code>List</code> value
-     * @param redirector
+     * @param redirector the redirector
      * @exception Exception if an error occurs
      */
     public void callFunction(String funName, List params, Redirector redirector)
@@ -701,7 +686,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(errorReporter);
-        
+
         LocationTrackingDebugger locationTracker = new LocationTrackingDebugger();
         if (!enableDebugger) {
             //FIXME: add a "tee" debugger that allows both to be used simultaneously
@@ -740,7 +725,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                         parameters.put(arg.name, parameters, arg.value);
                     }
                     cocoon.setParameters(parameters);
-                    
+
                     Object fun;
                     try {
                         fun = context.compileReader (
@@ -877,7 +862,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     }
 
     private void setupView(Scriptable scope, FOM_Cocoon cocoon, FOM_WebContinuation kont) {
-        Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> objectModel = (Map<String, Object>) ContextHelper.getObjectModel(this.avalonContext);
 
         // Make the JS live-connect objects available to the view layer
         FOM_JavaScriptFlowHelper.setPackages(objectModel,

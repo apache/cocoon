@@ -18,6 +18,7 @@ package org.apache.cocoon.components.flow;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -69,7 +70,7 @@ public abstract class AbstractInterpreter
     /**
      * List of source locations that need to be resolved.
      */
-    protected ArrayList needResolve = new ArrayList();
+    protected List<String> needResolve = new ArrayList<String>();
 
     protected org.apache.cocoon.environment.Context context;
     protected ServiceManager manager;
@@ -199,7 +200,8 @@ public abstract class AbstractInterpreter
     throws Exception {
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
-            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> objectModel = (Map<String, Object>) ContextHelper.getObjectModel(this.avalonContext);
             FlowHelper.setWebContinuation(objectModel, continuation);
             FlowHelper.setContextObject(objectModel, bizData);
             if (redirector.hasRedirected()) {

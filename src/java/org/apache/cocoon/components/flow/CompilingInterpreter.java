@@ -47,7 +47,7 @@ public abstract class CompilingInterpreter
     /**
      * Mapping of String objects (source uri's) to ScriptSourceEntry's
      */
-    protected Map compiledScripts = new HashMap();
+    protected final Map<String, ScriptSourceEntry> compiledScripts = new HashMap<String, ScriptSourceEntry>();
 
     /**
      * Composable
@@ -61,14 +61,10 @@ public abstract class CompilingInterpreter
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if (this.compiledScripts != null) {
-            Iterator i = this.compiledScripts.values().iterator();
-            while (i.hasNext()) {
-                ScriptSourceEntry current = (ScriptSourceEntry)i.next();
-                this.sourceresolver.release(current.getSource());
-            }
-            this.compiledScripts = null;
+        for (ScriptSourceEntry current : this.compiledScripts.values()) {
+            this.sourceresolver.release(current.getSource());
         }
+        this.compiledScripts.clear();
         if (this.manager != null) {
             this.manager.release(this.sourceresolver);
             this.sourceresolver = null;
@@ -85,7 +81,7 @@ public abstract class CompilingInterpreter
     protected abstract Script compileScript(Context context,
                                             Scriptable scope,
                                             Source source) throws Exception;
-    // This class cannot be static 
+    // This class cannot be static
     protected class ScriptSourceEntry {
         final private Source source;
         private Script script;
