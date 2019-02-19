@@ -27,6 +27,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -111,13 +112,13 @@ public class DefaultRunnableManager
      * Sorted set of <code>ExecutionInfo</code> instances, based on their next
      * execution time.
      */
-    protected SortedSet m_commandStack = new TreeSet(  );
+    protected final SortedSet<ExecutionInfo> m_commandStack = new TreeSet<ExecutionInfo>();
 
-    /** The managed thread pools */
-    final Map m_pools = new HashMap(  );
+    /** The managed thread pools. Use LinkedHashMap to preserve order for test cases. */
+    final Map<String, DefaultThreadPool> m_pools = new LinkedHashMap<String, DefaultThreadPool>();
 
     /** The configured default ThreadFactory class instance */
-    private Class m_defaultThreadFactoryClass;
+    private Class<?> m_defaultThreadFactoryClass;
 
     /** Keep us running? */
     private boolean m_keepRunning = false;
@@ -147,14 +148,13 @@ public class DefaultRunnableManager
         final Configuration [] threadpools =
             config.getChild( "thread-pools" ).getChildren( "thread-pool" );
 
-        for( int i = 0; i < threadpools.length; i++ )
+        for (Configuration threadpool : threadpools)
         {
-            final DefaultThreadPool pool = configThreadPool( threadpools[ i ] );
+            configThreadPool(threadpool);
         }
 
         // Check if a "default" pool has been created
-        final ThreadPool defaultThreadPool =
-            (ThreadPool)m_pools.get( DEFAULT_THREADPOOL_NAME );
+        final ThreadPool defaultThreadPool = m_pools.get(DEFAULT_THREADPOOL_NAME);
 
         if( null == defaultThreadPool )
         {
@@ -260,11 +260,9 @@ public class DefaultRunnableManager
             getLogger(  ).debug( "Disposing all thread pools" );
         }
 
-        for( final Iterator i = m_pools.keySet(  ).iterator(  ); i.hasNext(  ); )
+        for (final String poolName : m_pools.keySet())
         {
-            final String poolName = (String)i.next(  );
-            final DefaultThreadPool pool =
-                (DefaultThreadPool)m_pools.get( poolName );
+            final DefaultThreadPool pool = m_pools.get(poolName);
 
             if( getLogger(  ).isDebugEnabled(  ) )
             {
@@ -316,14 +314,14 @@ public class DefaultRunnableManager
             throw new IllegalArgumentException( "interval < 0" );
         }
 
-        ThreadPool pool = (ThreadPool)m_pools.get( threadPoolName );
+        ThreadPool pool = m_pools.get(threadPoolName);
 
         if( null == pool )
         {
             getLogger(  ).warn( "ThreadPool \"" + threadPoolName +
                                 "\" is not known. Will use ThreadPool \"" +
                                 DEFAULT_THREADPOOL_NAME + "\"" );
-            pool = (ThreadPool)m_pools.get( DEFAULT_THREADPOOL_NAME );
+            pool = m_pools.get(DEFAULT_THREADPOOL_NAME);
         }
 
         if( getLogger(  ).isDebugEnabled(  ) )
@@ -407,9 +405,9 @@ public class DefaultRunnableManager
     {
         synchronized( m_commandStack )
         {
-            for( final Iterator i = m_commandStack.iterator(  ); i.hasNext(  ); )
+            for (final Iterator<ExecutionInfo> i = m_commandStack.iterator(); i.hasNext();)
             {
-                final ExecutionInfo info = (ExecutionInfo)i.next(  );
+                final ExecutionInfo info = i.next();
 
                 if( info.m_command == command )
                 {
@@ -443,8 +441,7 @@ public class DefaultRunnableManager
                 {
                     if( m_commandStack.size(  ) > 0 )
                     {
-                        final ExecutionInfo info =
-                            (ExecutionInfo)m_commandStack.first(  );
+                        final ExecutionInfo info = m_commandStack.first();
                         final long delay =
                             info.m_nextRun - System.currentTimeMillis(  );
 
@@ -475,8 +472,7 @@ public class DefaultRunnableManager
                 {
                     if( m_commandStack.size(  ) > 0 )
                     {
-                        final ExecutionInfo info =
-                            (ExecutionInfo)m_commandStack.first(  );
+                        final ExecutionInfo info = m_commandStack.first();
                         final long delay =
                             info.m_nextRun - System.currentTimeMillis(  );
 
@@ -508,16 +504,13 @@ public class DefaultRunnableManager
         }
 
         m_keepRunning = true;
-        ( (ThreadPool) m_pools.get( DEFAULT_THREADPOOL_NAME ) ).execute( this );
+        m_pools.get(DEFAULT_THREADPOOL_NAME).execute(this);
     }
 
     /**
      * Stop the managing thread
-     *
-     * @throws Exception DOCUMENT ME!
      */
-    public void stop(  )
-        throws Exception
+    public void stop()
     {
         m_keepRunning = false;
 
@@ -642,7 +635,7 @@ public class DefaultRunnableManager
         pool.enableLogging( getLogger(  ).getChildLogger( name ) );
         pool.setName( name );
 
-        ThreadFactory factory = null;
+        ThreadFactory factory;
         try
         {
             factory =
@@ -703,31 +696,28 @@ public class DefaultRunnableManager
         {
             if( pool.isQueued(  ) )
             {
-                final StringBuffer msg = new StringBuffer(  );
-                msg.append( "ThreadPool named \"" ).append( pool.getName(  ) );
-                msg.append( "\" created with maximum queue-size=" );
-                msg.append( pool.getMaxQueueSize(  ) );
-                msg.append( ",max-pool-size=" ).append( pool.getMaximumPoolSize(  ) );
-                msg.append( ",min-pool-size=" ).append( pool.getMinimumPoolSize(  ) );
-                msg.append( ",priority=" ).append( pool.getPriority(  ) );
-                msg.append( ",isDaemon=" ).append( ( (ThreadFactory)pool.getThreadFactory(  ) ).isDaemon(  ) );
-                msg.append( ",keep-alive-time-ms=" ).append( pool.getKeepAliveTime(  ) );
-                msg.append( ",block-policy=\"" ).append( pool.getBlockPolicy(  ) );
-                msg.append( "\",shutdown-wait-time-ms=" ).append( pool.getShutdownWaitTimeMs(  ) );
-                getLogger(  ).info( msg.toString(  ) );
+                String msg = "ThreadPool named \"" + pool.getName()
+                        + "\" created with maximum queue-size=" + pool.getMaxQueueSize()
+                        + ",max-pool-size=" + pool.getMaximumPoolSize()
+                        + ",min-pool-size=" + pool.getMinimumPoolSize()
+                        + ",priority=" + pool.getPriority()
+                        + ",isDaemon=" + ((ThreadFactory) pool.getThreadFactory()).isDaemon()
+                        + ",keep-alive-time-ms=" + pool.getKeepAliveTime()
+                        + ",block-policy=\"" + pool.getBlockPolicy()
+                        + "\",shutdown-wait-time-ms=" + pool.getShutdownWaitTimeMs();
+                getLogger().info(msg);
             }
             else
             {
-                final StringBuffer msg = new StringBuffer(  );
-                msg.append( "ThreadPool named \"" ).append( pool.getName(  ) );
-                msg.append( "\" created with no queue,max-pool-size=" ).append( pool.getMaximumPoolSize(  ) );
-                msg.append( ",min-pool-size=" ).append( pool.getMinimumPoolSize(  ) );
-                msg.append( ",priority=" ).append( pool.getPriority(  ) );
-                msg.append( ",isDaemon=" ).append( ( (ThreadFactory)pool.getThreadFactory(  ) ).isDaemon(  ) );
-                msg.append( ",keep-alive-time-ms=" ).append( pool.getKeepAliveTime(  ) );
-                msg.append( ",block-policy=" ).append( pool.getBlockPolicy(  ) );
-                msg.append( ",shutdown-wait-time-ms=" ).append( pool.getShutdownWaitTimeMs(  ) );
-                getLogger(  ).info( msg.toString(  ) );
+                String msg = "ThreadPool named \"" + pool.getName()
+                        + "\" created with no queue,max-pool-size=" + pool.getMaximumPoolSize()
+                        + ",min-pool-size=" + pool.getMinimumPoolSize()
+                        + ",priority=" + pool.getPriority()
+                        + ",isDaemon=" + ((ThreadFactory) pool.getThreadFactory()).isDaemon()
+                        + ",keep-alive-time-ms=" + pool.getKeepAliveTime()
+                        + ",block-policy=" + pool.getBlockPolicy()
+                        + ",shutdown-wait-time-ms=" + pool.getShutdownWaitTimeMs();
+                getLogger().info(msg);
             }
         }
     }
@@ -740,7 +730,7 @@ public class DefaultRunnableManager
      * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
      * @version $Id: DefaultRunnableManager.java 56848 2004-11-07 14:09:23Z giacomo $
      */
-    private class ExecutionInfo implements Comparable
+    private class ExecutionInfo implements Comparable<ExecutionInfo>
     {
         //~ Instance fields ----------------------------------------------------
 
@@ -760,7 +750,7 @@ public class DefaultRunnableManager
         final long m_interval;
 
         /** DOCUMENT ME! */
-        long m_nextRun = 0;
+        long m_nextRun;
 
         //~ Constructors -------------------------------------------------------
 
@@ -803,10 +793,9 @@ public class DefaultRunnableManager
          *
          * @return DOCUMENT ME!
          */
-        public int compareTo( final Object other )
+        public int compareTo(final ExecutionInfo other)
         {
-            final ExecutionInfo otherInfo = (ExecutionInfo)other;
-            int diff = (int)( m_nextRun - otherInfo.m_nextRun );
+            int diff = (int)( m_nextRun - other.m_nextRun );
             if (diff == 0) {
                 if (this == other) {
                     // Same object, return 0.

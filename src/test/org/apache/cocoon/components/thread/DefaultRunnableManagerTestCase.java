@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.cocoon.components.thread;
 
 import org.apache.avalon.framework.configuration.Configuration;
@@ -22,27 +23,13 @@ import org.apache.avalon.framework.logger.Logger;
 import org.easymock.MockControl;
 
 /**
- * The $classType$ class ...
+ * The DefaultRunnableManagerTestCase class ...
  *
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati </a>
  * @version $Id$
  */
 public class DefaultRunnableManagerTestCase extends AbstractTestCase
 {
-    //~ Constructors -----------------------------------------------------------
-
-    /**
-     * Constructor for DefaultRunnableManagerTestCase.
-     *
-     * @param name
-     */
-    public DefaultRunnableManagerTestCase( String name )
-    {
-        super( name );
-    }
-
-    //~ Methods ----------------------------------------------------------------
-
     /**
      * DOCUMENT ME!
      *
@@ -140,14 +127,7 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         runnableManager.dispose(  );
         verify(  );
@@ -156,7 +136,8 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
     /**
      * DOCUMENT ME!
      */
-    public final void testConfigureMinimal(  )
+    public final void testConfigureMinimal()
+            throws Exception
     {
         final MockControl mainConfigControl =
             createStrictControl( Configuration.class );
@@ -194,14 +175,7 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         runnableManager.dispose(  );
         verify(  );
@@ -303,14 +277,7 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         runnableManager.dispose(  );
         verify(  );
@@ -320,7 +287,8 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
      * Class under test for void createPool(String, int, int, int, int,
      * boolean, long, String, boolean, int)
      */
-    public final void testCreatePoolStringintintintintbooleanlongStringbooleanint(  )
+    public final void testCreatePoolStringintintintintbooleanlongStringbooleanint()
+            throws Exception
     {
         final MockControl mainConfigControl =
             createStrictControl( Configuration.class );
@@ -359,27 +327,20 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Disposing all thread pools" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Disposing thread pool mypool" );
-        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Thread pool mypool disposed" );
-        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Disposing thread pool default" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Thread pool default disposed" );
+        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
+        logger.debug( "Disposing thread pool mypool" );
+        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
+        logger.debug( "Thread pool mypool disposed" );
         loggerControl.replay(  );
 
         final DefaultRunnableManager runnableManager =
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         runnableManager.createPool( "mypool", 230, 15, 12, Thread.MIN_PRIORITY,
                                     false, 15500, "DISCARD", false, 22200 );
@@ -391,7 +352,8 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
      * Class under test for ThreadPool createPool(int, int, int, int, boolean,
      * long, String, boolean, int)
      */
-    public final void testCreatePoolintintintintbooleanlongStringbooleanint(  )
+    public final void testCreatePoolintintintintbooleanlongStringbooleanint()
+            throws Exception
     {
         final MockControl mainConfigControl =
             createStrictControl( Configuration.class );
@@ -447,14 +409,7 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         final ThreadPool threadPool =
             runnableManager.createPool( 200, 5, 2, Thread.MAX_PRIORITY, true,
@@ -474,7 +429,8 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
     /**
      * Class under test for void execute(Runnable)
      */
-    public final void testExecuteRunnable(  )
+    public final void testExecuteRunnable()
+            throws Exception
     {
         final MockControl mainConfigControl =
             createStrictControl( Configuration.class );
@@ -530,14 +486,7 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         final MockControl runnableControl =
             createStrictControl( Runnable.class );
@@ -545,25 +494,17 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         runnable.run(  );
         runnableControl.replay(  );
 
-        try
-        {
-            runnableManager.start(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.execute( runnable );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.stop(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.dispose(  );
-            Thread.sleep( 20 );
-        }
-        catch( final Throwable ex )
-        {
-            ex.printStackTrace(  );
-            assertTrue( "Unexpected Exception", false );
-        }
+        runnableManager.start();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.execute(runnable);
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.stop();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.dispose();
+        Thread.sleep(20);
 
         verify(  );
     }
@@ -571,7 +512,8 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
     /**
      * Class under test for void execute(Runnable, long)
      */
-    public final void testExecuteRunnablelong(  )
+    public final void testExecuteRunnablelong()
+            throws Exception
     {
         final MockControl mainConfigControl =
             createStrictControl( Configuration.class );
@@ -627,14 +569,7 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         final MockControl runnableControl =
             createStrictControl( Runnable.class );
@@ -642,25 +577,17 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         runnable.run(  );
         runnableControl.replay(  );
 
-        try
-        {
-            runnableManager.start(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.execute( runnable, 100, 0 );
-            Thread.yield(  );
-            Thread.sleep( 200 );
-            runnableManager.stop(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.dispose(  );
-            Thread.sleep( 20 );
-        }
-        catch( final Throwable ex )
-        {
-            ex.printStackTrace(  );
-            assertTrue( "Unexpected Exception", false );
-        }
+        runnableManager.start();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.execute(runnable, 100, 0);
+        Thread.yield();
+        Thread.sleep(200);
+        runnableManager.stop();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.dispose();
+        Thread.sleep(20);
 
         verify(  );
     }
@@ -668,7 +595,8 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
     /**
      * Class under test for void execute(Runnable, long, long)
      */
-    public final void testExecuteRunnablelonglong(  )
+    public final void testExecuteRunnablelonglong()
+            throws Exception
     {
         final MockControl mainConfigControl =
             createStrictControl( Configuration.class );
@@ -722,14 +650,7 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         final MockControl runnableControl =
             createStrictControl( Runnable.class );
@@ -738,25 +659,17 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         runnableControl.setVoidCallable( MockControl.ONE_OR_MORE );
         runnableControl.replay(  );
 
-        try
-        {
-            runnableManager.start(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.execute( runnable, 100, 100 );
-            Thread.yield(  );
-            Thread.sleep( 200 );
-            runnableManager.stop(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.dispose(  );
-            Thread.sleep( 20 );
-        }
-        catch( final Throwable ex )
-        {
-            ex.printStackTrace(  );
-            assertTrue( "Unexpected Exception", false );
-        }
+        runnableManager.start();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.execute(runnable, 100, 100);
+        Thread.yield();
+        Thread.sleep(200);
+        runnableManager.stop();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.dispose();
+        Thread.sleep(20);
 
         verify(  );
     }
@@ -764,7 +677,8 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
     /**
      * Class under test for void execute(String, Runnable)
      */
-    public final void testExecuteStringRunnable(  )
+    public final void testExecuteStringRunnable()
+            throws Exception
     {
         final MockControl mainConfigControl =
             createStrictControl( Configuration.class );
@@ -824,27 +738,20 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Disposing all thread pools" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Disposing thread pool mypool" );
-        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Thread pool mypool disposed" );
-        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Disposing thread pool default" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Thread pool default disposed" );
+        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
+        logger.debug( "Disposing thread pool mypool" );
+        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
+        logger.debug( "Thread pool mypool disposed" );
         loggerControl.replay(  );
 
         final DefaultRunnableManager runnableManager =
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         final MockControl runnableControl =
             createStrictControl( Runnable.class );
@@ -852,28 +759,20 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         runnable.run(  );
         runnableControl.replay(  );
 
-        try
-        {
-            runnableManager.start(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.createPool( "mypool", 230, 15, 12,
-                                        Thread.MIN_PRIORITY, false, 15500,
-                                        "DISCARD", false, 22200 );
-            runnableManager.execute( "mypool", runnable );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.stop(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.dispose(  );
-            Thread.sleep( 20 );
-        }
-        catch( final Throwable ex )
-        {
-            ex.printStackTrace(  );
-            assertTrue( "Unexpected Exception", false );
-        }
+        runnableManager.start();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.createPool("mypool", 230, 15, 12,
+                                   Thread.MIN_PRIORITY, false, 15500,
+                                   "DISCARD", false, 22200);
+        runnableManager.execute("mypool", runnable);
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.stop();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.dispose();
+        Thread.sleep(20);
 
         verify(  );
     }
@@ -881,7 +780,8 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
     /**
      * Class under test for void execute(String, Runnable, long)
      */
-    public final void testExecuteStringRunnablelong(  )
+    public final void testExecuteStringRunnablelong()
+            throws Exception
     {
         final MockControl mainConfigControl =
             createStrictControl( Configuration.class );
@@ -941,27 +841,20 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Disposing all thread pools" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Disposing thread pool mypool" );
-        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Thread pool mypool disposed" );
-        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Disposing thread pool default" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Thread pool default disposed" );
+        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
+        logger.debug( "Disposing thread pool mypool" );
+        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
+        logger.debug( "Thread pool mypool disposed" );
         loggerControl.replay(  );
 
         final DefaultRunnableManager runnableManager =
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         final MockControl runnableControl =
             createStrictControl( Runnable.class );
@@ -969,28 +862,20 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         runnable.run(  );
         runnableControl.replay(  );
 
-        try
-        {
-            runnableManager.start(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.createPool( "mypool", 230, 15, 12,
-                                        Thread.MIN_PRIORITY, false, 15500,
-                                        "DISCARD", false, 22200 );
-            runnableManager.execute( "mypool", runnable, 100, 0 );
-            Thread.yield(  );
-            Thread.sleep( 200 );
-            runnableManager.stop(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.dispose(  );
-            Thread.sleep( 20 );
-        }
-        catch( final Throwable ex )
-        {
-            ex.printStackTrace(  );
-            assertTrue( "Unexpected Exception", false );
-        }
+        runnableManager.start();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.createPool("mypool", 230, 15, 12,
+                                   Thread.MIN_PRIORITY, false, 15500,
+                                   "DISCARD", false, 22200);
+        runnableManager.execute("mypool", runnable, 100, 0);
+        Thread.yield();
+        Thread.sleep(200);
+        runnableManager.stop();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.dispose();
+        Thread.sleep(20);
 
         verify(  );
     }
@@ -998,7 +883,8 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
     /**
      * Class under test for void execute(String, Runnable, long, long)
      */
-    public final void testExecuteStringRunnablelonglong(  )
+    public final void testExecuteStringRunnablelonglong()
+            throws Exception
     {
         final MockControl mainConfigControl =
             createStrictControl( Configuration.class );
@@ -1056,27 +942,20 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Disposing all thread pools" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Disposing thread pool mypool" );
-        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
-        logger.debug( "Thread pool mypool disposed" );
-        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Disposing thread pool default" );
         loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
         logger.debug( "Thread pool default disposed" );
+        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
+        logger.debug( "Disposing thread pool mypool" );
+        loggerControl.expectAndReturn( logger.isDebugEnabled(  ), true );
+        logger.debug( "Thread pool mypool disposed" );
         loggerControl.replay(  );
 
         final DefaultRunnableManager runnableManager =
             new DefaultRunnableManager(  );
         runnableManager.enableLogging( logger );
 
-        try
-        {
-            runnableManager.configure( mainConfig );
-        }
-        catch( final ConfigurationException ce )
-        {
-            assertTrue( "Throw unexpected ConfigurationException", false );
-        }
+        runnableManager.configure(mainConfig);
 
         final MockControl runnableControl =
             createStrictControl( Runnable.class );
@@ -1084,28 +963,20 @@ public class DefaultRunnableManagerTestCase extends AbstractTestCase
         runnable.run(  );
         runnableControl.replay(  );
 
-        try
-        {
-            runnableManager.start(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.createPool( "mypool", 230, 15, 12,
-                                        Thread.MIN_PRIORITY, false, 15500,
-                                        "DISCARD", false, 22200 );
-            runnableManager.execute( "mypool", runnable, 100, 100 );
-            Thread.yield(  );
-            Thread.sleep( 200 );
-            runnableManager.stop(  );
-            Thread.yield(  );
-            Thread.sleep( 20 );
-            runnableManager.dispose(  );
-            Thread.sleep( 20 );
-        }
-        catch( final Throwable ex )
-        {
-            ex.printStackTrace(  );
-            assertTrue( "Unexpected Exception", false );
-        }
+        runnableManager.start();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.createPool("mypool", 230, 15, 12,
+                                   Thread.MIN_PRIORITY, false, 15500,
+                                   "DISCARD", false, 22200);
+        runnableManager.execute("mypool", runnable, 100, 100);
+        Thread.yield();
+        Thread.sleep(150);
+        runnableManager.stop();
+        Thread.yield();
+        Thread.sleep(20);
+        runnableManager.dispose();
+        Thread.sleep(20);
 
         verify(  );
     }
