@@ -19,7 +19,6 @@ package org.apache.cocoon.environment.mock;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -38,7 +37,11 @@ import org.apache.cocoon.environment.Session;
  */
 public class MockRequest implements Request {
 
-    private Hashtable attributes = new Hashtable();
+    private final Map<String, Object> attributes = new HashMap<String, Object>();
+    private final Map<String, String> parameters = new HashMap<String, String>();
+    private final Map<String, String> headers = new HashMap<String, String>();
+    private final Map<String, Cookie> cookies = new HashMap<String, Cookie>();
+
     private String scheme;
     private String protocol = "HTTP/1.1";
     private String requestURI;
@@ -60,10 +63,6 @@ public class MockRequest implements Request {
     private String serverName;
     private int port = 80;
 
-    private Hashtable parameters = new Hashtable();
-    private Hashtable headers = new Hashtable();
-    private HashMap cookies = new HashMap();
-
     private MockSession session;
 
     public Object get(String name) {
@@ -74,8 +73,8 @@ public class MockRequest implements Request {
         return attributes.get(name);
     }
 
-    public Enumeration getAttributeNames() {
-        return attributes.keys();
+    public Enumeration<String> getAttributeNames() {
+        return Collections.enumeration(attributes.keySet());
     }
 
     public void setAttribute(String name, Object o) {
@@ -97,7 +96,7 @@ public class MockRequest implements Request {
         return charEncoding;
     }
 
-    public void setCharacterEncoding(String enc) throws java.io.UnsupportedEncodingException {
+    public void setCharacterEncoding(String enc) {
         charEncoding = enc;
     }
 
@@ -110,11 +109,11 @@ public class MockRequest implements Request {
     }
 
     public String getParameter(String name) {
-        return (String)parameters.get(name);
+        return parameters.get(name);
     }
 
-    public Enumeration getParameterNames() {
-        return parameters.keys();
+    public Enumeration<String> getParameterNames() {
+        return Collections.enumeration(parameters.keySet());
     }
 
     public String[] getParameterValues(String name) {
@@ -166,7 +165,7 @@ public class MockRequest implements Request {
         locale = loc;
     }
 
-    public Enumeration getLocales() {
+    public Enumeration<Locale> getLocales() {
         return Collections.enumeration(Collections.singleton(getLocale()));
     }
 
@@ -183,11 +182,11 @@ public class MockRequest implements Request {
             return null;
         else {
             Cookie[] cookieArray = new Cookie[cookies.size()];
-            return (Cookie []) cookies.values().toArray(cookieArray);
+            return cookies.values().toArray(cookieArray);
         }
     }
 
-    public Map getCookieMap() {
+    public Map<String, Cookie> getCookieMap() {
         return cookies;
     }
 
@@ -206,15 +205,15 @@ public class MockRequest implements Request {
     }
 
     public String getHeader(String name) {
-        return (String) headers.get(name);
+        return headers.get(name);
     }
 
-    public Enumeration getHeaders(String name) {
+    public Enumeration<String> getHeaders(String name) {
         throw new AssertionFailedError("Not implemented");
     }
 
-    public Enumeration getHeaderNames() {
-        return headers.keys();
+    public Enumeration<String> getHeaderNames() {
+        return Collections.enumeration(headers.keySet());
     }
 
     public String getMethod() {

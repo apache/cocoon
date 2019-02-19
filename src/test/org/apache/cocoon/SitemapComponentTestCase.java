@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.transform.TransformerException;
@@ -64,21 +65,21 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Testcase for actions, generators, transformers and serializer components. 
+ * Testcase for actions, generators, transformers and serializer components.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
  * @version CVS $Id$
  */
 public abstract class SitemapComponentTestCase extends ContainerTestCase {
-    
+
     public final static Parameters EMPTY_PARAMS = Parameters.EMPTY_PARAMETERS;
 
-    private MockRequest request = new MockRequest();
-    private MockResponse response = new MockResponse();
-    private MockContext context = new MockContext();
-    private MockRedirector redirector = new MockRedirector();
-    private Map objectmodel = new HashMap();
+    private final MockRequest request = new MockRequest();
+    private final MockResponse response = new MockResponse();
+    private final MockContext context = new MockContext();
+    private final MockRedirector redirector = new MockRedirector();
+    private final Map<String, Object> objectmodel = new HashMap<String, Object>();
 
     public final MockRequest getRequest() {
         return request;
@@ -92,14 +93,14 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         return context;
     }
 
-    public final MockRedirector getRedirector() { 
+    public final MockRedirector getRedirector() {
         return redirector;
     }
 
-    public final Map getObjectModel() {
+    public final Map<String, Object> getObjectModel() {
         return objectmodel;
     }
-    
+
     protected void addContext(DefaultContext context) {
         context.put(ContextHelper.CONTEXT_REQUEST_OBJECT, request);
         context.put(ContextHelper.CONTEXT_RESPONSE_OBJECT, response);
@@ -125,17 +126,16 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
     /**
      * Match with a pattern.
      *
-     * @param type Hint of the matcher. 
+     * @param type Hint of the matcher.
      * @param pattern Pattern for the matcher.
      * @param parameters Matcher parameters.
      */
-    public final Map match(String type, String pattern, Parameters parameters) throws PatternException {
+    public final Map<String, String> match(String type, String pattern, Parameters parameters) throws PatternException {
 
         ServiceSelector selector = null;
         Matcher matcher = null;
         SourceResolver resolver = null;
 
-        Map result = null;
         try {
             selector = (ServiceSelector) this.lookup(Matcher.ROLE +
                 "Selector");
@@ -148,11 +148,13 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             matcher = (Matcher) selector.select(type);
             assertNotNull("Test lookup of matcher", matcher);
 
-            result = matcher.match(pattern, objectmodel, parameters);
-
+            @SuppressWarnings("unchecked")
+            Map<String, String> result = (Map<String, String>) matcher.match(pattern, objectmodel, parameters);
+            return result;
         } catch (ServiceException ce) {
             getLogger().error("Could not retrieve matcher", ce);
             fail("Could not retrieve matcher: " + ce.toString());
+            return null;
         } finally {
             if (matcher != null) {
                 selector.release(matcher);
@@ -160,13 +162,12 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             this.release(selector);
             this.release(resolver);
         }
-        return result;
     }
 
     /**
      * Select with a pattern.
      *
-     * @param type Hint of the matcher. 
+     * @param type Hint of the matcher.
      * @param expression Expression for the selector.
      * @param parameters Matcher parameters.
      */
@@ -188,7 +189,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             assertNotNull("Test if selector name is not null", type);
             sel = (org.apache.cocoon.selection.Selector) selector.select(type);
             assertNotNull("Test lookup of selector", sel);
-            
+
 
             result = sel.select(expression, objectmodel, parameters);
 
@@ -208,19 +209,18 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
     /**
      * Perform the action component.
      *
-     * @param type Hint of the action. 
+     * @param type Hint of the action.
      * @param source Source for the action.
      * @param parameters Action parameters.
      */
-    public final Map act(String type, String source, Parameters parameters) throws Exception {
-        
+    public final Map<String, String> act(String type, String source, Parameters parameters) throws Exception {
+
         redirector.reset();
 
         ServiceSelector selector = null;
         Action action = null;
         SourceResolver resolver = null;
 
-        Map result = null;
         try {
             selector = (ServiceSelector) this.lookup(Action.ROLE +
                 "Selector");
@@ -233,12 +233,14 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             action = (Action) selector.select(type);
             assertNotNull("Test lookup of action", action);
 
-            result = action.act(redirector, new SourceResolverAdapter(resolver),
+            @SuppressWarnings("unchecked")
+            Map<String, String> result = (Map<String, String>) action.act(redirector, new SourceResolverAdapter(resolver),
                                 objectmodel, source, parameters);
-
+            return result;
         } catch (ServiceException ce) {
             getLogger().error("Could not retrieve action", ce);
             fail("Could not retrieve action: " + ce.toString());
+            return null;
         } finally {
             if (action != null) {
                 selector.release(action);
@@ -246,17 +248,16 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             this.release(selector);
             this.release(resolver);
         }
-        return result;
     }
 
     /**
      * Generate the generator output.
      *
-     * @param type Hint of the generator. 
+     * @param type Hint of the generator.
      * @param source Source for the generator.
      * @param parameters Generator parameters.
      */
-    public final Document generate(String type, String source, Parameters parameters) 
+    public final Document generate(String type, String source, Parameters parameters)
         throws IOException, SAXException, ProcessingException {
 
         ServiceSelector selector = null;
@@ -308,15 +309,15 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         return document;
     }
 
-    /**     
+    /**
      * Trannsform a document by a transformer
-     *      
-     * @param type Hint of the transformer. 
+     *
+     * @param type Hint of the transformer.
      * @param source Source for the transformer.
      * @param parameters Generator parameters.
      * @param input Input document.
-     */ 
-    public final Document transform(String type, String source, Parameters parameters, Document input) 
+     */
+    public final Document transform(String type, String source, Parameters parameters, Document input)
         throws SAXException, ProcessingException, IOException {
 
         ServiceSelector selector = null;
@@ -383,7 +384,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             }
         }
 
-        return document; 
+        return document;
     }
 
     /**
@@ -449,7 +450,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
 
         return document.toByteArray();
     }
-    
+
     public final byte[] read(String type, Parameters parameters, String source) throws SAXException, IOException, ProcessingException {
         ServiceSelector selector = null;
         Reader reader = null;
@@ -471,7 +472,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             assertNotNull("Test if reader name is not null", type);
             reader = (Reader) selector.select(type);
             assertNotNull("Test lookup of reader", reader);
-            
+
             reader.setup(new SourceResolverAdapter(resolver),
                     this.getObjectModel(), source, parameters);
 
@@ -502,11 +503,11 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
 
         return document.toByteArray();
     }
-    
-    public String callFunction(String type, String source, String function, Map params) throws Exception {
-        
+
+    public String callFunction(String type, String source, String function, Map<String, String> params) throws Exception {
+
         redirector.reset();
-        
+
         ServiceSelector selector = null;
         Interpreter interpreter = null;
         SourceResolver resolver = null;
@@ -521,18 +522,17 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             assertNotNull("Test if interpreter name is not null", type);
             interpreter = (Interpreter) selector.select(type);
             assertNotNull("Test lookup of interpreter", interpreter);
-            
+
             ((AbstractInterpreter)interpreter).register(source);
-            
-            ArrayList parameters = new ArrayList();
-            for (Iterator i = params.entrySet().iterator(); i.hasNext();) {
-                Map.Entry me = (Map.Entry)i.next();
-                String name = (String)me.getKey();
-                String value = (String)me.getValue();
+
+            List<Interpreter.Argument> parameters = new ArrayList<Interpreter.Argument>();
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                String name = entry.getKey();
+                String value = entry.getValue();
                 parameters.add(new Interpreter.Argument(name, value));
             }
             interpreter.callFunction(function, parameters, getRedirector());
-            
+
         } catch (ServiceException ce) {
             getLogger().error("Could not retrieve interpeter", ce);
             fail("Could not retrieve interpreter: " + ce.toString());
@@ -545,11 +545,11 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         }
         return FlowHelper.getWebContinuation(getObjectModel()).getId();
     }
-    
-    public String callContinuation(String type, String source, String id, Map params) throws Exception {
-        
+
+    public String callContinuation(String type, String source, String id, Map<String, String> params) throws Exception {
+
         redirector.reset();
-        
+
         ServiceSelector selector = null;
         Interpreter interpreter = null;
         SourceResolver resolver = null;
@@ -566,12 +566,11 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             assertNotNull("Test lookup of interpreter", interpreter);
 
             ((AbstractInterpreter)interpreter).register(source);
-            
-            ArrayList parameters = new ArrayList();
-            for (Iterator i = params.entrySet().iterator(); i.hasNext();) {
-                Map.Entry me = (Map.Entry)i.next();
-                String name = (String)me.getKey();
-                String value = (String)me.getValue();
+
+            List<Interpreter.Argument> parameters = new ArrayList<Interpreter.Argument>();
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                String name = entry.getKey();
+                String value = entry.getValue();
                 parameters.add(new Interpreter.Argument(name, value));
             }
             interpreter.handleContinuation(id, parameters, getRedirector());
@@ -588,22 +587,20 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
         }
         return FlowHelper.getWebContinuation(getObjectModel()).getId();
     }
-    
+
     public Object getFlowContextObject() {
         return FlowHelper.getContextObject(getObjectModel());
     }
 
     public final void print(Document document) {
         TransformerFactory factory = TransformerFactory.newInstance();
-        try
-        {
-          javax.xml.transform.Transformer serializer = factory.newTransformer();
-          serializer.transform(new DOMSource(document), new StreamResult(System.out));
-          System.out.println();
-        } 
-        catch (TransformerException te)
-        {
-          te.printStackTrace();
+        try {
+            javax.xml.transform.Transformer serializer = factory.newTransformer();
+            serializer.transform(new DOMSource(document), new StreamResult(System.out));
+            System.out.println();
+        }
+        catch (TransformerException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -751,7 +748,7 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
      *
      * @param expected The expected XML document
      * @param actual The actual XML Document
-     */  
+     */
     public final void assertEqual(Document expected, Document actual) {
 
         expected.getDocumentElement().normalize();
