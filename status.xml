@@ -184,6 +184,10 @@
 
   <changes>
   <release version="2.1.13" date="TBD">
+    <!-- Leave this entry about raising minimum Java to 1.6 at the top for 2.1.13! -->
+    <action dev="all" type="update">
+      Starting with 2.1.13 the minimum required Java version will be 1.6.
+    </action>
     <action dev="AN" type="fix">
       Unsynchronized HashMap.put in ResourceReader and GeneratorSelector may lead to infinite loop.
     </action>
@@ -197,7 +201,7 @@
       Update to commons-httpclient-3.1
     </action>
     <action dev="AN" type="update">
-      XSP: Remove alternative Javac because there is no common API for Java 5 to 8.
+      XSP: Use javax.tools.JavaCompiler interface for Javac (available since Java 6).
     </action>
     <action dev="AN" type="update">
       Core: Update to xalan-2.7.2 and add serializer-2.7.2
