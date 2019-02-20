@@ -441,6 +441,8 @@
     <depend project="jakarta-poi"/>
 
     <library name="poi"/>
+    <library name="commons-codec"/>
+    <library name="curvesapi"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>

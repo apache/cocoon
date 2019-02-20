@@ -884,7 +884,7 @@
   <file>
     <title>Jakarta Commons Codec</title>
     <description>Implementations of common encoders and decoders</description>
-    <used-by>WebDAV block</used-by>
+    <used-by>WebDAV block, POI block</used-by>
     <lib>optional/commons-codec-1.10.jar</lib>
     <homepage>http://commons.apache.org/codec/</homepage>
   </file>
@@ -1310,6 +1310,16 @@
     </description>
     <used-by>Core</used-by>
     <lib>core/slf4j-api-1.6.4.jar</lib>
+    <homepage>http://www.slf4j.org/</homepage>
+  </file>
+
+  <file>
+    <title>SLF4J</title>
+    <description>
+      Simple Logging Facade for Java - log4j adapter
+    </description>
+    <used-by>Core</used-by>
+    <lib>core/slf4j-log4j12-1.6.4.jar</lib>
     <homepage>http://www.slf4j.org/</homepage>
   </file>
 
