@@ -188,22 +188,22 @@
     <action dev="all" type="update">
       Starting with 2.1.13 the minimum required Java version will be 1.6.
     </action>
-    <action dev="AN" type="fix">
+    <action dev="AN" type="fix" fixes-bug="COCOON-2362">
       Unsynchronized HashMap.put in ResourceReader and GeneratorSelector may lead to infinite loop.
     </action>
-    <action dev="AN" type="update">
-      Update to poi-3.14
+    <action dev="AN" type="update" fixes-bug="COCOON-2363">
+      Update to poi-3.14 (requires Java 1.6)
     </action>
-    <action dev="AN" type="update">
+    <action dev="AN" type="update" fixes-bug="COCOON-2364">
       Update to fop-1.1
     </action>
-    <action dev="AN" type="update">
+    <action dev="AN" type="update" fixes-bug="COCOON-2365">
       Update to commons-httpclient-3.1
     </action>
-    <action dev="AN" type="update">
+    <action dev="AN" type="update" fixes-bug="COCOON-2366">
       XSP: Use javax.tools.JavaCompiler interface for Javac (available since Java 6).
     </action>
-    <action dev="AN" type="update">
+    <action dev="AN" type="update" fixes-bug="COCOON-2367">
       Core: Update to xalan-2.7.2 and add serializer-2.7.2
     </action>
     <action dev="DC" type="fix">
