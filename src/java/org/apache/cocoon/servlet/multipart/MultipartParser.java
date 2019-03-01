@@ -385,21 +385,87 @@ public class MultipartParser {
         String hdrline = readln(in);
 
         while (!"".equals(hdrline)) {
-            StringTokenizer tokenizer = new StringTokenizer(hdrline);
-
-            headers.put(tokenizer.nextToken(" :").toLowerCase(),
-                    tokenizer.nextToken(" :;"));
-
-            // The extra tokenizer.hasMoreTokens() in headers.put
-            // handles the filename="" case IE6 submits for an empty
-            // upload field.
-            while (tokenizer.hasMoreTokens()) {
-                headers.put(tokenizer.nextToken(" ;=\""),
-                        tokenizer.hasMoreTokens()?tokenizer.nextToken("=\""):"");
-            }
+            
+            headers.putAll(readHeaders(hdrline));
 
             hdrline = readln(in);
         }
+
+        return headers;
+    }
+    
+    private Hashtable readHeaders(String hdrline) {
+
+        Hashtable headers = new Hashtable();
+
+        boolean inValue = false;
+        boolean inFirstName = true;
+        boolean inName = true;
+        boolean inQuotedString = false;
+        
+        String name = null;
+        String value = null;
+        
+        int start = 0;
+        int offset = 0;
+        
+        for (int i = 0; i < hdrline.length(); i++) {
+            
+            char c = hdrline.charAt(i);
+            
+            switch (c) {
+                case ':':
+                case '=':
+                    if (!inQuotedString) {
+                        if (inName) {
+                            name = hdrline.substring(start, start + offset).trim();
+                            
+                            if (inFirstName) {
+                                name = name.toLowerCase();
+                                inFirstName = false;
+                            }
+
+                            inName = false;
+                            inValue = true;
+                            start = i + 1;
+                            offset = 0;
+                        }
+                    }
+                    else {
+                        offset++;
+                    }
+                    break;
+                case ';':
+                    if (!inQuotedString) {
+                        if (inValue) {
+                            value = hdrline.substring(start, start + offset).trim();
+                            headers.put(name, value);
+                            inName = true;
+                            inValue = false;
+                            start = i + 1;
+                            offset = 0;
+                        }
+                    }
+                    else {
+                        offset++;
+                    }
+                    
+                    break;
+                case '"':
+                    inQuotedString = !inQuotedString;
+                    if (inQuotedString) {
+                        start = i + 1;
+                    }
+                    break;
+                default:
+                    offset++;
+                    break;
+            }
+        }
+        
+        // last part
+        value = hdrline.substring(start, start + offset).trim();
+        headers.put(name, value);
 
         return headers;
     }
