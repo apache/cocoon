@@ -120,7 +120,7 @@
       |    the same level.
       |
       | 2) Once it is determined which generator, which transformers and
-      |    wich serializer is used, these components are executed. During
+      |    which serializer is used, these components are executed. During
       |    this, the pipeline may not be changed.
       |
       | You may have as many pipelines in your sitemap as you like.

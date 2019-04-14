@@ -47,7 +47,7 @@ public interface SourceInspector {
     /**
      * Gets all the SourceProperties associated with the given Source.
      * 
-     * @param source  the Source for wich to compute the property.
+     * @param source  the Source for which to compute the property.
      * @return  the collection of all SourceProperties that could be computed
      * by this SourceInspector.
      * @throws SourceException  
