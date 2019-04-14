@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Objects;
 
 import javax.servlet.http.HttpSession;
 import javax.xml.transform.OutputKeys;
@@ -320,7 +321,7 @@ public class SessionPostTransformer extends SessionPreTransformer {
             }
             DocumentFragment validationDoc = this.endRecording();
             String source = (String)stack.pop();
-            if (!source.equals("EMPTY")) {
+            if (!Objects.equals(source, "EMPTY")) {
                 // get configuration from external file
                 // referenced by "src" attribute of "validate" element
                 try {
