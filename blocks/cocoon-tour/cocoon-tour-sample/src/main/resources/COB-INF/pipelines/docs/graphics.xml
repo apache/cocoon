@@ -39,7 +39,7 @@
         <cinclude:include element="xml-code" src="cocoon:/xml-element/pipelines/sitemap.xmap/svgRequest"/>
 
         <h3>XSL transformation</h3>
-        <p>Here we show only the main template wich generates the SVG skeleton</p>
+        <p>Here we show only the main template which generates the SVG skeleton</p>
         <cinclude:include element="xml-code" src="cocoon:/xml-element/pipelines/xsl/request-to-svg.xsl/main"/>
 
         <h3>Typical output</h3>

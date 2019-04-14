@@ -19,7 +19,7 @@ package org.apache.cocoon.forms.validation;
 import org.w3c.dom.Element;
 
 /**
- * A {@link WidgetValidator} that can recieve a configuration {@link Element}
+ * A {@link WidgetValidator} that can receive a configuration {@link Element}
  * 
  * @version $Id$
  */

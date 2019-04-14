@@ -54,7 +54,7 @@ implements LSResourceResolver {
      * @param namespace the namespace of the resource being resolved.
      * @param systemId the system identifier of the resource being resolved.
      * @param publicId the public identifier of the resource being resolved.
-     * @param base the base uri against wich relative resolution should happen. 
+     * @param base the base uri against which relative resolution should happen. 
      * @return a <b>non null</b> {@link LSInput} instance.
      * @throws LSException wrapping another {@link Exception}.
      */

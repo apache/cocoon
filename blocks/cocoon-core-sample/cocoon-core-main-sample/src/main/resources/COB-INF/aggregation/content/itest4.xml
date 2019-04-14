@@ -18,6 +18,6 @@
 -->
 
 <para xmlns:i="http://apache.org/cocoon/include/1.0">
-  This is content of the <b>itest4.xml</b> file, wich includes <b>itest5.xml</b> file:
+  This is content of the <b>itest4.xml</b> file, which includes <b>itest5.xml</b> file:
   <i:include src="itest5.xml"/>
 </para>
