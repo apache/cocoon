@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.components.notification.SimpleNotifyingBean;
 import org.apache.commons.logging.Log;
 
 import org.apache.cocoon.Constants;
@@ -91,9 +92,16 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
                                       Environment env,
                                       InvokeContext context)
     throws Exception {
+        Map objectModel = env.getObjectModel();
         final Processor.InternalPipelineDescription desc = prepareErrorHandler(ex, env, context);
         if (desc != null) {
-            context.setInternalPipelineDescription(desc);
+            try {
+                context.setInternalPipelineDescription(desc);
+            } finally {
+                desc.release();
+                ((SimpleNotifyingBean)(objectModel.get(Constants.NOTIFYING_OBJECT))).cleanupExtraDescriptions();
+                objectModel.put(Constants.NOTIFYING_OBJECT, null);
+            }
             return true;
         }
 

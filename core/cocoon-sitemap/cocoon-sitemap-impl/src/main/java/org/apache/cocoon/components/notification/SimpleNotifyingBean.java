@@ -69,6 +69,10 @@ public class SimpleNotifyingBean implements Notifying {
         this.sender = sender.getClass().getName();
     }
 
+    public void cleanupExtraDescriptions(){
+        this.extraDescriptions = null;
+    }
+
     /**
      * Sets the Type of the SimpleNotifyingBean object
      *
