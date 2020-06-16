@@ -16,6 +16,16 @@
  */
 package org.apache.cocoon.generation;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -23,16 +33,11 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.util.PostInputStream;
-import org.apache.excalibur.xml.sax.SAXParser;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 
 /**
  * @cocoon.sitemap.component.documentation
@@ -64,7 +69,7 @@ import java.io.StringReader;
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
  * @version CVS $Id$
  */
-public class StreamGenerator extends ServiceableGenerator
+public class StreamGenerator extends ServiceableGenerator implements Initializable
 {
 
     /** The parameter holding the name associated with the xml data  **/
@@ -72,6 +77,9 @@ public class StreamGenerator extends ServiceableGenerator
 
     /** The input source */
     private InputSource inputSource;
+
+    // don't use Excalibur's SAXParser to prevent XXE injection
+    private SAXParserFactory factory;
 
     /**
      * Recycle this component.
@@ -81,13 +89,20 @@ public class StreamGenerator extends ServiceableGenerator
         super.recycle();
         this.inputSource = null;
     }
+    
+    public void initialize() throws Exception {
+        factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setXIncludeAware(false);
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+    }
 
     /**
      * Generate XML data out of request InputStream.
      */
     public void generate()
     throws IOException, SAXException, ProcessingException {
-        SAXParser parser = null;
         int len = 0;
         String contentType = null;
 
@@ -149,9 +164,16 @@ public class StreamGenerator extends ServiceableGenerator
             String charset =  getCharacterEncoding(request, contentType) ;
             if( charset != null) {
                 this.inputSource.setEncoding(charset);
-            }
-            parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
-            parser.parse(this.inputSource, super.xmlConsumer);
+            } 
+            
+            SAXParser parser = factory.newSAXParser();
+            XMLReader xmlReader = parser.getXMLReader();
+            xmlReader.setContentHandler(super.xmlConsumer);
+            xmlReader.setProperty( "http://xml.org/sax/properties/lexical-handler", super.xmlConsumer );
+            xmlReader.setFeature( "http://xml.org/sax/features/namespaces", true );
+            
+            xmlReader.parse(this.inputSource);
+            
         } catch (IOException e) {
             getLogger().error("StreamGenerator.generate()", e);
             throw new ResourceNotFoundException("StreamGenerator could not find resource", e);
@@ -161,9 +183,7 @@ public class StreamGenerator extends ServiceableGenerator
         } catch (Exception e) {
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in StreamGenerator.generate()", e);
-        } finally {
-            this.manager.release( parser);
-        }
+        } 
     }
 
     /**
@@ -208,7 +228,7 @@ public class StreamGenerator extends ServiceableGenerator
              return extractCharset( contentType, idx );
         }
     }
-
+    
 
     protected String extractCharset(String contentType, int idx) {
         String charencoding = null;
