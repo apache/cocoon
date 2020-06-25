@@ -280,10 +280,12 @@
     <description>
       Xalan is an XSLT processor that fully supports the W3C specs.
       Includes XSLTC.
+      This version is modified from the official xalan-2.7.2 release, 
+      with removal of org.apache.bcel.* and org.apache.regexp.* 
     </description>
     <ant-target>jar</ant-target>
     <used-by>Cocoon</used-by>
-    <lib>endorsed/xalan-2.7.2.jar</lib>
+    <lib>endorsed/xalan-2.7.2-cocoon.jar</lib>
     <homepage>http://xml.apache.org/xalan-j/</homepage>
   </file>
 
