@@ -70,6 +70,7 @@
   <person name="Ross Burton" email="rossb@apache.org" id="RB"/>
   <person name="Mark Butler" email="butlermh@apache.org" id="MB"/>
   <person name="Ugo Cei" email="ugo@apache.org" id="UC"/>
+  <person name="Francesco Chicchiricc&#242;" email="ilgrosso@apache.org" id="FC"/>
   <person name="Tony Collen" email="tony@apache.org" id="ATC"/>
   <person name="Marcus Crafter" email="crafterm@apache.org" id="MC"/>
   <person name="David Crossley" email="crossley@apache.org" id="DC"/>
@@ -187,6 +188,45 @@
     <!-- Leave this entry about raising minimum Java to 1.6 at the top for 2.1.13! -->
     <action dev="all" type="update">
       Starting with 2.1.13 the minimum required Java version will be 1.6.
+    </action>
+    <action dev="FC" type="fix" fixes-bug="COCOON-2336">
+        Cannot start Cocoon 2.1.12 on Windows
+    </action>
+    <action dev="FC" type="fix" fixes-bug="COCOON-2339">
+        Cannot build with Java 7
+    </action>
+    <action dev="FC" type="fix" fixes-bug="COCOON-2341">
+        Use ImageIO instead of old com.sun.image.* package in ImageReader
+    </action>
+    <action dev="FC" type="fix" fixes-bug="COCOON-2342">
+        Apache license at the beginning cocoon's dojo widgets templates causes: dojo.widget.Parse: error:
+    </action>
+    <action dev="FC" type="fix" fixes-bug="COCOON-2344">
+        XSP not working with Java 8
+    </action>
+    <action dev="CD" type="update" fixes-bug="COCOON-2348">
+        Make XMLResourceBundle (and -Factory) more extensible
+    </action>
+    <action dev="CD" type="fix" fixes-bug="COCOON-2349">
+        XMLResourceBundles are not available outside a Request
+    </action>
+    <action dev="CD" type="update" fixes-bug="COCOON-2350">
+        Escape accolades in i18n messages
+    </action>
+    <action dev="FC" type="fix" fixes-bug="COCOON-2351">
+        ContextSourceFactory calculates the path incorrectly when removing the protocol part
+    </action>
+    <action dev="FC" type="fix" fixes-bug="COCOON-2352">
+        XMLEncoder doesn't support Unicode surrogate pairs
+    </action>
+    <action dev="CD" type="fix" fixes-bug="COCOON-2357">
+        Content-Range and Range headers does not respect the HTTP spec
+    </action>
+    <action dev="CD" type="fix" fixes-bug="COCOON-2358">
+        Inconsistent Content-Length header for HEAD requests
+    </action>
+    <action dev="CD" type="fix" fixes-bug="COCOON-2361">
+        Cannot upload a file with name containing a '=' or a ';'
     </action>
     <action dev="AN" type="fix" fixes-bug="COCOON-2362">
       Unsynchronized HashMap.put in ResourceReader and GeneratorSelector may lead to infinite loop.
