@@ -184,7 +184,7 @@
   </todo>
 
   <changes>
-  <release version="2.1.13" date="TBD">
+  <release version="2.1.13" date="July 16 2020">
     <!-- Leave this entry about raising minimum Java to 1.6 at the top for 2.1.13! -->
     <action dev="all" type="update">
       Starting with 2.1.13 the minimum required Java version will be 1.6.
