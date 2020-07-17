@@ -1,0 +1,11 @@
+org.apache.log
+org.apache.log.format
+org.apache.log.output
+org.apache.log.output.db
+org.apache.log.output.io
+org.apache.log.output.io.rotate
+org.apache.log.output.jms
+org.apache.log.output.lf5
+org.apache.log.output.net
+org.apache.log.util
+

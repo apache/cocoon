@@ -1,0 +1,50 @@
+
+                                C R E D I T S
+                                 
+This is the file where major donations to the Cocoon project are listed and it
+should be used to give appropriate visibility to those inviduals, organizations
+or companies that donated resources to the effort. This file wants to be one of
+the ways the Cocoon community pays back.
+
+
+ Community Credits
+ -----------------
+                                   
+The Cocoon project was originally created, proposed and bootstrapped by
+Stefano Mazzocchi (http://www.betaversion.org/~stefano/)
+
+The web application framework consisting of the session handling (aka sunShine),
+the authentication framework (aka sunRise) and the portal engine (aka sunSpot)
+was created and developed by the Open Source Competence Center of 
+s&n AG (http://www.s-und-n.de), Paderborn, Germany.
+
+The interpreted sitemap engine and other contributions from Sylvain Wallez are
+made possible by the time donated by his company, Anyware Technologies 
+(http://www.anyware-tech.com).
+
+The flow control layer, the SOAP and XScript logicsheets, and other
+changes were contributed by Ovidiu Predescu and donated by the Hewlett
+Packard Company (http://www.hp.com/).
+
+The DELI implementation was contributed by Mark Butler, and donated to
+Cocoon by the Hewlett Packard Company (http://www.hp.com/).
+
+The initial code of the new portal framework is a donation by a joined development
+effort of BASF IT-Services (http://www.basf-it-services.com) 
+and s&n AG (http://www.s-und-n.de).
+
+The initial code of the new ojb block and other contributions from Antonio Gallardo
+and Carlos Chávez are made posible by the time donated by AG Software, S. A.
+(http://www.agssa.net).
+
+The initial code of the official Cocoon form handling block (CForms) 
+evolved from the Woody donation made by Outerthought
+(http://outerthought.org).
+
+The initial code of the official Cocoon authentication block (CAuth)
+evolved from the CoWarp donation made by Carsten Ziegeler (cziegeler@osoco.org).
+
+
+
+                                                 The Apache Cocoon Community
+                                                  http://cocoon.apache.org/

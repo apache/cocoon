@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | Chinese message catalogue file for menu in Cocoon 2 i18n sample
+    |
+    | CVS $Id$
+    +-->
+
+<catalogue xml:lang="zh_CN">
+    <message key="Apache Cocoon i18n Samples">Apache Cocoon 国际化 例题</message>
+    <message key="Samples">例题</message>
+    <message key="Introduction">入门</message>
+    <message key="Static (XML)">静的 (XML)</message>
+    <message key="Dynamic (XSP)">动的 (XSP)</message>
+    <message key="Sitemap source">Sitemap source</message>    
+    <message key="Locales">言语设定</message>
+    <message key="Documentation">文书</message>
+    <message key="i18n transformer docs">国际化 变换机 文书</message>
+    <message key="i18n transformer Javadoc">国际化 变换机 Javadoc</message>
+    <message key="LocaleAction Javadoc">LocaleAction Javadoc</message>
+</catalogue>

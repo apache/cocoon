@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xconf xpath="/cocoon" unless="datasources">
+  <datasources>
+    <!--
+      - See Excalibur documentation for details
+      - http://excalibur.apache.org/apidocs/org/apache/avalon/excalibur/datasource/ResourceLimitingJdbcDataSource.html
+      -->
+    <jdbc logger="core.datasources.personnel" name="personnel">
+      <!--
+        - If you have an Oracle database, and are using the the
+        - pool-controller below, you should add the attribute
+        - "oradb" and set it to true.
+        -
+        - <pool-controller min="5" max="10" oradb="true"/>
+        -
+        - That way the test to see if the server has disconnected
+        - the JdbcConnection will function properly.
+        -->
+      <pool-controller max="10" min="5" timeout="30000"/>
+      <!--
+        - If you need to ensure an autocommit is set to true or
+        - false, then create the "auto-commit" element below.
+        -
+        - <auto-commit>false</auto-commit>
+        -
+        - The default is true.
+        -->
+      <dburl>jdbc:hsqldb:hsql://localhost:9002/cocoondb</dburl>
+      <user>sa</user>
+      <password></password>
+    </jdbc>
+  </datasources>
+</xconf>

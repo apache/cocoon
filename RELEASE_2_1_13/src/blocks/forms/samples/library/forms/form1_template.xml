@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+
+  <title>Form libraries sample</title>
+  <content>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
+          <ft:widget id="field1"/>
+          <ft:widget id="field1-2"/>
+          <ft:widget id="field2"/>
+          <ft:widget id="myField3"/>
+          <ft:widget id="myField4"/>
+          <ft:widget id="myField5"/>
+          <ft:widget id="myBeer"/>
+          <ft:widget id="myEmail"/>
+          <ft:widget id="myAccount"/>
+          <ft:widget id="myAccount1"/>
+        </fi:items>
+      </fi:group>
+
+      <ft:widget-label id="contacts"/><br/>
+      <ft:repeater-size id="contacts"/>
+      <table border="1">
+        <tr>
+          <th><ft:repeater-widget-label id="contacts" widget-id="firstname"/></th>
+          <th><ft:repeater-widget-label id="contacts" widget-id="lastname"/></th>
+          <th><ft:repeater-widget-label id="contacts" widget-id="phone"/></th>
+          <th><ft:repeater-widget-label id="contacts" widget-id="email"/></th>
+          <th><ft:repeater-widget-label id="contacts" widget-id="birthdate"/></th>
+          <th><ft:repeater-widget-label id="contacts" widget-id="select"/></th>
+        </tr>
+        <jx:choose>
+          <jx:when test="${widget.getChild('contacts').getSize() == 0}">
+            <tr><td colspan="6" align="center"><em>There are no contacts to display</em></td></tr>
+          </jx:when>
+          <jx:otherwise>
+            <ft:repeater-widget id="contacts">
+              <tr>
+                <td><ft:widget id="firstname"/></td>
+                <td><ft:widget id="lastname"/></td>
+                <td><ft:widget id="phone"/></td>
+                <td><ft:widget id="email"/></td>
+                <td><ft:widget id="birthdate"/></td>
+                <td><ft:widget id="select"/></td>
+              </tr>
+            </ft:repeater-widget>
+          </jx:otherwise>
+        </jx:choose>
+        <tr>
+          <td colspan="6">
+            <ft:widget id="addcontact"/>
+            <jx:if test="${widget.getChild('contacts').getSize() > 0}">
+              <ft:widget id="removecontacts"/>
+              <br/>
+              <small>Hint: remove all contacts to see how dynamic form templates can change
+                their layout depending on widget values</small>
+            </jx:if>
+          </td>
+        </tr>
+      </table>
+
+      <ft:class id="rec-class-1">
+        <table border="1">
+          <tr>
+            <td>
+              <ft:widget id="addfields-rec-1"/>
+            </td>
+          </tr>
+          <jx:choose>
+            <jx:when test="${widget.getChild('fields-rec').getSize() == 0}">
+              <tr><td align="center"><em>There are no rows to display</em></td></tr>
+            </jx:when>
+            <jx:otherwise>
+              <ft:repeater-widget id="fields-rec-1">
+                <tr>
+                  <td><ft:widget id="field-rec-1"/></td>
+                </tr>
+                <td>
+                  <span class="actions">
+                    <ft:widget id="down"><fi:styling type="image" src="resources/forms/img/move_down.gif"/></ft:widget>
+                    <ft:widget id="up"><fi:styling type="image" src="resources/forms/img/move_up.gif"/></ft:widget>
+                    <ft:widget id="delete"><fi:styling type="image" src="resources/forms/img/delete.gif"/></ft:widget>
+                    <ft:widget id="add"><fi:styling type="image" src="resources/forms/img/new.gif"/></ft:widget>
+                  </span>
+                </td>
+                <tr>
+                  <td><ft:new id="rec-class-2"/></td>
+                </tr>
+              </ft:repeater-widget>
+            </jx:otherwise>
+          </jx:choose>
+        </table>
+      </ft:class>
+
+      <p>
+        <em>Recursive inter-library class/new inclusion madness:</em>
+      </p>
+
+      <ft:class id="rec-class-2">
+        <table border="1">
+          <tr>
+            <td>
+              <ft:widget id="addfields-rec-2"/>
+            </td>
+          </tr>
+          <jx:choose>
+            <jx:when test="${widget.getChild('fields-rec').getSize() == 0}">
+              <tr><td align="center"><em>There are no rows to display</em></td></tr>
+            </jx:when>
+            <jx:otherwise>
+              <ft:repeater-widget id="fields-rec-2">
+                <tr>
+                  <td><ft:widget id="field-rec-2"/></td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="actions">
+                      <ft:widget id="down"><fi:styling type="image" src="resources/forms/img/move_down.gif"/></ft:widget>
+                      <ft:widget id="up"><fi:styling type="image" src="resources/forms/img/move_up.gif"/></ft:widget>
+                      <ft:widget id="delete"><fi:styling type="image" src="resources/forms/img/delete.gif"/></ft:widget>
+                      <ft:widget id="add"><fi:styling type="image" src="resources/forms/img/new.gif"/></ft:widget>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><ft:new id="rec-class-1"/></td>
+                </tr>
+              </ft:repeater-widget>
+            </jx:otherwise>
+          </jx:choose>
+        </table>
+      </ft:class>
+
+      <ft:new id="rec-class-1"/>
+
+      <input type="submit"/>
+      <ft:widget id="cancel"/>
+
+    </ft:form-template>
+  </content>
+</page>

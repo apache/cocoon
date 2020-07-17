@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<document xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+	<header>
+		<title><i18n:text i18n:catalogue="local">new.person.title</i18n:text></title>
+		<authors>
+			<person name="Jeremy Quinn" email="jeremy@apache.org"/>
+		</authors>
+		<abstract>new person page using <code>document-v12.dtd</code>.</abstract>
+	</header>
+	<body>
+		<section>
+			<title><i18n:text i18n:catalogue="local">new.person.title</i18n:text></title>
+			<p><i18n:text i18n:catalogue="local">new.person.note</i18n:text></p>
+		</section>
+		<section>
+			<ft:form-template action="" method="post" accept-charset="UTF-8">
+				<ft:continuation-id/>
+				<fi:group>
+					<fi:styling type="fieldset" layout="columns"/>
+					<fi:label><i18n:text i18n:catalogue="local">person.name.label</i18n:text></fi:label>
+					<fi:hint><i18n:text i18n:catalogue="local">person.name.hint</i18n:text></fi:hint>
+					<fi:items>
+						<ft:widget id="firstname"/>						
+						<ft:widget id="lastname"/>						
+						<ft:widget id="email"/>						
+					</fi:items>
+				</fi:group>
+				<br/>
+				<fi:group>
+					<fi:styling type="fieldset" layout="columns"/>
+					<fi:label><i18n:text i18n:catalogue="local">person.address.label</i18n:text></fi:label>
+					<fi:hint><i18n:text i18n:catalogue="local">person.address.hint</i18n:text></fi:hint>
+					<fi:items>
+						<ft:widget id="deptName"/>						
+						<ft:widget id="address1"/>						
+						<ft:widget id="address2"/>						
+						<ft:widget id="address3"/>						
+						<ft:widget id="postcode"/>						
+					</fi:items>
+				</fi:group>
+				<br/>
+				<fi:group>
+					<fi:styling type="fieldset" layout="columns"/>
+					<fi:label><i18n:text i18n:catalogue="local">person.phone.label</i18n:text></fi:label>
+					<fi:hint><i18n:text i18n:catalogue="local">person.phone.hint</i18n:text></fi:hint>
+					<fi:items>
+						<ft:widget id="ophone"/>						
+						<ft:widget id="fphone"/>						
+						<ft:widget id="mphone"/>						
+						<ft:widget id="hphone"/>						
+						<ft:widget id="pager"/>						
+					</fi:items>
+				</fi:group>
+				<p class="form-buttons"><ft:widget id="done"/> <ft:widget id="cancel"/> <input type="reset" value="Reset" /></p>
+				<p>
+					<span class="forms-field-required">*</span> <i18n:text i18n:catalogue="local">required.note</i18n:text><br/>
+					<span class="forms-validation-message">!</span> <i18n:text i18n:catalogue="local">error.note</i18n:text><br/>
+					<forms-help-image/> <i18n:text i18n:catalogue="local">help.note</i18n:text>
+				</p>
+			</ft:form-template>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id$ -->
+
+<page>
+    <title>Sitemap pass-through test pages</title>
+    <content>
+        <para>
+            Shows that mounted pass-through breaks when a "cocoon:" is used
+            after going back to the parent sitemap (<link
+                href="http://issues.apache.org/bugzilla/show_bug.cgi?id=33178">bug
+                #33178</link>).
+        </para>
+        <para>
+            Test links:
+            <ul>
+                <li><link href="welcome">Direct pipeline</link></li>
+                <li><link href="welcome1">One "cocoon:" URL</link></li>
+                <li><link href="welcome2">Two chained "cocoon:" URLs</link></li>
+                <li><link href="welcome3">Three chained "cocoon:" URLs</link></li>
+            	   <li><link href="aggregate">Aggregation of the above</link></li>
+            </ul>
+        </para>
+        <para>
+           A "cocoon:" called within a pass-trough mount leading to no match reported an NPE
+           rather than a ResourceNotFound. With the bugfix, the RNFE is catched, and the "welcome"
+	   page is displayed.
+        </para>
+        <para><link href="another-welcome">Test link</link></para>
+    </content>
+</page>

@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <h4 class="samplesGroup">widgets States Sample</h4>
+  <title>Sample form</title>
+  <content>
+    <ft:form-template action="continue" method="POST" ajax="true">
+      <ft:continuation-id/>
+
+      <ft:widget-label id="field_1"/>
+      <ft:widget id="field_1"/>
+      <br />
+      <ft:widget-label id="field_3"/>
+      <ft:widget id="field_3"/>
+      <br />
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
+          <ft:widget id="field_2"/>
+          <ft:widget id="field_4">
+            <fi:styling list-type="listbox"/>
+          </ft:widget>
+          <ft:widget id="field_5"/>
+          <ft:widget id="field_6">
+            <fi:styling list-type="radio"/>
+          </ft:widget>
+          <ft:widget id="field_7"/>
+          <ft:widget id="field_8">
+            <fi:styling list-type="radio" list-orientation="horizontal"/>
+          </ft:widget>
+          <ft:widget id="field_9">
+            <fi:styling type="textarea"/>
+          </ft:widget>
+          <ft:widget id="field_10">
+            <fi:styling list-type="checkbox"/>
+          </ft:widget>
+          <ft:widget id="field_11"/>
+          <ft:widget id="field_12"/>
+          <ft:widget id="field_13" type="suggest"/>
+          <ft:widget id="field_14">
+            <fi:styling type="MultiValueEditorWithSuggestion"
+                        dataUrl="_cocoon/forms/suggest/contacts"/>
+          </ft:widget>
+          <ft:widget id="field_15">
+              <fi:styling list-type="dojo-double-listbox">
+                <fi:available-label>Available items</fi:available-label>
+                <fi:selected-label>Selected items</fi:selected-label>
+              </fi:styling>
+        </ft:widget>
+        </fi:items>
+      </fi:group>
+      <br />
+      <table border="1">
+        <thead>
+          <tr>
+            <th><ft:repeater-widget-label id="contacts" widget-id="firstname"/></th>
+            <th><ft:repeater-widget-label id="contacts" widget-id="lastname"/></th>
+            <th><ft:repeater-widget-label id="contacts" widget-id="select"/></th>
+          </tr>
+        </thead>
+        <ft:repeater id="contacts">
+          <tbody>
+            <ft:repeater-rows>
+              <tr>
+                <td><ft:widget id="firstname"/></td>
+                <td><ft:widget id="lastname"/></td>
+                <td><ft:widget id="select"/></td>
+              </tr>
+            </ft:repeater-rows>
+          </tbody>
+        </ft:repeater>
+        <tr>
+          <td colspan="4" align="right">
+            <ft:widget id="addcontact"/>
+            <ft:widget id="removecontacts"/>
+          </td>
+        </tr>
+      </table>
+      <br />
+      <table border="1">
+        <ft:repeater id="contacts2">
+          <tbody>
+            <ft:repeater-rows>
+              <tr>
+                <td>
+                    <fi:group>
+                      <fi:styling layout="columns"/>
+                      <fi:items>
+                        <ft:widget id="firstname"/>
+                        <ft:widget id="lastname"/>
+                        <ft:widget id="select"/>
+                      </fi:items>
+                    </fi:group>
+                </td>
+              </tr>
+            </ft:repeater-rows>
+          </tbody>
+        </ft:repeater>
+        <tr>
+          <td colspan="4" align="right">
+            <ft:widget id="addcontact2"/>
+            <ft:widget id="removecontacts2"/>
+          </td>
+        </tr>
+      </table>
+      <br />
+      <ft:repeater id="contacts3">
+      <div>
+        <jx:choose>
+          <jx:when test="${repeater.getSize() == 0}">
+            <p><strong><em>There are no rows to display</em></strong></p>
+          </jx:when>
+          <jx:otherwise>
+            <table border="1">
+              <tr>
+                <th><ft:repeater-widget-label widget-id="firstname"/></th>
+                <th><ft:repeater-widget-label widget-id="lastname"/></th>
+                <th><ft:repeater-widget-label widget-id="select"/></th>
+              </tr>
+              <tbody>
+                  <!-- The contents of the repeater-widget element is a template that will
+                       be applied to each row in the repeater. -->
+                  <ft:repeater-rows>
+                    <tr class="forms-row-${repeaterLoop.index % 2}">
+                      <td><ft:widget id="firstname"/></td>
+                      <td><ft:widget id="lastname"/></td>
+                      <td><ft:widget id="select"/></td>
+                    </tr>
+                  </ft:repeater-rows>
+                </tbody>
+            </table>
+          </jx:otherwise>
+        </jx:choose>
+        <p>
+          <ft:widget id="../addcontact3"/>
+          <jx:if test="${widget.getSize() > 0}">
+              <ft:widget id="../removecontacts3"/>
+          </jx:if>
+        </p>
+      </div>
+      </ft:repeater>
+      <br />
+      <ft:widget id="show"/>
+      <ft:widget id="hide"/>
+      <ft:widget id="disabled"/>
+    </ft:form-template>
+  </content>
+</page>

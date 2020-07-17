@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  SVN $Id$
+-->
+<samplesxconf xpath="/cocoon/*[@role='org.apache.cocoon.portal.PortalService']/portals" unless="portal[@name='portal']">
+
+    <portal name="portal">
+      <!-- This is the sample portal: 
+         - we use the cauth profile manager
+       -->
+      <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/CAuth</profile-manager>
+      <!-- If you want to use the authentication framework, comment out the above line
+           and uncomment the following line:
+        <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/Auth</profile-manager>
+       -->
+      <!-- These are the skins the user can choose from: -->
+      <skins>
+        <skin name="basic" base-path="context://samples/blocks/portal/skins/basic">
+          <thumbnail-path>images/thumb.jpg</thumbnail-path>
+        </skin>
+        <skin name="common" base-path="context://samples/blocks/portal/skins/common">
+          <thumbnail-path>images/thumb.jpg</thumbnail-path>
+        </skin>
+      </skins>
+    </portal>
+
+</samplesxconf>

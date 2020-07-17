@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<testcase>
+ <roles>
+  <role name="org.apache.excalibur.xml.sax.SAXParser"
+        shorthand="xml-parser"
+        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
+
+  <role name="org.apache.excalibur.xmlizer.XMLizer"
+        shorthand="xmlizer"
+        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
+
+  <role name="org.apache.excalibur.xml.xslt.XSLTProcessor"
+        shorthand="xslt-processor"
+        default-class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"/>
+
+  <role name="org.apache.excalibur.source.SourceFactorySelector"
+        shorthand="source-factories"
+        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
+
+  <role name="org.apache.excalibur.source.SourceResolver"
+        shorthand="source-resolver"
+        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
+
+  <role name="org.apache.cocoon.transformation.TransformerSelector"
+        shorthand="transformers"
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+
+  <role name="org.apache.excalibur.store.Store/TransientStore"
+        shorthand="transient-store"
+        default-class="org.apache.excalibur.store.impl.MemoryStore"/>
+
+  <role name="org.apache.excalibur.store.Store"
+       shorthand="persistent-store"
+       default-class="org.apache.excalibur.store.impl.MemoryStore"/>
+ </roles>
+
+ <components>
+  <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser">
+   <parameter name="validate" value="false"/>
+   <parameter name="namespace-prefixes" value="false"/>
+   <parameter name="stop-on-warning" value="true"/>
+   <parameter name="stop-on-recoverable-error" value="true"/>
+   <parameter name="reuse-parsers" value="false"/>
+  </xml-parser>
+
+  <xmlizer/>
+
+  <transient-store/>
+
+  <persistent-store/>
+
+  <source-factories>
+   <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
+   <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
+  </source-factories>
+
+  <source-resolver class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
+
+  <xslt-processor logger="core.xslt-processor">
+   <parameter name="use-store" value="true"/>
+   <parameter name="incremental-processing" value="true"/>
+  </xslt-processor>
+
+  <component-instance logger="core.xslt-processor"
+                      role="org.apache.excalibur.xml.xslt.XSLTProcessor/xsltc"
+                      class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
+     <parameter name="use-store" value="true"/>
+     <parameter name="incremental-processing" value="true"/>
+     <parameter name="transformer-factory" value="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"/>
+  </component-instance>
+
+  <component-instance logger="core.xslt-processor"
+                      role="org.apache.excalibur.xml.xslt.XSLTProcessor/xalan"
+                      class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
+     <parameter name="use-store" value="true"/>
+     <parameter name="incremental-processing" value="true"/>
+     <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
+  </component-instance>
+
+  <transformers logger="test">
+   <component-instance class="org.apache.cocoon.transformation.TraxTransformer" 
+                       name="xalan">
+    <use-request-parameters>false</use-request-parameters>
+    <use-session-parameters>false</use-session-parameters>
+    <use-cookie-parameters>false</use-cookie-parameters>
+    <xslt-processor-role>xalan</xslt-processor-role>
+   </component-instance>
+
+   <component-instance name="xsltc" 
+                       class="org.apache.cocoon.transformation.TraxTransformer">
+    <use-request-parameters>false</use-request-parameters>
+    <use-session-parameters>false</use-session-parameters>
+    <use-cookie-parameters>false</use-cookie-parameters>
+    <xslt-processor-role>xsltc</xslt-processor-role>
+   </component-instance>
+  </transformers>
+ </components>
+
+</testcase>

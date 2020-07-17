@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<stx:transform xmlns:stx="http://stx.sourceforge.net/2002/ns"
+	       version="1.0">
+
+  <stx:variable name="titleVal"/>
+
+  <stx:template match="page">
+    <html>
+      <stx:process-children/>
+    </html>
+  </stx:template>
+
+  <stx:template match="title">
+    <stx:assign name="titleVal" select="."/>
+    <head>
+      <title>
+	<stx:value-of select="$titleVal"/>
+      </title>
+      <link href="/styles/main.css" type="text/css" rel="stylesheet"/>
+    </head>
+  </stx:template>
+
+  <stx:template match="content">
+    <body>
+      <h1><stx:value-of select="$titleVal"/></h1>
+      <stx:process-children/>
+    </body>
+  </stx:template>
+
+  <stx:template match="para">
+    <p>
+      <stx:process-children/>
+    </p>
+  </stx:template>
+
+  <stx:template match="text()">
+    <stx:value-of select="."/>
+  </stx:template>
+
+</stx:transform>
