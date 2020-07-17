@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<document>
+  <header>
+    <title>Snapshot of Cocoon Webmail</title>
+    <authors>
+      <person name="Bernhard Huber" email="berni_huber@a1.net"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Snapshot">
+      <p>
+        You might want to see some nice pictures of Cocoon Webmail
+	before installing, and configuring this application.
+      </p>
+      <s2 title="A List of Folders">
+        <p>
+          Cocoon Webmail presents a list of available folders;
+          select a folder to list the messages, or list subfolders.
+        </p>
+        <figure alt="List of folders" src="cocoon-webmail-1.jpg"/>
+      </s2>
+      <s2 title="A List of Messages">
+        <p>
+          Cocoon Webmail presents a list of messages holded
+          by a folder; select a message #id in order to show 
+          the content of a mail.
+        </p>
+        <figure alt="List of messages" src="cocoon-webmail-2.jpg"/>
+      </s2>
+      <s2 title="Message Content">
+        <p>
+          Cocoon Webmail shows the content of a mail.
+        </p>
+        <figure alt="Message content" src="cocoon-webmail-3.jpg"/>
+      </s2>
+    </s1>
+  </body>
+</document>
+

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  SVN $Id$
+-->
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+             version="1.0"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+
+  <!--
+    - Simple test portlet for testing
+    -->
+  <portlet>
+    <description>This is a Test Portlet</description>
+    <portlet-name>TestPortlet1</portlet-name>
+    <display-name>Test Portlet #1</display-name>
+    <portlet-class>org.apache.cocoon.portal.pluto.test.TestPortlet</portlet-class>
+
+    <init-param>
+      <name>dummyName</name>
+      <value>dummyValue</value>
+    </init-param>
+
+    <expiration-cache>-1</expiration-cache>
+
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+      <portlet-mode>EDIT</portlet-mode>
+      <portlet-mode>HELP</portlet-mode>
+    </supports>
+
+    <supported-locale>en</supported-locale>
+    <supported-locale>de</supported-locale>
+
+    <portlet-info>
+      <title>Test Portlet #1</title>
+      <short-title>Test1</short-title>
+      <keywords>Test, Testen</keywords>
+    </portlet-info>
+    <portlet-preferences>
+      <preference>
+        <name>dumnmyName</name>
+        <value>dummyValue</value>
+        <read-only>false</read-only>
+      </preference>
+      <preference>
+        <name>dummyName2</name>
+        <value>dummyValue2</value>
+      </preference>
+      <preferences-validator>org.apache.pluto.core.impl.PreferencesValidatorImpl</preferences-validator>
+    </portlet-preferences>
+  </portlet>
+
+
+  <!--
+    - Cocoon JSR168 Portlet.
+    - You can deploy this portlet in any 3rd party portal implementing JSR168
+    - and make your Cocoon application available as a portlet.
+    -
+    - Cocoon portlet will create an instance of the Cocoon with parameters
+    - specified below.
+    -->
+  <portlet>
+    <portlet-name>CocoonPortlet</portlet-name>
+    <display-name>JSR-168 Cocoon Portlet</display-name>
+    <portlet-class>org.apache.cocoon.portlet.ManagedCocoonPortlet</portlet-class>
+
+    <!--
+      This parameter indicates the category id of the logger from the LogKit
+      configuration used by the CocoonServlet.
+    -->
+    <init-param>
+      <name>portlet-logger</name>
+      <value>access</value>
+    </init-param>
+
+    <!--
+      Causes all files in multipart requests to be processed.
+      Default is false for security reasons.
+      Unsupported values will be interpreted as false.
+    -->
+    <init-param>
+      <name>enable-uploads</name>
+      <value>true</value>
+    </init-param>
+
+    <!--
+      Causes all files in multipart requests to be saved to upload-dir.
+      Default is true for security reasons.
+      Unsupported values will be interpreted as false.
+    -->
+    <init-param>
+      <name>autosave-uploads</name>
+      <value>true</value>
+    </init-param>
+
+    <!--
+      Specify handling of name conflicts when saving uploaded files
+      to disk.  Acceptable values are deny, allow, rename (default).
+      Files are renamed x_filename where x is an integer value incremented
+      to make the new filename unique.
+    -->
+    <init-param>
+      <name>overwrite-uploads</name>
+      <value>rename</value>
+    </init-param>
+
+    <!--
+      Specify maximum allowed size of the upload. Defaults to 10 Mb.
+
+    <init-param>
+      <name>upload-max-size</name>
+      <value>10000000</value>
+    </init-param>
+    -->
+
+    <!--
+      If you set this parameter to 'true' or 'yes', Cocoon will add processing
+      time to the end of each response. Value 'hide' adds processing time as an HTML
+      comment. By default, processing time is not added (corresponds to value 'no').
+
+    <init-param>
+      <name>show-time</name>
+      <value>hide</value>
+    </init-param>
+    -->
+
+    <!--
+      If true or not set, this class will try to catch and handle all Cocoon exceptions.
+      If false, it will rethrow them to the servlet container.
+    -->
+    <init-param>
+      <name>manage-exceptions</name>
+      <value>true</value>
+    </init-param>
+
+    <!--
+      Set encoding used by the container. If not set the ISO-8859-1 encoding will be assumed.
+
+    <init-param>
+      <name>container-encoding</name>
+      <value>utf-8</value>
+    </init-param>
+    -->
+
+    <!--
+      Set form encoding. This will be the character set used to decode request parameters.
+      If not set the ISO-8859-1 encoding will be assumed.
+
+    <init-param>
+      <name>form-encoding</name>
+      <value>utf-8</value>
+    </init-param>
+    -->
+
+    <init-param>
+      <name>servlet-path</name>
+      <value>samples/blocks/portal/portlets/hello</value>
+    </init-param>
+
+    <!--
+      If true or not set, this class will override servlet-path by preferences.
+      If false, it uses a fixed servlet-path.
+    -->
+    <init-param>
+      <name>servlet-path-overriding</name>
+      <value>true</value>
+    </init-param>
+
+    <expiration-cache>-1</expiration-cache>
+
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+      <portlet-mode>EDIT</portlet-mode>
+      <portlet-mode>HELP</portlet-mode>
+    </supports>
+
+    <supported-locale>en</supported-locale>
+
+    <portlet-info>
+      <title>JSR-168 Cocoon Portlet</title>
+      <short-title>Cocoon Portlet</short-title>
+      <keywords>Apache, Cocoon, XML, Jakarta, Pluto, Portlet, JSR-168</keywords>
+    </portlet-info>
+  </portlet>
+
+</portlet-app>

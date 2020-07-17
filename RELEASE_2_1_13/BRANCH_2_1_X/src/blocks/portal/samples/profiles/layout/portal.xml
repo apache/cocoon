@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<composite-layout name="tab" id="maintab">
+
+  <named-item name="Main">
+    <coplet-layout name="coplet">
+      <coplet-instance-data>Portal-Demo-1</coplet-instance-data>
+    </coplet-layout>
+  </named-item>
+
+  <named-item name="News">
+    <composite-layout name="column">
+      <parameter name="border" value="0" />
+      <parameter name="border-color" value="#225599" />
+      <item>
+        <parameter name="width" value="50%" />
+        <composite-layout name="row">
+          <parameter name="border" value="0" />
+          <parameter name="border-color" value="#AACCFF" />
+          <item>
+            <coplet-layout name="coplet">
+              <parameter name="border" value="0" />
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance-data>Newsweek-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+          <item>
+            <coplet-layout name="coplet">
+              <parameter name="border" value="0"/>
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance-data>NYTBusiness-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+      <item>
+        <parameter name="width" value="25%" />
+        <composite-layout name="row">
+          <parameter name="border" value="0" />
+          <parameter name="border-color" value="#AACCFF" />
+          <item>
+            <coplet-layout name="coplet">
+              <parameter name="border" value="0" />
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance-data>BBCNews-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+          <item>
+            <composite-layout name="column">
+              <item>
+                <frame-layout name="frame" id="a">
+                  <source>cocoon:/coplets/news/nyt_sport.rss</source>
+                </frame-layout>
+              </item>
+              <item>
+                <coplet-layout name="coplet">
+                  <parameter name="border" value="0" />
+                  <parameter name="border-color" value="#AA0000" />
+                  <coplet-instance-data>CNET News-1</coplet-instance-data>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </item>
+        </composite-layout>
+      </item>
+      <item>
+        <parameter name="width" value="25%" />
+        <composite-layout name="row">
+          <parameter name="border" value="0" />
+          <parameter name="border-color" value="#AACCFF" />
+          <item>
+            <parameter name="bgcolor" value="#CCCCCC" />
+            <coplet-layout name="coplet">
+              <parameter name="border" value="0" />
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance-data>CSTNews-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+          <item>
+            <coplet-layout name="coplet">
+              <parameter name="border" value="0" />
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance-data>CNNEurope-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="Weblogs">
+    <composite-layout name="column">
+      <item>
+        <composite-layout name="row">
+          <item>
+            <parameter name="width" value="20%" />
+            <coplet-layout name="coplet">
+              <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+          <item>
+            <parameter name="width" value="80%" />
+            <coplet-layout name="coplet">
+              <coplet-instance-data>ML Weblog-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+      <item>
+        <composite-layout name="row">
+          <item>
+            <coplet-layout name="coplet">
+              <coplet-instance-data>Weblog-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="TabDemo1">
+    <composite-layout name="tab">
+      <named-item name="One">
+        <coplet-layout name="coplet">
+          <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
+        </coplet-layout>
+      </named-item>
+      <named-item name="Two">
+        <coplet-layout name="coplet">
+          <coplet-instance-data>ML Weblog-1</coplet-instance-data>
+        </coplet-layout>
+      </named-item>
+      <named-item name="Three">
+        <coplet-layout name="coplet">
+          <coplet-instance-data>Weblog-1</coplet-instance-data>
+        </coplet-layout>
+      </named-item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="TabDemo2">
+    <composite-layout name="linktab">
+      <named-item name="One">
+        <coplet-layout name="coplet">
+          <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
+        </coplet-layout>
+      </named-item>
+      <named-item name="Two">
+        <coplet-layout name="coplet">
+          <coplet-instance-data>ML Weblog-1</coplet-instance-data>
+        </coplet-layout>
+      </named-item>
+      <named-item name="Three">
+        <coplet-layout name="coplet">
+          <coplet-instance-data>Weblog-1</coplet-instance-data>
+        </coplet-layout>
+      </named-item>
+    </composite-layout>
+  </named-item>
+  <named-item name="TabDemo3">
+    <composite-layout name="linktab">
+      <named-item name="One">
+        <coplet-layout name="coplet">
+          <coplet-instance-data>CZ Weblog-1</coplet-instance-data>
+        </coplet-layout>
+      </named-item>
+      <named-item name="Two">
+        <coplet-layout name="coplet">
+          <coplet-instance-data>ML Weblog-1</coplet-instance-data>
+        </coplet-layout>
+      </named-item>
+      <named-item name="Three">
+        <composite-layout name="tab">
+          <named-item name="Weblog">
+             <coplet-layout name="coplet">
+          <coplet-instance-data>Weblog-1</coplet-instance-data>
+        </coplet-layout>
+          </named-item>
+          <named-item name="Gallery">
+            <composite-layout name="column">
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>Gallery-Petstore</coplet-instance-data>
+               </coplet-layout>
+              </item>
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>GalleryViewer-1</coplet-instance-data>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </named-item>
+        </composite-layout>
+      </named-item>
+    </composite-layout>
+  </named-item>
+  <named-item name="Gallery">
+    <composite-layout name="column">
+      <item>
+        <coplet-layout name="coplet">
+          <coplet-instance-data>Gallery-Petstore</coplet-instance-data>
+        </coplet-layout>
+      </item>
+      <item>
+        <coplet-layout name="coplet">
+          <coplet-instance-data>GalleryViewer-1</coplet-instance-data>
+        </coplet-layout>
+      </item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="JSR-168">
+    <composite-layout name="row">
+      <item>
+        <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+          <coplet-instance-data>TestPortlet-1</coplet-instance-data>
+        </coplet-layout>
+      </item>
+      <item>
+        <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+          <coplet-instance-data>CocoonPortlet</coplet-instance-data>
+        </coplet-layout>
+      </item>
+      <item>
+        <composite-layout name="column">
+          <item>
+            <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+              <coplet-instance-data>Portlet-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+          <item>
+            <coplet-layout name="coplet" layout-renderer-name="portlet-window">
+              <coplet-instance-data>Portlet-2</coplet-instance-data>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="Basket">
+    <!-- This is the basket demo. Usually you would only have the user
+    tab for users and the admin tab for the admin and not both at
+    the same time (But this is a demo...) -->
+    <composite-layout name="tab" id="baskettab">
+      <named-item name="List">
+        <composite-layout name="row">
+          <item>
+            <composite-layout name="column">
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-8</coplet-instance-data>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </item>
+        </composite-layout>
+      </named-item>
+      <named-item name="Input">
+        <composite-layout name="row">
+          <item>
+            <composite-layout name="column">
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-1</coplet-instance-data>
+                </coplet-layout>
+              </item>
+              <item>
+                <coplet-layout name="coplet" >
+                  <coplet-instance-data>basket-sample-2</coplet-instance-data>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </item>
+          <item>
+            <composite-layout name="column">
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-3</coplet-instance-data>
+                </coplet-layout>
+              </item>
+              <item>
+                <coplet-layout name="coplet" >
+                  <coplet-instance-data>basket-sample-4</coplet-instance-data>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </item>
+          <item>
+            <composite-layout name="column">
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-5</coplet-instance-data>
+                </coplet-layout>
+              </item>
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-6</coplet-instance-data>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </item>
+        </composite-layout>
+      </named-item>
+      <named-item name="Content">
+        <composite-layout name="row">
+          <item>
+            <composite-layout name="tab">
+              <named-item name="All">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Document">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-document</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Request">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-request</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Result">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-result</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Notepad">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-notepad</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+              <named-item name="Folder">
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-folder</coplet-instance-data>
+                </coplet-layout>
+              </named-item>
+            </composite-layout>
+          </item>
+          <item>
+            <composite-layout name="column">
+              <item>
+                <coplet-layout name="coplet" id="basket-content">
+                  <coplet-instance-data>basket-content</coplet-instance-data>
+                </coplet-layout>
+              </item>
+              <item>
+                <coplet-layout name="coplet">
+                  <coplet-instance-data>basket-sample-7</coplet-instance-data>
+                </coplet-layout>
+              </item>         
+            </composite-layout>
+          </item>
+        </composite-layout>
+      </named-item>
+      <named-item name="Admin">
+        <composite-layout name="column">
+          <item>
+            <coplet-layout name="coplet" >
+              <coplet-instance-data>BasketAdmin</coplet-instance-data>
+            </coplet-layout>
+          </item>
+          <item>
+            <coplet-layout name="coplet">
+              <coplet-instance-data>Basket.admin</coplet-instance-data>
+            </coplet-layout>
+          </item>
+          <item>
+            <coplet-layout name="coplet" id="basket-content-admin">
+              <coplet-instance-data>basket-content</coplet-instance-data>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </named-item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="Apps">
+    <composite-layout name="row">
+      <item>
+        <composite-layout name="column">
+          <item>
+            <parameter name="width" value="50%" />
+            <coplet-layout name="coplet" >
+              <coplet-instance-data>app-test-1</coplet-instance-data>
+            </coplet-layout>
+          </item>
+          <item>
+            <parameter name="width" value="50%" />
+            <coplet-layout name="coplet" >
+              <coplet-instance-data>app-test-2</coplet-instance-data>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+      <item>
+        <composite-layout name="column">
+          <item>
+            <parameter name="width" value="50%" />
+            <coplet-layout name="coplet" >
+              <coplet-instance-data>app-test-3</coplet-instance-data>
+            </coplet-layout>
+          </item>
+          <item>
+            <parameter name="width" value="50%" />
+            <coplet-layout name="coplet" >
+              <coplet-instance-data>app-test-4</coplet-instance-data>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+    </composite-layout>
+  </named-item>
+  <named-item name="AppCoplet">
+    <coplet-layout name="coplet">
+      <coplet-instance-data>Google-1</coplet-instance-data>
+    </coplet-layout>
+  </named-item>
+</composite-layout>

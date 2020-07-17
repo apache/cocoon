@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ 
+
+-->
+
+	<layout-profile>
+  		<portal>
+			<layouts>	
+			
+				<!-- there is always one layout part without an attribute media.
+                                         	      This is the default layout -->
+	            		<layout>
+        					<background>
+				          		<color>#ffffff</color>
+        					</background>
+        					<font>
+          						<type>Arial, Helvetica, sans-serif</type>
+          						<size>2</size>
+          						<color>black</color>
+	        				</font>
+         				</layout>
+      			</layouts>
+			
+			  <!-- The following means that the portal has a header area -->
+  			<header>
+				<exists>true</exists>
+  			</header>
+  			
+			<!-- The following means that the portal has 3 columns -->
+			<columns>
+				<number>3</number>
+			</columns>
+
+  			<!-- The following means that the portal has a footer area -->
+  			<footer>
+				<exists>false</exists>
+  			</footer>
+		</portal>
+
+		<coplets>
+			<layouts>
+        				<layout>
+					<title>
+		        				<background>
+						          <color>#46627A</color>
+						</background>
+						<font>
+	          						<type>Arial</type>
+          							<size>2</size>
+          							<color>#ffffff</color>
+						</font>
+					</title>
+					<content>
+						<font>
+	          						<type>Arial</type>
+          							<size>2</size>
+          							<color>#000000</color>
+						</font>
+	        					<background>
+						          <color>#ffffff</color>
+						</background>
+					</content>
+				</layout>
+			</layouts>
+ 		</coplets>
+
+	</layout-profile>
+
+
+

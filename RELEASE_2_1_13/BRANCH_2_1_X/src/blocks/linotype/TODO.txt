@@ -1,0 +1,12 @@
+ 
+ What is left to do?
+ -------------------
+
+  - IE support is not finished, but the framework for browser abstraction is there and no 
+    mozilla-specific features are used.
+  
+  - installing/personalizing is a pain.
+  
+  - the repository is kind of a joke, it should be using the repository block
+  
+  - 

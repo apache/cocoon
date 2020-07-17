@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<document>
+	<header>
+		<title>Addressbook : Introduction</title>
+		<authors>
+			<person name="Jeremy Quinn" email="jeremy@apache.org"/>
+		</authors>
+		<subtitle>An introduction to the Addressbook</subtitle>
+		<abstract>Using LDAP Entries</abstract>
+	</header>
+
+	<body>
+		<section>
+			<title>Addressbook : Introduction</title>
+            <p>Welcome to the Addressbook sample.</p>
+            <p>Donated by Ross McDonald and Jeremy Quinn from their presentation at <a href="http://wiki.apache.org/cocoon/GT2006Notes">CocoonGT 2006</a>.</p>
+            <p>Please run through the setup section below then give the sample a try <a href="index.html">here</a>.</p>
+        </section>
+        <section>
+            <title>Setup</title>
+            <p>In order for this sample to work, LDAP needs setting up on this machine.</p>
+            <p>You will need to do the following setup in a terminal, using the configuration files in samples/resources in this block.</p>
+            
+            <p>NB. These instructions are only tested on MacOSX 'Tiger' where OpenLDAP is pre-installed as standard</p>
+
+            <p>Copy the provided OpenLDAP config file :<br/>
+                <code>$ cd src/blocks/naming/samples/resources</code><br/>
+                <code>$ sudo cp slapd.conf /etc/openldap/slapd.conf</code>
+            </p>
+            
+            <p>Start OpenLDAP :<br/>
+                <code>$ sudo /usr/libexec/slapd</code>
+            </p>
+
+            <p>Configure the Addressbook directory :<br/>
+                <code>$ sudo ldapadd -x -D "dc=ldap,dc=cocoongt,dc=org" -W -f directory.ldif</code>
+            </p>
+
+            <p>Add some sample data to the Addressbook :<br/>
+                <code>$ sudo ldapadd -x -D "dc=ldap,dc=cocoongt,dc=org" -W -f contact.ldif</code>
+            </p>
+
+            <p>When these operations ask for the LDAP password, enter 'secret'</p>
+		</section>
+	</body>
+</document>
+

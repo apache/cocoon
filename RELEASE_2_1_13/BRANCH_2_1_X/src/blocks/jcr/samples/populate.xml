@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | Populates JCR repository with some sample data
+    | CVS $Id$
+    +-->
+<html>
+  <h2>Populating JCR with sample data</h2>
+
+  <h3>Import sitemap.xmap ...</h3>
+  <textarea cols="75" rows="3">
+    <s:write xmlns:s="http://apache.org/cocoon/source/1.0">
+      <s:source>jcr://cocoon/sitemap</s:source>
+      <s:fragment>
+        <i:include src="sitemap.xmap" xmlns:i="http://apache.org/cocoon/include/1.0"/>
+      </s:fragment>
+    </s:write>
+  </textarea>
+      
+  <h3>Import dir2samples.xsl ...</h3>
+  <textarea cols="75" rows="3">
+    <s:write xmlns:s="http://apache.org/cocoon/source/1.0">
+      <s:source>jcr://cocoon/dir2samples.xsl</s:source>
+      <s:fragment>
+        <i:include src="dir2samples.xsl" xmlns:i="http://apache.org/cocoon/include/1.0"/>
+      </s:fragment>
+    </s:write>
+  </textarea>
+
+  <h3>Import samples.xml ...</h3>
+  <textarea cols="75" rows="3">
+    <s:write xmlns:s="http://apache.org/cocoon/source/1.0">
+      <s:source>jcr://cocoon/samples.xml</s:source>
+      <s:fragment>
+        <i:include src="samples.xml" xmlns:i="http://apache.org/cocoon/include/1.0"/>
+      </s:fragment>
+    </s:write>
+  </textarea>
+
+  <h3>Done</h3>
+  <p>Review results of all operations and go check other samples.</p>
+  <a href="./">Go Back</a>
+</html>

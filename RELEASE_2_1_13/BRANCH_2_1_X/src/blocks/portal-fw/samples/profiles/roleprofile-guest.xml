@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ 
+
+ Description: The delta for the guest role
+              Disable the coplet personalize
+              Add a new coplet personalize-guest
+
+-->
+<role-delta>
+	<coplets-delta>
+		<coplets>
+			<coplet id="personalize">
+				<configuration>
+       					<active>false</active> <!-- this is not active for guests -->  
+    				</configuration>
+			</coplet>
+			<coplet id="personalizeguest">
+     				<configuration>  
+       				<active>true</active>  
+    				</configuration>
+			</coplet>
+		</coplets>
+	</coplets-delta>
+
+<portal-profile>
+ 
+	<content>
+		<header>
+     			<coplet id="personalizeguest" position="1" number="1">
+				<status>
+					<visible>true</visible>
+   					<size>max</size>
+				</status>
+			</coplet>
+		</header>
+		<column position="1">
+			<width>28%</width>
+			<coplets>
+				<coplet id="sundnnews" position="2" number="8">
+  					<status>
+       					<visible>true</visible>
+    	    					<size>max</size>
+					</status>
+				</coplet>
+			</coplets>
+    		</column>
+  
+		 <column position="2">
+			<width>50%</width>
+			<coplets>
+				<coplet id="customnews" position="1" number="7">
+  					<status>
+       					<visible>true</visible>
+    	    					<size>max</size>
+					</status>
+				</coplet>
+				<coplet id="feedback" position="3" number="9">        
+					<status>
+					      <visible>true</visible>               
+						<size>max</size>      
+					</status>     
+				</coplet>
+			</coplets>
+   		</column>
+ 		
+		 <column position="3">
+			<width>22%</width>
+			<coplets>
+      				<coplet id="germany" position="2" number="9">
+  					<status>
+        					<visible>true</visible>
+     	   					<size>max</size>
+					</status>
+				</coplet>
+
+			</coplets>
+   		</column>
+	
+ 	</content>
+</portal-profile>
+
+</role-delta>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<coplets>
+   <coplet-instance-data id="Newsweek-1" name="standard">
+      <coplet-data>Newsweek</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="NYTBusiness-1" name="standard">
+      <coplet-data>NYTBusiness</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="BBCNews-1" name="standard">
+      <coplet-data>BBCNews</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="CNET News-1" name="standard">
+      <coplet-data>CNET News</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="CNET Business-1" name="standard">
+      <coplet-data>CNET Business</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="CSTNews-1" name="standard">
+      <coplet-data>CSTNews</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="CNNEurope-1" name="standard">
+      <coplet-data>CNNEurope</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="ML Weblog-1" name="standard">
+      <coplet-data>ML Weblog</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="CZ Weblog-1" name="standard">
+      <coplet-data>CZ Weblog</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Weblog-1" name="standard">
+      <coplet-data>Weblog</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Portal-Intro-1" name="standard">
+      <coplet-data>Portal-Intro</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Right-1" name="standard">
+      <coplet-data>Portal-Right</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Left-1" name="standard">
+      <coplet-data>Portal-Left</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Bottom-1" name="standard">
+      <coplet-data>Portal-Bottom</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Portal-Demo-1" name="standard">
+      <coplet-data>Portal-Demo</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Gallery-Petstore" name="standard">
+      <coplet-data>Gallery</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="GalleryViewer-1" name="standard">
+      <coplet-data>GalleryViewer</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Login-1" name="standard">
+      <coplet-data>Login</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Portlet-1" name="standard">
+      <coplet-data>Portlet1</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Portlet-2" name="standard">
+      <coplet-data>Portlet2</coplet-data>
+   </coplet-instance-data>
+
+   <!-- This is the basket sample
+   -->
+   <coplet-instance-data id="basket" name="standard">
+      <coplet-data>Basket</coplet-data>
+      <attribute>  <!-- which kinds are enabled for this user: briefcase, basker, folder? -->
+         <name>basket:enabled-storages</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">briefcase,basket,folder</value>
+      </attribute>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="basket-document" name="standard">
+       <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">document</value>
+      </attribute>       
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-request" name="standard">
+       <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">request</value>
+      </attribute>       
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-result" name="standard">
+       <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">result</value>
+      </attribute>       
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-notepad" name="standard">
+      <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">notepad</value>
+      </attribute>       
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-folder" name="standard">
+       <coplet-data>Basket</coplet-data>
+      <attribute>
+         <name>type</name>
+         <value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">folder</value>
+      </attribute>       
+   </coplet-instance-data>
+
+   <coplet-instance-data id="Basket.admin" name="standard">
+      <coplet-data>Basket.admin</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-content" name="standard">
+      <coplet-data>BasketContent</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="BasketAdmin" name="standard">
+      <coplet-data>BasketAdmin</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-1" name="standard">
+      <coplet-data>BasketSampleStaticCoplet</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-2" name="standard">
+      <coplet-data>BasketSampleCopletWithAttribute</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-3" name="standard">
+      <coplet-data>BasketSampleCopletWithInlineProcess</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-4" name="standard">
+      <coplet-data>BasketSampleCopletWithInputProcess</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-5" name="standard">
+      <coplet-data>BasketSampleCopletWithApp</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-6" name="standard">
+      <coplet-data>BasketSampleCopletWithUpload</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-7" name="standard">
+      <coplet-data>BasketSampleCopletWithInputProcessShow</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="basket-sample-8" name="standard">
+      <coplet-data>BasketSampleCopletList</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="TestPortlet-1" name="standard">
+      <coplet-data>TestPortlet1</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="CocoonPortlet" name="standard">
+      <coplet-data>CocoonPortlet</coplet-data>
+   </coplet-instance-data>
+
+   <coplet-instance-data id="app-test-1" name="standard">
+      <coplet-data>app-test-one</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="app-test-2" name="standard">
+      <coplet-data>app-test-one</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="app-test-3" name="standard">
+      <coplet-data>app-test-two</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="app-test-4" name="standard">
+      <coplet-data>app-test-two</coplet-data>
+   </coplet-instance-data>
+   <coplet-instance-data id="Google-1" name="standard">
+      <coplet-data>Google</coplet-data>
+   </coplet-instance-data>
+
+</coplets>

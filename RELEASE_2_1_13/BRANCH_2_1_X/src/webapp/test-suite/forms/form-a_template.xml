@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- This file is similar to form1_template_action.xml. They differ in group layout,
+     form's action attribute (to use continuations) and, this one is a dynamic form
+     template that changes the 'contacts' repeater layout depending on its size -->
+<html xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <head>
+    <title>Sample form A</title>
+  </head>
+  <body>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="GET">
+      <ft:continuation-id/>
+      ${value}
+      ${CocoonFormsInstance.getChild("a")}
+      <ft:widget id="a"/>
+      <ft:widget id="change"/>
+      <ft:widget id="ok"/>
+    </ft:form-template>
+  </body>
+</html>
