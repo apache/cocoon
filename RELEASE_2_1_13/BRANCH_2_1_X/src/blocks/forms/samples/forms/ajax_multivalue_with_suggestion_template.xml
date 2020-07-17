@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page
+    xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+    xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+    xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/jx-macros.xml"/>
+  <h4 class="samplesGroup">AJAX sample</h4>
+  <title>Cocoon multivalue field with suggestions</title>
+  <content>
+
+    <para>This simple example illustrates the &lt;fd:multivaluefield&gt; styled as
+      MultiValueEditorWithSuggestion feature, that allows to provide suggestions on
+      the fly to the user.
+    </para>
+
+    <ft:form-template action="continue" method="post" ajax="true">
+      <ft:continuation-id/>
+      Choose a person.
+      <br/>
+      <ft:widget id="contacts">
+        <fi:styling type="MultiValueEditorWithSuggestion"
+            dataUrl="_cocoon/forms/suggest/contacts"/>
+      </ft:widget>
+      <br/>
+      <br/>
+      <ft:widget id="ok"/>
+    </ft:form-template>
+
+    <p>
+      <a href="./">Back to Forms samples</a>
+    </p>
+  </content>
+</page>

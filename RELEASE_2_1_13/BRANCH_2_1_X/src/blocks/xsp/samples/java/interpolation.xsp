@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- SVN $Id$ -->
+
+<xsp:page
+  language="java"
+  xmlns:xsp-interpolation="http://apache.org/xsp/interpolation/1.0"
+  xmlns:xsp="http://apache.org/xsp">
+
+  <xsp:logicsheet location="logicsheets/interpolation.xsl"/>
+
+  <page>
+    <title>Attribute and Text Interpolation</title>
+    <content>
+      <p>
+        {#Constants.COMPLETE_NAME} allows to use
+        <tt>{##expr}</tt><!-- Note ## to escape interpolation. -->
+        to replace the value of the Java expression <tt>expr</tt>
+        within attribute values and text nodes.
+      </p>
+
+      <p>
+        For expression interpolation in text nodes the difference is to
+        the usual xsp:expr syntax is minor.
+        For dynamic attribute values, however, interpolation
+        keeps it much more concise and readable.
+      </p>
+      <pre>
+        <![CDATA[
+        <xsp:logic>
+          String world = "world";
+          String color = "red";
+        </xsp:logic>
+        ]]>
+      </pre>
+
+      <xsp:logic>
+        String world = "world";
+        String color = "red";
+      </xsp:logic>
+
+      <p>
+        Just compare this:
+      </p>
+      <!-- Use attributes to disable interpolation in nested content. -->
+      <pre xsp:attr-interpolation="false" xsp:text-interpolation="false"><![CDATA[
+        <center style="color:{#color}">Hello simple {#world}!</center>]]>
+      </pre>
+      <center style="color:{#color}">Hello simple {#world}!</center>
+
+      <p>
+        to that:
+      </p>
+      <pre><![CDATA[
+        <center><xsp:attribute name="style">color:<xsp:expr>color</xsp:expr></xsp:attribute>Hello complex <xsp:expr>world</xsp:expr>!</center>]]>
+      </pre>
+      <center><xsp:attribute name="style">color:<xsp:expr>color</xsp:expr></xsp:attribute>Hello complex <xsp:expr>world</xsp:expr>!</center>
+
+      <p>
+        Interpolation can also be used in logicsheets:
+      </p>
+      <xsp-interpolation:greeting/>
+
+      <p>
+        The XSP expression parser understands nested braces,
+        single and double quoted strings, and backslash-escaped
+        quotes and apostrophes.
+      </p>
+      <table border="1">
+        <tr>
+          <th>Expression</th>
+          <th>Result</th>
+          <th>Expected</th>
+        </tr>
+        <tr>
+          <td xsp:text-interpolation="false">
+            {#new String[]{}.length}
+          </td>
+          <td>
+            {#new String[]{}.length}
+          </td>
+          <td>
+            0
+          </td>
+        </tr>
+        <tr>
+          <td xsp:text-interpolation="false">
+            {#new String[]{"}"}.length}
+          </td>
+          <td>
+            {#new String[]{"}"}.length}
+          </td>
+          <td>
+            1
+          </td>
+        </tr>
+        <tr>
+          <td xsp:text-interpolation="false">
+            {#"'\"}".indexOf('}')}
+          </td>
+          <td>
+            {#"'\"}".indexOf('}')}
+          </td>
+          <td>
+            2
+          </td>
+        </tr>
+      </table>
+    </content>
+  </page>
+
+</xsp:page>

@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | Cocoon Forms Components
+    | @version $Id$
+    +-->
+<components>
+  <!-- Include roles -->
+  <include src="resource://org/apache/cocoon/forms/forms.roles"/>
+
+  <!--+
+      | Bindings
+      +-->
+  <forms-binding logger="forms.bindings">
+    <bindings>
+      <binding name="group" src="org.apache.cocoon.forms.binding.GroupJXPathBindingBuilder"/>
+      <binding name="value" src="org.apache.cocoon.forms.binding.ValueJXPathBindingBuilder"/>
+      <binding name="multi-value" src="org.apache.cocoon.forms.binding.MultiValueJXPathBindingBuilder"/>
+      <binding name="context" src="org.apache.cocoon.forms.binding.ContextJXPathBindingBuilder"/>
+      <binding name="repeater" src="org.apache.cocoon.forms.binding.RepeaterJXPathBindingBuilder"/>
+      <binding name="simple-repeater" src="org.apache.cocoon.forms.binding.SimpleRepeaterJXPathBindingBuilder"/>
+      <binding name="temp-repeater" src="org.apache.cocoon.forms.binding.TempRepeaterJXPathBindingBuilder"/>
+      <binding name="aggregate" src="org.apache.cocoon.forms.binding.AggregateJXPathBindingBuilder"/>
+      <binding name="set-attribute" src="org.apache.cocoon.forms.binding.SetAttributeJXPathBindingBuilder"/>
+      <binding name="insert-node" src="org.apache.cocoon.forms.binding.InsertNodeJXPathBindingBuilder"/>
+      <binding name="delete-node" src="org.apache.cocoon.forms.binding.DeleteNodeJXPathBindingBuilder"/>
+      <binding name="insert-bean" src="org.apache.cocoon.forms.binding.InsertBeanJXPathBindingBuilder"/>
+      <binding name="javascript" src="org.apache.cocoon.forms.binding.JavaScriptJXPathBindingBuilder"/>
+      <binding name="custom" src="org.apache.cocoon.forms.binding.CustomJXPathBindingBuilder" />
+      <binding name="case" src="org.apache.cocoon.forms.binding.CaseJXPathBindingBuilder"/>
+      <binding name="class" src="org.apache.cocoon.forms.binding.ClassJXPathBindingBuilder"/>
+      <binding name="new" src="org.apache.cocoon.forms.binding.NewJXPathBindingBuilder"/>
+      <binding name="struct" src="org.apache.cocoon.forms.binding.StructJXPathBindingBuilder"/>
+      <binding name="union" src="org.apache.cocoon.forms.binding.UnionJXPathBindingBuilder"/>
+      <binding name="expand" src="org.apache.cocoon.forms.binding.ExpandJXPathBindingBuilder"/>
+      <binding name="import" src="org.apache.cocoon.forms.binding.ImportJXPathBindingBuilder"/>
+      <binding name="treemodel" src="org.apache.cocoon.forms.binding.TreeModelJXPathBuilder"/>
+    </bindings>
+  </forms-binding>
+
+  <!--+
+      | Datatypes and (old style, deprecated) validation rules
+      +-->
+  <forms-datatype logger="forms.types">
+    <datatypes>
+      <datatype name="string" src="org.apache.cocoon.forms.datatype.typeimpl.StringTypeBuilder">
+        <convertors default="dummy" plain="dummy">
+          <convertor name="dummy" src="org.apache.cocoon.forms.datatype.convertor.DummyStringConvertorBuilder"/>
+          <convertor name="htmlcleaner" src="org.apache.cocoon.forms.datatype.convertor.HtmlCleaningConvertorBuilder"/>
+          <!-- FIXME: The class is missing, so let's uncomment it for now
+          <convertor name="html2xml" src="org.apache.cocoon.forms.datatype.convertor.HTMLtoXMLStringConvertorBuilder"/>
+          -->
+        </convertors>
+      </datatype>
+      <datatype name="integer" src="org.apache.cocoon.forms.datatype.typeimpl.IntegerTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainIntegerConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingIntegerConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="long" src="org.apache.cocoon.forms.datatype.typeimpl.LongTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainLongConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingLongConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="decimal" src="org.apache.cocoon.forms.datatype.typeimpl.DecimalTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainDecimalConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingDecimalConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="float" src="org.apache.cocoon.forms.datatype.typeimpl.FloatTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainFloatConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingFloatConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="double" src="org.apache.cocoon.forms.datatype.typeimpl.DoubleTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainDoubleConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingDoubleConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="date" src="org.apache.cocoon.forms.datatype.typeimpl.DateTypeBuilder">
+        <convertors default="formatting" plain="millis">
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingDateConvertorBuilder"/>
+          <convertor name="millis" src="org.apache.cocoon.forms.datatype.convertor.MillisDateConvertorBuilder"/>
+          <convertor name="icu4j" src="org.apache.cocoon.forms.datatype.convertor.Icu4jDateConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="boolean" src="org.apache.cocoon.forms.datatype.typeimpl.BooleanTypeBuilder">
+        <convertors default="plain" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainBooleanConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="enum" src="org.apache.cocoon.forms.datatype.typeimpl.EnumTypeBuilder">
+        <convertors default="enum" plain="enum">
+          <convertor name="enum" src="org.apache.cocoon.forms.datatype.convertor.EnumConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="bean" src="org.apache.cocoon.forms.datatype.typeimpl.BeanTypeBuilder">
+        <convertors default="bean" plain="bean">
+          <convertor name="bean" src="org.apache.cocoon.forms.datatype.convertor.BeanConvertorBuilder"/>
+        </convertors>
+      </datatype>
+      <datatype name="char" src="org.apache.cocoon.forms.datatype.typeimpl.CharTypeBuilder">
+        <convertors default="plain" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.CharConvertorBuilder"/>
+        </convertors>
+      </datatype>
+    </datatypes>
+    <validation-rules>
+      <!-- old-style datatype validators (deprecated) -->
+      <validation-rule name="length" src="org.apache.cocoon.forms.datatype.validationruleimpl.LengthValidationRuleBuilder"/>
+      <validation-rule name="email" src="org.apache.cocoon.forms.datatype.validationruleimpl.EmailValidationRuleBuilder"/>
+      <validation-rule name="value-count" src="org.apache.cocoon.forms.datatype.validationruleimpl.ValueCountValidationRuleBuilder"/>
+      <validation-rule name="range" src="org.apache.cocoon.forms.datatype.validationruleimpl.RangeValidationRuleBuilder"/>
+      <validation-rule name="assert" src="org.apache.cocoon.forms.datatype.validationruleimpl.AssertValidationRuleBuilder"/>
+      <validation-rule name="mod10" src="org.apache.cocoon.forms.datatype.validationruleimpl.Mod10ValidationRuleBuilder"/>
+      <validation-rule name="regexp" src="org.apache.cocoon.forms.datatype.validationruleimpl.RegExpValidationRuleBuilder"/>
+    </validation-rules>
+  </forms-datatype>
+
+  <!--+
+      | Expression language and additional functions
+      +-->
+  <forms-expression logger="forms.expression">
+    <function name="Null" class="org.apache.cocoon.forms.expression.NullFunction"/>
+    <function name="IsNull" class="org.apache.cocoon.forms.expression.IsNullFunction"/>
+    <function name="String" class="org.apache.cocoon.forms.expression.StringFunction"/>
+    <function name="Sum" class="org.apache.cocoon.forms.expression.SumFunction"/>
+  </forms-expression>
+
+  <!--+
+      | FormManager component and form model definition
+      +-->
+  <forms-formmanager logger="forms.model">
+    <widgets>
+      <widget name="form" src="org.apache.cocoon.forms.formmodel.FormDefinitionBuilder"/>
+      <widget name="import" src="org.apache.cocoon.forms.formmodel.ImportDefinitionBuilder"/>
+      <widget name="expand" src="org.apache.cocoon.forms.formmodel.ExpandDefinitionBuilder"/>
+      <widget name="field" src="org.apache.cocoon.forms.formmodel.FieldDefinitionBuilder"/>
+      <widget name="group" src="org.apache.cocoon.forms.formmodel.GroupDefinitionBuilder"/>
+      <widget name="repeater" src="org.apache.cocoon.forms.formmodel.RepeaterDefinitionBuilder"/>
+      <widget name="booleanfield" src="org.apache.cocoon.forms.formmodel.BooleanFieldDefinitionBuilder"/>
+      <widget name="multivaluefield" src="org.apache.cocoon.forms.formmodel.MultiValueFieldDefinitionBuilder"/>
+      <widget name="action" src="org.apache.cocoon.forms.formmodel.ActionDefinitionBuilder"/>
+      <widget name="repeater-action" src="org.apache.cocoon.forms.formmodel.RepeaterActionDefinitionBuilder"/>
+      <widget name="row-action" src="org.apache.cocoon.forms.formmodel.RowActionDefinitionBuilder"/>
+      <widget name="submit" src="org.apache.cocoon.forms.formmodel.SubmitDefinitionBuilder"/>
+      <widget name="button" src="org.apache.cocoon.forms.formmodel.ButtonDefinitionBuilder"/>
+      <widget name="aggregatefield" src="org.apache.cocoon.forms.formmodel.AggregateFieldDefinitionBuilder"/>
+      <widget name="output" src="org.apache.cocoon.forms.formmodel.OutputDefinitionBuilder"/>
+      <widget name="upload" src="org.apache.cocoon.forms.formmodel.UploadDefinitionBuilder"/>
+      <widget name="messages" src="org.apache.cocoon.forms.formmodel.MessagesDefinitionBuilder"/>
+      <widget name="class" src="org.apache.cocoon.forms.formmodel.ClassDefinitionBuilder"/>
+      <widget name="new" src="org.apache.cocoon.forms.formmodel.NewDefinitionBuilder"/>
+      <widget name="struct" src="org.apache.cocoon.forms.formmodel.StructDefinitionBuilder"/>
+      <widget name="union" src="org.apache.cocoon.forms.formmodel.UnionDefinitionBuilder"/>
+      <widget name="captcha" src="org.apache.cocoon.forms.formmodel.CaptchaDefinitionBuilder"/>
+      <widget name="tree" src="org.apache.cocoon.forms.formmodel.tree.builder.TreeDefinitionBuilder"/>
+      <widget name="imagemap" src="org.apache.cocoon.forms.formmodel.ImageMapDefinitionBuilder"/>
+      <widget name="calculatedfield" src="org.apache.cocoon.forms.formmodel.CalculatedFieldDefinitionBuilder"/>
+      <widget name="googlemap" src="org.apache.cocoon.forms.formmodel.GoogleMapDefinitionBuilder"/>
+      <widget name="filterfield" src="org.apache.cocoon.forms.formmodel.RepeaterFilterFieldDefinitionBuilder"/>
+    </widgets>
+  </forms-formmanager>
+
+  <!--+
+      | Selection lists
+      +-->
+  <forms-selection-lists logger="forms.lists" default="default">
+    <selection-list name="default" class="org.apache.cocoon.forms.datatype.DefaultSelectionListBuilder"/>
+    <selection-list name="flow-jxpath" class="org.apache.cocoon.forms.datatype.FlowJXPathSelectionListBuilder"/>
+    <selection-list name="enum" class="org.apache.cocoon.forms.datatype.EnumSelectionListBuilder"/>
+    <selection-list name="java" class="org.apache.cocoon.forms.datatype.JavaSelectionListBuilder"/>
+  </forms-selection-lists>
+
+  <!--+
+      | Validators
+      +-->
+  <forms-validators logger="forms.validators">
+    <!-- new-style validators -->
+    <validator name="javascript" class="org.apache.cocoon.forms.validation.impl.JavaScriptValidatorBuilder"/>
+    <validator name="length" class="org.apache.cocoon.forms.validation.impl.LengthValidatorBuilder"/>
+    <validator name="email" class="org.apache.cocoon.forms.validation.impl.EmailValidatorBuilder"/>
+    <validator name="value-count" class="org.apache.cocoon.forms.validation.impl.ValueCountValidatorBuilder"/>
+    <validator name="range" class="org.apache.cocoon.forms.validation.impl.RangeValidatorBuilder"/>
+    <validator name="assert" class="org.apache.cocoon.forms.validation.impl.AssertValidatorBuilder"/>
+    <validator name="mod10" class="org.apache.cocoon.forms.validation.impl.Mod10ValidatorBuilder"/>
+    <validator name="regexp" class="org.apache.cocoon.forms.validation.impl.RegExpValidatorBuilder"/>
+    <validator name="captcha" class="org.apache.cocoon.forms.validation.impl.CaptchaValidatorBuilder"/>
+    <validator name="java" class="org.apache.cocoon.forms.validation.impl.JavaClassValidatorBuilder"/>
+  </forms-validators>
+
+  <!--+
+      | Calculated fields algorithms
+      +-->
+  <forms-calculated-algorithms logger="forms.algorithms" default="formula">
+    <algorithm name="formula" class="org.apache.cocoon.forms.formmodel.algorithms.SimpleFormulaBuilder"/>
+    <algorithm name="javascript" class="org.apache.cocoon.forms.formmodel.algorithms.JavaScriptBuilder"/>
+    <algorithm name="java" class="org.apache.cocoon.forms.formmodel.algorithms.JavaAlgorithmBuilder"/>
+    <algorithm name="repeatedformula" class="org.apache.cocoon.forms.formmodel.algorithms.RepeatedFormulaBuilder"/>
+  </forms-calculated-algorithms>
+
+
+  <!--+
+      | Widget listeners
+      +-->
+  <forms-widgetlisteners logger="forms.listeners">
+    <listener name="java" class="org.apache.cocoon.forms.event.impl.JavaClassWidgetListenerBuilder"/>
+    <listener name="javascript" class="org.apache.cocoon.forms.event.impl.JavaScriptWidgetListenerBuilder"/>
+  </forms-widgetlisteners>
+
+  <forms-treemodels>
+    <treemodel name="java" class="org.apache.cocoon.forms.formmodel.tree.builder.JavaTreeModelDefinitionBuilder"/>
+    <treemodel name="source" class="org.apache.cocoon.forms.formmodel.tree.builder.SourceTreeModelDefinitionBuilder"/>
+  </forms-treemodels>
+
+  <!--+
+      | Sitemap components
+      +-->
+  <generators>
+    <generator name="forms" logger="forms" src="org.apache.cocoon.forms.generation.FormsGenerator"/>
+  </generators>
+  <transformers>
+    <transformer name="forms" logger="forms" src="org.apache.cocoon.forms.transformation.FormsTemplateTransformer"/>
+  </transformers>
+
+</components>

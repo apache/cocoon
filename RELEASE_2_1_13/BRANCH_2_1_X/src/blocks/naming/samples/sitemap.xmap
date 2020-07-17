@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:components>
+    <map:transformers>
+    	<map:transformer logger="sitemap.transformer.i18n" name="i18n" pool-grow="4" pool-max="32" pool-min="8" src="org.apache.cocoon.transformation.I18nTransformer">
+            <catalogues default="local">
+              <catalogue id="local" name="addressbook" location="i18n"/>
+              <catalogue id="forms" name="messages" location="resource://org/apache/cocoon/forms/system/i18n"/>
+            </catalogues>
+            <cache-at-startup>true</cache-at-startup>
+            <untranslated-text>TODO: Finish the translations</untranslated-text>
+        </map:transformer>
+     </map:transformers>
+	 <map:pipes default="noncaching"/>
+  </map:components>
+
+	<map:flow language="javascript">
+		<map:script src="flow/flow.js"/>
+	</map:flow>
+
+	<map:pipelines>
+		
+		<map:pipeline internal-only="true">
+		    <map:act type="locale">
+		    
+                <!-- render JX Templates -->
+                <map:match pattern="screen/*">
+                    <map:generate type="jx" src="screens/{1}.xml"/>
+                    <map:transform type="i18n">
+                        <map:parameter name="locale" value="{../locale}"/>
+                    </map:transform>
+                    <map:transform src="xslt/page2html.xsl"/>
+                    <map:serialize/>
+                </map:match>
+                
+                <!-- render Cocoon Forms -->
+                <map:match pattern="form/*">
+                    <map:generate src="forms/{1}-template.xml"/>
+                    <map:transform type="forms">
+                        <map:parameter name="locale" value="{../locale}"/>
+                    </map:transform>
+                    <map:transform src="xslt/page2html.xsl"/>
+                    <map:transform src="xslt/forms.xsl">
+                        <map:parameter name="resources-uri" value="{request:contextPath}/_cocoon/resources"/>
+                    </map:transform>
+                    <map:transform type="i18n">
+                        <map:parameter name="locale" value="{../locale}"/>
+                    </map:transform>
+                    <map:serialize/>
+                </map:match>
+                
+            </map:act>
+		</map:pipeline>
+
+		<map:pipeline>
+
+			<!-- handle CForms Continuations -->
+			<map:match type="request-parameter" pattern="continuation-id">
+				<map:call continuation="{1}"/>
+			</map:match>
+
+            <!-- CSS stylesheets -->
+            <map:match pattern="styles/**.css">
+                <map:read src="styles/{1}.css" mime-type="text/css"/>
+            </map:match>
+
+			<!-- home page redirects to the welcome page -->
+            <map:match pattern="">
+                <map:redirect-to uri="cocoon:/welcome"/>
+            </map:match>
+            
+            <map:match pattern="welcome">
+                <map:generate src="welcome.xml"/>
+                <map:transform src="xslt/page2html.xsl"/>
+                <map:serialize/>
+            </map:match>
+
+			<!-- gets a single user, using flowscript -->
+			<map:match pattern="person.html">
+				<map:call function="getPerson">
+					<map:parameter name="screen" value="screen/person"/>
+					<map:parameter name="dn" value="{request-param:dn}"/><!-- the person's uid eg. cn=Jeremy Quinn,ou=muppets -->
+				</map:call>
+			</map:match>
+
+			<!-- gets all users in a department, using flowscript -->
+			<map:match pattern="people.html">
+				<map:call function="getPeople">
+					<map:parameter name="screen" value="screen/people"/>
+					<map:parameter name="dn" value="{request-param:dn}"/><!-- the department eg. ou=muppets  -->
+				</map:call>
+			</map:match>
+
+			<!-- gets all departments, using flowscript -->
+			<map:match pattern="index.html">
+				<map:call function="getDepartments">
+					<map:parameter name="screen" value="screen/departments"/>
+				</map:call>
+			</map:match>
+
+			<!-- make a new user, using flowscript and cforms -->
+			<map:match pattern="newperson.html">
+				<map:call function="handleForm">
+					<map:parameter name="function" value="addNewPerson"/>
+					<map:parameter name="form-definition" value="forms/person-model.xml"/>
+					<map:parameter name="bindingURI" value="forms/person-binding.xml"/>
+					<map:parameter name="screen" value="form/person"/>
+					<map:parameter name="dn" value="{request-param:dn}"/><!-- the department eg. ou=muppets  -->
+				</map:call>
+			</map:match>
+
+			<!-- update a user, using flowscript and cforms -->
+			<map:match pattern="updateperson.html">
+				<map:call function="handleForm">
+					<map:parameter name="function" value="updatePerson"/>
+					<map:parameter name="form-definition" value="forms/person-model.xml"/>
+					<map:parameter name="bindingURI" value="forms/person-binding.xml"/>
+					<map:parameter name="screen" value="form/person"/>
+					<map:parameter name="dn" value="{request-param:dn}"/><!-- the person's uid eg. cn=Jeremy Quinn,ou=muppets -->
+				</map:call>
+			</map:match>
+
+			<!-- deletes a single user, using flowscript -->
+			<map:match pattern="delete.html">
+				<map:call function="deletePerson">
+					<map:parameter name="dn" value="{request-param:dn}"/><!-- the person's uid eg. cn=Jeremy Quinn,ou=muppets -->
+				</map:call>
+			</map:match>
+
+		</map:pipeline>
+	</map:pipelines>
+</map:sitemap>
