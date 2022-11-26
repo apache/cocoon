@@ -21,6 +21,8 @@ package org.apache.cocoon.databases.bridge.spring.avalon;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -34,7 +36,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  *
  */
 public class SpringToAvalonDataSourceWrapper implements DataSource, DataSourceComponent {
-    
+
     private DataSource wrappedBean;
 
     /**
@@ -81,6 +83,13 @@ public class SpringToAvalonDataSourceWrapper implements DataSource, DataSourceCo
     }
 
     /**
+     * Required by JDK1.7.
+     */
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException();
+    }
+
+    /**
      * @return
      * @throws SQLException
      * @see javax.sql.CommonDataSource#getLogWriter()
@@ -106,7 +115,7 @@ public class SpringToAvalonDataSourceWrapper implements DataSource, DataSourceCo
     public void setLogWriter(PrintWriter out) throws SQLException {
         wrappedBean.setLogWriter(out);
     }
-    
+
     /**
      * @param iface
      * @return
@@ -114,8 +123,7 @@ public class SpringToAvalonDataSourceWrapper implements DataSource, DataSourceCo
      * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
      */
     public boolean isWrapperFor(Class iface) throws SQLException {
-        throw new UnsupportedOperationException("This operation is not supported because we need to stay compatible " +
-                                                "with Java 1.4 where isWrapperFor() is not defined");
+        return wrappedBean.isWrapperFor(iface);
     }
 
     /**
@@ -125,9 +133,7 @@ public class SpringToAvalonDataSourceWrapper implements DataSource, DataSourceCo
      * @see java.sql.Wrapper#unwrap(java.lang.Class)
      */
     public Object unwrap(Class iface) throws SQLException {
-        //I hope that nothing will call this method (GK)
-        throw new UnsupportedOperationException("This operation is not supported because we need to stay compatible " +
-        		                                "with Java 1.4 where unwrap() is not defined");
+        return wrappedBean.unwrap(iface);
     }
 
     public void configure(Configuration arg0) throws ConfigurationException {

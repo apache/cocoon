@@ -19,7 +19,9 @@ package org.apache.cocoon.databases.ibatis;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -63,13 +65,13 @@ public class ExcaliburDataSourceFactory implements DataSourceFactory {
         final ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
         if ( manager == null ) {
             throw new RuntimeException("Cocoon sitemap service manager is not available for " + this.getClass().getName() + "." +
-            " Make sure that you're initializing iBatis during an active request and not on startup.");            
+            " Make sure that you're initializing iBatis during an active request and not on startup.");
         }
         try {
             this.datasource = (DataSourceComponent)manager.lookup(DataSourceComponent.ROLE + '/' + connection);
         } catch (ServiceException e) {
             throw new CascadingRuntimeException("Unable to lookup data source with name " + connection + "." +
-                    " Check the cocoon.xconf and the iBatis sqlMapConfig.", e);                
+                    " Check the cocoon.xconf and the iBatis sqlMapConfig.", e);
         }
     }
 
@@ -95,6 +97,13 @@ public class ExcaliburDataSourceFactory implements DataSourceFactory {
             return this.timeout;
         }
 
+        /**
+         * Required by JDK1.7.
+         */
+        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+            throw new SQLFeatureNotSupportedException();
+        }
+
         public PrintWriter getLogWriter() throws SQLException {
             return this.writer;
         }
@@ -105,7 +114,7 @@ public class ExcaliburDataSourceFactory implements DataSourceFactory {
 
         public void setLogWriter(PrintWriter out) throws SQLException {
             this.writer = out;
-        }       
+        }
 
         /**
          * Required by JDK1.6.
