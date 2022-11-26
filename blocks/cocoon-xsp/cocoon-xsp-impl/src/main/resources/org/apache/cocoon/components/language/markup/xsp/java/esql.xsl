@@ -248,7 +248,6 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
         <xsl:when test="esql:pool">
           try {
             _esql_connection = new Cocoon2EsqlConnection( (DataSourceComponent) _esql_get_selector().select(String.valueOf(<xsl:copy-of select="$pool"/>)) );
-            setupLogger(_esql_connection);
 
             <xsl:if test="esql:allow-multiple-results">
              _esql_connection.setMultipleResults(String.valueOf(<xsl:copy-of select="$allow-multiple-results"/>));
@@ -268,7 +267,6 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
           </xsl:if>
           try {
             _esql_connection = new Cocoon2EsqlConnection();
-            setupLogger(_esql_connection);
 
             _esql_connection.setURL(String.valueOf(<xsl:copy-of select="$dburl"/>));
             <xsl:if test="esql:username">
