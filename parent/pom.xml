@@ -360,7 +360,7 @@
       <organizationUrl>http://www.apache.org</organizationUrl>
       <roles>
         <role>ASF member</role>
-        <role>PMC chair</role>        
+        <role>PMC chair</role>
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
@@ -506,7 +506,7 @@
       <roles>
         <role>Emeritus PMC Member</role>
         <role>Emeritus Committer</role>
-      </roles>	    
+      </roles>
       <timezone>+1</timezone>
     </developer>
     <developer>
@@ -1751,9 +1751,9 @@
         <version>1.1</version>
       </dependency>
       <dependency>
-        <groupId>eclipse</groupId>
-        <artifactId>jdtcore</artifactId>
-        <version>3.1.0</version>
+        <groupId>org.eclipse.jdt</groupId>
+        <artifactId>org.eclipse.jdt.core</artifactId>
+        <version>3.26.0</version>
       </dependency>
       <dependency>
         <groupId>net.sourceforge.jena</groupId>
@@ -1970,22 +1970,22 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-context-support</artifactId>
         <version>${spring.version}</version>
-      </dependency>          
+      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
         <version>${spring.version}</version>
-      </dependency>    
+      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>
         <version>${spring.version}</version>
-      </dependency>  
+      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jms</artifactId>
         <version>${spring.version}</version>
-      </dependency>        
+      </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
@@ -2001,7 +2001,7 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-tx</artifactId>
         <version>${spring.version}</version>
-      </dependency> 
+      </dependency>
       <dependency>
         <groupId>stax</groupId>
         <artifactId>stax-api</artifactId>
@@ -2233,7 +2233,7 @@
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-block-deployment</artifactId>
         <version>1.1.0</version>
-      </dependency>      
+      </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-blocks-fw-demo1</artifactId>
@@ -2773,7 +2773,7 @@
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-servlet-service-components-sample</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-      </dependency>	  	  
+      </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-servlet-service-impl</artifactId>
@@ -3056,12 +3056,12 @@
               <exclude>src/site/**</exclude>
             </excludes>
           </configuration>
-        </plugin>  
+        </plugin>
         <plugin>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-it-fw</artifactId>
           <version>1.0.0-M1</version>
-        </plugin>        
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -3237,7 +3237,7 @@
     <docs.m.configuration-api.relPath>${docs.m.site-configuration.relPath}configuration-api/</docs.m.configuration-api.relPath>
     <docs.m.spring-configurator.relPath>${docs.m.site-configuration.relPath}spring-configurator/</docs.m.spring-configurator.relPath>
     <docs.m.jnet.relPath>subprojects/jnet/</docs.m.jnet.relPath>
-    <docs.m.block-deployment.relPath>subprojects/block-deployment/</docs.m.block-deployment.relPath>    
+    <docs.m.block-deployment.relPath>subprojects/block-deployment/</docs.m.block-deployment.relPath>
     <!-- Path and version properties: blocks -->
     <docs.m.ajax.version>1.0</docs.m.ajax.version>
     <docs.m.ajax.relPath>2.2/blocks/ajax/${docs.m.ajax.version}/</docs.m.ajax.relPath>
@@ -3329,7 +3329,7 @@
                 </goals>
               </execution>
             </executions>
-          </plugin>              
+          </plugin>
         </plugins>
       </build>
     </profile>
