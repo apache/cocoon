@@ -34,7 +34,11 @@ import java.util.Properties;
  * <p>This module accept any configuration parameters and passes them as
  * properties to the InitialContext. When connecting to the Naming context
  * of the server Cocoon is running in, no parameters are required.</p>
- *
+ * <br/>
+ * <p><b>Security note:</b> Use secure parameters only with this module as
+ * it performs a JNDI lookup that can be exploited for remote code execution
+ * (RCE).</p>
+ * <br/>
  * <p>Example module configuration when connecting to external WebLogic server:
  * <pre>
  *   &lt;java.naming.factory.initial&gt;weblogic.jndi.WLInitialContextFactory&lt;/java.naming.factory.initial&gt;
