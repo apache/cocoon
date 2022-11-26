@@ -29,7 +29,7 @@
   </parent>
   <artifactId>cocoon-blocks-modules</artifactId>
   <version>6-SNAPSHOT</version>
-  <name>Cocoon Blocks [modules]</name>     
+  <name>Cocoon Blocks [modules]</name>
   <packaging>pom</packaging>
 
   <build>
@@ -49,7 +49,7 @@
       <plugin>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-maven-plugin</artifactId>
-        <version>1.0.0-M3</version>      
+        <version>1.0.0-M3</version>
       </plugin>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
@@ -75,33 +75,33 @@
               <name>org.apache.cocoon.mode</name>
               <value>dev</value>
             </systemProperty>
-          </systemProperties>          
+          </systemProperties>
         </configuration>
-      </plugin>             
+      </plugin>
     </plugins>
   </build>
-  
+
   <modules>
     <module>cocoon-ajax/cocoon-ajax-impl</module>
-    <module>cocoon-ajax/cocoon-ajax-sample</module>    
+    <module>cocoon-ajax/cocoon-ajax-sample</module>
     <module>cocoon-apples/cocoon-apples-impl</module>
-    <module>cocoon-apples/cocoon-apples-sample</module>    
+    <module>cocoon-apples/cocoon-apples-sample</module>
     <module>cocoon-core-sample/cocoon-core-additional-sample</module>
-    <module>cocoon-core-sample/cocoon-core-main-sample</module>    
+    <module>cocoon-core-sample/cocoon-core-main-sample</module>
     <module>cocoon-flowscript/cocoon-flowscript-impl</module>
     <module>cocoon-forms/cocoon-forms-impl</module>
-    <module>cocoon-forms/cocoon-forms-sample</module>    
-    <module>cocoon-it</module>    
+    <module>cocoon-forms/cocoon-forms-sample</module>
+    <module>cocoon-it</module>
     <module>cocoon-linkrewriter/cocoon-linkrewriter-impl</module>
     <module>cocoon-linkrewriter/cocoon-linkrewriter-sample</module>
     <module>cocoon-template/cocoon-template-impl</module>
-    <module>cocoon-template/cocoon-template-sample</module>    
+    <module>cocoon-template/cocoon-template-sample</module>
     <module>cocoon-samples-style/cocoon-samples-style-default</module>
     <module>cocoon-batik/cocoon-batik-impl</module>
     <module>cocoon-batik/cocoon-batik-sample</module>
     <module>cocoon-welcome</module>
   </modules>
-  
+
   <profiles>
     <profile>
       <id>eventcache-jms</id>
@@ -109,7 +109,7 @@
         <module>cocoon-eventcache/cocoon-eventcache-impl</module>
         <module>cocoon-eventcache/cocoon-eventcache-sample</module>
         <module>cocoon-jms/cocoon-jms-impl</module>
-        <module>cocoon-jms/cocoon-jms-sample</module>   
+        <module>cocoon-jms/cocoon-jms-sample</module>
       </modules>
     </profile>
     <profile>
@@ -125,15 +125,15 @@
         <module>cocoon-auth/cocoon-acegisecurity-sample</module>
         <module>cocoon-auth/cocoon-auth-api</module>
         <module>cocoon-auth/cocoon-auth-impl</module>
-        <module>cocoon-auth/cocoon-auth-sample</module>        
+        <module>cocoon-auth/cocoon-auth-sample</module>
         <module>cocoon-authentication-fw/cocoon-authentication-fw-impl</module>
         <module>cocoon-authentication-fw/cocoon-authentication-fw-sample</module>
         <module>cocoon-axis/cocoon-axis-impl</module>
         <module>cocoon-axis/cocoon-axis-sample</module>
         <module>cocoon-bsf/cocoon-bsf-impl</module>
         <module>cocoon-bsf/cocoon-bsf-sample</module>
-        <module>cocoon-captcha/cocoon-captcha-impl</module>
-        <module>cocoon-captcha/cocoon-captcha-sample</module>        
+<!--        <module>cocoon-captcha/cocoon-captcha-impl</module>-->
+<!--        <module>cocoon-captcha/cocoon-captcha-sample</module>-->
         <!--<module>cocoon-chaperon/cocoon-chaperon-impl</module>
         <module>cocoon-chaperon/cocoon-chaperon-sample</module>-->
         <module>cocoon-cron/cocoon-cron-impl</module>
@@ -154,13 +154,13 @@
         <module>cocoon-faces/cocoon-faces-impl</module>
         <module>cocoon-faces/cocoon-faces-sample</module>
         <module>cocoon-fop/cocoon-fop-impl</module>
-        <module>cocoon-fop/cocoon-fop-sample</module>  
+        <module>cocoon-fop/cocoon-fop-sample</module>
         <module>cocoon-fop/cocoon-fop-ng-impl</module>
         <module>cocoon-fop/cocoon-fop-ng-sample</module>
         <module>cocoon-html/cocoon-html-impl</module>
-        <module>cocoon-html/cocoon-html-sample</module>        
-        <module>cocoon-imageop/cocoon-imageop-impl</module>
-        <module>cocoon-imageop/cocoon-imageop-sample</module>
+        <module>cocoon-html/cocoon-html-sample</module>
+<!--        <module>cocoon-imageop/cocoon-imageop-impl</module>-->
+<!--        <module>cocoon-imageop/cocoon-imageop-sample</module>-->
         <module>cocoon-itext/cocoon-itext-impl</module>
         <module>cocoon-itext/cocoon-itext-sample</module>
         <!-- Java flow was excluded from building because org.apache.commons:javaflow:jar:1.0-SNAPSHOT is not available on any repository -->
@@ -177,7 +177,7 @@
         <module>cocoon-lucene/cocoon-lucene-impl</module>
         <module>cocoon-lucene/cocoon-lucene-sample</module>
         <module>cocoon-mail/cocoon-mail-impl</module>
-        <module>cocoon-mail/cocoon-mail-sample</module>        
+        <module>cocoon-mail/cocoon-mail-sample</module>
         <module>cocoon-midi/cocoon-midi-impl</module>
         <module>cocoon-midi/cocoon-midi-sample</module>
         <module>cocoon-naming/cocoon-naming-impl</module>
@@ -226,11 +226,11 @@
       </modules>
     </profile>
   </profiles>
-  
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/blocks</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</developerConnection>
     <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</url>
   </scm>
-  
+
 </project>

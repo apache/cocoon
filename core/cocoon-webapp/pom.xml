@@ -60,7 +60,7 @@
             <exclude>**/cocoon/it/**</exclude>
           </excludes>
         </configuration>
-      </plugin>      
+      </plugin>
     </plugins>
     <finalName>cocoon-webapp</finalName>
   </build>
@@ -104,7 +104,7 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-components-sample</artifactId>
     </dependency>
-	
+
     <!-- Cocoon Sample Blocks -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -118,7 +118,7 @@
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-sample</artifactId>
     </dependency>
-	
+
     <!-- Integration Tests -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -226,10 +226,10 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-bsf-sample</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-captcha-sample</artifactId>
-        </dependency>
+        </dependency-->
         <!--<dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-chaperon-sample</artifactId>
@@ -275,10 +275,10 @@
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-html-sample</artifactId>
         </dependency>
-        <dependency>
-          <groupId>org.apache.cocoon</groupId>
-          <artifactId>cocoon-imageop-sample</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--          <groupId>org.apache.cocoon</groupId>-->
+<!--          <artifactId>cocoon-imageop-sample</artifactId>-->
+<!--        </dependency>-->
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-itext-sample</artifactId>
