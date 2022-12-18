@@ -47,8 +47,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>eclipse</groupId>
-      <artifactId>jdtcore</artifactId>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>org.eclipse.jdt.core</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-httpclient</groupId>

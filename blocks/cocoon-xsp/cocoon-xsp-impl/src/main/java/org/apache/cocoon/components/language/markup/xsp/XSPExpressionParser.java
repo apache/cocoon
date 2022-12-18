@@ -216,7 +216,7 @@ public class XSPExpressionParser {
                     parser.setState(EXPRESSION_CHAR_STATE);
                     break;
 
-                case '´':
+                case 'Â´':
                     parser.append(ch);
                     parser.setState(EXPRESSION_SHELL_STATE);
                     break;
