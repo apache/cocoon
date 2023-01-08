@@ -30,7 +30,7 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>10</version>
+  <version>11-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
@@ -1129,9 +1129,9 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-10</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon/cocoon-10</developerConnection>
-    <url>http://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon/cocoon-10</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/parent</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/parent</developerConnection>
+    <url>http://svn.apache.org/viewvc/cocoon/trunk/parent</url>
   </scm>
 
   <distributionManagement>
