@@ -40,7 +40,7 @@
     <module>cocoon-maven-reports</module>
     <module>cocoon-maven-docs-cleaner-plugin</module>
     <module>cocoon-maven-javadocs-script-report</module>
-    <module>cocoon-sitemaptags2daisy-plugin</module>
+<!--    <module>cocoon-sitemaptags2daisy-plugin</module> -->
   </modules>
 
   <scm>
