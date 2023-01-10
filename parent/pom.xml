@@ -3302,7 +3302,7 @@
 
   <profiles>
     <profile>
-      <id>release</id>
+        <id>release</id>
       <build>
         <plugins>
           <plugin>
