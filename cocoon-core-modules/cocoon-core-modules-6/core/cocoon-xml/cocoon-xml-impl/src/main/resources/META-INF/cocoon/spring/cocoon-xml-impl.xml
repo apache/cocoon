@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- @version $Id$ -->
+<beans>
+  <!--+
+      | DOM XML Parser
+      |
+      | Configuration parameters:
+      | - validate (boolean, default = false): should the parser validate
+      |     parsed documents?
+      |     Note: XML validation is only being used for the documentation build.
+      |     (If you are going to use it elsewhere, then do so with caution.)
+      |     You really should have validated all of your XML documents already,
+      |     according to their proper DTD or schema. Do not expect Cocoon
+      |     to do it.
+      | - documentBuilderFactory (string, optional) : the name of the
+      |     DocumentBuilderFactory implementation to be used (similar to
+      |     sax-parser-factory for DOM).
+      | - resolver
+      |     An optional entity resolver.
+      +-->
+  <bean name="org.apache.cocoon.core.xml.DOMParser"
+        class="org.apache.cocoon.core.xml.impl.JaxpDOMParser" scope="singleton">
+    <property name="validate" value="false"/>
+  </bean>
+
+  <!--+
+      | SAX XML Parser
+      |
+      | Configuration parameters:
+      | - validate (boolean, default = false): should the parser validate
+      |     parsed documents?
+      |     Note: XML validation is only being used for the documentation build.
+      |     (If you are going to use it elsewhere, then do so with caution.)
+      |     You really should have validated all of your XML documents already,
+      |     according to their proper DTD or schema. Do not expect Cocoon
+      |     to do it.
+      | - nsPrefixes (boolean, default = false) : do we want
+      |     namespaces declarations also as 'xmlns:' attributes?
+      |     Note : setting this to true confuses some XSL processors
+      |     (e.g. Saxon).
+      | - stopOnWarning (boolean, default = true) : should the parser
+      |     stop parsing if a warning occurs ?
+      | - stopOnRecoverableError (boolean, default = true) : should the
+      |     parser stop parsing if a recoverable error occurs ?
+      | - saxParserFactory (string, optional) : the name of the
+      |     SAXParserFactory implementation class to be used instead of using
+      |     the standard JAXP mechanism (SAXParserFactory.newInstance()). This
+      |     allows to choose unambiguously the JAXP implementation to be used
+      |     when several of them are available in the classpath.
+      | - dropDtdComments : should comment() events from DTD's be dropped?
+      |     Note: Since this implementation does not support the DeclHandler
+      |     interface anyway, it is quite useless to only have the comments
+      |     from DTD. And the comment events from the internal DTD subset
+      |     would appear in the serialized output again.
+      | - resolver
+      |     An optional entity resolver.
+      +-->
+  <bean name="org.apache.cocoon.core.xml.SAXParser"
+        class="org.apache.cocoon.core.xml.impl.JaxpSAXParser" scope="singleton">
+      <property name="validate" value="${org.apache.cocoon.core.xml.SAXParser/validate}"/>
+      <property name="nsPrefixes" value="${org.apache.cocoon.core.xml.SAXParser/nsPrefixes}"/>
+      <property name="stopOnWarning" value="${org.apache.cocoon.core.xml.SAXParser/stopOnWarning}"/>
+      <property name="stopOnRecoverableError" value="${org.apache.cocoon.core.xml.SAXParser/stopOnRecoverableError}"/>
+<!--      <property name="saxParserFactory" value="${org.apache.cocoon.core.xml.SAXParser/saxParserFactory}"/>-->
+  </bean>
+</beans>

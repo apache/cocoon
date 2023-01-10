@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<!--
+  - @see http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  - @version $Id$
+  -->
+<document>
+  <properties>
+    <title>Changes Cocoon Core</title>
+  </properties>
+
+  <body>
+    <release version="2.2.1" date="TBA" description="unreleased">
+      <action dev="joerg" type="add">
+        Allow multiple file uploads of the same field name. If there are multiple file uploads Request.get(String) will
+        return a Vector. If there is only one file upload it will return the Part as it did before. This is now the same
+        behavior as for inline parts.
+      </action>
+    </release>
+    <release version="2.2.0" date="TBA" description="released">
+      <action dev="joerg" type="fix">
+        Close streams properly after copying Parts (MultipartParser). Allow to access InputStream of PartInMemory
+        multiple times.
+      </action>
+      <action dev="joerg" type="add" issue="COCOON-2149" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
+        Add capability to IncludeTransformer to strip the root element from included XML content.
+      </action>
+      <action dev="vgritsenko" type="update">
+        Cocoon Core has been switched from Avalon Logger to Jakarta Commons Logging.
+        See <a href="http://cocoon.apache.org/2.2/">migration guide</a> for more details.
+      </action>
+      <action dev="cziegler" type="fix" issue="COCOON-2070" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+        Fix bug in recycling of poolable components where recycle() was not called in all cases.
+      </action>
+      <action dev="joerg" type="fix" issue="COCOON-2055" due-to="Martin Heiden" due-to-email="martin.heiden@netcologne.de">
+        Fix MultipartFilter cleaning up the request and so disposing the uploaded files before the
+        request has been processed actually.
+      </action>
+    </release>
+
+    <release version="2.2.0-RC2" date="2007-10-29" description="released">
+    </release>
+
+    <release version="2.2.0-RC1" date="2007-07-02" description="released">
+    </release>
+
+    <release version="2.2.0-M3" date="2007-03-02" description="released">
+      <action dev="dfagerstrom" type="update">
+        Refactoring to make the pipelines usable outside the tree processor:
+        <ul>
+          <li>The source resolver in AbstractProcessingPipeline is looked up from the service
+              manager that is inserted with the setProcessorManager instead of from the
+              EnvironmentHelper.getCurrentProccessor method. After having traced the call
+              sequence it seem to be equivalent and from testing it seem to work.</li>
+          <li>Changed the return type SitemapErrorHandler.prepareErrorHandler to Processing
+              pipeline which is the same as it in Cocoon 2.1.x. Before the pipeline was embedded
+              in a descriptor object. The only use for that in the pipeline context was that
+              it was used for having a refernce to the container that created the pipeline and
+              could use that for releasing the pipeline. But in the Spring Avalon implementation
+              the release method is a noop.</li>
+        </ul>
+      </action>
+    </release>
+
+    <release version="2.2.0-M2" date="2007-02-11" description="released">
+      <action dev="cziegeler" type="update">
+        Cocoon becomes a normal Spring application which means that it is initialized by
+        Spring and not the other way around.
+      </action>
+    </release>
+
+    <release version="2.2.0-M1" date="2006-08-01" description="released">
+      <action dev="cziegeler" type="update">
+        Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
+      </action>
+    </release>
+  </body>
+</document>
