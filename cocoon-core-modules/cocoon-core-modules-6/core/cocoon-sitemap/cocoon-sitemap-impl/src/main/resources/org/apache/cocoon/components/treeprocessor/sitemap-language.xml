@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!DOCTYPE sitemap-language [
+  <!ELEMENT sitemap-language (nodes)>
+  <!ELEMENT nodes (node+)>
+  <!ELEMENT node (allowed-children*, ignored-children*, forbidden-children*)>
+  <!ATTLIST node
+    name CDATA #REQUIRED
+    builder CDATA #REQUIRED
+  >
+  <!ELEMENT allowed-children (#PCDATA)>
+  <!ELEMENT ignored-children (#PCDATA)>
+  <!ELEMENT forbidden-children (#PCDATA)>
+]>
+
+<!--
+  - The sitemap language.
+  - This file defines all possible sitemap elements and theirs implementations.
+  -
+  - $Id$
+  -->
+<sitemap-language>
+
+    <!-- node definitions for the sitemap language -->
+    <nodes>
+
+      <!--
+        - A node has the following attributes :
+        -  * name : the node name, given as a local name in the language namespace (no prefix)
+        -  * builder : the class name of the ProcessingNodeBuilder for this node
+        -
+        -  The contents of a node definition is the configuration of Configurable
+        -  ProcessingNodeBuilders.
+        -->
+      
+      <!-- Sitemap root node -->
+      <node name="sitemap" builder="org.apache.cocoon.components.treeprocessor.sitemap.SitemapNodeBuilder">
+        <allowed-children>components, views, action-sets, resources, flow, pipelines</allowed-children>
+      </node>
+
+      <node name="components" builder="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsNodeBuilder"/>
+
+      <node name="views" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder">
+        <allowed-children>view</allowed-children>
+      </node>
+
+      <node name="view" builder="org.apache.cocoon.components.treeprocessor.sitemap.ViewNodeBuilder"/>
+
+      <node name="action-sets" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder">
+        <allowed-children>action-set</allowed-children>
+      </node>
+
+      <node name="action-set" builder="org.apache.cocoon.components.treeprocessor.sitemap.ActionSetNodeBuilder"/>
+
+      <node name="resources" builder="org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder">
+        <allowed-children>resource</allowed-children>
+      </node>
+
+      <node name="resource" builder="org.apache.cocoon.components.treeprocessor.NamedContainerNodeBuilder"/>
+
+      <node name="flow" builder="org.apache.cocoon.components.treeprocessor.sitemap.FlowNodeBuilder">
+        <allowed-children>script</allowed-children>
+      </node>
+
+      <node name="script" builder="org.apache.cocoon.components.treeprocessor.sitemap.ScriptNodeBuilder"/>
+
+      <node name="pipelines" builder="org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNodeBuilder">
+        <allowed-children>pipeline, handle-errors</allowed-children>
+        <ignored-children>component-configurations</ignored-children>
+      </node>
+
+      <node name="pipeline" builder="org.apache.cocoon.components.treeprocessor.sitemap.PipelineNodeBuilder">
+        <forbidden-children>sitemap, components, pipeline</forbidden-children>
+      </node>
+
+      <node name="match" builder="org.apache.cocoon.components.treeprocessor.sitemap.MatchNodeBuilder">
+        <forbidden-children>sitemap, components, pipeline, handle-errors</forbidden-children>
+      </node>
+
+      <node name="select" builder="org.apache.cocoon.components.treeprocessor.sitemap.SelectNodeBuilder">
+        <forbidden-children>sitemap, components, pipeline, handle-errors</forbidden-children>
+      </node>
+
+      <node name="act" builder="org.apache.cocoon.components.treeprocessor.sitemap.ActNodeBuilder">
+        <forbidden-children>sitemap, components, pipeline, handle-errors</forbidden-children>
+      </node>
+
+      <node name="redirect-to" builder="org.apache.cocoon.components.treeprocessor.sitemap.RedirectToNodeBuilder"/>
+      <node name="call" builder="org.apache.cocoon.components.treeprocessor.sitemap.CallNodeBuilder"/>
+      <node name="mount" builder="org.apache.cocoon.components.treeprocessor.sitemap.MountNodeBuilder"/>
+
+      <node name="read" builder="org.apache.cocoon.components.treeprocessor.sitemap.ReadNodeBuilder"/>
+      <node name="aggregate" builder="org.apache.cocoon.components.treeprocessor.sitemap.AggregateNodeBuilder"/>
+
+      <node name="generate" builder="org.apache.cocoon.components.treeprocessor.sitemap.GenerateNodeBuilder"/>
+      <node name="transform" builder="org.apache.cocoon.components.treeprocessor.sitemap.TransformNodeBuilder"/>
+      <node name="serialize" builder="org.apache.cocoon.components.treeprocessor.sitemap.SerializeNodeBuilder"/>
+
+      <node name="handle-errors" builder="org.apache.cocoon.components.treeprocessor.sitemap.HandleErrorsNodeBuilder"/>
+    </nodes>
+
+    <!--
+      - You can add specific nodes for a specific sitemap version, using
+      - &lt;nodes-{version}&gt;
+      -->
+
+</sitemap-language>

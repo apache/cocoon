@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<!--
+  - This is the bare bones Cocoon web application,
+  - basis for creation of custom distributions.
+  -
+  - @version $Id$
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon-core-modules</artifactId>
+    <version>6-SNAPSHOT</version>
+  </parent>
+  <artifactId>cocoon-webapp</artifactId>
+  <version>2.2.0-M2-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>Cocoon Webapp</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+        <version>6.1.7</version>
+        <configuration>
+          <connectors>
+            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+              <port>${jetty.port}</port>
+              <maxIdleTime>30000</maxIdleTime>
+            </connector>
+          </connectors>
+          <webAppSourceDirectory>./target/cocoon-webapp</webAppSourceDirectory>
+          <contextPath>${jetty.context}</contextPath>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/cocoon/it/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>      
+    </plugins>
+    <finalName>cocoon-webapp</finalName>
+  </build>
+
+  <dependencies>
+    <!-- Cocoon Core -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-components</artifactId>
+    </dependency>
+
+    <!-- Cocoon Welcome Page -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-welcome</artifactId>
+    </dependency>
+
+    <!-- Cocoon Core Samples -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core-main-sample</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core-additional-sample</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-impl-sample</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-servlet-service-components-sample</artifactId>
+    </dependency>
+	
+    <!-- Cocoon Sample Blocks -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-ajax-sample</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-forms-sample</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-template-sample</artifactId>
+    </dependency>
+	
+    <!-- Integration Tests -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-it</artifactId>
+    </dependency>
+
+    <!-- Integration Test Framework -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-it-fw</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>it</id>
+      <build>
+        <plugins>
+          <!-- Integration tests -->
+          <plugin>
+            <groupId>org.apache.cocoon</groupId>
+            <artifactId>cocoon-it-fw</artifactId>
+            <configuration>
+              <webAppDirectory>./target/cocoon-webapp</webAppDirectory>
+            </configuration>
+            <executions>
+              <execution>
+                <id>jetty-start</id>
+                <goals>
+                  <goal>jetty-start</goal>
+                </goals>
+                <phase>pre-integration-test</phase>
+              </execution>
+              <execution>
+                <id>jetty-stop</id>
+                <goals>
+                  <goal>jetty-stop</goal>
+                </goals>
+                <phase>post-integration-test</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>integration-test</id>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <phase>integration-test</phase>
+                <configuration>
+                  <excludes>
+                    <exclude>none</exclude>
+                  </excludes>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>eventcache-jms</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-eventcache-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-jms-sample</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>allblocks</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-apples-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-asciiart-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-auth-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-authentication-fw-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-axis-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-batik-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-bsf-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-captcha-sample</artifactId>
+        </dependency>
+        <!--<dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-chaperon-sample</artifactId>
+        </dependency>-->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-cron-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-databases-sample</artifactId>
+        </dependency>
+        <!--<dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-deli-sample</artifactId>
+        </dependency>-->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-eventcache-sample</artifactId>
+        </dependency>
+        <!--dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-jms-sample</artifactId>
+        </dependency-->
+        <!-- Breaks currently cocoon-webapp
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-faces-sample</artifactId>
+        </dependency>
+        -->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-fop-sample</artifactId>
+        </dependency>
+        <!-- Disabled because classloading conflicts prevent it from running
+             at the same time as the "legacy" FOP block.
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-fop-ng-sample</artifactId>
+        </dependency>
+        -->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-html-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-imageop-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-itext-sample</artifactId>
+        </dependency>
+        <!-- Java flow was excluded from building because org.apache.commons:javaflow:jar:1.0-SNAPSHOT is not available anywhere -->
+        <!--
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-javaflow-sample</artifactId>
+        </dependency>
+        -->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-jcr-sample</artifactId>
+        </dependency>
+        <!--<dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-jfor-sample</artifactId>
+        </dependency>-->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-jsp-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-linkrewriter-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-lucene-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-mail-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-midi-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-naming-sample</artifactId>
+        </dependency>
+        <!-- Breaks currently cocoon-webapp
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-ojb-sample</artifactId>
+        </dependency>
+        -->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-petstore-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-poi-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-portal-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-profiler-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-proxy-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-qdox-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-querybean-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-scratchpad-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-session-fw-sample</artifactId>
+        </dependency>
+        <!-- Breaks currently cocoon-webapp
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-slide-sample</artifactId>
+        </dependency>
+        -->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-slop-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-stx-sample</artifactId>
+        </dependency>
+        <!-- Breaks currently cocoon-webapp
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-taglib-sample</artifactId>
+        </dependency>
+         -->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-tour-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-validation-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-velocity-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-web3-sample</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-webdav-sample</artifactId>
+        </dependency>
+        <!--<dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-xmldb-sample</artifactId>
+        </dependency>-->
+        <dependency>
+          <groupId>org.apache.cocoon</groupId>
+          <artifactId>cocoon-xsp-sample</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+
+  <properties>
+    <jetty.port>8888</jetty.port>
+    <jetty.context>/</jetty.context>
+  </properties>
+</project>
