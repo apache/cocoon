@@ -30,7 +30,7 @@
   </parent>
 
   <artifactId>cocoon-core-modules</artifactId>
-  <version>7-SNAPSHOT</version>
+  <version>6-SNAPSHOT</version>
   <name>Cocoon Core [modules]</name>
   <packaging>pom</packaging>
 
