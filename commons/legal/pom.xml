@@ -28,12 +28,12 @@
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
     <version>10</version>
-    <relativePath />
+    <relativePath/>
   </parent>
   <artifactId>cocoon-licenses</artifactId>
-  <version>1.0.0-M2</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
   <name>Cocoon Licenses</name>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-licenses/cocoon-licenses-1.0.0-M2</connection>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/commons/legal</connection>
   </scm>
 </project>
