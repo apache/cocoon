@@ -28,7 +28,7 @@
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>8</version>
+    <version>10</version>
     <relativePath>../../../parent/pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-serializers-impl</artifactId>
