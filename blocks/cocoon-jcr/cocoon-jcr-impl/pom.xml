@@ -22,7 +22,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
-  
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-jcr</artifactId>
@@ -31,19 +31,19 @@
   <artifactId>cocoon-jcr-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>JCR Block Implementation</name>
-  <url>http://cocoon.apache.org/${docs.m.jcr.relPath}</url>      
-  
+  <url>http://cocoon.apache.org/${docs.m.jcr.relPath}</url>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.jcr.relPath}</url>
     </site>
-  </distributionManagement>  
-  
+  </distributionManagement>
+
   <properties>
-    <docs.name>Cocoon Apples</docs.name>    
+    <docs.name>Cocoon Apples</docs.name>
     <docs.version>1.0</docs.version>
-  </properties>      
+  </properties>
 
   <dependencies>
     <dependency>
@@ -52,23 +52,23 @@
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-sitemap-impl</artifactId>  
+      <artifactId>cocoon-sitemap-impl</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>  
+      <artifactId>cocoon-core</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>javax.jcr</groupId>
-      <artifactId>jcr</artifactId>      
+      <artifactId>jcr</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>      
+      <artifactId>servlet-api</artifactId>
     </dependency>
     <dependency>
       <groupId>slide</groupId>
@@ -81,6 +81,12 @@
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-core</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -105,7 +111,7 @@
       <artifactId>poi</artifactId>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -121,7 +127,7 @@
             </configuration>
           </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
-  </profiles>  
+  </profiles>
 </project>

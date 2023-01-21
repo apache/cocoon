@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,7 +64,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
     boolean debug;
 
     String sourceDir;
-    String sourceFile; 
+    String sourceFile;
     String destDir;
     String sourceEncoding;
     int compilerComplianceLevel;
@@ -99,15 +99,15 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
     }
 
     public void setEncoding(String encoding) {
-        this.sourceEncoding = encoding; 
+        this.sourceEncoding = encoding;
     }
-    
+
     /**
      * Set the version of the java source code to be compiled
      *
      * @param compilerComplianceLevel The version of the JVM for which the code was written.
      * i.e: 130 = Java 1.3, 140 = Java 1.4 and 150 = Java 1.5
-     * 
+     *
      * @since 2.1.7
      */
     public void setCompilerComplianceLevel(int compilerComplianceLevel) {
@@ -132,7 +132,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
         String str = fileName;
         str = str.replace('\\', '/');
         if (sourceDir != null) {
-            String prefix = 
+            String prefix =
                 new File(sourceDir).getCanonicalPath().replace('\\', '/');
             if (canonical != null) {
                 if (canonical.startsWith(prefix)) {
@@ -175,7 +175,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
             public char[] getFileName() {
                 return className.toCharArray();
             }
-            
+
             public char[] getContents() {
                 char[] result = null;
                 FileReader fr = null;
@@ -201,7 +201,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                 }
                 return result;
             }
-            
+
             public char[] getMainTypeName() {
                 int dot = className.lastIndexOf('.');
                 if (dot > 0) {
@@ -209,7 +209,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                 }
                 return className.toCharArray();
             }
-            
+
             public char[][] getPackageName() {
                 StringTokenizer izer = new StringTokenizer(className, ".");
                 char[][] result = new char[izer.countTokens()-1][];
@@ -247,24 +247,24 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                         result.append(typeName);
                         return findType(result.toString());
                 }
-                
+
                 private NameEnvironmentAnswer findType(String className) {
 
                     try {
                         if (className.equals(targetClassName)) {
-                            ICompilationUnit compilationUnit = 
+                            ICompilationUnit compilationUnit =
                                 new CompilationUnit(sourceFile, className);
-                            return 
+                            return
                                 new NameEnvironmentAnswer(compilationUnit, null);
                         }
-                        String resourceName = 
+                        String resourceName =
                             className.replace('.', '/') + ".class";
-                        InputStream is = 
+                        InputStream is =
                             classLoader.getResourceAsStream(resourceName);
                         if (is != null) {
                             byte[] classBytes;
                             byte[] buf = new byte[8192];
-                            ByteArrayOutputStream baos = 
+                            ByteArrayOutputStream baos =
                                 new ByteArrayOutputStream(buf.length);
                             int count;
                             while ((count = is.read(buf, 0, buf.length)) > 0) {
@@ -273,17 +273,17 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                             baos.flush();
                             classBytes = baos.toByteArray();
                             char[] fileName = className.toCharArray();
-                            ClassFileReader classFileReader = 
-                                new ClassFileReader(classBytes, fileName, 
+                            ClassFileReader classFileReader =
+                                new ClassFileReader(classBytes, fileName,
                                                     true);
-                            return 
+                            return
                                 new NameEnvironmentAnswer(classFileReader, null);
                         }
                     } catch (IOException exc) {
-                        handleError(className, -1, -1, 
+                        handleError(className, -1, -1,
                                     exc.getMessage());
                     } catch (org.eclipse.jdt.internal.compiler.classfmt.ClassFormatException exc) {
-                        handleError(className, -1, -1, 
+                        handleError(className, -1, -1,
                                     exc.getMessage());
                     }
                     return null;
@@ -294,7 +294,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                         return false;
                     }
                     String resourceName = result.replace('.', '/') + ".class";
-                    InputStream is = 
+                    InputStream is =
                         classLoader.getResourceAsStream(resourceName);
                     return is == null;
                 }
@@ -322,7 +322,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                     // EMPTY
                 }
             };
-        final IErrorHandlingPolicy policy = 
+        final IErrorHandlingPolicy policy =
             DefaultErrorHandlingPolicies.proceedWithAllProblems();
         final Map settings = new HashMap(9);
         settings.put(CompilerOptions.OPTION_LineNumberAttribute,
@@ -340,6 +340,18 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
         }
         // Set the sourceCodeVersion
         switch (this.compilerComplianceLevel) {
+            case 180:
+                settings.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_8);
+                settings.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_8);
+                break;
+            case 170:
+                settings.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_7);
+                settings.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_7);
+                break;
+            case 160:
+                settings.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_6);
+                settings.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_6);
+                break;
             case 150:
                 settings.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_5);
                 settings.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_5);
@@ -352,6 +364,15 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
         }
         // Set the target platform
         switch (SystemUtils.JAVA_VERSION_INT) {
+            case 180:
+                settings.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_8);
+                break;
+            case 170:
+                settings.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_7);
+                break;
+            case 160:
+                settings.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_6);
+                break;
             case 150:
                 settings.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_5);
                 break;
@@ -361,7 +382,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
             default:
                 settings.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_3);
         }
-        final IProblemFactory problemFactory = 
+        final IProblemFactory problemFactory =
             new DefaultProblemFactory(Locale.getDefault());
 
         final ICompilerRequestor requestor = new ICompilerRequestor() {
@@ -387,7 +408,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                                     className.append(compoundName[j]);
                                 }
                                 byte[] bytes = classFile.getBytes();
-                                String outFile = destDir + "/" + 
+                                String outFile = destDir + "/" +
                                     className.toString().replace('.', '/') + ".class";
                                 FileOutputStream fout = new FileOutputStream(outFile);
                                 BufferedOutputStream bos = new BufferedOutputStream(fout);
@@ -400,7 +421,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
                     }
                 }
             };
-        ICompilationUnit[] compilationUnits = 
+        ICompilationUnit[] compilationUnits =
             new ICompilationUnit[classNames.length];
         for (int i = 0; i < compilationUnits.length; i++) {
             String className = classNames[i];
@@ -416,7 +437,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
     }
 
     void handleError(String className, int line, int column, Object errorMessage) {
-        String fileName = 
+        String fileName =
             className.replace('.', File.separatorChar) + ".java";
         if (column < 0) column = 0;
         errors.add(new CompilerError(fileName,

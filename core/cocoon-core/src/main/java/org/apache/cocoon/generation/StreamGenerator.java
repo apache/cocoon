@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,11 +20,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.excalibur.xml.sax.SAXParser;
-
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -32,9 +34,9 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.cocoon.util.PostInputStream;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * The <code>StreamGenerator</code> is a class that reads XML from a request
@@ -67,17 +69,28 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class StreamGenerator extends ServiceableGenerator {
+public class StreamGenerator extends ServiceableGenerator implements Initializable {
 
     /** The parameter holding the name associated with the xml data  **/
     public static final String FORM_NAME = "form-name";
+
+
+    private SAXParserFactory factory;
+
+    @Override
+    public void initialize() throws Exception {
+        factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setXIncludeAware(false);
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+    }
 
     /**
      * Generate XML data out of request InputStream.
      */
     public void generate()
     throws IOException, SAXException, ProcessingException {
-        SAXParser parser = null;
         int len = 0;
         String contentType;
 
@@ -110,7 +123,7 @@ public class StreamGenerator extends ServiceableGenerator {
                 } else if (xmlObject instanceof Part) {
                     xmlReader = new InputStreamReader(((Part) xmlObject).getInputStream());
                 } else {
-                    throw new ProcessingException("Unknown request object encountered named " + 
+                    throw new ProcessingException("Unknown request object encountered named " +
                                                   parameter + " : " + xmlObject);
                 }
 
@@ -143,19 +156,22 @@ public class StreamGenerator extends ServiceableGenerator {
                 source.setEncoding(charset);
             }
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
-            parser.parse(source, super.xmlConsumer);
+            SAXParser parser = factory.newSAXParser();
+            XMLReader xmlReader = parser.getXMLReader();
+            xmlReader.setContentHandler(super.xmlConsumer);
+            xmlReader.setProperty( "http://xml.org/sax/properties/lexical-handler", super.xmlConsumer );
+            xmlReader.setFeature( "http://xml.org/sax/features/namespaces", true );
+
+            xmlReader.parse(source);
         } catch (IOException e) {
             getLogger().error("StreamGenerator.generate()", e);
             throw new ResourceNotFoundException("StreamGenerator could not find resource", e);
         } catch (SAXException e) {
             getLogger().error("StreamGenerator.generate()", e);
             throw(e);
-        } catch (ServiceException e) {
+        } catch (ParserConfigurationException e) {
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in StreamGenerator.generate()", e);
-        } finally {
-            this.manager.release(parser);
         }
     }
 

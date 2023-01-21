@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 package org.apache.cocoon.acting;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Collections;
@@ -89,7 +90,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
         throws Exception {
         DataSourceComponent datasource = null;
         Connection conn = null;
-        Statement st = null;
+        PreparedStatement st = null;
         ResultSet rs = null;
 
         // read global parameter settings
@@ -129,8 +130,8 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                 return null;
             }
 
-            String query = this.getAuthQuery(objectModel, conf, req);
-            if (query == null) {
+            st = this.getAuthQuery(objectModel, conf, conn);
+            if (st == null) {
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("DBCOOKIEAUTH: have not got query");
                 }
@@ -138,11 +139,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                 return null;
             }
 
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("DBCOOKIEAUTH: query is: " + query);
-            }
-            st = conn.createStatement();
-            rs = st.executeQuery(query);
+            rs = st.executeQuery();
 
             if (rs.next()) {
                 if (getLogger().isDebugEnabled()) {
@@ -231,11 +228,10 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
      *
      * @param  objectModel  Description of Parameter
      * @param  conf         Description of Parameter
-     * @param  req          Description of Parameter
+     * @param  conn          Description of Parameter
      * @return              The authQuery value
      */
-    private String getAuthQuery(Map objectModel, Configuration conf, Request req) {
-        boolean first_constraint = true;
+    private PreparedStatement getAuthQuery(Map objectModel, Configuration conf, Connection conn) {
         StringBuffer queryBuffer = new StringBuffer("SELECT ");
         StringBuffer queryBufferEnd = new StringBuffer("");
         String dbcol;
@@ -246,6 +242,8 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
         Configuration table = conf.getChild("table");
         Configuration[] select = table.getChildren("select");
         try {
+            Object[] constraintValues = new Object[select.length];
+            int constraints = 0;
             for (int i = 0; i < select.length; i++) {
                 if (i != 0) {
                     queryBuffer.append(", ");
@@ -277,11 +275,11 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                         return null;
                     }
                 } else {
-                    if (!first_constraint) {
+                    if (constraints > 0) {
                         queryBufferEnd.append(" AND ");
                     }
-                    queryBufferEnd.append(dbcol + "='" + cookie_value + "'");
-                    first_constraint = false;
+                    queryBufferEnd.append(dbcol + "= ?");
+                    constraintValues[constraints++] = cookie_value;
                 }
             }
             queryBuffer.append(" FROM ");
@@ -289,7 +287,17 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
             if (!queryBufferEnd.toString().trim().equals("")) {
                 queryBuffer.append(" WHERE ").append(queryBufferEnd);
             }
-            return queryBuffer.toString();
+
+            getLogger().debug("DBCOOKIEAUTH: query " + queryBuffer);
+
+            PreparedStatement st = conn.prepareStatement(queryBuffer.toString());
+
+            for (int i = 0; i < constraints; i++) {
+                getLogger().debug("DBCOOKIEAUTH: parameter " + (i+1) + " = [" + constraintValues[i] + "]");
+                st.setObject(i+1,constraintValues[i]);
+            }
+
+            return st;
         } catch (Exception e) {
             getLogger().error("Exception: ",e);
             return null;
@@ -297,9 +305,9 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
     }
 
     public static Cookie getCookie(Map objectModel, String cookieName) {
-        
+
         Request request = ObjectModelHelper.getRequest(objectModel);
-        
+
         Cookie[] cookies = request.getCocoonCookies();
         if (cookies != null) {
             for(int count = 0; count < cookies.length; count++) {
@@ -309,7 +317,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                 }
             }
         }
-        
+
         return null;
     }
     /**
@@ -340,7 +348,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                         String type = select[i].getAttribute("type", "");
                         // "string" is the default type
                         if (StringUtils.isEmpty(type.trim()) || "string".equals(type)) {
-                            o = s;      
+                            o = s;
                         } else if ("long".equals(type)) {
                             Long l = Long.decode(s);
                             o = l;

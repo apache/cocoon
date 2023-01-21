@@ -59,7 +59,7 @@
     </plugins>
   </build>  
 
-  <profiles>
+<!--  <profiles>
     <profile>
       <id>daisy</id>
       <build>
@@ -79,6 +79,6 @@
         </plugins>
       </build>
     </profile>
-  </profiles>
+  </profiles> -->
 
 </project>
