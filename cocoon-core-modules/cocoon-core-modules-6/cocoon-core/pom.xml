@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!-- $Id$ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+  <parent>
+    <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon-core-modules</artifactId>
+    <version>6-SNAPSHOT</version>
+  </parent>
+  <artifactId>cocoon-core</artifactId>
+  <version>2.2.1-SNAPSHOT</version>
+  <name>Cocoon Core</name>
+  <description>
+    Module that contains dependencies to all modules normally needed for a basic
+    Cocoon webapp. Cocoon blocks should normally depend on this modules, as the
+    exact content of the more fine grained sitemap, pipeline and support modules
+    is not stable yet. This module also contains some classes, configuration
+    files and tests that we not have decided where to move yet.
+  </description>
+  <url>http://cocoon.apache.org/${docs.m.core.relPath}</url>
+
+  <build>
+    <plugins>
+      <plugin>
+        <!-- export our test classes in a separate jar -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*TestCase.class</include>
+            <include>**/*Test.class</include>
+          </includes>
+          <excludes>
+            <exclude>**/AllTest.class</exclude>
+            <exclude>**/CocoonBeanTestCase.class</exclude>
+            <exclude>**/*$$*Test.class</exclude>
+            <exclude>**/Abstract*.class</exclude>
+            <exclude>**/SitemapComponentTestCase*</exclude>
+            <exclude>**/SitemapTestCase*</exclude>
+            <exclude>**/ContainerTestCase*</exclude>
+            <exclude>**/CocoonTestCase*</exclude>
+            <exclude>**/Virtual*TestCase*</exclude>
+          </excludes>
+          <!-- currently triggers NPE in surefire plugin
+          <systemProperties>
+            <property>
+              <name>junit.test.loglevel</name>
+              <value>3</value>
+            </property>
+          </systemProperties>
+          -->
+        </configuration>
+      </plugin>
+    </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+
+  <properties>
+    <docs.name>Cocoon Core</docs.name>
+    <docs.version>${docs.m.core.version}</docs.version>
+  </properties>
+
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.core.relPath}</url>
+    </site>
+  </distributionManagement>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-core/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-core/</developerConnection>
+    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-core/</url>
+  </scm>
+
+  <dependencies>
+    <!-- Cocoon Subprojects -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-spring-configurator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-configuration-api</artifactId>
+    </dependency>  
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-block-deployment</artifactId>
+    </dependency>
+    <!-- Cocoon Core -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-pipeline-components</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-sitemap-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-sitemap-components</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-xml-resolver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-thread-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-expression-language-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-xml-util</artifactId>
+    </dependency>
+    <!--  excalibur -->
+    <dependency>
+      <groupId>org.apache.excalibur.components</groupId>
+      <artifactId>excalibur-pool-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.excalibur.containerkit</groupId>
+      <artifactId>excalibur-logger</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.excalibur.components</groupId>
+      <artifactId>excalibur-store</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avalon.framework</groupId>
+      <artifactId>avalon-framework-impl</artifactId>
+    </dependency>
+    <!-- commons -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>logkit</artifactId>
+          <groupId>logkit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>avalon-framework</artifactId>
+          <groupId>avalon-framework</groupId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>commons-jexl</groupId>
+      <artifactId>commons-jexl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>xalan</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>xml-apis</artifactId>
+          <groupId>xml-apis</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xml-resolver</groupId>
+      <artifactId>xml-resolver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+    <!--  test dependencies  -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-pipeline-impl</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-sitemap-impl</artifactId>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jmock</groupId>
+      <artifactId>jmock</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!--  runtime dependencies  -->
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-store-impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-thread-impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>daisy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.daisycms</groupId>
+            <artifactId>daisy-maven-plugin</artifactId>
+            <configuration>
+              <navDocId>1206</navDocId>
+              <collection>cdocs-core</collection>
+              <createSiteXmlOnly>false</createSiteXmlOnly>
+              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

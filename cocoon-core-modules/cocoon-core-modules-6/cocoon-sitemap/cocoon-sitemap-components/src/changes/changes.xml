@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!--+
+    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+    |
+    | @version $Id$
+    +-->
+<document>
+  <body>
+    <release version="1.0.1" date="TBD" description="to be done">
+      <action dev="joerg" type="update" fixes-bug="COCOON-1887" due-to="Andrew Stevens" due-to-email="stevensa@users.sourceforge.net">
+        Change HostSelector to be case-insensitive according to RFC3986 section 3.2.2.
+      </action>
+    </release>
+    <release version="1.0.0" date="TBA" description="released">
+      <action dev="rgoers" type="fix" issue="COCOON-1574">
+        Created XPathXMLFileModule to fix problems with XMLFileModule. Added getAttributeValue to JXPathHelper
+        and changed all references to getAttribute to use it instead.
+      </action>
+    </release>
+    <release version="1.0.0-RC2" date="2007-10-29" description="released">
+      <action dev="TS" type="fix" issue="COCOON-2144">
+        Fixed getAttributeNames(...) in SettingsInputModule:
+        The getAttributeNames(...) method returns an iterator of all properties instead an empty one.
+      </action>
+      <action dev="felixk" type="add">
+        A simple Action that logs a given message for a given log level.
+      </action>
+      <action dev="gkossakowski" type="add" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com" issue="COCOON-2054">
+        StatusGenerator must now show default Store explicitly (because no longer part of StoreJanitor)
+      </action>
+      <action dev="joerg" type="fix" issue="COCOON-2077" due-to="Ellis Pritchard">
+        Fixed getInputStream() in XModuleSource:
+        Set up XMLSerializer in a component way, i.e. retrieve it from ServiceManager.
+      </action>
+    </release>
+    <release version="1.0.0-RC1" date="2007-07-02" description="released">
+      <action dev="reinhard" type="add" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com" issue="COCOON-2047">
+        StatusGenerator: Show a list of all Spring beans
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2007-03-02" description="released">
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>
+    </release>
+  </body>
+</document>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html>
+  <head>
+    <title>Servlet-Service Framework samples</title>
+	<base target="_blank"/>
+  </head>
+  <body>
+    <h1>Servlet-Service Framework samples</h1>
+
+	<h2>Usage in sitemaps</h2>
+    <ul>
+      <li><a href="../cocoon-servlet-service-components-sample/1/test">Simple pipeline</a>: A simple pipeline that doesn't use the SSF.</li>
+      <li><a href="../cocoon-servlet-service-components-sample/1/test2">servlet: protocol usage</a>: Calling another pipeline using the servlet: protocol.</li>
+      <li><a href="../cocoon-servlet-service-components-sample/1/test3">servlet: protocol usage (self-referencing)</a>:
+        Calling another pipeline from within the same sitemap (servlet-service) using the servlet: protocol.</li>
+      <li><a href="../cocoon-servlet-service-components-sample/1/test4">Reading a resource</a>: A simple pipeline that reads a resource using the resource: protocol.</li>
+      <li><a href="../cocoon-servlet-service-components-sample/1/test5">Servlet-Service generator</a>: Using the servlet-service generator that
+        performs a POST request on a generating servlet-service and passes the result to the calling pipeline.</li>
+      <li><a href="../cocoon-servlet-service-components-sample/1/test6">Servlet-Service transformer</a>: Using the servlet-service transformer that
+        performs a POST request on a transforming servlet-service and passes the transformed result to the calling pipeline.</li>
+      <li><a href="../cocoon-servlet-service-components-sample/1/test7">Servlet-Service serializer</a>: Using the servlet-service serializer that
+        performs a POST request on a serializing servlet-service.</li>
+    </ul>
+
+	<h2>Sub-Sitemaps</h2>
+	<ul>
+      <li><a href="../cocoon-servlet-service-components-sample/1/sub/test">Simple pipeline</a>: A simple pipeline that doesn't use the SSF./</li>
+      <li><a href="../cocoon-servlet-service-components-sample1/sub/test3">Servlet: protocol</a>: Use the servlet: protocol from a sub sitemap./</li>
+	</ul>
+
+	<h2>Block-Path module</h2>
+	<ul>
+      <li><a href="../cocoon-servlet-service-components-sample/1/sub/abs">Block-path module</a>: Use the block-path module to find the mount-path of a servlet-service./</li>
+	</ul>
+
+	<h2>Passing information of origal request</h2>
+	<ul>
+      <li><a href="../test1/test4?foo=5">Passing original request</a>: The request attributes, parameters and header parameters are shared between the calling
+	    and the called request. The called request has its own session but can also access the global session.</li>
+	</ul>
+
+	<h2>Servlet-Connections</h2>
+	<ul>
+      <li><a href="../test1/test2">Request Dispatcher</a>: Use the RequestDispatcher to access another servlet-service.</li>
+      <li><a href="../test1/test3">Source Resolver</a>: Use the SourceResolver access another servlet-service.</li>
+      <li><a href="../test1/test5">Relative servlet connection</a>: Use the RelativeServletConnection object to access another servlet-service.</li>
+      <li><a href="../test1/test6">Relative servlet connection</a>: Use the RelativeServletConnection object to access a resource provided by the same servlet-service.</li>
+      <li><a href="../test1/test9">Relative servlet connection</a>: Use the RelativeServletConnection object to access a resource provided by the same servlet-service and that returns an error status code.</li>
+	</ul>
+
+  </body>
+</html>
