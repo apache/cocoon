@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | This is the 'heart' of Cocoon. The sitemap maps URI space to
+    | resources. It consists basicaly of two parts: components and
+    | pipelines. Pipelines are made out of components. There is such a
+    | vast number of components available that it would be impossible to
+    | describe them here, please refer to the accompanying
+    | documentation. For specific components, have a look also at the
+    | javadocs for them. Most pipelines are present to demonstrate some
+    | feature or technique, often they are explained in more detail in
+    | the accompanying documentation. The sitemaps which come with each
+    | sample and each block will help to explain.
+    |
+    | $Id$
+    +-->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Components =========================== -->
+
+  <map:components>
+
+   <!--+
+       | All needed components are inherited from the parent container
+       | configured in META-INF/cocoon/avalon/*.xconf and
+       | META-INF/cocoon/spring/*.xml files (if using default configuration).
+       +-->
+
+  </map:components>
+
+
+  <!-- =========================== Views ================================ -->
+
+  <!--+
+      | Views provide different, well, views to resources. Views are
+      | orthogonal to pipelines. Please refer to the docs.
+      |
+      | It would be wise to disable any unneeded views in a
+      | production environment in order to avoid exposing data
+      | that you may not necessarily wish to.
+      +-->
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <!--+
+          | Use servlet service serializer from the named block 'style'.
+          | Name 'style' is mapped to the 'cocoon-samples-style-default' block
+          | in the META-INF/cocoon/spring/cocoon-welcome-blockServlet.xml file.
+          +-->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+      </map:serialize>
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+
+  <!-- =========================== Resources ============================ -->
+
+  <!--+
+      | Resources are pipeline fragments that may be used from different
+      | pipeline fragments. For our needs, they behave exactly like
+      | pipelines, only that they are not accessible from outside.
+      | Hence I will explain what's inside below for pipelines.
+      +-->
+  <map:resources>
+  </map:resources>
+
+
+  <!-- =========================== Action sets ========================== -->
+
+  <!--+
+      | Action sets group actions together. If some actions are often used
+      | together in pipeline fragments, it's easier to group them and refer
+      | to the group. For more info, please see the docs.
+      +-->
+  <map:action-sets>
+  </map:action-sets>
+
+
+  <!-- =========================== Pipelines ============================ -->
+
+  <!--+
+      | Pipelines. The beef. Pipelines specify how the processing of your
+      | content is done. Usually, a pipeline consists of several fragments
+      | that specify the generation, transformation, and serialization of
+      | SAX events.
+      |
+      | Processing is done in two steps:
+      |
+      | 1) The top level elements are executed in order of appearance until
+      |    one signals success. These top level elements are usually
+      |    matchers.
+      |
+      |    Other components are called depth-first to determine what
+      |    fragments make up the processing pipeline. When a component
+      |    fails, no nested components are called but the next component on
+      |    the same level.
+      |
+      | 2) Once it is determined which generator, which transformers and
+      |    which serializer is used, these components are executed. During
+      |    this, the pipeline may not be changed.
+      |
+      | You may have as many pipelines in your sitemap as you like.
+      +-->
+  <map:pipelines>
+    <!-- main pipeline -->
+    <map:pipeline>
+
+      <!--
+        - Match current sitemap URI against specified pattern.
+        - Here we are using empty pattern, "". If URI matches
+        - (if it is empty), nested instructions are exectuted,
+        - thus assembling the welcome page.  
+        -->
+      <map:match pattern="">
+
+        <!--+
+            | Start generating SAX events inside the pipeline. In this case,
+            | since no "type" attribute is specified, the default generator
+            | is used and this is a regular XML parser that reads the
+            | given file from the URL included in the "src" attribute and
+            | sends the events produced by the parser down the pipeline to
+            | be processed by the next stage.
+            +-->
+        <map:generate src="welcome.xml" label="content, pretty-content"/>
+
+        <!--+
+            | The serializer concludes the SAX events journey into the pipeline
+            | since it serializes the events it receives into a representation
+            | depending on the serializer type.
+            +-->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!--+
+          | Show this sitemap.xmap file.
+          +-->
+      <map:match pattern="sitemap.xmap">
+        <map:read src="sitemap.xmap" mime-type="text/xml"/>
+      </map:match>
+
+      <!--+
+          | The default matching is also capable of matching more than a
+          | single request by the use of 'wildcards'. There are two kinds of
+          | wildcards:
+          |
+          |  "*" means "anything that does not contain a path separator"
+          |  "**" means "anything including path separators"
+          |
+          | The tokens matched by the wildcards are passed over as sitemap
+          | variables. Those variables can be accessed using the '{...}' syntax
+          | inside the attributes. The URI-matching tokens are associated to
+          | numbered variables, as shown in the following match that processes all
+          | the GIF images that are located in the 'images/' URL space but
+          | not in any deeper levels. Note how requesting "images/logo.gif"
+          | triggers the matcher to create the token {1} = 'logo' which is later
+          | expanded into the src="" attribute of the reader, indicating
+          | what file it has to read.
+          +-->
+
+      <!--+
+          | Mount user directories.
+          |
+          | The location of user directories depends heavily on the operating
+          | system used. Here we try to detect if we are running on one of 3
+          | most used platforms and mount appropriate home directory.
+          |
+          | NOTE: You might want to comment out this entire section in a
+          |       production environment.
+          +-->
+      <map:match pattern="~*/**">
+        <map:select type="resource-exists">
+          <!-- macosx -->
+          <map:when test="/Users/">
+            <map:mount src="/Users/{1}/Sites/" uri-prefix="~{1}"/>
+          </map:when>
+          <!-- unix -->
+          <map:when test="/home/">
+            <map:mount src="/home/{1}/public_html/" uri-prefix="~{1}"/>
+          </map:when>
+          <!-- win32 -->
+          <map:when test="/Documents and Settings/">
+            <map:mount src="/Documents and Settings/{1}/My Documents/My Website/" uri-prefix="~{1}"/>
+          </map:when>
+        </map:select>
+      </map:match>
+
+      <!--+
+          | Redirect to the user directory if the ending slash is missing
+          | Cocoon doesn't do automatic translation of URLs because we consider it
+          | a bad practice. http://blah/something/ and http://blah/something
+          | effectively locate different web resources and the act of mapping
+          | them to the same system resources is your concern, not Cocoon's.
+          | Note that some stupid browsers (IE, for example) believe the opposite
+          | and will drop the ending slash when you bookmark a web resource
+          | so be aware of this issue and plan your URL-space carefully.
+          +-->
+      <map:match pattern="~*">
+        <map:redirect-to uri="{0}/"/>
+      </map:match>
+
+      <!--+
+          | Find a match in the "mount-table.xml" file, if present. It allows to mount other
+          | directories without touching this main sitemap (and thus loosing changes on rebuild).
+          |
+          | Note that other mount-tables can be added here using the xpatch ant task
+          | (see src/confpatch/mount-table.xmap)
+          +-->
+      <!--
+        Disabled while working on OSGI stuff, this wouldn't work anyway
+        (due to the ../) and it causes an NPE in the MountTableMatcher
+      <map:match type="mount-table" pattern="../../mount-table.xml">
+        <map:mount src="{src}" uri-prefix="{uri-prefix}"/>
+      </map:match>
+      -->
+
+      <!--+
+          | Cocoon-provided client-side resources.
+          | Some block's jar files (e.g. Ajax & Forms) include client-side resources
+          | such as JavaScript, CSS and images. The system-level pattern below
+          | fetches these resources, while allowing them to be overridden if needed
+          | in the webapp's "resources" directory.
+          |
+          | Defining this pattern in the root sitemap avoids duplicating it in subsitemaps,
+          | which reduces copy/pasting in application code and allows better client-side
+          | caching by giving each resource a single URL.
+          |
+          | Furthermore, some Cocoon code such as the Forms-provided XSLs assume that
+          | resources are available at that URL.
+          |
+          | The absolute path for these resources is "{request:contextPath}/_cocoon/resources"
+          +-->
+      <map:match pattern="_cocoon/resources/*/**">
+        <map:select type="resource-exists">
+          <map:when test="resources/{1}/{2}">
+            <map:read src="resources/{1}/{2}"/>
+          </map:when>
+          <!-- For Cocoon development, read directly from source directories
+          <map:when test="../../src/blocks/{1}/java/org/apache/cocoon/{1}/resources/{2}">
+            <map:read src="../../src/blocks/{1}/java/org/apache/cocoon/{1}/resources/{2}"/>
+	        </map:when>
+		      -->
+          <map:otherwise>
+            <map:read src="resource://org/apache/cocoon/{1}/resources/{2}"/>
+          </map:otherwise>
+        </map:select>
+      </map:match>
+
+      <!--+
+          | Mount everything else by calling the sitemap.xmap file located
+          | in the requested folder.
+          +-->
+      <map:match pattern="*/**">
+        <map:mount src="{1}/" uri-prefix="{1}"/>
+      </map:match>
+
+      <!--+
+          | In every pipeline, you can catch the errors triggered
+          | by the pipeline execution. The error handler is an internal sitemap
+          | component that, when triggered by an error, takes over the normal
+          | pipeline execution.
+          | You can here use the "exception" generator that produces an XML
+          | representation of the error and further manipulate this document
+          | for presentation on screen.
+          | You can also use any other generator if you don't want the
+          | error to be displayed on screen. The "exception" selector can help
+          | you to define different screens for different error types.
+          +-->
+      <map:handle-errors>
+        <map:select type="exception">
+
+          <map:when test="not-found">
+            <map:generate type="exception"/>
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
+              <map:parameter name="realPath" value="{realpath:}"/>
+              <map:parameter name="pageTitle" value="Resource not found"/>
+            </map:transform>
+            <map:serialize status-code="404"/>
+          </map:when>
+
+          <map:when test="invalid-continuation">
+            <map:generate type="exception"/>
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
+              <map:parameter name="realPath" value="{realpath:}"/>
+              <map:parameter name="pageTitle" value="Invalid Continuation"/>
+            </map:transform>
+            <map:serialize status-code="404"/>
+          </map:when>
+
+          <map:otherwise>
+            <map:generate type="exception"/>
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
+              <map:parameter name="realPath" value="{realpath:}"/>
+            </map:transform>
+            <map:serialize status-code="500"/>
+          </map:otherwise>
+        </map:select>
+
+      </map:handle-errors>
+    </map:pipeline>
+  </map:pipelines>
+
+</map:sitemap>

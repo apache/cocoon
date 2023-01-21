@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS: $Id$ -->
+
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="web3 Block Samples">
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+    <note> 
+      For the examples of this block to work, an SAP R/3 system and some
+      SAP java classes need to be available and configured according to the docs that 
+      can be found in the developer section of the Apache Cocoon documentation.
+    </note>
+  </group>
+
+  <group name="web3">
+    <sample name="Documentation" href="../../../docs/developing/web3.html">
+      Documentation for this component.
+    </sample>
+    <sample name="Connect to SAP R/3" href="info.html">
+      Demo connection to <b>your</b> SAP system.   
+    </sample>
+    <sample name="Connect to SAP R/3 (XML)" href="info.xml">
+      Same as above but produces XML.
+    </sample>
+  </group>
+  
+</samples>

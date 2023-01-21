@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | Cocoon Auth block samples sitemap
+    |
+    | @version $Id$
+    +-->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Pipelines ================================= -->
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="login" />
+      </map:match>
+
+      <!-- ================= -->
+      <!-- Simple login page -->
+      <!-- ================= -->
+      <map:match pattern="login">
+        <!-- if we are already logged in, redirect to the protected document -->
+        <map:act type="cauth-is-logged-in">
+          <map:parameter name="application" value="sample" />
+
+          <map:redirect-to uri="protected" />
+        </map:act>
+        <map:generate src="docs/login.xml" />
+        <map:transform src="stylesheets/simple-page2html.xsl" />
+        <map:transform type="encodeURL" />
+        <map:serialize />
+      </map:match>
+
+      <!-- ========================================= -->
+      <!-- Form target which performs auth service   -->
+      <!-- ========================================= -->
+      <map:match pattern="do-login">
+        <!-- try to login -->
+        <map:act type="cauth-login">
+          <map:parameter name="application" value="sample" />
+          <map:parameter name="name" value="{request-param:username}" />
+          <map:parameter name="password" value="{request-param:password}" />
+          <map:redirect-to uri="protected" />
+        </map:act>
+        <!-- something was wrong, try it again -->
+        <map:redirect-to uri="login" />
+      </map:match>
+
+      <!-- ================ -->
+      <!-- Protected area   -->
+      <!-- ================ -->
+      <map:match pattern="protected">
+        <map:act type="cauth-is-logged-in">
+          <map:parameter name="application" value="sample" />
+
+          <map:generate src="docs/protected.xml" type="jx" />
+          <map:transform src="stylesheets/simple-page2html.xsl" />
+          <map:transform type="encodeURL" />
+          <map:serialize />
+        </map:act>
+        <!-- something was wrong, redirect to login page -->
+        <map:redirect-to uri="login" />
+      </map:match>
+
+      <!-- ========================================= -->
+      <!-- Logout link which invalidates the session -->
+      <!-- ========================================= -->
+      <map:match pattern="do-logout">
+        <map:act type="cauth-logout">
+          <map:parameter name="application" value="sample" />
+
+        </map:act>
+        <map:redirect-to uri="login" />
+      </map:match>
+    </map:pipeline>
+
+  </map:pipelines>
+</map:sitemap>

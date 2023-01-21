@@ -1,0 +1,31 @@
+<div id="${this.widgetId}" class="${this.styleClass}">
+  <table>
+    <tr>
+    <th>${this.availableListLabel}</th>
+    <th/>
+    <th>${this.selectedListLabel}</th>
+    </tr>
+    <tr>
+      <td>
+        <select name="${this.cformsIdPrefix}.unselected" id="${this.cformsIdPrefix}.unselected" size="${this.size}"
+            multiple="multiple" dojoAttachPoint="selectLeft">
+        </select>
+      </td>
+      <td width="10px">
+        <img dojoAttachPoint="transferRight" src="${this.resourcesUri}/img/move_right.gif">
+        <br/>
+        <img dojoAttachPoint="transferAllRight" src="${this.resourcesUri}/img/move_all_right.gif">
+        <br/>
+        <img dojoAttachPoint="transferLeft" src="${this.resourcesUri}/img/move_left.gif">
+        <br/>
+        <img dojoAttachPoint="transferAllLeft" src="${this.resourcesUri}/img/move_all_left.gif">
+        <br/>
+      </td>
+      <td>
+        <select name="${this.cformsIdPrefix}" id="${this.cformsIdPrefix}:input" size="${this.size}"
+            multiple="multiple" dojoAttachPoint="selectRight">
+        </select>
+      </td>
+    </tr>
+  </table>
+</div>

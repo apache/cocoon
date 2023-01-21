@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - This is the configuration for the standard poi beans (generator/serializer).
+  -
+  - @version $Id$
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:pipeline="http://cocoon.apache.org/schema/pipeline"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://cocoon.apache.org/schema/pipeline http://cocoon.apache.org/schema/pipeline/cocoon-pipeline-1.0.xsd">
+
+  <bean name="org.apache.cocoon.generation.Generator/xls"
+        class="org.apache.cocoon.generation.HSSFGenerator"
+        scope="prototype">
+    <property name="resolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    <!-- uri for namespace. -->
+    <property name="uri" value="http://www.gnome.org/gnumeric/v7"/>
+    <!-- prefix for namespace -->
+    <property name="prefix" value="gmr"/>
+    <!-- receive not only the data but also the formatting information of the workbook -->
+    <property name="formatting" value="false"/>
+  </bean>
+
+  <bean name="org.apache.cocoon.serialization.Serializer/xls"
+        class="org.apache.cocoon.serialization.HSSFSerializer"
+        scope="prototype">
+    <pipeline:component mime-type="application/vnd.ms-excel"/>
+  </bean>
+
+</beans>
+    

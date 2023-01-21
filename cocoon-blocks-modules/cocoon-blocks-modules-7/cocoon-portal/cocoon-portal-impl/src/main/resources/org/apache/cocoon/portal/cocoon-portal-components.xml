@@ -1,0 +1,304 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--+
+    | This is the default configuration for the portal beans.
+    |
+    | @version $Id$
+    +-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:portal="http://cocoon.apache.org/schema/portal"
+       xmlns:configurator="http://cocoon.apache.org/schema/configurator"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+                           http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd
+                           http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
+
+  <!--+
+      | Spring Bean Post Processors:
+      +-->
+    <bean name="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"
+          class="org.apache.cocoon.portal.spring.ReceiverBeanPostProcessor"/>
+    <bean name="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"
+          class="org.apache.cocoon.portal.spring.RegistrationBeanPostProcessor"/>
+
+  <!--+
+      | Abstract Definition for Portal Service
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.PortalService/abstract"
+          class="org.apache.cocoon.portal.impl.PortalServiceImpl"
+          abstract="true" destroy-method="dispose">
+      <property name="servletContext" ref="javax.servlet.ServletContext"/>
+    </bean>
+
+  <!--+
+      | Abstract Bean used as a base for nearly all beans
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.util.AbstractBean"
+          class="org.apache.cocoon.portal.util.AbstractBean"
+          abstract="true">
+      <property name="portalService" ref="org.apache.cocoon.portal.PortalService"/>
+    </bean>
+
+  <!--+
+      | Coplet Adapters
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter"
+          class="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter"
+          parent="org.apache.cocoon.portal.util.AbstractBean" abstract="true">
+      <property name="runnableManager" ref="org.apache.cocoon.thread.RunnableManager"/>
+    </bean>
+
+    <!--+
+        | This is the uri based adapter.
+        +-->
+    <bean name="org.apache.cocoon.portal.coplet.adapter.CopletAdapter.uri"
+          class="org.apache.cocoon.portal.coplet.adapter.impl.URICopletAdapter"
+          parent="org.apache.cocoon.portal.coplet.adapter.impl.AbstractCopletAdapter" scope="singleton">
+      <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser"/>
+    </bean>
+
+  <!--+
+      | Renderer Aspects
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.composite-content"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.tab-content"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.TabContentAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.window"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton" init-method="init"/>
+
+    <!--+
+        | This aspect can be used to render the remove button.
+        +-->
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.coplet-removing"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.RemovableAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <!--+
+        | This aspect can be used to render cinclude statements that will be used to include
+        | the coplet content, use the coplet aspect below to directly stream the content.
+        +-->
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.coplet-cinclude"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CIncludeCopletAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+    
+    <!--+
+        | This aspect can be used to render the content of the coplet.
+        +-->
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.coplet"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultCopletAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.frame"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.xslt"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton">
+      <property name="xsltProcessor" ref="org.apache.excalibur.xml.xslt.XSLTProcessor"/>
+      <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    </bean>
+
+    <bean name="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect.parameter"
+          class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+  <!--+
+      | Portal Manager.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.PortalManager"
+          class="org.apache.cocoon.portal.services.impl.DefaultPortalManager"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton">
+      <property name="requestAspectChain" ref="org.apache.cocoon.portal.services.PortalManager.requestAspects"/>
+      <property name="responseAspectChain" ref="org.apache.cocoon.portal.services.PortalManager.responseAspects"/>
+    </bean>
+
+    <!-- We register an empty aspects bean which should be redefined in the portal config. -->
+    <portal:request-processor-aspects id="org.apache.cocoon.portal.services.PortalManager.requestAspects">
+    </portal:request-processor-aspects>
+
+    <!-- We register an empty aspects bean which should be redefined in the portal config. -->
+    <portal:response-processor-aspects id="org.apache.cocoon.portal.services.PortalManager.responseAspects"/>
+
+  <!--+
+      | Portal Manager Aspects
+      |
+      +-->
+    <!-- Legacy service selector. -->
+    <bean id="org.apache.cocoon.portal.services.aspects.PortalManagerAspect.preload"
+          class="org.apache.cocoon.portal.services.aspects.impl.PreloadPortalManagerAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+  <!--+
+      | Portal Event Converter.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.event.EventConverter"
+          class="org.apache.cocoon.portal.event.impl.DefaultEventConverter"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          init-method="init" scope="singleton">
+      <!-- Map event class to keys. These keys are used to create the values
+           for the uri if that event is used. If no mapping is found a hash
+           of the event class name is used as default. -->
+      <property name="mappings">
+        <map>
+          <entry key="sizing" value="org.apache.cocoon.portal.event.coplet.CopletInstanceSizingEvent"/>
+          <entry key="lpar" value="org.apache.cocoon.portal.event.layout.LayoutChangeParameterEvent"/>
+        </map>
+      </property>
+    </bean>
+
+  <!--+
+      | Event Manager.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.event.EventManager"
+          class="org.apache.cocoon.portal.event.impl.DefaultEventManager"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          init-method="init" scope="singleton"/>
+
+  <!--+ 
+      | Request Processor Aspects
+      |
+      +-->
+    <bean id="org.apache.cocoon.portal.services.aspects.RequestProcessorAspect.action-counter"
+          class="org.apache.cocoon.portal.services.aspects.impl.ActionCounterRequestProcessorAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean id="org.apache.cocoon.portal.services.aspects.RequestProcessorAspect.frame"
+          class="org.apache.cocoon.portal.services.aspects.impl.FrameRequestProcessorAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <bean id="org.apache.cocoon.portal.services.aspects.RequestProcessorAspect.link"
+          class="org.apache.cocoon.portal.services.aspects.impl.LinkRequestProcessorAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+    <!--+
+        | This aspect sets headers on the response telling the client to not cache
+        | the response.
+        +-->
+    <bean id="org.apache.cocoon.portal.services.aspects.RequestProcessorAspect.no-client-caching"
+          class="org.apache.cocoon.portal.services.aspects.impl.NoClientCachingRequestProcessorAspect"
+          parent="org.apache.cocoon.portal.util.AbstractBean" scope="singleton"/>
+
+
+  <!--+
+      | Portal Link Service.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.LinkService"
+          class="org.apache.cocoon.portal.services.impl.links.DefaultLinkService"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton"/>
+
+  <!--+
+      | Coplet Factory.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.CopletFactory"
+          class="org.apache.cocoon.portal.services.impl.DefaultCopletFactory"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton"/>
+
+  <!--+
+      | Layout Factory.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.LayoutFactory"
+          class="org.apache.cocoon.portal.services.impl.DefaultLayoutFactory"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton">
+      <property name="layoutTypesMap" ref="org.apache.cocoon.portal.om.LayoutTypeMap"/>
+    </bean>
+
+  <!--+
+      | User Service.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.UserService"
+          class="org.apache.cocoon.portal.services.impl.DefaultUserService"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton" init-method="init"/>
+
+  <!--+
+      | Variable Resolver.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.VariableResolver"
+          class="org.apache.cocoon.portal.services.impl.DefaultVariableResolver"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton">
+        <property name="settings" ref="org.apache.cocoon.configuration.Settings"/>
+    </bean>
+
+  <!--+
+      | Profile Manager.
+      |
+      +-->
+
+  <!--+
+      | Profile Manager Aspects.
+      |
+      +-->
+
+    <!-- We register an empty aspects bean which should be redefined in the portal config. -->
+    <portal:profile-manager-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects"/>
+
+  <!--+
+      | Renderer map
+      |
+      +-->
+    <configurator:bean-map id="org.apache.cocoon.portal.om.RendererMap"
+                           type="org.apache.cocoon.portal.om.Renderer"/>
+
+  <!--+
+      | Coplet Adapter map
+      |
+      +-->
+    <configurator:bean-map id="org.apache.cocoon.portal.om.CopletAdapterMap"
+                           type="org.apache.cocoon.portal.om.CopletAdapter"/>
+
+  <!--+
+      | Coplet Type map
+      |
+      +-->
+    <configurator:bean-map id="org.apache.cocoon.portal.om.CopletTypeMap"
+                           type="org.apache.cocoon.portal.om.CopletType"/>
+
+  <!--+
+      | Layout Type map
+      |
+      +-->
+    <configurator:bean-map id="org.apache.cocoon.portal.om.LayoutTypeMap"
+                           type="org.apache.cocoon.portal.om.LayoutType"/>
+
+</beans>

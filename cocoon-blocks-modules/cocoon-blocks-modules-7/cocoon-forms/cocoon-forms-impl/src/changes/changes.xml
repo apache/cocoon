@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<!--
+  - See http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+  - $Id$
+  -->
+<document>
+  <body>
+    <release version="1.2.0" date="TBD" description="unreleased">
+      <action dev="jreijn" type="fix" issue="COCOON-2035" due-to="Gustavo N. Fernandes" due-to-email="gustavonalle@gmail.com">
+        Fix NPE in the RepeaterJXPathSorter caused by null values.
+      </action>
+    </release>
+    <release version="1.1.1" date="TBD" description="unreleased">
+      <action dev="felixk" type="fix" issue="COCOON-1822" due-to="Karen Torres &amp; Rafael Márquez" due-to-email="ktorres@agssa.net &amp; rmarquez@agssa.net">
+        Forms: MultiValueField list-type="double-listbox" does not work correctly in ajax enabled forms.
+      </action>
+      <action dev="joerg" type="fix" issue="COCOON-1825" due-to="Vincent Demay" due-to-email="vincent@demay-fr.net">
+        Fix @id handling on fi:group/fi:struct element in conjunction with AJAX requests.
+      </action>
+      <action dev="joerg" type="fix" issue="COCOON-2204" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+        Fix @id handling on fi:group element in conjunction with AJAX requests.
+      </action>
+    </release>
+    <release version="1.1.0" date="2008-??-??" description="released">
+      <action dev="giacomo" type="update">
+        The Cocoon Forms springified (as much as possible).
+      </action>
+    </release>
+    <release version="1.0.0" date="2008-??-??" description="unreleased">
+      <action dev="joerg" type="fix" issue="COCOON-2178" due-to="Harald Entner" due-to-email="harald.entner@workflow.at">
+        Dispatch only one TreeSelectionEvent on multiple selection rather than one event for each selected tree item.
+      </action>
+      <action dev="joerg" type="fix" issue="COCOON-2058" due-to="Ralph Collett" due-to-email="ralph.collett@semantico.com">
+        Fix ambiguous rule issue with Forms stylesheets when using Saxon.
+      </action>
+      <action dev="vgritsenko" type="fix">
+        Fixed concurrency issue in form definition builders code. If you have custom
+        widgets, please implement WidgetDefinitionBuilder.buildWidgetDefinition(Element, WidgetDefinitionBuilderContext)
+        method. Do not use WidgetDefinitionBuilder.buildWidgetDefinition(Element) method, it is intended to be
+        implemented only by the top level widget (Form).
+      </action>
+      <action dev="joerg" type="fix" issue="COCOON-2052" due-to="Robin Wyles" due-to-email="rob@robinwyles.com">
+        Allow Ajax submission of forms with empty upload field.
+      </action>
+    </release>
+    <!-- Here forms block got branched for forms 1.0 and springified form 1.1. -->
+    <release version="1.0.0-RC1" date="2007-09-27" description="released">
+      <action dev="gkossakowski" type="fix" issue="COCOON-2062" due-to="Alexander Klimetschek" due-to-email="alexander.klimetschek@mindquarry.com">
+        Add missing dojo.require("dojo.ns") statement.
+      </action>
+      <action dev="felixk" type="add" issue="COCOON-2091">
+        Add Xinha as alternative for HTMLArea as WYSIWYG online editor as HTMLArea is no longer maintained.
+      </action>
+      <action dev="felixk" type="update">
+        Deprecate HTMLArea. HTMLArea editor will be removed in version 1.1 of cocoon-forms block.
+        Use alternatives instead (e.g. Xinha).
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2006-08-03" description="released">
+      <action dev="ltrieloff" type="fix" issue="COCOON-2027" due-to="Jan Oberst">
+        Fix AJAX form uploads with MSIE.
+      </action>
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>
+    </release>
+  </body>
+</document>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--
+  @version $Id$
+-->
+
+<!-- An implementation of the TimedBrowserUpdate template engine as a JXTemplate tag library -->
+    
+    <!--+	Usage Instructions
+    		+
+    		+		The purpose of this Macro is to make regions in a webpage 
+    		+		that update themselves periodically without user interaction.
+    		+		This is implemented using AJAX techniques taken from CForms.
+    		+
+    		+		1. Import this macro into your JXTemplate :
+    		+
+    		+			<jx:import uri="resource://org/apache/cocoon/ajax/resources/macros/timedbrowserupdater.xml"/>
+    		+
+    		+		2. Use the tags in your page where you want auto-updating to occur :
+    		+
+    		+			<tbu:replace id="element.id" state="${change.value}">
+    		+				<td id="element.id">
+    		+					Your value is: <b>${change.value}</b>
+    		+				</td>
+				+			</tbu:replace>
+				+
+				+			Where:
+				+				"element.id" is an id that is unique to your page
+				+				"change.value" is the value that you are primarilily interested in tracking
+				+				i.e. the update is only made if this value changes.
+				+
+				+			Note: The id attribute of both the <tbu:replace> and the child of <tbu:replace> 
+				+			would normally be the same as this indicates that this is the element being replaced.
+				+			Only the first child of <tbu:replace> is used.
+    		+
+    		+		3. Add the BrowserUpdateTransformer to your pipeline, after the JXTGenerator.
+    		+
+    		+			<map:transform type="browser-update"/>
+    		+
+    		+		4. Have your page load the JavaScript.
+    		+
+				+			<script type="text/javascript" src="resources/ajax/js/cocoon-ajax.js"/>
+				+			<script type="text/javascript" src="resources/ajax/js/timedbrowserupdater.js"/>
+    		+
+    		+		5. Effect
+    		+
+    		+			When the page is first loaded, it will display all of it's content normally, 
+    		+			including the content of the <tbu:replace> tags.
+    		+			Thereafter, every 5 minutes, the regions inside <tbu:replace> tags will 
+    		+			automatically update, having retrieved any changed values via an XMLHTTPRequest
+    		+			in the background, to the same URI as the page.
+    		+
+    		+		6. Console
+    		+
+    		+		There is an optional sample console to control TimedBrowserUpdate.
+    		+
+    		+			<tbu:console i18nCatalogue="catalogue.name"/>
+    		+
+    		+		This outputs a simple form to control the Updater.
+    		+		It is not designed to be placed on the page more than once.
+    		+
+    		+		You need to supply the name of an i18n Catalogue that contain terms used by the console
+    		+		and you need to ensure that the I18nTransformer is in your pipeline.
+    		+
+    		+		The Console used these i18n keys :
+    		+
+    		+			tbu.name.title						the label in the console
+    		+			tbu.name.hint							the hint of the console
+    		+			tbu.delay.title						the label of the delay control
+    		+			tbu.delay.hint            the hint of the delay control
+    		+			tbu.delay.30  						delay for 300 secs
+    		+			tbu.delay.60  						delay for 60 secs
+    		+			tbu.delay.120  	  				delay for 120 secs
+    		+			tbu.delay.300   					delay for 300 secs
+    		+			tbu.delay.600   					delay for 600 secs
+    		+			tbu.isrunning.title				button text for running state
+    		+			tbu.isrunning.hint				button hint for running state
+    		+			tbu.notrunning.title			button text for not running state
+    		+			tbu.notrunning.hint				button hint for not running state
+    		+			
+    		+-->
+    
+    
+    
+<jx:template 	xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
+							xmlns:bu="http://apache.org/cocoon/browser-update/1.0"
+							xmlns:tbu="http://apache.org/cocoon/timed-browser-update/1.0"
+							xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+    <jx:macro name="replace" targetNamespace="http://apache.org/cocoon/timed-browser-update/1.0">
+      <jx:parameter name="id"/>
+      <jx:parameter name="state"/>
+			<jx:choose>
+				<jx:when test="${cocoon.request.getParameter('cocoon-ajax') == 'true' &amp;&amp; cocoon.request.getParameter(id) != state}">
+					<bu:replace id="${id}" state="${state}">
+						<jx:evalBody/>
+					</bu:replace>
+				</jx:when>
+				<jx:otherwise>
+					<script type="text/javascript">
+						TimedBrowserUpdaterInstance.registerWidget("${id}","${state}");
+					</script>
+					<jx:evalBody/>
+				</jx:otherwise>
+			</jx:choose>
+    </jx:macro>
+
+
+    <jx:macro name="console" targetNamespace="http://apache.org/cocoon/timed-browser-update/1.0">
+			<jx:parameter name="i18nCatalogue"/>
+			
+			<form id="tbuconsole" name="tbuconsole">
+				<table class="tbuConsole" title="${i18nCatalogue}:tbu.name.hint" i18n:attr="title">
+					<tr>
+						<th class="tbuName">
+							<i18n:text i18n:catalogue="${i18nCatalogue}">tbu.name.title</i18n:text>
+						</th>
+						<td class="tbuRunning">
+							<input id="tbuToggleRunButton" 
+								type="button" 
+								title="" 
+								value="" 
+								onClick="TimedBrowserConsole.toggleTimer();"  
+								tabindex="32000"
+							/>
+						</td>
+					</tr>
+					<tr>
+						<th class="tbuFrequencyTitle">
+							<i18n:text i18n:catalogue="${i18nCatalogue}">tbu.frequency.title</i18n:text>
+						</th>
+						<td class="tbuFrequency">
+							<select id="tbuFrequencySelector" 
+								size="1" 
+								onchange="TimedBrowserConsole.setFrequency();" 
+								title="${i18nCatalogue}:tbu.frequency.hint"
+								i18n:attr="title"
+								tabindex="32001"
+							>
+								<option value="30"><i18n:text i18n:catalogue="${i18nCatalogue}">tbu.frequency.30</i18n:text></option>
+								<option value="60"><i18n:text i18n:catalogue="${i18nCatalogue}">tbu.frequency.60</i18n:text></option>
+								<option value="120"><i18n:text i18n:catalogue="${i18nCatalogue}">tbu.frequency.120</i18n:text></option>
+								<option value="300"><i18n:text i18n:catalogue="${i18nCatalogue}">tbu.frequency.300</i18n:text></option>
+								<option value="600"><i18n:text i18n:catalogue="${i18nCatalogue}">tbu.frequency.600</i18n:text></option>
+							</select>
+						</td>
+					</tr>
+					<!-- uncomment this row to see the debug console -->
+					<!--<tr>
+						<th align="top">console</th>
+						<td class="tbuDebugConsole">
+							<textarea id="tbuConsole" rows="10" cols="40"></textarea>
+						</td>
+					</tr>-->
+				</table>
+			</form>
+			<script language="Javascript">
+				TimedBrowserConsole = new Cocoon.Ajax.TimedBrowserUpdater.Console (
+					TimedBrowserUpdaterInstance,
+					{
+						frequencyControl: $("tbuFrequencySelector"),
+						toggleControl: $("tbuToggleRunButton"),
+						console: $("tbuDebugConsole"),
+						isRunningTitle: "<i18n:text i18n:catalogue="${i18nCatalogue}">tbu.isrunning.title</i18n:text>",
+						notRunningTitle: "<i18n:text i18n:catalogue="${i18nCatalogue}">tbu.notrunning.title</i18n:text>",
+						isRunningHint: "<i18n:text i18n:catalogue="${i18nCatalogue}">tbu.isrunning.hint</i18n:text>",
+						notRunningHint: "<i18n:text i18n:catalogue="${i18nCatalogue}">tbu.notrunning.hint</i18n:text>"
+					}
+				)
+			</script>
+		</jx:macro>
+
+
+</jx:template>

@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - $Id$
+  -->
+<samples name="Internal Requests Error Handling Samples">
+
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
+
+  <group name="Back">
+    <sample name="Back" href="../">
+      Back to the error handling samples page.
+    </sample>
+  </group>
+
+  <group name="Types of Errors">
+    <note>
+      Request processing in the Cocoon consists of several phases.
+      First one is pipeline assembly phase, when sitemap processor
+      traverses sitemaps, finds, and builds a pipeline for the
+      request.
+    </note>
+    <note>
+      Second phase is the pipeline setup phase, when pipeline is
+      initialized with the request parameters.
+    </note>
+    <note>
+      Third phase is the pipeline execution phase, when generator
+      starts streaming SAX events down the pipeline, which end up
+      in the serializer, writing bytes into the output stream.
+    </note>
+  </group>
+
+  <group name="Default Error Handling">
+    <sample name="sitemap" href="default-sitemap">
+      Exception in the sitemap during pipeline assembly phase
+    </sample>
+    <sample name="setup" href="default-setup">
+      Exception in the pipeline during setup phase
+    </sample>
+    <sample name="pipeline" href="default-pipeline">
+      Exception in the pipeline during processing phase
+    </sample>
+  </group>
+
+  <group name="Custom Error Handling">
+    <sample name="sitemap" href="custom-sitemap">
+      Exception in the sitemap during pipeline assembly phase
+    </sample>
+    <sample name="setup" href="custom-setup">
+      Exception in the pipeline during setup phase
+    </sample>
+    <sample name="pipeline" href="custom-pipeline">
+      Exception in the pipeline during processing phase
+    </sample>
+  </group>
+
+  <group name="Aggregate (Default Error Handling)">
+    <note>
+      Attempt to aggregate several pages, were one contains an error,
+      with default error handling.
+    </note>
+    <sample name="sitemap" href="aggregate/default-sitemap">
+      Aggegate Exception in the sitemap during pipeline assembly phase
+    </sample>
+    <sample name="setup" href="aggregate/default-setup">
+      Aggegate Exception in the pipeline during setup phase
+    </sample>
+    <sample name="pipeline" href="aggregate/default-pipeline">
+      Aggegate Exception in the pipeline during processing phase
+    </sample>
+  </group>
+
+  <group name="Aggregate (Custom Error Handling)">
+    <note>
+      Attempt to aggregate several pages, were one contains an error,
+      with custom error handling.
+    </note>
+    <sample name="sitemap" href="aggregate/custom-sitemap">
+      Aggegate Exception in the sitemap during pipeline assembly phase
+    </sample>
+    <sample name="setup" href="aggregate/custom-setup">
+      Aggegate Exception in the pipeline during setup phase
+    </sample>
+    <sample name="pipeline" href="aggregate/custom-pipeline">
+      Aggegate Exception in the pipeline during processing phase
+    </sample>
+  </group>
+
+  <group name="Include (Default Error Handling)">
+    <note>
+      Attempt to include several pages, were one contains an error,
+      with default error handling. Include happens after xslt
+      transformation.
+    </note>
+    <sample name="sitemap" href="include/default-sitemap">
+      Include Exception in the sitemap during pipeline assembly phase
+    </sample>
+    <sample name="setup" href="include/default-setup">
+      Include Exception in the pipeline during setup phase
+    </sample>
+    <sample name="pipeline" href="include/default-pipeline">
+      Include Exception in the pipeline during processing phase
+    </sample>
+  </group>
+
+  <group name="Include (Custom Error Handling)">
+    <note>
+      Attempt to include several pages, were one contains an error,
+      with custom error handling. Include happens after xslt
+      transformation.
+    </note>
+    <sample name="sitemap" href="include/custom-sitemap">
+      Include Exception in the sitemap during pipeline assembly phase
+    </sample>
+    <sample name="setup" href="include/custom-setup">
+      Include Exception in the pipeline during setup phase
+    </sample>
+    <sample name="pipeline" href="include/custom-pipeline">
+      Include Exception in the pipeline during processing phase
+    </sample>
+  </group>
+
+</samples>
