@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+	<catalogue>
+		<message key="copletManagement.editLayout">Edit Layout</message>
+		<message key="copletManagement.title">Coplet-Management</message>
+		<message key="copletManagement.selectTab">Tab-Selection</message>
+		<message key="copletManagement.enterTabName">Enter a name for the tab</message>
+		<message key="copletManagement.tabName">Name</message>
+		
+		<message key="copletManagement.items.tab">Tab</message>
+		<message key="copletManagement.items.tabFolder">Tab-Folder</message>
+		<message key="copletManagement.items.row">Row</message>
+		<message key="copletManagement.items.col">Column</message>
+		<message key="copletManagement.items.coplet">Coplet</message>
+
+		<message key="copletManagement.actions.title">Actions</message>
+		<message key="copletManagement.actions.addCoplet">Add Coplet</message>
+		<message key="copletManagement.actions.addRow">Add Row</message>
+		<message key="copletManagement.actions.addCol">Add Column</message>
+		<message key="copletManagement.actions.addTab">Add Tab</message>
+		<message key="copletManagement.actions.removeItem">Delete Item</message>
+		<message key="copletManagement.actions.moveLeft">Move Left</message>
+		<message key="copletManagement.actions.moveUp">Move Up</message>
+		<message key="copletManagement.actions.moveRight">Move Right</message>
+		<message key="copletManagement.actions.moveDown">Move Down</message>
+		<message key="copletManagement.actions.drillDown">Drilldown</message>
+		<message key="copletManagement.actions.goUp">Go Up</message>
+		
+		<message key="copletManagement.selectSkin">Select Skin</message>
+
+		<message key="copletManagement.selectCoplet">Select one or more Coplets</message>
+		
+		<message key="copletManagement.editCoplet.save">Save</message>
+		<message key="copletManagement.editCoplet.all.title">Edit Coplet</message>
+		<message key="copletManagement.editCoplet.all.copletTitle">Title</message>
+		<message key="copletManagement.editCoplet.all.visible">Visible</message>
+		<message key="copletManagement.editCoplet.uri.title">Edit URI-Coplet</message>
+		<message key="copletManagement.editCoplet.uri.copletTitle">Title</message>
+		<message key="copletManagement.editCoplet.uri.copletUri">URI</message>
+		
+	</catalogue>

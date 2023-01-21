@@ -1,0 +1,31 @@
+<div id="${this.widgetId}" class="${this.styleClass}">
+  <table>
+    <tr>
+      <td>Search:</td>
+      <td>
+        <select dojoType="ComboBox" autoComplete="true" mode="remote" dojoAttachPoint="entry"
+          dataUrl="${this.dataUrl}" style="width: 300px;" maxListLength="15">
+        </select>
+      </td>
+      <td/>
+    </tr>
+    <tr>
+      <td/>
+      <td>
+        <select name="${this.widgetId}" id="${this.widgetId}:input" size="5" multiple="multiple" style="width:100%"
+          dojoAttachPoint="select">
+        </select>
+      </td>
+      <td width="20px">
+        <a id="${this.widgetId}.link" href="#" dojoAttachPoint="linkButton">${this.popupLinkText}</a>
+        <br/>		
+        <img dojoAttachPoint="deleteButton" src="${this.resourcesUri}/forms/img/delete.gif"/>
+        <br/>
+        <img dojoAttachPoint="moveUpButton" src="${this.resourcesUri}/forms/img/move_up.gif"/>
+        <br/>
+        <img dojoAttachPoint="moveDownButton" src="${this.resourcesUri}/forms/img/move_down.gif"/>
+        <br/>
+      </td>
+    </tr>
+  </table>
+</div>

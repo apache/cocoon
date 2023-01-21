@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<introhtml>
+<p>
+    This is a Sitemap-viewer, made by Jelle Alten.
+</p>
+<p>
+    This viewer reads a sitemap, attempts to follow links, references and other interesting lines in the &apos;match&apos; elements and generates an HTML file from this information. If you use IE or Mozilla, the resulting HTML has clickable buttons for folding and unfolding elements. 
+</p>
+<p>
+    <b>Warning: This tool can show the contents of sitemaps, don't put this tool in a production environment for security reasons.</b>
+    The source-viewing is turned on and off in the sitemap, in the "showsources" parameter and by setting the internal-only attribute of the "srcviewing"-pipeline.
+</p>
+<p>See this <a href="example.html">example of a difficult sitemap</a> to see where it won't work.</p>
+<p>
+    It is in a testing stage, and some work, cleanup and documentation should still be done. It works fine on Cocoon 2.1.2+
+</p>
+<p>
+    <h4>Known bugs</h4>
+    <ul>
+        <li>please tell the Cocoon mailing lists</li>
+    </ul>
+    <h4>Todo</h4>
+    <ul>
+        <li>Find people to test this</li>
+        <li>Collect wishes and bugs from people</li>
+        <li>Test on all example sitemaps</li>
+    </ul>
+</p>
+</introhtml>

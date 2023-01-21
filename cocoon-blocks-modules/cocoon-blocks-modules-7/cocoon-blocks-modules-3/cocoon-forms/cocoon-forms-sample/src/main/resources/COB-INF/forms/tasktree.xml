@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  A form for a work breakdown in a tree of tasks.
+
+  @version $Id$
+-->
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+         xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <fd:widgets>
+  
+    <!-- a list of tasks -->
+    <fd:class id="tasklist-class">
+      <fd:widgets>
+        <fd:repeater id="tasks">
+          <fd:widgets>
+            <!-- inline widget definitions from task-class -->
+            <fd:new id="task-class"/>
+          </fd:widgets>
+        </fd:repeater>
+        <fd:repeater-action id="addsub" repeater="tasks" command="add-row">
+          <fd:label>Add subtasks</fd:label>
+          <fd:hint>Creates a task subtree</fd:hint>
+        </fd:repeater-action>
+      </fd:widgets>
+    </fd:class>
+    
+    <!-- a task -->
+    <fd:class id="task-class">
+      <fd:widgets>
+      <!-- FIXME: doesn't work if there's not an enclosing group -->
+        <fd:group id="task">
+          <fd:widgets>
+            <fd:field id="title">
+              <fd:datatype base="string"/>
+            </fd:field>
+            <fd:field id="start">
+              <fd:datatype base="date"/>
+            </fd:field>
+            <fd:field id="end">
+              <fd:datatype base="date"/>
+            </fd:field>
+            
+            <!-- these actions will act on the "tasks" repeater in which this class is inlined -->
+            <fd:row-action id="add" command="add-after">
+              <fd:label>+</fd:label>
+            </fd:row-action>
+            <fd:row-action id="up" command="move-up">
+              <fd:label>^</fd:label>
+            </fd:row-action>
+            <fd:row-action id="down" command="move-down">
+              <fd:label>v</fd:label>
+            </fd:row-action>
+            <fd:row-action id="delete" command="delete">
+              <fd:label>X</fd:label>
+            </fd:row-action>
+            
+            <!-- the substasks -->
+            <fd:new id="tasklist-class"/>
+            
+          </fd:widgets>
+        </fd:group>
+      </fd:widgets>
+    </fd:class>
+
+    <!-- the project's name -->
+    <fd:field id="name" required="true">
+      <fd:datatype base="string"/>
+    </fd:field>
+    
+    <!-- the top-level tasks -->
+    <fd:new id="tasklist-class"/>
+    
+    <fd:submit id="ok">
+      <fd:label>OK</fd:label>
+    </fd:submit>
+    
+  </fd:widgets>
+</fd:form>

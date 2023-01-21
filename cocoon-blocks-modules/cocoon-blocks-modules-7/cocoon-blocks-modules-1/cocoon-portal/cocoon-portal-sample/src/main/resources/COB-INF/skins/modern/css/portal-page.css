@@ -1,0 +1,31 @@
+/* specific styling for the portal page */
+
+/*
+This is just fun with restyling tables to
+something that is different to what you
+would expect.
+Verified to be working as intended in FireFox 
+and Safari on OSX.
+Verified to be working as intended in FireFox
+on Win XP.
+Doesn't work in IE6 on Win XP (why should it eh? ;-) ).
+
+*/
+#personal_area {
+	border: 1px dashed #ddd;
+	width: 100%;
+	overflow: auto;
+}
+
+#personal_area h3 { 
+	font-size: 12pt;
+	font-style: normal;
+}
+
+#personal_area td:last-child { 
+	font-style: italic;  
+}
+
+#personal_area table td {
+	font-style: normal;
+}

@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS: $Id$ -->
+
+<samples name="QDoxSource Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
+
+  <group name="Class: java.util.HashMap">
+    <sample name="HTML" href="javadoc/java.util.HashMap">
+      Shows the Javadoc page of the class <code>java.util.HashMap</code>
+    </sample>
+    <sample name="XML" href="javadoc-xml/java.util.HashMap">
+      Shows the Javadoc XML source of the class <code>java.util.HashMap</code>
+    </sample>
+    <sample name="J2SE" href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/HashMap.html">
+      Shows the original J2SE API document of the class <code>java.util.HashMap</code>
+    </sample>
+      <note>
+          NOTE: for these samples to work, the &lt;source-roots&gt; of the QDoxSource must be configured
+          correctly in cocoon.xconf. The QDox block provides an initial configuration that reads source code from
+          file:///tmp/qdox-test, so unless you reconfigure source-roots in cocoon.xconf you need to copy source files
+          there for these tests to work (for example /tmp/qdox-test//java/util/HashMap.java).
+      </note>
+  </group>
+  <group name="Interface: java.util.SortedSet">
+    <sample name="HTML" href="javadoc/java.util.SortedSet">
+      Shows the Javadoc page of the interface <code>java.util.SortedSet</code>
+    </sample>
+    <sample name="XML" href="javadoc-xml/java.util.SortedSet">
+      Shows the Javadoc XML source of the interface <code>java.util.SortedSet</code>
+    </sample>
+    <sample name="J2SE" href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/SortedSet.html">
+      Shows the original J2SE API document of the interface <code>java.util.SortedSet</code>
+    </sample>
+  </group>
+  <group name="BIG class: javax.swing.JComponent">
+    <sample name="HTML" href="javadoc/javax.swing.JComponent">
+      Shows the Javadoc page of the class <code>javax.swing.JComponent</code>
+    </sample>
+    <sample name="XML" href="javadoc-xml/javax.swing.JComponent">
+      Shows the Javadoc XML source of the class <code>javax.swing.JComponent</code>
+    </sample>
+    <sample name="J2SE" href="http://java.sun.com/j2se/1.4.2/docs/api/javax/swing/JComponent.html">
+      Shows the original J2SE API document of the class <code>javax.swing.JComponent</code>
+    </sample>
+  </group>
+  <group name="Inner class: java.awt.geom.Arc2D.Double">
+    <sample name="HTML" href="javadoc/java.awt.geom.Arc2D.Double">
+      Shows the Javadoc page of the class <code>java.awt.geom.Arc2D.Double</code>
+    </sample>
+    <sample name="XML" href="javadoc-xml/java.awt.geom.Arc2D.Double">
+      Shows the Javadoc XML source of the class <code>java.awt.geom.Arc2D.Double</code>
+    </sample>
+    <sample name="J2SE" href="http://java.sun.com/j2se/1.4.2/docs/api/java/awt/geom/Arc2D.Double.html">
+      Shows the original J2SE API document of the class <code>java.awt.geom.Arc2D.Double</code>
+    </sample>
+  </group>
+
+  <group name="Resources">
+    <sample name="QDox web site" href="http://qdox.codehaus.org/">
+       Links and reference information
+    </sample>
+   </group>
+</samples>

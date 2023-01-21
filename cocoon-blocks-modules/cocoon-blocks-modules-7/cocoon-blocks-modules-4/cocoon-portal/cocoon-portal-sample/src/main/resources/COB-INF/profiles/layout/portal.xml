@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<composite-layout type="tab" id="maintab">
+
+  <named-item name="Main">
+    <coplet-layout type="coplet">
+      <coplet-instance>PortalDemo_1</coplet-instance>
+    </coplet-layout>
+  </named-item>
+
+  <named-item name="News">
+    <composite-layout type="column">
+      <parameter name="border" value="0" />
+      <parameter name="border-color" value="#225599" />
+      <item>
+        <parameter name="width" value="50%" />
+        <composite-layout type="row">
+          <parameter name="border" value="0" />
+          <parameter name="border-color" value="#AACCFF" />
+          <item>
+            <coplet-layout type="coplet">
+              <parameter name="border" value="0" />
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance>Newsweek_1</coplet-instance>
+            </coplet-layout>
+          </item>
+          <item>
+            <coplet-layout type="coplet">
+              <parameter name="border" value="0"/>
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance>NYTBusiness_1</coplet-instance>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+      <item>
+        <parameter name="width" value="25%" />
+        <composite-layout type="row">
+          <parameter name="border" value="0" />
+          <parameter name="border-color" value="#AACCFF" />
+          <item>
+            <coplet-layout type="coplet">
+              <parameter name="border" value="0" />
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance>BBCNews_1</coplet-instance>
+            </coplet-layout>
+          </item>
+          <item>
+            <composite-layout type="column">
+              <item>
+                <frame-layout type="frame" id="a">
+                  <source>cocoon:/coplets/news/nyt_sport.rss</source>
+                </frame-layout>
+              </item>
+              <item>
+                <coplet-layout type="coplet">
+                  <parameter name="border" value="0" />
+                  <parameter name="border-color" value="#AA0000" />
+                  <coplet-instance>CNETNews_1</coplet-instance>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </item>
+        </composite-layout>
+      </item>
+      <item>
+        <parameter name="width" value="25%" />
+        <composite-layout type="row">
+          <parameter name="border" value="0" />
+          <parameter name="border-color" value="#AACCFF" />
+          <item>
+            <parameter name="bgcolor" value="#CCCCCC" />
+            <coplet-layout type="coplet">
+              <parameter name="border" value="0" />
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance>CSTNews_1</coplet-instance>
+            </coplet-layout>
+          </item>
+          <item>
+            <coplet-layout type="coplet">
+              <parameter name="border" value="0" />
+              <parameter name="border-color" value="#AA0000" />
+              <coplet-instance>CNNEurope_1</coplet-instance>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="Weblogs">
+    <composite-layout type="column">
+      <item>
+        <composite-layout type="row">
+          <item>
+            <parameter name="width" value="20%" />
+            <coplet-layout type="coplet">
+              <coplet-instance>CZWeblog_1</coplet-instance>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+      <item>
+        <composite-layout type="row">
+          <item>
+            <coplet-layout type="coplet">
+              <coplet-instance>Weblog_1</coplet-instance>
+            </coplet-layout>
+          </item>
+        </composite-layout>
+      </item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="TabDemo1">
+    <composite-layout type="tab">
+      <named-item name="One">
+        <coplet-layout type="coplet">
+          <coplet-instance>CZWeblog_1</coplet-instance>
+        </coplet-layout>
+      </named-item>
+      <named-item name="Two">
+        <coplet-layout type="coplet">
+          <coplet-instance>Weblog_1</coplet-instance>
+        </coplet-layout>
+      </named-item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="TabDemo2">
+    <composite-layout type="linktab">
+      <named-item name="One">
+        <coplet-layout type="coplet">
+          <coplet-instance>CZWeblog_1</coplet-instance>
+        </coplet-layout>
+      </named-item>
+      <named-item name="Two">
+        <coplet-layout type="coplet">
+          <coplet-instance>Weblog_1</coplet-instance>
+        </coplet-layout>
+      </named-item>
+    </composite-layout>
+  </named-item>
+
+  <named-item name="TabDemo3">
+    <composite-layout type="linktab">
+      <named-item name="One">
+        <coplet-layout type="coplet">
+          <coplet-instance>CZWeblog_1</coplet-instance>
+        </coplet-layout>
+      </named-item>
+      <named-item name="Two">
+        <composite-layout type="tab">
+          <named-item name="Weblog">
+             <coplet-layout type="coplet">
+          <coplet-instance>Weblog_1</coplet-instance>
+        </coplet-layout>
+          </named-item>
+          <named-item name="Gallery">
+            <composite-layout type="column">
+              <item>
+                <coplet-layout type="coplet">
+                  <coplet-instance>GalleryPetstore_1</coplet-instance>
+               </coplet-layout>
+              </item>
+              <item>
+                <coplet-layout type="coplet">
+                  <coplet-instance>GalleryViewer_1</coplet-instance>
+                </coplet-layout>
+              </item>
+            </composite-layout>
+          </named-item>
+        </composite-layout>
+      </named-item>
+    </composite-layout>
+  </named-item>
+    
+</composite-layout>

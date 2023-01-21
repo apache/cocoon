@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - $Id$
+  -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view name="pretty-content" from-label="content">
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+      </map:serialize>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline>
+
+      <map:match pattern="">
+        <map:generate src="samples.xml"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!--
+        - News sources, post processed using XSLT, for content aggregation
+        - samples.
+        -->
+
+      <map:match pattern="slashdot.xml">
+        <map:generate src="http://slashdot.org/slashdot.xml"/>
+        <map:transform src="stylesheets/slashdot.xsl"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="moreover.xml">
+        <map:generate src="http://www.moreover.com/cgi-local/page?o=xml&amp;c=Developer%20news"/>
+        <map:transform src="stylesheets/moreover.xsl"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="xmlhack.xml">
+        <map:generate src="http://www.xmlhack.com/cdf.cdf"/>
+        <map:transform src="stylesheets/xmlhack.xsl"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <!--
+        - News sources, transformed to HTML for display
+        -->
+
+      <map:match pattern="slashdot">
+        <map:generate src="cocoon:/slashdot.xml"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="moreover">
+        <map:generate src="cocoon:/moreover.xml"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="xmlhack">
+        <map:generate src="cocoon:/xmlhack.xml"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!--
+        - Content aggregation samples
+        -->
+
+      <!-- Aggregation using the sitemap aggregator -->
+      <map:match pattern="aggregate">
+        <map:aggregate element="page">
+          <!--
+            - Aggregation is a very powerful concept that allows a document
+            - be generated from several other documents. Strictly speaking,
+            - all parts are just concatenated in this order to a new
+            - document.
+            -
+            - Several things to note here:
+            -
+            -   "cocoon:" is a pseudo protocol and refers to another
+            -   pipeline. "cocoon:/" refers to a pipeline from the current
+            -   sitemap while "cocoon://" refers to a pipeline from the root
+            -   sitemap.
+            -
+            - Other pseudo protocols exist:
+            -
+            -   "context:" is another pseudo protocol, "context://" is
+            -   refering to a resource using the servlet context.
+            -
+            -   "resource:" is yet another pseudo protocol, "resource://" is
+            -   refering to a resource from the context classloader.
+            -
+            - All these pseudo protocols are declared in the cocoon.xconf.
+            -
+            - Thus, the parts refer to the pipeline fragments above.
+            -
+            - The optional element attribute places the content in a new root
+            - element named as specified, using the namespace provided by an
+            - optional ns attribute.
+            -
+            - Please see docs for further explanations.
+            -->
+          <map:part src="cocoon:/slashdot.xml" element="samples"/>
+          <map:part src="cocoon:/moreover.xml" element="samples"/>
+          <map:part src="cocoon:/xmlhack.xml" element="samples"/>
+        </map:aggregate>
+        <map:transform src="stylesheets/news.xsl"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!-- Aggregation using the include transformer -->
+      <map:match pattern="aggregate2">
+        <map:generate src="aggregate.xml"/>
+        <map:transform type="include"/>
+        <map:transform src="stylesheets/news.xsl"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!-- Aggregation using the include transformer, done in parallel threads -->
+      <map:match pattern="aggregate3">
+        <map:generate src="aggregate.xml"/>
+        <map:transform type="include">
+          <map:parameter name="parallel" value="true"/>
+        </map:transform>
+        <map:transform src="stylesheets/news.xsl"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!-- Aggregation using the CInclude transformer -->
+      <map:match pattern="aggregate4">
+        <map:generate src="aggregate.xml"/>
+        <map:transform type="cinclude"/>
+        <map:transform src="stylesheets/news.xsl"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!-- Aggregation using the XInclude transformer -->
+      <map:match pattern="aggregate5">
+        <map:generate src="xaggregate.xml"/>
+        <map:transform type="xinclude"/>
+        <map:transform src="stylesheets/news.xsl"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!--
+        - Include Samples
+        -->
+
+      <map:match pattern="include-*-*-*">
+        <map:generate src="content/i{3}.xml"/>
+        <map:transform type="include">
+          <map:parameter name="parallel" value="{1}"/>
+          <map:parameter name="recursive" value="{2}"/>
+        </map:transform>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!--
+        - XInclude Samples
+        -->
+
+      <map:match pattern="xinclude-*">
+        <map:generate src="content/x{1}.xml"/>
+        <map:transform type="xinclude"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+        </map:serialize>
+      </map:match>
+
+
+      <!--
+        - COCOON-1985 Pipeline locking and parallel includes:
+        - Generating from cocoon source which includes self, in parallel threads, should not dead lock
+        -->
+      <map:match pattern="lock">
+        <map:generate src="content/ilock.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="include-lock">
+        <map:generate src="cocoon:/lock"/>
+        <map:transform type="include">
+          <map:parameter name="parallel" value="true"/>
+        </map:transform>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!-- Source Files -->
+      <map:match pattern="*.xml">
+        <map:generate src="content/{1}.xml"/>
+        <map:serialize/>
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

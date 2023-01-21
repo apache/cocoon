@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fb:library
+  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+  >
+  
+  <fb:class id="class1">
+    <fb:value id="field1" path="field1"/>
+  </fb:class>
+  
+  <fb:value id="field2" path="field2"/>
+  
+</fb:library>

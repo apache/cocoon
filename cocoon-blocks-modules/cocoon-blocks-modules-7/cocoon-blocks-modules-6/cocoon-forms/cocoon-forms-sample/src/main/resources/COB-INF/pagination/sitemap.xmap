@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml" />
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
+
+    <map:view name="form" from-label="form">
+      <map:serialize type="xml" />
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Flowscripts =================================== -->
+
+  <map:flow language="javascript">
+    <map:script src="flow.js" />
+  </map:flow>
+
+  <!-- =========================== Pipelines =================================== -->
+
+  <map:pipelines>
+    <map:pipeline type="noncaching">
+      <map:match pattern="*.continue">
+        <map:call continuation="{1}" />
+      </map:match>
+
+      <map:match pattern="*-display-pipeline">
+        <!-- pipeline to show the form -->
+        <map:generate src="{1}.tpl.xml" type="jx" />
+        <map:transform type="browser-update" />
+        <map:transform type="i18n">
+          <map:parameter name="locale" value="en-US" />
+        </map:transform>
+        <map:transform src="servlet:style-default:/common/style/xsl/html/simple-page2html.xsl" />
+        <map:transform src="../resources/forms-samples-styling.xsl">
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+        </map:transform>
+        <map:transform type="servletLinkRewriter" />
+        <map:select type="ajax-request">
+          <map:when test="true"><!-- sending a partial Browser Update -->
+            <map:select type="request-parameter">
+              <map:parameter name="parameter-name" value="dojo.transport" />
+              <map:when test="iframe"><!-- sending BU via iFrameIO -->
+                <map:transform src="servlet:forms:/resource/internal/xsl/IframeTransport-bu-styling.xsl" />
+                <map:serialize type="xhtml" /><!-- this is REALLY important -->
+              </map:when>
+              <map:otherwise><!-- sending BU via XHR -->
+                <map:serialize type="xml" />
+              </map:otherwise>
+            </map:select>
+          </map:when>
+          <map:otherwise><!-- sending a complete page -->
+            <map:serialize type="html" />
+          </map:otherwise>
+        </map:select>
+      </map:match>
+
+      <map:match pattern="*-result-pipeline.jx">
+        <map:generate type="jx" src="{1}-result.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="*.do">
+        <map:call function="do_{1}" />
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+
+</map:sitemap>

@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!-- form used to illustrate calculated fields. -->
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  
+  <fd:widgets>
+    <fd:repeater id="articles" orderable="true" initial-size="1">
+      <fd:widgets>
+        <fd:field id="description">
+          <fd:label>Description</fd:label>
+          <fd:datatype base="string"/>
+        </fd:field>
+        <fd:field id="items" required="true">
+          <fd:label>Items</fd:label>
+          <fd:datatype base="integer"/>
+        </fd:field>
+        <fd:field id="price" required="true">
+          <fd:label>Price</fd:label>
+          <fd:datatype base="double"/>
+        </fd:field>
+        <fd:calculatedfield id="subtotal" required="true" state="output">
+          <fd:label>Sub total</fd:label>
+          <fd:datatype base="double">
+            <fd:convertor type="formatting" variant="currency"/>
+          </fd:datatype>
+          <fd:value eval="items * price"/>
+        </fd:calculatedfield>
+        <fd:calculatedfield id="vat" required="true" state="output">
+          <fd:label>VAT</fd:label>
+          <fd:datatype base="double">
+            <fd:convertor type="formatting" variant="currency"/>
+          </fd:datatype>
+          <fd:value eval="Round((subtotal / 100.000000) * 20,2)"/>
+        </fd:calculatedfield>
+        <fd:calculatedfield id="total" required="true" state="output">
+          <fd:label>Total</fd:label>
+          <fd:datatype base="double">
+            <fd:convertor type="formatting" variant="currency"/>
+          </fd:datatype>
+          <fd:value eval="subtotal + vat"/>
+        </fd:calculatedfield>
+        <fd:booleanfield id="select">
+          <fd:label>Select</fd:label>
+        </fd:booleanfield>
+      </fd:widgets>
+    </fd:repeater>
+    
+    <fd:repeater-action id="addarticle" command="add-row" repeater="articles">
+      <fd:label>Add article</fd:label>
+    </fd:repeater-action>
+    
+    <fd:repeater-action id="removearticles" command="delete-rows" repeater="articles" select="select">
+      <fd:label>Remove selected articles</fd:label>
+    </fd:repeater-action>
+    
+    <fd:calculatedfield id="totalitems" state="output" required="true">
+      <fd:label>Total items</fd:label>
+      <fd:datatype base="integer"/>
+      <fd:value eval="Sum({/articles/./items})"/>
+    </fd:calculatedfield>
+    
+    <fd:calculatedfield id="totalitemscost" state="output" required="true">
+      <fd:label>Total cost</fd:label>
+      <fd:datatype base="double">
+        <fd:convertor type="formatting" variant="currency"/>
+      </fd:datatype>
+      <fd:value eval="Sum({/articles/./subtotal})"/>
+    </fd:calculatedfield>
+    
+    <fd:calculatedfield id="totalvat" state="output" required="true">
+      <fd:label>Total VAT</fd:label>
+      <fd:datatype base="double">
+        <fd:convertor type="formatting" variant="currency"/>
+      </fd:datatype>
+      <fd:value eval="Sum({/articles/./vat})"/>
+    </fd:calculatedfield>
+    
+    <fd:calculatedfield id="totalcost" state="output" required="true">
+      <fd:label>Total Cost</fd:label>
+      <fd:datatype base="double">
+        <fd:convertor type="formatting" variant="currency"/>
+      </fd:datatype>
+      <fd:value eval="Sum({/articles/./total})"/>
+    </fd:calculatedfield>
+    
+    <fd:calculatedfield id="boxes" state="output" required="true">
+      <fd:label>Boxes</fd:label>
+      <fd:datatype base="integer"/>
+      <fd:value type="repeatedformula" repeat-on="/articles/./items" eval="formulaResult + Ceiling(Round(formulaCurrent,4) / 10)" initial-result="0"/>
+    </fd:calculatedfield>
+    
+    <fd:calculatedfield id="freeboxes" state="output">
+      <fd:label>Free boxes</fd:label>
+      <fd:datatype base="integer"/>
+      <fd:value type="javascript" triggers="boxes"> 
+        var acboxes = form.lookupWidget('boxes').getValue(); 
+        var freeboxes = 0; 
+        if (acboxes > 100) { 
+        	freeboxes = 30; 
+        } else if (acboxes > 50) { 
+        	freeboxes = 15; 
+       	} else if (acboxes > 10) { 
+        	freeboxes = 2; 
+        } 
+        return freeboxes;
+      </fd:value>
+    </fd:calculatedfield>
+    
+    <fd:field id="courier" required="true">
+      <fd:label>Courier</fd:label>
+      <fd:datatype base="double"/>
+      <fd:selection-list>
+        <fd:item value="5"><fd:label>Normal mail - 5 per box</fd:label></fd:item>
+        <fd:item value="10"><fd:label>Express/air mail - 10 per box</fd:label></fd:item>
+        <fd:item value="15"><fd:label>12 hours delivery - 15 per box</fd:label></fd:item>
+        <fd:item value="25"><fd:label>12 hours delivery with refund - 25 per box</fd:label></fd:item>
+      </fd:selection-list>
+    </fd:field>
+    
+    <fd:calculatedfield id="couriercost" state="output">
+      <fd:label>Courier cost</fd:label>
+      <fd:datatype base="double">
+        <fd:convertor type="formatting" variant="currency"/>
+      </fd:datatype>
+      <fd:value eval="(boxes - freeboxes) * courier"/>
+    </fd:calculatedfield>
+    
+    <fd:calculatedfield id="grandtotal" state="output">
+      <fd:label>Grand total</fd:label>
+      <fd:datatype base="double">
+        <fd:convertor type="formatting" variant="currency"/>
+      </fd:datatype>
+      <fd:value eval="totalcost + couriercost"/>
+    </fd:calculatedfield>
+    
+  </fd:widgets>
+</fd:form>

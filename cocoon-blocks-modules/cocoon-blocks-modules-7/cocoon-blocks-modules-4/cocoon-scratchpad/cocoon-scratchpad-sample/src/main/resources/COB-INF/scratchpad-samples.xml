@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- @version $Id$ -->
+
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Scratchpad Samples">
+
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
+
+  <group name="Betwixt">
+    <sample name="Example" href="betwixt/">
+      Show the usage of the Betwixt Transformer
+    </sample>
+  </group>
+
+  <group name="Castor">
+    <sample name="CastorTransformer" href="castor/">
+      Show the usage of the Castor Transformer.
+    </sample>
+  </group>
+  
+  <group name="Groovy Flow Engine">
+    <sample name="Groovy" href="groovyflow/">
+      An experimental Groovy Flow Engine based on the JavaFlow Engine
+    </sample>
+  </group>
+
+  <group name="Intercepted Flow">
+    <sample name="Example" href="intercepted-flow/">
+      Show the usage intercepted JavaScript flow functions
+    </sample>
+  </group>
+
+  <group name="Flow Action">
+    <sample name="Example" href="flow-action/">
+      This sample simply calls the flow action. Look at the console for the output.
+    </sample>
+  </group>
+
+  <group name="Image-Based Authentication">
+    <sample name="Image Auth" href="image-auth/">
+      An example of image-based authentication using the Flow layer.  
+      Make sure the Batik block is included before testing this sample.
+    </sample>
+  </group>
+  
+  <group name="Jelly">
+    <sample name="Test 1" href="jelly/test1">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
+    </sample>
+    <sample name="Test 2" href="jelly/test2">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
+    </sample>
+  </group>
+
+  <group name="Module Source">
+    <sample name="Request URI"
+            href="module-source/test1">
+      Use a source that reads from a request URI.
+    </sample>
+    <sample name="Text field"
+            href="module-source/test2">
+      Use a source that reads from a input text field.
+    </sample>
+    <sample name="XML text field"
+            href="module-source/test4">
+      Read XML data from a text field. Also demonstrates the use of
+      input from multi part mime posts and require that uploads are
+      enabled in web.xml.
+    </sample>
+  </group>
+  
+  <group name="Othello">
+    <sample name="Example" href="othello/">Template based static web site.</sample>
+  </group>
+  
+  <group name="Sitemap Viewer">
+    <sample name="Sitemap Viewer" href="sitemap-viewer/">
+        Experimental sitemap viewer
+    </sample>
+  </group>
+
+  <group name="WebServices with Flowscript">
+    <sample name="Random quote webservice" href="flow-webservices/randomQuoteWebService">
+      Remote service returns an xsd string that is mapped to a Javascript string.<br/>
+      (use: http://www.boyzoid.com/comp/randomQuote.cfc?wsdl)
+    </sample>
+    <sample name="Morgage rate" href="flow-webservices/mortgageIndexWebService">
+        Remote service returns an xsd complex type that is mapped to a Javascript object.<br/>
+        (use: http://www.webservicex.net/MortgageIndex.asmx?WSDL)
+    </sample>
+  </group>   
+
+  <group name="XModule Source">
+    <sample name="Create"
+            href="xmodule-source/insert?file=test.xml&amp;url=xmodule:session-attr:test">
+        Populate a session attribute "test" with a dom tree created from the file "test.xml".
+    </sample>
+    <sample name="Read"
+            href="xmodule-source/test-view?url=xmodule:session-attr:test&amp;xPathIn=page/body">
+      Read xml from the session attribute "test" at the XPath position "page/body".
+    </sample>
+    <sample name="Insert"
+            href="xmodule-source/insert?file=insert.xml&amp;url=xmodule:session-attr:test&amp;xPathOut=page/body/p">
+        Insert a dom tree created from the file "insert.xml", at the
+        XPath position "page/body/p" in the session attribute "test".
+    </sample>
+    <sample name="Delete"
+            href="xmodule-source/delete?url=xmodule:session-attr:test&amp;xPath=page/body/p">
+        Delete the content at theXPath position "page/body/p" in the
+        session attribute "test".
+    </sample>
+  </group>
+</samples>

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:esql="http://apache.org/cocoon/SQL/v2"
+          xmlns:xsp-request="http://apache.org/xsp/request/2.0">
+
+  <xsp:logic>
+    String process = null;
+    String name = null;
+    String departmentId = null;
+    int currId = -1;
+  </xsp:logic>
+
+  <page>
+    <xsp:logic>
+      process = <xsp-request:get-parameter name="process"/>;
+      name = <xsp-request:get-parameter name="name"/>;
+      departmentId = <xsp-request:get-parameter name="department"/>;
+    </xsp:logic>
+
+    <resources>
+      <resource type="file" href="employee.xml?cocoon-view=pretty-content">Descriptor</resource>
+      <resource type="file" href="../schema.sql">Schema</resource>
+      <resource type="doc" href="userdocs/actions/database-actions.html">Actions</resource>
+      <resource type="doc" href="userdocs/xsp/esql.html">ESQL</resource>
+    </resources>
+
+    <title><xsp:expr>process</xsp:expr> Employee Processed</title>
+    <content>
+      <esql:connection>
+        <esql:pool>personnel</esql:pool>
+        <esql:autocommit>false</esql:autocommit>
+        <esql:execute-query>
+          <esql:query>select max(id) as maxid from employee</esql:query>
+          <esql:results>
+            <esql:row-results>
+              <xsp:logic>
+                currId = <esql:get-int column="maxid"/>;
+              </xsp:logic>
+              <esql:execute-query>
+                <esql:query>
+                  insert into employee (id, name, department_id) values (
+                    (<esql:parameter><xsp:expr>currId + 1</xsp:expr></esql:parameter>),
+                  <esql:parameter><xsp:expr>name</xsp:expr></esql:parameter>,
+                  <esql:parameter><xsp:expr>departmentId</xsp:expr></esql:parameter>
+                  )
+                </esql:query>
+              </esql:execute-query>
+            </esql:row-results>
+          </esql:results>
+        </esql:execute-query>
+      </esql:connection>
+
+      <para><xsp:expr>name</xsp:expr> added</para>
+      <a href="../welcome">Back to the welcome page</a>
+    </content>
+  </page>
+</xsp:page>

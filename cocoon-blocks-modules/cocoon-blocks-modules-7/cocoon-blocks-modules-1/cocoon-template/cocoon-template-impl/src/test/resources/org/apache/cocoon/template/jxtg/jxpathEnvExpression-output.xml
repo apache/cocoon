@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<root>
+  protocol: HTTP/1.1
+
+  <item attr="** foo **">
+    context: bar
+  </item>
+
+</root>

@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page xmlns:xi="http://www.w3.org/2001/XInclude">
+  <title>XInclude demo</title>
+  <content>
+    <para><b><![CDATA[<xi:include href="xtest3.xml"/>]]></b></para>
+    <xi:include href="xtest3.xml"/>
+    <hr/>
+
+    <para><b><![CDATA[<xi:include href="xtest2.xml#xpointer(/page/content/para[2])"/>]]></b></para>
+    <xi:include href="xtest2.xml#xpointer(/page/content/para[2])"/>
+    <hr/>
+
+    <para><b><![CDATA[<xi:include href="xtest2.xml#xmlns(my=http://localhost/my)xpointer(/page/content/my:abc/*)"/>]]></b></para>
+    <xi:include href="xtest2.xml#xmlns(my=http://localhost/my)xpointer(/page/content/my:abc/*)"/>
+    <hr/>
+
+    <para><b>Inclusion with an invalid xpointer expression, will cause fallback
+        element content to be inserted:</b></para>
+    <para><b><![CDATA[<xi:include href="xtest2.xml#xpointer(">]]></b></para>
+    <xi:include href="xtest2.xml#xpointer(">
+      <a>
+        <b>
+          Any random content inside the xi:include element will be ignored.
+        </b>
+      </a>
+      <xi:fallback>
+        An error occured! This is the content of the fallback element you're seeing.
+      </xi:fallback>
+      And here's some more text you shouldn't see.
+    </xi:include>
+    <hr/>
+
+    <para><b><![CDATA[
+    <xi:include href="#xmlns(xi=http://www.w3.org/2001/XInclude)xpointer(/page/content/xi:include[1])"/>
+        ]]></b></para>
+    <xi:include href="#xmlns(xi=http://www.w3.org/2001/XInclude)xpointer(/page/content/xi:include[1])"/>
+    <hr/>
+
+    <para><b>This sample demonstrates the recursive inclusion: here file4.xml
+        is included, which in itself includes file5.xml:</b></para>
+    <para><b><![CDATA[<xi:include href="xtest4.xml"/>]]></b></para>
+    <xi:include href="xtest4.xml"/>
+    <hr/>
+
+    <para><b>This example shows how you can put multiple xpointer expressions
+        one after the other. If one doesn't return a result, it is skipped and
+        the next one is evaluated, until one is found that returns a
+        result.</b></para>
+    <para><b><![CDATA[<xi:include href="xtest2.xml#xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>]]></b></para>
+    <xi:include href="xtest2.xml#xpointer(/x)xpointer(/y)xpointer(/z)xpointer(/page/content/para[2])"/>
+    <hr/>
+  
+  </content>
+</page>

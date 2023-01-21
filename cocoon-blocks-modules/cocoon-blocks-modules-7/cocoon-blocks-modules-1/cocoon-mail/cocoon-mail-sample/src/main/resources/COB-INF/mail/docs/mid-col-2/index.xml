@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<document>
+  <header>
+    <title>CocoonMail Index</title>
+    <authors>
+      <person name="Bernhard Huber" email="berni_huber@a1.net"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="CocoonMail Index">
+      <p>
+        This site demonstrates using Cocoon as Webmail Engine.
+	As it is a demo site you can use Cocoon Webmail. 
+	Moreover some documentation about:
+      </p>
+      <ul>
+	<li>installing,</li>
+	<li>configuring, </li>
+	<li>customizing, and </li>
+	<li>technical background </li>
+      </ul>
+      <p>
+        is available, too.
+      </p>
+    </s1>
+    <s1 title="Using Webmail Demo Application">
+      <p>
+        Some quick installation notes:
+      </p>
+      <ul>
+        <li>Find an IMAP server access.</li>
+        <li>Configure the <code>sitemap.xmap</code>, by
+          entering the IMAP server configuration in the format
+          <code>imap://''mail-userid'':''mail-passwd''@imap-server.foo.bar/</code>.
+          Replacing <code>imap-server.foo.bar</code> by your imap server.
+        </li>
+        <li>Try to <link href="page:login">login</link>.
+        </li>
+      </ul>
+    </s1>
+    <s1 title="Feedback">
+      <p>
+        Send your feedback to Cocoon.
+      </p>
+    </s1>
+  </body>
+</document>

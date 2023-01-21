@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html>
+  <head>
+    <title>Micro Cocoon Integration Tests: Overview</title>
+	<base target="_blank"/>
+  </head>
+  <body>
+  	<h1>Micro Cocoon Integration Tests</h1>
+	<h2>map:read</h2>
+	<ul>
+		<li><a href="read/javascript-resource-explicit">Javascript Resource</a>: Test explicit setting of mime-type.</li>
+		<li><a href="read/javascript-resource-implicit">Javascript Resource</a>: Test automatic setting of mime-type.</li>
+	</ul>
+	<h2>SAX Pipelines</h2>
+	<ul>
+		<li><a href="sax-pipeline/simple">SAX Pipeline</a>: Simplest possible pipeline that has a generator, transformer and serializer.</li>
+		<li><a href="sax-pipeline/simple-xhtml">SAX Pipeline</a>: Same as before but creates XHTML as output format.</li>
+		<li><a href="sax-pipeline/simple-xml">SAX Pipeline</a>: Same as before but creates XML as output format.</li>
+		<li><a href="sax-pipeline/unauthorized">Status code</a>: Set status code '401' at pipeline.</li>
+	</ul>
+	<h2>Error handling</h2>
+	<ul>
+		<li><a href="123456789123456789">ResourceNotFound</a>: The error handler catches all exceptions, in this case no matcher matches.</li>
+		<li><a href="error-handling/custom-error">Custom error - Sitemap</a>: Catch a custom error in the sitemap.</li>
+		<li><a href="error-handling/custom-error-per-pipeline-error-handling">
+			Custom error - Pipeline</a>: Catch a custom error using a per-pipeline error handler. <b>*** doesn't work ***</b></li>
+	</ul>
+	<h2>Servlet-Service-Components and servlet: protocol</h2>
+	<ul>
+		<li><a href="ssf/local">servlet:/</a>: Using a local servlet service.</li>
+	</ul>
+	<h2>Expression language</h2>
+	<ul>
+		<li><a href="expression-language/jexl?fileName=simple">request attribute (jexl)</a>: Accessing a request attribute using Jexl.</li>
+		<li><a href="expression-language/jxpath?fileName=simple">request attribute (jxpath)</a>: Accessing a request attribute using JXPath.</li>
+		<li><a href="expression-language/map/simple">sitemap parameter</a>: Accessing a sitemap parameter.</li>
+		<li><a href="expression-language/nested/simple">nested matchers</a>: Accessing a parameter from one level above.</li>
+	</ul>
+	<h2>Redirects</h2>
+	<ul>
+		<li><a href="redirect/www.orf.at">Temporary (302)</a>: Temporary redirect to orf.at.</li>
+	</ul>
+	<h2>Object Model</h2>
+	<ul>
+		<li><a href="object-model/request-parameters?a=1&b=2&c=3">All request parameters</a>: Print all request parameters.</li>
+	</ul>
+	<h2>Aggregation</h2>
+	<ul>
+		<li><a href="aggregation/include-transformer">Include-Transformer</a>: Aggregate XML using the IncludeTransformer.</li>
+	</ul>
+	<h2>XSLT</h2>
+	<ul>
+		<li><a href="xslt/main">XSLT Transformation</a>: An XSLT transformation that includes stylesheets via file and servlet protocol.</li>
+	</ul>
+	<h2>Parameter passing</h2>
+	<ul>
+		<li><a href="parameter-passing/working">Matching Matcher</a>: Passing a named parameter from a matcher to the sitemap.</li>
+		<li><a href="parameter-passing/failing">Not-Matching Matcher</a>: Passing null from a matcher to the sitemap.</li>
+	</ul>
+	<h2>Controller</h2>
+	<ul>
+		<li><a href="controller/invoke">Invoke a controller</a>: Invoke a controller (the first time). (returns 201)</li>
+		<li><a href="controller/continue">Continue</a>: Continue a controller. (returns 202)</li>
+	</ul>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS: $Id$ -->
+
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Databases Block Samples">
+
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+    <note>
+      For the examples of this block to work, either the HSQLDB block
+      needs to be present as well or another RDBMS backend needs to
+      be configured. Schema information is contained in each
+      subdirectory of samples/databases.
+    </note>
+  </group>
+
+  <group name="SQL Transformer">
+     <sample name="Documentation" href="../../../docs/userdocs/transformers/sql-transformer.html">
+       Documentation for this component.
+     </sample>
+     <sample name="SQL Transformer" href="transform/sql-page" xlink:role="dynamic">
+       Simple example using the SQL transformer.
+     </sample>
+     <sample name="Nested Queries" href="transform/sql-page2" xlink:role="dynamic">
+       Example with two queries nested into the third one.
+     </sample>
+     <sample name="XML Test" href="transform/sql-page3" xlink:role="dynamic">
+       Example with inserting XML into a database and with a select statement
+       nested into the insert statement.
+     </sample>
+  </group>
+
+  <group name="XSP">
+     <sample name="Documentation" href="../../../docs/userdocs/xsp/esql.html">
+       Documentation for this component.
+     </sample>
+     <sample name="ESQL Logicsheet" href="xsp/esql" xlink:role="dynamic">
+       Simple example of embedding SQL in a serverpage using the ESQL logicsheet.
+     </sample>
+  </group>
+
+  <group name="Modular Database Actions">
+     <note>
+       This application demonstrates the use of the newer database actions that
+       are based on Cocoon's input and output modules to read and write data from
+       and to many more places than request attributes and parameters.
+     </note>
+     <sample name="Documentation" href="../../../docs/userdocs/actions/database-actions.html">
+       Documentation for this component.
+     </sample>
+     <sample name="Manage Users and Groups" href="mod-db/user-list">
+       An example web-application built around database actions from the
+       modular package which supports auto increments and more.
+     </sample>
+     <sample name="File Upload to Blob" href="mod-db/file-upload-blob">
+       A simple example demonstrating of populating a binary database column
+       via a multipart form file upload.
+     </sample>
+  </group>
+
+  <group name="Original Database Actions">
+     <note>
+       These examples are created around the original database actions and the
+       use of ESQL.
+     </note>
+     <sample name="Documentation" href="../../../docs/userdocs/actions/database-actions.html">
+       Documentation for this component.
+     </sample>
+     <sample name="Manage Employees" href="org-db/employee" xlink:role="dynamic">
+       Adds, updates and deletes Employees to the employees table.
+     </sample>
+     <sample name="Insert Department" href="org-db/add-department" xlink:role="dynamic">
+       Adds new Departments to the department table.
+     </sample>
+     <sample name="Insert Employees" href="org-db/add-employee" xlink:role="dynamic">
+       Adds new Employees to the employees table.
+     </sample>
+     <sample name="Show Departments" href="org-db/departments" xlink:role="dynamic">
+       Show all departments.
+     </sample>
+  </group>
+
+  <group name="Tutorial">
+     <note>
+       This tutorial demonstrates the use of the original database actions in
+       conjunction with actions sets and ESQL.
+     </note>
+     <sample name="Documentation" href="../../../docs/tutorial/tutorial-develop-webapp.html">
+       Documentation for this component.
+     </sample>
+     <sample name="Personnel Administrator" href="tutorial/" xlink:role="dynamic">
+       Start the tutorial application.
+     </sample>
+  </group>
+
+</samples>

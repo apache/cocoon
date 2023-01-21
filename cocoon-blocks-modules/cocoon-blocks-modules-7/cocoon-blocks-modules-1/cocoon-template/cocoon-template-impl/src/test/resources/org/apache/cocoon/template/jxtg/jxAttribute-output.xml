@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+	<one foo="bar"/>
+	<two second="twoAttr"> xyz </two>
+	<three foo="bar" foo2="bar2" dd="dd">
+		<abc>def</abc>
+	</three>
+	<nestedjx value="01 styczeń 1979"/>
+</root>

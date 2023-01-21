@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!-- Version: $Id$ -->
+<xweb xpath="/*" insert-before="*[last() and local-name() = 'filter']">
+  <!--+
+      | Declare a filter for acegisecurity handling
+      +-->
+  <filter>
+    <description>Security Filter Chain Proxy</description>
+    <display-name>Security Filter Chain Proxy</display-name>
+    <filter-name>SecurityFilterChainProxy</filter-name>
+    <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
+    <init-param>
+      <param-name>targetClass</param-name>
+      <param-value>org.acegisecurity.util.FilterChainProxy</param-value>
+    </init-param>
+  </filter>
+
+  <!--+
+      | Map filter for acegisecurity handling
+      +-->
+  <filter-mapping>
+    <filter-name>SecurityFilterChainProxy</filter-name>
+    <servlet-name>DispatcherServlet</servlet-name>
+  </filter-mapping>
+</xweb>

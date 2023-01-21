@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
+    <site signOn="#{accountForm/signOn}" view="jxpath">
+        <backpointer name="Main Menu" do="index.do" />
+        <c:if test="#{message}">
+            <message>#{message}</message>
+        </c:if>
+        <panel header="Order ##{archivedOrder/orderId}" subheader="#{archivedOrder/orderDate}">
+            <panel label="Payment Details">
+                <field label="Card Type">#{archivedOrder/cardType}</field>
+                <field label="Card Number">#{archivedOrder/creditCard}</field>
+                <field label="Expiry Date (MM/YYYY)">#{archivedOrder/exprdate}</field>
+            </panel>
+            <panel label="Billing Address">
+                <field label="First name">#{archivedOrder/billToFirstName}</field>
+                <field label="Last name" >#{archivedOrder/billToLastName}</field>
+                <field label="Address 1" >#{archivedOrder/billaddr1}</field>
+                <field label="Address 2" >#{archivedOrder/billaddr2}</field>
+                <field label="City" >#{archivedOrder/billCity}</field>
+                <field label="State" >#{archivedOrder/billState}</field>
+                <field label="Zip" >#{archivedOrder/billZip}</field>
+                <field label="Country" >#{archivedOrder/billCountry}</field>
+            </panel>
+            <panel label="Shipping Address">
+                <field label="First name">#{archivedOrder/shipToFirstName}</field>
+                <field label="Last name" >#{archivedOrder/shipToLastName}</field>
+                <field label="Address 1" >#{archivedOrder/shipaddr1}</field>
+                <field label="Address 2" >#{archivedOrder/shipaddr2}</field>
+                <field label="City" >#{archivedOrder/shipCity}</field>
+                <field label="State" >#{archivedOrder/shipState}</field>
+                <field label="Zip" >#{archivedOrder/shipZip}</field>
+                <field label="Country" >#{archivedOrder/shipCountry}</field>
+                <field label="Courier" >#{archivedOrder/courier}</field>
+            </panel>
+            <panel label="Status" value=" #{archivedOrder/status}">
+                <field empty="2">
+                    <cart name="Status">
+                        <c:forEach select="#{lineItemList}" >
+                            <lineItem  linenum="#{linenum}"  id="#{itemId}">
+                                <quantity>#{quantity}</quantity>
+                                <unitprice>#{unitprice}</unitprice>
+                                <total>#{total}</total>
+                            </lineItem>
+                        </c:forEach>
+                        <total>#{archivedOrder/totalPrice}</total>
+                    </cart>
+                </field>
+            </panel>
+            
+            
+        </panel>
+    </site>
+
+</page>
+
+
+
+

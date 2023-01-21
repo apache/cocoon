@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+	xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+	<fd:widgets>
+
+		<fd:field id="message" required="false">
+			<fd:label>message:</fd:label>
+			<fd:datatype base="string">
+			</fd:datatype>
+		</fd:field>
+
+		<fd:field id="username">
+			<fd:label>User ID</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+
+		<fd:booleanfield id="changePwdOption">
+			<fd:label>I want to change my Password.</fd:label>
+		</fd:booleanfield>
+		
+		<fd:field id="password" >
+			<fd:label>New Password:</fd:label>
+			<fd:datatype base="string">
+			</fd:datatype>
+		</fd:field>
+	
+		<fd:field id="retypepassword" >
+			<fd:label>Re-enter New password:</fd:label>
+			<fd:datatype base="string">
+			</fd:datatype>
+		</fd:field>
+		
+		
+		<fd:field id="firstname" required="true">
+			<fd:label>First Name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="lastname" required="true">
+			<fd:label>Last Name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="email" required="true">
+			<fd:label>Email</fd:label>
+			<fd:datatype base="string">
+				<fd:validation>
+					<fd:email>
+						<fd:failmessage>
+							Please enter a valid e-mail address!
+						</fd:failmessage>
+					</fd:email>
+				</fd:validation>
+			</fd:datatype>
+		</fd:field>
+
+		<fd:field id="phone" required="true">
+			<fd:label>Phone</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+
+		<fd:field id="addr1" required="true">
+			<fd:label>Address 1</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+	
+		<fd:field id="addr2" required="false">
+			<fd:label>Address 2</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="city" required="true">
+			<fd:label>City</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="state" required="true">
+			<fd:label>State</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="zip" required="true">
+			<fd:label>Zip</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="country" required="true">
+			<fd:label>Country</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+
+
+		<fd:field id="langpref">
+			<fd:label>Language Preference</fd:label>
+			<fd:datatype base="string"/>
+				<fd:selection-list>
+					<fd:item value="english">
+						<fd:label>english</fd:label>
+					</fd:item>
+					<fd:item value="japanese">
+						<fd:label>japanese</fd:label>
+					</fd:item>
+				</fd:selection-list>
+		</fd:field>
+
+		<fd:field id="favcategory">
+			<fd:label>Favourite Category</fd:label>
+			<fd:datatype base="string"/>
+				<fd:selection-list>
+					<fd:item value="FISH">
+						<fd:label>FISH</fd:label>
+					</fd:item>
+					<fd:item value="DOGS">
+						<fd:label>DOGS</fd:label>
+					</fd:item>
+					<fd:item value="CATS">
+						<fd:label>CATS</fd:label>
+					</fd:item>
+					<fd:item value="BIRDS">
+						<fd:label>BIRDS</fd:label>
+					</fd:item>
+				</fd:selection-list>
+		</fd:field>
+
+		<fd:booleanfield id="mylistopt">
+			<fd:label>Enable MyList</fd:label>
+		</fd:booleanfield>
+
+		<fd:booleanfield id="banneropt">
+			<fd:label>Enable MyBanner</fd:label>
+		</fd:booleanfield>
+
+
+	</fd:widgets>
+</fd:form>

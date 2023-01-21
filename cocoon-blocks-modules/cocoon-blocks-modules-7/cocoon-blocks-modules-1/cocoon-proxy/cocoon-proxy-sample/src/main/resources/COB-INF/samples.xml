@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<samples name="Proxy Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+  </group>
+
+  <group name="No samples">
+    <note>There are currently no samples for this block. It will be revisited in
+          in a future version</note>
+  </group>
+
+  <!-- Samples disabled
+  <group name="Web Site Syndication">
+    <sample name="Examples" href="wsproxy/">
+      Demonstrates how to embed one website's functionality into another.
+      Using the WebServiceProxyGenerator remote web app integration is easy.
+    </sample>
+    <sample name="Virtual Portal Demo" href="cocoonhive/">
+      A more sophisticated example including Amazon and OpenWiki.
+      Shows how a personalized portal can be built by connecting multiple remote
+      services without writing a single line of business logic code.
+      Only styling is used in addition to the proxy.
+    </sample>
+  </group> 
+  -->
+
+</samples>

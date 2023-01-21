@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+    <map:pipelines>
+
+        <map:pipeline>
+
+            <map:match id="requestPipeline" pattern="dump-request">
+                <map:generate id="12" type="request"/>
+                <map:serialize type="xml"/>
+            </map:match>
+
+            <map:match id="requestToHtml" pattern="request.html">
+                <map:generate type="request"/>
+                <map:transform src="xsl/request-to-html.xsl"/>
+                <map:serialize type="html"/>
+            </map:match>
+
+            <map:match id="styledHtml" pattern="styled/request.html">
+                <map:generate type="request"/>
+                <map:transform src="xsl/request-to-html.xsl"/>
+                <map:transform src="xsl/html-styling.xsl"/>
+                <map:serialize type="html"/>
+            </map:match>
+
+            <map:match id="svgRequest" pattern="*/request.svg">
+                <map:generate type="request"/>
+                <map:transform src="xsl/request-to-svg.xsl">
+                    <map:parameter name="fillColor" value="{1}"/>
+                </map:transform>
+                <map:serialize type="svgxml"/>
+            </map:match>
+
+            <map:match id="pngRequest" pattern="*/request.png">
+                <map:generate src="cocoon:/{1}/request.svg"/>
+                <map:serialize type="svg2png"/>
+            </map:match>
+
+            <map:match id="jpegRequest" pattern="*/request.jpeg">
+                <map:generate src="cocoon:/{1}/request.svg"/>
+                <map:serialize type="svg2jpeg"/>
+            </map:match>
+
+            <map:match id="xmlNews" pattern="xmlnews.html">
+                <map:generate src="http://codeconsult.ch/bertrand/index.rdf"/>
+                <map:transform src="xsl/news-to-html.xsl"/>
+                <map:transform src="xsl/html-styling.xsl"/>
+                <map:serialize type="html"/>
+            </map:match>
+
+        </map:pipeline>
+
+    </map:pipelines>
+
+</map:sitemap>

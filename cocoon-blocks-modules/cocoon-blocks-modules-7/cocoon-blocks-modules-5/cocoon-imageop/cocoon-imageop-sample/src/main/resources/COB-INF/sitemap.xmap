@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline>
+
+      <map:match pattern="">
+        <map:generate src="samples.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="image">
+        <map:read src="logo.jpg" />
+      </map:match>
+
+      <map:match pattern="*/scale-*-*">
+        <map:read type="image-op-scale" src="{1}">
+          <map:parameter name="scale-scale" value="{2}" />
+          <map:parameter name="output-format" value="{3}" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/resize-*-*">
+        <map:read type="image-op-resize" src="{1}">
+          <map:parameter name="size-width" value="{2}" />
+          <map:parameter name="size-height" value="{3}" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/offset-*-*">
+        <map:read type="image-op-offset" src="{1}">
+          <map:parameter name="offset-up" value="{2}" />
+          <map:parameter name="offset-left" value="{3}" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/mirror-*">
+        <map:read type="image-op-mirror" src="{1}">
+          <map:parameter name="mirror-along-y" value="{2}" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/rotate-*">
+        <map:read type="image-op-rotate" src="{1}">
+          <map:parameter name="rotate-angle" value="{2}" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/grayscale">
+        <map:read type="image-op-grayscale" src="{1}" />
+      </map:match>
+
+      <map:match pattern="*/crop-*">
+        <map:read type="image-op-crop" src="{1}">
+          <map:parameter name="crop-ratio" value="{2}" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/color-*-*-*-*-*-*">
+        <map:read type="image-op-color" src="{1}">
+          <map:parameter name="color-scale-red" value="{2}" />
+          <map:parameter name="color-scale-green" value="{3}" />
+          <map:parameter name="color-scale-blue" value="{4}" />
+          <map:parameter name="color-offset-red" value="{5}" />
+          <map:parameter name="color-offset-green" value="{6}" />
+          <map:parameter name="color-offset-blue" value="{7}" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/complex-*-*-*-*-*-*-*-*">
+        <map:read type="image-op-complex" src="{1}">
+          <map:parameter name="mirror-enabled" value="{2}" />
+          <map:parameter name="size-width" value="{3}" />
+          <map:parameter name="size-height" value="{4}" />
+          <map:parameter name="shear-x" value="{5}" />
+          <map:parameter name="shear-y" value="{6}" />
+          <map:parameter name="rotate-angle" value="{7}" />
+          <map:parameter name="offset-up" value="{8}" />
+          <map:parameter name="offset-left" value="{9}" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/sharpen">
+        <map:read type="image-op-convolve" src="{1}">
+          <map:parameter name="convolve-height" value="3" />
+          <map:parameter name="convolve-width" value="3" />
+          <map:parameter name="convolve-data" value="0.0, -1.0, 0.0, -1.0, 5.0, -1.0, 0.0, -1.0, 0.0" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/blur">
+        <map:read type="image-op-convolve" src="{1}">
+          <map:parameter name="convolve-height" value="3" />
+          <map:parameter name="convolve-width" value="3" />
+          <map:parameter name="convolve-data" value="0.1, 0.1, 0.1, 0.1, 0.2, 0.1, 0.1, 0.1, 0.1" />
+        </map:read>
+      </map:match>
+
+      <map:match pattern="*/overlay/*/*/*">
+        <map:read type="image-op-overlay" src="{1}">
+          <map:parameter name="overlay-offset-x" value="{3}" />
+          <map:parameter name="overlay-offset-y" value="{4}" />
+          <map:parameter name="overlay-source" value="{2}" />
+        </map:read>
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

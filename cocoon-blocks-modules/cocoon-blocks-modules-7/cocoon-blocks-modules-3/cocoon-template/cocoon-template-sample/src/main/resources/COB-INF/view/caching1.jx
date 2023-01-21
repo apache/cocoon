@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"  jx:cache-key="abc" jx:cache-validity="${Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}">
+    <h4 class="samplesGroup">JXTG template caching with static cache key and NOP Validity</h4>
+	<title>Sample page</title>
+	<content>
+		<p>
+			This content has been generated at <jx:formatDate value="${java.util.Calendar.getInstance().getTime()}" pattern="yyyy-MM-dd HH:mm:ss"/><br/>
+        </p>
+		<p>
+			Caching configuration is <b>jx:cache-key=&quot;abc&quot;
+			jx:cache-validity=&quot;$ {Packages.org.apache.excalibur.source.impl.validity.NOPValidity()}&quot;</b>
+		</p>
+
+		<p>
+			This means that once the content is generated it never expires (NOPValidity) and be served the same for any parameter combination (cache-key is static).<br/>
+			The content WILL expire if the template source has been changed.
+		</p>
+
+		<p>
+			You may try to <a href="">reload the page</a> and see if generation date changes.<br/>
+			You may try to <a href="?foo=bar">define additional request parameters</a> to see that it does not change a thing.
+		</p>
+
+		<p>
+			Next sample: <a href="../view/caching2">Request parameter based caching</a>.<br/>
+			Go <a href="../">back</a> to Cocoon Template samples.
+		</p>
+	</content>
+</page>

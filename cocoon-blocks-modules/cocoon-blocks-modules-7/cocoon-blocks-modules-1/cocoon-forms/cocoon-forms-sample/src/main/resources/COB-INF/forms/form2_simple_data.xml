@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<data>
+  <email>yourname@yourdomain.com</email>
+  <phone>+32-2-2222222</phone>
+  <ipaddress>10.34.44.78</ipaddress>
+  <birthday>10/04/1960</birthday>
+  <number>3</number>
+  <choose>true</choose>
+  <drinks>
+    <item>Jupiler</item>
+    <item>Hoegaarden</item>
+  </drinks>
+  <contacts>
+    <item>
+      <firstname>Lucien</firstname>
+      <lastname>Vandevelde</lastname>
+      <phone>+32-2-2222222</phone>
+      <email>lv@vdvld.be</email>
+    </item>
+    <item>
+      <firstname>Joris</firstname>
+      <lastname>Veldweghel</lastname>
+      <phone>+32-59-595959</phone>
+      <email>jrsvldwghl@hotmail.com</email>
+    </item>
+  </contacts>
+</data>

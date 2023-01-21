@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- SVN $Id$ -->
+<xsp:page language="java" xmlns:xsp="http://apache.org/xsp">
+<xsp:structure>
+<xsp:include>org.apache.cocoon.portal.acting.helpers.*</xsp:include>
+<xsp:include>java.lang.String</xsp:include>
+</xsp:structure>
+<links>
+	
+		<xsp:logic>
+
+			List listHistory = (List) request.getSession().getAttribute( "portal-history");
+			String strData = "untitled";
+			for (int i = 1; i &lt; listHistory.size()-1; i++)
+			{
+				List listItem = (List) listHistory.get( i);
+				for( int j=0; j &lt; listItem.size(); j++)
+				{
+					Mapping mapping = (Mapping) listItem.get( j);
+					if( mapping instanceof org.apache.cocoon.portal.acting.helpers.CopletEventDescription)
+					{
+						CopletEventDescription desc = (CopletEventDescription) listItem.get( j);
+						if( desc.copletId.equals( "MyCoplet"))
+						{
+							strData = (String) desc.data;
+						}
+					}
+					else if( mapping instanceof org.apache.cocoon.portal.acting.helpers.LayoutEventDescription)
+					{
+						LayoutEventDescription desc = (LayoutEventDescription) listItem.get( j);
+						if( desc.layoutId.equals( "maintab") &amp;&amp; desc.path.equals("parameters/title"))
+						{
+							strData = (String) desc.data;
+						}
+					}
+				}
+				<xsp:content>				
+				<link>
+					<number><xsp:expr>i</xsp:expr></number>
+					<title><xsp:expr>strData</xsp:expr></title>
+				</link>
+				</xsp:content>
+			}
+		</xsp:logic>
+	
+</links>
+</xsp:page>

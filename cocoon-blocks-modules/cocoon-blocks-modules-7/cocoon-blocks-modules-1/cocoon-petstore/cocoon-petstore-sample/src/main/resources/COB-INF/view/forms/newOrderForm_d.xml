@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+	xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+	<fd:widgets>
+
+
+		<fd:field id="cardType" required="true">
+			<fd:label>Card Type</fd:label>
+			<fd:datatype base="string"/>
+				<fd:selection-list>
+					<fd:item value="">
+						<fd:label>Choose Card Type</fd:label>
+					</fd:item>
+					<fd:item value="master">
+						<fd:label>Master Card</fd:label>
+					</fd:item>
+					<fd:item value="visa">
+						<fd:label>Visa Card</fd:label>
+					</fd:item>
+					<fd:item value="ae">
+						<fd:label>American Express</fd:label>
+					</fd:item>
+				</fd:selection-list>
+		</fd:field>
+		
+		
+		<fd:field id="creditCard" required="true">
+			<fd:label>Card Number</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="expiryDate" required="true">
+			<fd:label>Expiry Date (MM/YYYY)</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="billToFirstName" required="true">
+			<fd:label>First name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="billToLastName" required="true">
+			<fd:label>Last name</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+	
+		<fd:field id="billAddress1" required="true">
+			<fd:label>Address 1</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+	
+		<fd:field id="billAddress2" required="false">
+			<fd:label>Address 2</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="billCity" required="true">
+			<fd:label>City</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="billState">
+			<fd:label>State</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="billZip" required="true">
+			<fd:label>Zip</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:field id="billCountry" required="true">
+			<fd:label>Country</fd:label>
+			<fd:datatype base="string"/>
+		</fd:field>
+	
+		<fd:booleanfield id="shippingAddressRequired">
+			<fd:label>Ship to different address...</fd:label>
+		</fd:booleanfield>
+	</fd:widgets>
+</fd:form>

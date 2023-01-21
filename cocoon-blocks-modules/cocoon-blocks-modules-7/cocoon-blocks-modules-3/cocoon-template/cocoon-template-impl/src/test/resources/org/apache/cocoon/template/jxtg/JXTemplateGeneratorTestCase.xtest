@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<testcase>
+    <roles>
+        <role name="org.apache.cocoon.generation.GeneratorSelector" shorthand="generators" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+        <role name="org.apache.excalibur.store.Store/TransientStore" shorthand="store" default-class="org.apache.excalibur.store.impl.MemoryStore"/>
+        <role name="org.apache.cocoon.components.expression.ExpressionCompilerSelector" shorthand="expression-compilers" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+        <role name="org.apache.cocoon.template.expression.StringTemplateParserSelector" shorthand="string-template-parsers" default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+    </roles>
+    <components>
+        <component role="org.apache.cocoon.components.expression.ExpressionFactory" 
+                   class="org.apache.cocoon.components.expression.DefaultExpressionFactory"/>
+        <generators logger="test">
+            <component-instance class="org.apache.cocoon.template.JXTemplateGenerator" name="jx"/>
+        </generators>
+        <component role="org.apache.cocoon.template.script.ScriptManager" class="org.apache.cocoon.template.script.DefaultScriptManager"/>
+        <component role="org.apache.cocoon.template.script.InstructionFactory" class="org.apache.cocoon.template.script.DefaultInstructionFactory"/>
+        <string-template-parsers>
+        	<component-instance class="org.apache.cocoon.template.expression.JXTGStringTemplateParser" name="jxtg"/>
+        	<component-instance class="org.apache.cocoon.template.expression.DefaultStringTemplateParser" name="default"/>
+        </string-template-parsers>
+        <expression-compilers>
+            <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="default"/>
+            <component-instance class="org.apache.cocoon.components.expression.jexl.JexlCompiler" name="jexl"/>
+            <component-instance class="org.apache.cocoon.components.expression.jxpath.JXPathCompiler" name="jxpath"/>
+        </expression-compilers>
+    </components>
+</testcase>

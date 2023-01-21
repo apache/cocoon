@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fb:library
+  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
+  >
+  
+  <fb:import prefix="ext" uri="library_form1_binding.xml"/>
+  
+  <fb:class id="class1" extends="ext:class1">
+    <fb:value id="field1-2" path="field12"/>
+  </fb:class>
+  
+  <fb:expand id="ext:field2"/>
+  
+
+  <fb:class id="rec-class-1">
+    <fb:repeater id="fields-rec-1" parent-path="fields-rec-1" row-path="row-rec-1">
+      <fb:on-bind>
+        <fb:value id="field-rec-1" path="field-rec-1"/>
+        <fb:new id="rec-class-2"/>
+      </fb:on-bind>
+      <fb:on-insert-row>
+        <fb:insert-node>
+          <row-rec-1/>
+        </fb:insert-node>
+      </fb:on-insert-row>
+      <fb:on-delete-row>
+        <fb:delete-node/>
+      </fb:on-delete-row>
+    </fb:repeater>
+  </fb:class>
+  
+  <fb:class id="rec-class-2">
+    <fb:repeater id="fields-rec-2" parent-path="fields-rec-2" row-path="row-rec-2">
+      <fb:on-bind>
+        <fb:value id="field-rec-2" path="field-rec-2"/>
+        <fb:new id="rec-class-1"/>
+      </fb:on-bind>
+      <fb:on-insert-row>
+        <fb:insert-node>
+          <row-rec-2/>
+        </fb:insert-node>
+      </fb:on-insert-row>
+      <fb:on-delete-row>
+        <fb:delete-node/>
+      </fb:on-delete-row>
+    </fb:repeater>
+  </fb:class>
+
+  
+</fb:library>

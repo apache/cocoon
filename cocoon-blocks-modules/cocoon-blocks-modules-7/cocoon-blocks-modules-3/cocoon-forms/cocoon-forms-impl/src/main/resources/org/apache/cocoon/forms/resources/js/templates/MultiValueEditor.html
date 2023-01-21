@@ -1,0 +1,21 @@
+<div id="${this.widgetId}">
+  <input name="${this.cformsIdPrefix}:entry" id="${this.cformsIdPrefix}:entry"
+        dojoAttachPoint="entry"/>
+  <table>
+    <tr>
+      <td>
+        <select name="${this.cformsIdPrefix}" id="${this.cformsIdPrefix}:input" size="5" multiple="multiple" style="width: 150px"
+                dojoAttachPoint="select">
+        </select>
+      </td>
+      <td width="20px">
+        <input dojoAttachPoint="deleteButton" type="image" src="${this.resourcesUri}/forms/img/delete.gif"/>
+        <br/>
+        <input dojoAttachPoint="moveUpButton" type="image" src="${this.resourcesUri}/forms/img/move_up.gif"/>
+        <br/>
+        <input dojoAttachPoint="moveDownButton" type="image" src="${this.resourcesUri}/forms/img/move_down.gif"/>
+        <br/>
+      </td>
+    </tr>
+  </table>
+</div>

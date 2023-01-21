@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<property name="{http://www.jcp.org/jcr/1.0}primaryType" parentUUID="deadbeef-face-babe-cafe-babecafebabe" multiValued="false" definitionId="1266667140" type="Name">
+	<values>
+		<value>{internal}versionStorage</value>
+	</values>
+</property>

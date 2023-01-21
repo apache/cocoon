@@ -1,0 +1,19 @@
+<span style='white-space: nowrap'>
+    <img src='${this.iconURL}' dojoAttachEvent='onclick:_onIconClick' dojoAttachPoint='buttonNode'
+         style='vertical-align: middle; cursor: pointer; cursor: hand'/>
+
+    <div dojoAttachPoint="popupNode" style="display: none" class="forms-default-popup">
+        <table style="width: 100%; margin: 0px; border: 0px">
+            <tr>
+                <td>
+                    <div dojoAttachPoint="contentNode"/>
+                </td>
+                <td style="vertical-align: top; width: 15px">
+                    <!-- Image on which to click to hide the help box -->
+                    <img src="${this.closeIconURL}" alt="x" dojoAttachEvent="onClick:hidePopup"
+                         style="vertical-align: top; cursor: pointer;"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+</span>

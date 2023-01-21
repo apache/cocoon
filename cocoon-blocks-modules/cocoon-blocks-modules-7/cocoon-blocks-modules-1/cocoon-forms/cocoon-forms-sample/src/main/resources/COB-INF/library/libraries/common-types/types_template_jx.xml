@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 1999-2005 The Apache Software Foundation
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<jx:template xmlns:jx="http://apache.org/cocoon/templates/jx/1.0"
+    xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+    xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
+    
+    <jx:macro name="duration">
+        <jx:parameter name="id" default="duration"/>
+        <jx:parameter name="layout" default="row"/>
+        <ft:group id="${id}">
+            <fi:group>
+                <fi:styling layout="${layout}"/>
+                <fi:items>
+                    <ft:widget id="from"/>
+                    <ft:widget id="to"/>
+                </fi:items>
+            </fi:group>
+        </ft:group>
+    </jx:macro>
+    
+    <jx:macro name="address">
+        <jx:parameter name="id" default="address"/>
+        <jx:parameter name="layout" default="rows"/>
+        <ft:group id="${id}">
+            <fi:group>
+                <fi:styling layout="${layout}"/>
+                <fi:items>
+                    <ft:widget id="street"/>
+                    <ft:widget id="number"/>
+                    <ft:widget id="zipcode"/>
+                    <ft:widget id="city"/>
+                    <ft:widget id="country"/>
+                </fi:items>
+            </fi:group>
+        </ft:group>
+    </jx:macro>
+    
+    <jx:macro name="person">
+        <jx:parameter name="id" default="person"/>
+        <jx:parameter name="layout" default="rows"/>
+        <ft:group id="${id}">
+            <fi:group>
+                <fi:styling layout="${layout}"/>
+                <fi:items>
+                    <ft:widget id="title"/>
+                    <ft:widget id="firstname"/>
+                    <ft:widget id="lastname"/>
+                </fi:items>
+            </fi:group>
+        </ft:group>
+    </jx:macro>
+    
+    <!-- unfortunately, this doesn't work yet -->
+    <!--
+    <jx:macro name="genericRepeater">
+        <jx:parameter name="id"/>
+        <table cellspacing="0">
+            <jx:choose>
+                <jx:when test="${widget.getChild(id).getSize() == 0}">
+                    <tr><td align="center"><em>There are no rows present yet!</em></td></tr>
+                </jx:when>
+                <jx:otherwise>
+                    <ft:repeater-widget id="${id}">
+                        <tr>
+                            <jx:evalBody/>
+                            <td>
+                                <jx:choose>
+                                    <jx:when test="${repeaterLoop.first}">
+                                        <img src="resources/forms/img/blank_btn.gif"/>
+                                    </jx:when>
+                                    <jx:otherwise>
+                                        <ft:widget id="moveUp">
+                                            <fi:styling type="image" src="resources/forms/img/move_up.gif"/>
+                                        </ft:widget>
+                                    </jx:otherwise>
+                                </jx:choose>
+                                <jx:choose>
+                                    <jx:when test="${repeaterLoop.last}">
+                                        <img src="resources/forms/img/blank_btn.gif"/>
+                                    </jx:when>
+                                    <jx:otherwise>
+                                        <ft:widget id="moveDown">
+                                            <fi:styling type="image" src="resources/forms/img/move_down.gif"/>
+                                        </ft:widget>
+                                    </jx:otherwise>
+                                </jx:choose>
+                                <ft:widget id="deleteRow">
+                                    <fi:styling type="image" src="resources/forms/img/delete.gif"/>
+                                </ft:widget>
+                            </td>
+                        </tr>
+                    </ft:repeater-widget>
+                </jx:otherwise>
+            </jx:choose>
+        </table>
+    </jx:macro>
+    -->
+    
+</jx:template>

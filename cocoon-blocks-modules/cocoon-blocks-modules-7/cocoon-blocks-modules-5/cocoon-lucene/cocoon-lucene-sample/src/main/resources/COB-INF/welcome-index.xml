@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- @version $Id$ -->
+<page>
+    <title>Welcome to Cocoon XML Search using Lucene</title>
+    <content>
+      <a href="http://lucene.apache.org/"><img border="0" alt="Lucene Logo" src="images/lucene_green_300.gif"/></a>
+      
+      <h1>XML Search</h1>
+      
+      <p>
+        Welcome to Cocoon XML Search. This page introduces Cocoon searching
+        and offers the following samples:
+      </p>
+      <ul>
+        <li>Creating a Lucene index to enable searching
+        </li>
+        <li>Searching through a once created Lucene index using various means:
+        </li>
+        <li>Searching a Lucene index using <em>SearchGenerator</em>
+        </li>
+      </ul>
+      
+      <h2>Creating an Index</h2>
+      <p>
+        You must create a Lucene index first, before you can do the searching.
+        You can create a Lucene index either by crawling, or by using
+        LuceneIndexTransformer.
+      </p>
+
+      <h3>Creating Index By Crawling</h3>
+      <p>
+        Create an index by specifying a base url from which to start
+        crawling (the indexer will follow the links to build its content).
+        The base url should be 
+        <a href="http://cocoon.apache.org/2.1/userdocs/concepts/views.html">cocoon-view</a>
+        aware of content-labels
+        <strong>links</strong>, and <strong>content</strong>.
+        For example you might use the base URL 
+        <code>http://localhost:8888/blocks/cocoon-lucene-sample/welcome</code>
+      </p>
+      <p>
+        This following page allows you to <a href="create">create</a> an
+        index, named index.
+      </p>
+      <br />
+      <p>
+        Create an index by specifying a base url from which to start
+        crawling (the indexer will follow the links to build its content).
+        The base url should be 
+        <a href="http://cocoon.apache.org/2.1/userdocs/concepts/views.html">cocoon-view</a>
+        aware of content-labels
+        <strong>links</strong>, and <strong>content</strong>.
+        For example you might use the base URL 
+        <code>http://localhost:8888/blocks/cocoon-core-main-sample/</code>
+      </p>
+      <p>
+        This following page allows you to <a href="create2">create2</a> an
+        index, named index2.
+      </p>
+
+      <h3>Creating Index By Transformer</h3>
+      <p>
+        This transformer reads a document with elements in the namespace http://apache.org/cocoon/lucene/1.0, 
+        and creates a new Lucene Index, or updates an existing one.
+      </p>
+      <p>
+        This following page allows you to <a href="create-transformer">create</a> an
+        index, named index-transformer.
+      </p>
+
+      <h2>Searching</h2>
+      <p>
+        If you have created a Lucene index, you can search the created index.
+      </p>
+      <h3>Searching Index</h3>
+      <p>
+        Enter a query and search the Lucene index that you have created
+        - using <a href="findIt?queryString=lucene">Cocoon Generators</a>.
+      </p>
+
+      <h3>Searching Index2</h3>
+      <p>
+        Enter a query and search the Lucene index2 that you have created
+        - using <a href="findIt2?queryString=cocoon">Cocoon Generators</a>.
+      </p>
+      <!--<p>
+        Construct a query and search the Lucene index2 that you have created
+        - using <a href="query/advanced.html">Cocoon Forms</a>.<br/>
+        Or enter a word or two in here : 
+        	<form action="query/simple.html">
+        		<input type="text" name="query" size="20" value="cocoon"/>
+        		<input type="submit" value="Search" />
+        	</form>
+      </p>-->
+      
+      <h3>Searching Index-Transformer</h3>
+      <p>
+        Enter a query and search the Lucene index-transformer that you have created
+        - using <a href="findItTransformer?queryString=scelerisque">Cocoon Generators</a>.
+      </p>
+
+      <h2>Internals</h2>
+      <p>
+        Cocoon XML search uses the
+        <a href="http://lucene.apache.org/">Apache Lucene</a>
+        indexing and search engine.
+        The Cocoon documentation
+        <a href="http://cocoon.apache.org/2.1/userdocs/concepts/xmlsearching.html">explains</a> how it is implemented within Cocoon. Look behind the scenes of this
+        example to find out more.
+      </p>
+
+      <!--center>
+        <form name="search" action="search" method="get">
+          <table>
+            <tr><td></td>
+              <td>
+                <input name="queryString" size="44"/>&#160;<input type="submit" value="Search"/>
+              </td>
+            </tr>
+            <tr>
+              <td>Index</td>
+              <td>
+                <select name="index">
+                  <option value="index">index</option>
+                  <option value="index-1">index-1</option>
+                  <option value="index-2">index-2</option>
+                  <option value="index-3">index-3</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Analyzer Class</td>
+              <td>
+                <select name="analyzerClassName">
+                  <option value="org.apache.lucene.analysis.StopAnalyzer">StopAnalyzer</option>
+                  <option value="org.apache.lucene.analysis.standard.StandardAnalyzer">StandardAnalyzer</option>
+                  <option value="org.apache.lucene.analysis.de.GermanAnalyzer">GermanAnalyzer</option>
+                  <option value="org.apache.lucene.analysis.SimpleAnalyzer">SimpleAnalyzer</option>
+                </select>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </center-->
+    </content>
+</page>
+

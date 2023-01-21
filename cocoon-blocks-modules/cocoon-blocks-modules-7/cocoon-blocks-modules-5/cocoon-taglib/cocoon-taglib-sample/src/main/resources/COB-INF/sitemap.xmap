@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Components =================================== -->
+
+  <map:components>
+
+    <!-- =========================== Transformers =================================== -->
+
+    <map:transformers default="xslt">
+      <map:transformer name="tag" src="org.apache.cocoon.transformation.TagTransformer" pool-max="64" logger="sitemap.transformer.newtag">
+        <transformer-hint>tag</transformer-hint>
+      </map:transformer>
+    </map:transformers>
+
+    <!-- =========================== Actions =================================== -->
+
+    <map:actions>
+      <map:action name="tagtest" logger="sitemap.action.locale" src="org.apache.cocoon.taglib.test.acting.TagtestAction" />
+      <map:action name="locale" logger="sitemap.action.locale" src="org.apache.cocoon.acting.LocaleAction">
+        <store-in-session>true</store-in-session>
+        <create-session>true</create-session>
+      </map:action>
+    </map:actions>
+
+  </map:components>
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml" />
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="welcome" />
+      </map:match>
+
+      <map:match pattern="welcome">
+        <map:generate src="samples.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="**.xhtml">
+        <map:act type="locale" />
+        <map:act type="tagtest" />
+        <map:generate src="{1}.xhtml" />
+        <map:transform type="tag" label="tag" />
+        <map:serialize />
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

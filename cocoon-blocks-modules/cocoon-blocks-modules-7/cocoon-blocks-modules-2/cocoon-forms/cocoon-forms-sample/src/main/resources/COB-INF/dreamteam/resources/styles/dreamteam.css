@@ -1,0 +1,115 @@
+/*
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements.  See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License.  You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+/** CSS stylesheet for the dreamteam sample, adjusted to match the supersonic tour example app */
+
+body { 	
+    font-family: Georgia, Verdana, Arial;
+	font-style:normal;
+	font-variant:normal;
+	background-color: white;
+	background-image: none;
+	color: black;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-left:10px;
+	padding-right:10px;
+ }
+h1 {
+    font-size: 120%
+	font-weight: bold;
+	padding-left: 20px;
+	border-bottom: solid red 1px;
+}
+h2 {
+    border-bottom: solid #CCCCCC 1px;
+}
+
+img {
+    border: 0px solid;
+}
+table {
+    border: 0px solid;
+	margin:0px;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-left:10px;
+	padding-right:10px;
+	border-top: solid 0px #ccc;
+}
+
+.tableheader {
+	font-size:100%;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	color:#000000;
+	padding: 5px;
+	border-bottom: 1px solid #ccc;
+}
+td {
+	font-size:100%;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:normal;
+	color:#00000;
+	padding: 3px;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.legend {
+	border: 1px solid #ccc;
+	font-size: 70%;
+	width: 50%;
+}
+
+.developer-header {
+	border-bottom: solid #CCCCCC 1px;
+	background-color: #FFFFCC;
+	font-weight:bold;
+}
+
+.developer-note {
+	font-height: 80%;	
+}                        
+
+.code {
+    font-family: courier, monospaced;
+    font-size: 70%;
+    background: #FFFFCC;
+    margin-top: 1em;
+    padding: 2px;
+}
+
+.codeIndent {
+    margin-left: 1em;
+}
+
+                        
+.sort-arrow.descending {
+	background-image:		url("images/sort_down.gif");
+}
+
+.sort-arrow.ascending {
+	background-image:		url("images/sort_up.gif");
+}
+
+.sort-arrow {
+	width: 11px;
+	height:	11px;
+	margin: 0 2px;
+	cursor:	hand;
+}

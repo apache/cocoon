@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- @version $Id$ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd">
+
+  <!-- Automatically receives AuthenticationEvent messages -->
+  <bean id="loggerListener" class="org.acegisecurity.event.authentication.LoggerListener" />
+
+  <!-- ======================== FILTER CHAIN ======================= -->
+
+  <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
+    <property name="filterInvocationDefinitionSource">
+      <value>
+        CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON 
+        PATTERN_TYPE_APACHE_ANT
+        /**=httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,securityContextHolderAwareRequestFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
+      </value>
+    </property>
+  </bean>
+
+  <!-- ======================== SESSION CONTEXT INTEGRATION ======================= -->
+
+  <bean id="httpSessionContextIntegrationFilter"
+    class="org.acegisecurity.context.HttpSessionContextIntegrationFilter" />
+
+  <!-- ======================== LOGOUT ======================= -->
+
+  <bean id="logoutFilter" class="org.acegisecurity.ui.logout.LogoutFilter">
+    <constructor-arg value="/cocoon-acegisecurity-sample/welcome" /><!-- URL redirected to after logout -->
+    <constructor-arg>
+      <list>
+        <bean class="org.acegisecurity.ui.logout.SecurityContextLogoutHandler" />
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <!-- ===================== HTTP REQUEST SECURITY ==================== -->
+
+  <bean id="authenticationProcessingFilter"
+    class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+    <property name="authenticationManager" ref="authenticationManager" />
+    <property name="authenticationFailureUrl" value="/cocoon-acegisecurity-sample/login?login_error=1" />
+    <property name="defaultTargetUrl" value="/cocoon-acegisecurity-sample/welcome" />
+    <property name="filterProcessesUrl" value="/cocoon-acegisecurity-sample/security_check" />
+  </bean>
+
+  <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+    <property name="providers">
+      <list>
+        <ref local="daoAuthenticationProvider" />
+        <ref local="anonymousAuthenticationProvider" />
+      </list>
+    </property>
+  </bean>
+
+  <bean id="daoAuthenticationProvider"
+    class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+    <property name="userDetailsService" ref="inMemoryDaoImpl" />
+    <property name="forcePrincipalAsString"><value>true</value></property>
+  </bean>
+
+  <bean id="inMemoryDaoImpl" class="org.acegisecurity.userdetails.memory.InMemoryDaoImpl">
+    <property name="userMap">
+      <value>
+        cocoon=cocoon,ROLE_USER,ROLE_SUPERVISOR 
+        guest=guest,ROLE_USER
+        other=other,ROLE_OTHER
+      </value>
+    </property>
+  </bean>
+
+  <bean id="anonymousAuthenticationProvider"
+    class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
+    <property name="key" value="foobar"/>
+  </bean>
+
+  <!-- ===================== SECURITY CONTEXT HOLDER AWARE REQUEST ==================== -->
+
+  <bean id="securityContextHolderAwareRequestFilter"
+    class="org.acegisecurity.wrapper.SecurityContextHolderAwareRequestFilter" />
+
+  <!-- ===================== ANONYMOUS USER PROCESSING ==================== -->
+
+  <bean id="anonymousProcessingFilter" class="org.acegisecurity.providers.anonymous.AnonymousProcessingFilter">
+    <property name="key" value="foobar"/>
+    <property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS"/>
+  </bean>
+
+  <!-- ===================== EXCEPTION TRANSLATION ==================== -->
+
+  <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
+    <property name="authenticationEntryPoint" ref="authenticationProcessingFilterEntryPoint"/>
+    <property name="accessDeniedHandler">
+      <bean class="org.acegisecurity.ui.AccessDeniedHandlerImpl">
+        <property name="errorPage" value="/cocoon-acegisecurity-sample/accessDenied" />
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="authenticationProcessingFilterEntryPoint"
+    class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+    <property name="loginFormUrl" value="/cocoon-acegisecurity-sample/login"/>
+    <property name="forceHttps" value="false"/>
+  </bean>
+
+  <!-- ===================== INVOCATION INTERCEPTOR ==================== -->
+
+  <!-- Note the order that entries are placed against the objectDefinitionSource is critical.
+    The FilterSecurityInterceptor will work from the top of the list down to the FIRST pattern that matches the request URL.
+    Accordingly, you should place MOST SPECIFIC (ie a/b/c/d.*) expressions first, with LEAST SPECIFIC (ie a/.*) expressions last -->
+  <bean id="filterInvocationInterceptor"
+    class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+    <property name="authenticationManager" ref="authenticationManager"/>
+    <property name="accessDecisionManager" ref="httpRequestAccessDecisionManager"/>
+    <property name="objectDefinitionSource">
+      <value>
+        CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON 
+        PATTERN_TYPE_APACHE_ANT
+        /cocoon-acegisecurity-sample/welcome=ROLE_ANONYMOUS,ROLE_USER 
+        /cocoon-acegisecurity-sample/login=ROLE_ANONYMOUS,ROLE_USER 
+        /cocoon-acegisecurity-sample/accessdenied=ROLE_ANONYMOUS,ROLE_USER 
+        /cocoon-acegisecurity-sample/supervisor=ROLE_SUPERVISOR 
+        /cocoon-acegisecurity-sample/**=ROLE_USER
+      </value>
+    </property>
+  </bean>
+
+  <bean id="httpRequestAccessDecisionManager" class="org.acegisecurity.vote.AffirmativeBased">
+    <property name="allowIfAllAbstainDecisions" value="false"/>
+    <property name="decisionVoters">
+      <list>
+        <ref bean="roleVoter" />
+      </list>
+    </property>
+  </bean>
+
+  <!-- An access decision voter that reads ROLE_* configuration settings -->
+  <bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter"/>
+
+</beans>

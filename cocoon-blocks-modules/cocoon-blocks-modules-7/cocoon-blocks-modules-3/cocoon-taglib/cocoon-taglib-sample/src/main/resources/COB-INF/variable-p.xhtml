@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<html xmlns:core="urn:apache:taglib:core"
+      xmlns:string="urn:apache:taglib:string"
+      xmlns:jxpath="urn:apache:taglib:jxpath:core">
+
+  <title>Taglib Test: Setting and getting variables</title>
+  <h2>Taglib Test: Setting and getting variables</h2>
+
+  <!-- string:trim var="p">Variable pipeline</string:trim -->
+  <string:trim var="$request/r">Variable declared in request</string:trim>
+  <string:trim var="$session/s">Variable declared in session</string:trim>
+  <string:trim var="$application/a">Variable declared in application</string:trim>
+
+  <p>
+    <table cellpadding="5" border="1">
+      <!-- tr>
+        <td>pipeline:</td>
+        <td><jxpath:out value="p" /></td>
+      </tr -->
+      <tr>
+        <td>Get variable from request:</td>
+        <td><jxpath:out value="$request/r" /></td>
+      </tr>
+      <tr>
+        <td>Get variable from session:</td>
+        <td><jxpath:out value="$session/s" /></td>
+      </tr>
+      <tr>
+        <td>Get variable from application:</td>
+        <td><jxpath:out value="$application/a" /></td>
+      </tr>
+    </table>
+  </p>
+
+  <a href="variable-p.xhtml">Variables</a>
+  <a href="variable-r.xhtml">Include</a>
+
+  <p>
+    <a href="welcome">Back</a>
+  </p>
+</html>

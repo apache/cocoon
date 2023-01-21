@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2005 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE status [
+<!ELEMENT status (developers, todo, changes)>
+<!ELEMENT developers (person+)>
+<!ELEMENT person EMPTY>
+<!ATTLIST person
+  name CDATA #REQUIRED
+  email CDATA #REQUIRED
+  id CDATA #REQUIRED
+>
+<!ELEMENT todo (actions+)>
+<!ELEMENT actions (action+)>
+<!ATTLIST actions
+  priority (high | medium | low) #REQUIRED
+>
+<!ELEMENT changes (release+)>
+<!ELEMENT release (action+)>
+<!ATTLIST release
+  version CDATA #REQUIRED
+  date CDATA #REQUIRED
+>
+<!ELEMENT action (#PCDATA | link | br | code | ul | strong)*>
+<!ATTLIST action
+  context (build | code | docs) #IMPLIED
+  assigned-to CDATA #IMPLIED
+  dev CDATA #IMPLIED
+  type (add | fix | remove | update) #IMPLIED
+  fixes-bug CDATA #IMPLIED
+  due-to CDATA #IMPLIED
+  due-to-email CDATA #IMPLIED
+>
+<!ELEMENT code (#PCDATA)>
+<!ELEMENT br EMPTY>
+<!ELEMENT strong (#PCDATA)>
+<!ELEMENT link (#PCDATA)>
+<!ATTLIST link
+  href CDATA #REQUIRED
+>
+<!ELEMENT ul (li)+>
+<!ELEMENT li (#PCDATA | link | br | code | ul)*>
+<!ENTITY eacute           "&#x000E9;">
+<!ENTITY ouml             "&#x000F6;">
+<!ENTITY uuml             "&#x000FC;">
+<!ENTITY ccedil           "&#x000E7;">
+]>
+
+<!-- SVN $Id$ -->
+
+<status>
+ <!-- The following list contains the changes since the latest 2.1.x version. -->
+ <changes>
+  <release version="@version@" date="@date@">
+    <action dev="UH" type="add" due-to="Johan Stuyts">
+      JMS block: Connection failures can now be recovered from. The default JMSConnectionManager implementation
+      detects when JMS connections are severed and schedules reconnection attempts with the cron scheduler
+      in order to re-establish the connection. As soon as reconnection was successful it notifies its listeners
+      so that they may recover as well and refresh their JMS sessions. The provided abstract MessageListener
+      and JMS publisher that users are recommended to use as base classes for their concrete JMS needs have been
+      updated to use this mechanism.
+    </action>
+  </release>
+ </changes>
+
+</status>
+

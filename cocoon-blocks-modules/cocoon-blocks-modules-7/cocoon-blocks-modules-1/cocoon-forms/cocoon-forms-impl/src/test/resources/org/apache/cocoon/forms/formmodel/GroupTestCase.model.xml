@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 2005 The Apache Software Foundation or its licensors,
+  as applicable.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
+    <fd:widgets>
+        
+        <fd:group id="group1">
+            <fd:widgets>
+                <fd:field id="field1">
+                    <fd:label>Field1</fd:label>
+                    <fd:datatype base="integer"/>
+                 </fd:field>
+            </fd:widgets>
+        </fd:group>
+        
+        <fd:group id="group2" extends="group1">
+            <fd:widgets>
+                <fd:field id="field2">
+                    <fd:label>Field2</fd:label>
+                    <fd:datatype base="string"/>
+                </fd:field>
+                <fd:field id="field3" extends="field1"/>
+            </fd:widgets>
+        </fd:group>
+        
+    </fd:widgets>
+</fd:form>
