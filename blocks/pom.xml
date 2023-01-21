@@ -28,7 +28,7 @@
     <relativePath>../parent</relativePath>
   </parent>
   <artifactId>cocoon-blocks-modules</artifactId>
-  <version>7-SNAPSHOT</version>
+  <version>7</version>
   <name>Cocoon Blocks [modules]</name>
   <packaging>pom</packaging>
 
@@ -228,9 +228,9 @@
   </profiles>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/blocks</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</developerConnection>
-    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-blocks-modules</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-7</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-7</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-blocks-modules/cocoon-blocks-modules-7</url>
   </scm>
 
 </project>
