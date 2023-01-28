@@ -25,7 +25,7 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>7</version>
+    <version>6-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -115,7 +115,7 @@
     								</goals>
     							</pluginExecutionFilter>
     							<action>
-    								<ignore/>
+    								<ignore></ignore>
     							</action>
     						</pluginExecution>
     					</pluginExecutions>

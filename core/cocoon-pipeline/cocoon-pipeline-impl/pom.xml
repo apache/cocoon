@@ -15,6 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <!--
   - $Id$
   -->
@@ -22,7 +23,7 @@
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6</version>
+    <version>6-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>

@@ -17,6 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
+
 <!--
   - @version $Id: pom.xml 580603 2007-09-29 16:36:48Z vgritsenko $
   -->
@@ -26,7 +27,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-blocks-modules</artifactId>
-    <version>7</version>
+    <version>6-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
