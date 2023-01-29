@@ -1049,6 +1049,16 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>javier</id>
+      <name>Javier Puerto</name>
+      <email>javier@apache.org</email>
+      <roles>
+        <role>PMC member</role>
+        <role>Committer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
 
   <contributors>
