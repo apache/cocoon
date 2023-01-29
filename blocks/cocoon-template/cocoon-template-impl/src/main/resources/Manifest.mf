@@ -5,16 +5,17 @@ Bundle-Name: cocoon
 Bundle-SymbolicName: org.apache.cocoon:template:1.0.0
 Bundle-Version: 1.0.0
 Bundle-Description: Cocoon bundle
+Bundle-License: https://www.apache.org/licenses/LICENSE-2.0.txt
 Bundle-Vendor: The Apache Software Foundation
 Bundle-DocURL: http://cocoon.apache.org
 Bundle-ContactAddress: http://cocoon.apache.org
 Bundle-Category: library
 Bundle-Classpath: .
-Export-Package: 
- org.apache.cocoon.template, 
+Export-Package:
+ org.apache.cocoon.template,
  org.apache.cocoon.template.instruction,
- org.apache.cocoon.template.script, 
- org.apache.cocoon.template.xml, 
+ org.apache.cocoon.template.script,
+ org.apache.cocoon.template.xml,
  org.apache.cocoon.components.expression,
  org.apache.cocoon.components.expression.jxpath,
  org.apache.cocoon.components.expression.jexl,
@@ -38,7 +39,7 @@ Import-Package: org.osgi.framework,
  org.apache.avalon.excalibur.logger,
  org.apache.excalibur.source,
  org.apache.excalibur.source.impl,
- org.apache.excalibur.xml.sax, 
+ org.apache.excalibur.xml.sax,
  org.apache.excalibur.xmlizer,
  org.apache.log,
  org.xml.sax,

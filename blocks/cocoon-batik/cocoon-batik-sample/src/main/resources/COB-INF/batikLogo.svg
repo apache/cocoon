@@ -2,14 +2,24 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
 "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 
-<!-- ====================================================================== -->
-<!-- Copyright (C) The Apache Software Foundation. All rights reserved.     -->
-<!--                                                                        -->
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
 
-<!-- This software is published under the terms of the Apache Software      -->
-<!-- License version 1.1, a copy of which has been included with this       -->
-<!-- distribution in the LICENSE file.                                      -->
-<!-- ====================================================================== -->
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
 
 <!-- ====================================================================== -->
 <!-- Defines the Batik Logo using an SVG font.                              -->
@@ -24,18 +34,18 @@
     <title>Batik Logo</title>
     <g id="content">
         <defs>
-          <g id="Batik_Squiggle" stroke="none" transform="scale(1.6, 1.6)">  
+          <g id="Batik_Squiggle" stroke="none" transform="scale(1.6, 1.6)">
               <!-- The squiggle is defined as approx 54x57 units @ 0,0 -->
-              <path id="Batik_Squiggle_Blue" fill="#6666FF" 
+              <path id="Batik_Squiggle_Blue" fill="#6666FF"
                     d="M14.88,13.024c-0.186-0.247-0.322-0.254-0.42-0.151c0.008-1.744-1.698-2.605-3.419-1.529c-0.065,0.047-0.131,0.104-0.197,0.161c-0.379-0.118-0.805-0.078-1.252,0.162
 	                          c0.995-1.338,2.228-3.299,3.129-5.603c0.479-1.44,0-4.32-2.16-3.12c-3.6,1.68-6.48,4.08-8.88,7.2c-0.72,0.96-1.92,2.88-0.96,4.319c0.62,1.034,2.126,0.463,2.993-0.328C2.767,15.45,1.173,17.944,0,20.944c-0.96,2.4,0.479,4.8,2.88,3.12
 	                          c1.376-0.953,2.701-1.957,3.942-3.023c0.134,0.188,0.406,0.114,0.857-0.337c0.221-0.221,0.441-0.445,0.661-0.668c0.672,0.652,1.843,0.769,2.938-0.052c0.061-0.091,0.136-0.169,0.204-0.253c1.212-0.44,2.762-2.248,2.917-2.867c0.72-1.2,1.2-2.64,0.48-3.84z"/>
-              <path id="Batik_Squiggle_Red" fill="#FF0000" 
+              <path id="Batik_Squiggle_Red" fill="#FF0000"
                     d="M33.84,11.583c0-1.08-0.976-2.341-2.222-2.058c0.021-0.034,0.041-0.068,0.062-0.103c0.72-1.199,1.2-2.64,0.72-4.079c-0.24-0.96-1.439-1.921-2.399-1.2c-1.075,0.645-2.147,1.24-3.2,1.832
 	                          c-0.161-0.339-0.372-0.642-0.619-0.871c0.073-0.16,0.144-0.32,0.218-0.481c0.48-1.2,0.72-6-1.92-4.56c-1.2,0.72-2.16,1.439-3.12,2.399c-1.2,1.2-1.92,3.12-1.439,4.801c0.063,0.189,0.14,0.355,0.226,0.503c-0.293,0.494-0.602,0.973-0.947,1.417
 	                          c-0.72,1.2-1.199,2.64-0.72,4.08c0.24,0.96,1.2,1.92,2.4,1.199c0.227-0.129,0.439-0.274,0.658-0.413c0.451,0.664,1.158,1.001,1.982,0.413c0.154-0.092,0.306-0.176,0.46-0.267c-0.298,1.618-0.163,3.473,1.433,3.402c0.371,0.98,1.139,1.784,2.188,1.185
 	                          c1.44-0.96,2.88-1.92,4.32-2.88c1.439-0.72,2.159-2.64,1.92-4.32z"/>
-              <path id="Batik_Squiggle_Green" fill="#33CC33" 
+              <path id="Batik_Squiggle_Green" fill="#33CC33"
                     d="M25.692,24.387c-0.212-1.113-1.282-1.869-2.892-1.283c-0.112,0.032-0.226,0.09-0.339,0.164c-0.809-0.396-2.029-0.135-2.781,0.316c-0.238,0.159-0.412,0.428-0.541,0.755
 	                          c-0.143,0.081-0.288,0.163-0.437,0.252c0.89-2.079-1.543-2.853-3.343-1.727c-2.16,1.2-3.84,2.4-5.28,4.56c-0.479,0.961-0.72,2.881,0.961,2.881c0.004,0,0.008,0,0.013,0c-0.304,0.808-0.617,1.614-0.974,2.399c-1.68,3.12,1.921,3.84,3.841,2.16
 	                          c0.105-0.105,0.217-0.202,0.324-0.304c0.622,0.677,1.771,0.869,3.035,0.064c0.818-0.446,1.635-0.87,2.446-1.298c0.973,0.631,2.822,0.489,3.794-0.622c0.413-0.413,0.799-0.814,1.167-1.217c0.011,0.006,0.021,0.012,0.033,0.017c0.029-0.048,0.056-0.096,0.085-0.144
@@ -45,7 +55,7 @@
           <!-- ============================= -->
           <!-- Batik SVG Font Definition     -->
           <!-- ============================= -->
-          
+
           <font horiz-adv-x="150" id="Batik">
               <font-face
                   font-family="Batik SVGFont"
@@ -53,13 +63,13 @@
                   ascent="190"
                   descent="50"
                   alphabetic="0"/>
-          
+
               <missing-glyph horiz-adv-x="150" d="M20 0 V240 H100 V0 z"/>
-          
-          
+
+
               <glyph unicode=" " glyph-name=" " horiz-adv-x="100"/>
-          
-              <glyph id="B" unicode="B" glyph-name="B" horiz-adv-x="130"> 
+
+              <glyph id="B" unicode="B" glyph-name="B" horiz-adv-x="130">
                   <g transform="scale(1,-1)translate(0,-170)">
                       <path d="M21.244,141.963V40.831c0-6.188-0.57-10.773-1.707-13.754c-1.137-2.977-3.066-5.461-5.793-7.449c-1.137-0.766-2.367-1.395-3.695-1.891s-3.012-0.938-5.055-1.32c-2.125-0.371-3.488-0.781-4.094-1.23s-0.906-1.121-0.906-2.02
                                c0-1.195,0.32-2.035,0.969-2.52c0.645-0.484,1.953-0.73,3.93-0.73c0.758,0,3.816,0.211,9.176,0.625c5.355,0.418,10.387,0.625,15.098,0.625c2.961,0,7.883-0.207,14.758-0.625c6.875-0.414,12.324-0.625,16.352-0.625c16.711,0,29.762,3.461,39.145,10.379
@@ -70,12 +80,12 @@
                                c0,6.539,1.789,10.953,5.371,13.242c3.578,2.293,11.16,3.438,22.746,3.438c14.172,0,24.82-3.031,31.945-9.094s10.688-15.156,10.688-27.281c0-13.031-4.234-23.188-12.695-30.461s-20.316-10.914-35.563-10.914H47.463c-3.578,0-5.84,0.477-6.793,1.426
                                s-1.426,3.285-1.426,7.004v52.641z"/>
                      <!-- Put the Squiggle in the B -->
-                     <use xlink:href="#Batik_Squiggle" 
+                     <use xlink:href="#Batik_Squiggle"
                           transform="translate(45,103)" />
                    </g>
 	          </glyph>
-          
-              <glyph id="a" unicode="a" glyph-name="a" horiz-adv-x="105"> 
+
+              <glyph id="a" unicode="a" glyph-name="a" horiz-adv-x="105">
                   <path transform="scale(1,-1)translate(-125, -170)"
                     d="M194.825,161.952c-5.238,4.766-10.891,8.285-16.961,10.559c-6.07,2.27-12.863,3.406-20.375,3.406c-7.363,0-12.98-1.922-16.848-5.762c-3.871-3.844-5.805-9.414-5.805-16.719c0-9.359,4.266-16.758,12.805-22.195
                       c8.535-5.438,23.766-10.215,45.695-14.324v-15.789c0-7.09-2.16-12.523-6.477-16.297s-10.523-5.664-18.625-5.664c-6.891,0-11.758,0.992-14.598,2.977s-4.258,5.336-4.258,10.063c0,1.984,0.281,4.27,0.852,6.863s0.855,4.156,0.855,4.688
@@ -84,8 +94,8 @@
                       c0,1.574-1.273,2.887-3.816,3.934s-5.785,1.574-9.73,1.574c-4.176,0-7.668-1.039-10.477-3.117s-4.973-5.191-6.488-9.348z M193.037,122.167c-16.43,3.43-27.789,7.273-34.074,11.535c-6.285,4.266-9.426,9.973-9.426,17.129c0,5.559,1.512,9.879,4.543,12.961
                       c3.027,3.086,7.27,4.625,12.723,4.625c7.492,0,13.738-1.941,18.738-5.832c4.996-3.887,7.496-8.813,7.496-14.777v-25.641z"/>
               </glyph>
-          
-              <glyph id="ti" unicode="ti" glyph-name="ti" horiz-adv-x="100"> 
+
+              <glyph id="ti" unicode="ti" glyph-name="ti" horiz-adv-x="100">
                   <g style="fill:#FF0000;" transform="scale(1,-1)translate(-215,-170)">
                       <path d="M311.259,168.69c-0.684-0.531-2.199-0.871-4.551-1.023c-1.441,0-2.711-0.113-3.813-0.34s-2.105-0.57-3.012-1.027c-3.035-1.594-5.102-3.586-6.203-5.98c-1.102-2.391-1.648-6.625-1.648-12.703v-35.543c0-11.688,0.188-23.227,0.566-34.617
                                c0.078-2.047,0.117-3.227,0.117-3.531c0-1.594-0.191-2.617-0.57-3.074c-0.383-0.453-1.066-0.684-2.059-0.684c-1.066,0-9.44,3.681-11.451,4.196s-6.655,1.804-11.209,1.804h-20.266V55.045c0-1.148-0.117-1.918-0.344-2.301s-0.684-0.578-1.363-0.578
@@ -96,9 +106,9 @@
                       <path d="M284.067,48.667c1.969,0,4.207-1.535,6.711-4.605c2.5-3.07,3.754-5.555,3.754-7.453c0-1.969-1.309-4.453-3.926-7.449c-2.617-2.992-4.648-4.492-6.086-4.492c-1.594,0-3.695,1.555-6.313,4.664s-3.926,5.766-3.926,7.961c0,2.352,1.137,4.836,3.41,7.453s4.398,3.922,6.375,3.922z"/>
                   </g>
               </glyph>
-          
-          
-              <glyph id="k" unicode="k" glyph-name="k" horiz-adv-x="120"> 
+
+
+              <glyph id="k" unicode="k" glyph-name="k" horiz-adv-x="120">
                   <path transform="scale(1,-1)translate(-310, -170)"
                      d="M331.507,147.307V35.413c0-8.078-0.68-13.219-2.031-15.43s-3.906-3.316-7.664-3.316h-1.805c-1.387,0-2.465-0.242-3.23-0.734c-0.77-0.492-1.191-1.188-1.27-2.094c0-1.656,1.977-2.941,5.93-3.848l0.23-0.074
                       c1.824-0.301,3.516-0.68,5.074-1.133s3.098-0.984,4.617-1.594c2.66-1.059,5.586-2.535,8.781-4.43c3.191-1.895,5.246-2.844,6.16-2.844c0.984,0,1.746,0.383,2.277,1.141s0.801,1.859,0.801,3.301c0,0.305-0.039,1.082-0.113,2.332
@@ -114,11 +124,11 @@
 
                <glyph unicode="*" glyph-name="*" horiz-adv-x="120">
                 <g transform="scale(1, -1)">
-                  <use xlink:href="#Batik_Squiggle" 
+                  <use xlink:href="#Batik_Squiggle"
                           transform="scale(2,2) translate(0,-67)" />
                 </g>
                </glyph>
-          
+
                <hkern g1="B"  g2="a"  k="5"/>
                <hkern g1="a"  g2="t"  k="14"/>
                <hkern g1="a"  g2="ti" k="14"/>
@@ -138,28 +148,28 @@
                               c-0.205,0.374-0.38,0.762-0.549,1.151c-1.126,2.59-2.056,5.322-2.196,8.168c-0.222,4.484,4.48,3.091,6.917,1.551c3.856-2.437,7.345-6.516,8.167-11.093z"/>
           </g> <!-- End Batik_Logo_Underline -->
 
-          <filter id="dropShadow"  filterUnits="objectBoundingBox" 
+          <filter id="dropShadow"  filterUnits="objectBoundingBox"
                   filterRes="200" width="1.4" height="1.4">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="4" /> 
+              <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
               <feOffset dx="8" dy="8" />
               <feComponentTransfer result="shadow">
                  <feFuncA type="linear" slope=".5" intercept="0" />
               </feComponentTransfer>
               <feComposite in2="shadow" in="SourceGraphic"/>
           </filter>
-          
+
           <g id="Batik_Logo_Shadow" filter="url(#dropShadow)">
               <g id="Batik_Logo">
-                 <text id="text" x="0" y="0" font-family="Batik SVGFont" 
+                 <text id="text" x="0" y="0" font-family="Batik SVGFont"
                        font-size="180">Batik</text>
                  <use xlink:href="#Batik_Logo_Underline"/>
               </g> <!-- End Batik_Logo -->
           </g> <!-- End Batik_Logo_Shadow -->
-          
+
           <g id="Batik_Tag_Box" >
-              <rect x="1" y="1" width="446" height="496" 
+              <rect x="1" y="1" width="446" height="496"
                     style="fill:none; stroke:black" />
-              <use xlink:href="#Batik_Squiggle" 
+              <use xlink:href="#Batik_Squiggle"
                    transform="translate(418,467) scale(0.5, 0.5)" />
           </g> <!-- End Batik_Tag_Box -->
         </defs>
@@ -170,5 +180,5 @@
     <!-- ============================================================= -->
     <!-- Batik sample mark                                             -->
     <!-- ============================================================= -->
-    <use xlink:href="#Batik_Tag_Box" /> 
+    <use xlink:href="#Batik_Tag_Box" />
 </svg>
