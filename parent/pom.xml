@@ -25,12 +25,12 @@
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
     <version>21</version>
-    <relativePath />
+    <relativePath/>
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>11-SNAPSHOT</version>
+  <version>10-SNAPSHOT</version>
   <name>Apache Cocoon</name>
   <inceptionYear>1999</inceptionYear>
   <url>http://cocoon.apache.org</url>
@@ -3302,7 +3302,7 @@
 
   <profiles>
     <profile>
-        <id>release</id>
+      <id>release</id>
       <build>
         <plugins>
           <plugin>

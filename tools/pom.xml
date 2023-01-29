@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>10</version>
+    <version>10-SNAPSHOT</version>
     <relativePath>../parent</relativePath>
   </parent>
   <artifactId>cocoon-tools-modules</artifactId>
@@ -35,12 +35,12 @@
 
   <modules>
     <module>archetypes/cocoon-22-archetype-block</module>
-    <module>archetypes/cocoon-22-archetype-block-plain</module>
-    <module>archetypes/cocoon-22-archetype-webapp</module>
+    <module>archetypes/cocoon-22-archetype-block-plain</module>    
+    <module>archetypes/cocoon-22-archetype-webapp</module>    
     <module>cocoon-maven-reports</module>
     <module>cocoon-maven-docs-cleaner-plugin</module>
     <module>cocoon-maven-javadocs-script-report</module>
-<!--    <module>cocoon-sitemaptags2daisy-plugin</module> -->
+    <module>cocoon-sitemaptags2daisy-plugin</module> 
   </modules>
 
   <scm>

@@ -23,7 +23,7 @@
   <parent>
     <artifactId>cocoon</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>10</version>
+    <version>10-SNAPSHOT</version>
     <relativePath>../../../parent/pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-servlet-service-components-sample</artifactId>
