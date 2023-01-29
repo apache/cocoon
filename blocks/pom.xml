@@ -28,7 +28,7 @@
     <relativePath>../parent</relativePath>
   </parent>
   <artifactId>cocoon-blocks-modules</artifactId>
-  <version>6-SNAPSHOT</version>
+  <version>7-SNAPSHOT</version>
   <name>Cocoon Blocks [modules]</name>
   <packaging>pom</packaging>
 
@@ -224,6 +224,34 @@
         <module>cocoon-xsp/cocoon-xsp-impl</module>
         <module>cocoon-xsp/cocoon-xsp-sample</module>
       </modules>
+    </profile>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>cocoon-*/**/target/**</exclude>
+                <!-- Sample resources. -->
+                <exclude>cocoon-*/cocoon-*-sample/src/main/resources/**</exclude>
+                <!-- Test files. -->
+                <exclude>cocoon-chaperon/cocoon-chaperon-impl/src/test/resources/org/apache/cocoon/generation/*.txt</exclude>
+                <!-- XMidi is MIT license. -->
+                <exclude>cocoon-midi/cocoon-midi-impl/src/test/resources/org/apache/cocoon/generation/*.dtd</exclude>
+                <!-- Text resource for Cocoon POI element processor. -->
+                <exclude>cocoon-poi/cocoon-poi-impl/src/main/resources/org/apache/cocoon/components/elementprocessor/impl/poi/hssf/elements/**</exclude>
+                <!-- Generated properties. -->
+                <exclude>cocoon-html/cocoon-html-impl/src/main/resources/org/apache/cocoon/html/*.properties</exclude>
+                <!-- Sun Microsystem license. -->
+                <exclude>cocoon-portal/cocoon-portal-portlet-impl/src/main/resources/org/apache/cocoon/portal/pluto/deployment/web-app_2_3.dtd</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 

@@ -34,7 +34,7 @@
   <version>1.1.0-SNAPSHOT</version>
   <name>Cocoon XML Resolver</name>
   <description>
-    The Cocoon system resolver component together with default enteties.
+    The Cocoon system resolver component together with default entities.
   </description>
   <url>http://cocoon.apache.org/${docs.m.xml-resolver.relPath}</url>
 
@@ -58,11 +58,30 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-block-deployment</artifactId>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>src/main/resources/META-INF/cocoon/entities/**</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

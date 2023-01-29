@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-blocks-modules</artifactId>
-    <version>6-SNAPSHOT</version>
+    <version>7-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -42,12 +42,12 @@
       <url>${docs.deploymentBaseUrl}/blocks/lucene/${docs.version}/</url>
     </site>
   </distributionManagement>
-  
+
   <properties>
-    <docs.name>Cocoon Lucene</docs.name>    
+    <docs.name>Cocoon Lucene</docs.name>
     <docs.version>1.0</docs.version>
   </properties>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -63,7 +63,7 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -72,14 +72,14 @@
           <plugin>
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>        
+            <configuration>
               <navDocId>1232</navDocId>
-              <collection>cdocs-lucene</collection>          
+              <collection>cdocs-lucene</collection>
               <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
             </configuration>
-          </plugin>  
+          </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
-  </profiles>  
+  </profiles>
 </project>

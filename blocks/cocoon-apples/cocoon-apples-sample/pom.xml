@@ -22,17 +22,17 @@
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
-  
+
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <version>7-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-apples-sample</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Apples Block Samples</name>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -60,5 +60,5 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
 </project>

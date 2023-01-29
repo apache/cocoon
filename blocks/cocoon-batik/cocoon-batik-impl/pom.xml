@@ -22,29 +22,29 @@
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
-    
+
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <version>7-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-batik-impl</artifactId>
   <version>1.1.0-SNAPSHOT</version>
   <name>Cocoon Batik Block Implementation</name>
-  <url>http://cocoon.apache.org/${docs.m.batik.relPath}</url>  
+  <url>http://cocoon.apache.org/${docs.m.batik.relPath}</url>
 
   <properties>
-    <docs.name>Cocoon Batik Block</docs.name>    
+    <docs.name>Cocoon Batik Block</docs.name>
     <docs.version>${docs.m.batik.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.batik.relPath}</url>
     </site>
-  </distributionManagement>  
+  </distributionManagement>
 
   <dependencies>
     <dependency>
@@ -177,7 +177,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -186,14 +186,14 @@
           <plugin>
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>        
+            <configuration>
               <navDocId>1349</navDocId>
-              <collection>cdocs-batik</collection>     
-              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>               
+              <collection>cdocs-batik</collection>
+              <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
             </configuration>
-          </plugin>    
+          </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
   </profiles>
 </project>

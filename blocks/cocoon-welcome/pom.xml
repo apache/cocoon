@@ -24,16 +24,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
-  
+
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
+    <version>7-SNAPSHOT</version>
   </parent>
   <artifactId>cocoon-welcome</artifactId>
-  <version>1.0.0-M1-SNAPSHOT</version>  
+  <version>1.0.0-M1-SNAPSHOT</version>
   <name>Cocoon Welcome (Samples)</name>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -52,7 +52,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>

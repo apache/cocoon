@@ -35,12 +35,13 @@
 
   <modules>
     <module>archetypes/cocoon-22-archetype-block</module>
-    <module>archetypes/cocoon-22-archetype-block-plain</module>    
-    <module>archetypes/cocoon-22-archetype-webapp</module>    
+    <module>archetypes/cocoon-22-archetype-block-plain</module>
+    <module>archetypes/cocoon-22-archetype-webapp</module>
     <module>cocoon-maven-reports</module>
     <module>cocoon-maven-docs-cleaner-plugin</module>
     <module>cocoon-maven-javadocs-script-report</module>
-    <module>cocoon-sitemaptags2daisy-plugin</module> 
+    <!-- Obsolete -->
+<!--    <module>cocoon-sitemaptags2daisy-plugin</module> -->
   </modules>
 
   <scm>
@@ -49,4 +50,22 @@
     <url>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2/cocoon-tools-modules</url>
   </scm>
 
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>cocoon-sitemaptags2daisy-plugin/target/**</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

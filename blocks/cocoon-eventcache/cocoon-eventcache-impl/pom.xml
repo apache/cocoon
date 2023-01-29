@@ -26,26 +26,26 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-blocks-modules</artifactId>
-    <version>6-SNAPSHOT</version>
+    <version>7-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>cocoon-eventcache-impl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Eventcache Block Implementation</name>
-  <url>http://cocoon.apache.org/${docs.m.eventcache.relPath}</url>      
-  
+  <url>http://cocoon.apache.org/${docs.m.eventcache.relPath}</url>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.eventcache.relPath}</url>
     </site>
-  </distributionManagement>  
-  
+  </distributionManagement>
+
   <properties>
-    <docs.name>Cocoon Eventcache</docs.name>    
+    <docs.name>Cocoon Eventcache</docs.name>
     <docs.version>1.0</docs.version>
-  </properties>      
+  </properties>
 
   <dependencies>
     <dependency>
@@ -62,7 +62,7 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -78,7 +78,7 @@
             </configuration>
           </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
-  </profiles>  
+  </profiles>
 </project>

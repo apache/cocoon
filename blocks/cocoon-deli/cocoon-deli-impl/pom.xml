@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-blocks-modules</artifactId>
-    <version>6-SNAPSHOT</version>
+    <version>7-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -35,7 +35,7 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Deli Block Implementation</name>
-  
+
   <repositories>
     <!-- Repository for the deli -->
     <repository>
@@ -43,19 +43,19 @@
       <name>Apache Maven 1 Repository</name>
       <url>http://people.apache.org/repo/m1-snapshot-repository</url>
       <layout>legacy</layout>
-    </repository>  
-  </repositories>    
+    </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
+
     </dependency>
     <dependency>
       <groupId>net.sourceforge.jena</groupId>
       <artifactId>jena</artifactId>
-      
+
       <exclusions>
         <exclusion>
           <groupId>avalon-framework</groupId>
@@ -70,14 +70,14 @@
     <dependency>
       <groupId>deli</groupId>
       <artifactId>deli</artifactId>
-      
+
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      
+
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
 </project>

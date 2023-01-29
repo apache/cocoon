@@ -24,14 +24,14 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <version>7-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>cocoon-captcha-impl</artifactId>
   <version>1.1.0-SNAPSHOT</version>
   <name>Cocoon Captcha Block Implementation</name>
-  <url>http://cocoon.apache.org/${docs.m.captcha.relPath}</url>    
+  <url>http://cocoon.apache.org/${docs.m.captcha.relPath}</url>
   <packaging>jar</packaging>
 
   <distributionManagement>
@@ -39,20 +39,20 @@
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.captcha.relPath}</url>
     </site>
-  </distributionManagement>  
-  
+  </distributionManagement>
+
   <properties>
-    <docs.name>Cocoon Captcha</docs.name>    
+    <docs.name>Cocoon Captcha</docs.name>
     <docs.version>${docs.m.captcha.version}</docs.version>
   </properties>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -61,14 +61,14 @@
           <plugin>
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>        
+            <configuration>
               <navDocId>1230</navDocId>
-              <collection>cdocs-captcha</collection>          
+              <collection>cdocs-captcha</collection>
               <skipFirstNavigationDocumentLevel>true</skipFirstNavigationDocumentLevel>
             </configuration>
-          </plugin>  
+          </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
   </profiles>
 </project>

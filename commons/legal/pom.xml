@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>9</version>
+    <version>10-SNAPSHOT</version>
     <relativePath/>
   </parent>
   <artifactId>cocoon-licenses</artifactId>
@@ -36,4 +36,23 @@
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/commons/legal</connection>
   </scm>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>src/main/resources/**</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

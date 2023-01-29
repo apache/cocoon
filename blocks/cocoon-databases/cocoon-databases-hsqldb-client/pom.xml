@@ -22,34 +22,34 @@
 
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
-  
+
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <version>7-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon-databases-hsqldb-client</artifactId>
   <version>1.1.0-SNAPSHOT</version>
   <name>Cocoon Hsqldb Client Implementation</name>
-  <url>http://cocoon.apache.org/${docs.m.hsqldb-client.relPath}</url>  
+  <url>http://cocoon.apache.org/${docs.m.hsqldb-client.relPath}</url>
   <description>
     JDBC access of a Hsql database.
   </description>
 
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.hsqldb-client.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.hsqldb-client.relPath}</url>
     </site>
-  </distributionManagement>  
-  
+  </distributionManagement>
+
   <reporting>
     <plugins>
       <plugin>
@@ -68,7 +68,7 @@
         </reportSets>
       </plugin>
     </plugins>
-  </reporting>    
+  </reporting>
 
   <dependencies>
     <dependency>
@@ -80,7 +80,7 @@
       <artifactId>hsqldb</artifactId>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -89,12 +89,12 @@
           <plugin>
             <groupId>org.daisycms</groupId>
             <artifactId>daisy-maven-plugin</artifactId>
-            <configuration>        
+            <configuration>
               <createSiteXmlOnly>true</createSiteXmlOnly>
             </configuration>
-          </plugin>  
+          </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
   </profiles>
 </project>
