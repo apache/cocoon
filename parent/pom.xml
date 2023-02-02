@@ -3189,7 +3189,7 @@
   <properties>
     <targetJdk>1.6</targetJdk>
     <maven.version>2.0.11</maven.version>
-    <spring.version>4.3.16.RELEASE</spring.version>
+    <spring.version>4.3.30.RELEASE</spring.version>
 
     <!-- General doc properties -->
     <docs.deploymentBaseUrl>file://${basedir}/../../../site/site</docs.deploymentBaseUrl>
