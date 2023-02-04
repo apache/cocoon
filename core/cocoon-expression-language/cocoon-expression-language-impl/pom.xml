@@ -59,12 +59,10 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-util</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>

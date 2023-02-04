@@ -74,12 +74,10 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-impl</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -88,22 +86,18 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-pipeline-impl</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-thread-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <!-- Excalibur -->
     <dependency>

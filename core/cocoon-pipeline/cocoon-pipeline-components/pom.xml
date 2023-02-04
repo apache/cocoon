@@ -62,17 +62,14 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-pipeline-impl</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-util</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -83,14 +80,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-pipeline-impl</artifactId>
-      <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-impl</artifactId>
-      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
