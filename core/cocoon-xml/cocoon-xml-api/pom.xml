@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-xml-api</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1-SNAPSHOT</version>
   <name>Cocoon XML API</name>
   <description>
     DOMParser and SAXParser interface.
@@ -40,9 +40,9 @@
   <url>http://cocoon.apache.org/${docs.m.xml-api.relPath}</url>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-xml-api/cocoon-xml-api-1.1.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-xml-api/cocoon-xml-api-1.1.0</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-xml-api/cocoon-xml-api-1.1.0</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-xml/cocoon-xml-api</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-xml/cocoon-xml-api</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-xml/cocoon-xml-api</url>
   </scm>
 
   <properties>
