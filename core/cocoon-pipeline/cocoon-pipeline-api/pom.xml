@@ -24,7 +24,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-pipeline-api</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Cocoon Pipeline API</name>
   <description>
@@ -32,19 +32,19 @@
     and basic XML interfaces, the environment abstraction, caching interfaces
     and needed exceptions.
   </description>
-  <url>http://cocoon.apache.org/${docs.m.pipeline-api.relPath}</url>  
-  
+  <url>http://cocoon.apache.org/${docs.m.pipeline-api.relPath}</url>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.pipeline-api.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.pipeline-api.relPath}</url>
     </site>
-  </distributionManagement>       
+  </distributionManagement>
 
   <dependencies>
     <!-- Excalibur -->
