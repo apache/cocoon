@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- @version $Id$ -->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:configurator="http://cocoon.apache.org/schema/configurator"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+                           http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
+  <bean name="org.apache.cocoon.template.script.InstructionFactory"
+    class="org.apache.cocoon.template.script.DefaultInstructionFactory" init-method="initialize">
+    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver" />
+  </bean>
+
+  <bean name="org.apache.cocoon.template.script.ScriptManager"
+    class="org.apache.cocoon.template.script.DefaultScriptManager">
+    <property name="store" ref="org.apache.excalibur.store.Store/TransientStore" />
+    <property name="instructionFactory" ref="org.apache.cocoon.template.script.InstructionFactory" />
+    <property name="stringTemplateParser" ref="org.apache.cocoon.el.parsing.StringTemplateParser/legacy" />
+    <property name="saxParser" ref="org.apache.cocoon.core.xml.SAXParser" />
+    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver" />
+  </bean>
+
+  <bean name="org.apache.cocoon.generation.Generator/jx" class="org.apache.cocoon.template.JXTemplateGenerator"
+    scope="prototype">
+    <property name="saxParser" ref="org.apache.cocoon.core.xml.SAXParser" />
+    <property name="scriptManager" ref="org.apache.cocoon.template.script.ScriptManager" />
+    <property name="objectModel" ref="org.apache.cocoon.el.objectmodel.ObjectModel" />
+  </bean>
+
+  <bean name="org.apache.cocoon.transformation.Transformer/jx" class="org.apache.cocoon.template.JXTemplateTransformer"
+    scope="prototype">
+    <property name="templateConsumer">
+      <bean class="org.apache.cocoon.template.TemplateConsumer" scope="prototype" init-method="initialize">
+        <property name="generator" ref="org.apache.cocoon.generation.Generator/jx" />
+        <property name="instructionFactory" ref="org.apache.cocoon.template.script.InstructionFactory" />
+        <property name="stringTemplateParser" ref="org.apache.cocoon.el.parsing.StringTemplateParser/legacy" />
+      </bean>
+    </property>
+  </bean>
+</beans>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!--+
+    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+    |
+    | @version $Id$
+    +-->
+<document>
+  <body>
+    <release version="1.2.0" date="2008-??-??" description="unreleased">
+      <action dev="lgawron" type="fix">
+        &lt;jx:out xmlize=&quot;true&quot;/&gt; problem: val.toString().getBytes() effected in xml parsing errors
+        (uses default platform encoding while parser expects utf-8).
+        Introduction of &lt;jx:out xmlize=&quot;true&quot; encoding=&quot;...&quot;/&gt; should be considered.
+      </action>
+      <action dev="gkossakowski" type="add" issue="COCOON-2211" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+        Add support for jx:element - the instructions that allow dynamic element creation.
+      </action>
+      <action dev="gkossakowski" type="add" issue="COCOON-2212" due-to="Kamal Bhatt" due-to-email="bhatt@tt.com.au">
+        Add check for name correctness in jx:attribute.
+      </action>
+    </release>
+    <release version="1.0.0-RC1" date="2007-??-??" description="unreleased">
+
+    </release>
+    <release version="1.0.0-M3" date="2007-03-02" description="released">
+      <action dev="vgritsenko" type="fix">
+        Fix exception handling in script manager. Do not wrap processing exception into SAXException.
+      </action>
+      <action dev="joerg" type="fix" issue="COCOON-1866" due-to="Ellis Pritchard" due-to-email="ellis@nukinetics.com">
+        Fix an ArrrayIndexOutOfBoundsException with jx:comment.
+      </action>
+      <action dev="lgawron" type="add">
+        New syntax for jx:attribute tag: apart from &lt;jx:atttribute name="text" value="abc"/&gt; one can do:
+        &lt;jx:atttribute name="text"&gt;abc&lt;/jx:attribute&gt; This is most useful for nesting jx:* tags:
+        &lt;jx:attribute name="value"&gt;&lt;jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="pl_PL"/&gt;&lt;/jx:attribute&gt;
+      </action>
+      <action dev="lgawron" type="add">
+        JXTG: Pluggable expression parser. New expression syntax: ${expr}, #{expr} -&gt; {jexl:expr}, {jxpath:expr}.
+        This is a target syntax for CTemplate.
+      </action>
+      <action dev="lgawron" type="add">
+        Support for following use cases: &lt;jx:out value=&quot;${xmlString}&quot; xmlize=&quot;true&quot; strip-root=&quot;true&quot;/&gt;
+        and &lt;jx:out value=&quot;${domDocument}&quot; strip-root=&quot;true&quot;/&gt;
+      </action>
+      <action dev="dfagerstrom" type="fix">
+        Fix a bug in <code>&lt;jx:set&gt;</code> that caused considerable performance problems.
+      </action>
+      <action dev="lgawron" type="update">
+        JXTemplateGenerator's ScriptManager uses transient store to cache parsed templates.
+      </action>
+    </release>
+    <release version="1.0.0-M2" date="2006-12-19" description="released"/>
+    <release version="1.0.0-M1" date="2006-08-03" description="released">
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>
+    </release>
+  </body>
+</document>
+
