@@ -21,10 +21,10 @@
     | @version $Id$
     +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
-  <modelVersion>4.0.0</modelVersion>  
+
+  <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
-    
+
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
@@ -37,20 +37,26 @@
   <description>
      Several components implementing of the Excalibur Store interface.
   </description>
-  <url>http://cocoon.apache.org/${docs.m.store-impl.relPath}</url>    
-  
+  <url>http://cocoon.apache.org/${docs.m.store-impl.relPath}</url>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-store/cocoon-store-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-store/cocoon-store-impl</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-store/cocoon-store-impl</url>
+  </scm>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.store-impl.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.store-impl.relPath}</url>
     </site>
-  </distributionManagement>  
-    
+  </distributionManagement>
+
   <dependencies>
     <!--  Cocoon  -->
     <dependency>

@@ -34,7 +34,13 @@
   <version>1.0.0-M2-SNAPSHOT</version>
   <name>Cocoon Blocks Framework Implementation</name>
   <description>${project.name}</description>
-  
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-blocks-fw/cocoon-blocks-fw-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-blocks-fw/cocoon-blocks-fw-impl</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-blocks-fw/cocoon-blocks-fw-impl</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -50,7 +56,7 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <resources>
       <resource>

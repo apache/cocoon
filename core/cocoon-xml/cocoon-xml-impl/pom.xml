@@ -37,6 +37,12 @@
   </description>
   <url>http://cocoon.apache.org/${docs.m.xml-impl.relPath}</url>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-xml/cocoon-xml-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-xml/cocoon-xml-impl</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-xml/cocoon-xml-impl</url>
+  </scm>
+
   <properties>
     <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.xml-impl.version}</docs.version>

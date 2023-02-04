@@ -32,21 +32,27 @@
     and readers that are needed in most Cocoon webapps as well as some basic
     sources and the XPointer and XSLT components.
   </description>
-  
-  <url>http://cocoon.apache.org/${docs.m.pipeline-components.relPath}</url>  
-  
+
+  <url>http://cocoon.apache.org/${docs.m.pipeline-components.relPath}</url>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.pipeline-components.version}</docs.version>
-  </properties>    
-  
+  </properties>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-components</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-components</developerConnection>
+    <url>https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-components</url>
+  </scm>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.pipeline-components.relPath}</url>
     </site>
-  </distributionManagement>   
-  
+  </distributionManagement>
+
   <dependencies>
     <!-- Cocoon -->
     <dependency>

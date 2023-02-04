@@ -36,6 +36,12 @@
     Modules contains Avalon-Spring bridge and base classes for unit testing.
   </description>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-container</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-container</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-container</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.avalon.framework</groupId>

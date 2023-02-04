@@ -35,20 +35,26 @@
   <description>
     Various utilities classes.
   </description>
-  <url>http://cocoon.apache.org/${docs.m.xml-util.relPath}</url>    
-  
+  <url>http://cocoon.apache.org/${docs.m.xml-util.relPath}</url>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-xml/cocoon-xml-util</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-xml/cocoon-xml-util</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-xml/cocoon-xml-util</url>
+  </scm>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.xml-util.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.xml-util.relPath}</url>
     </site>
-  </distributionManagement>    
-  
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>xml-apis</groupId>

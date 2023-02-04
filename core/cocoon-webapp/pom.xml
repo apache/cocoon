@@ -35,6 +35,12 @@
   <packaging>war</packaging>
   <name>Cocoon Webapp</name>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-webapp</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-webapp</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-webapp</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>

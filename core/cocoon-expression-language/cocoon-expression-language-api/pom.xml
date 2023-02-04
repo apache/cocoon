@@ -39,10 +39,16 @@
   </description>
   <url>http://cocoon.apache.org/${docs.m.expression-language-api.relPath}</url>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-expression-language/cocoon-expression-language-api</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-expression-language/cocoon-expression-language-api</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-expression-language/cocoon-expression-language-api</url>
+  </scm>
+
   <properties>
     <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.expression-language-api.version}</docs.version>
-  </properties>  
+  </properties>
 
   <distributionManagement>
     <site>

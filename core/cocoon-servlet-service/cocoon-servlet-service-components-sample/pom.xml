@@ -68,8 +68,6 @@
               <name>org.apache.cocoon.log4j.loglevel</name>
               <value>ERROR</value>
             </systemProperty>
-          </systemProperties>
-          <systemProperties>
             <systemProperty>
               <name>org.apache.cocoon.mode</name>
               <value>dev</value>

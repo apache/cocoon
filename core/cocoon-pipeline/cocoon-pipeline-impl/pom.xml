@@ -37,7 +37,13 @@
     write sitemap components.
   </description>
   <url>http://cocoon.apache.org/${docs.m.pipeline-impl.relPath}</url>
-  
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-impl</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-impl</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>
@@ -52,20 +58,20 @@
         </executions>
       </plugin>
     </plugins>
-  </build>  
-  
+  </build>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.pipeline-impl.version}</docs.version>
-  </properties>    
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.pipeline-impl.relPath}</url>
     </site>
-  </distributionManagement>     
-  
+  </distributionManagement>
+
   <dependencies>
     <!-- Cocoon -->
     <dependency>
@@ -124,15 +130,15 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>

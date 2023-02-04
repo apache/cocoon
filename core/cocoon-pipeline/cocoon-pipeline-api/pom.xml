@@ -46,6 +46,12 @@
     </site>
   </distributionManagement>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-api</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-api</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-api</url>
+  </scm>
+
   <dependencies>
     <!-- Excalibur -->
     <dependency>

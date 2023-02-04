@@ -18,10 +18,10 @@
   under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
+
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
-  
+
   <parent>
     <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
@@ -35,20 +35,26 @@
    Implementation of thread pool and factory components.
    Implementation of a component for execution of background tasks.
   </description>
-  <url>http://cocoon.apache.org/${docs.m.thread-impl.relPath}</url>      
-  
+  <url>http://cocoon.apache.org/${docs.m.thread-impl.relPath}</url>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-thread/cocoon-thread-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-thread/cocoon-thread-impl</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-thread/cocoon-thread-impl</url>
+  </scm>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.thread-impl.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.thread-impl.relPath}</url>
     </site>
-  </distributionManagement>     
-  
+  </distributionManagement>
+
   <dependencies>
     <!--  Cocoon  -->
     <dependency>

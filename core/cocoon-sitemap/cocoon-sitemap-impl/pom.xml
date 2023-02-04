@@ -34,7 +34,13 @@
     and support classes for making it easier to write sitemap components.
   </description>
   <url>http://cocoon.apache.org/${docs.m.sitemap-impl.relPath}</url>
-  
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-sitemap/cocoon-sitemap-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-sitemap/cocoon-sitemap-impl</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-sitemap/cocoon-sitemap-impl</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>
