@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:components>
+    <!-- Pipes definition -->
+    <map:pipes default="caching">
+      <!-- A pipe must be defined configured to use the EventAware cache. -->
+      <map:pipe logger="core.sitemap" name="event-aware"
+        src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
+        <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware" />
+      </map:pipe>
+    </map:pipes>
+  </map:components>
+  <map:flow language="javascript">
+    <map:script src="../event.js" />
+  </map:flow>
+
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="it/**">
+        <map:mount src="it/" uri-prefix="it" />
+      </map:match>
+    </map:pipeline>
+    <!-- Our content must occur in a pipeline configured to use our Event Aware cache -->
+    <map:pipeline type="event-aware">
+      <map:match pattern="action">
+        <map:act type="CacheEvent">
+          <map:parameter name="event" value="{request-param:event}" />
+        </map:act>
+        <map:redirect-to uri="demo?pageKey={request-param:pageKey}&amp;rand={random:x}" />
+      </map:match>
+
+      <map:match pattern="flow">
+        <map:call function="cacheEvent" />
+      </map:match>
+
+      <map:match pattern="*">
+        <map:generate src="it.xml" type="EventCacheSample">
+          <map:parameter name="DELAY_SECS" value="2" />
+          <map:parameter name="DATE" value="{date:date}" />
+          <map:parameter name="KEY" value="{request-param:pageKey}" />
+        </map:generate>
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
+
+</map:sitemap>

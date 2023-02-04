@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Chinese message catalogue file for Cocoon 2 i18n sample
+  -
+  - $Id$
+  -->
+<catalogue xml:lang="zh_TW">
+  <message key="a_key">這個是鍵值.</message>
+  <message key="language">英語</message>
+  <message key="titletext">你好嗎, 國際化!</message>
+  <message key="doclink">詳細事項請參考國際化文書: {0}</message>
+  <message key="first">第一</message>
+  <message key="second">第二</message>
+  <message key="third">第三</message>
+  <message key="forth">第四</message>
+  <message key="article">論文</message>
+  <message key="article_text1">這個是國際化的段落.</message>
+  <message key="article_text2">這個還是國際化的段落, 并且出色.</message>
+  <message key="Hello">您好, {0}! 見到你很高興!</message>
+  <message key="Kot">Tomcat</message>
+  <message key="none">零</message>
+  <message key="one">一</message>
+  <message key="two">二</message>
+  <message key="count_title">這頁 {0} 番接續. 最近接續日時: {1}.</message>
+</catalogue>

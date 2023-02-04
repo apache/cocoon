@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--+
+  | This is the configuration for the standard application manager.
+  |
+  | @version $Id$
+  +-->
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+  <bean name="org.apache.cocoon.generation.Generator/lucene-search" 
+        class="org.apache.cocoon.generation.SearchGenerator"
+        scope="prototype">
+    <!-- The component to use for searching. -->
+    <property name="luceneCocoonSearcher" ref="org.apache.cocoon.components.search.LuceneCocoonSearcher" />
+  </bean>
+
+  <bean name="org.apache.cocoon.transformation.Transformer/luceneIndexer"
+      class="org.apache.cocoon.transformation.LuceneIndexTransformer"
+      scope="prototype">
+    <!-- Class name of the Lucene text analyzer to use. Typically depends on the language of the 
+         text being indexed. See the Lucene documentation for more information. -->
+    <property name="analyzer" value="org.apache.lucene.analysis.standard.StandardAnalyzer" />
+    <!-- Location of directory where index files are stored. This path is relative to the Cocoon 
+         work directory -->
+    <property name="directory" value="index" />
+    <!-- Determines how often segment indices are merged. See the Lucene documentation for more information. -->
+    <property name="mergeFactor" value="20" />
+    <!-- Maximum number of terms to index in a field (as far as the index is concerned, the document
+         will effectively be truncated at this point. The default value, 10k, may not be sufficient for
+         large documents. -->
+    <property name="maxFieldLength" value="10000" />
+    <!-- Determines how often the lucene index will be optimized. -->
+    <property name="optimizeFrequency" value="1" />
+  </bean>
+  
+  <bean name="org.apache.cocoon.components.search.LuceneCocoonIndexer"
+        class="org.apache.cocoon.components.search.SimpleLuceneCocoonIndexerImpl">
+    <!-- XML Indexer implementation. -->
+    <property name="luceneXMLIndexer" ref="org.apache.cocoon.components.search.LuceneXMLIndexer" />
+    <!-- CocoonCrawler implementation. -->
+    <property name="cocoonCrawler" ref="org.apache.cocoon.components.crawler.CocoonCrawler" />
+    <!-- Configuration element of lucene's Analyzer class. Its default class is
+         'org.apache.lucene.analysis.standard.StandardAnalyzer' -->
+    <!-- property name="analyzer" ref="org.apache.lucene.analysis.standard.StandardAnalyzer" /-->
+    <!-- Configuration element of lucene's merge factor. its default value is '10'. -->
+    <property name="mergeFactor" value="10" />
+  </bean>
+
+  <bean name="org.apache.cocoon.components.search.LuceneCocoonSearcher"
+        class="org.apache.cocoon.components.search.SimpleLuceneCocoonSearcherImpl">
+    <!-- Configuration element of lucene's Analyzer class.Its default class is
+         'org.apache.lucene.analysis.standard.StandardAnalyzer' -->
+    <!-- property name="analyzer" ref="org.apache.lucene.analysis.standard.StandardAnalyzer" /-->
+    <!-- Configuration element default value of lucene's default search field. Its value is 'body'. -->
+    <property name="defaultSearchFieldDefault" value="body" />
+    <!-- Configuration element default value of default-query. It's default value is 'null'. -->
+    <!-- property name="defaultQueryDefault" value="" / -->
+    <!-- Configuration element name of lucene's default filesystem default directory. Its 
+         default value is 'null'. -->
+    <property name="defaultDirectory" value="." />
+    <!-- Configuration element name of query parser class name. Configuration element default 
+         value of queryparser-classname.
+         Its value is 'org.apache.lucene.queryParser.QueryParser'. -->
+    <property name="defaultQueryparser" value="org.apache.lucene.queryParser.QueryParser" />
+  </bean>
+
+  <bean name="org.apache.cocoon.components.search.LuceneXMLIndexer"
+        class="org.apache.cocoon.components.search.SimpleLuceneXMLIndexerImpl">
+    <!-- SAXParser implementation. -->
+    <property name="parser" ref="org.apache.cocoon.core.xml.SAXParser" />
+    <!-- Optional config element name specifying query-string appendend for requesting links of an URL. -->
+    <property name="contentViewQuery" value="cocoon-view=content" />
+    <!-- Optional config element name specifying the tags to be added as Stored, Untokenised, Unindexed Fields. -->
+    <!-- property name="storeFields">
+      <set>
+      <value>title</value>
+      <value>summary</value>
+      </set>
+      </property-->
+  </bean>
+
+  <bean name="org.apache.cocoon.components.crawler.CocoonCrawler"
+        class="org.apache.cocoon.samples.LuceneCocoonCrawler">
+    <!-- Optional list of properties -->
+    <!--
+      <property name="include">
+      <list>
+      <value></value>
+      </list>
+      </property>
+      <property name="exclude">
+      <list>
+      <value></value>
+      </list>
+      </property>
+      <property name="linkContentType" value="" />
+      <property name="linkViewQuery" value="" />
+      <property name"userAgent" value="" />
+      <property name="accept" value="" />
+    -->
+  </bean>
+
+  <!-- Sample util -->
+  <bean name="org.apache.cocoon.samples.LuceneUtil"
+        class="org.apache.cocoon.samples.LuceneUtil">
+    <property name="luceneCocoonIndexer" ref="org.apache.cocoon.components.search.LuceneCocoonIndexer" />
+  </bean>
+
+</beans>

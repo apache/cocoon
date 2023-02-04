@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- @version $Id$ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+  <!--+
+      | HSQLDB Server for samples:
+      |
+      |  port   : number      port where the server is listening
+      |  silent : true/false  display all queries
+      |  trace  : true/false  display JDBC trace messages
+      |  databases : Properties configuring the databases, the key is the name of the
+      |              database and the value is the path to the database. Context protocol
+      |              can be used.
+      +-->
+  <bean name="org.apache.cocoon.components.hsqldb.Server"
+        class="org.apache.cocoon.components.hsqldb.ServerImpl"
+        scope="singleton" init-method="init" destroy-method="destroy">
+    <property name="servletContext" ref="javax.servlet.ServletContext"/>
+    <property name="runnableManager" ref="org.apache.cocoon.thread.RunnableManager"/>
+    <property name="port" value="${org.apache.cocoon.hsqldb.server.port}"/>
+    <property name="silent" value="true"/>
+    <property name="trace" value="false"/>
+    <property name="threadPoolName" value="daemon"/>
+    <property name="databases">
+      <value>
+        cocoondb=${org.apache.cocoon.hsqldb.server.db.path}
+      </value>
+    </property>
+  </bean>
+</beans>

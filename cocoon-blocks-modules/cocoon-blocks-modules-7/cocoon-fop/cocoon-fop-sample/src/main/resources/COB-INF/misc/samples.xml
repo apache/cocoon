@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- CVS $Id$ -->
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="FOP Block Samples">
+
+    <group name="Back">
+      <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+      <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+      <note>
+        FOP block requires Batik block to be present for generating PDF with embedded images.
+      </note>   
+      <note>
+        This is the "old" FOP block which uses FOP 0.2x - see the "FOP NG" block to use 
+        the current version of FOP.
+      </note>
+      
+    </group>
+
+    <group name="Simple FOP examples">
+        <sample name="Hello, PDF world!" href="hello.pdf">
+            The well-known hello.xml document rendered as PDF.
+        </sample>
+        <sample name="Hello, PS world!" href="hello.ps">
+            The well-known hello.xml document rendered as PS.
+        </sample>
+        <sample name="minimal XSL-FO document" href="misc/minimal.fo.xml">
+            Source document used by FOP in the next example.
+        </sample>
+        <sample name="minimal PDF output" href="misc/minimal.pdf">
+            PDF version of the above document
+        </sample>
+        <sample name="SVG test XSL-FO document" href="misc/svgtest.fo.xml">
+            Source document for testing embedded SVG in FOP. Should enforce
+            possible problems with our FOP and our Batik if they are incompatible.
+        </sample>
+        <sample name="SVG test PDF output" href="misc/svgtest.pdf">
+            PDF version of the above document.
+        </sample>
+    </group>
+
+    <!--group name="XSP + FOP caching test">
+        <sample name="PDF with pageKey=ONE, 250 pages" href="cache-test-250.pdf?pageKey=ONE&amp;other=xyz&amp;validity=60">
+            Needs the serverpages generator to generate input, see generated document or sitemap for info.
+        </sample>
+        <sample name="PDF with pageKey=TWO, 125 pages" href="cache-test-125.pdf?pageKey=TWO&amp;validity=45">
+            Uses a different pageKey value to check that both are cached separately.
+        </sample>
+    </group-->
+
+    <group name="Resources">
+        <sample name="FOP web site" href="http://xml.apache.org/fop">
+            FOP reference information
+        </sample>
+    </group>
+
+</samples>

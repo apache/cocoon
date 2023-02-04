@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<root xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+	<jx:set var="a" value="dd"/>
+	<jx:set var="elem" value="DynamicElement"/>
+	<jx:set var="namespace" value="http://cocoon.apache.org/kamalbhatt"/>
+	<jx:set var="prefix" value="kb"/>
+    <jx:element name="Empty"/>
+    <jx:element name="ElementWithValue">value</jx:element>
+	<jx:element name="OneFixedValueChildNode"><ChildNode>Test</ChildNode></jx:element>
+	<jx:element name="WithChildGeneratedNode"><ChildNode><jx:out value="${a}"/></ChildNode></jx:element>
+	<jx:element name="${elem}"><jx:formatDate value="${date}" pattern="dd MMMM yyyy" locale="de_DE"/></jx:element>
+    <jx:element name="WithAttribute"><jx:attribute name="attribute" value="attr"/></jx:element>	
+	<jx:element name="AttributeAndChildNode">
+	  <jx:attribute name="attribute" value="attr"/>
+	  <ChildNode>A</ChildNode>
+	</jx:element>
+	<jx:element name="MixedContent"><jx:attribute name="attribute" value="attr"/>A<B/></jx:element>
+	<jx:element name="MixedContent2">A<jx:attribute name="attribute" value="attr"/><B/></jx:element>
+	<jx:element name="EmptyElementWithNamespace" uri="http://cocoon.apache.org/kamal"></jx:element>
+	<jx:element name="EmptyElementWithGeneratedNamespace" uri="${namespace}"></jx:element>
+	<jx:element name="GeneratedElementWithGeneratedChild" uri="${namespace}">
+	  <jx:element name="GeneratedChild" uri="http://cocoon.apache.org/kamal">Test</jx:element>
+	</jx:element>
+	<jx:element name="ElementWithNamespaceAndHardCodedPrefix" uri="${namespace}" prefix="prefix"/>
+	<jx:element name="ElementWithNamespaceAndGeneratedPrefix" uri="${namespace}" prefix="${prefix}"/> 
+</root>

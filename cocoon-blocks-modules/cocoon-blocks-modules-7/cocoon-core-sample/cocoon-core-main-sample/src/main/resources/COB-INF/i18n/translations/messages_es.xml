@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Spanish message catalogue file for Cocoon 2 i18n sample
+  -
+  - $Id$
+  -->
+<catalogue xml:lang="es">
+  <message key="count_title">Esta página ha sido visitada {0} veces. Último acceso: {1}.</message>
+  <message key="a_key">Esto es un valor clave.</message>
+  <message key="language">Español</message>
+  <message key="titletext">¡¡Hola!, internacionalización!</message>
+  <message key="doclink">Visite la documentación i18n para más información: {0}</message>
+  <message key="first">Primero</message>
+  <message key="second">Segundo</message>
+  <message key="third">Tercero</message>
+  <message key="forth">En adelante</message>
+  <message key="article">Artículo</message>
+  <message key="article_text1">Esto es un párrafo i18n.</message>
+  <message key="article_text2">Esto es otro párrafo i18n y también es 'cool'.</message>
+  <message key="Hello">¡¡Hola!, {0}! ¡Encantado de verte!</message>
+  <message key="Kot">Tomcat</message>
+  <message key="none">Ninguno</message>
+  <message key="one">uno</message>
+  <message key="two">dos</message>
+</catalogue>

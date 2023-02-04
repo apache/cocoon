@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- $Id$ -->
+<map:sitemap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://apache.org/cocoon/sitemap/1.0 http://cocoon.apache.org/schema/sitemap/cocoon-sitemap-1.0.xsd"
+  xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:flow language="it-controller"/>
+
+  <map:pipelines>
+    <!-- ~~~~~~~~~~~~~~~~ map:read ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="">
+        <map:read src="overview.html"/>
+      </map:match>
+      <map:match pattern="read/javascript-resource-explicit">
+        <map:read src="read/javascript-resource" mime-type="text/javascript"/>
+      </map:match>
+      <map:match pattern="read/javascript-resource-implicit">
+        <map:read src="read/javascript-resource.js"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ sax pipelines ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="sax-pipeline/simple">
+        <map:generate src="sax-pipeline/simple.xml"/>
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="1"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+      <map:match pattern="sax-pipeline/simple-xhtml">
+        <map:generate src="sax-pipeline/simple.xml"/>
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="2"/>
+        </map:transform>
+        <map:serialize type="xhtml"/>
+      </map:match>
+      <map:match pattern="sax-pipeline/simple-xml">
+        <map:generate src="sax-pipeline/simple.xml"/>
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="3"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:match pattern="sax-pipeline/unauthorized">
+        <map:generate src="sax-pipeline/unauthorized.xml"/>
+        <map:serialize type="xhtml" status-code="401"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ caching of pipelines ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="caching-pipeline/on">
+        <map:generate type="date"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline type="noncaching">
+      <map:match pattern="caching-pipeline/off">
+        <map:generate type="date"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ servlet service framework ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="ssf/local">
+        <map:generate src="servlet:/sax-pipeline/simple-xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ expression language ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="expression-language/jexl">
+        <map:generate src="sax-pipeline/{request-param:fileName}.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:match pattern="expression-language/jxpath">
+        <map:generate src="sax-pipeline/{request-param:fileName}.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:match pattern="expression-language/map/*">
+        <map:generate src="sax-pipeline/{1}.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:match pattern="**">
+        <map:match pattern="expression-language/*/*">
+          <map:match pattern="expression-language/nested/*">
+            <map:generate src="sax-pipeline/{../2}.xml"/>
+            <map:serialize type="xml"/>
+          </map:match>
+        </map:match>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ aggregation ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="aggregation/include-transformer">
+        <map:generate src="aggregation/include.xml"/>
+        <map:transform type="include"/>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:match pattern="aggregation/sub-request">
+        <map:generate src="aggregation/sub.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ aggregation ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="xslt/main">
+        <map:generate src="sax-pipeline/simple.xml"/>
+        <map:transform src="xslt/main.xslt"/>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:match pattern="xslt/sub-servlet.xslt">
+        <map:generate src="xslt/sub-servlet.xslt"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ matcher: parameter passing ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="parameter-passing/failing">
+        <map:match type="parameter-passing" pattern="empty">
+          <map:generate src="sax-pipeline/simple.xml"/>
+          <map:serialize/>
+        </map:match>
+      </map:match>
+      <map:match pattern="parameter-passing/working">
+        <map:match type="parameter-passing">
+          <map:generate src="sax-pipeline/simple.xml"/>
+          <map:serialize type="xml"/>
+        </map:match>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ object model ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="object-model/request-parameters">
+        <map:generate type="request-parameters"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ controller ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="controller/invoke">
+        <map:call function="any-function"/>
+      </map:match>
+      <map:match pattern="controller/continue">
+        <map:call continuation="any-continuation"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ error handling ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="error-handling/custom-error">
+        <map:act type="error-throwing"/>
+        <map:generate src="sax-pipeline/simple.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:match pattern="error-handling/another-custom-error">
+        <map:act type="another-error-throwing"/>
+        <map:generate src="sax-pipeline/simple.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+    <!-- doesn't work: when this per pipeline error handler is active, it catches ALL error and
+         the per-sitemap error handler will never be reached. -->
+    <map:pipeline>
+      <map:match pattern="error-handling/custom-error-per-pipeline-error-handling">
+        <map:act type="error-throwing"/>
+        <map:generate src="sax-pipeline/simple.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+      <map:handle-errors>
+        <map:generate src="error-handling/501.xml"/>
+        <map:serialize type="xhtml" status-code="501"/>
+      </map:handle-errors>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ redirect ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="redirect/www.orf.at">
+        <map:redirect-to uri="http://www.orf.at"/>
+      </map:match>
+      <!-- Redirecting to a servlet service doesn't work -->
+      <!--map:match pattern="redirect/sax-pipeline/simple-xml">
+        <map:redirect-to uri="servlet:/sax-pipeline/simple-xml"/>
+      </map:match-->
+    </map:pipeline>
+
+    <map:handle-errors>
+      <map:select type="custom-exception">
+        <map:when test="not-found">
+          <map:generate src="error-handling/404.xml"/>
+          <map:serialize type="xhtml" status-code="404"/>
+        </map:when>
+        <map:when test="custom-exception">
+          <map:generate src="error-handling/500.xml"/>
+          <map:serialize type="xhtml" status-code="500"/>
+        </map:when>
+        <map:when test="another-custom-exception">
+          <map:generate type="exception" />
+          <map:serialize type="xml" status-code="506"/>
+        </map:when>
+        <map:otherwise>
+          <map:generate src="error-handling/503.xml"/>
+          <map:serialize type="xhtml" status-code="503"/>
+        </map:otherwise>
+      </map:select>
+    </map:handle-errors>
+
+  </map:pipelines>
+
+</map:sitemap>

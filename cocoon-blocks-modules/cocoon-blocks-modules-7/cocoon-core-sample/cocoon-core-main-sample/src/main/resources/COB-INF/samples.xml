@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Main samples page
+  -
+  - $Id$
+  -->
+<samples name="Cocoon Core Samples">
+
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
+
+  <group name="Cocoon Pipelines">
+    <sample name="Hello World!" href="hello-world/">
+      Generating various types of content
+      from XML documents and data sources.
+    </sample>
+  </group>
+
+  <group name="Cocoon Sitemap">
+    <sample name="Sources" href="sources/">
+      This example shows the usage of sources in the sitemap.
+    </sample>
+    <sample name="Expressions" href="modules/">
+      This example shows the usage of input modules in the sitemap attribute
+      expressions.
+    </sample>
+    <sample name="Content Syndication &amp; Aggregation" href="aggregation/">
+      Separation of content and style allows not only to serve your content
+      in different ways, but also to syndicate, aggregate or otherwise include
+      and transform content provided by other web sites.
+    </sample>
+    <sample name="Error Handling" href="errorhandling/">
+      An example page producing exceptions and handling them. Demonstrates the
+      error handlers hierarchy and the exception selectors.
+    </sample>
+  </group>
+
+  <group name="Cocoon Flow">
+    <note>
+      These are basic examples of Flow usage, but it is also used in the samples
+      of several other blocks, see the forms and tour blocks for more advanced examples.
+    </note>
+    <sample name="Calculator" href="flow/jxcalc/">
+      A simple web-based calculator that uses javascript on the server side
+      to describe the web application flow between screens in a coherent
+      unique location and continuations to maintain state between requests.
+    </sample>
+    <sample name="User Preferences" href="flow/prefs/">
+      A common portion of an application which requires users to be
+      registered. This example shows how to use java objects from the
+      javascript flow as it is best practice to put business logic into
+      strongly-typed java objects and use javascript to describe only the
+      page flow.
+    </sample>
+  </group>
+
+  <group name="Internationalization">
+    <sample name="Internationalization (i18n) &amp; Localization (l10n)" href="i18n/">
+      Samples of the powerful Cocoon i18n and l10n Cocoon tools.
+    </sample>
+  </group>
+
+  <group name="XML and XSLT">
+    <sample name="XML Based Sites" href="sites/">
+      A couple of existing web sites have been converted to XML to show you
+      how much easier it is to handle pure-content markup.
+    </sample>
+    <sample name="Presentation Slides" href="slides/">
+      An example of more complex use of XSLT for navigation and content filtering.
+    </sample>
+    <sample name="Catalog Entity Resolver" href="catalog/">
+      XML is handy but also very complex. Cocoon integrates a number of
+      facilities to help you during your journey through XML-land. One of these
+      is the centralized handling of resolving network resources
+      (e.g. DTDs, symbols, character entity sets, images) to local copies
+      through the use of catalogs. Also explains how to use DocBook DTDs.
+    </sample>
+  </group>
+
+  <group name="Development Samples">
+    <sample name="Spring Sample" href="spring/">
+      A simple example of using a per sitemap Spring application context.
+    </sample>
+    <sample name="Class Reloading" href="reloading/">
+      Trivial sample of class reloading.
+    </sample>
+    <sample name="Components" href="components/">
+      Samples of various components included with the Cocoon core,
+      such as Stream Generator, Paginator Transformer, Image Reader.
+    </sample>
+  </group>
+
+  <group name="System Tools And Pages">
+    <sample name="System Tools" href="system/">
+      Display Cocoon status, clear the Cocoon cache, etc.
+    </sample>
+  </group>
+
+</samples>

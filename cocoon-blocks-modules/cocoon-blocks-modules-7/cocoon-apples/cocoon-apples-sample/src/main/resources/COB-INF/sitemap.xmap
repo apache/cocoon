@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<!--+
+    | Apples block samples sitemap
+    |
+    | CVS $Id$
+    +-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Components =================================== -->
+
+  <map:components>
+    <map:transformers default="xslt">
+      <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+        <catalogues default="forms">
+          <catalogue id="other" name="OtherMessages" location="messages" />
+          <catalogue id="forms" name="FormsMessages" location="servlet:forms:/resource/internal/i18n" />
+        </catalogues>
+        <cache-at-startup>true</cache-at-startup>
+      </map:transformer>
+    </map:transformers>
+  </map:components>
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml" />
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Resources =================================== -->
+
+  <map:resources>
+    <map:resource name="serialize-jx-screen">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+      </map:serialize>
+    </map:resource>
+  </map:resources>
+
+  <!-- =========================== Flowscripts =================================== -->
+
+  <map:flow language="apples" />
+
+  <!-- =========================== Pipelines =================================== -->
+
+  <map:pipelines>
+    <map:pipeline>
+
+      <map:match pattern="">
+        <map:generate src="welcome.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="sitemap.xmap">
+        <map:read src="sitemap.xmap" mime-type="text/xml" />
+      </map:match>
+
+      <!-- =========================== Apples =================================== -->
+
+      <map:match pattern="*.continue">
+        <map:call continuation="{1}" />
+      </map:match>
+
+      <map:match pattern="continue.*">
+        <map:call continuation="{1}" />
+      </map:match>
+
+      <!--+
+        |   Binding form sample, reuses pipelines stolen from Cocoon Forms
+        +-->
+
+      <!--map:match pattern="form2xml.flow">
+        <map:call function="org.apache.cocoon.components.flow.apples.samples.BindingWoodyApple">
+        <map:parameter name="form-src" value="block:cocoon-samples-style-default:blocks/forms/forms/form2_model.xml"/>
+        <map:parameter name="binding-src" value="block:cocoon-forms-sample:forms-data/form2_bind_xml.xml"/>
+        <map:parameter name="documentURI" value="block:cocoon-forms-sample:forms-data/form2_data.xml"/>
+        <map:parameter name="form-pipe" value="block:cocoon-forms-sample:forms/form2-display-pipeline"/>
+        <map:parameter name="valid-pipe" value="block:cocoon-forms-sample:forms/form2-success-pipeline"/>
+        </map:call>
+        </map:match-->
+
+
+      <!--+ 
+        |  Calculator sample, uses stolen and modified xsp's from flowscript sample
+        +-->
+
+      <map:match pattern="calc.flow">
+        <map:call function="org.apache.cocoon.components.flow.apples.samples.CalculationApple" />
+      </map:match>
+
+      <map:match pattern="calc/*">
+        <map:generate type="jx" src="servlet:main-sample:/flow/jxcalc/screens/{1}.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-page2html" />
+        </map:serialize>
+        <map:serialize />
+      </map:match>
+
+
+      <!--+ 
+        |  Guess Game sample, borrowed setup from the uses stolen and modified xsp's from flowscript
+        +-->
+
+      <map:match pattern="guess.flow">
+        <map:call function="org.apache.cocoon.components.flow.apples.samples.GuessGameApple" />
+      </map:match>
+
+
+      <!--+ 
+        |  Tower of Hanoi Puzzle sample.
+        +-->
+
+      <map:match pattern="hanoi.flow">
+        <map:call function="org.apache.cocoon.components.flow.apples.samples.HanoiApple" />
+      </map:match>
+
+
+      <!--+ 
+        |  JX screen pipes 
+        +-->
+
+      <map:match pattern="hanoi/hanoi.jx">
+        <map:generate type="jx" src="hanoi/hanoi.jx" />
+        <map:transform src="hanoi/hanoi.xsl" />
+        <map:call resource="serialize-jx-screen">
+          <map:parameter name="screen-src" value="hanoi/hanoi.jx" />
+        </map:call>
+      </map:match>
+
+      <map:match pattern="*/*.jx">
+        <map:generate type="jx" src="{1}/{2}.jx" />
+        <map:call resource="serialize-jx-screen">
+          <map:parameter name="screen-src" value="{1}/{2}.jx" />
+        </map:call>
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

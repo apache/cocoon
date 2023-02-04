@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!--+
+    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+    |
+    | @version $Id$
+    +-->
+<document>
+  <body>
+    <release version="1.0.0-RC2" date="2007-??-??" description="unreleased">
+      <action dev="gkossakowski" type="add" issue="COCOON-2083">
+      	Implemented bridge to allow database connections defined as Spring beans to be used in Avalon components.
+      </action>
+    </release>
+    <release version="1.0.0-M1" date="2007-03-02" description="released">  
+      <action dev="cziegeler" type="add">
+        Make database reader usable with a (Spring managed) data source (instead
+        of an excalibur datasource).
+      </action>
+      <action dev="vgritsenko" type="fix">
+        Read CLOBs using getCharacterStream, delegate character decoding
+        to the database. Revert to old behavior if clob-encoding parameter is present.
+      </action>
+      <action dev="vgritsenko" type="fix" issue="COCOON-1247">
+        Support multiple results in SQLTransformer.
+      </action>
+      <action dev="vgritsenko" type="fix" issue="COCOON-1552">
+        Fix NPE in SQLTransformer in error handling code.
+      </action>
+      <action dev="vgritsenko" type="update">
+        Support CLOBs in SQLTransformer when returned as stored procedure
+        parameters, or as columns in a cursor returned by stored procedure.
+      </action>
+      <action dev="vgritsenko" type="fix">
+        Fix reading of the CLOBs in SQLTransformer.
+      </action>
+      <action dev="cziegeler" type="update">
+        Move XSP logicsheets from the databases block to the xsp block.
+      </action>
+      <action dev="tcurdt" type="add">
+        esql: added support for derby
+      </action>          
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>      
+    </release>
+  </body>
+</document>
+    

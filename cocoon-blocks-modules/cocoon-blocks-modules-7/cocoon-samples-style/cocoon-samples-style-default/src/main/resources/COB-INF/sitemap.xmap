@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Samples Style block sitemap
+  -
+  - $Id$
+  -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:pipelines>
+    <map:pipeline id="services">
+      <!--
+        - These matchers are intended to be called
+        - when making use of servlet services from other blocks
+        -->
+
+      <map:match pattern="service/blocks/*">
+        <map:generate src="service-consumer:"/>
+        <map:transform src="blocks/{1}.xsl"/>
+        <map:transform type="servletLinkRewriter"/>
+        <map:serialize type="html"/>
+      </map:match>
+
+      <map:match pattern="service/common/*">
+        <map:generate src="service-consumer:"/>
+        <map:transform src="common/style/xsl/html/{1}.xsl">
+          <map:parameter name="version" value="{cocoon-properties:version}"/>
+          <map:parameter name="year" value="{cocoon-properties:year}"/>
+        </map:transform>
+        <map:transform type="servletLinkRewriter"/>
+        <map:serialize type="html"/>
+      </map:match>
+
+      <map:match pattern="service/system/*">
+        <map:generate src="service-consumer:"/>
+        <map:transform src="stylesheets/system/{1}.xslt"/>
+        <map:transform type="servletLinkRewriter"/>
+        <map:serialize type="html"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline id="resources">
+      <map:match pattern="**.gif">
+        <map:read src="resources/{1}.gif"/>
+      </map:match>
+      <map:match pattern="**.jpg">
+        <map:read src="resources/{1}.jpg"/>
+      </map:match>
+      <map:match pattern="**.ico">
+        <map:read src="resources/{1}.ico"/>
+      </map:match>
+
+      <map:match pattern="**.css">
+        <map:read type="servletLinkRewriter" src="resources/{1}.css"/>
+      </map:match>
+      <map:match pattern="**.js">
+        <map:read type="servletLinkRewriter" src="resources/{1}.js"/>
+      </map:match>
+      <map:match pattern="**">
+        <map:read type="servletLinkRewriter" src="{1}"/>
+      </map:match>
+    </map:pipeline>
+  </map:pipelines>
+
+</map:sitemap>
