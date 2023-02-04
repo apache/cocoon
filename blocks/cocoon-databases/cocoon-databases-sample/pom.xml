@@ -28,7 +28,7 @@
   <parent>
     <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>7-SNAPSHOT</version>
+    <version>7</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-databases-sample</artifactId>
