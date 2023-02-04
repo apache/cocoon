@@ -28,7 +28,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>cocoon-pipeline-impl</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.1.0</version>
   <packaging>jar</packaging>
   <name>Cocoon Pipeline Implementation</name>
   <description>
@@ -39,9 +39,9 @@
   <url>http://cocoon.apache.org/${docs.m.pipeline-impl.relPath}</url>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-impl</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-impl</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-pipeline/cocoon-pipeline-impl</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-pipeline-impl/cocoon-pipeline-impl-1.1.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-pipeline-impl/cocoon-pipeline-impl-1.1.0</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-pipeline-impl/cocoon-pipeline-impl-1.1.0</url>
   </scm>
 
   <build>
