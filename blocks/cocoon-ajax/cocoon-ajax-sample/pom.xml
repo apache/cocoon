@@ -35,6 +35,12 @@
   <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Ajax Block Sample</name>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-sample</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-sample</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-sample</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>

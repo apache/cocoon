@@ -34,6 +34,12 @@
   <version>1.2.0-SNAPSHOT</version>
   <url>http://cocoon.apache.org/${docs.m.forms.relPath}</url>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-forms/cocoon-forms-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-forms/cocoon-forms-impl</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-forms/cocoon-forms-impl</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>

@@ -33,6 +33,12 @@
   <version>1.0.0-M1-SNAPSHOT</version>
   <name>Cocoon Welcome (Samples)</name>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-welcome</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-welcome</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-welcome</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>

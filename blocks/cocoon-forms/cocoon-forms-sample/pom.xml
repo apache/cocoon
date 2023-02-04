@@ -35,6 +35,12 @@
   <name>Cocoon Forms Block Samples</name>
   <packaging>jar</packaging>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-forms/cocoon-forms-sample</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-forms/cocoon-forms-sample</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-forms/cocoon-forms-sample</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>

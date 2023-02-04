@@ -33,6 +33,12 @@
   <name>Cocoon Ajax Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.ajax.relPath}</url>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-impl</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-impl</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>

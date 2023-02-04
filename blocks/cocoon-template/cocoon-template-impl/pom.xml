@@ -34,6 +34,12 @@
   <url>http://cocoon.apache.org/${docs.m.template.relPath}</url>
   <packaging>jar</packaging>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-template/cocoon-template-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-template/cocoon-template-impl</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-template/cocoon-template-impl</url>
+  </scm>
+
   <distributionManagement>
     <site>
       <id>website</id>

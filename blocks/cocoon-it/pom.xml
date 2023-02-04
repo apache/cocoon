@@ -36,6 +36,12 @@
   </description>
   <url>http://cocoon.apache.org/${docs.m.it.relPath}</url>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-it</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-it</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-it</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
