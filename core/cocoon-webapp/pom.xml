@@ -17,7 +17,6 @@
   specific language governing permissions and limitations
   under the License.
 -->
-
 <!--
   - This is the bare bones Cocoon web application,
   - basis for creation of custom distributions.
@@ -29,7 +28,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
-    <version>6-SNAPSHOT</version>
+    <version>6</version>
   </parent>
   <artifactId>cocoon-webapp</artifactId>
   <version>2.2.1-SNAPSHOT</version>
