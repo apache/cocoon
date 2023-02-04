@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>8</version>
+    <version>10</version>
     <relativePath>../../parent/pom.xml</relativePath>
   </parent>
 
