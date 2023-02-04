@@ -2157,6 +2157,8 @@
       </dependency>
 
       <!-- Cocoon SNAPSHOT dependencies -->
+      <!-- Comment for release. Update versions and uncomment after it. -->
+      <!--
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
@@ -3016,6 +3018,7 @@
         <artifactId>javaflow</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
+      -->
     </dependencies>
   </dependencyManagement>
 
