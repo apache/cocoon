@@ -32,26 +32,26 @@
   <version>1.1.0-SNAPSHOT</version>
   <name>Cocoon Servlet Service Components</name>
   <description>Components for the servlet service framework that depends on pipeline and sitemap APIs.</description>
-  <url>http://cocoon.apache.org/${docs.m.servlet-service-components.relPath}</url>    
-  
+  <url>http://cocoon.apache.org/${docs.m.servlet-service-components.relPath}</url>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.servlet-service-components.version}</docs.version>
     <docs.urlRelativizer>../../../../../</docs.urlRelativizer>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.servlet-service-components.relPath}</url>
     </site>
-  </distributionManagement>  
-  
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-jnet</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
@@ -92,7 +92,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -109,13 +109,13 @@
       </resource>
     </resources>
   </build>
-  
+
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</developerConnection>
-    <url>http://svn.apache.org/viewvc/cocoon/trunk/core/cocoon-servlet-service/cocoon-servlet-service-components/</url>    
-  </scm>     
-  
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/cocoon-servlet-service/cocoon-servlet-service-components</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/cocoon-servlet-service/cocoon-servlet-service-components</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-servlet-service/cocoon-servlet-service-components</url>
+  </scm>
+
   <reporting>
     <plugins>
       <plugin>
@@ -131,7 +131,7 @@
             </reports>
           </reportSet>
         </reportSets>
-      </plugin>    
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
@@ -144,8 +144,8 @@
         </reportSets>
       </plugin>
     </plugins>
-  </reporting> 
-  
+  </reporting>
+
   <profiles>
     <profile>
       <id>daisy</id>
@@ -158,11 +158,11 @@
               <navDocId>1411</navDocId>
               <collection>cdocs-servlet-service-components</collection>
               <skipFirstNavigationDocumentLevel>false</skipFirstNavigationDocumentLevel>
-            </configuration>            
-          </plugin> 
+            </configuration>
+          </plugin>
         </plugins>
-      </build>      
-    </profile>   
-  </profiles>   
-  
+      </build>
+    </profile>
+  </profiles>
+
 </project>
