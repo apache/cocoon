@@ -32,13 +32,13 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-ajax-sample</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Cocoon Ajax Block Sample</name>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-sample</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-sample</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-sample</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-ajax-sample/cocoon-ajax-sample-1.0.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-ajax-sample/cocoon-ajax-sample-1.0.0</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-ajax-sample/cocoon-ajax-sample-1.0.0</url>
   </scm>
 
   <dependencies>
