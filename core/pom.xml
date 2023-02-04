@@ -30,7 +30,7 @@
   </parent>
 
   <artifactId>cocoon-core-modules</artifactId>
-  <version>6-SNAPSHOT</version>
+  <version>6</version>
   <name>Cocoon Core [modules]</name>
   <packaging>pom</packaging>
 
@@ -76,9 +76,9 @@
   </reporting>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-core-modules/cocoon-core-modules-6</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-core-modules/cocoon-core-modules-6</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-core-modules/cocoon-core-modules-6</url>
   </scm>
 
   <!--  Only uncomment this section when doing the release -->
