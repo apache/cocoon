@@ -28,15 +28,15 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cocoon-ajax-impl</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.1.0</version>
   <packaging>jar</packaging>
   <name>Cocoon Ajax Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.ajax.relPath}</url>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-impl</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-impl</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-ajax/cocoon-ajax-impl</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-ajax-impl/cocoon-ajax-impl-1.1.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-ajax-impl/cocoon-ajax-impl-1.1.0</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-ajax-impl/cocoon-ajax-impl-1.1.0</url>
   </scm>
 
   <dependencies>
@@ -82,7 +82,7 @@
             <configuration>
               <tasks>
                 <ant antfile="${basedir}/build.xml" inheritRefs="true">
-                  <target name="unzip-dojo"/>
+                  <target name="unzip-dojo" />
                 </ant>
               </tasks>
             </configuration>
