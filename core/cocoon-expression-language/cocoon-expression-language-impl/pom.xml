@@ -30,7 +30,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-expression-language-impl</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.1.0</version>
   <name>Cocoon Expression Language Implementation.</name>
   <description>
     Implementation of several expressions languages like: JXPath, JEXL, Javascript and implementation of unified Object Model.
@@ -38,9 +38,9 @@
   <url>http://cocoon.apache.org/${docs.m.expression-language-impl.relPath}</url>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-expression-language/cocoon-expression-language-impl</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-expression-language/cocoon-expression-language-impl</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-expression-language/cocoon-expression-language-impl</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-expression-language-impl/cocoon-expression-language-impl-1.1.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-expression-language-impl/cocoon-expression-language-impl-1.1.0</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-expression-language-impl/cocoon-expression-language-impl-1.1.0</url>
   </scm>
 
   <properties>
