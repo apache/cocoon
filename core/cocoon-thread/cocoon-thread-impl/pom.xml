@@ -29,7 +29,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-thread-impl</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.1.0</version>
   <name>Cocoon Thread Implementation</name>
   <description>
    Implementation of thread pool and factory components.
@@ -38,9 +38,9 @@
   <url>http://cocoon.apache.org/${docs.m.thread-impl.relPath}</url>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-thread/cocoon-thread-impl</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-thread/cocoon-thread-impl</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-thread/cocoon-thread-impl</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thread-impl/cocoon-thread-impl-1.1.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thread-impl/cocoon-thread-impl-1.1.0</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-thread-impl/cocoon-thread-impl-1.1.0</url>
   </scm>
 
   <properties>
