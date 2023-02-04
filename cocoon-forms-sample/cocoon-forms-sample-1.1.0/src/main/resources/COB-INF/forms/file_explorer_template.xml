@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="servlet:forms:/resource/internal/generation/jx-macros.xml"/>
+
+  <!-- A macro that displays the toggle icons (plus/minus) for the current treeNode -->
+  <jx:macro name="toggle-icon">
+	  <jx:choose>
+	    <jx:when test="${treeNode.isLeaf()}">
+	      <img src="servlet:forms:/resource/external/forms/img/tree/win/${treeNode.iconType}.gif" border="0"/>
+	    </jx:when>
+	    <jx:otherwise>
+	       <a href="#" onclick="return TreeToggleCollapse('${widget.fullName}', '${treeNode.path}')"><img
+	         src="servlet:forms:/resource/external/forms/img/tree/win/${treeNode.iconType}.gif" border="0"/></a>
+	    </jx:otherwise>
+	  </jx:choose>
+  </jx:macro>
+  
+  <title>File explorer</title>
+  <style type="text/css">
+	 #files { border-collapse: collapse; border-left: dotted black 1px; }
+    #files td { padding: 0.1em; border-bottom: dotted black 1px; }
+    .selected { background: #D0D0D0; }
+  </style>
+  <content>
+    <script language="JavaScript">
+      function TreeAction(id, act, path) {
+        var elt = document.getElementById(id);
+        if (!elt) {
+            alert("Error: cannot find element with id '" + id + "'");
+            return;
+        }
+        var form = cocoon.forms.getForm(elt);
+        var actInput = id + ":action";
+        var pathInput = id + ":path";
+        form[actInput].value = act
+        form[pathInput].value = path;
+        cocoon.forms.submitForm(elt, id);
+        // Reset fields (this form may be reposted later when in Ajax mode)
+        form[actInput].value = "";
+        form[pathInput].value = "";
+        return false;
+      }
+      function TreeToggleCollapse(id, path) {
+        return TreeAction(id, "toggle-collapse", path);
+      }
+      
+      function TreeSelect(id, path) {
+        return TreeAction(id, "select", path);
+      }
+      
+      function TreeToggleSelect(id, path) {
+        return TreeAction(id, "toggle-select", path);
+      }
+      
+    </script>
+    <ft:form-template action="continue" method="POST" ajax="true">
+      <ft:continuation-id />
+      <table>
+        <tr valign="top">
+          <td>
+            <ft:tree id="directories">
+              <div>
+                <ft:tree-nodes>
+                  <div style="margin-left: 15px">
+                    <toggle-icon />
+                    <a class="${treeNode.selectionType}" href="#"
+                      onclick="return TreeSelect('${treeWidget.fullName}', '${treeNode.path}')">
+                      ${treeNode.node.name}
+                    </a>
+                    <ft:tree-children />
+                  </div>
+                </ft:tree-nodes>
+              </div>
+            </ft:tree>
+          </td>
+          <td>
+            <ft:tree id="files">
+              <div>
+                <table>
+                  <ft:tree-nodes>
+                    <tr class="${treeNode.selectionType}">
+                      <td>
+                        <a class="${treeNode.selectionType}" href="#"
+                          onclick="return TreeToggleSelect('${treeWidget.fullName}', '${treeNode.path}')">
+                          ${treeNode.node.name}
+                        </a>
+                      </td>
+                      <td>
+                        <jx:formatDate
+                          value="${java.util.Date(treeNode.node.lastModified)}"
+                          pattern="yyyy-dd-MM hh:mm:ss" />
+                      </td>
+                    </tr>
+                  </ft:tree-nodes>
+                </table>
+              </div>
+            </ft:tree>
+          </td>
+        </tr>
+      </table>
+      <p>
+        <ft:widget id="messages" />
+      </p>
+      <a href="./do-fileExplorer.flow">Restart this sample</a>
+      -
+      <a href="./">Back to samples</a>
+
+    </ft:form-template>
+  </content>
+</page>

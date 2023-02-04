@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- form used to illustrate suggestion lists. -->
+<fd:form
+  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <fd:widgets>
+    <!-- a field with a suggestion-list that explores the Cocoon samples -->
+    <fd:field id="path">
+	  <fd:datatype base="string"/>
+	  <fd:suggestion-list type="javascript">
+	  <![CDATA[
+	    function addSuggestion(src) {
+	        suggestions.push({
+	            value: filename + src.name,
+	            label: filename + src.name +
+	                (src.isCollection() ? "/" : " (" + src.contentLength + " bytes)")
+	        });
+	    }
+	
+	    var resolver = cocoon.getComponent(org.apache.excalibur.source.SourceResolver.ROLE);
+        var filename = filter;
+	    var src = resolver.resolveURI("./" + filename);
+	    var suggestions = [];
+	    if (src.exists() && src.isCollection()) {
+	        // A directory: list its children
+            if (filename.lastIndexOf('/') != filename.length - 1)  filename += "/";
+	        suggestions.push({value: filename});
+	        var children = src.children;
+	        for (var i = 0; i < children.size(); i++) {
+	            addSuggestion(children.get(i));
+	        }
+	    } else {
+	        // Get the parent directory and list its children whose name start with the given filter
+	        var parent = src.parent;
+	        if (filename.indexOf('/') != -1) {
+	            filename = filename.substring(0, filename.lastIndexOf('/') + 1);
+	        } else {
+	            filename = "";
+	        }
+	        var children = parent.children;
+	        for (var i = 0; i < children.size(); i++) {
+	            var child = children.get(i);
+	            if (child.name.startsWith(src.name)) {
+	                addSuggestion(child);
+                }
+	        }
+	    }
+	    return suggestions;
+	  ]]>
+	  </fd:suggestion-list>
+	</fd:field>
+  <fd:field id="personId">
+      <fd:datatype base="integer"/>
+      <fd:initial-value>16</fd:initial-value>
+      <fd:suggestion-list type="javascript">
+      <![CDATA[
+        function addSuggestion(bean) {
+            suggestions.push({value: bean.value, label: bean.label});
+        }
+
+        function personList() {
+          return [
+                  {value: 1, label: "Donald Ball"},
+                  {value: 2, label: "Sylvain Wallez"},
+                  {value: 3, label: "Carsten Ziegeler"},
+                  {value: 4, label: "Torsten Curdt"},
+                  {value: 5, label: "Marcus Crafter"},
+                  {value: 6, label: "Ovidiu Predescu"},
+                  {value: 7, label: "Christian Haul"},
+                  {value: 8, label: "Jeremy Quinn"},
+                  {value: 9, label: "Stefano Mazzocchi"},
+                  {value: 10, label: "Pierpaolo Fumagalli"},
+                  {value: 11, label: "Davanum Srinivas"},
+                  {value: 12, label: "Antonio Gallardo"},
+                  {value: 13, label: "Ugo Cei"},
+                  {value: 14, label: "David Crossley"},
+                  {value: 15, label: "Bertrand Delacrétaz"},
+                  {value: 16, label: "Bruno Dumon"},
+                  {value: 17, label: "Daniel Fagerstrom"},
+                  {value: 18, label: "Leszek Gawron"},
+                  {value: 19, label: "Ralph Goers"},
+                  {value: 20, label: "Vadim Gritsenko"},
+                  {value: 21, label: "Jorg Heymans"},
+                  {value: 22, label: "Jörg Heinicke"},
+                  {value: 23, label: "Jean-Baptiste Quenot"}
+                ];
+        }
+
+        function startsWith(string1, string2) {
+          return (new java.lang.String(string1.toLowerCase())).startsWith(string2.toLowerCase());
+        }
+        
+        function searchByString() {
+          for (var i = 0; i < list.length; i++) {
+            if (startsWith(list[i].label, filter)) {
+              addSuggestion(list[i]);
+            }
+          }
+        }
+        
+        function searchById() {
+          for (var i = 0; i < list.length; i++) {
+            if (list[i].value == parseInt(filter)) {
+              addSuggestion(list[i]);
+            }
+          }
+        }
+        
+        var suggestions = [];
+        var list = personList();
+        if (filter) {
+          var phase = cocoon.request.getParameter("phase");
+          if (phase && phase.equals("init")) {
+            if (!isNaN(parseInt(filter))) {
+              searchById();
+            } else {
+              cocoon.log.error("The filter: '" + filter + "' must be a number.");
+            }
+          } else {              
+            searchByString();
+          }          
+        } else {
+          suggestions = list;
+        }
+        return suggestions;
+      ]]>
+      </fd:suggestion-list>
+    </fd:field>
+    <fd:submit id="ok"><fd:label>OK</fd:label></fd:submit>
+  </fd:widgets>
+</fd:form>

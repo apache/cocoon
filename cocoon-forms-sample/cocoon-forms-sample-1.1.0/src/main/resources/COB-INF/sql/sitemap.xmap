@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | @version $Id$
+    +-->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Components =================================== -->
+
+  <map:components>
+
+    <!-- =========================== Selectors =================================== -->
+
+    <map:selectors>
+      <map:selector name="ajax-request" src="org.apache.cocoon.ajax.AjaxRequestSelector" />
+    </map:selectors>
+
+    <!-- =========================== Transformers =================================== -->
+
+    <map:transformers default="xslt">
+      <map:transformer name="browser-update" src="org.apache.cocoon.ajax.BrowserUpdateTransformer" />
+      <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+        <catalogues default="forms">
+          <catalogue id="forms" name="messages" location="servlet:forms:/resource/internal/i18n" />
+        </catalogues>
+      </map:transformer>
+    </map:transformers>
+  </map:components>
+
+  <!-- =========================== Flowscripts =================================== -->
+
+  <map:flow>
+    <map:script src="flow/flow.js" />
+    <map:script src="flow/jdbi.js" />
+  </map:flow>
+
+  <!-- =========================== Pipelines =================================== -->
+
+  <map:pipelines>
+    <!-- Public URLs -->
+    <map:pipeline>
+      <!-- Main page: list employees -->
+      <map:match pattern="">
+        <map:redirect-to uri="do_list_employees" />
+      </map:match>
+
+      <map:match pattern="do_*">
+        <map:call function="do_{1}" />
+      </map:match>
+
+      <map:match pattern="continue">
+        <map:call continuation="{request-param:continuation-id}" />
+      </map:match>
+
+    </map:pipeline>
+
+    <!-- Internal URLs -->
+    <map:pipeline internal-only="false">
+
+      <map:match pattern="selection-list/*">
+        <map:call function="selection_list">
+          <map:parameter name="table" value="{1}" />
+        </map:call>
+      </map:match>
+
+      <map:match pattern="*.xml">
+        <map:generate type="jx" src="{1}.xml" />
+        <map:serialize type="xml" />
+      </map:match>
+
+      <map:match pattern="viewform-*.html">
+        <map:generate type="jx" src="pages/{1}.xml" />
+        <map:transform type="browser-update" />
+        <map:transform type="i18n" />
+        <map:transform src="../resources/forms-samples-styling.xsl" />
+        <map:select type="ajax-request">
+          <map:when test="true">
+            <map:serialize type="xml" />
+          </map:when>
+          <map:otherwise>
+            <map:transform src="resources/page-styling.xsl" />
+            <map:serialize type="html" />
+          </map:otherwise>
+        </map:select>
+      </map:match>
+
+      <map:match pattern="*.html">
+        <map:generate type="jx" src="pages/{1}.xml" />
+        <map:transform src="resources/page-styling.xsl" />
+        <map:serialize type="html" />
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+
+</map:sitemap>

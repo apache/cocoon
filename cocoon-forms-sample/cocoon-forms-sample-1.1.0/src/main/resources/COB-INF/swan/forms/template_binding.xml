@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  Binding for the Swan form-template editor.
+
+  @version $Id$
+-->
+
+<fb:context
+  xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
+  xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+  path="/page"
+  lenient="true">
+
+  <fb:new id="items-class"/>
+
+  <fb:class id="case-class">
+    <fb:case id="case" path=".">
+      <fb:insert-node><ft:case/>
+</fb:insert-node>
+      <fb:group id="case" path="ft:case">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="class-class">
+    <fb:case id="class" path=".">
+      <fb:insert-node><ft:class/>
+</fb:insert-node>
+      <fb:group id="class" path="ft:class">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="form-template-class">
+    <fb:case id="form-template" path=".">
+      <fb:insert-node><ft:form-template/>
+</fb:insert-node>
+      <fb:group id="form-template" path="ft:form-template">
+        <fb:group id="stuff" path=".">
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="group-class">
+    <fb:case id="group" path=".">
+      <fb:insert-node><ft:group/>
+</fb:insert-node>
+      <fb:group id="group" path="ft:group">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+          <fb:new id="label-class"/>
+          <fb:insert-node>
+  <ft:widgets/>
+  </fb:insert-node>
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="new-class">
+    <fb:case id="new" path=".">
+      <fb:insert-node><ft:new/>
+</fb:insert-node>
+      <fb:group id="new" path="ft:new">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:group>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="repeater-size-class">
+    <fb:case id="repeater-size" path=".">
+      <fb:insert-node><ft:repeater-size/>
+</fb:insert-node>
+      <fb:group id="repeater-size" path="ft:repeater-size">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:group>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="repeater-widget-class">
+    <fb:case id="repeater-widget" path=".">
+      <fb:insert-node><ft:repeater-widget/>
+</fb:insert-node>
+      <fb:group id="repeater-widget" path="ft:repeater-widget">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+          <fb:insert-node></fb:insert-node>
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="struct-class">
+    <fb:case id="struct" path=".">
+      <fb:insert-node><ft:struct/>
+</fb:insert-node>
+      <fb:group id="struct" path="ft:struct">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+          <fb:new id="label-class"/>
+          <fb:insert-node>
+  <ft:widgets/>
+  </fb:insert-node>
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="union-class">
+    <fb:case id="union" path=".">
+      <fb:insert-node><ft:union/>
+</fb:insert-node>
+      <fb:group id="union" path="ft:union">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:group>
+        <!--<ft:new id="label-class"/>-->
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="widget-class">
+    <fb:case id="widget" path=".">
+      <fb:insert-node><ft:widget/>
+</fb:insert-node>
+      <fb:group id="widget" path="ft:widget">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:group>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="widget-label-class">
+    <fb:case id="widget-label" path=".">
+      <fb:insert-node><ft:widget-label/>
+</fb:insert-node>
+      <fb:group id="widget-label" path="ft:widget-label">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:group>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="default-class">
+
+    <fb:case id="table" path=".">
+      <fb:insert-node><table/></fb:insert-node>
+      <fb:group id="table" path="table">
+        <fb:group id="stuff" path=".">
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+
+    <fb:case id="tr" path=".">
+      <fb:insert-node><tr/></fb:insert-node>
+      <fb:group id="tr" path="tr">
+        <fb:group id="stuff" path=".">
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+
+    <fb:case id="td" path=".">
+      <fb:insert-node><td/></fb:insert-node>
+      <fb:group id="td" path="td">
+        <fb:group id="stuff" path=".">
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+
+    <fb:case id="p" path=".">
+      <fb:insert-node><p/></fb:insert-node>
+      <fb:group id="p" path="p">
+        <fb:group id="stuff" path=".">
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+
+    <fb:case id="input" path=".">
+      <fb:insert-node><input/></fb:insert-node>
+      <fb:group id="input" path="input">
+        <fb:group id="stuff" path=".">
+          <fb:value id="id" path="@id"/>
+        </fb:group>
+      </fb:group>
+    </fb:case>
+
+    <fb:case id="content" path=".">
+      <fb:insert-node><content/></fb:insert-node>
+      <fb:group id="content" path="content">
+        <fb:group id="stuff" path=".">
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+
+    <fb:case id="title" path=".">
+      <fb:insert-node><title/></fb:insert-node>
+      <fb:group id="title" path="title">
+        <fb:group id="stuff" path=".">
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+
+    <fb:case id="page" path=".">
+      <fb:insert-node><page/></fb:insert-node>
+      <fb:group id="page" path="page">
+        <fb:group id="stuff" path=".">
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
+    </fb:case>
+
+  </fb:class>
+
+  <fb:class id="view-selector-class">
+    <fb:javascript id="view-selector" path="." direction="load">
+      <fb:load-form>
+        widget.value = "view";
+      </fb:load-form>
+    </fb:javascript>
+  </fb:class>
+
+  <fb:class id="items-class">
+    <fb:temp-repeater id="items"
+      parent-path="."
+      row-path="*" row-path-insert="."
+      virtual-rows="true">
+      <fb:on-bind><fb:new id="item-row-class"/></fb:on-bind>
+    </fb:temp-repeater>
+  </fb:class>
+
+  <fb:class id="item-row-class">
+    <fb:javascript id="type-selector" path="." direction="load">
+      <fb:load-form>
+        widget.value = jxpathPointer.getNode().getFirstChild().getLocalName();
+      </fb:load-form>
+    </fb:javascript>
+    <fb:union id="union" path=".">
+      <fb:new id="case-class"/>
+      <fb:new id="class-class"/>
+      <fb:new id="form-template-class"/>
+      <fb:new id="group-class"/>
+      <fb:new id="new-class"/>
+      <fb:new id="repeater-size-class"/>
+      <fb:new id="repeater-widget-class"/>
+      <fb:new id="struct-class"/>
+      <fb:new id="union-class"/>
+      <fb:new id="widget-class"/>
+      <fb:new id="widget-label-class"/>
+      <fb:new id="default-class"/>
+    </fb:union>
+    <!--
+    The view-selector binding must happen last,
+    so that all the widgets will exist that the 
+    view-selector's on-value-changed handler needs.
+    -->
+    <fb:new id="view-selector-class"/>
+  </fb:class>
+
+  <fb:class id="label-class">
+    <fb:value id="label" path="ft:label"/>
+  </fb:class>
+
+</fb:context>
