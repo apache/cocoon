@@ -31,14 +31,14 @@
   </parent>
 
   <artifactId>cocoon-forms-sample</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1-SNAPSHOT</version>
   <name>Cocoon Forms Block Samples</name>
   <packaging>jar</packaging>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-sample/cocoon-forms-sample-1.1.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-forms-sample/cocoon-forms-sample-1.1.0</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-forms-sample/cocoon-forms-sample-1.1.0</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-forms/cocoon-forms-sample</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-forms/cocoon-forms-sample</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-forms/cocoon-forms-sample</url>
   </scm>
 
   <dependencies>
