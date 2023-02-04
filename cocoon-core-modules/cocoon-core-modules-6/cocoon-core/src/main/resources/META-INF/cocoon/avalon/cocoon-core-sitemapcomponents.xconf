@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--+
+    | This file defines core components for the sitemap.
+    |
+    | SVN $Id$
+    +-->
+
+<map:components xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+ <!--+
+     | All pipelines consist at least of two components: a generator, that
+     | produces the content, and a serialiser, that delivers the content to
+     | the client.
+     |
+     | More precisely: a generator generates SAX events and a serializer
+     | consumes these events and produces a byte stream.
+     |
+     | Some things to note here: each generator has a unique name, this
+     | name is mapped to a java class, one name is declared as the default
+     | generator. Each generator may have additional configurations as
+     | child elements.
+     |
+     | Additional attributes are targeted at the component manager. The optional
+     | "label" attribute is relevant for the view concept below. The optional
+     | "logger" attribute defines the logging category where messages produced
+     | by a component should go. If there's no "logger" attribute, the category
+     | used is the one defined for the "sitemap" component in cocoon.xconf.
+     |
+     | We have chosen in this sitemap to use a different logging category
+     | for each component, which allows fine-grained classification of log
+     | messages. But you are free to use any category you want.
+     |
+     | It is possible to have the same java class declared as different
+     | generators by using different names. No configuration options are
+     | shared between these instances, however.
+     |
+     | All components follow this scheme.
+     +-->
+ <map:generators default="file">
+   <map:generator label="content" logger="sitemap.generator.imagedirectory" name="imagedirectory" src="org.apache.cocoon.generation.ImageDirectoryGenerator"/>
+   <map:generator label="content" logger="sitemap.generator.request" name="request" pool-max="16" src="org.apache.cocoon.generation.RequestGenerator"/>
+   <map:generator label="content" logger="sitemap.generator.stream" name="stream" pool-max="16" src="org.apache.cocoon.generation.StreamGenerator"/>
+   <map:generator label="content" logger="sitemap.generator.status" name="status" pool-max="16" src="org.apache.cocoon.generation.StatusGenerator"/>
+   <!-- The notifying generator can only be used in a <handle-errors> section -->
+   <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>
+   <!-- The exception generator can only be used in a <handle-errors> section : it produces an XML
+        representation of the exception that caused the error handler to be executed -->
+   <map:generator name="exception" src="org.apache.cocoon.generation.ExceptionGenerator"/>
+   <map:generator label="content" logger="sitemap.generator.mp3directory" name="mp3directory" src="org.apache.cocoon.generation.MP3DirectoryGenerator"/>
+
+ </map:generators>
+
+
+ <!--+
+     | Transformers can be placed inside the pipeline between the generator
+     | and the serializer. You may have as many transformers as you
+     | like. Transformers consume SAX events and emit SAX events.
+     |
+     | The "xslt" transformer is an example of a component with additional
+     | configuration.
+     +-->
+ <map:transformers default="xslt">
+
+   <!-- NOTE: This is the default XSLT processor. -->
+   <map:transformer logger="sitemap.transformer.xslt" name="xslt" pool-max="32" src="org.apache.cocoon.transformation.TraxTransformer">
+     <use-request-parameters>false</use-request-parameters>
+     <use-session-parameters>false</use-session-parameters>
+     <use-cookie-parameters>false</use-cookie-parameters>
+     <xslt-processor-role>xalan</xslt-processor-role>
+     <check-includes>true</check-includes>
+   </map:transformer>
+
+   <!-- NOTE: This is the same as the default processor but with a different name (for compatibility) -->
+   <map:transformer logger="sitemap.transformer.xalan" name="xalan" pool-max="32" src="org.apache.cocoon.transformation.TraxTransformer">
+     <use-request-parameters>false</use-request-parameters>
+     <use-session-parameters>false</use-session-parameters>
+     <use-cookie-parameters>false</use-cookie-parameters>
+     <xslt-processor-role>xalan</xslt-processor-role>
+     <check-includes>true</check-includes>
+   </map:transformer>
+
+   <!-- NOTE: You can also try XSLTC as the default processor. If you use Xalan extensions, use the "xalan" transformer. -->
+   <map:transformer logger="sitemap.transformer.xsltc" name="xsltc" pool-max="32" src="org.apache.cocoon.transformation.TraxTransformer">
+     <use-request-parameters>false</use-request-parameters>
+     <use-session-parameters>false</use-session-parameters>
+     <use-cookie-parameters>false</use-cookie-parameters>
+     <xslt-processor-role>xsltc</xslt-processor-role>
+     <check-includes>true</check-includes>
+   </map:transformer>
+
+   <map:transformer logger="sitemap.transformer.include" name="include" pool-max="16" src="org.apache.cocoon.transformation.IncludeTransformer"/>
+   <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-max="16" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
+   <map:transformer logger="sitemap.transformer.cinclude" name="cinclude" pool-max="16" src="org.apache.cocoon.transformation.CIncludeTransformer"/>
+   <map:transformer logger="sitemap.transformer.encodeURL" name="encodeURL" src="org.apache.cocoon.transformation.EncodeURLTransformer"/>
+   <map:transformer logger="sitemap.transformer.write-source" name="write-source" src="org.apache.cocoon.transformation.SourceWritingTransformer"/>
+   <map:transformer logger="sitemap.transformer.writeDOMsession" name="writeDOMsession" src="org.apache.cocoon.transformation.WriteDOMSessionTransformer"/>
+   <map:transformer logger="sitemap.transformer.readDOMsession" name="readDOMsession" src="org.apache.cocoon.transformation.ReadDOMSessionTransformer"/>
+   <map:transformer logger="sitemap.transformer.log" name="log" pool-max="16" src="org.apache.cocoon.transformation.LogTransformer"/>
+   <map:transformer logger="sitemap.transformer.paginate" name="paginate" src="org.apache.cocoon.transformation.pagination.Paginator"/>
+   <map:transformer logger="sitemap.transformer.jpath" name="jpath" src="org.apache.cocoon.transformation.JPathTransformer"/>
+   <map:transformer logger="sitemap.transformer.filter" name="filter" src="org.apache.cocoon.transformation.FilterTransformer"/>
+ </map:transformers>
+
+
+ <!--+
+     | Serializers consume SAX events and produce a character stream. Every
+     | pipeline needs to be terminated by a serializer.
+     +-->
+ <map:serializers default="html">
+   <map:serializer logger="sitemap.serializer.links" name="links" src="org.apache.cocoon.serialization.LinkSerializer"/>
+
+   <map:serializer logger="sitemap.serializer.zip"  mime-type="application/zip" name="zip" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
+   <map:serializer logger="sitemap.serializer.sxw"  mime-type="application/vnd.sun.xml.writer" name="sxw" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
+   <map:serializer logger="sitemap.serializer.sxc"  mime-type="application/vnd.sun.xml.calc" name="sxc" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
+   <map:serializer logger="sitemap.serializer.sxd"  mime-type="application/vnd.sun.xml.draw" name="sxd" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
+   <map:serializer logger="sitemap.serializer.sxi"  mime-type="application/vnd.sun.xml.impress" name="sxi" src="org.apache.cocoon.serialization.ZipArchiveSerializer"/>
+ </map:serializers>
+
+
+ <!--+
+     | Readers circumvent the XML oriented SAX pipeline model, think of a reader
+     | being a generator and a serializer at once thus a pipeline may not
+     | contain any generator, transformer or serializer in addition to a
+     | reader. They are useful for delivering binary content like images.
+     +-->
+ <map:readers default="resource"/>
+
+ <!--+
+     | Matchers are executed during pipeline setup. They decide if a
+     | pipeline fragment is used within a pipeline. Usually, the decision
+     | is based on a match on the requested URI but matchers exist, that
+     | match different things as well. Most often the fragment contained in
+     | a matcher has a generator as well as a serializer. This is not a
+     | necessity, matchers can be nested while chaining does not work.
+     +-->
+ <map:matchers default="wildcard">
+   <map:matcher logger="sitemap.matcher.wildcard" name="wildcard" src="org.apache.cocoon.matching.WildcardURIMatcher"/>
+   <map:matcher logger="sitemap.matcher.regexp" name="regexp" src="org.apache.cocoon.matching.RegexpURIMatcher"/>
+   <map:matcher logger="sitemap.matcher.request-parameter" name="request-parameter" src="org.apache.cocoon.matching.RequestParameterMatcher"/>
+   <map:matcher logger="sitemap.matcher.cookie" name="cookie" src="org.apache.cocoon.matching.CookieMatcher"/>
+   <map:matcher logger="sitemap.matcher.header" name="header" src="org.apache.cocoon.matching.HeaderMatcher"/>
+   <map:matcher logger="sitemap.matcher.parameter" name="parameter" src="org.apache.cocoon.matching.ParameterMatcher"/>
+   <map:matcher logger="sitemap.matcher.sessionstate" name="sessionstate" src="org.apache.cocoon.matching.WildcardSessionAttributeMatcher">
+     <attribute-name>org.apache.cocoon.SessionState</attribute-name>
+   </map:matcher>
+   <map:matcher logger="sitemap.matcher.referer-match" name="referer-match" src="org.apache.cocoon.matching.WildcardHeaderMatcher">
+     <header-name>referer</header-name>
+   </map:matcher>
+   <map:matcher name="mount-table" src="org.apache.cocoon.matching.MountTableMatcher">
+     <map:parameter name="ignore-missing-tables" value="true"/>
+   </map:matcher>
+   <map:matcher logger="sitemap.matcher.locale" name="locale" src="org.apache.cocoon.matching.LocaleMatcher">
+     <!--+
+         | Default configuration:
+     <locale-attribute>locale</locale-attribute>
+     <negotiate>false</negotiate>
+     <use-locale>true</use-locale>
+     <use-locales>false</use-locales>
+     <use-blank-locale>true</use-blank-locale>
+     <default-locale language="en" country="US"/>
+     <create-session>false</create-session>
+     <store-in-request>false</store-in-request>
+     <store-in-session>false</store-in-session>
+     <store-in-cookie>false</store-in-cookie>
+         +-->
+   </map:matcher>
+ </map:matchers>
+
+ <!--+
+     | Selectors are executed during pipeline setup. They can be used to
+     | determine which pipeline fragments should be combined. They are best
+     | compared with a java switch statement.
+     +-->
+ <map:selectors default="browser">
+   <map:selector logger="sitemap.selector.browser" name="browser" src="org.apache.cocoon.selection.BrowserSelector">
+     <!--+
+         | NOTE: The appearance indicates the search order. This is very important since
+         |       some words may be found in more than one browser description. (MSIE is
+         |       presented as "Mozilla/4.0 (Compatible; MSIE 4.01; ...")
+         +-->
+     <browser name="explorer" useragent="MSIE"/>
+     <browser name="pocketexplorer" useragent="MSPIE"/>
+     <browser name="handweb" useragent="HandHTTP"/>
+     <browser name="avantgo" useragent="AvantGo"/>
+     <browser name="imode" useragent="DoCoMo"/>
+     <browser name="opera" useragent="Opera"/>
+     <browser name="lynx" useragent="Lynx"/>
+     <browser name="java" useragent="Java"/>
+     <browser name="wap" useragent="Nokia"/>
+     <browser name="wap" useragent="UP"/>
+     <browser name="wap" useragent="Wapalizer"/>
+     <browser name="mozilla5" useragent="Mozilla/5"/>
+     <browser name="mozilla5" useragent="Netscape6/"/>
+     <browser name="netscape" useragent="Mozilla"/>
+   </map:selector>
+
+   <!--+
+       | Exception selector : used in <map:handle> errors to build different pipelines
+       | depending on the error that occured.
+       | The configuration allows to associate a symbolic name to exception classes
+       | which is used in the <map:when> tests.
+       | An exception can also be "unrolled", meaning that cascaded exception will be checked.
+       +-->
+   <map:selector logger="sitemap.selector.exception" name="exception" src="org.apache.cocoon.selection.ExceptionSelector">
+     <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
+     <exception name="invalid-continuation" class="org.apache.cocoon.components.flow.InvalidContinuationException"/>
+     <!-- The statement below tells the selector to unroll as much exceptions as possible -->
+     <exception class="java.lang.Throwable" unroll="true"/>
+   </map:selector>
+
+   <map:selector logger="sitemap.selector.request-method" name="request-method" src="org.apache.cocoon.selection.RequestMethodSelector"/>
+   <map:selector logger="sitemap.selector.resource-exists" name="resource-exists" src="org.apache.cocoon.selection.ResourceExistsSelector"/>
+   <map:selector logger="sitemap.selector.request-parameter" name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector">
+     <!--+
+         | Define now which request parameter to use; or do it later,
+         | when using this selector, via "parameter-name" parameter.
+     <parameter-name>myparam</parameter-name>
+         +-->
+   </map:selector>
+   <map:selector logger="sitemap.selector.request-attribute" name="request-attribute" src="org.apache.cocoon.selection.RequestAttributeSelector">
+     <!-- <attribute-name>myparam</attribute-name> -->
+   </map:selector>
+   <map:selector logger="sitemap.selector.session-attribute" name="session-attribute" src="org.apache.cocoon.selection.SessionAttributeSelector">
+     <!-- <attribute-name>myparam</attribute-name> -->
+   </map:selector>
+   <map:selector logger="sitemap.selector.parameter" name="parameter" src="org.apache.cocoon.selection.ParameterSelector"/>
+   <map:selector logger="sitemap.selector.header" name="header" src="org.apache.cocoon.selection.HeaderSelector">
+     <!-- <header-name>myparam</header-name> -->
+   </map:selector>
+   <map:selector logger="sitemap.selector.host" name="host" src="org.apache.cocoon.selection.HostSelector"/>
+   <map:selector logger="sitemap.selector.simple" name="simple" src="org.apache.cocoon.selection.SimpleSelector"/>
+ </map:selectors>
+
+
+ <!--+
+     | Actions are executed during pipeline setup. Their purpose is to
+     | execute some code that doesn't involve touching the stream of
+     | pipeline events. Example usage is to update databases, check external
+     | resources, etc.. The execution may fail or complete successfully. Only
+     | if the execution of the action was successful, the pipeline fragment
+     | nested inside the action element is executed, otherwise, it's skipped
+     | entirely and execution proceeds from the element right below the action.
+     +-->
+ <map:actions>
+   <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/>
+   <map:action logger="sitemap.action.requestParamExists" name="req-params" src="org.apache.cocoon.acting.RequestParameterExistsAction"/>
+   <map:action logger="sitemap.action.form-validator" name="form-validator" src="org.apache.cocoon.acting.FormValidatorAction"/>
+   <map:action logger="sitemap.action.session-state" name="session-state" src="org.apache.cocoon.acting.SessionStateAction"/>
+   <map:action logger="sitemap.action.session-isvalid" name="session-isvalid" src="org.apache.cocoon.acting.SessionIsValidAction"/>
+   <map:action logger="sitemap.action.session-validator" name="session-validator" src="org.apache.cocoon.acting.SessionValidatorAction"/>
+   <map:action logger="sitemap.action.session-invalidator" name="session-invalidator" src="org.apache.cocoon.acting.SessionInvalidatorAction"/>
+   <map:action logger="sitemap.action.resource-exists" name="resource-exists" src="org.apache.cocoon.acting.ResourceExistsAction"/>
+   <map:action logger="sitemap.action.set-header" name="set-header" src="org.apache.cocoon.acting.HttpHeaderAction"/>
+   <map:action logger="sitemap.action.clear-cache" name="clear-cache" src="org.apache.cocoon.acting.ClearCacheAction"/>
+   <map:action logger="sitemap.action.clear-persistent-store" name="clear-persistent-store" src="org.apache.cocoon.acting.ClearPersistentStoreAction"/>
+   <map:action logger="sitemap.action.locale" name="locale" src="org.apache.cocoon.acting.LocaleAction">
+     <!--+
+         | Default configuration:
+     <locale-attribute>locale</locale-attribute>
+     <create-session>false</create-session>
+     <store-in-request>false</store-in-request>
+     <store-in-session>false</store-in-session>
+     <store-in-cookie>false</store-in-cookie>
+     <use-locale>true</use-locale>
+     <default-locale language="en" country="US"/>
+         +-->
+   </map:action>
+   <map:action logger="sitemap.action.log" name="log" src="org.apache.cocoon.acting.LogAction"/>
+ </map:actions>
+
+
+ <!--+
+     | The different pipe implementations
+     |
+     | NON-CACHING:
+     |   The non caching implementation of cocoon pipelines.
+     |
+     | CACHING:
+     |   Traditional longest cacheable key caching.
+     |
+     | CACHING-POINT:
+     |   The caching-point pipeline implements an extended
+     |   caching algorithm which is of particular benefit for use with
+     |   those pipelines that utilise cocoon-views and/or provide
+     |   drill-down functionality.
+     |
+     | The autoCachingPoint algorithim (if enabled) will automatically
+     | cache common elements of the pipeline currently being processed - as well
+     | as the entire cacheable pipeline according to the "longest cacheable key"
+     | algorithm.
+     |
+     | Consider the following simple pipeline, where generator G is labelled with
+     | a cocoon-view enabling the pipeline to serialize data to either html or pdf
+     | depending on the value of cocoon-view (as provided by the request):
+     | G - T -  S(html)
+     | |__ T -  S(pdf)
+     |
+     | If cocoon-view=html, then the caching-point algorithm will not only cache
+     | the longest cacheable path, which would be GTS(html) but also the
+     | *common element* which in this case would be the results from G. If the
+     | next request to this pipeline was cocoon-view=pdf, then there would be no
+     | need to invoke the generator a second time, as it's value has already been
+     | cached (provided G generates the same cache key)
+     |
+     | Also note: One can switch "Off" autoCachingPoint and use "pipeline-hints" to
+     | manually indicate that certain pipeline-components should be considered as
+     | cache points.
+     +-->
+  <map:pipes default="caching">
+    <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
+      <!--+
+          | Configures the size of the output buffer, i.e. the size of the output before it is
+          | (partly) send to the client. In case an error occurs during the processing of the
+          | SAX-pipeline, Cocoon is able to reset the response and send an error page instead.
+          | If the buffer size is too small the response can not be reset completely and the error
+          | page will be appended to the output already send to the client.
+          |
+          | If not specified, the value of the outputBufferSize parameter is 1048576 (1 MB).
+          | Setting it to -1 causes Cocoon to buffer all output until processing has finished
+          | before sending it to client, but might result potentially in OutOfMemoryErrors on too
+          | large outputs.
+          |
+          | For more granularity, you can also supply this parameter to
+          | individual map:pipeline elements (using map:parameter syntax).
+          +-->
+      <!-- parameter name="outputBufferSize" value="1048576"/ -->
+    </map:pipe>
+    <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline">
+      <parameter name="autoCachingPoint" value="On"/>
+      <!-- parameter name="outputBufferSize" value="1048576"/ -->
+    </map:pipe>
+    <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
+      <!-- parameter name="outputBufferSize" value="1048576"/ -->
+    </map:pipe>
+    <!--+
+        | This pipeline implementation caches the complete content for a defined
+        | period of time (expires). The cache key is the current uri.
+        +-->
+    <map:pipe name="expires" src="org.apache.cocoon.components.pipeline.impl.ExpiresCachingProcessingPipeline">
+      <parameter name="cache-expires" value="180"/> <!-- Expires in secondes -->
+      <!-- parameter name="outputBufferSize" value="1048576"/ -->
+    </map:pipe>
+  </map:pipes>
+  
+</map:components>
