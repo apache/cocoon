@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- SVN $Id$ -->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:pipelines>
+    <map:pipeline>
+
+      <map:match pattern="test">
+        <map:generate src="test.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="test2">
+        <map:generate src="servlet:test2:/test"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="test3">
+        <map:generate src="servlet:/test"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="test4">
+        <map:generate src="resource://COB-INF/test1/test-resource.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <!-- This is a test of basic servlet services functionality
+           servletService generator makes a HTTP POST request on servlet:test2:/basic-service.
+           Generator posts content of test.xml file and returns to the pipeline result of service call.
+      -->
+      <map:match pattern="test5">
+        <map:generate type="servletService" src="test.xml">
+          <map:parameter name="service" value="servlet:test2:/basic-service?caller=generator"/>
+        </map:generate>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <!-- This is a test of basic servlet services functionality
+        servletService transformer makes a HTTP POST request on servlet:test2:/basic-service.
+        Transformer posts content of the incoming SAX stream (here it's just content of test.xml file)
+        and returns to the pipeline result of service call.
+      -->
+      <map:match pattern="test6">
+        <map:generate src="test.xml"/>
+        <map:transform type="servletService">
+          <map:parameter name="service" value="servlet:test2:/basic-service?caller=transformer"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <!-- This is a test of basic servlet services functionality
+        servletService serializer makes a HTTP POST request on servlet:test2:/basic-service.
+        Serializer posts content of the incoming SAX stream (here it's just content of test.xml file)
+        and returns as output of serialized the output obtained from servlet service call.
+      -->
+      <map:match pattern="test7">
+        <map:generate src="test.xml"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:test2:/basic-service?caller=serializer"/>
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="sub/**">
+        <map:mount uri-prefix="sub" src="sub/"/>
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

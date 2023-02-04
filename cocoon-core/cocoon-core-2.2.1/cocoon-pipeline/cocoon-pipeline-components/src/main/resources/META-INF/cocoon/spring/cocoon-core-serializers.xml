@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Serializers consume SAX events and produce a character stream. Every
+  - pipeline needs to be terminated by a serializer.
+  -
+  - $Id$
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:pipeline="http://cocoon.apache.org/schema/pipeline"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://cocoon.apache.org/schema/pipeline http://cocoon.apache.org/schema/pipeline/cocoon-pipeline-1.0.xsd"
+       default-init-method="init">
+
+  <!--
+    - Abstract parent bean that sets the default encoding from the settings bean
+    - FIXME Why it is necessary at all, anyway?
+    -->
+  <bean name="org.apache.cocoon.serialization.AbstractTextSerializer" class="org.apache.cocoon.serialization.AbstractTextSerializer"
+        scope="prototype" abstract="true">
+    <property name="defaultEncoding">
+      <bean class="org.springframework.beans.factory.config.PropertyPathFactoryBean">
+        <property name="targetBeanName" value="org.apache.cocoon.configuration.Settings"/>
+        <property name="propertyPath" value="containerEncoding"/>
+      </bean>
+    </property>
+  </bean>
+
+  <!--
+    - XML Serializer
+    -->
+  <bean name="org.apache.cocoon.serialization.Serializer/xml" class="org.apache.cocoon.serialization.XMLSerializer"
+        scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
+    <pipeline:component mime-type="text/xml;charset=utf-8"/>
+    <property name="format">
+      <props>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!--
+    - HTML 4.01 Transitional Serializer
+    -->
+  <bean name="org.apache.cocoon.serialization.Serializer/html" class="org.apache.cocoon.serialization.HTMLSerializer"
+        scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
+    <pipeline:component mime-type="text/html;charset=utf-8"/>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD HTML 4.01 Transitional//EN</prop>
+        <prop key="doctype-system">http://www.w3.org/TR/html4/loose.dtd</prop>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!--
+    - XHTML 1.0 Serializer. You can choose from Strict, Transitional, or Frameset XHTML.
+    -
+    - For Strict XHTML set doctype to:
+    -   <doctype-public>-//W3C//DTD XHTML 1.0 Strict//EN</doctype-public>
+    -   <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</doctype-system>
+    -
+    - For Transitional XHTML set doctype to:
+    -   <doctype-public>-//W3C//DTD XHTML 1.0 Transitional//EN</doctype-public>
+    -   <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</doctype-system>
+    -
+    - For Frameset XHTML set doctype to:
+    -   <doctype-public>-//W3C//DTD XHTML 1.0 Frameset//EN</doctype-public>
+    -   <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd</doctype-system>
+    -
+    - Default XHTML doctype in Cocoon is XHTML Strict. If you want to use more than one
+    - XHTML DTD simultaneously, you can define several XHTML serializers.
+    -->
+  <bean name="org.apache.cocoon.serialization.Serializer/xhtml" class="org.apache.cocoon.serialization.XMLSerializer"
+        scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
+    <pipeline:component mime-type="text/html;charset=utf-8"/>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD XHTML 1.0 Strict//EN</prop>
+        <prop key="doctype-system">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</prop>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!--
+    - XHTML 1.1 Serializer
+    -->
+  <bean name="org.apache.cocoon.serialization.Serializer/xhtml11" class="org.apache.cocoon.serialization.XMLSerializer"
+        scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
+    <pipeline:component mime-type="application/xhtml+xml;charset=utf-8"/>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD XHTML 1.1//EN</prop>
+        <prop key="doctype-system">http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd</prop>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!--
+    - Plain Text Serializer
+    -->
+  <bean name="org.apache.cocoon.serialization.Serializer/text" class="org.apache.cocoon.serialization.TextSerializer"
+        scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
+    <pipeline:component mime-type="text/plain;charset=utf-8"/>
+    <property name="format">
+      <props>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
+  </bean>
+
+
+  <bean name="org.apache.cocoon.serialization.Serializer/svgxml" class="org.apache.cocoon.serialization.XMLSerializer"
+        scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
+    <pipeline:component mime-type="image/svg+xml;charset=utf-8"/>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD SVG 1.0//EN</prop>
+        <prop key="doctype-system">http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd</prop>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!--
+    - Compact HTML for Small Information Appliances,
+    - based on http://www.w3.org/TR/1998/NOTE-compactHTML-19980209/
+    -->
+  <bean name="org.apache.cocoon.serialization.Serializer/chtml" class="org.apache.cocoon.serialization.HTMLSerializer"
+        scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
+    <pipeline:component mime-type="text/html;charset=utf-8"/>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//W3C//DTD Compact HTML 1.0 Draft//EN</prop>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean name="org.apache.cocoon.serialization.Serializer/wml" class="org.apache.cocoon.serialization.XMLSerializer"
+        scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
+    <pipeline:component mime-type="text/vnd.wap.wml;charset=utf-8"/>
+    <property name="format">
+      <props>
+        <prop key="doctype-public">-//WAPFORUM//DTD WML 1.1//EN</prop>
+        <prop key="doctype-system">http://www.wapforum.org/DTD/wml_1.1.xml</prop>
+        <prop key="encoding">UTF-8</prop>
+        <prop key="omit-xml-declaration">yes</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean name="org.apache.cocoon.serialization.Serializer/vrml" class="org.apache.cocoon.serialization.TextSerializer"
+        scope="prototype" parent="org.apache.cocoon.serialization.AbstractTextSerializer">
+    <pipeline:component mime-type="model/vrml;charset=utf-8"/>
+    <property name="format">
+      <props>
+        <prop key="encoding">UTF-8</prop>
+      </props>
+    </property>
+  </bean>
+</beans>
+        

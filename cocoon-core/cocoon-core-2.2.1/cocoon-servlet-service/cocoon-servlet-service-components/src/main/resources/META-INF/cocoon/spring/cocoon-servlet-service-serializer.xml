@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:pipeline="http://cocoon.apache.org/schema/pipeline"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://cocoon.apache.org/schema/pipeline http://cocoon.apache.org/schema/pipeline/cocoon-pipeline-1.0.xsd">
+
+  <bean name="org.apache.cocoon.serialization.Serializer/servletService"
+        class="org.apache.cocoon.servletservice.postable.components.ServletServiceSerializer" scope="prototype">
+    <!--
+      - This method returns dummy mime type to satisfy pipeline's requirement to have mime type determined at setup phase.
+      - In this serializer case it's not possible to satisfy this requirement so dummy value is returned and real is set in the
+      - method org.apache.cocoon.servletservice.postable.components.ServletServiceSerializer#endDocument()
+      - See http://article.gmane.org/gmane.text.xml.cocoon.devel/73261 for post explaining current (hacky) solution
+      -->
+    <pipeline:component mime-type="application/dummy-mime-type"/>
+  </bean>
+</beans>
