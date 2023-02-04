@@ -25,7 +25,7 @@
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
     <version>21</version>
-    <relativePath />
+    <relativePath/>
   </parent>
 
   <groupId>org.apache.cocoon</groupId>
@@ -50,7 +50,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>balld</id>
@@ -61,7 +61,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>nicolaken</id>
@@ -74,7 +74,7 @@
         <role>Emeritus PMC member</role>
         <role>Emeritus ASF member</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>brianb</id>
@@ -86,7 +86,7 @@
         <role>Emeritus Committer</role>
         <role>ASF member</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>rossb</id>
@@ -97,7 +97,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>butlermh</id>
@@ -108,7 +108,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>arje</id>
@@ -133,7 +133,7 @@
         <role>Emeritus Committer</role>
         <role>Emeritus PMC member</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>ugo</id>
@@ -156,7 +156,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>tony</id>
@@ -167,7 +167,7 @@
       <roles>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>crafterm</id>
@@ -179,7 +179,7 @@
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>crossley</id>
@@ -229,7 +229,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>bruno</id>
@@ -266,7 +266,7 @@
       <roles>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>pier</id>
@@ -278,7 +278,7 @@
         <role>ASF member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>antonio</id>
@@ -304,7 +304,7 @@
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>lgawron</id>
@@ -339,7 +339,7 @@
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>greenrd</id>
@@ -350,7 +350,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>vgritsenko</id>
@@ -387,7 +387,7 @@
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>niclas</id>
@@ -395,7 +395,7 @@
       <email>niclas@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
-      <timezone />
+      <timezone/>
       <roles>
         <role>Emeritus PMC member</role>
         <role>Emeritus Committer</role>
@@ -447,7 +447,7 @@
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>ghoward</id>
@@ -459,7 +459,7 @@
         <role>Committer</role>
         <role>PMC member</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>huber</id>
@@ -471,7 +471,7 @@
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>phunsberger</id>
@@ -479,7 +479,7 @@
       <email>phunsberger@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
-      <timezone />
+      <timezone/>
       <roles>
         <role>PMC member</role>
         <role>Committer</role>
@@ -495,7 +495,7 @@
         <role>Emeritus Committer</role>
         <role>Emeritus PMC member</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>jasha</id>
@@ -567,7 +567,7 @@
         <role>Emeritus PMC member</role>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>tim</id>
@@ -579,7 +579,7 @@
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>ben</id>
@@ -591,7 +591,7 @@
         <role>ASF member</role>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>dlegg</id>
@@ -615,7 +615,7 @@
         <role>ASF member</role>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>mman</id>
@@ -626,7 +626,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>stefano</id>
@@ -639,7 +639,7 @@
         <role>Emeritus PMC member</role>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>bmclaugh</id>
@@ -650,7 +650,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>michaelm</id>
@@ -662,7 +662,7 @@
         <role>PMC member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>stephan</id>
@@ -673,7 +673,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>lmorandini</id>
@@ -696,7 +696,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>anathaniel</id>
@@ -732,7 +732,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>giacomo</id>
@@ -756,7 +756,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>mpfingsthorn</id>
@@ -764,7 +764,7 @@
       <email>mpfingsthorn@apache.org</email>
       <organization>ASF</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
-      <timezone />
+      <timezone/>
       <roles>
         <role>PMC member</role>
         <role>Committer</role>
@@ -804,7 +804,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>jbq</id>
@@ -828,7 +828,7 @@
         <role>ASF member</role>
         <role>Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>gianugo</id>
@@ -852,7 +852,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>proyal</id>
@@ -865,7 +865,7 @@
         <role>Emeritus PMC member</role>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>jreijn</id>
@@ -889,7 +889,7 @@
         <role>ASF member</role>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>prussell</id>
@@ -900,7 +900,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>ssahuc</id>
@@ -911,7 +911,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>asavory</id>
@@ -946,7 +946,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>dims</id>
@@ -958,7 +958,7 @@
         <role>ASF member</role>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>ltrieloff</id>
@@ -981,7 +981,7 @@
       <roles>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>upayavira</id>
@@ -994,7 +994,7 @@
         <role>PMC member</role>
         <role>Emeritus Committer</role>
       </roles>
-      <timezone />
+      <timezone/>
     </developer>
     <developer>
       <id>sylvain</id>
@@ -1065,7 +1065,7 @@
     <contributor>
       <name>Tay Thien Luh</name>
       <email>thienluh@gmail.com</email>
-      <url />
+      <url/>
       <organization>Jayway</organization>
       <organizationUrl>http://malaysia.jayway.net/design</organizationUrl>
       <roles>
@@ -2158,7 +2158,6 @@
 
       <!-- Cocoon SNAPSHOT dependencies -->
       <!-- Comment for release. Update versions and uncomment after it. -->
-      <!--
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-ajax-impl</artifactId>
@@ -3018,7 +3017,6 @@
         <artifactId>javaflow</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
-      -->
     </dependencies>
   </dependencyManagement>
 
@@ -3199,7 +3197,7 @@
     <docs.urlRelativizer>../../../../</docs.urlRelativizer>
     <docs.breadcrumb>cocoon22</docs.breadcrumb>
     <!-- Path and version properties: sites -->
-    <docs.m.site-main.relPath />
+    <docs.m.site-main.relPath/>
     <docs.m.site-22.relPath>2.2/</docs.m.site-22.relPath>
     <docs.m.site-blocks.relPath>2.2/blocks/</docs.m.site-blocks.relPath>
     <docs.m.site-core-modules.relPath>2.2/core-modules/</docs.m.site-core-modules.relPath>
