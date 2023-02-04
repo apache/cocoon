@@ -32,7 +32,7 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>cocoon-thread-api</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1-SNAPSHOT</version>
   <name>Cocoon Thread API</name>
   <description>
     Interfaces for thread factories and pools and for execution of background tasks.
@@ -40,9 +40,9 @@
   <url>http://cocoon.apache.org/${docs.m.thread-api.relPath}</url>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thread-api/cocoon-thread-api-1.1.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-thread-api/cocoon-thread-api-1.1.0</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-thread-api/cocoon-thread-api-1.1.0</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-thread/cocoon-thread-api</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-thread/cocoon-thread-api</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-thread/cocoon-thread-api</url>
   </scm>
 
   <properties>
