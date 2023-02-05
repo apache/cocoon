@@ -90,38 +90,46 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-welcome</artifactId>
+      <version>1.0.0-M1</version>
     </dependency>
 
     <!-- Cocoon Core Samples -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-main-sample</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-additional-sample</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-impl-sample</artifactId>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-components-sample</artifactId>
+      <version>1.0.0</version>
     </dependency>
 
     <!-- Cocoon Sample Blocks -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ajax-sample</artifactId>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-sample</artifactId>
+      <version>1.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-sample</artifactId>
+      <version>1.1.0</version>
     </dependency>
 
     <!-- Integration Tests -->

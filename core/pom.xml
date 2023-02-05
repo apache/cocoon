@@ -30,9 +30,10 @@
   </parent>
 
   <artifactId>cocoon-core-modules</artifactId>
-  <version>7-SNAPSHOT</version>
+  <version>6-SNAPSHOT</version>
   <name>Cocoon Core [modules]</name>
   <packaging>pom</packaging>
+
 
   <modules>
     <module>cocoon-core</module>
@@ -81,13 +82,40 @@
     <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core</url>
   </scm>
 
+
+
   <!--  Only uncomment this section when doing the release -->
-  <!--dependencyManagement>
+  <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
         <artifactId>cocoon-configuration-api</artifactId>
         <version>1.0.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-block-deployment</artifactId>
+        <version>1.2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-servlet-service-impl</artifactId>
+        <version>1.3.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-servlet-service-components</artifactId>
+        <version>1.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-it</artifactId>
+        <version>1.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cocoon</groupId>
+        <artifactId>cocoon-it-fw</artifactId>
+        <version>1.0.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.cocoon</groupId>
@@ -201,7 +229,7 @@
         <version>1.1.0</version>
       </dependency>
     </dependencies>
-  </dependencyManagement-->
+  </dependencyManagement>
 
   <profiles>
     <profile>
