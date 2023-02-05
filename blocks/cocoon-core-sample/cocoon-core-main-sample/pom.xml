@@ -37,6 +37,12 @@
   <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Main Core Sample Block</name>
 
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-core-sample/cocoon-core-main-sample</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-core-sample/cocoon-core-main-sample</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-core-sample/cocoon-core-main-sample</url>
+  </scm>
+
   <repositories>
     <repository>
       <id>apache.snapshot</id>

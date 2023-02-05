@@ -95,8 +95,8 @@
   </dependencies>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-servlet-service/cocoon-servlet-service-sample</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-servlet-service/cocoon-servlet-service-sample</developerConnection>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-servlet-service/cocoon-servlet-service-components-sample</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-servlet-service/cocoon-servlet-service-components-sample</developerConnection>
     <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-servlet-service/cocoon-servlet-service-components-sample</url>
   </scm>
 
