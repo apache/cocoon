@@ -28,7 +28,7 @@
   </parent>
   <artifactId>cocoon-servlet-service-components-sample</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>Cocoon Servlet Service Components Sample Blocks</name>
 
   <build>
@@ -95,9 +95,9 @@
   </dependencies>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-servlet-service-components-sample/cocoon-servlet-service-components-sample-1.0.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-servlet-service-components-sample/cocoon-servlet-service-components-sample-1.0.0</developerConnection>
-    <url>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-servlet-service-components-sample/cocoon-servlet-service-components-sample-1.0.0</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-servlet-service/cocoon-servlet-service-sample</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/core/cocoon-servlet-service/cocoon-servlet-service-sample</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/core/cocoon-servlet-service/cocoon-servlet-service-components-sample</url>
   </scm>
 
 </project>
