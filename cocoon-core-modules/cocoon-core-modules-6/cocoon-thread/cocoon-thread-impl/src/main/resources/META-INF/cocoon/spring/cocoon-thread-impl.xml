@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- @version $Id$ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:configurator="http://cocoon.apache.org/schema/configurator"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+                           http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd">
+
+  <!--+
+      | Runnable manager
+      |
+      | This component manages commands (Runnables) executed in background using
+      | preconfigured pools of worker threads
+      +-->
+  <bean name="org.apache.cocoon.thread.RunnableManager"
+        class="org.apache.cocoon.thread.impl.DefaultRunnableManager"
+        scope="singleton" init-method="init" destroy-method="destroy">
+    <!--+
+        | This is the default configuration of the runnable-manager. More
+        | indepth information can be found at
+        | http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html
+        | The following elements can be used:
+        |
+        | threadPools:       container element for thread-pool elements.
+        +-->
+    <property name="workerThreadPools">
+      <configurator:bean-map type="org.apache.cocoon.thread.ThreadPool" strip-prefix="true"/>
+    </property>
+  </bean>
+  
+  <!--+
+      | This is the default thread pool. It's use fits best for short
+      | running background tasks.
+      +-->
+  <bean name="org.apache.cocoon.thread.ThreadPool/default"
+        class="org.apache.cocoon.thread.impl.DefaultThreadPool"
+        init-method="init" scope="singleton">
+    <!--+
+        | More indepth information can be found at
+        | http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/PooledExecutor.html
+        | The following elements can be used:
+        +-->
+    <!-- required name of the pool -->
+    <property name="name" value="default" />
+    <!--+
+        | optional priority all threads of the pool will have (the ThreadFactory will be 
+        | set to this priority).The possible values  are:
+        |    MIN:  corresponds to Thread#MIN_PRIORITY
+        |    NORM: corresponds to Thread#NORM_PRIORITY (default)
+        |    MAX:  corresponds to Thread#MAX_PRIORITY
+        +-->
+    <property name="poolPriority" value="NORM" />
+    <!--+
+        | whether newly created Threads should run in daemon mode or not. Default to false.
+        +-->
+    <property name="daemon" value="false" />
+    <!-- 
+        | optional size of a queue to hold Runnables if the pool is full. Possible values are:
+        |    less than 0:    unbounded (default)
+        |    equal to 0:     no queue at all
+        |    greater than 0: size of the queue
+     -->
+    <property name="queueSize" value="-1" />
+    <!--+
+        | optional maximum number of threads in the pool. Defaults to 5.
+        | NOTE: if a queue is specified (queue-sie != 0)
+        |       this value will be ignored.
+        +-->
+    <property name="maxPoolSize" value="5" />
+    <!--+
+        | optional minimum number of threads in the pool. Defaults to 5.
+        | NOTE: if a queue has been specified (queue-sie != 0)
+        |       this value will be used as the maximum of thread running concurrently.
+        +-->
+    <property name="minPoolSize" value="5" />
+    <!--+
+        | The time in ms an idle thread should keep alive before it might get garbage collected.
+        | This defaults to 60000 ms.
+        +-->
+    <property name="keepAliveTime" value="60000" />
+    <!--+
+        | The policy to be used if all resources (thread in the pool and 
+        | slots in the queue) are exhausted.
+        | Possible values are:
+        |    ABORT:         Throw a RuntimeException
+        |    DISCARD:       Throw away the current request and return.
+        |    DISCARDOLDEST: Throw away the oldest request and return.
+        |    RUN (default): The thread making the execute request runs the task itself.
+        |                   This policy helps guard against lockup.
+        |    WAIT:          Wait until a thread becomes available. This policy should, in
+        |                   general, not be used if the minimum number of threads is zero,
+        |                   in which case a thread may never become available. 
+        +-->
+    <property name="blockPolicy" value="ABORT" />
+    <!--+
+        | Terminate thread pool after processing all Runnables currently in queue. Any 
+        | Runnable entered after this point will be discarded. A shut down pool cannot 
+        | be restarted. This also means that a pool will need keep-alive-time-ms to 
+        | terminate. The default value not to shutdown graceful. 
+        +-->
+    <property name="shutdownGraceful" value="false" />
+    <!--+
+        | The time in ms to wait before issuing an immediate shutdown after a graceful shutdown
+        | has been requested. 
+        +-->
+    <property name="shutdownWaitTimeMs" value="-1" />
+    <!--+
+        | specifies the fully qualified class name of an org.apache.cocoon.thread.ThreadFactory
+        | implementation. It is responsible to create Thread classes.
+        +-->
+    <property name="factory" ref="org.apache.cocoon.thread.ThreadFactory"/>
+  </bean>
+
+  <!--+
+      | This thread pool should be used for daemons (permanently running
+      | threads).
+      +-->
+  <bean name="org.apache.cocoon.thread.ThreadPool/daemon"
+        class="org.apache.cocoon.thread.impl.DefaultThreadPool"
+        init-method="init" scope="singleton">
+    <property name="name" value="daemon"/>
+    <property name="poolPriority" value="NORM"/>
+    <property name="daemon" value="true"/>
+    <property name="queueSize" value="0"/>
+    <property name="maxPoolSize" value="-1"/>
+    <property name="minPoolSize" value="1"/>
+    <property name="keepAliveTime" value="60000"/>
+    <property name="blockPolicy" value="ABORT"/>
+    <property name="shutdownGraceful" value="false"/>
+    <property name="shutdownWaitTimeMs" value="-1"/>
+    <property name="factory" ref="org.apache.cocoon.thread.ThreadFactory"/>
+  </bean>
+  
+  <bean name="org.apache.cocoon.thread.ThreadFactory"
+        class="org.apache.cocoon.thread.impl.DefaultThreadFactory"
+        scope="prototype"/>
+</beans>

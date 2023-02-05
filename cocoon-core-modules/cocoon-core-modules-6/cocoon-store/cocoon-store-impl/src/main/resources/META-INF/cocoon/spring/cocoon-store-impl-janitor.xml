@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- Normally uses the org.apache.excalibur.store.impl.StoreJanitorImpl as
+     the default-class but as that uses its own Thread spawning there is
+     the org.apache.cocoon.components.store.impl.CocoonStoreJanitor class
+     to use a daemon thread from the org.apache.cocoon.thread.RunnableManager
+     component.
+     NOTE: As soon as our patch has been accepted by the Excalibur community and an
+           excalibur-store has been release we can switch back to the original
+           org.apache.excalibur.store.impl.StoreJanitorImpl class
+
+     $Id$
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+  <!--+
+      | Store Janitor: the store garbage collector and memory usage controller.
+      |
+      | WARNING: Be careful with the heapsize and freememory parameters.
+      |           Wrong values can cause high cpu usage.
+      |
+      | Example configuration:
+      | Jvm settings:
+      |    -Xmx200000000
+      | store-janitor settings:
+      |    <parameter name="freememory" value="5000000"/>
+      |    <parameter name="heapsize" value="196000000"/>
+      |
+      | It is recommended to have heapsize equal to -Xmx, especially on Sun's
+      | JVM which are unable to shrink its heap once it grows above minimum.
+      | Freememory should be greater than amount of memory necessary for normal
+      | application operation.
+      | BUT: The heap size of the memory of the JVM is a little bit less than
+      |      the value you specify for -Xmx, so you have to set the heapsize
+      |      for the store janitor to a value which is lower (2% less seems
+      |      to be a working value).
+      +-->
+      
+  <bean name="org.apache.excalibur.store.StoreJanitor" class="org.apache.cocoon.components.store.impl.CocoonStoreJanitor"
+        init-method="init" destroy-method="destroy">
+    <!--+
+        | How much free memory shall be available in the jvm?
+        | If not specified, defaults to 1Mb.
+        +-->
+    <property name="freeMemory" value="2048000"/>
+    <!--+
+        | How much memory at max jvm can consume?
+        | The default max heapsize for Sun's JVM is (almost) 64Mb,
+        | can be increased by specifying -Xmx command line parameter.
+        | If not specified, defaults to 66600000 bytes.
+        +-->
+    <property name="heapSize" value="66600000"/>
+    <!--+
+        | How often shall the cleanup thread check memory?
+        | If not specified, defaults to 10 seconds.
+        +-->
+    <property name="cleanupThreadInterval" value="10"/>
+    <!--+
+        | Experimental adaptive algorithm for cleanup interval
+    <property name="adaptiveThreadInterval" value="true"/>
+        +-->
+    <!--+
+        | What percent of the store elements shall be dropped on low memory?
+        | If not specified, defaults to 10%
+        +-->
+    <property name="percentToFree" value="10"/>
+    <!--+
+        | Shall garbage collector be invoked on low memory?
+        | If not specified, defaults to false.
+        +-->
+    <property name="invokeGC" value="false"/>
+    <!--+
+        | Algorithm describing how to clean caches in low memory situations.
+        |   round-robin: The registered caches are cycled through,
+        |                and each time there is a low memory situation one
+        |                of the registered caches has objects freed from it.
+        |   all-stores:  All registered stores have objects removed from
+        |                them each time there is a low memory situation.
+        | If not specified, defaults to 'round-robin'.
+        +-->
+    <property name="freeingAlgorithm" value="round-robin"/>
+    <!--+
+        | Name of the thread pool to use.
+        | If not specified, defaults to 'daemon'.
+        +-->
+    <property name="threadPool" value="daemon"/>
+
+    <!--+
+        | What should be the priority of the cleanup thread?
+        | This property is used only by older implementation of the janitor.
+        | New implementation uses centrally configured thread pool (see
+        | thread-pools element below).
+    <property name="threadPriority" value="5"/>
+        +-->
+        
+    <property name="runnableManager" ref="org.apache.cocoon.thread.RunnableManager"/>
+  </bean>
+</beans>
