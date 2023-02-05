@@ -30,13 +30,13 @@
     <version>7</version>
   </parent>
   <artifactId>cocoon-welcome</artifactId>
-  <version>1.0.0-M1</version>
+  <version>1.0.0-M2-SNAPSHOT</version>
   <name>Cocoon Welcome (Samples)</name>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-welcome/cocoon-welcome-1.0.0-M1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.2/cocoon-welcome/cocoon-welcome-1.0.0-M1</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.2/cocoon-welcome/cocoon-welcome-1.0.0-M1</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-welcome</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/branches/cocoon-2.2.1/blocks/cocoon-welcome</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/branches/cocoon-2.2.1/blocks/cocoon-welcome</url>
   </scm>
 
   <build>
