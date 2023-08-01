@@ -40,9 +40,10 @@
     </repository>
   </repositories>
 
-  <modules>
+  <!-- Disabled as I couldn't find the jfor artifact anywhere -->
+  <!--modules>
     <module>cocoon-jfor-impl</module>
     <module>cocoon-jfor-sample</module>
-  </modules>
+  </modules-->
 
 </project>
