@@ -17,35 +17,33 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!-- $Id: pom.xml 448825 2006-09-22 06:19:55Z reinhard $ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
 
   <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <artifactId>cocoon-flowscript</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-flowscript-impl</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Cocoon Flowscript Block Implementation</name>
-  <url>http://cocoon.apache.org/${docs.m.flowscript.relPath}</url>  
+  <url>http://cocoon.apache.org/${docs.m.flowscript.relPath}</url>
+
+  <properties>
+    <docs.name>Cocoon FlowScript</docs.name>
+    <docs.version>${docs.m.flowscript.version}</docs.version>
+  </properties>
 
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.flowscript.relPath}</url>
     </site>
-  </distributionManagement>  
-  
-  <properties>
-    <docs.name>Cocoon FlowScript</docs.name>    
-    <docs.version>${docs.m.flowscript.version}</docs.version>
-  </properties>
-  
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>rhino</groupId>
@@ -54,7 +52,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.2.0</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -64,7 +62,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-api</artifactId>
-      <version>1.0.0</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   

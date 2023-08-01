@@ -17,20 +17,18 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!-- $Id: pom.xml 538625 2007-05-16 15:06:56Z reinhard $ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
 
   <parent>
-    <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <artifactId>cocoon-expression-language</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-expression-language-impl</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Cocoon Expression Language Implementation.</name>
   <description>
     Implementation of several expressions languages like: JXPath, JEXL, Javascript and implementation of unified Object Model.
@@ -53,16 +51,17 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-api</artifactId>
-      <version>${project.version}</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-util</artifactId>
-      <version>${project.version}</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -79,36 +78,6 @@
     <dependency>
       <groupId>commons-jxpath</groupId>
       <artifactId>commons-jxpath</artifactId>
-      <exclusions>
-        <exclusion>
-          <artifactId>ant-optional</artifactId>
-          <groupId>ant-optional</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-beanutils</artifactId>
-          <groupId>commons-beanutils</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jdom</artifactId>
-          <groupId>jdom</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>servlet</artifactId>
-          <groupId>javax.servlet</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>servletapi</artifactId>
-          <groupId>servletapi</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>xerces</artifactId>
-          <groupId>xerces</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>ant-optional</artifactId>
-          <groupId>ant</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>rhino</groupId>

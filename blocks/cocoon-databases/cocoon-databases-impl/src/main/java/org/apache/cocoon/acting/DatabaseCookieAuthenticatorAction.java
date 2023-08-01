@@ -69,8 +69,6 @@ import org.apache.commons.lang.StringUtils;
  *  to the sesion and session object is not verified. If you want to append
  *  attributes to the session without creating a new one, specify action
  *  parameter "append-session" to "yes" or "true".
- *
- * @version $Id$
  */
 public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe {
 

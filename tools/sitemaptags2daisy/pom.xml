@@ -181,15 +181,4 @@ java org.apache.cocoon.documentation.daisy.SitemapTagsToDaisy
     </dependency>
   </dependencies>
 
-  <repositories>
-    <repository>
-      <id>daisy</id>
-      <url>http://daisycms.org/maven/maven2/deploy/</url>
-    </repository>
-    <repository>
-      <id>maven2-repository for neko</id>
-      <url>http://mirrors.ibiblio.org/maven2/</url>
-    </repository>
-  </repositories>
-
 </project>

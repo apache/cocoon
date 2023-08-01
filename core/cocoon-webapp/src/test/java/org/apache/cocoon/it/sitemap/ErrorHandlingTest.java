@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test error handling of sitemaps.
@@ -33,8 +34,8 @@ public class ErrorHandlingTest extends HtmlUnitTestCase {
         this.loadResponse("/cocoon-it/12345678901234567890");
         this.loadResponse("/cocoon-it/12345678901234567890");
         int statusCode = this.response.getStatusCode();
-        assertTrue(statusCode == 404);
-        assertTrue(this.response.getContentAsString().indexOf("404 Resource Not Available (Cocoon Integration Tests)") > 0);
+        Assert.assertEquals(404, statusCode);
+        Assert.assertTrue(this.response.getContentAsString().indexOf("404 Resource Not Available (Cocoon Integration Tests)") > 0);
     }
 
     public void testPerSitemapCustomError() throws Exception {
@@ -43,8 +44,8 @@ public class ErrorHandlingTest extends HtmlUnitTestCase {
         this.loadResponse("/cocoon-it/error-handling/custom-error");
         this.loadResponse("/cocoon-it/error-handling/custom-error");
         int statusCode = this.response.getStatusCode();
-        assertTrue(statusCode == 500);
-        assertTrue(this.response.getContentAsString().indexOf("Error 500 (Cocoon Integration Tests)") > 0);
+        Assert.assertEquals(500, statusCode);
+        Assert.assertTrue(this.response.getContentAsString().indexOf("Error 500 (Cocoon Integration Tests)") > 0);
     }
 
     public void testPerPipelineCustomError() throws Exception {
@@ -53,8 +54,8 @@ public class ErrorHandlingTest extends HtmlUnitTestCase {
         this.loadResponse("/cocoon-it/error-handling/custom-error-per-pipeline-error-handling");
         this.loadResponse("/cocoon-it/error-handling/custom-error-per-pipeline-error-handling");
         int statusCode = this.response.getStatusCode();
-        assertTrue(statusCode == 501);
-        assertTrue(this.response.getContentAsString().indexOf("Error 501 (Cocoon Integration Tests)") > 0);
+        Assert.assertEquals(501, statusCode);
+        Assert.assertTrue(this.response.getContentAsString().indexOf("Error 501 (Cocoon Integration Tests)") > 0);
     }
 
     /*
@@ -64,7 +65,7 @@ public class ErrorHandlingTest extends HtmlUnitTestCase {
         for(int i = 0; i < 5; i++) {
             this.loadResponse("/cocoon-it/error-handling/another-custom-error");
             int statusCode = this.response.getStatusCode();
-            assertTrue(statusCode == 506);
+            Assert.assertEquals(506, statusCode);
         }
     }
 

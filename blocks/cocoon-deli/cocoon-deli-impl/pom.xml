@@ -17,67 +17,40 @@
   specific language governing permissions and limitations
   under the License.
 -->
-
-<!--
-  - @version $Id$
-  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-blocks-modules</artifactId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <artifactId>cocoon-deli</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-deli-impl</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Deli Block Implementation</name>
-  
-  <repositories>
-    <!-- Repository for the deli -->
-    <repository>
-      <id>apache-cvs</id>
-      <name>Apache Maven 1 Repository</name>
-      <url>http://people.apache.org/repo/m1-snapshot-repository</url>
-      <layout>legacy</layout>
-    </repository>  
-  </repositories>    
 
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>net.sourceforge.jena</groupId>
       <artifactId>jena</artifactId>
-      
-      <exclusions>
-        <exclusion>
-          <groupId>avalon-framework</groupId>
-          <artifactId>avalon-framework</artifactId>
-        </exclusion>
-        <exclusion>
-          <artifactId>xmlbeans-jsr173-api</artifactId>
-          <groupId>xmlbeans</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>deli</groupId>
       <artifactId>deli</artifactId>
-      
+      <!-- http://svn.apache.org/repos/asf/cocoon/branches/BRANCH_2_1_X/lib/optional/deli-x050330.jar -->
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
 </project>

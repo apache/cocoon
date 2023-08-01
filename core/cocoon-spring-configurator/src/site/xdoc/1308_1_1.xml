@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Spring Configurator - Installation</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Installation</h1><section name="Requirements" style="background:none;padding:0;"/><p>The Spring Configurator requires</p><ul>
+<li>the Spring Framework Version 2.5.x (or above)</li>
+<li>JDK 1.5 (or above)</li>
+<li>Servlet API 2.3 (or above)</li>
+</ul>The Spring Configuration requires two additional jar files, the Cocoon
+Configuration API and the Cocoon Spring Configurator, which you can either
+download
+<a href="http://repo1.maven.org/maven2/org/apache/cocoon/cocoon-configuration-api/">here</a>
+and
+<a href="http://repo1.maven.org/maven2/org/apache/cocoon/cocoon-spring-configurator/">here</a>
+or from a public Maven repository by adding the Spring Configurator as a
+dependency to your project:Please refer to the Spring documentation for setting up Spring's web
+application context.</div></div>
+       </body></document>

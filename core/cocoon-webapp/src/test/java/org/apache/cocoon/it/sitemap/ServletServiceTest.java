@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test the usage of servlet services in Cocoon sitemaps.
@@ -29,8 +30,8 @@ public class ServletServiceTest extends HtmlUnitTestCase {
      */
     public void testSimplePipelineParameterPassingToTransformer() throws Exception {
         this.loadXmlPage("/cocoon-it/ssf/local");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/xml", this.response.getContentType());
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/xml", this.response.getContentType());
         assertXPath("/html/body/p", "3");
     }
 

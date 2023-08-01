@@ -17,39 +17,36 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
-  
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
-    <version>6-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-util</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Cocoon Util</name>
   <description>
     Utility classes.
   </description>
-  <url>http://cocoon.apache.org/${docs.m.util.relPath}</url>    
-  
+  <url>http://cocoon.apache.org/${docs.m.util.relPath}</url>
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.util.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.util.relPath}</url>
     </site>
-  </distributionManagement>  
-  
+  </distributionManagement>
+
   <dependencies>
     <!-- Excalibur -->
     <dependency>
@@ -64,16 +61,6 @@
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <exclusions>
-        <exclusion>
-          <artifactId>logkit</artifactId>
-          <groupId>logkit</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>avalon-framework</artifactId>
-          <groupId>avalon-framework</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>jakarta-regexp</groupId>
@@ -86,4 +73,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
 </project>

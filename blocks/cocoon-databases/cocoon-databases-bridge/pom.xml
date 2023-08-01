@@ -17,54 +17,51 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
-  
+
   <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <artifactId>cocoon-databases</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-databases-bridge</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Cocoon Database Block Bridge for Avalon components</name>
-  <url>http://cocoon.apache.org/${docs.m.databases-bridge.relPath}</url>  
+  <url>http://cocoon.apache.org/${docs.m.databases-bridge.relPath}</url>
 
   <properties>
     <docs.name>Cocoon Databases Block</docs.name>
     <docs.version>${docs.m.databases.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.databases-bridge.relPath}</url>
     </site>
   </distributionManagement>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.excalibur.components</groupId>
-      <artifactId>excalibur-datasource</artifactId>    
+      <artifactId>excalibur-datasource</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
-      <version>2.0.6</version>
     </dependency>
     <!-- Specify transitive dependencies to avoid MNG-2782 with JDK1.4.2. -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-dao</artifactId>
-      <version>2.0.6</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

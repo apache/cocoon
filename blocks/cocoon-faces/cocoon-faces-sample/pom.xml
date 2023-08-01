@@ -17,33 +17,46 @@
   specific language governing permissions and limitations
   under the License.
 -->
-
-<!--
-  - @version $Id$
-  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-blocks-modules</artifactId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <artifactId>cocoon-faces</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-faces-sample</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Faces Block Samples</name>
-  <packaging>jar</packaging>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes combine.children="append">
+            <!-- TODO: This needs to be fixed as it contains stuff licensed by others -->
+            <exclude>src/main/resources/COB-INF/cardemo/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-faces-impl</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-samples-style-default</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
+
 </project>

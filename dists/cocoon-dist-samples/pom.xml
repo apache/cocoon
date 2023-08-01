@@ -17,30 +17,45 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--
-  - @version $Id$
-  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-dists-modules</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-dist-samples</artifactId>
+  <version>2.2.1-SNAPSHOT</version>
   <packaging>war</packaging>
+
   <name>Cocoon Samples Distribution</name>
+
   <build>
+    <finalName>cocoon-samples</finalName>
+
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.1</version>
-        <configuration>
-          <descriptor>assembly.xml</descriptor>
-          <outputDirectory>target/dist</outputDirectory>
-          <workDirectory>target/assembly/work</workDirectory>
-        </configuration>
+        <executions>
+          <execution>
+            <id>build-assembly</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>assembly.xml</descriptor>
+              </descriptors>
+              <outputDirectory>target/dist</outputDirectory>
+              <workDirectory>target/assembly/work</workDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
+
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
@@ -57,70 +72,69 @@
         </configuration>
       </plugin>
     </plugins>
-    <finalName>cocoon-samples</finalName>
   </build>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-webapp</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
       <type>war</type>
-      
     </dependency>
 
     <!-- Core Samples -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-main-sample</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-blocks-fw-demo1</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-blocks-fw-demo2</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-blocks-fw-sample</artifactId>
-      
-    </dependency>
+      <version>2.2.1-SNAPSHOT</version>
+    </dependency-->
 
     <!-- Blocks Samples -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ajax-sample</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-batik-sample</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-fop-sample</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-sample</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-sample</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <!-- Many of old samples require XSP -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xsp-sample</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
@@ -131,21 +145,15 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-databases-sample</artifactId>
-          <version>1.0.0-SNAPSHOT</version>
+          <version>2.2.1-SNAPSHOT</version>
         </dependency>    
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-portal-sample</artifactId>
-          <version>1.0.0-SNAPSHOT</version>
+          <version>2.2.1-SNAPSHOT</version>
         </dependency>    
       </dependencies>
     </profile>
   </profiles>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>snapshots</id>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-    </pluginRepository>
-  </pluginRepositories>
 </project>

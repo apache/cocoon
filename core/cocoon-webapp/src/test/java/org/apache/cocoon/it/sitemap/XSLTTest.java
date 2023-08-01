@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test XSLT transformation.
@@ -30,8 +31,8 @@ public class XSLTTest extends HtmlUnitTestCase {
      */
     public void testXSLTTransformation() throws Exception {
         this.loadXmlPage("/cocoon-it/xslt/main");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/xml", this.response.getContentType());
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/xml", this.response.getContentType());
         assertXPath("/xslt/servlet", "servlet");
         assertXPath("/xslt/file", "file");
     }

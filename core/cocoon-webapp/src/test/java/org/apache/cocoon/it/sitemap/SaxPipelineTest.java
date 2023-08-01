@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test SAX Pipelines
@@ -29,9 +30,9 @@ public class SaxPipelineTest extends HtmlUnitTestCase {
      */
     public void testSimplePipeline() throws Exception {
         this.loadResponse("/cocoon-it/sax-pipeline/simple");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/html", this.response.getContentType());
-        assertTrue(this.response.getContentAsString().indexOf("-//W3C//DTD XHTML 1.0 Strict//EN") == -1);
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/html", this.response.getContentType());
+        Assert.assertEquals(-1, this.response.getContentAsString().indexOf("-//W3C//DTD XHTML 1.0 Strict//EN"));
     }
 
     /**
@@ -40,9 +41,9 @@ public class SaxPipelineTest extends HtmlUnitTestCase {
      */
     public void testSimplePipelineXhtml() throws Exception {
         this.loadResponse("/cocoon-it/sax-pipeline/simple-xhtml");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/html", this.response.getContentType());
-        assertTrue(this.response.getContentAsString().indexOf("-//W3C//DTD XHTML 1.0 Strict//EN") > 0);
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/html", this.response.getContentType());
+        Assert.assertTrue(this.response.getContentAsString().indexOf("-//W3C//DTD XHTML 1.0 Strict//EN") > 0);
     }
 
     /**
@@ -50,8 +51,8 @@ public class SaxPipelineTest extends HtmlUnitTestCase {
      */
     public void testSimplePipelineParameterPassingToTransformer() throws Exception {
         this.loadXmlPage("/cocoon-it/sax-pipeline/simple-xml");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/xml", this.response.getContentType());
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/xml", this.response.getContentType());
         assertXPath("/html/body/p", "3");
     }
 
@@ -64,10 +65,10 @@ public class SaxPipelineTest extends HtmlUnitTestCase {
         this.loadResponse("/cocoon-it/sax-pipeline/unauthorized");
         this.loadResponse("/cocoon-it/sax-pipeline/unauthorized");
         int statusCode = this.response.getStatusCode();
-        assertTrue(statusCode == 401);
+        Assert.assertEquals(401, statusCode);
         String lastModified = this.response.getResponseHeaderValue("Last-Modified");
-        assertNotNull(lastModified);
-        assertFalse(lastModified.equals(""));
+        Assert.assertNotNull(lastModified);
+        Assert.assertNotEquals("", lastModified);
     }
 
 }

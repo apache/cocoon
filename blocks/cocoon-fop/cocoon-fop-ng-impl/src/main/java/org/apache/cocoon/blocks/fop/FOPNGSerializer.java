@@ -100,7 +100,6 @@ public class FOPNGSerializer extends AbstractSerializer
 
         String configUrl = conf.getChild("user-config").getValue(null);
 
-
         if (configUrl != null) {
             Source configSource = null;
             SourceResolver resolver = null;

@@ -30,9 +30,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Random;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
 
 /**
  * The <code>CaptchaReader</code> is a simple tool generating JPEG images for the text
@@ -300,14 +301,20 @@ public class CaptchaReader extends AbstractReader {
         graphics.fillRect(0, 0, width, height);
         graphics.setColor(foreground);
         graphics.drawImage(image, 0, 0, null);
-        warped = null;
 
         /* Write the processed image as a JPEG image */
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(buffer);
-        JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(result);
-        param.setQuality(quality, true);
-        encoder.encode(result, param);
+
+        ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
+        ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
+        jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        jpgWriteParam.setCompressionQuality(quality);
+        jpgWriter.setOutput(buffer);
+
+        IIOImage outputImage = new IIOImage((BufferedImage) image, null, null);
+        jpgWriter.write(null, outputImage, jpgWriteParam);
+        jpgWriter.dispose();
+
         buffer.flush();
         buffer.close();
         this.out.write(buffer.toByteArray());

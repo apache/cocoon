@@ -16,16 +16,15 @@
 */
 package org.apache.cocoon.it.servletservice;
 
-import junit.framework.Assert;
-
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 public class RequestInformationPassing extends HtmlUnitTestCase {
 
     public void testAttributes() throws Exception {
         this.webClient.addRequestHeader("my-header-param", "6");
         this.loadXmlPage("cocoon-servlet-service-impl-sample/test1/test4?foo=5");
-        Assert.assertTrue(this.response.getStatusCode() == 200);
+        Assert.assertEquals(200, this.response.getStatusCode());
 
         // external request
         // ~~~~~~~~~~~~~~~~

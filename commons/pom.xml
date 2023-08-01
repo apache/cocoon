@@ -17,27 +17,41 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    |
-    +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <packaging>pom</packaging>
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon</artifactId>
-    <version>10-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
     <relativePath>../parent</relativePath>
   </parent>
-  <groupId>org.apache.cocoon</groupId>
-  <artifactId>cocoon-commons-modules</artifactId>
-  <version>2-SNAPSHOT</version>
+
+  <artifactId>cocoon-commons</artifactId>
+  <version>2.2.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
   <name>Cocoon Commons [modules]</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes combine.children="append">
+            <exclude>TO-SYNC-FROM-BRANCH.txt</exclude>
+            <exclude>bylaws/bylaws.txt</exclude>
+            <exclude>CREDITS.txt</exclude>
+            <exclude>misc/graphics/*.ai</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <modules>
     <module>legal</module>
   </modules>
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/cocoon/trunk/commons</connection>
-  </scm>
+
 </project>

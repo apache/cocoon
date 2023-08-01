@@ -17,47 +17,60 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--+
-    | @version $Id$
-    |
-    +-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-portal</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
   <artifactId>cocoon-portal-portlet-impl</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Portal Block Portlet Implementation</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes combine.children="append">
+            <exclude>src/main/resources/org/apache/cocoon/portal/pluto/deployment/web-app_2_3.dtd</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-portal-impl</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-portal-bridges-impl</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-serializers-impl</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-portal-sitemap</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.castor</groupId>
@@ -66,20 +79,18 @@
     <dependency>
       <groupId>org.apache.pluto</groupId>
       <artifactId>pluto</artifactId>
-      
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
-      
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      
       <scope>provided</scope>
     </dependency>
   </dependencies>
+
 </project>

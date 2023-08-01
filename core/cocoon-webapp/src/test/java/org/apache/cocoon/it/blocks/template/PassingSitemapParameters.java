@@ -16,21 +16,20 @@
  */
 package org.apache.cocoon.it.blocks.template;
 
-import junit.framework.Assert;
-
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 public class PassingSitemapParameters extends HtmlUnitTestCase {
 
     public void testSimpleSitemapParameterPassing() throws Exception {
         this.loadXmlPage("cocoon-template-sample/it/parameter-from-sitemap");
-        Assert.assertTrue(this.response.getStatusCode() == 200);
+        Assert.assertEquals(200, this.response.getStatusCode());
         assertXPath("/parameters/parameter[@name='abc']", "123");
     }
 
     public void testSitemapParameterPassingInJxImport() throws Exception {
         this.loadXmlPage("cocoon-template-sample/it/parameter-from-sitemap-with-import");
-        Assert.assertTrue(this.response.getStatusCode() == 200);
+        Assert.assertEquals(200, this.response.getStatusCode());
         assertXPath("/page/p1/parameters/parameter[@name='abc']", "123");
         // Bug: https://issues.apache.org/jira/browse/COCOON-2187
         // assertXPath("/page/p2", "123");

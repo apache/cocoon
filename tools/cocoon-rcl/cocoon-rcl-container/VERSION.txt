@@ -1,3 +1,19 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
 jetty-6.0.1 - 24 September 2006
     + fixed isUserInRole checking for JAASUserRealm
@@ -69,7 +85,7 @@ jetty-6.0.0rc1 - 16 August 2006
     + -DSTOP.PORT must be specified.
     + moved optional modules to extras
     + fixed bug that caused Response.setStatus to ignore the provided message
-    + refactored resource cache 
+    + refactored resource cache
     + Allow direct filling of buffers for uncached static content.
     + Added simple ResourceHandler and FileServer example
 
@@ -88,14 +104,14 @@ jetty-6.0.0rc0 - 7 July 2006
     + Ssl algorithm taken from system property
     + Added 8 random letters&digits to Jetty-generated tmp work dir name to ensure uniqueness
     + Simplify runtime resolution of JSP library for plugin
-    + Ensure mvn clean cleans the build 
+    + Ensure mvn clean cleans the build
     + Do not wrap EofException with EofException
     + reverse order for destroy event listeners
     + added StatisticsHandler and statistics on Connector.
     + Simplified Servlet Context API
     + Added maximum limit to filter chain cache.
     + refactor HttpChannelEndPoint in preparation for SslEngine
-    + ContextHandlerCollection addContext and setContextClass 
+    + ContextHandlerCollection addContext and setContextClass
     + Discard excess bytes in header buffer if connection is closing
     + Updated javax code from http://svn.apache.org/repos/asf/tomcat/tc6.0.x/trunk/java/javax@417727
     + Threadpool does not need to be a LifeCycle
@@ -136,13 +152,13 @@ jetty-6.0.0beta15 - 11/5/2006
     + setSendServerVersion method added to Server to control sending of Server: http header
     + removed SelectBlockingChannelConnector (unmaintained)
     + Improved HttpException
-    + Moved more resources to resources 
+    + Moved more resources to resources
     + Added ThrottlingFilter and fixed race in Continuations
     + Added taglib resources to 2.1 jsp api jar
     + Reset of timer task clears expiry
     + improved MBeanContainer object removal
     + ContextHandler.setContextPath can be called after start.
-    + Fixed handling of params after forward 
+    + Fixed handling of params after forward
     + Added --version to start.jar
     + Added embedded examples
     + Simplified DefaultServlet static content buffering
@@ -176,8 +192,8 @@ jetty-6.0.0beta14 - 9/4/2006
     + fixed HttpField iterator
     + added jetty-util.jar module
     + added reset to Continuation
-  
- 
+
+
 jetty-6.0.0beta12 - 16/3/2006
     + Fixed maven plugin JNDI for redeploys
     + Fixed tld discovery for plugin (search dependencies)
@@ -214,7 +230,7 @@ jetty-6.0.0beta10 25/2/2006
     + Fix sf1431936 don't chunk the chunk
     + Fix http://jira.codehaus.org/browse/JETTY-6. hi byte reader
     + Updates javax to MR2 release
-   
+
 jetty-6.0.0beta9 9/2/2006
     + PathMap for direct context mapping.
     + Refactored chat demo and upgraded prototype.js
@@ -226,7 +242,7 @@ jetty-6.0.0beta9 9/2/2006
     + Added CGI servlet.
     + Force a tempdir to be set.
     + Force jasper scratch dir.
-    + fixed setLocale bug sf1426940 
+    + fixed setLocale bug sf1426940
     + Added TLD tag listener handling.
 
 jetty-6.0.0beta8 24/1/2006

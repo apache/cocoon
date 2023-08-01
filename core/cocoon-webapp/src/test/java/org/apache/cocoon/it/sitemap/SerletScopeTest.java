@@ -19,18 +19,19 @@ package org.apache.cocoon.it.sitemap;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 public class SerletScopeTest extends HtmlUnitTestCase {
 
     public void testServletScope() throws Exception {
         this.loadResponse("/cocoon-it/demo1/setCode?code=300");
-        assertEquals(HttpServletResponse.SC_OK, this.response.getStatusCode());
+        Assert.assertEquals(HttpServletResponse.SC_OK, this.response.getStatusCode());
         this.loadResponse("/cocoon-it/demo2/setCode?code=301");
-        assertEquals(HttpServletResponse.SC_OK, this.response.getStatusCode());
+        Assert.assertEquals(HttpServletResponse.SC_OK, this.response.getStatusCode());
 
         this.loadResponse("/cocoon-it/demo1/getCode");
-        assertEquals(300, this.response.getStatusCode());
+        Assert.assertEquals(300, this.response.getStatusCode());
         this.loadResponse("/cocoon-it/demo2/getCode");
-        assertEquals(301, this.response.getStatusCode());
+        Assert.assertEquals(301, this.response.getStatusCode());
     }
 }

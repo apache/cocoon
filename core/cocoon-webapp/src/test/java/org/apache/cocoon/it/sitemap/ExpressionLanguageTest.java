@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test expression language usage
@@ -29,8 +30,8 @@ public class ExpressionLanguageTest extends HtmlUnitTestCase {
      */
     public void testJexl() throws Exception {
         this.loadXmlPage("/cocoon-it/expression-language/jexl?fileName=simple");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/xml", this.response.getContentType());
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/xml", this.response.getContentType());
         assertXPath("/simple", "simple-text");
     }
 
@@ -39,8 +40,8 @@ public class ExpressionLanguageTest extends HtmlUnitTestCase {
      */
     public void testJXPath() throws Exception {
         this.loadXmlPage("/cocoon-it/expression-language/jxpath?fileName=simple");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/xml", this.response.getContentType());
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/xml", this.response.getContentType());
         assertXPath("/simple", "simple-text");
     }
 
@@ -49,8 +50,8 @@ public class ExpressionLanguageTest extends HtmlUnitTestCase {
      */
     public void testMap() throws Exception {
         this.loadXmlPage("/cocoon-it/expression-language/map/simple");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/xml", this.response.getContentType());
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/xml", this.response.getContentType());
         assertXPath("/simple", "simple-text");
     }
 
@@ -59,8 +60,8 @@ public class ExpressionLanguageTest extends HtmlUnitTestCase {
      */
     public void testNextedMap() throws Exception {
         this.loadXmlPage("/cocoon-it/expression-language/nested/simple");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/xml", this.response.getContentType());
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/xml", this.response.getContentType());
         assertXPath("/simple", "simple-text");
     }
 

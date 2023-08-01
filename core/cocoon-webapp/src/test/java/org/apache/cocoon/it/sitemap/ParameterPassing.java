@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test passing parameters.
@@ -29,8 +30,8 @@ public class ParameterPassing extends HtmlUnitTestCase {
      */
     public void testPassingParamatersFromMatcherToSitemap() throws Exception {
         this.loadXmlPage("/cocoon-it/parameter-passing/working");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/xml", this.response.getContentType());
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/xml", this.response.getContentType());
         assertXPath("/simple", "simple-text");
     }
 
@@ -41,7 +42,7 @@ public class ParameterPassing extends HtmlUnitTestCase {
         this.webClient.setThrowExceptionOnFailingStatusCode(false);
         this.loadResponse("/cocoon-it/parameter-passing/failing");
         this.loadResponse("/cocoon-it/parameter-passing/failing");
-        assertTrue(this.response.getStatusCode() == 404);
+        Assert.assertEquals(404, this.response.getStatusCode());
     }
 
 }

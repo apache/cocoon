@@ -17,58 +17,65 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!--
-  - @version $Id$
-  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-dists-modules</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-dist-publishing</artifactId>
+  <version>2.2.1-SNAPSHOT</version>
   <packaging>war</packaging>
+
   <name>Core Publishing Distribution</name>
+
   <build>
+    <finalName>cocoon-publishing</finalName>
+
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.1</version>
-        <configuration>
-          <descriptor>assembly.xml</descriptor>
-          <outputDirectory>target/dist</outputDirectory>
-          <workDirectory>target/assembly/work</workDirectory>
-        </configuration>
+        <executions>
+          <execution>
+            <id>build-assembly</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>assembly.xml</descriptor>
+              </descriptors>
+              <outputDirectory>target/dist</outputDirectory>
+              <workDirectory>target/assembly/work</workDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
-    <finalName>cocoon-publishing</finalName>
   </build>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-webapp</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
       <type>war</type>
-      
     </dependency>
 
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-batik-impl</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-fop-impl</artifactId>
-      
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>snapshots</id>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-    </pluginRepository>
-  </pluginRepositories>
 </project>

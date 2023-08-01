@@ -17,39 +17,38 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <artifactId>cocoon-captcha</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-captcha-impl</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Cocoon Captcha Block Implementation</name>
-  <url>http://cocoon.apache.org/${docs.m.captcha.relPath}</url>    
-  <packaging>jar</packaging>
+  <url>http://cocoon.apache.org/${docs.m.captcha.relPath}</url>
+
+  <properties>
+    <docs.name>Cocoon Captcha</docs.name>
+    <docs.version>${docs.m.captcha.version}</docs.version>
+  </properties>
 
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.captcha.relPath}</url>
     </site>
-  </distributionManagement>  
-  
-  <properties>
-    <docs.name>Cocoon Captcha</docs.name>    
-    <docs.version>${docs.m.captcha.version}</docs.version>
-  </properties>
-  
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   

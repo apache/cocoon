@@ -17,21 +17,25 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
 
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-jcr</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-jcr-impl</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>JCR Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.jcr.relPath}</url>
+
+  <properties>
+    <docs.name>Cocoon Apples</docs.name>
+    <docs.version>1.0</docs.version>
+  </properties>
 
   <distributionManagement>
     <site>
@@ -40,35 +44,35 @@
     </site>
   </distributionManagement>
 
-  <properties>
-    <docs.name>Cocoon Apples</docs.name>
-    <docs.version>1.0</docs.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>slide</groupId>
@@ -81,12 +85,6 @@
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-core</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -98,13 +96,6 @@
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-text-extractors</artifactId>
-      <version>1.4</version>
-      <exclusions>
-        <exclusion>
-          <groupId>poi</groupId>
-          <artifactId>poi</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.poi</groupId>

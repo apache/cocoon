@@ -20,9 +20,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.svg.SVGOMDocument;
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
+import org.apache.batik.anim.dom.SVGDOMImplementation;
+import org.apache.batik.anim.dom.SVGOMDocument;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

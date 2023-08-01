@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test redirecting
@@ -29,8 +30,8 @@ public class RedirectTest extends HtmlUnitTestCase {
      */
     public void testTemporaryRedirect() throws Exception {
         this.loadResponse("/cocoon-it/redirect/www.orf.at");
-        assertEquals(302, this.response.getStatusCode());
-        assertEquals("http://www.orf.at", this.response.getResponseHeaderValue("Location"));
+        Assert.assertEquals(302, this.response.getStatusCode());
+        Assert.assertEquals("http://www.orf.at", this.response.getResponseHeaderValue("Location"));
     }
 
 }

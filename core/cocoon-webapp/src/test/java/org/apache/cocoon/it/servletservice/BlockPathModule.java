@@ -16,15 +16,15 @@
  */
 package org.apache.cocoon.it.servletservice;
 
-import junit.framework.Assert;
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 public class BlockPathModule extends HtmlUnitTestCase {
 
     public void testSimplePipelineFromSubSitemap() throws Exception {
         this.loadXmlPage("cocoon-servlet-service-components-sample/1/sub/abs");
-        Assert.assertTrue(this.response.getStatusCode() == 200);
+        Assert.assertEquals(200, this.response.getStatusCode());
         assertXPath("/properties/@other", "/cocoon-servlet-service-components-sample/2/test");
         assertXPath("/properties/@abs", "/cocoon-servlet-service-components-sample/1/test");
     }

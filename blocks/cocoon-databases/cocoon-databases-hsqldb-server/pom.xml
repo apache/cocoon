@@ -17,43 +17,63 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
 
   <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>    
+    <artifactId>cocoon-databases</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-databases-hsqldb-server</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Cocoon Hsqldb Server Block Implementation</name>
-  <url>http://cocoon.apache.org/${docs.m.hsqldb-server.relPath}</url>  
+  <url>http://cocoon.apache.org/${docs.m.hsqldb-server.relPath}</url>
   <description>
     Start a Hsql database server as part of your Cocoon application.
   </description>
-  
+
   <properties>
-    <docs.name>${project.name}</docs.name>    
+    <docs.name>${project.name}</docs.name>
     <docs.version>${docs.m.hsqldb-server.version}</docs.version>
-  </properties>  
-  
+  </properties>
+
   <distributionManagement>
     <site>
       <id>website</id>
       <url>${docs.deploymentBaseUrl}/${docs.m.hsqldb-server.relPath}</url>
     </site>
-  </distributionManagement>    
-  
+  </distributionManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-spring-configurator</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-thread-impl</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
   <reporting>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.0.1</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -67,28 +87,8 @@
         </reportSets>
       </plugin>
     </plugins>
-  </reporting>  
+  </reporting>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-spring-configurator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-thread-impl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
-  
   <profiles>
     <profile>
       <id>daisy</id>

@@ -19,6 +19,7 @@ package org.apache.cocoon.it.sitemap;
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
 import org.custommonkey.xmlunit.Diff;
+import org.junit.Assert;
 
 /**
  * Test accessing the object model.
@@ -30,10 +31,10 @@ public class ObjectModelTest extends HtmlUnitTestCase {
      */
     public void testTemporaryRedirect() throws Exception {
         this.loadResponse("/cocoon-it/object-model/request-parameters?a=1&b=2&c=3");
-        assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals(200, this.response.getStatusCode());
         String content = this.response.getContentAsString();
         String expectedContent = "<?xml version=\"1.0\"?><request-paramters><a>1</a><c>3</c><b>2</b></request-paramters>";
-        assertTrue(new Diff(expectedContent, content).similar());
+        Assert.assertTrue(new Diff(expectedContent, content).similar());
     }
 
 }

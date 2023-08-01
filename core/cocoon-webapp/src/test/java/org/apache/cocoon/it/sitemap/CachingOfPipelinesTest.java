@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test pipeline caching
@@ -30,11 +31,11 @@ public class CachingOfPipelinesTest extends HtmlUnitTestCase {
     public void testNonCachingPipeline() throws Exception {
         this.loadResponse("/cocoon-it/caching-pipeline/off");
         String content1 = this.response.getContentAsString();
-        assertNotNull(content1);
+        Assert.assertNotNull(content1);
         this.loadResponse("/cocoon-it/caching-pipeline/off");
         String content2 = this.response.getContentAsString();
-        assertNotNull(content2);
-        assertFalse("The response has to change with every request.", content1.equals(content2));
+        Assert.assertNotNull(content2);
+        Assert.assertFalse("The response has to change with every request.", content1.equals(content2));
     }
 
     /**
@@ -43,11 +44,11 @@ public class CachingOfPipelinesTest extends HtmlUnitTestCase {
     public void testCachingPipeline() throws Exception {
         this.loadResponse("/cocoon-it/caching-pipeline/on");
         String content1 = this.response.getContentAsString();
-        assertNotNull(content1);
+        Assert.assertNotNull(content1);
         this.loadResponse("/cocoon-it/caching-pipeline/on");
         String content2 = this.response.getContentAsString();
-        assertNotNull(content2);
-        assertTrue("The response has to be always the same.", content1.equals(content2));
+        Assert.assertNotNull(content2);
+        Assert.assertTrue("The response has to be always the same.", content1.equals(content2));
     }
 
 }

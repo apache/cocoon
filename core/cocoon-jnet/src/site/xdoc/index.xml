@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon JNet - Overview</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Overview</h1><p>Cocoon JNet allows the dynamic registration of URLStreamHandler factories
+with your JVM. That's a feature that isn't supported by Java itself.</p><h1>Plain Java usage</h1><p>The class <tt>org.apache.cocoon.jnet.DynamicURLStreamHandlerFactory</tt> can
+be used to install more than one
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/net/class-use/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a>
+and is registered at the JVM by using<tt>
+org.apache.cocoon.jnet.URLStreamHandlerFactoryInstaller</tt>.</p><p>After registering your own URLStreamHandler, you can use the new protocols
+for java.net.URL objects:</p><pre>java.net.URL url = new java.net.URL("myprotocol:/a/b/c");
+</pre><h1>Spring integration</h1><p>By using the <a href="../spring-configurator/index.html">Cocoon Spring-Configurator</a> all beans of
+type <tt>java.net.URLStreamHandlerFactory</tt> can be collected:</p><pre>&lt;bean id="org.apache.cocoon.jnet.URLHandlerFactoryCollector" 
+  class="org.apache.cocoon.jnet.URLHandlerFactoryCollector"&gt;
+  &lt;property name="urlHandlerFactories"&gt;
+    &lt;configurator:bean-map type="java.net.URLStreamHandlerFactory" 
+      strip-prefix="true" /&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;
+</pre><p>The URLHandlerFactoryCollector is implemented as an around advice. The code
+that wants to use the registred protocols only has to be wrapped by this advice.
+The Cocoon Servlet-Service framework uses it to intercept all calls of the
+service method of any of its servlets:</p><pre>&lt;aop:config&gt;
+  &lt;aop:aspect id="installURL" ref="org.apache.cocoon.jnet.URLHandlerFactoryCollector"&gt;
+    &lt;aop:pointcut id="servletServiceInvocation"
+      expression="execution(* javax.servlet.Servlet.service(..)) and bean(*/embedded)" /&gt;
+    &lt;aop:around pointcut-ref="servletServiceInvocation" method="installURLHandlers" /&gt;
+  &lt;/aop:aspect&gt;
+&lt;/aop:config&gt;
+</pre></div></div>
+       </body></document>

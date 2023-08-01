@@ -8,10 +8,10 @@ There are also some Daisy documentation pages about this, for more "stable" info
 
 PREREQUISITES
 -------------
-You need a JDK, 1.4.x, 1.5.x, 1.6.x, or 1.7.x.
-When experimenting with trunk, 1.5.x is probably the best bet.
+You need a JDK, 1.8.x or later. (Note, currently a JRE won't do)
+When experimenting with trunk, 11.x is probably the best bet.
 
-Maven 2 must be installed (at least 2.0.9).
+Maven 3 must be installed.
 
 
 MAVEN REPOSITORY MIRRORS
@@ -22,7 +22,7 @@ Using a Maven mirror isn't necessary anymore.
 HOW TO BUILD THE COCOON WEBAPP
 ------------------------------
 
-Since Cocoon release 2.2, Cocoon relies on Maven 2 for its build
+Since Cocoon release 2.2, Cocoon relies on Maven for its build
 process. 
 
 To build Cocoon, use the following command:
@@ -76,18 +76,9 @@ For further information about the maven eclipse plugin visit
 HOW TO MOUNT THE PROJECTS IN INTELLIJ
 ------------------------------------
 
-First, build all the projects as described above.
-Next, from /trunk, run
+In IntelliJ select File - Open Project...  Navigate to the root directory and select that.
 
-  $ mvn -P allblocks idea:idea
 
-In IntelliJ select File - Open Project...  Navigate to the trunk directory and select cocoon.ipr.
-
-For further information about the maven idea plugin visit
-
-  http://maven.apache.org/plugins/maven-idea-plugin/
-  
-  
 HOW TO START THE COCOON WEBAPP
 ------------------------------
 

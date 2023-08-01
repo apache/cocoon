@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test controller.
@@ -29,7 +30,7 @@ public class ControllerTest extends HtmlUnitTestCase {
      */
     public void testControllerInvocation() throws Exception {
         this.loadResponse("/cocoon-it/controller/invoke");
-        assertTrue(this.response.getStatusCode() == 201);
+        Assert.assertEquals(201, this.response.getStatusCode());
     }
 
     /**
@@ -37,7 +38,7 @@ public class ControllerTest extends HtmlUnitTestCase {
      */
     public void testContinuingController() throws Exception {
         this.loadResponse("/cocoon-it/controller/continue");
-        assertTrue(this.response.getStatusCode() == 202);
+        Assert.assertEquals(202, this.response.getStatusCode());
     }
 
 }

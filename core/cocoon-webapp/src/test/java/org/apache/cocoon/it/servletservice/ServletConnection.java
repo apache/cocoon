@@ -16,36 +16,35 @@
  */
 package org.apache.cocoon.it.servletservice;
 
-import junit.framework.Assert;
-
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 public class ServletConnection extends HtmlUnitTestCase {
 
     public void testRequestDispatcher() throws Exception {
         this.loadResponse("cocoon-servlet-service-impl-sample/test1/test3");
-        Assert.assertTrue(this.response.getStatusCode() == 200);
+        Assert.assertEquals(200, this.response.getStatusCode());
     }
 
     public void testSourceResolver() throws Exception {
         this.loadResponse("cocoon-servlet-service-impl-sample/test1/test2");
-        Assert.assertTrue(this.response.getStatusCode() == 200);
+        Assert.assertEquals(200, this.response.getStatusCode());
     }
 
     public void testRelativeServletConnection1() throws Exception {
         this.loadResponse("cocoon-servlet-service-impl-sample/test1/test5");
-        Assert.assertTrue(this.response.getStatusCode() == 200);
+        Assert.assertEquals(200, this.response.getStatusCode());
     }
 
     public void testRelativeServletConnection2() throws Exception {
         this.loadResponse("cocoon-servlet-service-impl-sample/test1/test6");
-        Assert.assertTrue(this.response.getStatusCode() == 200);
+        Assert.assertEquals(200, this.response.getStatusCode());
     }
 
     public void testRelativeServletConnectionErrorStatusCode() throws Exception {
         this.loadResponse("cocoon-servlet-service-impl-sample/test1/test9");
-        assertTrue(this.response.getContentAsString().indexOf("Forbidden") > 0);
-        Assert.assertTrue(this.response.getStatusCode() == 403);
+        Assert.assertTrue(this.response.getContentAsString().indexOf("Forbidden") > 0);
+        Assert.assertEquals(403, this.response.getStatusCode());
     }
 
 }

@@ -17,25 +17,46 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<!-- $Id$ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
 
   <parent>
-    <artifactId>cocoon-blocks-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <artifactId>cocoon-forms</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-forms-impl</artifactId>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Cocoon Forms Block Implementation</name>
-  <version>1.2.0-SNAPSHOT</version>
   <url>http://cocoon.apache.org/${docs.m.forms.relPath}</url>
+
+  <properties>
+    <docs.name>Cocoon Forms</docs.name>
+    <docs.version>${docs.m.forms.version}</docs.version>
+  </properties>
+
+  <distributionManagement>
+    <site>
+      <id>website</id>
+      <url>${docs.deploymentBaseUrl}/${docs.m.forms.relPath}</url>
+    </site>
+  </distributionManagement>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes combine.children="append">
+            <!-- TODO: This needs to be fixed as it contains stuff licensed by others -->
+            <exclude>src/main/resources/org/apache/cocoon/forms/resources/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
@@ -53,27 +74,33 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ajax-impl</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-flowscript-impl</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-api</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-impl</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -85,7 +112,6 @@
     <dependency>
       <groupId>org.outerj.daisy</groupId>
       <artifactId>daisy-htmlcleaner</artifactId>
-      <version>1.4.1</version>
     </dependency>
     <dependency>
       <groupId>com.ibm.icu</groupId>
@@ -113,6 +139,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -127,18 +154,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>${docs.deploymentBaseUrl}/${docs.m.forms.relPath}</url>
-    </site>
-  </distributionManagement>
-
-  <properties>
-    <docs.name>Cocoon Forms</docs.name>
-    <docs.version>${docs.m.forms.version}</docs.version>
-  </properties>
 
   <profiles>
     <profile>

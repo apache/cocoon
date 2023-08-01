@@ -41,8 +41,6 @@
     <module>commons</module>
     <module>core</module>
     <module>dists</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-components</module>
-    <module>core/cocoon-servlet-service/cocoon-servlet-service-components-sample</module>
   </modules>
 
   <organization>
@@ -53,32 +51,10 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.10</version>
       </plugin>
     </plugins>
-  </build>  
-
-<!--  <profiles>
-    <profile>
-      <id>daisy</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.cocoon</groupId>
-            <artifactId>cocoon-sitemaptags2daisy-plugin</artifactId>
-            <executions>
-              <execution>
-                <phase>install</phase>
-                <goals>
-                  <goal>sitemaptags2daisy</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles> -->
+  </build>
 
 </project>

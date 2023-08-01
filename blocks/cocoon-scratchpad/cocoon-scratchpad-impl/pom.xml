@@ -17,107 +17,20 @@
   specific language governing permissions and limitations
   under the License.
 -->
-
-<!--
-  - @version $Id$
-  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.apache.cocoon</groupId>
-    <artifactId>cocoon-blocks-modules</artifactId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <artifactId>cocoon-scratchpad</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-scratchpad-impl</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <name>Scratchpad Block Implementation</name>
-  <packaging>jar</packaging>
+  <version>2.2.1-SNAPSHOT</version>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-repository-impl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-flowscript-impl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.axis</groupId>
-      <artifactId>axis</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>axis</groupId>
-      <artifactId>axis-wsdl4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-betwixt</groupId>
-      <artifactId>commons-betwixt</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>avalon-framework</groupId>
-          <artifactId>avalon-framework</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-jelly</groupId>
-      <artifactId>commons-jelly</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>pull-parser</groupId>
-          <artifactId>pull-parser</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.excalibur.components</groupId>
-      <artifactId>excalibur-sourceresolve</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>d-haven-managed-pool</groupId>
-          <artifactId>d-haven-managed-pool</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>geronimo-spec</groupId>
-          <artifactId>geronimo-spec-javamail</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>geronimo-spec</groupId>
-          <artifactId>geronimo-spec-jms</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.castor</groupId>
-      <artifactId>castor</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.cocoon</groupId>
-      <artifactId>cocoon-core</artifactId>
-      <type>test-jar</type>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <name>Scratchpad Block Implementation</name>
+
   <build>
     <plugins>
       <plugin>
@@ -131,4 +44,66 @@
       </plugin>
     </plugins>
   </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-repository-impl</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-flowscript-impl</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.axis</groupId>
+      <artifactId>axis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis-wsdl4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-betwixt</groupId>
+      <artifactId>commons-betwixt</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-jelly</groupId>
+      <artifactId>commons-jelly</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.excalibur.components</groupId>
+      <artifactId>excalibur-sourceresolve</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.castor</groupId>
+      <artifactId>castor</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cocoon</groupId>
+      <artifactId>cocoon-core</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
+      <type>test-jar</type>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
 </project>

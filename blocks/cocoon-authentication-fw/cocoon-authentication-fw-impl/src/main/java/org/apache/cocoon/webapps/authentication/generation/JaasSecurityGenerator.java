@@ -17,9 +17,7 @@
 package org.apache.cocoon.webapps.authentication.generation;
 
 import java.security.Principal;
-import java.security.acl.Group;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Iterator;
 
 import javax.security.auth.Subject;
@@ -86,12 +84,14 @@ public class JaasSecurityGenerator extends ServiceableGenerator {
 			while (it.hasNext()) {
 				Principal prp = (Principal) it.next();
 				if (prp.getName().equalsIgnoreCase("Roles")) {
-					Group grp = (Group) prp;
+					throw new RuntimeException("Migrate me");
+					// Group has been deprecated and was replaced by java.security.Policy
+					/*Group grp = (Group) prp;
 					Enumeration enumm = grp.members();
 					while (enumm.hasMoreElements()) {
 						Principal sg = (Principal) enumm.nextElement();
 						roles.add(sg.getName());
-					}
+					}*/
 				} else {
 					principal = prp.getName();
 				}

@@ -1,0 +1,6 @@
+# Maven related
+target/
+
+# IntelliJ related
+*.iml
+/.idea/

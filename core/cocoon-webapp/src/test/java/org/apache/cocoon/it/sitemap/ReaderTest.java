@@ -18,6 +18,7 @@ package org.apache.cocoon.it.sitemap;
  */
 
 import org.apache.cocoon.tools.it.HtmlUnitTestCase;
+import org.junit.Assert;
 
 /**
  * Test readers
@@ -29,9 +30,9 @@ public class ReaderTest extends HtmlUnitTestCase {
 	 */
     public void testReadingResourceWithExplicitMimeType() throws Exception {
         this.loadResponse("/cocoon-it/read/javascript-resource-explicit");
-        assertTrue(this.response.getStatusCode() == 200);
-        assertEquals("text/javascript", this.response.getContentType());
-        assertEquals("853", this.response.getResponseHeaderValue("Content-Length"));
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("text/javascript", this.response.getContentType());
+        Assert.assertEquals("853", this.response.getResponseHeaderValue("Content-Length"));
     }
 
     /**
@@ -39,8 +40,8 @@ public class ReaderTest extends HtmlUnitTestCase {
      */
     public void testReadingResourceWithImplicitMimeType() throws Exception {
     	this.loadResponse("/cocoon-it/read/javascript-resource-implicit");
-    	assertTrue(this.response.getStatusCode() == 200);
-    	assertEquals("application/x-javascript", this.response.getContentType());
+        Assert.assertEquals(200, this.response.getStatusCode());
+        Assert.assertEquals("application/x-javascript", this.response.getContentType());
     }
 
     /**
@@ -51,7 +52,7 @@ public class ReaderTest extends HtmlUnitTestCase {
     	String lastModified = this.response.getResponseHeaderValue("Last-Modified");
     	this.webClient.addRequestHeader("If-Modified-Since", lastModified);
     	this.loadResponse("/cocoon-it/read/javascript-resource-implicit");
-    	assertEquals(304, this.response.getStatusCode());
+        Assert.assertEquals(304, this.response.getStatusCode());
     }
 
 }

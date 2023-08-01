@@ -1,0 +1,37 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.cocoon.blockdeployment;
+
+import java.util.Map;
+
+/**
+ * This component provides a map with the deployed block resources.
+ * 
+ * @version $Id: BlockResourcesHolder.java 686263 2008-08-15 15:53:47Z
+ *          gkossakowski $
+ * @since 1.1.0
+ */
+public interface BlockResourcesHolder {
+
+    /**
+     * Return a map with deployed block names as keys and the url of the
+     * deployed resources as value.
+     * 
+     * @return The map with the block contexts.
+     */
+    Map<String, String> getBlockContexts();
+}

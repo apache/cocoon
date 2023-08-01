@@ -16,17 +16,17 @@
   limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
+
   <parent>
-    <artifactId>cocoon-core-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>6-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <artifactId>cocoon-sitemap</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>cocoon-sitemap-impl</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
+
   <name>Cocoon Sitemap Implementation</name>
   <description>
     The tree processor implementation of the sitemap with dependencies.
@@ -34,7 +34,7 @@
     and support classes for making it easier to write sitemap components.
   </description>
   <url>http://cocoon.apache.org/${docs.m.sitemap-impl.relPath}</url>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -68,36 +68,37 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-api</artifactId>
-      <version>${project.version}</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-impl</artifactId>
-      <version>${project.version}</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-pipeline-impl</artifactId>
-      <version>${project.version}</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-thread-api</artifactId>
-      <version>${project.version}</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xml-api</artifactId>
-      <version>${project.version}</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-api</artifactId>
-      <version>${project.version}</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <!-- Excalibur -->
     <dependency>
@@ -116,44 +117,6 @@
     <dependency>
       <groupId>commons-jxpath</groupId>
       <artifactId>commons-jxpath</artifactId>
-      <exclusions>
-        <exclusion>
-          <artifactId>ant-optional</artifactId>
-          <groupId>ant-optional</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-beanutils</artifactId>
-          <groupId>commons-beanutils</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jdom</artifactId>
-          <groupId>jdom</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>servlet</artifactId>
-          <groupId>javax.servlet</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>servletapi</artifactId>
-          <groupId>servletapi</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>xerces</artifactId>
-          <groupId>xerces</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>ant-optional</artifactId>
-          <groupId>ant</groupId>
-        </exclusion>
-        <!--
-          excluding this because it brings avalon-framework which is NOT ignored by eclipse:eclipse
-          even though we excluded it in our root pom
-        -->
-        <exclusion>
-          <artifactId>commons-logging</artifactId>
-          <groupId>commons-logging</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <!-- Spring Framework -->
     <dependency>
@@ -167,22 +130,10 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>avalon-framework</groupId>
-          <artifactId>avalon-framework</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>avalon-framework</groupId>
-          <artifactId>avalon-framework</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -207,4 +158,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
 </project>
