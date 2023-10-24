@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-store</artifactId>
-    <version>2.2.1-SNAPSHOT</version>
+    <version>2.3.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-store-impl</artifactId>
-  <version>2.2.1-SNAPSHOT</version>
+  <version>2.3.0-SNAPSHOT</version>
 
   <name>Cocoon Store Implementation</name>
   <description>
@@ -52,17 +52,17 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-configuration-api</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-thread-api</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-util</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <!--  Commons -->
     <dependency>

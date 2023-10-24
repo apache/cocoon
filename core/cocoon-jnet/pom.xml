@@ -24,11 +24,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
-    <version>2.2.1-SNAPSHOT</version>
+    <version>2.3.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-jnet</artifactId>
-  <version>2.2.1-SNAPSHOT</version>
+  <version>2.3.0-SNAPSHOT</version>
 
   <name>Cocoon JNet</name>
   <description>Dynamically register URLStreamHandler factories with your JVM.</description>
@@ -88,14 +88,14 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-configuration-api</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-spring-configurator</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>

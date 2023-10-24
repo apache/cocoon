@@ -27,11 +27,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-core-modules</artifactId>
-    <version>2.2.1-SNAPSHOT</version>
+    <version>2.3.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-webapp</artifactId>
-  <version>2.2.1-SNAPSHOT</version>
+  <version>2.3.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <name>Cocoon Webapp</name>
@@ -75,78 +75,78 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-impl</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-components</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
 
     <!-- Cocoon Welcome Page -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-welcome</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
 
     <!-- Cocoon Core Samples -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-main-sample</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-additional-sample</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-impl-sample</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-servlet-service-components-sample</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
 
     <!-- Cocoon Sample Blocks -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ajax-sample</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-sample</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-sample</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
 
     <!-- Integration Tests -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-it</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
 
     <!-- Integration Test Framework -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-it-fw</artifactId>
-      <version>2.2.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
@@ -225,37 +225,37 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-apples-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-asciiart-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-auth-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-authentication-fw-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-axis-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-batik-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-bsf-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!--dependency>
           <groupId>org.apache.cocoon</groupId>
@@ -270,12 +270,12 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-cron-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-databases-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!--<dependency>
           <groupId>org.apache.cocoon</groupId>
@@ -285,7 +285,7 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-eventcache-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!--dependency>
           <groupId>org.apache.cocoon</groupId>
@@ -302,7 +302,7 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-fop-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!-- Disabled because classloading conflicts prevent it from running
              at the same time as the "legacy" FOP block.
@@ -315,7 +315,7 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-html-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!--dependency>
           <groupId>org.apache.cocoon</groupId>
@@ -325,7 +325,7 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-itext-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!-- Java flow was excluded from building because org.apache.commons:javaflow:jar:1.0-SNAPSHOT is not available anywhere -->
         <!--
@@ -338,7 +338,7 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jcr-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!--<dependency>
           <groupId>org.apache.cocoon</groupId>
@@ -348,32 +348,32 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-jsp-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-linkrewriter-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-lucene-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-mail-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-midi-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-naming-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!-- Breaks currently cocoon-webapp
         <dependency>
@@ -385,47 +385,47 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-petstore-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-poi-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-portal-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-profiler-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-proxy-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-qdox-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-querybean-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-scratchpad-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-session-fw-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!-- Breaks currently cocoon-webapp
         <dependency>
@@ -437,12 +437,12 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-slop-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-stx-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!-- Breaks currently cocoon-webapp
         <dependency>
@@ -454,27 +454,27 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-tour-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-validation-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-velocity-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-web3-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-webdav-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <!--<dependency>
           <groupId>org.apache.cocoon</groupId>
@@ -484,7 +484,7 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-xsp-sample</artifactId>
-          <version>2.2.1-SNAPSHOT</version>
+          <version>2.3.0-SNAPSHOT</version>
         </dependency>
       </dependencies>
     </profile>
