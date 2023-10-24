@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-linkrewriter</artifactId>
-    <version>2.3.0</version>
+    <version>2.3.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-linkrewriter-sample</artifactId>
-  <version>2.3.0</version>
+  <version>2.3.1-SNAPSHOT</version>
 
   <name>Cocoon Linkrewriter Block Samples</name>
 
@@ -35,12 +35,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-linkrewriter-impl</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-samples-style-default</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-eventcache</artifactId>
-    <version>2.3.0</version>
+    <version>2.3.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-eventcache-impl</artifactId>
-  <version>2.3.0</version>
+  <version>2.3.1-SNAPSHOT</version>
 
   <name>Cocoon Eventcache Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.eventcache.relPath}</url>
@@ -48,12 +48,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

@@ -29,7 +29,7 @@
 
   <groupId>org.apache.cocoon</groupId>
   <artifactId>cocoon</artifactId>
-  <version>2.3.0</version>
+  <version>2.3.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Apache Cocoon</name>
@@ -42,9 +42,9 @@
   </organization>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.3/cocoon/cocoon-2.3.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.3/cocoon/cocoon-2.3.0</developerConnection>
-    <url>https://svn.apache.org/viewvc/cocoon/tags/cocoon-2.3/cocoon/cocoon-2.3.0</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/cocoon/trunk</developerConnection>
+    <url>https://svn.apache.org/viewvc/cocoon/trunk</url>
   </scm>
 
   <developers>
@@ -2579,7 +2579,7 @@
         <plugin>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-it-fw</artifactId>
-          <version>2.3.0</version>
+          <version>2.3.1-SNAPSHOT</version>
         </plugin>
       </plugins>
     </pluginManagement>

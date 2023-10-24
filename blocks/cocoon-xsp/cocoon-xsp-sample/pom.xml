@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-xsp</artifactId>
-    <version>2.3.0</version>
+    <version>2.3.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-xsp-sample</artifactId>
-  <version>2.3.0</version>
+  <version>2.3.1-SNAPSHOT</version>
 
   <name>Cocoon XSP Block Samples</name>
 
@@ -35,12 +35,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xsp-impl</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-samples-style-default</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

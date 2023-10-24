@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-archetype</artifactId>
-    <version>2.3.0</version>
+    <version>2.3.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-22-archetype-block-plain</artifactId>
-  <version>2.3.0</version>
+  <version>2.3.1-SNAPSHOT</version>
 
   <name>Cocoon 2.2 Archetype: Block (plain)</name>
 

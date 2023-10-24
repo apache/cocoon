@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-dists-modules</artifactId>
-    <version>2.3.0</version>
+    <version>2.3.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-dist-publishing</artifactId>
-  <version>2.3.0</version>
+  <version>2.3.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <name>Core Publishing Distribution</name>
@@ -62,19 +62,19 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-webapp</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-batik-impl</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-fop-impl</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
