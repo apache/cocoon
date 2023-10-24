@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-flowscript</artifactId>
-    <version>2.3.0-SNAPSHOT</version>
+    <version>2.3.0</version>
   </parent>
 
   <artifactId>cocoon-flowscript-impl</artifactId>
-  <version>2.3.0-SNAPSHOT</version>
+  <version>2.3.0</version>
 
   <name>Cocoon Flowscript Block Implementation</name>
   <url>http://cocoon.apache.org/${docs.m.flowscript.relPath}</url>
@@ -52,7 +52,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -62,7 +62,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-expression-language-api</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
     </dependency>
   </dependencies>
   
