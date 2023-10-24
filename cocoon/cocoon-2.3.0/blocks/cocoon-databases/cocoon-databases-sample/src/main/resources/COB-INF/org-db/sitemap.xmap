@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- ========================= Components ================================ -->
+
+  <map:components>
+
+    <!-- ========================= Actions ================================ -->
+
+    <map:actions>
+      <!--
+        - Original database actions
+      -->
+      <map:action logger="sitemap.action.add-employee" name="add-employee" src="org.apache.cocoon.acting.DatabaseAddAction" />
+      <map:action logger="sitemap.action.del-employee" name="del-employee" src="org.apache.cocoon.acting.DatabaseDeleteAction" />
+      <map:action logger="sitemap.action.upd-employee" name="upd-employee" src="org.apache.cocoon.acting.DatabaseUpdateAction" />
+    </map:actions>
+
+  </map:components>
+
+  <!-- ========================== Action sets ================================ -->
+
+  <!--
+    - Action sets group actions together. If some actions are often used
+    - together in pipeline fragments, it's easier to group them and refer
+    - to the group. For more info, please see the docs.
+  -->
+  <map:action-sets>
+    <map:action-set name="employee">
+      <map:act action="Add" type="add-employee" />
+      <map:act action="Delete" type="del-employee" />
+      <map:act action="Update" type="upd-employee" />
+    </map:action-set>
+  </map:action-sets>
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml" />
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline>
+
+      <map:match pattern="employee.xml">
+        <map:generate src="{0}" />
+        <map:serialize type="xml" />
+      </map:match>
+
+      <map:match pattern="employee">
+        <map:act set="employee">
+          <map:parameter name="descriptor" value="employee.xml" />
+          <!--
+            - Here an action is used. To be precise: all actions that were
+            - grouped together to a set named "employee". See user docs on
+            - actions for more on this.
+            -
+            - This fragment until the closing tag of map:act is only
+            - included if at least one action of this set completes
+            - successfully.
+          -->
+          <map:generate src="employee.xsp" type="serverpages" />
+          <!-- Make use of servlet services -->
+          <map:serialize type="servletService">
+            <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+          </map:serialize>
+        </map:act>
+      </map:match>
+
+      <map:match pattern="*">
+        <map:generate src="{1}.xsp" type="serverpages" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/blocks/dynamic-page2html" />
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="">
+        <map:redirect-to uri="../" />
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+
+</map:sitemap>

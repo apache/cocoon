@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Property Configuration</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Property Configuration</h1><p>Cocoon comes with a smart configuration mechanism based on property files.
+The configuration of Cocoon (or more precisely of the components) is based on
+XML files for the various components. To customize these configuration files
+without changing the files itself you can define properties to which you can
+refer to from within the configuration files (and sitemaps and your own code).
+In addition, Cocoon provides integrated support for the Spring property override
+mechanism.</p><p>Cocoon uses the Cocoon Spring Configurator for these features. You can find a
+complete description <a href="../../../../subprojects/configuration/spring-configurator/index.html">here</a>. In short, you can define
+various property files and have different ways of configuring these properties.
+You can refer to the values of a property by using the common
+<tt>${PROPERTY_NAME}</tt> syntax in your configuration files or sitemaps. You
+can also access these values in your Java code.</p><p>In addition the Spring Configurator supports different running modes, so you
+can define on startup which set of properties is used. This allows you to define
+different properties for production, development and test, for example.</p><h1>Properties and Sitemaps</h1><p>THIS DOCUMENTATION HAS TO BE UPDATED - IT DOESN'T REFLECT THE
+LATEST CHANGES</p><p>As explained above, you can simply refer to a value of a property within a
+sitemap. In addition a sitemap can have a set of own properties which are only
+available to this sitemap (and the components defined in this sitemap) and all
+sub sitemaps. This mechanism is a replacement for the deprecated global
+variables.</p><p>By default each sitemap tries to read properties from within the directory
+the sitemap is in, looking into these two directories:
+<tt>config/properties</tt> and <tt>config/properties/${RUNNING_MODE}</tt>. If
+you don't want to use these default locations, you can specify the attribute
+"use-default-include" with a value of "false" at the map:components element in
+the sitemap.</p><p>You can specify your own property directory where all property files are read
+from by using the element <tt>map:include-properties</tt> with the attribute
+<tt><tt>dir </tt></tt>specifying the directory location inside the
+map:components element in the sitemap.</p><p>If you don't want that Cocoon tries to replace strings containing a property
+reference in your sitemap, you can set the attribute <tt>replace-properties</tt>
+with the value <tt>false</tt> at the <tt>map:components</tt> element in the
+sitemap.</p><p>Please note, that you can't use properties to define the values for the
+attributes on the map:components element. This means that the possible values
+for "use-default-include" and "replace-properties" are hard-coded values which
+can't be changed using properties.</p><h1>Properties and Java Code</h1><p>If you need access to the defined properties within your Java code, just
+lookup the Settings bean. This bean provides access to all available properties.
+See the documentation about the Configuration API for more information.</p></div></div>
+       </body></document>

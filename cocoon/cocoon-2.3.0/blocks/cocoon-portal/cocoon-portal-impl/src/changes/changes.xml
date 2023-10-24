@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!--+
+    | Find usage details at http://maven.apache.org/plugins/maven-changes-plugin/usage.html
+    |
+    | @version $Id$
+    +-->
+<document>
+  <body>
+    <release version="1.0.0-M1" date="2007-??-??" description="unreleased">    
+      <action dev="cziegler" type="add">
+        User specific data for a layout is now stored in a separate LayoutInstance. This allows
+        the sharing of layout tree.
+      </action>
+      <action dev="cziegler" type="add">
+        CopletLayout only holds the coplet instance id instead of the object itself.
+      </action>
+      <action dev="cziegler" type="update">
+        Refactor the object model: CopletBaseData has been renamed to CopletType,
+        CopletData has been renamed to CopletDefinition and CopletInstanceData
+        to CopletInstance.
+      </action>
+      <action dev="cziegler" type="update">
+        Add Spring post processor to add all configured components implement the Receiver
+        interface as subscribers to the event manager. This simplifies component development
+        as the component itself does not need to register itself anymore.
+        Remove the possibility to configure components or classes as receivers from
+        the event manager.
+      </action>
+      <action dev="cziegler" type="add">
+        Add CopletDecorationProvider which provides the information for the
+        title bar of a coplet. A coplet adapter can optionally implement
+        this interface.
+      </action>
+      <action dev="cziegler" type="update">
+        Castor source converter can be configured using xconf instead of adding
+        a castor.properties file to the classpath.
+      </action>
+      <action dev="cziegler" type="update">
+        Unify coplet adapters: Caching is now supported by all adapters including
+        the portlet and wsrp adapters. Therefore the caching-uri adapter has been removed.
+      </action>
+      <action dev="cziegler" type="add">
+        Add deployment infrastructure.
+      </action>
+      <action dev="cziegler" type="add">
+        Add static layout objects and implement maximize functionality for layouts.
+      </action>
+      <action dev="cziegler" type="add">
+        Portal Service provides access to global configuration settings which can be
+        used throughout the portal.
+      </action>
+      <action dev="cziegler" type="add">
+        Add AJAX support.
+      </action>
+      <action dev="cziegler" type="add">
+        Make coplet adapters accessible from portal component manager.
+      </action>
+      <action dev="cziegler" type="add">
+        Add layout source to stream complete coplets/layouts.
+      </action>
+      <action dev="cziegler" type="add">
+        Add temporary attributes to Layout objects.
+      </action>
+      <action dev="cziegler" type="update">
+        Move Castor support into own package and support roles files for Castor. This makes
+        including/excluding the Castor support easier.
+      </action>
+      <action dev="cziegler" type="update">
+        Simplify object model by removing Producible. Clean up Castor mapping.
+      </action>
+      <action dev="cziegler" type="remove">
+        Remove the support for aspect data handling.
+      </action>
+      <action dev="cziegler" type="update">
+        Tab events are now convertable.
+      </action>
+      <action dev="cziegler" type="update">
+        The lifetime of encoded events is now the user session.
+      </action>
+      <action dev="cziegler" type="remove">
+        Remove aspect datas from layouts. Parameters are now used instead.
+      </action>
+      <action dev="cziegler" type="add">
+        Add CopletInstanceDataFeatures and CopletDataFeatures utility classes
+        to query optional features of coplets and to track changed coplets.
+      </action>
+      <action dev="cziegler" type="update">
+        Refactor url creation for events (NOT FINISHED YET).
+      </action>
+      <action dev="cziegler" type="remove">
+        Remove aspect datas from coplet instance datas. Attributes are now used instead.
+      </action>
+      <action dev="cziegler" type="remove">
+        Remove AbstractUserProfileManager and AuthenticationProfileManager. Use
+        GroupBasedProfileManager instead.
+      </action>
+      <action dev="cziegler" type="add">
+        Add coplet size to coplet instance data. The size can be minimized,
+        normal or full-screen. This removed the need for a special full screen
+        handling.
+      </action>
+      <action dev="cziegler" type="add">
+        Enable per sitemap configuration for portal applications and add several roles files
+        for default configurations. Using per sitemap configurations and including the provided
+        roles files make the configuration of the portal much easier.
+      </action>
+      <action dev="cziegler" type="remove">
+        Remove aspect datas from coplet datas. Attributes are now used instead.
+      </action>
+      <action dev="cziegler" type="remove">
+        Remove deprecated Publisher, Subscriber, Filter and Register.
+      </action>
+      <action dev="cziegler" type="remove">
+        Remove deprecated PortletPortalManager.
+      </action>
+      <action dev="reinhard" type="add">
+        Initial creation.
+      </action>      
+    </release>
+  </body>
+</document>

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<testcase>
+  <context/>
+
+  <roles>
+    <role name="javax.jcr.Repository"
+          shorthand="jcr-repository"
+          default-class="org.apache.cocoon.jcr.JackrabbitRepository"/>
+
+    <role name="org.apache.excalibur.source.SourceFactorySelector"
+          shorthand="source-factories"
+          default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+
+    <role name="org.apache.excalibur.source.SourceResolver"
+          shorthand="source-resolver"
+          default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
+  </roles>
+
+  <components>
+    <jcr-repository>
+      <!-- will use the temp directory setup by the testcase -->
+      <home src="test-repository"/>
+      <configuration src="resource://org/apache/cocoon/jcr/repository.xml"/>
+      <credentials login="super" password=""/>
+    </jcr-repository>
+
+    <source-factories>
+     <component-instance class="org.apache.cocoon.jcr.source.JCRSourceFactory" name="jcr">
+       <folder-node type="rep:root"  new-file="nt:file" new-folder="nt:folder"/>
+       <folder-node type="nt:folder" new-file="nt:file"/>
+       <file-node type="nt:file" content-path="jcr:content" content-type="nt:resource"/>
+       <file-node type="nt:linkedFile" content-ref="jcr:content"/>
+       <content-node type="nt:resource"
+	     content-prop="jcr:data"
+	     mimetype-prop="jcr:mimeType"
+	     lastmodified-prop="jcr:lastModified"
+	     validity-prop="jcr:lastModified"/>
+
+     </component-instance>
+     <component-instance class="org.apache.excalibur.source.impl.ResourceSourceFactory" name="resource"/>
+     <component-instance class="org.apache.excalibur.source.impl.URLSourceFactory" name="*"/>
+    </source-factories>
+
+  </components>
+</testcase>

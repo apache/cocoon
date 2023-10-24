@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon 2.2 Site - How to configure consistent encoding in Cocoon</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">How to configure consistent encoding in Cocoon</h1><p>The best for internationalization, ie. support of umlauts, special
+characters, non-english languages, is to handle everything in UTF-8, because
+this is probably the most intelligent encoding available out there.</p><div class="note"><div><strong>Note: </strong>If you need another encoding, simply replace all occurrences of
+UTF-8 with that one, but note that this guide was only tested with UTF-8, other
+encodings might not be supported at all places.</div></div><p>The following how-to covers the typical steps to achieve a consistent
+encoding throughout a Cocoon application. Some <a href="#theory">Background
+information</a> can be found at the end of this page.</p><h1>1. Sending all pages in UTF-8</h1><p>You need to configure Cocoon's serializers to UTF-8. The XML serializer
+(<tt>&lt;serialize type="xml" /&gt;</tt>) and the HTML serializer
+(<tt>&lt;serialize type="html" /&gt;</tt>) need to be configured. To support all
+browsers, you must state the encoding to be used for the body and also include a
+meta tag in the html:
+<tt>&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;</tt>.
+This is very important, since the browser will then send form requests encoded
+in UTF-8 (and browsers normaly don't mention the encoding in the request, so you
+have to assume they are doing it right). Here is the configuration for the
+serializer components for your sitemaps that will do that:</p><pre>&lt;serializer name="xml" mime-type="text/xml"
+  src="org.apache.cocoon.serialization.XMLSerializer"&gt;
+  &lt;encoding&gt;UTF-8&lt;/encoding&gt;
+&lt;/serializer&gt;
+
+&lt;serializer name="html" mime-type="text/html; charset=UTF-8"
+  src="org.apache.cocoon.serialization.HTMLSerializer"&gt;
+  &lt;encoding&gt;UTF-8&lt;/encoding&gt;
+
+  &lt;!-- the following common doctype is only included for completeness, it has no impact on encoding --&gt;
+  &lt;doctype-public&gt;-//W3C//DTD HTML 4.01 Transitional//EN&lt;/doctype-public&gt;
+  &lt;doctype-system&gt;http://www.w3.org/TR/html4/loose.dtd&lt;/doctype-system&gt;
+&lt;/serializer&gt;
+</pre><h1>2. AJAX Requests with CForms/Dojo</h1><p>If you use CForms with ajax enabled, Cocoon will make use of dojo.io.bind()
+under the hood, which creates XMLHttpRequests that POST the form data to the
+server. Here Dojo decides the encoding by default, which does not match the
+browser's behaviour of using the charset defined in the META tag. But you can
+easily tell Dojo which formatting to use for all dojo.io.bind() calls, just
+include that in the top of your HTML pages, before dojo.js is included:</p><pre>&lt;script&gt;djConfig = { bindEncoding: "utf-8" };&lt;/script&gt;
+</pre><p>You might already have other djConfig options, then simply add the
+<tt>bindEncoding</tt> property to the hash map.</p><h1>3. Decoding incoming requests: Servlet Container</h1><p>When the browser sends stuff to your server, eg. form data, the
+<tt>ServletRequest</tt> will be created by your servlet container, which needs
+to decode the parameters correctly into Java Strings. If there is the encoding
+specified in the HTTP request header, he will use that, but unfortunately this
+is typically not the case. When the browser sends a form post, he will only say
+<tt>application/x-www-form-urlencoded</tt> in the header. So you have to assume
+the encoding here, and the right thing to assume is the encoding of the page you
+originally sent to the browser.</p><p>The servlet standard says that the default encoding for incoming requests
+should be ISO-8859-1 (Jetty is not according to the standard here, it assumes
+UTF-8 by default). So to make sure UTF-8 is used for the parameter decoding, you
+have to tell your servlet that encoding explicitly. This is done by calling
+<tt>ServletRequest.setCharacterEncoding()</tt>. To do that for all your
+requests, you can use a servlet filter like this one:
+<a href="http://wiki.apache.org/cocoon/SetCharacterEncodingFilter">SetCharacterEncodingFilter</a>.
+Put this into one of your Cocoon blocks under
+<tt>src/main/java/my/package/filters/SetCharacterEncodingFilter</tt> so that the
+class will be in a jar that lands in <tt>WEB-INF/lib</tt> and thus being
+availble for use in the web.xml configuration.</p><p>Then you add the filter to the web.xml:</p><pre>&lt;filter&gt;
+  &lt;filter-name&gt;Set Character Encoding&lt;/filter-name&gt;
+  &lt;filter-class&gt;my.package.filters.SetCharacterEncodingFilter&lt;/filter-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;encoding&lt;/param-name&gt;
+    &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/filter&gt;
+
+&lt;!-- either mapping to URL pattern --&gt;
+
+&lt;filter-mapping&gt;
+  &lt;filter-name&gt;Set Character Encoding&lt;/filter-name&gt;
+  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+
+&lt;!-- or mapping to your Cocoon servlet (the servlet-name might be different) --&gt;
+
+&lt;filter-mapping&gt;
+  &lt;filter-name&gt;SetCharacterEncoding&lt;/filter-name&gt;
+  &lt;servlet-name&gt;CocoonBlocksDispatcherServlet&lt;/servlet-name&gt;
+&lt;/filter-mapping&gt;
+
+</pre><p>Since the filter element was added in the servlet 2.3 specification, you need
+at least 2.3 in your web.xml, but using the current 2.4 version is better, it's
+the standard for Cocoon webapplications. For 2.4 you use a XSD schema:</p><pre>&lt;web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"&gt;
+</pre><p>For 2.3 you need to modify the DOCTYPE declaration in the web.xml:</p><pre>&lt;!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd"&gt;
+</pre><h1>4. Setting Cocoon's encoding (especially CForms)</h1><p>To tell Cocoon to use UTF-8 internally, you have to set 2 properties:</p><pre>org.apache.cocoon.containerencoding=utf-8
+org.apache.cocoon.formencoding=utf-8
+</pre><p>They need to be in some <tt>*.properties</tt> file under
+<tt>META-INF/cocoon/properties</tt> in one of your blocks. Note that the
+containerencoding must be the same as the one you specified in the
+SetCharacterEncodingFilter. But here we are using UTF-8 everywhere anyway.</p><h1>5. XML Files</h1><p>This is normally not a problem, since the standard encoding for XML files is
+UTF-8. However, they should always start with the following instruction, which
+should force your XML Editor to save them in UTF-8 (it looks like most of them
+do that, so there should not be a problem here).</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+</pre><h1>6. Special Transformers</h1><p>The standard XSLT Transformers and others are working on SAX events, which
+are not serialized, thus encoding is not a problem. But there are some special
+transformers that pass stuff on to another library that does include
+serialization and might need a hint to use the correct encoding. One problem is
+for example the NekoHTMLTransformer:
+<a href="https://issues.apache.org/jira/browse/COCOON-2063">https://issues.apache.org/jira/browse/COCOON-2063</a>.
+</p><p>If you think there might be a transformer doing things wrong in your
+pipeline, add a <tt>TeeTransformer</tt> between each step, outputting the XML
+between the transformers into temp1.xml, temp2.xml and so on to look for the
+place where your umlaute and special characters are messed up.</p><h1>7. Your own XML serializing Sources</h1><p>If you have your own Source implementation that needs to serialize XML, make
+sure it will do that in UTF-8 as well. A good idea is to use Cocoon's XML
+serializer, since we already configured that one to UTF-8 above. Sample code
+that does that is here:
+<a href="http://wiki.apache.org/cocoon/UseCocoonXMLSerializerCode">UseCocoonXMLSerializerCode</a>
+</p><h1>Further information</h1><section name="Browser encoding basics" style="background:none;padding:0;"/><h3>Getting pages</h3><p>If your Cocoon application needs to read request parameters that could
+contain <em>special</em> characters, i.e. characters outside of the first 128
+ASCII characters, you'll need to pay attention to what encoding is used.</p><p>Normally a browser will send data to the server using the same encoding as
+the page containing the submitted form (or whatever). So if the pages are
+serialized using UTF-8, the browser will submit form data using UTF-8. The user
+can change the encoding, but it's quite safe to assume he/she won't do that
+(have you ever done it?).</p><p>The browser will either read the encoding from either the &lt;meta&gt; tag
+inside the HTML &lt;head&gt;:</p><pre>&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+</pre><p>or from the HTTP Header Content-Type:</p><pre>Content-Type: text/html; charset=UTF-8
+</pre><p>One has to include both to support all browsers. This will be done by the
+HTML serializer if you configure it with the parameters mime-type and encoding,
+as stated above.</p><h3>Sending form data</h3><p>By default, if the browser doesn't explicitely mention the encoding, a
+servlet container will decode request parameters using the ISO-8859-1 encoding
+(independent of the platform on which the container is running). So in the above
+case where UTF-8 was used when serializing, we would be facing problems. An
+exception, that might hide the problem and which you will face when you use the
+handy mvn jetty:run to run your Cocoon application, is that Jetty uses UTF-8 by
+default. It does not adhere to the servlet container standard here.</p><p>You either have to configure your container with the default encoding you
+want (e.g. UTF-8), if that is possible, or you must use a servlet-filter
+solution like the
+<a href="http://wiki.apache.org/cocoon/SetCharacterEncodingFilter">SetCharacterEncodingFilter</a>.
+Using a servlet filter also has the advantage that it will work for any servlet.
+Suppose your webapp consists of multiple servlets, with Cocoon being only one of
+them. Sometimes the processing could start in another servlet (which sets the
+character encoding correctly) and then be forwarded to Cocoon, while other times
+the processing could start immediately in the Cocoon servlet. It would then be
+impossible to know in Cocoon whether the request parameter encoding needs to be
+corrected or not (see below).</p><section name="Request parameter decoding in Cocoon" style="background:none;padding:0;"/><h3>Fixing a wrong servlet container</h3><p>If you are not able to set the default encoding for your servlet container to
+what you actually want, it is possible to configure Cocoon to re-decode
+parameters properly. Suppose the servlet container has ISO-8859-1 default
+encoding set, but the requests from the browser are actually encoded in UTF-8.
+Then you can configure Cocoon with these properties:</p><pre>org.apache.cocoon.containerencoding=iso-8859-1
+org.apache.cocoon.formencoding=utf-8
+</pre><p>For Java-insiders: what Cocoon actually does internally is apply the
+following trick to get a parameter correctly decoded: suppose "value" is a
+string containing a request parameter, then Cocoon will do:</p><pre>value = new String(value.getBytes("ISO-8859-1"), "UTF-8");
+</pre><p>So it recodes the incorrectly decoded string back to bytes and decodes it
+using the correct encoding. The first (ISO-8859-1 in the example) is the
+containerencoding, the second one the formencoding.</p><p>Not that this only works for core Cocoon concepts, eg. sitemaps, CForms and
+others accessing the request parameters. There are other components, eg. the
+JSPGenerator, that access the original HttpServletRequest object and thus do not
+get the correctly re-decoded parameter values (that is, if for example the JSP
+page itself would read request parameters). The only working solution seems to
+be the servlet-filter here.</p><h3>Locally overriding the form-encoding</h3><p>Cocoon is ideally suited for publishing to different kinds of devices, and it
+may well be possible that for certain devices, it is required to use different
+encodings. In this case, you can redefine the form-encoding for specific
+pipelines using the SetCharacterEncodingAction.</p><p>To use it, first of all make sure the action is declared in the map:actions
+element of the sitemap:</p><pre>&lt;map:action name="set-encoding" src="org.apache.cocoon.acting.SetCharacterEncodingAction"/&gt;
+</pre><p>and then call the action at the required location as follows:</p><pre>&lt;map:act type="set-encoding"&gt;
+  &lt;map:parameter name="form-encoding" value="some-other-encoding"/&gt;
+&lt;/map:act&gt;
+</pre><section name="Operating System Preliminaries" style="background:none;padding:0;"/><p>Not having influence on request parameter decoding, but sometimes making
+trouble with text files, database communication, etc. are operating system
+language settings. Working with non-english characters may pose problems, as the
+JVM seems to detect the system language. If, e.g., german umlauts should be
+correctly processed with Cocoon on Linux, it is required to set the LANG
+environment variable to de like this:</p><p><tt>export LANG=de</tt></p><p>That's one of several ways of setting the JVM locale, see also
+<a href="http://wiki.apache.org/cocoon/SettingTheJvmLocale">SettingTheJvmLocale</a>.
+</p><section name="More readings" style="background:none;padding:0;"/><ul>
+<li>
+
+<a href="http://marc.theaimsgroup.com/?t=106760662600010&amp;r=1&amp;w=2">Cocoon's
+defaults form-encoding and seerialize-encoding</a>
+<a href="http://wiki.apache.org/cocoon/MarcPortier">MarcPortier</a> proposal to
+remove inconsitencies in the way Cocoon handles the encoding of serialized text
+and request-parameter decoding.
+<a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=106772461923197&amp;w=2">This</a>
+is a good summary of the thread.
+</li>
+<li>Cocoon does not support the HTTP request header
+<a href="http://www.w3.org/TR/REC-html40/interact/forms.html#adef-accept-charset">Accept-Charset</a>,
+where the browser specifies a list of encodings it can handle. Maybe this might
+be useful to implement.</li>
+</ul></div></div>
+       </body></document>

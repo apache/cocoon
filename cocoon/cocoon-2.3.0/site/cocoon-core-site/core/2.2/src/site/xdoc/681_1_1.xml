@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Creating a Reader</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Creating a Reader</h1><h1>Creating a Reader</h1><p>Readers are the components that send you a stream without the XML processing
+that normally happens in a pipeline. Cocoon already comes with some readers out
+of the box such as your FileReader which serializes files from your webapp
+context. What if you need something that doesn't come from the file system? What
+if you need to create content on the fly but the XML processing gets in the way?
+That's where the Reader comes to play. Even though there is a DatabaseReader in
+the Cocoon's SQL block, we are going to go through the process of creating a
+cacheable database reader here.</p><p>In the sitemap we use the reader we are going to develop like this:</p><pre>&lt;map:match pattern="attachment/*"&gt;
+  &lt;map:read type="db-attachments" src="{1}"/&gt;
+&lt;/map:match&gt;
+</pre><p>The sitemap snippet above matches anything in the attachment path followed by
+the ID for the attachment. It then passes the ID into the <tt>src</tt>
+attribute for our reader. Why not include the nice neat little extension for the
+file after the ID? We actually have a very good reason: Microsoft. If you recall
+from the <a href="674_1_1.html">SitemapOutputComponent Contracts</a> page, Internet
+Explorer likes to pretend its smarter than you are. If you have a file extension
+on the URL that IE knows, it will ignore your mime-type settings that you
+provide. However, if you don't provide any clues then IE has to fall back to
+respecting the standard.</p><section name="How Does the Sitemap Treat a Reader?" style="background:none;padding:0;"/><p>A Sitemap fills two of the core contracts with the Sitemap. It is both a
+SitemapModelComponent and a SitemapOutputComponent. You <em>can</em> make it a
+CacheableProcessingComponent as well, which will help reduce the load on your
+database by avoiding the need to retrieve your attachments all the time. In
+fact, unless you have a good reason not to, you should always make your
+components cacheable just for the flexibility in deployment later. I recommend
+you read the articles on the core contracts to understand where to find the
+resources you need.</p><p>A sitemap will fulfill all its core contracts first. It will then query the
+reader using the <tt>getLastModified()</tt> method. The results of that method
+will be added to the response header for browser caching purposes--although it
+is only done for the CachingPipeline. Lastly, the sitemap will call the
+<tt>generate()</tt> method to create and send the results back to the client.
+It's a one stop shop, and because the Reader is both a SitemapModelComponent and
+a SitemapOutputComponent it is the beginning and the end of your pipeline.</p><p>Considering the order in which the processing happens, the sooner you can
+send a response to the Sitemap because of a failure the better.</p><section name="ServiceableReader: A Good Start" style="background:none;padding:0;"/><p>The ServiceableReader provides a good basis for building our database bound
+AttachmentReader. The ServiceableReader implements the Recyclable, LogEnabled
+and Serviceable interfaces and captures some of the information you will need
+for you. We will need these three interfaces to get a reference to the
+DataSourceComponent, our Logger, and to clean up our request based artifacts.
+You might want to implement the Parameterizable or Configurable interfaces if
+you want to decide which particular database we will be hitting in your own
+code. For now, we are going to hard code the information.</p><h3>The Skeleton</h3><p>Our skeleton code will look like this:</p><pre>import org.apache.avalon.excalibur.datasource.DataSourceComponent;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.reading.ServiceableReader;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.TimeStampValidity;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Map;
+
+public class AttachmentReader extends ServiceableReader implements CacheableProcessingComponent, Disposable
+{
+    private static final int BUFFER = 1024;
+    public static String DB_RESOURCE_NAME = "ourdb"; // warning: static database table name
+
+    // ... skip many methods covered later
+
+    public void setup( SourceResolver sourceResolver, Map model, String src, Parameters params )
+        throws IOException, ProcessingException, SAXException
+    {
+        // ... skip setup code for now
+    }
+
+    public void generate() throws IOException, SAXException, ProcessingException
+    {
+        // ... skip generate code for now
+    }
+}
+</pre><p>If you'll notice we added the Disposable interface to the contract as well.
+This is so that we can be good citizens and release our components when we are
+done with them. Anything pooled needs to be released.</p><h3>Getting a Reference to Our DataSourceComponent</h3><p>While it's probably safe to treat your DataSourceComponent and your
+ServiceManager as singletons in the system, we still want to be responsible.
+First things first, let's get our DataSourceComponent and hold on to it as long
+as this Reader is around. To do this we will need to add two more class fields:
+</p><pre>    private DataSourceComponent datasource;
+    private ServiceSelector dbselector;
+</pre><p>Now we are going to override the <tt>service()</tt> method and implement the
+<tt>dispose()</tt> method to get and cleanup after ourselves. First lets start
+with getting the DataSourceComponent. Because Cocoon is configured to deal with
+multiple databases, you will need to use a ServiceSelector to choose the
+DataSourceComponent corresponding to your desired database.</p><pre>    @Override
+    public void service(ServiceManager services) throws ServiceException
+    {
+        super.service(services);
+
+        dbselector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
+        datasource = (DataSourceComponent) dbselector.select(DB_RESOURCE_NAME);
+    }
+</pre><div class="note"><div><strong>Note: </strong>The <tt>@Override</tt> annotation above is used by the Java
+compiler to ensure that you are overriding a parent class's method. It only
+works in Java 5. If you are developing against an earlier version of Java remove
+that line so that you can compile the class. That goes for every time you see
+it.</div></div><p>We ensured that we called the superclass's <tt>service()</tt> method so that
+we didn't upset the expectations of anyone wanting to extend our class. Keeping
+the user's expectations in mind always helps to produce a good product--and in
+this case the user is a developer. Next, we retrieved the selector for the
+DataSourceComponent and stored it in the class field we created earlier. Then we
+did the same for the actual DataSouceComponent itself. Now we have access to the
+component when we need it. We didn't get an actual connection yet because the
+connections are pooled. If we held onto a connection for the life of the
+component then we would run out and the application would come to a screaching
+halt waiting for a connection to become available.</p><p>Since we are still dealing with managing the component itself, let's do the
+cleanup code next. The Avalon framework uses the <tt>Disposable.dispose()</tt>
+callback method to let the component know when it is safe to release all the
+components it is using and perform other cleanup.</p><pre>    public void dispose()
+    {
+        dbselector.release(datasource);
+        manager.release(dbselector);
+        datasource = null;
+        manager = null;
+    }
+</pre><p>While setting the fields to <tt>null</tt> might not be necessary with modern
+day garbage collectors, it still doesn't hurt. By releasing those components we
+ensure that Cocoon can shut down nicely and safely when it is time.</p><h3>Make sure PDFs Work</h3><p>Since we expect to have PDF documents in our database alongside pictures and
+other types of documents, we need to make sure they display properly. Since the
+bug in the IE Acrobat Reader plugin wasn't fixed until version 7 we need to make
+sure the content length is returned. There is some overhead with this as Cocoon
+has to cache the results to get the content length, but because we are going to
+cache it anyway there is little difference on when it gets sent to the cache.
+This is how we do it:</p><pre>    @Override
+    public boolean shouldSetContentLength()
+    {
+        return true;
+    }
+</pre><h3>Setting up for the Read (Cache directives, finding the resource, etc.)</h3><p>In the <tt>setup()</tt> method we need to ask the database for the
+meta-information about our attachment. You may be curious why we need to do it
+in the setup as opposed to the generate phase of the Reader. The answer is
+simply this: the sitemap has already asked the Reader for all caching related
+information and it is too late to do it then. We'll assume the attachments table
+is really simple and it has an ID, a mimeType, a timeStamp, and the attachment
+content. We need to get our component and query it. You can never rely on your
+connection pooling code to clean up your open statements and resultsets, so we
+will have to do that ourselves. Let's add some more class fields to support the
+cache directives and cache the blob reference:</p><pre>    private TimeStampValidity m_validity;
+    private InputStream m_content;
+    private String m_mimeType;
+</pre><p>Since our AttachementReader is pooled and recyclable, let's make sure we
+clean these values up when the AttachmentReader is returned to the pool:</p><pre>    @Override
+    public void recycle()
+    {
+        super.recycle();
+        if ( null != m_content ) try{ m_content.close(); } catch(Exception e) {/*ignore*/}
+        m_content = null;
+        m_validity = null;
+        m_mimeType = null;
+    }
+</pre><p>The next code snippet is the content of the setup() method from the code
+skeleton above. Let's break it down to understand what's going on. First we call
+the superclass's version of the method so that all expectations of the class
+hold true:</p><pre>    super.setup(sourceResolver, objectModel, src, params);
+</pre><p>Next we set up the holders for the connection, statement and resultset so
+that we can clean them up later.</p><pre>    Connection con = null;
+    ResultSet rs = null;
+    Statement stm = null;
+</pre><p>Now we have the meat of the method. We get a connection from the
+DataSourceComponent, and for good measure we set the AutoCommit to false. You
+can adjust this to your taste, but for a read we really don't need transactions.
+There is some standard query code next, and the part I want to point out is how
+we deal with the resultset. If you notice we have two courses of action
+depending on whether the record was found or not. If we did find the record we
+set the mimeType, validity, and content fields for the class. Otherwise, we
+throw <tt>ResourceNotFoundException</tt>. That exception is how Cocoon knows to
+differentiate between a 404 (HTTP Resource Not Found) and a 500 (HTTP Server
+Error) error.</p><pre>    try
+    {
+        final String sql = "SELECT mimeType, sourceDate, attachmentData FROM attachments" +
+        " WHERE attachmentId = '" + source + "'";
+
+        con = datasource.getConnection();
+        con.setAutoCommit(false);
+        stm = con.createStatement();
+        rs = stm.executeQuery(sql);
+
+        if (rs.next())
+        {
+            m_mimeType = rs.getString(1);
+            m_validity = new TimeStampValidity( rs.getTimestamp(2).getTime() );
+            m_content = rs.getBlob(3).getBinaryStream();
+        }
+        else
+        {
+            throw new ResourceNotFoundException("Could not find the record");
+        }
+    }
+</pre><p>If for some reason we catch a <tt>SQLException</tt> from the database, it is
+certainly not expected so we rethrow it wrapped with a general
+<tt>ProcessingException</tt>.</p><pre>    catch (SQLException se)
+    {
+        throw new ProcessingException(se);
+    }
+</pre><p>Lastly we cleanup our database objects in the finally method. Without that we
+run into database server memory leaks as the database keeps resources open for
+queries on the server side. Even the big name databases are sensitive to this.
+The JDBCDataSourceComponent connection pooling code does cache the resultsets
+and statements to make sure they are closed when you close the connection, but
+you might want to use a generic J2EEDataSourceComponent which may or may not do
+that for you. Never make assumptions and always clean up after yourself.</p><pre>    finally
+    {
+        if (rs != null) try{ rs.close(); } catch(SQLException se) {/*ignore*/}
+        if (stm != null) try{ stm.close(); } catch(SQLException se) {/*ignore*/}
+        if (con != null) try{ con.close(); } catch(SQLException se) {/*ignore*/}
+    }
+</pre><p>The setup is done. Now we just need to let the sitemap know what we found.
+The first thing is to let the sitemap know what kind of attachment we are
+sending. As you recall, we stored that in the class field "m_mimeType", and the
+<tt>getMimeType()</tt> method from SitemapOutputComponent informs the sitemap.
+</p><pre>    @Override
+    public String getMimeType()
+    {
+        return m_mimeType;
+    }
+</pre><p>Now we want to let the sitemap know the last modified timestamp for the
+attachment. Since we stored this information in the "m_validity" field we will
+send the information from that field. There is a problem though: what if the
+resource was not found? We might get a NullPointerException if the m_validity
+field was never set. Even though the Sitemap shouldn't call this method in the
+event that we couldn't find a resource we still don't want to take any chances.
+A properly guarded <tt>getLastModified()</tt> method would be:</p><pre>    @Override
+    public long getLastModified()
+    {
+        return (null == m_validity) ? -1L : m_validity.getTimeStamp();
+    }
+</pre><h3>The Caching Clues</h3><p>Lastly we want to provide the caching information to the CachingPipeline when
+needed. Since our source is an ID (from <tt>&lt;map:read src="{1}"/&gt;</tt>) it
+is probably the best cache key for our component. Let's just use it:</p><pre>    public Serializable getKey()
+    {
+        return source;
+    }
+</pre><p>We stored the TimeStampValidity object when we set up the attachment
+information, so let's just give that back. Alternatively you could use an
+ExpiresValidity to completely avoid hits to the database altogether--but for now
+this is good enough.</p><pre>    public SourceValidity getValidity()
+    {
+        return m_validity;
+    }
+</pre><h3>Sending the Payload</h3><p>All this work was done just so we could send the results back to the client,
+and now we get to see the code that does it.</p><p>Don't try to read the entire attachment into memory and then
+send it on to the user. It isn't necessary and it kills your scalability.
+Instead grab little chunks at a time and send it on to the output stream as you
+get it. You'll find that it feels faster on the client end as well.</p><p>The next code snippet is the contents of the <tt>generate() </tt>method from
+the class skeleton above. All we are doing is pulling a little data at a time
+from the database and sending it directly to the user. Wait a minute! I hear you
+shout. What about the connection we just closed in the setup method? Remember
+that the connection isn't closed until the pool retires it. You will never
+practically need to worry about the system severing your connection to the
+database mid-stream. Try it. Throw a load test at the system just to make sure
+I'm not smoking some controlled substances. Nevertheless, without much further
+ado, the code:</p><pre>    public void generate() throws IOException, SAXException, ProcessingException
+    {
+        try
+        {
+            byte[] buffer = new byte[BUFFER];
+            int len = 0;
+            
+            while ((len = m_content.read(buffer)) &gt;= 0)
+            {
+                out.write(buffer, 0, len);
+            }
+            
+            out.flush();
+        }
+        finally
+        {
+            out.close();
+            m_content.close();
+            m_content = null;
+        }
+    }
+</pre><p>We close the stream in the finally clause. If there are any exceptions
+thrown, they are propogated up without rewrapping them. You may wonder why we
+close the <tt>m_content</tt> stream here and in the <tt>recycle()</tt> method
+above. The answer is assurance. The <tt>generate()</tt> method is only called
+when the resource exists so the content stream won't get closed. Additionally,
+most database drivers tend to wait on all open streams to be closed manually
+before the connection with the server is severed. Of course there are timeout
+limits as well, but we don't want to use them if we can avoid it. By including
+the call to close the attachment data stream in the <tt>generate()</tt> method,
+we shorten the amount of time that there might be resources tied up with the
+stream.</p><section name="Summary" style="background:none;padding:0;"/><p>We're done. It seems like we did a lot here, and that's because we did. If we
+simply did direct generation of the data the class would have been simpler. By
+incorporating a database into the mix we've covered most of the things you might
+be curious about. Things like how to access other components from your
+component, how to make sure our component is cacheable, and some real gotchas
+that you do want to avoid. The example we have here will be very performant, and
+is not too different from Cocoon's DatabaseReader. Of course, by doing it
+ourselves we get to learn a bit more about how things work inside of Cocoon.</p></div></div>
+       </body></document>

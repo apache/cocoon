@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Apache Cocoon 2.2-RC2 Released</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Apache Cocoon 2.2-RC2 Released</h1><pre>Apache Cocoon 2.2-RC2 Released
+
+  The Apache Cocoon Community is proud to announce the second release
+  candidate of Cocoon 2.2.
+  
+  Apache Cocoon is a Spring-based framework (since version 2.2) built 
+  around the concepts of separation of concerns and component-based development.
+
+  Cocoon implements these concepts around the notion of component pipelines, 
+  each component on the pipeline specializing on a particular operation.
+  
+  Cocoon 2.2 introduces blocks. A block is the unit of modularization 
+  in Cocoon (in comparison: Eclipse uses the term plugins, OSGi uses bundles). 
+  Everything that goes beyond what Cocoon provides in its core modules 
+  (Spring integration, sitemap and pipeline implementation) is provided as 
+  block (see below). Custom Cocoon applications are also developed as blocks. 
+  A block can provide the following features:
+
+    * general servlet services (any servlet can be managed by the Cocoon 
+      servlet-service framework),
+    * special services that provide pipelines as services,
+    * component services (Spring beans, Avalon services/components),
+    * a container for classes and resources.
+
+  A block is packaged as a Java archive (jar) following certain conventions 
+  concerning the directory structure.
+
+  Find information about the new features at 
+  http://cocoon.apache.org/2.2/1420_1_1.html.
+
+  For more information about Apache Cocoon 2.2, please go to
+  http://cocoon.apache.org or follow our getting started guide at 
+  http://cocoon.apache.org/2.2/1159_1_1.html.
+
+  The release artifacts are available from the central Maven repository
+  (http://repo1.maven.org/maven2/).
+
+
+                                      - o -
+                                   
+                                   
+  Additionally we also want to announce some more releases:
+  
+  SUBPROJECTS
+  -----------
+  
+  * Cocoon Servlet-Service Framework 1.0.0-RC1
+    The Servlet Service Famework makes it easy to use servlets as components
+    which can communicate with each other. The current implementation is based on
+    Spring 2.0. There are no dependencies on Cocoon core libraries at all.
+
+    http://cocoon.apache.org/subprojects/servlet-service/servlet-service-impl/
+
+  * Cocoon Configuration 1.0.1
+    The Cocoon Configuration subproject provides basic support for configuring
+    web applications. Its current implementation, the Spring Configurator, is a
+    useful component providing support in common configuration issues when using the
+    Spring framework. There are no dependencies on Cocoon core libraries at all.
+
+    http://cocoon.apache.org/subprojects/configuration/
+
+  BLOCKS
+  ------
+  
+  * Cocoon Ajax 1.0.0-RC1
+    Partial page and form reloads
+
+    http://cocoon.apache.org/2.2/blocks/ajax/1.0/
+
+  * Cocoon Apples 1.0.0-RC2
+    Pure Java implementations of controller logic.
+ 
+  * Cocoon Auth 1.0.0-RC2
+    Authentication and authorization of pipelines and control-flow based 
+    Cocoon applications.
+
+    http://cocoon.apache.org/2.2/blocks/auth/1.0/ 
+   
+  * Cocoon Batik 1.0.0-RC2
+    Create Scalable Vector Graphics (SVG) using Cocoon pipelines.
+
+    http://cocoon.apache.org/2.2/blocks/batik/1.0/ 
+
+  * Cocoon Captcha 1.0.0-RC2
+    A reader to create CAPTCHAs 
+
+    http://cocoon.apache.org/2.2/blocks/captcha/1.0/
+    
+  * Cocoon Database 1.0.0-RC2
+    Direct usage of relational databases with sitemap components.  
+
+    http://cocoon.apache.org/2.2/blocks/databases/1.0/  
+    
+  * Cocoon Flowscript 1.0.0-RC2  
+    Flowscript is a continuation-based implementation of Cocoon control 
+    flow based on Rhino (Javascript/ECMAScript).
+
+    http://cocoon.apache.org/2.2/blocks/flowscript/1.0/
+ 
+  * Cocoon FOP 1.0.0-RC2
+    Use Apache FOP, an XSL-FO driven print formatter to render pages to 
+    PDF or Postscript.
+
+    http://cocoon.apache.org/2.2/blocks/fop/1.0/ 
+
+  * Cocoon Forms 1.0.0-RC1
+    Cocoon has an advanced forms framework. Together with Flow and JXTemplates, 
+    Cocoon Forms (or CForms) provides a solid basis for  building interactive 
+    web applications. Cocoon Forms handles complex use cases while still being 
+    simple enough to be used by non-Java-programmers who want to add forms to 
+    their site.  
+
+    http://cocoon.apache.org/2.2/blocks/ajax/1.0/ 
+ 
+  * Cocoon Hsqldb-Client 1.0.0-RC2
+    JDBC access of a Hsql database
+
+    http://cocoon.apache.org/2.2/blocks/hsqldb-client/1.0/
+ 
+  * Cocoon Hsqldb-Server 1.0.0-RC2
+    Start a Hsql database server as part of your Cocoon application.
+
+    http://cocoon.apache.org/2.2/blocks/hsqldb-server/1.0/  
+
+  * Cocoon HTML 1.0.0-RC2
+    Generators to deal with HTML.
+
+    http://cocoon.apache.org/2.2/blocks/html/1.0/
+
+  * Cocoon Linkrewriter 1.0.0-RC2
+    Transformers to rewrite all elements containing links. 
+
+    http://cocoon.apache.org/2.2/blocks/linkrewriter/1.0/
+    
+  * Cocoon Mail 1.0.0-RC2   
+    Sitemap components to send emails.  
+
+    http://cocoon.apache.org/2.2/blocks/mail/1.0/  
+
+  * Cocoon Template 1.0.0-RC2
+    XML-based templating
+
+    http://cocoon.apache.org/2.2/blocks/template/1.0/
+
+  TOOLS
+  -----
+  
+  * Cocoon Maven plugin 1.0.0-M1
+    The Cocoon Maven plugin contains several goals that make the life of software 
+    developers easier, e.g. support for running blocks as webapps or support for 
+    patching the web.xml at deployment time.
+
+    http://cocoon.apache.org/2.2/maven-plugins/maven-plugin/1.0/
+
+  * Cocoon Block Archetype 1.0.0-RC2
+    This archetype creates a Cocoon block that comes with some small samples.
+
+    http://cocoon.apache.org/2.2/maven-plugins/
+
+  * Cocoon Plain-Block Archetype 1.0.0-RC2
+    Use this archetype to create the simplest possible Cocoon block.
+
+    http://cocoon.apache.org/2.2/maven-plugins/
+ 
+  * Cocoon Webapp Archetype 1.0.0-RC2
+    Use this archetype to create a web application that is configured to host Cocoon blocks. 
+
+    http://cocoon.apache.org/2.2/maven-plugins/
+
+The Apache Cocoon Project
+</pre></div></div>
+       </body></document>

@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--+
+    | This is the default configuration for the portal beans.
+    |
+    | @version $Id$
+    +-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:portal="http://cocoon.apache.org/schema/portal"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+                           http://cocoon.apache.org/schema/portal http://cocoon.apache.org/schema/portal/cocoon-portal-1.0.xsd">
+
+  <!--+
+      |                       THIS IS A SAMPLE PORTAL
+      |
+      | It demonstrates several features of the portal engine,
+      | so it's neither configured for *your* environment nor
+      | optimized for production. If you use the portal for your
+      | own projects make sure that you remove all unused stuff
+      | from the configuration and that you configure the remaining
+      | components properly. However, the best way is to start your
+      | portal project from scratch!
+      +-->
+
+  <!-- Include sitemap default beans -->
+  <import resource="classpath:org/apache/cocoon/portal/sitemap/cocoon-portal-sitemap-components.xml"/>
+
+  <!-- Include default beans -->
+  <import resource="classpath:org/apache/cocoon/portal/cocoon-portal-components.xml"/>
+
+  <!-- If you don't need WSRP support, you can remove the following include: 
+  <import resource="classpath:org/apache/cocoon/portal/wsrp/cocoon-portal-wsrp-components.xml"/>
+  -->
+
+  <!--+
+      | Portal Service.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.PortalService"
+          class="org.apache.cocoon.portal.spring.SpringPortalService"
+          parent="org.apache.cocoon.portal.PortalService/abstract"
+          scope="singleton">
+      <!-- Configuration: -->
+      <property name="portalName" value="portal"/>
+      <!-- The available skins -->
+      <property name="skinDescriptions">
+        <list>
+          <bean class="org.apache.cocoon.portal.om.SkinDescription">
+            <property name="name" value="basic"/>
+            <property name="basePath" value="skins/basic"/>
+            <property name="thumbnailPath" value="skins/basic/images/thumb.jpg"/>
+          </bean>
+          <bean class="org.apache.cocoon.portal.om.SkinDescription">
+            <property name="name" value="common"/>
+            <property name="basePath" value="skins/common"/>
+            <property name="thumbnailPath" value="skins/common/images/thumb.jpg"/>
+          </bean>
+          <bean class="org.apache.cocoon.portal.om.SkinDescription">
+            <property name="name" value="modern"/>
+            <property name="basePath" value="skins/modern"/>
+            <property name="thumbnailPath" value="skins/modern/images/thumb.jpg"/>
+          </bean>
+        </list>
+      </property>
+      <property name="configuration">
+        <value>
+          <!-- Whether the portal should use ajax or not -->
+          use-ajax=false
+        </value>
+      </property>
+    </bean>
+
+  <!--+
+      | Portal Link Service.
+      |
+      +-->
+    <bean name="org.apache.cocoon.portal.services.LinkService"
+          class="org.apache.cocoon.portal.services.impl.links.PageLabelLinkService"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton">
+      <property name="defaultPort" value="8888"/>
+      <property name="defaultSecurePort" value="443"/>
+    </bean>
+    <!--+
+      | This is the service profile manager using pipelines to load the various parts.
+      |
+      +-->
+	<bean name="org.apache.cocoon.portal.services.ProfileManager"
+	        class="org.apache.cocoon.portal.profile.impl.GroupBasedProfileManager"
+	        parent="org.apache.cocoon.portal.util.AbstractBean"
+	        scope="singleton">
+	    <property name="aspectChain" ref="org.apache.cocoon.portal.profile.ProfileManager.aspects"/>
+	    <property name="profileStore" ref="org.apache.cocoon.portal.profile.ProfileStore"/>
+	    <property name="copletTypesMap" ref="org.apache.cocoon.portal.om.CopletTypeMap"/>
+	    <property name="rendererMap" ref="org.apache.cocoon.portal.om.RendererMap"/>
+	</bean>
+
+  <!--+
+      | This is the map based profile store.
+      | TODO : Create abstract def in castor module
+      +-->
+  <bean name="org.apache.cocoon.portal.profile.ProfileStore"
+        class="org.apache.cocoon.portal.converter.castor.CastorSourceConverter"
+        scope="singleton" init-method="init">
+    <property name="sourceResolver" ref="org.apache.excalibur.source.SourceResolver"/>
+    <property name="configuration">
+      <value>
+        copletdefinition-global-load=profiles/copletdefinition/global.xml
+        copletinstance-global-load=profiles/copletinstance/global.xml
+        layout-global-load=profiles/layout/global.xml
+        copletdefinition-user-load=profiles/copletdefinition/user-{user-name}.xml
+        copletinstance-user-load=profiles/copletinstance/user-{user-name}.xml
+        layout-user-load=profiles/layout/user-{user-name}.xml
+      </value>
+    </property>
+  </bean>
+
+  <!--+
+      | Request Processor Aspect configuration.
+      |
+      +-->
+    <portal:request-processor-aspects id="org.apache.cocoon.portal.services.PortalManager.requestAspects">
+      <!--  The client should not cache the page. -->
+      <portal:aspect type="no-client-caching"/>
+      <!-- Use the action counter with great care. We recommend turning it off. -->
+      <!-- Remove action-counter when using PageLabels -->
+      <!-- aspect type="action-counter"/ -->
+      <portal:aspect type="frame"/>
+      <portal:aspect type="link"/>
+    </portal:request-processor-aspects>
+
+  <!--+
+      | Response Processor Aspect configuration.
+      |
+      +-->
+    <portal:response-processor-aspects id="org.apache.cocoon.portal.services.PortalManager.responseAspects">
+      <!-- Add your aspects here -->
+    </portal:response-processor-aspects>
+
+  <!--+
+      | Profile Manager Aspect configuration.
+      |
+      +-->
+    <portal:profile-manager-aspects id="org.apache.cocoon.portal.profile.ProfileManager.aspects">
+      <!-- Add your aspects here -->
+    </portal:profile-manager-aspects>
+
+  <!--+
+      | Deployment Manager.
+      +-->
+    <bean name="org.apache.cocoon.portal.deployment.DeploymentManager"
+          class="org.apache.cocoon.portal.deployment.impl.DefaultDeploymentManager"
+          parent="org.apache.cocoon.portal.util.AbstractBean"
+          scope="singleton">
+        <!-- Scan the following locations: -->
+        <property name="deploymentSources">
+            <list>
+                <value>conf/deploy</value>
+            </list>
+        </property>
+        <!-- Scan the provided directories every minute: -->
+        <property name="scanningDelay" value="60000"/>
+        <!-- Turn on/off hot deployment: -->
+        <property name="hotDeployment" value="true"/>
+        <property name="runnableManager" ref="org.apache.cocoon.thread.RunnableManager"/>
+    </bean> 
+
+</beans>

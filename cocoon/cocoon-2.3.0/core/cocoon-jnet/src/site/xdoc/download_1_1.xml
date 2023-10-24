@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon JNet - Download</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Download</h1><table class="bodyTable">
+<tbody>
+<tr class="a">
+<th>
+<p>Artifact</p>
+</th>
+<th>
+<p>Description</p>
+</th>
+<th>
+<p>Download</p>
+</th>
+<th>
+<p>Verify</p>
+</th>
+</tr>
+<tr class="b">
+<td>
+<p><strong>Cocoon JNet 1.1.0</strong></p>
+</td>
+<td>
+<p>sources, binaries, javadocs, docs</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/jnet/cocoon-jnet-1.1.0.zip">cocoon-jnet-1.1.0.zip</a>
+<br/>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/jnet/cocoon-jnet-1.1.0.tar.gz">
+cocoon-jnet-1.1.0.tar.gz</a></p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dist/cocoon/subprojects/jnet/cocoon-jnet-1.1.0.zip.asc">pgp</a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/jnet/cocoon-jnet-1.1.0.zip.md51">md5</a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/jnet/cocoon-jnet-1.1.0.zip.sha1">sha1</a>
+<br/>
+<a href="http://www.apache.org/dist/cocoon/subprojects/jnet/cocoon-jnet-1.1.0.tar.gz.asc">
+pgp</a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/jnet/cocoon-jnet-1.1.0.tar.gz.md5">md5</a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/jnet/cocoon-jnet-1.1.0.tar.gz.sha1">sha1</a>
+</p>
+</td>
+</tr>
+<tr class="a"> 
+</tr>
+</tbody>
+</table><h1>Maven 2 Dependency</h1><p>Add following dependency to your pom.xml file:</p><pre>&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
+  &lt;artifactId&gt;cocoon-jnet&lt;/artifactId&gt;
+  &lt;version&gt;1.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+</pre></div></div>
+       </body></document>

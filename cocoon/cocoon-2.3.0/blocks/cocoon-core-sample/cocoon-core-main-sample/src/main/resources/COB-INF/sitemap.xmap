@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Core-samples-main sitemap: these are "important" the samples that we
+  - want to see on the samples front page.
+  -
+  - Less important samples to go the core-samples-misc block.
+  -
+  - $Id$
+  -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view name="pretty-content" from-label="content">
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+      </map:serialize>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:generate src="samples.xml"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="sitemap.xmap">
+        <map:read src="sitemap.xmap" mime-type="text/xml"/>
+      </map:match>
+
+      <map:match pattern="**/sitemap.xmap">
+        <map:read src="{0}" mime-type="text/xml"/>
+      </map:match>
+
+      <map:match pattern="*/**">
+        <map:mount uri-prefix="{1}" src="{1}/"/>
+      </map:match>
+
+      <map:handle-errors>
+        <map:select type="exception">
+          <map:when test="not-found">
+            <map:generate type="exception"/>
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
+              <map:parameter name="realPath" value="{realpath:}"/>
+              <map:parameter name="pageTitle" value="Resource not found"/>
+            </map:transform>
+            <map:serialize status-code="404"/>
+          </map:when>
+
+          <map:when test="invalid-continuation">
+            <map:generate type="exception"/>
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
+              <map:parameter name="realPath" value="{realpath:}"/>
+              <map:parameter name="pageTitle" value="Invalid Continuation"/>
+            </map:transform>
+            <map:serialize status-code="404"/>
+          </map:when>
+
+          <map:otherwise>
+            <map:generate type="exception"/>
+            <map:transform src="servlet:style:/stylesheets/system/exception2html.xslt">
+              <map:parameter name="realPath" value="{realpath:}"/>
+            </map:transform>
+            <map:serialize status-code="500"/>
+          </map:otherwise>
+        </map:select>
+      </map:handle-errors>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

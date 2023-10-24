@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    -->
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Cocoon Main Site - Products</title>
+    <author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author>
+  </properties>
+  <body>
+    <div id="contentBody">
+      <div id="bodyText">
+        <h1 class="docTitle">Products</h1>
+        <p>These are products that use Apache Cocoon:</p>
+        <section name="Ametys" style="background:none;padding:0;"/>
+        <p>
+          <a href="http://www.ametys.org">Ametys</a>  is a java-based open source web content management system. 
+          Its features include in a unified platform through an easy-to-use and intuitive interface for beginners : 
+        </p>
+        <ul>
+	        <li>Web-based administration,</li>
+	        <li>Microsoft Word-like interface,</li>
+	        <li>Multi-tab authoring tool,</li>
+	        <li>Content versioning,</li>
+	        <li>WAI standards,</li>
+	        <li>Open social gadgets,</li>
+	        <li>Powerful plugins : UGC, maps, newsletters, online survey</li>
+	        <li>and much more...</li>
+        </ul>
+        <section name="Apache Lenya" style="background:none;padding:0;"/>
+        <p>
+          <a href="http://lenya.apache.org">Apache Lenya</a> is an Open Source Java/XML
+          Content Management System and comes with revision control, site management,
+          scheduling, search, WYSIWYG editors, and workflow.
+        </p>
+        <section name="Daisy CMS" style="background:none;padding:0;"/>
+        <p>
+          <a href="http://www.daisycms.org">Daisy</a> is a content management system
+          that offers rich out-of-the-box functionality combined with solid foundations
+          for extensibility and integration. Daisy consists of two main components:
+        </p>
+        <ul>
+          <li>a stand-alone repository server accessible through HTTP/XML (using the
+            <a href="http://naeblis.cx/rtomayko/2004/12/12/rest-to-my-wife">REST</a> style
+            of WebServices) and/or a high-level (remote) Java API, and
+          </li>
+          <li>an extensive editing and publishing front-end web application running inside Apache Cocoon.
+          </li>
+        </ul>Due to its genericity and flexibility, Daisy can be used for many different
+        purposes, but is ideally suited for information-rich, structured content and
+        asset management applications. Even for advanced content management
+        applications, Daisy can be used and configured without any Java-coding skills:
+        Daisy offers a Javascript/Cocoon-based extension framework.Daisy is licensed under the open source, business-friendly Apache License 2.0
+        <section name="Hippo CMS" style="background:none;padding:0;"/>
+        <p>
+          <a href="https://wiki.onehippo.com/display/CMS6/Hippo+CMS+6+Home">Hippo CMS 6.0</a> is an open source 
+          information centered content management system. It's targeted at
+          medium to large organisations managing content for multi-channel distribution
+          like web sites and intranets. It facilitates an open and flexible way of using
+          your information by following international accepted
+          <a href="http://www.hippocms.org/pages/viewpage.action?pageId=2609">open
+            standards
+          </a>.
+        </p>
+        <p>Hippo CMS is licensed under the Apache License 2.0.</p>
+        <section name="Hippo Cocoon Toolkit" style="background:none;padding:0;"/>
+        <p>
+          The 
+          <a href="http://tirasa.github.com/HippoCocoonToolkit/">Hippo Cocoon Toolkit</a> provides an alternative,
+          Cocoon 3.0 based, toolkit for building front-end web sites while relying upon Hippo 7.x CMS and Repository.
+        </p>
+        <p>Hippo Cocoon Toolkit is licensed under the Apache License 2.0.</p>
+      </div>
+      <section name="Mindquarry" style="background:none;padding:0;"/>
+      <p>
+        <a href="http://code.google.com/p/mindquarry/">Mindquarry</a> is an Open Source collaborative software platform 
+        for file sharing (documents, images, media files, etc.), task and project management, team collaboration and 
+        Wiki editing that meshes simplicity and functionality. As a result, knowledge workers are able to connect with 
+        team members and share information from wherever they are, effectively improving team-work and increasing 
+        productivity within the company.
+      </p>
+      <p>Mindquarry is licensed under the Apache License 2.0.</p>
+    </div>
+  </body>
+</document>

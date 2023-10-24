@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - ResourceExistsSelector</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">ResourceExistsSelector</h1><h1>Summary</h1><p>Selects the first of a set of Resources (usually files) that exists.</p><h1>Basic information</h1><table class="bodyTable"><tbody><tr class="a"><th>Component type</th><td>Selector</td></tr><tr class="b"><th>Cocoon block</th><td>core</td></tr><tr class="a"><th>Java class</th><td>org.apache.cocoon.selection.ResourceExistsSelector</td></tr><tr class="b"><th>Name in Sitemap</th><td/></tr><tr class="a"><th>Cacheable</th><td/></tr></tbody></table><h1>Documentation</h1><p>A parameter 'prefix',</p><p>&lt;map:parameter src="prefix"
+value="&lt;code&gt;some/path&lt;/code&gt;"/&gt;</p><p>may be supplied to the selector instance.  This prefix is prepended to all
+<br/>
+test expressions before evaluation.  The default prefix is '' (empty string),
+<br/>
+meaning that all expressions are relative to the current sitemap, unless<br/>
+explicitly overridden.</p><p><strong>NOTE:</strong><br/>
+Provided resource URI is resolved as Source, relative to the current<br/>
+sitemap, which differs from behavior of selector in previous versions.<br/>
+To resolve resource paths relative to the context root, provide prefix<br/>
+parameter:</p><p>&lt;map:parameter name="prefix" value="context://"/&gt;</p><p>For example, we could define a ResourceExistsSelector with:</p><p>&lt;map:selector name="resource-exists"<br/>
+                    logger="sitemap.selector.resource-exists"<br/>
+                    src="org.apache.cocoon.selection.ResourceExistsSelector"
+/&gt;</p><p>And use it to build a PDF from XSL:FO or a higher-level XML format with:</p><p>&lt;map:match pattern="**.pdf"&gt;<br/>
+  &lt;map:select type="resource-exists"&gt;<br/>
+    &lt;map:when test="context/xdocs/{1}.fo"&gt;<br/>
+      &lt;map:generate src="content/xdocs/{1}.fo" /&gt;<br/>
+    &lt;/map:when&gt;<br/>
+    &lt;map:otherwise&gt;<br/>
+      &lt;map:generate src="content/xdocs/{1}.xml" /&gt;<br/>
+      &lt;map:transform src="stylesheets/document2fo.xsl" /&gt;<br/>
+    &lt;/map:otherwise&gt;<br/>
+  &lt;/map:select&gt;<br/>
+&lt;map:serialize type="fo2pdf" /&gt;</p></div></div>
+       </body></document>

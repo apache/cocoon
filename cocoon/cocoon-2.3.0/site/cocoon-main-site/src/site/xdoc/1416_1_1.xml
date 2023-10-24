@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Relaunch of cocoon.apache.org</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Relaunch of cocoon.apache.org</h1><p>We are pleased to announce the publishing of the new website of Apache
+Cocoon. This relaunch comprises a new design for the main site and the Cocoon
+2.2 documentation.<br/>
+The new documentation reflects the new structure of <a href="2.2/1327_1_1.html">Cocoon
+2.2</a> with a</p><ul>
+<li>small <a href="2.2/core-modules/core/2.2/1270_1_1.html">core</a></li>
+<li>which is based on the <a href="subprojects/">subprojects</a>
+"<a href="subprojects/configuration/">Cocoon Configuration</a>" and
+"<a href="subprojects/servlet-service/servlet-service-impl/">Cocoon Servlet-Service Framework</a>"</li>
+<li><a href="2.2/blocks/1204_1_1.html">blocks</a> with additional functionality (e.g. PDF or
+SVG creation, form frameworks, etc.)</li>
+<li>and <a href="2.2/maven-plugins/1208_1_1.html">Maven 2 plugins</a>.</li>
+</ul>The content was also cleaned up so that information which had become
+irrelevant for 2.2 was removed, though this is a still ongoing process.<br/>
+We are happy to receive your feedback (dev[at]cocoon.apache.org) or your
+additions and improvements (follow the 'edit' link on the bottom of a page).Enjoy!</div></div>
+       </body></document>

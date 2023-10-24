@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - XML Pipeline Contracts</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">XML Pipeline Contracts</h1><h1>XML Pipeline Contracts</h1><p>The XMLProducer contract is part of how Cocoon assembles the actual SAX
+pipeline to handle a particular request. It is a little different from the
+Sitemap related interfaces in that the focus is on the assembled pipeline
+instead of the decisions of which elements to use in the pipeline. If you think
+of the pipeline in a strict engineering mindset, an XMLProducer is a
+<em>source</em> of SAX events and an XMLConsumer is a <em>sink</em> for SAX
+events.  An XMLPipe is both a source and a sink of SAX Events.</p><section name="The XMLProducer" style="background:none;padding:0;"/><p>The XMLProducer is a very simple beast, comprised of only one method to give
+the component the next element of the pipeline.  Cocoon calls the
+<tt>setConsumer()</tt> method with the reference to the next XMLConsumer in the
+pipeline.  The approach allows the XMLProducer to call the different SAX related
+methods on the XMLConsumer without knowing ahead of time what that consumer will
+be.  The design is very simple and very powerful in that it allows Cocoon to
+daisy chain several components in any order and then execute the pipeline.</p><p>Any producer can be paired with any consumer and we have a pipeline.  The
+core design is very powerful and allows the end user to mix and match sitemap
+components as they see fit.  Cocoon will always call setConsumer() on every
+XMLProducer in a pipeline or it will throw an exception saying that the pipeline
+is invalid (i.e. there is no serializer for the pipeline).  The only contract
+that the XMLProducer has to worry about is that it must always make calls to the
+XMLConsumer passed in through the <tt>setConsumer()</tt> method.</p><section name="The XMLConsumer" style="background:none;padding:0;"/><p>An XMLConsumer is much more complex due to the interfaces it implements.  An
+XMLConsumer is also a SAX ContentHandler and a SAX LexicalHandler.  That means
+the XMLConsumer has to respect all the contracts with the SAX interfaces.  SAX
+stands for Serialized API for XML.  A document start, and each element start
+must be matched by the corresponding element end or document end.  So why does
+Cocoon use SAX instead of manipulating a DOM?  For two main reasons: performance
+and scalability.  A DOM tree is much more heavy on system memory than successive
+calls to an API.  SAX events can be sent as soon as they are read from the
+originating XML, the parsing and processing can happen essentially at the same
+time.</p><p>Most people's needs will be handled just fine with the ContentHandler
+interface, as that declares your namespaces.  However if you need lexical
+support to resolve entity names and such, you need the LexicalHandler
+interface.  The AbstractXMLConsumer base class can make implementing this
+interface easier so that you only need to override the events you intend to do
+anything with.</p><section name="The XMLPipe" style="background:none;padding:0;"/><p>The XMLPipe is both an XMLProducer and an XMLConsumer.  All the Transformers
+implement this interface for example.  By having an XMLPipe interface, we can
+chain more than one pipeline component together.  What this means is that Cocoon
+will honor all the XMLProducer contracts in a pipeline first.  The SAX pipeline
+will be completely assembled before any SAX calls are issued.  Cocoon does not
+want any stray calls to get lost.  There can be zero or more XMLPipes in a
+pipeline, but there must always be at least one XMLProducer and XMLConsumer
+pair.</p><p>Because an XMLPipe is both a source and a sink for SAX events, the basic
+contract that you need to worry about is that you must forward any SAX events on
+that you are not intercepting and transforming.  As you receive your
+<tt>startDocument</tt> event, pass it on to the XMLConsumer you received as part
+of the XMLProducer side of the contract.  An example ASCII art will help make it
+a bit more clear:</p><pre>XMLProducer -&gt; (XMLConsumer)XMLPipe(XMLProducer) -&gt; XMLConsumer
+</pre><p>A typical example would be using the FileGenerator (an XMLProducer), sending
+events to an XSLTTransformer (an XMLPipe), which then sends events to an
+HTMLSerializer (an XMLConsumer).  The XSLTTransformer acts as an XMLConsumer to
+the FileGenerator, and also acts as an XMLProducer to the HTMLSerializer.  It is
+still the responsibility of the XMLPipe component to ensure that the XML passed
+on to the next component is valid--provided the XML received from the previous
+component is valid.  In layman's terms it means if you don't intend to alter the
+input, just pass it on.  In most cases we just want to transform a small snippet
+of XML.  For example, inserting a snippet of XML based on an embedded element in
+a certain namespace.  Anything that doesn't belong to the namespace you are
+worried about should be passed on as is.</p></div></div>
+       </body></document>

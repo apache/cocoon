@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Logging</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Logging</h1><div class="fixme"><div><strong>Fixme: </strong>There is a new, up-to-date <a href="1399_1_1.html">document</a>
+describing loggin configuration. Is there any valuable information to grab or
+could we remove this document?</div></div><p>Cocoon uses <a href="http://jakarta.apache.org/commons/logging/">Commons
+Logging</a> by default and provides support for using Log4j (through commons
+logging). The usual Cocoon web application sets up Log4j through the
+<a href="../../../../subprojects/configuration/spring-configurator/index.html">Cocoon Spring Configurator</a>.</p><p>The default configuration for Log4j is in the global application context
+definition. Cocoon loads <em>WEB-INF/cocoon/log4j.xconf</em> as the
+configuration for Log4J. If you want to make any changes to the configuration
+file, it is advisable to not alter this default file but instead use your own
+configuration. Just change the reference in the application definition. This
+sample configuration file sets up Log4j to log all statements to a single log
+file in the temporary directory of the application server. The logging can be
+controlled in various ways as described below.</p><h1>Overriding the log level</h1><p>For development you can override the configured log level for your Log4J
+configuration by setting the property
+<em>org.apache.cocoon.override.loglevel</em> to the name of the level. For
+example this is very usefull to set the log level to debug for development
+purposes without changing the logging configuration.</p><h1>Shielded Classloading</h1><p>By default, Cocoon is configured to use shielded classloading. Therefore an
+own instance of Log4J is instantiated for just the Cocoon web application. If
+you want to share a global Log4J configuration between web applications, you
+have to turn off the shielded classloading for the whole Cocoon instance of for
+just Log4J.</p><h1>Using your own logging system</h1><p>If you want to use your own logging system instead of Log4J you can setup a
+Logger bean in the root application context of Spring. This bean must be
+registered with the name <em>org.apache.avalon.framework.logger.Logger</em> and
+it must conform to the interface with this name.</p></div></div>
+       </body></document>

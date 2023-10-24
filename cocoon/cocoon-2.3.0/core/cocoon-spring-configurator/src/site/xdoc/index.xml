@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Spring Configurator - Introduction to the Spring Configurator</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Introduction to the Spring Configurator</h1><p>The Spring Configurator is a useful component providing support in common
+configuration issues when using the Spring framework.</p><p>Although the code was developed as part of Cocoon, it is aimed at making it
+easier to use Spring in any web application.  It has no dependencies on Cocoon
+and can be used standalone. The impact on your code is nearly zero and the
+Spring Configurator has only Spring itself as a dependency.</p><section name="Motivation" style="background:none;padding:0;"/><p>When using a framework like Spring there are always the same problems to
+solve, like</p><ul>
+<li>Where do I store my bean configurations?</li>
+<li>How can I parameterize them dynamically?</li>
+<li>Where do I store this extra information?</li>
+<li>How can I handle different environments for testing or development or
+production?</li>
+<li>How can I distribute code configuration information?</li>
+<li>How can I distribute partial web applications?</li>
+<li>How do I manage hierarchial web application contexts?</li>
+</ul>Of course Spring is flexible enough to handle these problems, but you have to
+implement your own solution.  The danger here is that every project ends up
+developing its own "proprietary" solution.A standardized way of doing these things would be great.  Guess what!, the
+Spring Configurator is the answer to your problems. Just like Maven has
+standardized the build process, the Spring Configurator standardizes the way of
+dealing with various configuration issues with Spring.</div></div>
+       </body></document>

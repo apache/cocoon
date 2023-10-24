@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Basic Contracts</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Basic Contracts</h1><h1>Sitemap Components</h1><p>All sitemap components follow some basic contracts, which makes learning how
+to write components a bit easier. The first and most important contract is that
+all components usable in the sitemap implement the SitemapComponent interface.
+This is the very first contract to understand and learn. We then build on each
+of the contracts a little at a time until we have the full understanding of what
+is happening between the sitemap and the components it uses. Other contracts
+that we will look at are the SitemapOutputComponent,
+CacheableProcessingComponent, Generator, Transformer, Serializer, Reader, and
+Action.</p><p>The goal of this series is to introduce you to the mechanics of the different
+components and how they are created. When applicable we will address when is a
+good time to create these components, although that is not the primary focus.
+</p><section name="Core Sitemap Contracts" style="background:none;padding:0;"/><p>The sitemap is responsible for setting up and using the components for a
+given pipeline. A pipeline consists of one or more SitemapModelComponents and a
+SitemapOutputComponent. Examples of this are a pipeline consisting of a
+Generator, some Transformers, and a Serializer. The Generator and Transformer
+interfaces implement the SitemapModelComponent while the Serializer interface
+implements the SitemapOutputComponent. The same goes for a pipeline consisting
+only of a Reader. The Reader interface implements both the SitemapModelComponent
+interface and the SitemapOutputComponent interface.</p><p>The basic progression of a request consists of the Sitemap reserving the
+components that will be used for the request. It then performs the setup that is
+necessary for the components to find the resources they use and set up any
+caching directives. Next, it executes the pipeline to produce your results.
+Lastly, it releases all the components used to process the request back to the
+respective pools.</p><section name="Extended Contracts" style="background:none;padding:0;"/><p>The particular pipeline type used can support additional contracts like
+caching. The CachingPipeline uses the CacheableProcessingComponent interface to
+determine how and when to control caching. Remember that some items in your
+system are dependent on more than the URL used to access it. For example, if you
+are navigating through a list, the important meta-information of what page you
+are on should be part of the cache so that you don't get repeated results just
+because the URL didn't really change. We'll look at that in more detail as well.
+</p></div></div>
+       </body></document>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Live Sites - 2.1.5</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Live Sites - 2.1.5</h1><p>This is a list of live sites proudly powered by Apache Cocoon.</p><h1>Cocoon 2.1.5 - Cocoon 2.1.5.1</h1><section name="TanakhML Project" style="background:none;padding:0;"/><p><em>Date added: 2005-10-24</em></p><p>Hebrew text of the Bible and online related tools: Hebrew/English text
+browser, verse accentual structure analyser, form concordancer.</p><p><strong>URL:</strong>
+<a href="http://www.tanakhml.org/">http://www.tanakhml.org</a><br/>
+<strong>Contact</strong>: alain AT tanakhml.org</p><h4>Additional information</h4><h5>How much time did it take to build the site from design to publication?</h5><p>About 14 months (1 person).</p><h5>How much traffic does this site handle?</h5><p>Currently, about 1GB/month, but this site is in production since a few months
+only, so we still don't actually know how much traffic it will handle in the
+future.</p><h5>What made you choose Cocoon to build the site?</h5><ol type="1">
+<li>Separation of concerns</li>
+<li>Ability to generate, from a single dynamically generated XML file, as many
+formats as needed (HTML, PDF, and so on).</li>
+</ol><h5>What other information do you want to disclose (e.g. how does it work, how
+did you build it, what parts of Cocoon did you use)?</h5>It actually works fine!<section name="Marine Power Europe Inc." style="background:none;padding:0;"/><em>Date added: 2005-09-10</em><p>Marine Power Europe is the manufacturing, marketing and distribution
+subsidiary of Mercury Marine, covering Europe, CIS, Africa and the Middle East.
+Mercury Marine is the biggest boat engines business in the world and a major
+boat builder.</p><p><strong>URL:</strong>
+<a href="http://www.marinepower.com/">http://www.marinepower.com</a></p><h4>Additional information</h4><h5>How much time did it take to build the site from design to publication?</h5><p>One year because we have to create the content management with Lotus Notes.
+Finally the cocoon part was the easiest one ;-)</p><h5>How many people were involved in the project?</h5><p>2 but representing a child companies accross Europe (it will be extend in a
+near futur to center in France, Germany, Italy,...) ==&gt; Content management
+(under Notes &amp; DB2) via Web and publication via Cocoon.</p><h5>How much traffic does this site handle?</h5><p>Actually 3000 pages/ hour.</p><h5>What made you choose Cocoon to build the site?</h5><p>Has to separate concerns as for MVC ==&gt; I want a site that can be build on
+any behind databases and a content management that do not care about the
+presentation ==&gt; use XML as exchange tunnel and represent saved data with
+Cocoon.</p><h5>What other information do you want to disclose (e.g. how does it work, how
+did you build it, what parts of Cocoon did you use)?</h5><p>I bind it with Lotus Notes with my own generator. It's also coupled with DB2
+with ESQL. The site contains also forms that I link with Lotus Notes databases.
+</p><p>I run it under Jetty ==&gt; that's really a nice web server that perform
+exactly what we asked and only that, really easy to configure,...<br/>
+I also include a features that I think must be include in all web site : Filter
+: Zip filter greatly improve performance of site if well managed. Perhaps an
+idea for the next Cocoon release</p><section name="EFIX PULS" style="background:none;padding:0;"/><p><em>Date added: 2005-09-10</em></p><p>Information vortal for polish forex traders</p><p><strong>URL:</strong>
+<a href="http://www.efixpuls.pl/">http://www.efixpuls.pl/</a></p><h4>Additional information</h4><h5>What other information do you want to disclose (e.g. how does it work, how
+did you build it, what parts of Cocoon did you use)?</h5><p>it is based on webdav server and OOo Writer native files. Content managers
+fimply adds content by saving <br/>
+Writer's files to webdav collection.</p><p>URL of the website: <br/>
+Title of the website: <br/>
+Cocoon version used: 2.1.5<br/>
+Short summary: Information vortal for polish forex traders<br/>
+How can we verify this site is actually built with Cocoon? Make it to show
+<br/>
+error page eg:
+<a href="http://www.efixpuls.pl/cotton/something.wrong.sxw.html">http://www.efixpuls.pl/cotton/something.wrong.sxw.html</a>
+<br/>
+What other information do you want to disclose: it is based on webdav server
+<br/>
+and OOo Writer native files. Content managers fimply adds content by saving
+<br/>
+Writer's files to webdav collection.</p><section name="Other sites" style="background:none;padding:0;"/><ul>
+<li><a href="http://www.shopbloomfield.com/">Bloomfield Nutrition</a></li>
+<li><a href="http://www.rsv.vd.ch/">Systematic collection of the legislation for
+state of Vaudin Switzerland</a> - Site gathering all the laws of the state of
+Vaud in Switzerland. It publish actual and previous version of a law as PDF or
+HTML. The research is also facilitated by using different wizard's.</li>
+<li><a href="http://www.vnunet.com/">vnunet.com</a> - UK technology, news,
+reviews and downloads</li>
+<li><a href="http://www.knowlex.org/">KnowLex</a> - provides additional services
+(PDF, Lucene search, content-based ads) to the contents of Wikipedia (German)
+</li>
+<li><a href="http://www.digitaldevice.com.ua/">Digital Device Ukraine</a> -
+Hi-Tech Life company (English, Russian)</li>
+<li><a href="http://www.zolotoverh.info/">Ukrainian Orthodox Church</a>
+(Ukrainian)</li>
+<li><a href="http://www.computeractive.co.uk/">Computeractive - simple clear
+computer advice</a></li>
+<li><a href="http://roetgesbuettel-info.de/">Rötgesbüttel</a>- a small town in
+Germany</li>
+<li><a href="http://www.zki.caf.dlr.de/">Center for Satellite Based Crisis
+Information (ZKI)</a> - engaged in the acquisition, analysis and provision of
+satellite based information products on natural disasters, for humanitarian
+relief actions and in the context of civil security</li>
+<li><a href="http://www.coalfire.caf.dlr.de/">Coal Fire Research Project</a> - a
+Sino-German Initiative to understand and combat the processes leading to and
+influencing the development of coal fires in China.</li>
+<li><a href="http://glaciology.ethz.ch/swiss-glaciers/">Swiss Glacier Monitoring
+Network</a></li>
+<li><a href="http://glaciology.ethz.ch/glacier-hazards/">Glacier Hazard
+Assessment</a></li>
+<li><a href="http://www.learnkey.de/">LearnKey</a> - Computer Based Trainings,
+Lernprogramme für die MS Office Familie</li>
+<li><a href="http://www.inside.pl/">Inside</a> - polish interior design company
+(English and Polish)</li>
+<li><a href="http://commerce.wi.gov/">Wisconsin Department of Commerce</a> - The
+entire Wisconsin Department of Commerce web site (except for home page)</li>
+<li><a href="http://www.travelthere.com/">travelthere.com</a> - handles travel
+bookings for flights, hotels, car hire, tours, etc within Australia and flights
+between Australia and New Zealand.</li>
+<li><a href="http://www.duinetwork.com/">DUI Network</a></li>
+<li><a href="http://gesuender-abnehmen.com/">Gesünder abnehmen</a> - German
+information portal about healthy weight loss and fitness</li>
+<li><a href="http://www.fivestaralliance.com/">Five Star Alliance</a> - Search
+and Book the World's Finest Hotels</li>
+</ul></div></div>
+       </body></document>

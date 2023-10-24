@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Spring Configurator - Property Handling</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Property Handling</h1><p>For using properties in your configuration files, Spring provides the
+<a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-placeholderconfigurer">property
+placeholder configurer</a> which you have to configure in your application
+context. The Spring Configurator has already built-in support for replacing
+property values in configuration files, so there is no additional work required
+anymore. In addition the Configurator reads properties from various standard
+locations.</p><p>In general, the Configurator works with directories containing property files
+and supports two areas where these directories can be located: somewhere in the
+classpath or in some directory in your web application. While the first area is
+very convenient for distributing properties within libraries, the second area is
+very easy to edit by administrators or developers.</p><p>Let's start with the full list of actions taken by the Spring Configurator to
+read in properties. During this process, various property files are read. If
+there is more than one definiton for a property, the last definition wins!</p><ol type="1">
+<li>The classpath is scanned for property files inside jar files located at
+<tt>/META-INF/cocoon/properties/*.properties.</tt> Usually these property files
+are default values for beans distributed with the jar the property files are
+contained in. All these property files are read in alphabetical order.</li>
+<li>All property files located at
+<tt>/WEB-INF/classes/META-INF/cocoon/properties/*.properties</tt> are read in
+alphabetical order.</li>
+<li>The classpath is scanned for property files inside jar files located at
+<tt>/META-INF/cocoon/properties/[RUNNING_MODE]/*.properties.</tt> Usually these
+property files are default values in the given running mode for beans
+distributed with the jar the property files are contained in. All these property
+files are read in alphabetical order.</li>
+<li>All property files located at
+<tt>/WEB-INF/classes/META-INF/cocoon/properties/[RUNNING_MODE]/*.properties</tt>
+are read in alphabetical order.</li>
+<li>All property files from <tt>/WEB-INF/cocoon/properties/*.properties</tt>
+are read in alphabetical order.</li>
+<li>All property files from
+<tt>/WEB-INF/cocoon/properties/[RUNNING_MODE]/*.properties</tt> are read in
+alphabetical order.</li>
+<li>If the home directory of the current user contains a
+<tt>.cocoon/settings.properties</tt> file, this is read next.</li>
+<li>If the system property <tt>org.apache.cocoon.settings</tt> is specified and
+points to a property file, this is read. If the system property points to a
+directory all property files from this directory are read in alphabetical order
+and all property files from the sub directory named [RUNNING_MODE] are read in
+alphabetical order.</li>
+<li>If the servlet context init parameter <tt>org.apache.cocoon.settings</tt>
+is specified and points to a property file, this is read. If the system property
+points to a directory all property files from this directory are read in
+alphabetical order and all property files from the sub directory named
+[RUNNING_MODE] are read in alphabetical order.</li>
+<li>If a property provider (see below) is configured in the application context,
+it is queried for a set of properties.</li>
+<li>Read additional configured properties from the settings configuration in the
+application context.</li>
+<li>Apply additional configured properties from the settings configuration in
+the application context.</li>
+<li>Apply system properties.</li>
+</ol>Although this list might look very scary, it is in fact a very simple but
+powerful approach:<ul>
+<li>If you want to use properties within your configurations, make sure to
+supply a default value through a property file which is stored in the jar
+containing your components.</li>
+<li>If you want to provide default values for different running modes, add these
+configurations to your jar as well.</li>
+<li>If you want to override default configurations, put them either in your own
+jar file and make sure that the name of your property file comes after the
+default configuration file in alphabetical order, or put your property file in
+/<tt>WEB-INF/classes/META-INF/cocoon/properties.</tt></li>
+<li>If you want to override a default configuration depending on a running mode,
+add a property file at the same location as before but put it in a sub directory
+with the name of the running mode.</li>
+<li>To override properties globally, e.g. through an administrator, put the
+properties at <tt>/WEB-INF/cocoon/properties</tt> or
+<tt>/WEB-INF/cocoon/[RUNNING_MODE]/properties</tt>.</li>
+<li>If you want to change a configuration value during development you can just
+set it as a system property. (You can also add a property file with the values
+or define your own running mode of course.)</li>
+<li>If you have special requirements for property handling, you can add a
+property provider bean which is a Spring managed bean conforming to the
+<tt>org.apache.cocoon.configuration.PropertyProvider</tt> interface. For
+example, if you want to store your configurations inside a database or configure
+them through a jndi context, you can provide these values through a custom
+implementation.</li>
+</ul></div></div>
+       </body></document>

@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!-- $Id$ -->
+<project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd"
+         name="Cocoon Core Modules 2.2">
+
+  <skin>
+    <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon-thien-maven-site-skin</artifactId>
+    <version>1.0.1</version>
+  </skin>
+    
+  <body>    
+    <menu name="Introduction">
+      <item name="Introduction" href="./index.html"/>
+    </menu>
+    
+    <menu name="Sitemap">
+      <item name="Sitemap Evaluation" href="./853_1_1.html"/>
+      <item collapse="true" name="Writing your own components" href="./664_1_1.html">
+        <item name="Basic Contracts" href="./664_1_1.html"/>
+        <item name="Core Contracts" href="./673_1_1.html">
+          <item name="SitemapModelComponent Contracts" href="./673_1_1.html"/>
+          <item name="SitemapOutputComponent Contracts" href="./674_1_1.html"/>
+          <item name="CacheableProcessingComponent Contracts" href="./675_1_1.html"/>
+          <item name="XML Pipeline Contracts" href="./689_1_1.html"/>
+        </item>
+        <item name="Sitemap Components" href="./676_1_1.html">
+          <item name="Creating an Action" href="./676_1_1.html"/>
+          <item name="Creating a Reader" href="./681_1_1.html"/>
+          <item name="Creating a Generator" href="./688_1_1.html"/>
+          <item name="Creating a Transformer" href="./694_1_1.html"/>
+          <item name="Creating a Serializer" href="./725_1_1.html"/>
+        </item>
+        <item name="Writing Cache Efficient Components" href="./690_1_1.html"/>
+      </item>
+      <item name="Concepts" href="./1375_1_1.html">
+        <item name="Actions" href="./1375_1_1.html"/>
+        <item name="Error Handling" href="./1379_1_1.html"/>
+        <item name="Matchers and Selectors" href="./1376_1_1.html"/>
+        <item name="Modules" href="./1377_1_1.html"/>
+        <item name="Redirection" href="./1378_1_1.html"/>
+        <item name="Views" href="./1374_1_1.html"/>
+      </item>
+      <item name="Reference" href="./842_1_1.html">
+        <item name="Sitemap Components" href="./842_1_1.html">
+          <item name="map:act" href="./842_1_1.html"/>
+          <item name="map:aggregate" href="./847_1_1.html"/>
+          <item name="map:call" href="./844_1_1.html"/>
+          <item name="map:component-configurations" href="./836_1_1.html"/>
+          <item name="map:generate" href="./850_1_1.html"/>
+          <item name="map:handle-errors" href="./837_1_1.html"/>
+          <item name="map:match" href="./838_1_1.html"/>
+          <item name="map:mount" href="./845_1_1.html"/>
+          <item name="map:otherwise" href="./841_1_1.html"/>
+          <item name="map:part" href="./848_1_1.html"/>
+          <item name="map:read" href="./846_1_1.html"/>
+          <item name="map:redirect-to" href="./843_1_1.html"/>
+          <item name="map:select" href="./839_1_1.html"/>
+          <item name="map:serialize" href="./849_1_1.html"/>
+          <item name="map:transform" href="./851_1_1.html"/>
+          <item name="map:when" href="./840_1_1.html"/>
+        </item>
+        <item name="Other elements" href="./811_1_1.html">
+          <item name="map:action" href="./811_1_1.html"/>
+          <item name="map:actions" href="./810_1_1.html"/>
+          <item name="map:action-set" href="./829_1_1.html"/>
+          <item name="map:action-sets" href="./828_1_1.html"/>
+          <item name="map:components" href="./809_1_1.html"/>
+          <item name="map:flow" href="./832_1_1.html"/>
+          <item name="map:generator" href="./813_1_1.html"/>
+          <item name="map:generators" href="./812_1_1.html"/>
+          <item name="map:matcher" href="./825_1_1.html"/>
+          <item name="map:matchers" href="./824_1_1.html"/>
+          <item name="map:parameter" href="./852_1_1.html"/>
+          <item name="map:pipe" href="./823_1_1.html"/>
+          <item name="map:pipeline" href="./835_1_1.html"/>
+          <item name="map:pipelines" href="./834_1_1.html"/>
+          <item name="map:reader" href="./821_1_1.html"/>
+          <item name="map:readers" href="./820_1_1.html"/>
+          <item name="map:resource" href="./831_1_1.html"/>
+          <item name="map:resources" href="./830_1_1.html"/>
+          <item name="map:script" href="./833_1_1.html"/>
+          <item name="map:selector" href="./819_1_1.html"/>
+          <item name="map:selectors" href="./818_1_1.html"/>
+          <item name="map:serializer" href="./817_1_1.html"/>
+          <item name="map:serializers" href="./816_1_1.html"/>
+          <item name="map:sitemap" href="./808_1_1.html"/>
+          <item name="map:transformer" href="./815_1_1.html"/>
+          <item name="map:transformers" href="./814_1_1.html"/>
+          <item name="map:view" href="./827_1_1.html"/>
+          <item name="map:views" href="./826_1_1.html"/>
+        </item>
+      </item>
+      <item name="Sitemap Components" href="./1006_1_1.html">
+        <item name="Action" href="./1006_1_1.html">
+          <item name="ClearCacheAction" href="./1006_1_1.html"/> 
+          <item name="ClearPersistentStoreAction" href="./933_1_1.html"/>
+          <item name="CopySourceAction" href="./968_1_1.html"/>
+          <item name="FormValidatorAction" href="./966_1_1.html"/>
+          <item name="HelloAction" href="./868_1_1.html"/>
+          <item name="HttpCacheAction" href="./1049_1_1.html"/>
+          <item name="HttpHeaderAction" href="./1057_1_1.html"/>
+          <item name="InputModuleAction" href="./1020_1_1.html"/>
+          <item name="LocaleAction" href="./889_1_1.html"/>
+          <item name="LogAction" href="./1403_1_1.html"/>
+          <item name="PreemptiveLoaderAction" href="./909_1_1.html"/>
+          <item name="PropagatorAction" href="./1004_1_1.html"/>
+          <item name="RequestParamAction" href="./888_1_1.html"/>
+          <item name="RequestParameterExistsAction" href="./906_1_1.html"/>
+          <item name="ResourceExistsAction" href="./885_1_1.html"/>
+          <item name="SessionInvalidatorAction" href="./872_1_1.html"/>
+          <item name="SessionIsValidAction" href="./1031_1_1.html"/>
+          <item name="SessionPropagatorAction" href="./965_1_1.html"/>
+          <item name="SessionStateAction" href="./875_1_1.html"/>
+          <item name="SessionValidatorAction" href="./917_1_1.html"/>
+          <item name="SetCharacterEncodingAction" href="./975_1_1.html"/>
+          <item name="SetterAction" href="./983_1_1.html"/>
+        </item>
+        <item name="Generator" href="./1025_1_1.html">
+          <item name="CalendarGenerator" href="./1025_1_1.html"/>
+          <item name="CSVGenerator" href="./913_1_1.html"/>
+          <item name="CSVGeneratorBean" href="./1339_1_1.html"/>
+          <item name="DefaultContentAggregator" href="./1043_1_1.html"/>
+          <item name="DirectoryGenerator" href="./953_1_1.html"/>
+          <item name="ExceptionGenerator" href="./937_1_1.html"/>
+          <item name="FileGenerator" href="./999_1_1.html"/>
+          <item name="FileGeneratorBean" href="./1336_1_1.html"/>
+          <item name="FragmentExtractorGenerator" href="./1008_1_1.html"/>
+          <item name="ImageDirectoryGenerator" href="./1030_1_1.html"/>
+          <item name="LinkStatusGenerator" href="./1039_1_1.html"/>
+          <item name="MP3DirectoryGenerator" href="./960_1_1.html"/>
+          <item name="NotifyingGenerator" href="./1022_1_1.html"/>
+          <item name="PauseGenerator" href="./973_1_1.html"/>
+          <item name="PauseGeneratorBean" href="./1337_1_1.html"/>
+          <item name="RequestGenerator" href="./884_1_1.html"/>
+          <item name="ServletServiceGenerator" href="./1398_1_1.html"/>
+          <item name="SessionAttributeGenerator" href="./932_1_1.html"/>
+          <item name="StatusGenerator" href="./995_1_1.html"/>
+          <item name="StreamGenerator" href="./925_1_1.html"/>
+          <item name="TraversableGenerator" href="./1016_1_1.html"/>
+          <item name="XPathDirectoryGenerator" href="./982_1_1.html"/>
+          <item name="XPathTraversableGenerator" href="./873_1_1.html"/>
+        </item>
+        <item name="Matcher" href="./899_1_1.html">
+          <item name="CachingRegexpMatcher" href="./899_1_1.html"/>
+          <item name="CachingWildcardMatcher" href="./1015_1_1.html"/>
+          <item name="CookieMatcher" href="./903_1_1.html"/>
+          <item name="HeaderMatcher" href="./874_1_1.html"/>
+          <item name="LocaleMatcher" href="./914_1_1.html"/>
+          <item name="MountTableMatcher" href="./1007_1_1.html"/>
+          <item name="ParameterMatcher" href="./897_1_1.html"/>
+          <item name="RegexpHeaderMatcher" href="./972_1_1.html"/>
+          <item name="RegexpHostMatcher" href="./940_1_1.html"/>
+          <item name="RegexpParameterMatcher" href="./963_1_1.html"/>
+          <item name="RegexpRequestAttributeMatcher" href="./1005_1_1.html"/>
+          <item name="RegexpRequestParameterMatcher" href="./997_1_1.html"/>
+          <item name="RegexpSessionAttributeMatcher" href="./961_1_1.html"/>
+          <item name="RegexpURIMatcher" href="./922_1_1.html"/>
+          <item name="RequestAttributeMatcher" href="./954_1_1.html"/>
+          <item name="RequestParameterMatcher" href="./1017_1_1.html"/>
+          <item name="SessionAttributeMatcher" href="./1037_1_1.html"/>
+          <item name="WildcardHeaderMatcher" href="./1021_1_1.html"/>
+          <item name="WildcardHostMatcher" href="./955_1_1.html"/>
+          <item name="WildcardMatcher" href="./1034_1_1.html"/>
+          <item name="WildcardParameterMatcher" href="./1019_1_1.html"/>
+          <item name="WildcardRequestAttributeMatcher" href="./951_1_1.html"/>
+          <item name="WildcardRequestParameterMatcher" href="./1051_1_1.html"/>
+          <item name="WildcardSessionAttributeMatcher" href="./902_1_1.html"/>
+          <item name="WildcardURIMatcher" href="./1044_1_1.html"/>
+        </item>
+        <item name="Pipe" href="./920_1_1.html">
+          <item name="CachingPointProcessingPipeline" href="./920_1_1.html"/>
+          <item name="CachingProcessingPipeline" href="./1046_1_1.html"/>
+          <item name="ExpiresCachingProcessingPipeline" href="./939_1_1.html"/>
+          <item name="NonCachingProcessingPipeline" href="./892_1_1.html"/>
+        </item>
+        <item name="Reader" href="./930_1_1.html">
+          <item name="ImageReader" href="./930_1_1.html"/>
+          <item name="LinkRewriterReader" href="./1344_1_1.html"/>
+          <item name="ResourceReader" href="./916_1_1.html"/>
+        </item>
+        <item name="Selector" href="./924_1_1.html">
+          <item name="BrowserSelector" href="./924_1_1.html"/>
+          <item name="CookieSelector" href="./1042_1_1.html"/>
+          <item name="ExceptionSelector" href="./931_1_1.html"/>
+          <item name="HeaderSelector" href="./890_1_1.html"/>
+          <item name="HostSelector" href="./998_1_1.html"/>
+          <item name="ParameterSelector" href="./911_1_1.html"/>
+          <item name="RegexpHeaderSelector" href="./883_1_1.html"/>
+          <item name="RegexpRequestParameterSelector" href="./956_1_1.html"/>
+          <item name="RequestAttributeSelector" href="./882_1_1.html"/>
+          <item name="RequestMethodSelector" href="./967_1_1.html"/>
+          <item name="RequestParameterSelector" href="./1018_1_1.html"/>
+          <item name="ResourceExistsSelector" href="./901_1_1.html"/>
+          <item name="SessionAttributeSelector" href="./958_1_1.html"/>
+          <item name="SimpleSelector" href="./1056_1_1.html"/>
+          <item name="XPathExceptionSelector" href="./969_1_1.html"/>
+        </item>
+        <item name="Serializer" href="./896_1_1.html">
+          <item name="HTMLSerializer" href="./896_1_1.html"/>
+          <item name="LinkSerializer" href="./959_1_1.html"/>
+          <item name="ServletServiceSerializer" href="./1395_1_1.html"/>
+          <item name="TextSerializer" href="./929_1_1.html"/>
+          <item name="XMLSerializer" href="./870_1_1.html"/>
+          <item name="ZipArchiveSerializer" href="./1000_1_1.html"/>
+        </item>
+        <item name="Transformer" href="./996_1_1.html">
+          <item name="AugmentTransformer" href="./996_1_1.html"/>
+          <item name="CIncludeTransformer" href="./934_1_1.html"/>
+          <item name="EncodeURLTransformer" href="./867_1_1.html"/>
+          <item name="FilterTransformer" href="./936_1_1.html"/>
+          <item name="FragmentExtractorTransformer" href="./948_1_1.html"/>
+          <item name="I18nTransformer" href="./981_1_1.html"/>
+          <item name="IncludeTransformer" href="./1048_1_1.html"/>
+          <item name="JPathTransformer" href="./898_1_1.html"/>
+          <item name="LinkGatherer" href="./1023_1_1.html"/>
+          <item name="LinkTranslator" href="./881_1_1.html"/>
+          <item name="LogTransformer" href="./1029_1_1.html"/>
+          <item name="Paginator" href="./991_1_1.html"/>
+          <item name="ReadDOMSessionTransformer" href="./949_1_1.html"/>
+          <item name="RoleFilterTransformer" href="./876_1_1.html"/>
+          <item name="ServletServiceTransformer" href="./1396_1_1.html"/>
+          <item name="SimpleFormInstanceExtractionTransformer" href="./1028_1_1.html"/>
+          <item name="SimpleFormTransformer" href="./992_1_1.html"/>
+          <item name="SourceWritingTransformer" href="./1050_1_1.html"/>
+          <item name="StripNameSpacesTransformer" href="./1340_1_1.html"/>
+          <item name="TeeTransformer" href="./923_1_1.html"/>
+          <item name="TraxTransformer" href="./908_1_1.html"/>
+          <item name="WriteDOMSessionTransformer" href="./1036_1_1.html"/>
+          <item name="XIncludeTransformer" href="./985_1_1.html"/>
+          <item name="XSLTTransformer" href="./1331_1_1.html"/>
+        </item>
+      </item>
+    </menu>
+    
+    <menu name="Control Flow">
+      <item name="Introduction" href="./1372_1_1.html"/>      
+      <item name="Continuations" href="./1373_1_1.html"/>      
+      <item name="Using Control Flow" href="./1380_1_1.html"/>      
+    </menu>
+
+    <menu name="Modularization (Blocks)">
+      <item name="Overview" href="./1268_1_1.html"/>          
+      <item name="Block structure" href="./1263_1_1.html"/>          
+    </menu>
+
+    <menu name="Configuration &amp; Initialization">
+      <item name="Overview" href="./1258_1_1.html"/>          
+      <item name="Property Configuration" href="./1261_1_1.html"/>          
+      <item name="Logging" href="./1257_1_1.html"/>          
+      <item name="Logging Configuration" href="./1399_1_1.html"/>          
+      <item name="Component Configuration" href="./1259_1_1.html"/>          
+      <item name="Web application structure" href="./1269_1_1.html"/>          
+    </menu>
+    
+    <!-- TODO: generate this dinamically and remove changes-report.xml from xdocs -->
+    <menu name="Project Reports">
+      <item name="Changes Report" href="./changes-report.html"/>        
+      <item name="JavaDocs" href="./apidocs/"/>        
+    </menu>
+  </body>
+</project>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Spring Configurator - Bean Configurations</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Bean Configurations</h1><p>The Spring Configurator supports an automatic inclusion mechanism for bean
+definitions. By default all configuration files ending with *.xml are read from
+these locations in alphabetical order:</p><ul>
+<li>All configuration files contained in jar files located at
+<tt>/META-INF/cocoon/spring</tt></li>
+<li>All configuration files from
+<tt>/WEB-INF/classes/META-INF/cocoon/spring</tt></li>
+<li>All configuration files contained in jar files located at
+<tt>/META-INF/cocoon/spring/[RUNNING_MODE]</tt></li>
+<li>All configuration files from
+<tt>/WEB-INF/classes/META-INF/cocoon/spring/[RUNNING_MODE]</tt></li>
+</ul>If you want to deploy basic configurations together with your components, you
+can just put the configuration file inside the jar and the beans are available
+in the application context.<section name="Property Overriding" style="background:none;padding:0;"/>To customize bean configurations according to your environment, the Cocoon
+Spring Configurator provides built-in support for Spring's
+<a href="http://static.springframework.org/spring/docs/2.0.x/reference/beans.html#beans-factory-overrideconfigurer">property
+override configuration mechanism</a>. By default, property files are read in
+alphabetical order from the following locations:<ul>
+<li>All files ending with *.properties contained in jar files located at
+<tt>/META-INF/cocoon/spring</tt></li>
+<li>All files ending with *.properties from
+<tt>/WEB-INF/classes/META-INF/cocoon/spring</tt></li>
+<li>All files ending with *.properties contained in jar files located at
+<tt>/META-INF/cocoon/spring/[RUNNING_MODE]</tt></li>
+<li>All files ending with *.properties from
+<tt>/WEB-INF/classes/META-INF/cocoon/spring/[RUNNING_MODE]</tt></li>
+<li>All files ending with *.properties from <tt>/WEB-INF/cocoon/spring</tt>
+</li>
+<li>All files ending with *.properties from
+<tt>/WEB-INF/cocoon/spring/[RUNNING_MODE]</tt></li>
+</ul>The properties defined in these property files are only used for overriding
+bean configurations! These values are not available through the settings object.
+As we suggest to use namespace based identifiers for beans, the Cocoon Spring
+Configurator uses the character <tt>/</tt> for separating the bean name from the
+property name:<pre>my.special.beanName/property=somevalue
+</pre></div></div>
+       </body></document>

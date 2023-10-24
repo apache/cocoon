@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Releasing Cocoon</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Releasing Cocoon</h1><p>As Cocoon uses Maven 2 as build system, the release process is very simple
+and only requires a few steps.</p><h1>Step 1: Prepare your workstation</h1><p>In order to get started, you have to make sure that your work station is
+configured correctly:</p><section name="Java" style="background:none;padding:0;"/><p>Make sure that you use Java 1.4. Usually this means setting JAVA_HOME
+correctly.</p><section name="GnuPG" style="background:none;padding:0;"/><p>Install <a href="http://www.gnupg.org/">GnuPG</a> on your workstation and
+make sure that YOUR key is your default local key. Also add the key to
+<a href="http://svn.apache.org/repos/asf/cocoon/trunk/commons/KEYS">KEYS.</a>
+</p><section name="Maven 2" style="background:none;padding:0;"/><h3>Unix based systems</h3><ul>
+<li>make sure that you can login to people.apache.org using keys 
+(<a href="http://hacks.oreilly.com/pub/h/66">http://hacks.oreilly.com/pub/h/66</a>)
+</li>
+<li>in the case that your local username is different from your username at
+people.apache.org, configure it at ~/.m2/settings.xml.</li>
+<li>point to an empty local repository</li>
+</ul><pre>&lt;settings&gt;
+  &lt;localRepository&gt;[path to an existing, empty directory&lt;/localRepository&gt;
+  &lt;servers&gt;
+    &lt;server&gt;
+      &lt;id&gt;cocoon-staging-repo&lt;/id&gt;
+      &lt;username&gt;[your username on people.apache.org]&lt;/username&gt;
+      &lt;filePermissions&gt;664&lt;/filePermissions&gt;
+      &lt;directoryPermissions&gt;775&lt;/directoryPermissions&gt;
+    &lt;/server&gt;
+  &lt;/servers&gt;
+&lt;/settings&gt;</pre><div class="note"><div><strong>Note: </strong>Point to an empty local repository. This ensures that you don't
+introduce dependencies that can only be fullfilled within your local build
+environment or after doing the release which puts all created artifacts into
+your local repository.</div></div><h3>Win32 based systems</h3><div class="fixme"><div><strong>Fixme: </strong>TBD</div></div>
+<h1>Step 2: Releasing POM artifacts</h1><ol type="1">
+<li>refer to an already released parent in pom.xml</li>
+<li><tt>mvn -N -Dusername=[svn-user-name] -Dpassword=******** release:prepare
+-Darguments="-N"<br/>
+</tt></li>
+<li><tt>mvn -N -Dusername=</tt><tt>[svn-user-name]</tt><tt> -Dpassword=********
+release:perform -Darguments="-N
+</tt><tt>-Dgpg.passphrase='[secret_passphrase_here]'</tt><tt>" </tt><tt>-P
+release</tt></li>
+</ol>Take care to manually change all poms that have the released pom as a parent.
+For example you release cocoon-blocks-modules under version 3, before it was
+2-SNAPSHOT. The next version increment of that pom is thus 3-SNAPSHOT, and you
+should manually change all poms that have 2-SNAPSHOT for this parent to
+3-SNAPSHOT. Otherwise the trunk build will use "old" ie already released
+artifacts, which is not desired. The pu.sh script in 
+<tt>cocoon/trunk/tools/pom-updater</tt> helps to make the update easier.<h1>Step 3: Releasing JAR artifacts</h1><ol type="1">
+<li>refer to an already released parent in pom.xml</li>
+<li>replace all SNAPSHOT dependencies with already deployed artifacts</li>
+<li>the dependencies of a POM don't contain version numbers because they are
+managed by the root POM of Cocoon. By replacing all SNAPSHOT dependencies in the
+step before, you also have replaced the SNAPSHOT version of the parent with a
+released version. Make sure that the module that you want to release also works
+with the versions set in the <em>released root POM</em>! Otherwise you have to
+override them by setting them manually in the module's POM (sic).</li>
+<li><tt>mvn -Dusername=[svn-user-name] -Dpassword=******** release:prepare</tt>
+</li>
+<li><tt>mvn -Dusername=[svn-user-name] -Dpassword=******** release:perform
+-Darguments="-Dgpg.passphrase='[secret_passphrase_here]' -P
+release,daisy,localDocs,javadocs-script" -P
+release,daisy,localDocs,javadocs-script</tt></li>
+<ul>
+<li><tt><tt>release </tt>... </tt>adds all plugins to the build lifecycle which
+are only necessary at release time (e.g. the GPG plugin)</li>
+<li><tt>daisy ... </tt>adds the Daisy export plugin to the lifecycle of the site
+module</li>
+<li><tt>j<tt>avad</tt></tt><tt>ocs-script ... </tt>adds a special report to the
+report generation phase which adds an <tt>apidocs </tt>directory to the site
+output. This directory then contains a script which pulls the Javadocs from a
+Maven repository and unpacks it.</li>
+<li><tt>localDocs ... </tt>configures the target directory of the deploy
+process. This profile has to be configured in the <em>local
+</em><tt>settings.xml</tt>!</li>
+</ul>
+
+<li>if <tt>SNAPSHOT </tt>dependencies have been replaced before, point again to
+them</li>
+<li>Point all artifacts in trunk to the new snapshot version of this artifact.
+For this purpose update the dependencies management section of the root pom.
+</li>
+</ol><section name="Additional instructions for special modules" style="background:none;padding:0;"/><h3>Multi-module release of Cocoon Core</h3><ul>
+<li>Before you can invoke a multi-module release of Cocoon core, go to
+<tt>/trunk/core-modules/pom.xml</tt> and enable the dependency management
+section. This has to contain the complete list of all to be released modules.
+You have to use <em>the to-be-released</em> version.</li>
+<li>Before you can invoke the release procedure from above, run <tt>mvn clean
+install</tt> before. This has to be done because of a bug when Maven tries to
+resolve test-jar dependencies from within the release plugin.</li>
+<li>After the release deactivate the dependencyManagement section in
+<tt>/trunk/core-modules/pom.xml </tt>again.</li>
+</ul><h3>Maven plugin</h3><ul>
+<li>Release the <tt>cocoon-rcl-spring-reloader</tt> and the
+<tt>cocoon-rcl-webapp-wrapper</tt> modules first.</li>
+<li>The Maven plugin has two special dependencies that MUSTN'T be declared from
+within its pom.xml file but are being resolved at runtime. This means that
+before you run invoke the release procedure, go to the file
+<a href="http://svn.apache.org/repos/asf/cocoon/trunk/tools/cocoon-maven-plugin/src/main/java/org/apache/cocoon/maven/rcl/PrepareWebappMojo.java">PrepareWebappMojo.java</a>
+and set the constants LIB_VERSION_WRAPPER and LIB_VERSION_SPRING_RELOADER to the
+<em>to-be-released</em> version.</li>
+<li>After the release, set the version to the new SNAPSHOT version.</li>
+</ul><h1>Step 4: Build Cocoon</h1>The next step is testing whether you have set all dependencies on parent or
+other modules correctly. The best way to do this is pointing to an empty local
+repository in your ~/.m2/settings.xml file again and do a <tt>mvn install -P
+allblocks</tt> from <tt>./cocoon/trunk</tt>.<h1>Step 5: Build the Non-Maven release artifacts</h1>In <tt>cocoon/trunk/tools/release-builder</tt> there is an Ant script that
+creates release artifacts for blocks, the core, the servlet-service framework
+and the Cocoon configuration project. Read the instructions at the top of the
+script and make sure that your system that builds the artifacts is configured
+properly.<h1>Step 6: Call for a vote</h1>Call for a vote that includes information about<ul>
+<li>the name and the version of the artifact</li>
+<li>the SVN tag (actually we are voting on SCM tags; we have to trust in the
+release manager that the binaries are generated from the tag)</li>
+<li>how to test it</li>
+<li>time how long the vote will stay open</li>
+<li>pointer to the changes document</li>
+</ul><div class="fixme"><div><strong>Fixme: </strong>Add a mail template here</div></div><h1>Step 7: Publish the artifacts</h1>If the vote passes, the artifacts are copied to public locations:<section name="Maven repository" style="background:none;padding:0;"/>Copy the artifacts to the Apache sync repository:<pre>cp -R /x1/www/people.apache.org/builds/cocoon/ /x1/www/people.apache.org/repo/m2-ibiblio-rsync-repository/
+</pre>If everything worked fine, you you can delete
+<tt>/x1/www/people.apache.org/builds/cocoon/org</tt>.<section name="Apache distribution site" style="background:none;padding:0;"/>Then copy the distribution artifacts (aka Non-Maven release artifacts):<h1>Step 8: Announce the release</h1><div class="fixme"><div><strong>Fixme: </strong>Add a template here</div></div><h1>Step 9: Update JIRA fields</h1>Cocoon has its own JIRA fields of similar meaing to standard fields
+<em>Affects Version</em> and <em>Fix version</em> but scoped to one component
+(usually block) only. Administration of these fields can be done only by users
+having JIRA administration rights (project administration rights are not
+enough).<br/>
+As for 3th of Janury, 2008 there are two Cocoon committers with necessary karma:
+<ul>
+<li>Grzegorz Kossakowski (gkossakowski (at) apache.org)</li>
+<li>Carsten Ziegeler (cziegeler (at) apache.org)</li>
+</ul>I (Grzegorz) volunteered to take care of administration of these fields
+whenever need occur. When a new version is being released, write me a short
+e-mail using following template:<pre>Hi Grzegorz!
+
+I would like you to ask for adjusting values of custom Cocoon project fields in JIRA. Here comes the info about released artifacts:
+
+Aritfact name: cocoon-forms-impl
+Version in the POM file *before* preparing the release: 1.0.0-RC2-SNAPSHOT
+Version in a released POM: 1.0.0-RC2
+Version in the POM file *after* preparing the release: 1.0.0-RC3-SNAPSHOT
+</pre>This will give me (or any other committer if I'm busy) all necessary
+information needed for values update.<h1>Tips and tricks</h1><ul>
+<li>You can probably omit the username and password if you have committed to the
+cocoon repository before, SVN should have  cached your login credentials.
+(anyway that's how it was for me on Mac OS X)</li>
+<li>You can shortcut the execution by specifying both goals in one:<br/>
+<tt>mvn -N release:prepare release:perform ...</tt></li>
+<li>Verify a GPG signature: <tt>gpg --verify gnupg-x.x.x.tar.gz.sig
+gnupg-x.x.x.tar.gz</tt></li>
+<li>You can reach the staging repository via http at
+<a href="http://people.apache.org/builds/cocoon/">http://people.apache.org/builds/cocoon/</a>
+</li>
+</ul><h1>More readings</h1><ul>
+<li>
+<a href="http://maven.apache.org/plugins/maven-release-plugin/">Documentation of
+the Maven release plugin</a></li>
+<li><a href="http://maven.apache.org/guides/mini/guide-releasing.html">Guide to
+use the Maven 2 release plugin</a></li>
+<li>GnuPG</li>
+<ul>
+<li><a href="http://www.queen.clara.net/pgp/art4.html">GnuPG tutorial</a></li>
+<li>
+<a href="http://alfie.ist.org/projects/gpg-party/gpg-party.de.html">Information
+about a key signing party containing useful information how GnuPG is used</a>
+(german)</li>
+</ul>
+
+</ul></div></div>
+       </body></document>

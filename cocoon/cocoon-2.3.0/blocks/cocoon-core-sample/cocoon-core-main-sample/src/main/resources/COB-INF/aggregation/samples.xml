@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Aggregation, Include, CInclude, XInclude samples.
+  - $Id$
+  -->
+<samples name="Aggregation">
+
+  <links>
+    <link role="see-also" href="sitemap.xmap">Sitemap</link>
+  </links>
+
+  <group name="Back">
+    <sample name="Back" href="../">
+      Back to the samples home page.
+    </sample>
+  </group>
+
+  <group name="Data Sources">
+    <sample name="Slashdot" href="slashdot">
+      Live XML Feed from Slashdot.
+    </sample>
+    <sample name="Moreover.com" href="moreover">
+      Live XML Developer News Feed from moreover.com.
+    </sample>
+    <sample name="XMLHack.com" href="xmlhack">
+      Live Channel Feed from XMLHack.com.
+    </sample>
+  </group>
+
+  <group name="Aggregation Sample">
+    <sample name="Fixed Content Aggregation" href="aggregate">
+      Single web page with news from all sources above aggregated by
+      the sitemap aggregation facilities. This is useful when you know
+      that the parts of your page to aggregate are always the same
+      and never change.
+    </sample>
+    <sample name="Flexible Content Aggregation" href="aggregate2">
+      Single web page with news from all sources above aggregated by
+      the include transformer. This is useful for pages where
+      the user can customize the parts of the page to aggregate.
+    </sample>
+    <sample name="Parallel Content Aggregation" href="aggregate3">
+      Same as sample above, but using separate threads for obtaining
+      content from each aggregated source. This is useful when
+      aggregating several sources with large latency.
+    </sample>
+    <sample name="XInclude Content Aggregation" href="aggregate5">
+      Same as 'Flexible Content Aggregation' sample above, using
+      XInclude transformer which supports standard XInclude syntax.
+    </sample>
+  </group>
+  
+  <group name="Include Samples">
+    <sample name="General" href="include-true-true-test">
+      Demonstration of various include features. Recursive inclusion
+      is on. Inclusion is done in parallel threads.
+    </sample>
+    <sample name="Not Recursive" href="include-true-false-test">
+      Demonstration of various include features. Recursion is off.
+    </sample>
+    <sample name="Not Parallel" href="include-false-true-test">
+      Demonstration of various include features. Parallel threads
+      are off.
+    </sample>
+  </group>
+
+  <group name="XInclude Samples">
+    <sample name="General" href="xinclude-test">
+      Demonstration of various XInclude and XPointer features.
+    </sample>
+    <sample name="XML Base" href="xinclude-base">
+      Demonstration of xml:base support.
+    </sample>
+    <sample name="Loop Inclusion" href="xinclude-loop">
+      Example of a loop inclusion. This will show an error page.
+    </sample>
+    <sample name="Elementpath XPointer Scheme" href="xinclude-html">
+      Example of streaming inclusion using the custom elementpath XPointer scheme.
+    </sample>
+  </group>
+
+  <group name="Tests">
+    <sample name="Self Include" href="include-lock">
+      Document created by Cocoon pipeline includes this same pipeline
+      twice, in parallel. Should not cause deadlocks in the caching
+      pipeline (COCOON-1985).
+    </sample>
+  </group>
+</samples>

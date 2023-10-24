@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - TraversableGenerator</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">TraversableGenerator</h1><h1>Summary</h1><p>Generates an XML source hierarchy listing from a Traversable Source.</p><h1>Basic information</h1><table class="bodyTable"><tbody><tr class="a"><th>Component type</th><td>Generator</td></tr><tr class="b"><th>Cocoon block</th><td>core</td></tr><tr class="a"><th>Java class</th><td>org.apache.cocoon.generation.TraversableGenerator</td></tr><tr class="b"><th>Name in Sitemap</th><td/></tr><tr class="a"><th>Cacheable</th><td>Yes - Yes</td></tr></tbody></table><h1>Documentation</h1><p>The root node of the generated document will normally be a collection node
+and a collection node can contain zero or more resource or collection nodes. A
+resource node has no children. Each node will contain the following attributes:
+</p><ul>
+<li><tt>name</tt> the name of the source</li>
+<li><tt>lastModified</tt> the time the source was last modified, measured as the
+number of milliseconds since the epoch (as in java.io.File.lastModified)</li>
+<li><tt>size</tt> the source size, in bytes (as in java.io.File.length)</li>
+<li><tt>date</tt> (optional) the time the source was last modified in
+human-readable form</li>
+</ul><div class="note"><div><strong>Note: </strong>The TraversableGenerator can browse block defined in the Servlet
+Service Framework in addition to the resources in the current block.</div></div><h3><strong>Configuration options:</strong></h3><ul>
+<li><tt><em>depth</em></tt> (optional) Sets how deep TraversableGenerator should
+delve into the source hierarchy. If set to 1 (the default), only the starting
+collection's immediate contents will be returned. <em><br/>
+</em></li>
+<li><tt><em>sort</em></tt> (optional) Sort order in which the nodes are
+returned. Possible values are name, size, time, collection. collection is the
+same as name, except that the collection entries are listed first. System order
+is default. </li>
+<li><tt><em>reverse</em></tt> (optional) Reverse the order of the sort </li>
+<li><tt><em>dateFormat</em></tt> (optional) Sets the format for the date
+attribute of each node, as described in java.text.SimpleDateFormat. If unset,
+the default format for the current locale will be used.</li>
+<li> <tt><em>timeZone</em></tt> (optional) Sets the time zone offset ID for the
+date attribute, as described in java.util.TimeZone. If unset, the default system
+time zone will be used. </li>
+<li><tt><em>refreshDelay</em></tt> (optional) Sets the delay (in seconds)
+between checks on the source hierarchy for changed content. Defaults to 1
+second.</li>
+<li><tt><em>root</em></tt> (optional) Sets the the regular expression for the
+root pattern. </li>
+<li><tt><em>include</em></tt> (optional) Sets the the regular expression for
+including sources based on their names.</li>
+<li><em><tt><tt><em>exclude</em></tt></tt></em> (optional) Sets the the regular
+expression for excluding sources based on their names.</li>
+</ul><h3><strong>Example:</strong></h3><pre>      &lt;map:match pattern="pages.xml"&gt;
+        &lt;map:generate type="traversable" src="blockcontext:/"&gt;
+          &lt;map:parameter name="depth" value="4"/&gt;
+          &lt;map:parameter name="include" value="wsmain$|resource$|basepage$|\.(.+)"/&gt; 
+          &lt;map:parameter name="exclude" value="xsl$|xmap$"/&gt;
+        &lt;/map:generate&gt;
+        &lt;map:serialize type="xml"/&gt;
+      &lt;/map:match&gt;</pre>The sitemap fragment above will browse every block defined in the current
+block via the Servlet Service Framework (look at the "blockcontext:/"
+<tt>src</tt> attribute) and will include every resources fitting
+the"<tt>wsmain/resource/basepage/*.</tt><tt>*</tt>" pattern (well,  its
+permutations too, like
+<tt>"resource/</tt><tt>wsmain/resource/basepage/*.</tt><tt>*</tt>) excluding
+those ending with "<tt>xsl</tt>" and "<tt>xmap</tt>".While the <tt>exclude</tt> could be referred to name of
+resources, the <tt>include</tt> should take into account its path as well, since
+the matching is done path segment by path segment. In other words, every single
+segment of the path leading to the resources to be included has to be matched.
+</div></div>
+       </body></document>

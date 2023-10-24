@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - SitemapModelComponent Contracts</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">SitemapModelComponent Contracts</h1><h1>The SitemapModelComponent</h1><p>The SitemapModelComponent identifies the contract between the Sitemap and
+your pipeline components that create or transform information. The types of
+components that fit within this umbrella are your Generators, Transformers, and
+your Readers. It is very important to note that all components implementing this
+interface must be pooled or created on demand. This is due to the separation
+between the setup and the execution. If you don't ensure every instance of the
+component is unique within a pipeline, or across pipelines, then the setup
+process will start killing all the other setups and you will end up with serious
+race conditions. It's not that they need synchronized keywords applied to the
+methods, its that the methods have to be called in a certain order. This is by
+design. If you really think about it, due to the SAX infrastructure we would
+still need to keep them synchronized because the order of SAX events affects the
+validity of your XML document.</p><section name="Setup" style="background:none;padding:0;"/><p>The Sitemap will call the <tt>setup()</tt> method to prepare the component
+for use. This is where you start the process of getting your information ready
+to generate your results. The Sitemap provides the following information:</p><ul>
+<li>SourceResolver--to find resources within your context.</li>
+<li>Object Model--a <tt>java.util.Map</tt> that contains the request and session
+information.</li>
+<li>Source--the value of the "src" attribute in the sitemap.</li>
+<li>Parameters--the sitemap parameters passed into your component.</li>
+</ul>The setup method can throw one of three different types of exceptions which
+would abort the processing of the pipeline. These exceptions are:<ul>
+<li>ProcessingException--the preferred type of exception. Essentially wrap
+anything with one of these.</li>
+<li>SAXException--a problem reading an XML document will generate one of these.
+</li>
+<li>IOException--when you can't find a file or there is a problem with the
+filesystem.</li>
+</ul><section name="Finding Resources" style="background:none;padding:0;"/>The SourceResolver passed into your SitemapModelComponent is used to find
+other resources. It will behave with the same properties as your sitemap. So if
+you are in a mounted sitemap handling a certain segment of requests, any
+relative URLs resolved by the SourceResolver will be relative to that sitemap.
+However, the real fun comes with the types of requests we can make. Cocoon
+understands several different protocols, including embedding a call to another
+pipeline within your generated document.<div class="note"><div><strong>Note: </strong>TODO: details of working with the SourceResolver</div></div><section name="Working with the Object Model" style="background:none;padding:0;"/>The object model that your component gets to use is essentially a
+<tt>java.util.Map</tt>. So how do we find what we need to get our job done?
+After all a key for a Java Map is just an Object--it could be anything.
+Thankfully, Cocoon provides a class to help you find your information:
+<a href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/environment/ObjectModelHelper.html">org.apache.cocoon.environment.ObjectModelHelper</a>.
+You will be able to find the Cocoon Context, Request, and Response objects.The Context and Request objects are simplified forms of the ServletContext
+and ServletRequest objects--however they do allow Cocoon to be invoked from the
+command line as well. The Response object follows the same vein, and does not
+provide any access to the output stream. That is because it is only the
+responsibility of a SitemapOutputComponent to send the results down the output
+stream. So why provide access to the Response object at all? It is for two
+reasons: so that you can add or modify response headers before the pipeline is
+executed, or that you can signal a redirect.<section name="The Source" style="background:none;padding:0;"/>The source provided by the Sitemap is the value of the attribute "src" in the
+sitemap. For example:<pre>&lt;map:transformer type="custom" src="{1}.xsl"/&gt;
+</pre>Will resolve the name based on the substitution values and then pass the
+resolved name to the component. Let's say we matched on the pattern "status/*"
+with the url "status/printfriendly". The Sitemap will resolve the source to
+"printfriendly.xsl" using the definition above. The source is not necessary all
+the time, although you may find it much more convenient than retrieving
+information from a request object or the parameters.<section name="Working with the Parameters" style="background:none;padding:0;"/>The parameters object allows you to pull information in much the same way as
+you would in the sitemap. The
+<a href="http://excalibur.apache.org/apidocs/org/apache/avalon/framework/parameters/Parameters.html">org.apache.avalon.framework.parameters.Parameters</a>
+object is the same as the one from the Excalibur project, and you have the same
+interface there.<div class="note"><div><strong>Note: </strong>You can get parent parameters using paths in the name. For
+example, <tt>getParameter("../mrn")</tt> will get the "mrn" value from a parent
+Parameters object.</div></div><p>The parameters are set in the sitemap using the <tt>&lt;map:parameter
+name="foo" value="bar"/&gt;</tt> to set the parameter "foo" with the value
+"bar". An example would look like this:</p><pre>&lt;map:generator type="myspecialgen" src="foo"&gt;
+  &lt;!-- these parameters are passed in --&gt;
+  &lt;map:parameter name="foo" value="bar"/&gt;
+  &lt;map:parameter name="nav" value="{request:bar}"/&gt;
+&lt;/map:generator&gt;
+</pre><p>Sometimes you may find some weirdness with parameters if you are setting some
+values in flowscript and expecting to see them in your generator. In that case
+you may find it much more convenient to pass values within the Request
+attributes.</p></div></div>
+       </body></document>

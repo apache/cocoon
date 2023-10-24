@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon 2.2 Site - New in 2.2</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">New in 2.2</h1><p>While developing Cocoon 2.2 the main goal was simplicity, modularity and
+consistent configuration. This page is a summary of all the new features and
+improvements.</p><h1>General</h1><ul>
+<li>Cocoon 2.2 doesn't use an Avalon-based component manager any more but uses
+Spring 2 instead.</li>
+<li>Cocoon components (sitemap components as well as general components) can be
+defined as Spring beans now. This brings all the power of Spring (Dependency
+Injection, AOP framework, etc.) to the core of Cocoon without having to rely on
+some kind of bridging mechanism. Avalon component configurations are still
+supported but deprecated.</li>
+<li>Cocoon core has been split up into a bunch of smaller modules (pipeline
+api/impl, sitemap api/impl, components, etc.). This is an important step in
+order to make Cocoon more easily embeddable in the future and to define clear
+contracts.</li>
+<li>An optional additional validation of sitemaps based on an XML schema
+definition is configureable.</li>
+<li>Cocoon 2.2 uses Comons Logging instead of Avalon Logkit as logging interface
+and Log4j as logging implementation. (<em>Also see the 'Incompatibles changes'
+section of this document.</em>)</li>
+</ul><h1>Modularity</h1><ul>
+<li>In order to make Cocoon applications more modular, the
+Servlet-Service-Framework was introduced. The Servlet-Service-Framework is a
+general-purpose framework that makes it possible to establish contracts between
+sub-applications.</li>
+<li>The Servlet-Service-Framework introduces polymorphic relationships between
+services.</li>
+<li>The Servlet-Service-Framework has no dependency on the 'traditional' Cocoon
+(sitemap/pipeline machinery) and can be used together with any
+JavaServlet-compatible web application.</li>
+</ul><h1>Configuration and Deployment</h1><ul>
+<li>Cocoon 2.1 was configured at build time. This means that you have to build
+Cocoon 2.1 yourself in order to get the Cocoon that you need for your
+application. There was no simple upgrade path from one minor/patch release to
+the next. Cocoon 2.2 expands the meaning of blocks. Blocks have become binary
+deployment units which follow a particular directory structure and can provide
+Servlet-Services, Java services, Java classes and resources and Cocoon specific
+files (templates, stylesheets, etc.).</li>
+<li>Cocoon blocks express their dependencies using project object model
+descriptors (POM 4.0) defined by the Maven project. This makes it easy to build
+Cocoon 2.2 based projects with Maven 2 though it's no hard requirement.</li>
+<li>Cocoon 2.2 provides a consistent way of configuration based on the Cocoon
+Spring Configurator - a new Cocoon sub project. It supports the configuration of
+components based on the Spring property placeholder configurer and the property
+overrider configurer and is aware of running modes, i.e. you can provide special
+properties for different environments (e.g. development, test, production).</li>
+<li>Cocoon 2.2 uses Jakarta Commons Logging 1.1 as logging framework and Log4j
+as default implementation.</li>
+<li>The number of dependencies of a minimal Cocoon application (sitemaps,
+pipelines, XML templates) was reduced and together they amount to less than
+10MB  (incl. Xalan and Xerces libs!).</li>
+</ul><h1>Tools</h1><ul>
+<li>The Cocoon Maven 2 plugin makes is very easy to use Cocoon together with
+Maven 2 as build system. The main features are</li>
+<ul>
+<li>starting a block as web application (+ support for the automatical reload of
+Java classes and all other resources),</li>
+<li>rewritting web.xml to weave in a shielding classloader that reverses the
+classloading hierarchy in order to avoid classloader problems (e.g. with XML
+libraries),</li>
+<li>a block can supply xpatch files to patch the <tt>web.xml </tt>of the
+destination web application.</li>
+</ul>
+
+<li>Schema files for sitemaps.</li>
+</ul><h1>Deprecation</h1><ul>
+<li>Avalon-style component configurations</li>
+</ul><div class="fixme"><div><strong>Fixme: </strong>Deprecation is subject of an ongoing dicussion.</div></div><h1>Migrating 2.1 components</h1>When you have avalon based components that you want to use with the new
+spring configuration system make sure you are configure them right. Avalon based
+components were implementing an interface to e.g. be Threadsafe. In Spring you
+will need to configure the scope (default is singletone). If you see a lot of
+NPE in concurrency tests then you would need to use the prototype scope as shown
+below.<pre/><pre>&lt;beans&gt;
+  &lt;bean id="dispatcher" scope="prototype"
+    name="org.apache.cocoon.transformation.Transformer/dispatcher"
+    class="org.apache.forrest.dispatcher.transformation.DispatcherTransformer"&gt;
+    &lt;property name="manager" ref="org.apache.avalon.framework.service.ServiceManager"/&gt;
+  &lt;/bean&gt;
+&lt;/beans&gt;</pre><pre/><h1>Incompatible changes</h1><ul>
+<li>All Cocoon components don't implement the Avalon Logkit logging interfaces
+(<tt><a href="http://excalibur.apache.org/apidocs/org/apache/avalon/framework/logger/Logger.html">org.apache.avalon.framework.logger.Logger</a></tt>
+) anymore but Commons logging instead. This change also makes it possible to
+configure components via Spring configuration files. If you extend one of those
+components (e.g.
+<a href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/transformation/AbstractSAXTransformer.html">AbstractSAXTransformer</a>),
+you have to change the logger implementation and to recompile your classes. We
+are sorry but there is no backwards compatible way in doing this move from
+Avalon Logkit to Commons Logging.</li>
+</ul></div></div>
+       </body></document>

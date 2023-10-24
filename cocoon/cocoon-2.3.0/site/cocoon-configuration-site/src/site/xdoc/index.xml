@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Configuration Site - Overview</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Overview</h1><h1>List</h1><table class="bodyTable">
+<tbody>
+<tr class="a">
+<th>
+<p><strong>Name</strong></p>
+</th>
+<th>
+<p><strong>Versions</strong></p>
+</th>
+<th>
+<p><strong>Description</strong></p>
+</th>
+</tr>
+<tr class="b">
+<td>
+<p><a href="configuration-api/index.html">Configuration API</a></p>
+</td>
+<td><a href="configuration-api/index.html">1.0.4</a></td>
+<td>
+<p>The Configuration API is a simple but powerful API for handling configuration
+issues inside your application. It provides a standard mechanism for getting
+configuration values inside your application code.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="spring-configurator/index.html">Spring Configurator</a></p>
+</td>
+<td>
+<p><a href="spring-configurator/index.html">2.2.1</a></p>
+</td>
+<td>
+<p>The Spring Configurator is a useful component providing support in common
+configuration issues when using the Spring framework</p>
+</td>
+</tr>
+</tbody>
+</table><h1>Download </h1><table class="bodyTable">
+<tbody>
+<tr class="b">
+<th>
+<p>Artifact</p>
+</th>
+<th>
+<p>Description</p>
+</th>
+<th>
+<p>Download</p>
+</th>
+<th>
+<p>Verify</p>
+</th>
+</tr>
+<tr class="a">
+<td>
+<p><strong>Cocoon Configuration 1.0.4</strong></p>
+</td>
+<td>
+<p>Contains the Configuration API and the Spring Configurator sources</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/configuration-api/1.0.4/cocoon-configuration-api-1.0.4-source-release.zip">
+cocoon-configuration-api-1.0.4-source-release.zip </a>
+</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/configuration-api/1.0.4/cocoon-configuration-api-1.0.4-source-release.zip.asc">
+pgp </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/configuration-api/1.0.4/cocoon-configuration-api-1.0.4-source-release.zip.md5">
+md5 </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/configuration-api/1.0.4/cocoon-configuration-api-1.0.4-source-release.zip.sha1">
+sha1 </a>
+</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><strong>Cocoon Configuration 1.0.2</strong></p>
+</td>
+<td>
+<p>Contains the Configuration API and the Spring Configurator: sources,
+binaries, javadocs, docs</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.zip">
+cocoon-configuration-1.0.2.zip </a>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.tar.gz">
+cocoon-configuration-1.0.2.tar.gz </a></p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.zip.asc">
+pgp </a>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.zip.md5">
+md5 </a>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.zip.sha1">
+sha1 </a> <br/>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.tar.gz.asc">
+pgp </a>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.tar.gz.md5">
+md5 </a>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-1.0.2.tar.gz.sha1">
+sha1 </a></p>
+</td>
+</tr>
+<tr class="b"> 
+</tr>
+<tr class="a">
+<td>
+<p><strong>Cocoon Spring Configurator 2.2.1</strong></p>
+</td>
+<td>
+<p>Contains the Spring Configurator sources<br/>
+(the Configuration API hasn't changed since 1.0.2)</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/spring-configurator/2.2.1/cocoon-spring-configurator-2.2.1-source-release.zip">
+cocoon-spring-configurator-2.2.1-source-release.zip</a>
+</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/spring-configurator/2.2.1/cocoon-spring-configurator-2.2.1-source-release.zip.asc">
+pgp </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/spring-configurator/2.2.1/cocoon-spring-configurator-2.2.1-source-release.zip.md5">
+md5 </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/spring-configurator/2.2.1/cocoon-spring-configurator-2.2.1-source-release.zip.sha1">
+sha1 </a>
+</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><strong>Cocoon Spring Configurator 2.0.0</strong></p>
+</td>
+<td>
+<p>Contains the Spring Configurator: sources, binaries, javadocs, docs<br/>
+(the Configuration API hasn't changed since 1.0.2)</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-2.0.0.zip">
+cocoon-configuration-2.0.0.zip </a> <br/>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/subprojects/configuration/cocoon-configuration-2.0.0.tar.gz">
+cocoon-configuration-2.0.0.tar.gz </a></p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/cocoon-configuration-2.0.0.zip.asc">
+pgp </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/cocoon-configuration-2.0.0.zip.md5">
+md5 </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/cocoon-configuration-2.0.0.zip.sha1">
+sha1 </a> <br/>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/cocoon-configuration-2.0.0.tar.gz.asc">
+pgp </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/cocoon-configuration-2.0.0.tar.gz.md5">
+md5 </a>
+<a href="http://www.apache.org/dist/cocoon/subprojects/configuration/cocoon-configuration-2.0.0.tar.gz.sha1">
+sha1 </a></p>
+</td>
+</tr>
+<tr class="b"> 
+</tr>
+</tbody>
+</table><h1>Maven 2 Dependency</h1><p>Add following dependency to your pom.xml file:</p><pre>&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.cocoon&lt;/groupId&gt;
+  &lt;artifactId&gt;cocoon-spring-configurator&lt;/artifactId&gt;
+  &lt;version&gt;2.2.1&lt;/version&gt;
+&lt;/dependency&gt;
+</pre></div></div>
+       </body></document>

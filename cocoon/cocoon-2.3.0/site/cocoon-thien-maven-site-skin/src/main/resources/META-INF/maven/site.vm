@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+#macro ( links $links )
+  #set ( $counter = 0 )
+  #if ( $links.size() > 0 )
+   |
+  #end
+  #foreach( $item in $links )
+    #set ( $counter = $counter + 1 )
+    #set ( $currentItemHref = $PathTool.calculateLink( $item.href, $relativePath ) )
+    #set ( $currentItemHref = $currentItemHref.replaceAll( "\\", "/" ) )
+    <a href="$currentItemHref">$item.name</a>
+    #if ( $links.size() > $counter )
+      |
+    #end
+  #end
+#end
+
+#macro ( displayTree $display $item )
+  #if ( $item && $item.items && $item.items.size() > 0 )
+    #foreach( $subitem in $item.items )
+      #set ( $subitemHref = $PathTool.calculateLink( $subitem.href, $relativePath ) )
+      #set ( $subitemHref = $subitemHref.replaceAll( "\\", "/" ) )
+
+      #if ( $alignedFileName == $subitemHref )
+        #set ( $display = true )
+      #end
+
+      #displayTree( $display $subitem )
+    #end
+  #end
+#end
+
+#macro ( menuItem $item )
+  #set ( $collapse = "" )
+  #set ( $currentItemHref = $PathTool.calculateLink( $item.href, $relativePath ) )
+  #set ( $currentItemHref = $currentItemHref.replaceAll( "\\", "/" ) )
+
+  #if ( $item && $item.items && $item.items.size() > 0 )
+
+##    #if ( $item.collapse == false )
+##      #set ( $collapse = "expanded" )
+##    #else
+##      ## By default collapsed
+##      #set ( $collapse = "collapsed" )
+##    #end
+
+## start Cocoon specific modification
+    #set ( $collapse = "class='menuCollapse'" )
+## end Cocoon specific modification
+
+    #set ( $display = false )
+    #displayTree( $display $item )
+
+    #if ( $alignedFileName == $currentItemHref || $display )
+      #set ( $collapse = "class='menuExpand'" )
+    #end
+  #end
+  <li $collapse>
+    #if ( $item.img )
+      #if ( ! ( $item.img.toLowerCase().startsWith("http") || $item.img.toLowerCase().startsWith("https") ) )
+        #set ( $src = $PathTool.calculateLink( $item.img, $relativePath ) )
+        #set ( $src = $item.img.replaceAll( "\\", "/" ) )
+        <img src="$src"/>
+      #else
+        <img src="$item.img" align="absbottom" style="border-width: 0"/>
+      #end
+    #end
+    #if ( $alignedFileName == $currentItemHref )
+      <strong>$item.name</strong>
+    #else
+      <a href="$currentItemHref">$item.name</a>
+    #end
+  #if ( $item && $item.items && $item.items.size() > 0 )
+    #if ( $collapse == "class='menuExpand'" )
+      <ul>
+        #foreach( $subitem in $item.items )
+          #menuItem( $subitem )
+        #end
+      </ul>
+    #end
+  #end
+  </li>
+#end
+
+#macro ( mainMenu $menus )
+  <ul id="menu">
+    #foreach( $menu in $menus )
+    <li>
+      #if ( $menu.name )
+        $menu.name
+      #end
+      <ul>
+        #foreach( $item in $menu.items )
+          #menuItem( $item )
+        #end
+      </ul>
+    </li>
+  #end
+  #if ( $project.getProperties().get("docs.urlRelativizer") == "" || $project.getProperties().get("docs.urlRelativizer") == "./"  )
+    <li class="menuVersions">Versions
+      <ul>
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")3.0/">Cocoon 3.0</a></li>
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></li>
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")2.1/">Cocoon 2.1</a></li>
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")2.0/">Cocoon 2.0</a></li>
+        <li><a href="$project.getProperties().get("docs.urlRelativizer")1.x/">Cocoon 1.x</a></li>
+      </ul>
+    </li>
+  #end
+  </ul>
+#end
+
+#macro ( copyright )
+  #if ( $project )
+    #set ( $currentYear = ${currentDate.year} + 1900 )
+
+    #if ( ${project.inceptionYear} && ( ${project.inceptionYear} != ${currentYear.toString()} ) )
+      ${project.inceptionYear}-${currentYear}
+    #else
+      ${currentYear}
+    #end
+
+    #if ( ${project.organization} && ${project.organization.name} )
+      ${project.organization.name}
+    #end
+  #end
+#end
+
+#macro ( poweredByLogo $poweredBy )
+    #if( $poweredBy )
+        #foreach ($item in $poweredBy)
+            #if( $item.href )
+                #set ( $href = $PathTool.calculateLink( $item.href, $relativePath ) )
+                #set ( $href = $href.replaceAll( "\\", "/" ) )
+            #else
+                #set ( $href="http://maven.apache.org/" )
+            #end
+
+            #if( $item.name )
+                #set ( $name = $item.name )
+            #else
+                #set ( $name = $i18n.getString( "site-renderer", $locale, "template.builtby" )  )
+                #set ( $name = "${name} Maven"  )
+            #end
+
+            #if( $item.img )
+                #set ( $img = $item.img )
+            #else
+                #set ( $img = "images/logos/maven-feather.png" )
+            #end
+
+            <a href="$href" title="$name" id="poweredBy">
+              #set ( $img = $PathTool.calculateLink( $img, $relativePath ) )
+              #set ( $img = $img.replaceAll( "\\", "/" ) )
+              <img alt="$name" src="$img" />
+            </a>
+        #end
+        #if( $poweredBy.isEmpty() )
+          <a href="http://maven.apache.org/" title="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" id="poweredBy">
+            <img alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/logos/maven-feather.png"></img>
+          </a>
+        #end
+    #else
+        <a href="http://maven.apache.org/" title="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" id="poweredBy">
+          <img alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/logos/maven-feather.png"></img>
+        </a>
+    #end
+#end
+
+#macro ( title )
+  #if ( $title )
+    $title
+  #else
+    #if ( $project.getProperties().get("docs.name") )
+      $project.getProperties().get("docs.name")
+    #else
+      #if ( $project.name )
+        $project.name
+      #end
+    #end
+  #end
+#end
+
+#macro ( nameAndVersion )
+  $project.getProperties().get("docs.name")
+  #if ( $project.getProperties().get("docs.version") )
+    $project.getProperties().get("docs.version")
+  #end
+#end
+
+<html>
+  <head>
+    <title>#title()</title>
+    <link rel="stylesheet" href="$relativePath/css/apache-cocoon-thien-maven-skin.min.css" />
+    <link rel="stylesheet" href="$relativePath/css/print.css" type="text/css" media="print" />
+    <script src="$relativePath/js/apache-cocoon-thien-maven-skin.min.js" language="javascript" type="text/javascript"></script>
+    #foreach( $author in $authors )
+      <meta name="author" content="$author" />
+    #end
+    <meta http-equiv="Content-Type" content="text/html; charset=${outputEncoding}" />
+  </head>
+  <body onload="javascript:prettyPrint();">
+    <div id="breadtrail">
+       <p><a href="http://www.apache.org">Apache</a> &raquo; <a href="$project.getProperties().get("docs.urlRelativizer")">Cocoon</a> &raquo;</p>
+    </div>
+    <div id="top">
+      <div id="header">
+          <div class="projectlogo">
+             <a href="$project.getProperties().get("docs.urlRelativizer")"><img class="logoImage"
+               src="$PathTool.calculateLink( "images/cocoon_logo.jpg", $relativePath )"
+                alt="Apache Cocoon" border="0" /></a>
+          </div>
+          <div class="grouplogo">
+             <p class="grouptitle"><a href="$project.getProperties().get("docs.urlRelativizer")">The Apache Cocoon Project</a><img
+               src="$PathTool.calculateLink( "images/apache-logo.jpg", $relativePath )" alt="Cocoon Project Logo" /></p>
+             <form class="searchbox" action="http://www.google.com/search" method="get">
+               <input value="cocoon.apache.org" name="sitesearch" type="hidden" />
+               <input onFocus="getBlank (this, 'Search the site with google');" size="25" name="q" id="query" type="text" value="Search the site with google" />&nbsp;
+               <input class="searchboxsubmit" name="Search" value="Search" type="submit" />
+             </form>
+         </div>
+         </div>
+         <div id="projectBar">
+           <p class="cocoonHome"><a href="./index.html"><img
+           src="$PathTool.calculateLink( "images/pmc-home.gif", $relativePath )"
+           alt="#nameAndVersion() homepage"
+           border="0" title="#nameAndVersion() homepage" /></a></p>
+           <h1 class="projectTitle"><a href="./index.html">#nameAndVersion()</a></h1>
+           #if( $project.getProperties().get("docs.breadcrumb") == "cocoon22")
+              <ul class="projectList">
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></em></strong></li>
+                <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-core-modules.relPath")">Core <span class="pl-version-small">2.2</span></a></li>
+                <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-blocks.relPath")">Blocks <span class="pl-version-small">2.2</span></a></li>
+                <li><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-maven-plugins.relPath")">Maven Plugins <span class="pl-version-small">2.2</span></a></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")/3.0/">Cocoon 3.0</a></em></strong></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")$project.getProperties().get("docs.m.site-subprojects.relPath")">Subprojects</a></strong></li>
+              </ul>
+           #else
+              <ul class="projectList">
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")2.2/">Cocoon 2.2</a></em></strong></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")3.0/">Cocoon 3.0</a></em></strong></li>
+                <li><strong><a href="$project.getProperties().get("docs.urlRelativizer")subprojects/">Subprojects</a></strong></li>
+              </ul>
+           #end
+         </div>
+         <div class="projectBarClear"><!-- --></div>
+      </div>
+    <!-- end of top -->
+
+    <div id="content">
+       #mainMenu( $decoration.body.menus )
+       <div class="main">
+         $bodyContent.replaceAll( "<div class=\"source\"><pre>", "<div class=\"source\"><pre class=\"prettyprint\">" )
+       </div>
+    </div>
+
+    <!-- end of content -->
+    <div id="footer">
+      <p>Copyright &copy;#copyright()All Rights Reserved.</p>
+
+      <p>
+      Apache Cocoon, Apache, the Apache feather logo, and the Apache Cocoon project logos are trademarks of The Apache Software Foundation.
+      All other marks mentioned may be trademarks or registered trademarks of their respective owners.
+      </p>
+    </div>
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      _uacct = "UA-1740622-3";
+      urchinTracker();
+    </script>
+
+  </body>
+</html>

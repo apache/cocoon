@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<fd:form
+	xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
+	xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+	<fd:widgets>
+
+		<fd:field id="message" required="false">
+			<fd:label>message:</fd:label>
+			<fd:datatype base="string">
+			</fd:datatype>
+		</fd:field>
+		<fd:field id="username" required="true">
+			<fd:label>Username:</fd:label>
+			<fd:datatype base="string">
+				<fd:validation>
+					<fd:length min="2"/>
+				</fd:validation>
+			</fd:datatype>
+		</fd:field>
+	
+		<fd:field id="password" required="true">
+			<fd:label>Password:</fd:label>
+			<fd:datatype base="string">
+				<fd:validation>
+					<fd:length min="2" max="20"/>
+				</fd:validation>
+			</fd:datatype>
+		</fd:field>
+	
+		<fd:field id="retypepassword" required="true">
+			<fd:label>Re-enter password:</fd:label>
+			<fd:datatype base="string">
+				<fd:validation>
+					<fd:assert test="password = retypepassword">
+						<fd:failmessage>The two passwords are not equal.</fd:failmessage>
+					</fd:assert>
+				</fd:validation>
+			</fd:datatype>
+		</fd:field>
+
+	</fd:widgets>
+</fd:form>

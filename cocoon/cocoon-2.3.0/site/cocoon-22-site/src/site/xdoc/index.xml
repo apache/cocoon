@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    -->
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Cocoon 2.2 Site - Overview</title>
+    <author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author>
+  </properties>
+  <body>
+    <div id="contentBody">
+      <div id="bodyText">
+        <h1 class="docTitle">Overview</h1>
+        <p>The main design goal of Apache Cocoon 2.2 was providing better support for
+          modularization:
+        </p>
+        <p>
+          <img width="473" height="341" name="cocoon22_overview" alt="cocoon22_overview" src="images/1401_1_1.img"/>
+        </p>
+        <p>Cocoon is based on the
+          <a href="http://static.springframework.org/spring/docs/2.0.x/reference/index.html">Spring
+            2.0
+          </a> framework. The Spring Configurator and the Servlet Service Framework are
+          two subprojects having Spring as main dependency. It's important to note that
+          both can be reused outside of Cocoon Core.
+          <br/>
+          The 
+          <a href="../subprojects/configuration/index.html">Spring Configurator</a> provides basic support for
+          configuring web applications that make use of Spring. The
+          <a href="../subprojects/servlet-service/servlet-service-impl/index.html">Servlet Service Framework</a> enables modularization based
+          on the 
+          <tt>javax.servlet.Servlet</tt> interface. Those servlet services are
+          <a href="http://en.wikipedia.org/wiki/Polymorphism_in_object-oriented_programming">polymorphic</a>.
+        </p>
+        <p>
+          <a href="../2.2/core-modules/1210_1_1.html">Cocoon Core</a> provides implementations of a sitemap
+          engine and of pipelines. It also establishes a contract to add modules. The unit
+          of modularization in Cocoon is called blocks. 
+          <a href="../2.2/blocks/1204_1_1.html">This list</a>
+          gives an overview of what additional functionality is available. Web
+          applications based on Cocoon are also developed following the block contracts.
+        </p>
+      </div>
+    </div>
+  </body>
+</document>

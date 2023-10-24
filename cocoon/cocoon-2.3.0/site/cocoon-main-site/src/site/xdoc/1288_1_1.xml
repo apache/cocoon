@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Articles</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Articles</h1><h1>Cocoon 2.2</h1><section name="German articles" style="background:none;padding:0;"/><ul>
+<li>Cocoon 2.2, Javamagazin, Issue 3, 2007 (Ziegeler)</li>
+</ul><h1>Cocoon 2.0/2.1</h1><section name="English articles" style="background:none;padding:0;"/><ul>
+<li><a href="http://www-106.ibm.com/developerworks/library/j-contin.html"> Use
+continuations to develop complex Web applications </a> <br/>
+An article in IBW Developersworks about continuations</li>
+<li><a href="http://www.xml.com/pub/a/2003/04/23/cocoon-magazine.html"> Online
+Magazines with Apache Cocoon </a> <br/>
+An article about aggregation of news with RSS.</li>
+<li><a href="http://webservices.xml.com/pub/a/ws/2003/03/18/cocoon.html">
+Creating SOAP Services with Cocoon </a> <br/>
+An article about building webservices with Cocoon.</li>
+<li>
+<a href="http://webservices.xml.com/pub/a/ws/2003/01/29/cocoon-xforms.html">
+XML Forms, Web Services and Apache Cocoon </a> <br/>
+Using XML Forms with Cocoon.</li>
+<li><a href="http://www.xml.com/pub/a/2003/01/22/cocoon-excel.html"> Excel
+Reports with Apache Cocoon and POI </a> <br/>
+Creating Excel reports.</li>
+<li><a href="http://www.xml.com/pub/a/2002/02/13/cocoon2.html"> Introducing
+Cocoon 2.0 </a> <br/>
+An article by Stefano Mazzocchi on xml.com... need we say more to make you read
+it ?</li>
+<li><a href="http://www.sys-con.com/java/articleprint.cfm?id=1480"> Spread your
+Wings with Cocoon, David Rosenstrauch, Java Developer's Journal, Volume 07,
+Issue 06 </a> <br/>
+The title says it all...</li>
+<li><a href="http://www.webreference.com/xml/column52/"> Generating Web content
+with Cocoon </a> <br/>
+Introductory article about Cocoon pipelines.</li>
+<li>
+<a href="http://www.webservices.org/index.php/article/articleview/613/1/24/">
+Portal Syndication with Web services and Cocoon </a> <br/>
+Good case-study</li>
+<li>
+<a href="http://www.javaworld.com/javaworld/jw-09-2002/jw-0920-cocoon.html">
+Transform data into Web applications with Cocoon, Lajos Moczar, JavaWorld,
+September 2002 </a> <br/>
+Emphasis on the Java parts of Cocoon (XSP and Actions, basically)</li>
+<li><a href="http://www.xml.com/pub/a/2002/07/10/cocoon2.html"> Getting Started
+With Cocoon 2 </a> <br/>
+How to get started with Cocoon.</li>
+<li><a href="http://www.webreference.com/xml/column52/"> Generating Web content
+with Cocoon </a> <br/>
+Basic article to dive into Cocon.</li>
+<li>
+<a href="http://www.javaworld.com/javaworld/jw-02-2001/jw-0209-xmlj2ee_p.html">
+Add XML to your J2EE applications, Eoin Lane, JavaWorld, February 2001 </a>
+<br/>
+Comprehensive article about integrating Cocoon and a J2EE framework.</li>
+<li><a href="http://www.sdmagazine.com/articles/2001/0105/"> Is open source for
+you ?, Rick Wayne, Software Development, May 2001 </a> <br/>
+A worthy mention of Cocoon</li>
+<li><a href="http://www.sdmagazine.com/products/prev_reviews.html"> Products
+review, Software Development, December 2001, </a> <br/>
+Little review of Cocoon 2.0</li>
+</ul><section name="French articles" style="background:none;padding:0;"/><ul>
+<li>
+<a href="http://www.csquad.org/2009/02/10/systeme-dimpression-pdf-restful-pour-le-web/">
+Système d?impression PDF ?RESTful? pour le Web</a>, Christophe Nowicki, February
+10, 2009<br/>
+This article explains an architecture for producing PDF documents using the
+<a href="http://mavise.obs.coe.int/">MAVISE database</a>.</li>
+<li>
+<a href="http://howto.landure.fr/gnu-linux/debian-4-0-etch/installer-cocoon-2-1-x-et-fop-0-9x-sur-debian-4-0-etch">
+Installer Cocoon 2.1.x et FOP 0.9x sur Debian 4.0 Etch</a>, Pierre-Yves Landuré,
+September 10, 2008<br/>
+This article is about Apache Cocoon setup on Debian GNU/Linux.</li>
+</ul><section name="German articles" style="background:none;padding:0;"/><ul>
+<li>
+<a href="http://www.computerwoche.de/index.cfm?pageid=267&amp;type=ArtikelDetail&amp;id=80106336&amp;cfid=142863&amp;cftoken=29262623&amp;nr=1">
+Publishing mit freier Apache-Software, COMPUTERWOCHE Nr. 06 vom 08.02.2002
+(Langham/Ziegeler) </a></li>
+<li>Cocoon - aber sicher, XML Magazin &amp; Web Services, Issue 3, 2002
+(Langham/Ziegeler) <br/>
+The article introduces the reader to the authentication components in Cocoon and
+how they integrate into the central sitemap.</li>
+<li>Ante Portas! XML Portale mit dem Open Source Projekt Cocoon, XML Magazin
+&amp; Web Services, Issue 3, 2002 (Langham/Ziegeler) <br/>
+The article shows how the Cocoon portal components can be used to build XML
+portals.</li>
+</ul><section name="Italian articles" style="background:none;padding:0;"/><ul>
+<li><a href="http://www.latoserver.it/cocoon/install_c2/"> Installazione di
+Tomcat 4 e Cocoon 2 su Mac OS X e Linux Debian </a> <br/>
+Installazione di Cocoon 2</li>
+<li><a href="http://www.latoserver.it/cocoon/sm/"> Intervista a Stefano
+Mazzocchi </a> <br/>
+Intervista datata (Febbraio 2001), ma sempre interessante</li>
+</ul><section name="How to get listed" style="background:none;padding:0;"/>If you do not find your book here, make sure you
+<a href="mailto:users.at.cocoon.apache.org?subject=Link:%20Article:">tell
+us</a>. Enter the title after the words "Link: Article:" in the subject, and
+provide the title and publications of your article. Do not forget to tell us the
+URL if possible. You could also follow the
+<a href="http://cocoon.apache.org/community/contrib.html">Contributing</a> page
+to make it easier for everyone.<h1>Cocoon 1.x</h1><section name="English articles" style="background:none;padding:0;"/><ul>
+<li><a href="http://www.sdmagazine.com/articles/2001/0106/"> The Apache XML
+Project: How to Get Read All Over, Rick Wayne, Software Development, June 2001,
+</a> <br/>
+Nice article about Cocoon 1</li>
+<li>
+<a href="http://www.fawcette.com/archives/premier/mgznarch/javapro/2000/08aug00/kj0008/kj0008.asp">
+A Better Way for Web Development, Kevin Jones, XML Magazine, Fall 2000 </a>
+<br/>
+Another article about Cocoon 1</li>
+</ul><section name="Italian articles" style="background:none;padding:0;"/><ul>
+<li><a href="http://www.latoserver.it/cocoon/install_c1/"> Installazione di
+Tomcat e Cocoon </a> <br/>
+Installazione di Cocoon 1</li>
+<li><a href="http://www.latoserver.it/cocoon/sitemg/"> Gestione di un sito con
+XML e Cocoon </a> <br/>
+Introduttorio, con Cocoon 1</li>
+</ul></div></div>
+       </body></document>

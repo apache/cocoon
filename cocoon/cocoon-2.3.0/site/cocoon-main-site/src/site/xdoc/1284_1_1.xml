@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Versions &amp; Download</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Versions &amp; Download</h1><section name="Cocoon 2.2 (stable)" style="background:none;padding:0;"/><p>Our latest version of Cocoon is 2.2. The best way to get familiar with Cocoon
+2.2 and how to use it together with Maven 2 is the <a href="2.2/1159_1_1.html">Getting
+started tutorial</a>. If you follow that path, Maven 2 will take care of
+downloading all (transitive) dependencies.</p><p>However, there is also a <em>Getting Started package</em> that contains a
+simple Cocoon 2.2 based application that uses Apache Ant as build system.</p>
+<p>It is good practice to <a href="#Verifying_Releases">verify the integrity</a> of the distribution files.</p></div></div>
+<table class="bodyTable">
+<tbody>
+<tr class="a">
+<th>
+<p>Artifact</p>
+</th>
+<th>
+<p>Description</p>
+</th>
+<th>
+<p>Download</p>
+</th>
+<th>
+<p>Verify</p>
+</th>
+</tr>
+<tr class="b">
+<td>
+<p><strong>Cocoon 2.2.0</strong></p>
+</td>
+<td>
+<p>Cocoon Core (pipelines, sitemaps, servlet): sources, binaries, javadocs and
+docs.</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/2.2/cocoon-2.2.0.zip">cocoon-2.2.0.zip</a>
+<br/>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/2.2/cocoon-2.2.0.tar.gz">
+cocoon-2.2.0.tar.gz</a></p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.zip.asc">pgp</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.zip.md5">md5</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.zip.sha1">sha1</a>
+<br/>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.tar.gz.asc">
+pgp</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.tar.gz.md5">md5</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-2.2.0.tar.gz.sha1">sha1</a>
+</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><strong>Getting Started 2.2.0</strong></p>
+</td>
+<td>
+<p>A simple web application based on Cocoon 2.2 that makes use of blocks and
+servlet services.</p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip">cocoon-getting-started-2.2.0-zip</a>
+<br/>
+<a href="http://www.apache.org/dyn/closer.lua/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz">
+cocoon-getting-started-2.2.0.tar.gz</a></p>
+</td>
+<td>
+<p>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip.asc">pgp</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip.md5">md5</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.zip.sha1">sha1</a>
+<br/>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz.asc">
+pgp</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz.md5">md5</a>
+<a href="http://www.apache.org/dist/cocoon/2.2/cocoon-getting-started/cocoon-getting-started-2.2.0.tar.gz.sha1">sha1</a>
+</p>
+</td>
+</tr>
+</tbody>
+</table><p>Cocoon 2.2 was split up into smaller units called blocks. Everything that
+goes beyond what Cocoon provides in its core modules (Spring integration,
+sitemap and pipeline implementation) is provided as block. Blocks can be
+downloaded separately. In order to get an overview of what blocks are available,
+use the <a href="2.2/blocks/1204_1_1.html">list of blocks</a>.</p>
+<section name="Cocoon 2.1 (stable)" style="background:none;padding:0;"/><p>The latest stable release of Cocoon 2.1.x  is 2.1.11.
+<a href="http://cocoon.apache.org/mirror.cgi">Downloads</a> and
+<a href="http://cocoon.apache.org/2.1/">documentation</a> are available.</p><section name="Previous versions" style="background:none;padding:0;"/><p>Older versions of Cocoon are <a href="2.0/">2.0</a> and
+<a href="1.x/">1.x</a>. It is not recommended to start a new project based on
+one of them.</p>
+    <section name="Verifying Releases">
+      <p>We strongly recommend you verify the integrity of the downloaded files with both PGP and MD5.</p>
+      
+      <p>The PGP signatures can be verified using <a href="http://www.pgpi.org/">PGP</a> or 
+      <a href="http://www.gnupg.org/">GPG</a>. 
+      First download the <a href="http://www.apache.org/dist/cocoon/KEYS">KEYS</a> as well as the 
+      <tt>*.asc</tt> signature file for the particular distribution. Make sure you get these files from the main 
+      distribution directory, rather than from a mirror. Then verify the signatures using one of the following sets of
+      commands:
+      
+        <source>$ pgpk -a KEYS
+$ pgpv cocoon-*.tar.gz.asc
+$ pgpv cocoon-*.zip.asc</source>
+        
+        <source>$ pgp -ka KEYS
+$ pgp cocoon-*.tar.gz.asc
+$ pgp cocoon-*.zip.asc</source>
+      
+        <source>$ gpg --import KEYS
+$ gpg --verify cocoon-*.tar.gz.asc
+$ gpg --verify cocoon-*.zip.asc</source>
+       </p>
+    <p>Alternatively, you can verify the MD5 signature on the files. A Unix/Linux program called  
+      <code>md5</code> or 
+      <code>md5sum</code> is included in most distributions.  It is also available as part of
+      <a href="http://www.gnu.org/software/textutils/textutils.html">GNU Textutils</a>.
+      Windows users can get binary md5 programs from these (and likely other) places:
+      <ul>
+        <li>
+          <a href="http://www.md5summer.org/">http://www.md5summer.org/</a>
+        </li>
+        <li>
+          <a href="http://www.fourmilab.ch/md5/">http://www.fourmilab.ch/md5/</a>
+        </li>
+        <li>
+          <a href="http://www.pc-tools.net/win32/md5sums/">http://www.pc-tools.net/win32/md5sums/</a>
+        </li>
+      </ul>
+    </p>
+    </section>
+       </body></document>

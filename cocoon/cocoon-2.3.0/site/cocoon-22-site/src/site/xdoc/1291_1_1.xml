@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon 2.2 Site - Modularize Cocoon apps (Using blocks)</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Modularize Cocoon apps (Using blocks)</h1><p>In the basic tutorial <a href="1159_1_1.html">"Your first Cocoon application
+using Maven 2"</a> you created your first block. Cocoon 2.2 introduced the
+concept of blocks because it should help you to split your application into
+smaller parts. This increases the maintainability and reusability by orders of
+magnitude.</p><p>In this tutorial you will</p><ol type="1">
+<li>create a second block</li>
+<li>connect one block with another one</li>
+<li>use a pipeline fragement available in one block from within another block
+</li>
+</ol><h1>Create a second block</h1>For this purpose move into the <tt>getting-started-app</tt> directory and use
+the Maven 2 archetype command again:<pre>mvn archetype:generate -DarchetypeCatalog=http://cocoon.apache.org
+</pre>First choose the archetype:<pre>Choose archetype:
+1: remote -&gt; cocoon-22-archetype-block-plain (Creates an empty Cocoon block; useful
+ if you want to add another block to a Cocoon application)
+2: remote -&gt; cocoon-22-archetype-block (Creates a Cocoon block containing some small
+ samples)
+3: remote -&gt; cocoon-22-archetype-webapp (Creates a web application configured to
+ host Cocoon blocks. Just add the block dependencies)
+Choose a number:  (1/2/3): <strong>2
+</strong></pre>Then respond to the other questions as follows:<pre>Define value for groupId: : <strong>com.mycompany</strong>
+Define value for artifactId: : <strong>myBlock2</strong>
+Define value for version:  1.0-SNAPSHOT: : <strong>1.0.0</strong>
+Define value for package: : <strong>com.mycompany.myBlock2</strong></pre><p>The result is a second Cocoon block called myBlock2.  You should find the
+directory structure of your application now looks as follows:</p><pre>getting-started-app
+<tt> +-</tt><tt>myBlock1
+ |  +-pom.xml
+ |  +-src
+ |     +-[...]</tt>
+<tt> +-</tt><tt>myBlock2
+    +-pom.xml
+    +-src
+       +-[...]
+
+</tt></pre><p>Move into the myBlock2 folder and execute the following command:</p><pre>mvn install eclipse:eclipse</pre><p>This builds and copies the second block into your local Maven repository so
+that other dependent blocks and projects can see it and then creates the
+necessary files to allow you to import the block as a project in Eclipse.</p><h1>Connect two blocks</h1><p>Let's assume that you want to use a pipeline defined in <tt>myBlock2</tt>
+from within <tt>myBlock1</tt>. You have to establish the connection between the
+two blocks. Edit
+<tt>getting-started-app/<strong>myBlock1</strong>/src/main/resources/META-INF/cocoon/spring/block-servlet-service.xml:</tt>
+</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:servlet="http://cocoon.apache.org/schema/servlet"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://cocoon.apache.org/schema/servlet http://cocoon.apache.org/schema/servlet/cocoon-servlet-1.0.xsd"&gt;
+
+  &lt;bean id="com.mycompany.myBlock1.service" class="org.apache.cocoon.sitemap.SitemapServlet"&gt;
+    &lt;servlet:context mount-path="/myBlock1" context-path="blockcontext:/myBlock1/"&gt;
+<strong>      &lt;servlet:connections&gt;
+        &lt;entry key="myBlock2" value-ref="com.mycompany.myBlock2.service"/&gt;
+      &lt;/servlet:connections&gt;</strong>
+    &lt;/servlet:context&gt;
+  &lt;/bean&gt;
+
+&lt;/beans&gt;
+</pre><p>Additionally, you have to record the fact that myBlock1 has a dependency on
+myBlock2 by editing myBlock1's Maven project descriptor
+(<tt>getting-started-app/<strong>myBlock1</strong>/pom.xml</tt>):</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project&gt;
+  [...]
+  &lt;dependencies&gt;
+    [...]
+<strong>    &lt;dependency&gt;
+      &lt;groupId&gt;com.mycompany&lt;/groupId&gt;
+      &lt;artifactId&gt;myBlock2&lt;/artifactId&gt;
+      &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;/dependency&gt;</strong>
+  &lt;/dependencies&gt;
+  [...]
+&lt;/project&gt;
+</pre><p>If you use the RCL goal of the Cocoon Maven plugin, you will also want to add
+the location of the new block to the configuration file of block1. This has the
+advantage that you can work on block2 and the changes take effect immediately.
+Open getting-started-app/myBlock1/rcl.properties and add</p><pre>com.mycompany.myBlock1.service%classes-dir=./target/classes
+
+<strong>com.mycompany.myBlock2.service%classes-dir=../myBlock2/target/classes
+%exclude-lib=com.mycompany:myBlock2
+</strong></pre><p>Restart the servlet container by invoking</p><pre>mvn jetty:run 
+</pre><p>Now it's time to test connection. For that purpose add a pipeline to the
+sitemap of block1
+(<tt>getting-started-app/myBlock1/src/main/resources/COB-INF/sitemap.xmap</tt>):
+</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0"&gt;
+  &lt;map:pipelines&gt;
+    [...]
+    &lt;map:pipeline&gt;
+      &lt;map:match pattern="callingBlock2"&gt;
+        &lt;map:generate src="<strong>servlet:myBlock2:/spring-bean</strong>" type="file"/&gt;
+        &lt;map:serialize type="xml"/&gt;
+      &lt;/map:match&gt;
+    &lt;/map:pipeline&gt;
+    [...]
+  &lt;/map:pipelines&gt;
+&lt;/map:sitemap&gt;
+</pre><p>The file generator of this pipeline uses a special purpose protocol, the
+servlet protocol, to access a pipeline defined in the other block. If you enter
+<tt>http://localhost:8888/myBlock1/callingBlock2</tt> shows the output of the
+spring-bean pipeline of <tt>myBlock2</tt> but routed through <tt>myBlock1</tt>.
+<br/>
+Though this is a "<em>hello word</em>" style example you might already imagine
+the power of this protocol, e.g. you can move all styling resources and
+pipelines to a particular block.</p><h1>Use a pipeline fragment</h1><p>The previous example showed how you can call a pipeline from another block.
+But here is even more you can do! A sitemap can also provide pipeline fragements
+that can be used by other blocks:</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0"&gt;
+  &lt;map:pipelines&gt;
+    &lt;map:pipeline&gt;
+      &lt;map:match pattern="callingTransformationService"&gt;
+        &lt;map:generate src="demo/welcome.xml"/&gt;
+        <strong>&lt;map:transform type="servletService"&gt;
+          &lt;map:parameter name="service" 
+           value="servlet:myBlock2:/myXsltTransformation-service"/&gt;
+        &lt;/map:transform&gt;</strong>
+        &lt;map:serialize type="xml"/&gt;
+      &lt;/map:match&gt;
+    &lt;/map:pipeline&gt;
+  &lt;/map:pipelines&gt;
+&lt;/map:sitemap&gt;</pre><p>When the requests arrives at <tt>callingTransformationService</tt> pipeline,
+the generator produces SAX events of <tt>demo/welcome.xml</tt>. There is nothing
+special here. The interesting part comes with the following transformer of type
+<tt>servletService</tt>. It calls a transformation service which is provided by
+<tt>myBlock2</tt>.</p><p>Add this service to the sitemap of myBlock2
+(<tt>getting-started-app/myBlock2/src/main/resources/COB-INF/sitemap.xmap)</tt>.
+It consists of one XSLT transformation step:</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0"&gt;
+  &lt;map:pipelines&gt;
+    &lt;map:pipeline&gt;
+      &lt;map:match pattern="<strong>myXsltTransformation-service</strong>"&gt;
+        &lt;map:generate src="<strong>service-consumer:</strong>"/&gt;
+        &lt;map:transform src="myXsltTransformation.xslt"/&gt;
+        &lt;map:serialize type="xml"/&gt;
+      &lt;/map:match&gt;
+    &lt;/map:pipeline&gt;
+  &lt;/map:pipelines&gt;
+&lt;/map:sitemap&gt;</pre><p>The generator uses the service-consumer protocol which initializes the
+service. Then the pipeline continues with an XSLT transformation
+<tt>myXsltTransformation.xslt</tt>, which has to be put into the same directory
+as the <tt>myBlock2</tt> sitemap:</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;Output of the XSLT transformation service.&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        Output of the XSLT transformation service.
+      &lt;/body&gt;
+    &lt;/html&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+</pre><p>Point your browser at
+<tt>http://localhost:8888/myBlock1/callingTransformationService</tt> and see the
+output of the pipeline.</p><div class="note"><div><strong>Note: </strong>Besides transformation services there are also generation and
+serialization services.</div></div></div></div>
+       </body></document>

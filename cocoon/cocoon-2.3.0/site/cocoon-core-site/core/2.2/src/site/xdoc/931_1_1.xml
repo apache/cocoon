@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - ExceptionSelector</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">ExceptionSelector</h1><h1>Summary</h1><p>In a &lt;map:handle-errors&gt;, selects depending on the exception that
+caused the error. The configuration of this selector allows to map exception
+class names to symbolic names that are used in the &lt;map:when&gt;
+alternatives.</p><h1>Basic information</h1><table class="bodyTable"><tbody><tr class="a"><th>Component type</th><td>Selector</td></tr><tr class="b"><th>Cocoon block</th><td>core</td></tr><tr class="a"><th>Java class</th><td>org.apache.cocoon.selection.ExceptionSelector</td></tr><tr class="b"><th>Name in Sitemap</th><td/></tr><tr class="a"><th>Cacheable</th><td/></tr></tbody></table><h1>Documentation</h1><p>Example configuration :</p><p>&lt;map:selector type="error" src="....ExceptionSelector"&gt;<br/>
+  &lt;exception class="org.xml.sax.SAXException" name="sax" unroll="true"/&gt;
+<br/>
+  &lt;exception name="not-found"
+class="org.apache.cocoon.ResourceNotFoundException"/&gt;<br/>
+  &lt;exception class="org.apache.cocoon.ProcessingException" unroll="true"/&gt;
+<br/>
+  &lt;exception name="denied" class="java.security.SecurityException"/&gt;<br/>
+  &lt;exception name="denied" class="my.comp.auth.AuthenticationFailure"/&gt;
+<br/>
+&lt;/map:selector&gt;</p><p>This example shows several features :</p><ul>
+<li>the "class" is the class name of the exception (which can be any
+&lt;code&gt;Throwable&lt;/code&gt;),</li>
+<li>an exception can be given a name, which is used in the &amp;lt;map:when&gt;
+tests,</li>
+<li>an exception can be unrolled, meaning we try to get its cause and then
+consider this cause for the exception name</li>
+</ul>Note that both "name" and "unroll" can be specified. In that case, we first
+try to unroll the exception,<br/>
+and if none of the causes has a name, then the "name" attribute is considered.
+</div></div>
+       </body></document>

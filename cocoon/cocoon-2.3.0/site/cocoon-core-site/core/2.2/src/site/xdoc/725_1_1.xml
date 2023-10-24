@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Creating a Serializer</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Creating a Serializer</h1><h1>Creating a Serializer</h1><p>For most problems, Cocoon has a serializer ready for you.  However, you may
+have to deal with some new unique binary format which is fed by your XML.  The
+SVG to PNG serializer works in this way as does the FOP to PDF serializer. 
+Given that there are only so many ways to present data on the web, it is very
+difficult to come up with an example serializer that is new and useful. 
+Nevertheless we will present the <a href="http://www.yaml.org">YAML</a>
+serializer.  There is no real direct mapping of concepts, but the only thing
+that you can't map directly in YAML to XML is the attributes.</p></div></div>
+       </body></document>

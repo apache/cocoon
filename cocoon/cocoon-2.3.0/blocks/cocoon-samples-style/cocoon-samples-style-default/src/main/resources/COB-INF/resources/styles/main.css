@@ -1,0 +1,98 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+body { background-color: white; color: black; font-family: verdana, helvetica, arial, sans-serif; font-size: 80%; }
+
+h1 { color: #0086b3; text-align: center; font-size: 3em; padding-bottom: 10px; margin: 0px; }
+h2 { color: #0086b3; }
+h3 { color: #0086b3; }
+h4 { color: #0086b3; }
+
+a:link { color: #0086b3; }
+a:visited { color: #800080; }
+a:hover { color: #800080; background-color: #ffff80; }
+a:active { color: #006666; }
+
+img { border: 0; }
+.figure { text-align: center; }
+
+span.year { color: #0086b3; }
+
+p.copyright { text-align: center; padding-top: 10px; border-width: 1px 0 0 0; border-style: solid; border-color: #0086b3; }
+p.author { color: #0086b3; padding-bottom: 10px; }
+p.block { text-align: center; }
+
+hr { height: 0; color: #336699; }
+
+span.description { color: #0086b3; font-weight: bold; }
+span.switch { cursor: pointer; margin-left: 5px; text-decoration: underline; }
+
+/* Samples */
+
+#top { background: url(servlet:/images/top-background.jpg) repeat-x; }
+#header { height: 129px; background: url(servlet:/images/logo-background.jpg) no-repeat; }
+.projectlogo { float: left; }
+.logoImage { margin: 30px 0 0 34px; }
+.grouplogo { margin: 10px 10px 0 0; float: right; }
+.grouptitle { margin: 0; padding-bottom: 5px; background: url(servlet:/images/group-title-line.gif) repeat-x bottom; }
+.grouptitle a:link, .grouptitle a:visited { color: #545454; text-decoration: none; }
+#samplesBar { margin-bottom: 10px; height: 25px; border-top: 1px solid #f2f2f2; border-bottom: 1px solid #f2f2f2; }
+#samplesBar #links { margin: 5px 15px 0 0; padding: 0; list-style: none; float: right; }
+#samplesBar #links li.sep { padding: 0 16px; background: none; float: left; border: 0px; }
+#samplesBar #links li { padding: 0 8px; background: none; float: left; border-right: 1px solid #f2f2f2; }
+#samplesBar #links a { color: #acacac; text-decoration: none; }
+#samplesBar #links a:hover { text-decoration: underline; }
+.samplesBarClear { height: 1%; clear: both; }
+
+.samplesTitle { margin: 0; padding: 6px 0 0 5px; background: none; border: none; float: left; font-size: 100%; color: #0086b3; }
+.samplesTitle a { text-decoration: none; }
+.samplesTitle a:hover { text-decoration: underline; }
+
+.samplesGroup {
+    margin: 15px 0 10px 0;
+    padding: 0 0 5px 17px;
+    background: url(servlet:/images/h1-image.gif) no-repeat left 4px;
+    font-size: 120%;
+    color: #0086b3;
+    border-bottom: 1px solid #0086b3;
+}
+
+.samplesNote {
+    color: #333333;
+    margin: 0.5em;
+    padding: 0.2em;
+    background-color: #ffffcc;
+    font-style: italic;
+}
+
+.samplesStatusNote {
+	font-style: italic;
+	font-size: 80%;
+	text-align: right;
+	margin: 2px;
+	padding: 0;
+}
+
+.samplesText {
+    margin-top: 0.2em;
+}
+
+div.resources {
+    text-align: right;
+}
+div.resources a {
+    margin: 5px;
+}

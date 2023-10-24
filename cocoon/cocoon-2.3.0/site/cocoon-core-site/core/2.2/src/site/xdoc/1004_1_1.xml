@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - PropagatorAction</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">PropagatorAction</h1><h1>Summary</h1><p>This is the action used to propagate parameters into a store using an {@link
+org.apache.cocoon.components.modules.output.OutputModule}. It simply propagates
+given expression. Additionaly it will make all propagated values available via
+returned Map.</p><h1>Basic information</h1><table class="bodyTable"><tbody><tr class="a"><th>Component type</th><td>Action</td></tr><tr class="b"><th>Cocoon block</th><td>core</td></tr><tr class="a"><th>Java class</th><td>org.apache.cocoon.acting.PropagatorAction</td></tr><tr class="b"><th>Name in Sitemap</th><td/></tr><tr class="a"><th>Cacheable</th><td/></tr></tbody></table><h1>Documentation</h1><p>Example configuration:</p><p>&lt;map:action type="...." name="...." logger="..."&gt;<br/>
+  &lt;output-module name="session-attr"&gt;<br/>
+       &lt;!-- optional configuration for output module --&gt;<br/>
+  &lt;/output-module&gt;<br/>
+  &lt;store-empty-parameters&gt;true&lt;/store-empty-parameters&gt;<br/>
+  &lt;defaults&gt;<br/>
+    &lt;default name="..." value="...."/&gt;<br/>
+    &lt;default name="..." value="..."/&gt;<br/>
+  &lt;/defaults&gt;<br/>
+&lt;/map:action&gt;</p><p>Example use:</p><p>&lt;map:act type="session-propagator"&gt;<br/>
+  &lt;paramater name="example" value="{example}"/&gt;<br/>
+  &lt;paramater name="example1" value="xxx"/&gt;<br/>
+  &lt;parameter name="PropagatorAction:store-empty-parameters" value="true"/&gt;
+<br/>
+  &lt;parameter name="PropagatorAction:output-module" value="session-attr"/&gt;
+<br/>
+&lt;/map:act&gt;</p><p><strong>Configuration</strong></p><table class="bodyTable">
+<tbody>
+<tr class="b">
+<th>
+<p>output-module</p>
+</th>
+<td>
+<p>Nested element configuring output to use. Name attribute holds<br/>
+ *      output module hint.</p>
+</td>
+<td/>
+<td>
+<p>XML</p>
+</td>
+<td>
+<p>request-attr</p>
+</td>
+</tr>
+<tr class="a">
+<th>
+<p>store-empty-parameters</p>
+</th>
+<td>
+<p>Propagate parameters with empty values.</p>
+</td>
+<td/>
+<td>
+<p>boolean</p>
+</td>
+<td>
+<p>true</p>
+</td>
+</tr>
+<tr class="b">
+<th>
+<p>defaults</p>
+</th>
+<td>
+<p>Parent for default parameters to propagate.</p>
+</td>
+<td/>
+<td>
+<p>XML</p>
+</td>
+<td/>
+</tr>
+<tr class="a">
+<th>
+<p>defaults/default</p>
+</th>
+<td>
+<p>Name attribute holds parameter name, value attribute holds<br/>
+ *      parameter value. Will be used when not set on use.</p>
+</td>
+<td/>
+<td>
+<p>parameter</p>
+</td>
+<td/>
+</tr>
+</tbody>
+</table><p><strong> Parameters</strong></p><table class="bodyTable">
+<tbody>
+<tr class="b">
+<th>
+<p>PropagatorAction:output-module</p>
+</th>
+<td>
+<p>Alternative output module hint to use. A <tt>null</tt> configuration<br/>
+ will be passed to a module selected this way.</p>
+</td>
+<td/>
+<td>
+<p>String</p>
+</td>
+<td>
+<p>as determined by configuration</p>
+</td>
+</tr>
+<tr class="a">
+<th>
+<p>PropagatorAction:store-empty-parameters</p>
+</th>
+<td>
+<p>Propagate parameters with empty values.</p>
+</td>
+<td/>
+<td>
+<p>boolean</p>
+</td>
+<td>
+<p>as determined by configuration</p>
+</td>
+</tr>
+<tr class="b">
+<th>
+<p>any other</p>
+</th>
+<td>
+<p>Any other parameter will be propagated.</p>
+</td>
+<td/>
+<td>
+<p>String</p>
+</td>
+<td/>
+</tr>
+</tbody>
+</table></div></div>
+       </body></document>

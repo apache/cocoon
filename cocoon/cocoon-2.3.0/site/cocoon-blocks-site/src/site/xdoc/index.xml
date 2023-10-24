@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Blocks Site - List</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">List</h1><h1>Available Cocoon Blocks</h1><table class="bodyTable">
+<tbody>
+<tr class="a">
+<th>
+<p><strong>Name</strong></p>
+</th>
+<th>
+<p><strong>Versions</strong></p>
+</th>
+<th>
+<p><strong>Description</strong></p>
+</th>
+</tr>
+<tr class="b">
+<td><a href="../../2.2/blocks/ajax/1.0/1220_1_1.html">Ajax</a></td>
+<td><a href="ajax/1.0/">1.0</a></td>
+<td>
+<p>Partial page and form reloads</p>
+</td>
+</tr>
+<tr class="a">
+<td><a href="../../2.2/blocks/apples/1.0/1484_1_1.html">Apples</a></td>
+<td><a href="apples/1.0/">1.0</a></td>
+<td>
+<p>A simple Java based Cocoon control flow implemntation. In difference to
+Flowscript and Javaflow it doesn't support continuations though.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="../../2.2/blocks/auth/1.0/1236_1_1.html">Authentication</a></p>
+</td>
+<td>
+<p><a href="auth/1.0/">1.0</a></p>
+</td>
+<td>
+<p>Authentication and authorization of pipelines and control-flow based Cocoon
+applications.</p>
+</td>
+</tr>
+<tr class="a">
+<td><a href="../../2.2/blocks/batik/1.0/1348_1_1.html">Batik</a></td>
+<td><a href="batik/1.0/">1.0</a></td>
+<td>
+<p>Create <a href="http://www.w3.org/TR/SVG11/">Scalable Vector Graphics
+(SVG)</a> using Cocoon pipelines.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="../../2.2/blocks/captcha/1.0/1238_1_1.html">Captcha</a></p>
+</td>
+<td>
+<p><a href="captcha/1.0/">1.0</a></p>
+</td>
+<td>
+<p>A reader to create
+<a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHAs</a>.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="../../2.2/blocks/databases/1.0/1356_1_1.html">Databases</a></p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td>
+<p>Direct usage of releational databases with sitemap components.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="../../2.2/blocks/flowscript/1.0/1240_1_1.html">Flowscript</a></p>
+</td>
+<td>
+<p><a href="flowscript/1.0/">1.0</a></p>
+</td>
+<td>
+<p>Flowscript is a
+<a href="http://en.wikipedia.org/wiki/Continuation">continuation</a>-based
+implementation of Cocoon control flow based on
+<a href="http://www.mozilla.org/rhino/">Rhino</a>
+(Javascript/<a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">ECMAScript</a>).
+</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="../../2.2/blocks/fop/1.0/1217_1_1.html">FOP</a></p>
+</td>
+<td>
+<p><a href="fop/1.0/">1.0</a></p>
+</td>
+<td>
+<p>Use <a href="http://xmlgraphics.apache.org/fop/">Apache FOP</a>, an XSL-FO
+driven print formatter to render pages to PDF or Postscript.</p>
+</td>
+</tr>
+<tr class="b">
+<td><a href="../../2.2/blocks/forms/1.0/489_1_1.html">Forms</a></td>
+<td><a href="forms/1.0/">1.0</a></td>
+<td>
+<p>Cocoon has an advanced forms framework. Together with Flow and JXTemplates,
+Cocoon Forms (or CForms) provides a solid basis for  building interactive web
+applications. Cocoon Forms handles complex use cases while still being simple
+enough to be used by non-Java-programmers who want to add forms to their site.
+</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="hsqldb-client/1.0/">Hsqldb Client</a></p>
+</td>
+<td>
+<p><a href="hsqldb-client/1.0/">1.0</a></p>
+</td>
+<td>
+<p>JDBC access of a Hsql database</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="hsqldb-server/1.0/">Hsqldb Server</a></p>
+</td>
+<td>
+<p><a href="hsqldb-server/1.0/">1.0</a></p>
+</td>
+<td>
+<p>Start a <a href="http://hsqldb.org/">Hsql database</a> server as part of your
+Cocoon application.</p>
+</td>
+</tr>
+<tr class="a">
+<td><a href="../../2.2/blocks/html/1.0/1352_1_1.html">HTML</a></td>
+<td><a href="html/1.0/">1.0</a></td>
+<td>
+<p>Generators to deal with HTML</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="../../2.2/blocks/linkrewriter/1.0/1354_1_1.html">Linkrewriter</a></p>
+</td>
+<td>
+<p><a href="linkrewriter/1.0/">1.0</a></p>
+</td>
+<td>
+<p>Transformers to rewrite all elements containing links.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><a href="../../2.2/blocks/mail/1.0/1248_1_1.html">Mail</a></p>
+</td>
+<td>
+<p><a href="mail/1.0/">1.0</a></p>
+</td>
+<td>
+<p>Sitemap components to send mails.</p>
+</td>
+</tr>
+<tr class="b">
+<td><a href="../../2.2/blocks/template/1.0/1215_1_1.html">Template</a></td>
+<td><a href="template/1.0/">1.0</a></td>
+<td>
+<p>XML-based templating</p>
+</td>
+</tr>
+</tbody>
+</table><h1>Unreleased Blocks</h1><p>This list of blocks hasn't been released yet. Your help is more than
+appreciated to make them ready for a release as Cocoon 2.2 block.</p><table class="bodyTable">
+<tbody>
+<tr class="a">
+<th>
+<p><strong>Name</strong></p>
+</th>
+<th>
+<p><strong>Versions</strong></p>
+</th>
+<th>
+<p><strong>Description </strong></p>
+</th>
+</tr>
+<tr class="b">
+<td>
+<p><a href="../../2.2/blocks/eventcache/1.0/1478_1_1.html">Eventcache</a></p>
+</td>
+<td>
+<p><a href="eventcache/1.0/">1.0</a></p>
+</td>
+<td>
+<p>Use events to invalidate cached pipeline responses.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p>ImageOp</p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td/>
+</tr>
+<tr class="b">
+<td>
+<p>Javaflow</p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td/>
+</tr>
+<tr class="a">
+<td>
+<p><a href="../../2.2/blocks/jcr/1.0/1481_1_1.html">JCR</a></p>
+</td>
+<td>
+<p><a href="jcr/1.0/">1.0</a></p>
+</td>
+<td>
+<p>Integration with Java Content Repositories</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><a href="../../2.2/blocks/jms/1.0/1475_1_1.html">JMS</a></p>
+</td>
+<td>
+<p><a href="jms/1.0/">1.0</a></p>
+</td>
+<td>
+<p>Use JMS messages together with the eventcache</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p>Lucene</p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td/>
+</tr>
+<tr class="b">
+<td>
+<p>Naming</p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td/>
+</tr>
+<tr class="a">
+<td>
+<p>Portal</p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td/>
+</tr>
+<tr class="b">
+<td>
+<p>Profiler</p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td/>
+</tr>
+<tr class="a">
+<td>
+<p>Repository</p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td/>
+</tr>
+<tr class="b">
+<td>
+<p>Serializers</p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td/>
+</tr>
+<tr class="a">
+<td>
+<p>WebDAV</p>
+</td>
+<td>
+<p>1.0</p>
+</td>
+<td/>
+</tr>
+</tbody>
+</table><div class="note"><div><strong>Note: </strong>There are more unreleased blocks. This list only contains the
+most popular ones. See our
+<a href="http://svn.apache.org/repos/asf/cocoon/trunk/blocks/">SVN</a> for a
+complete overview.</div></div><h1>Deprecated Blocks</h1><p>These blocks have been deprecated in 2.1 and are replaced by other blocks or
+solutions coming from outside of Cocoon.</p><table class="bodyTable">
+<tbody>
+<tr class="b">
+<th>
+<p>Name</p>
+</th>
+<th>
+<p>Description</p>
+</th>
+</tr>
+<tr class="a">
+<td>
+<p>Authentication-fw</p>
+</td>
+<td>
+<p>This block has been deprecated in favour of the Cocoon Auth.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p>Cron</p>
+</td>
+<td>
+<p>Use the
+<a href="http://static.springframework.org/spring/docs/2.0.x/reference/scheduling.html">Scheduling
+and Thread pool support of Spring</a> instead.</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p>Portal-fw</p>
+</td>
+<td>
+<p>This block has been deprecated in favour of the Cocoon Portal.</p>
+</td>
+</tr>
+</tbody>
+</table></div></div>
+       </body></document>

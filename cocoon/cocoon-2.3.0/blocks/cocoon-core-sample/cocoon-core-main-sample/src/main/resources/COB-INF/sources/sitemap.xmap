@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - $Id$
+  -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view name="pretty-content" from-label="content">
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+      </map:serialize>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines =============================== -->
+
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="welcome"/>
+      </map:match>
+
+      <map:match pattern="welcome">
+        <map:generate src="samples.xml"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <!-- All Static. -->
+      <map:match pattern="all-static">
+        <map:generate src="content/simple.xml" />
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html" />
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="xsp/**">
+        <map:mount uri-prefix="xsp" src="xsp.xmap"/>
+      </map:match>
+
+      <!-- These samples show ways how XSL could be obtained and applied -->
+      <map:match pattern="xsl-*">
+        <!-- XSL obtained from the local file, and applied -->
+        <map:match pattern="xsl-file">
+          <map:generate src="content/simple.xml"/>
+          <map:serialize type="servletService">
+            <map:parameter name="service" value="servlet:style:/service/common/simple-page2html" />
+          </map:serialize>
+        </map:match>
+
+        <!-- Generate XSL source from local file -->
+        <map:match pattern="xsl-source">
+          <map:generate src="servlet:style:/common/style/xsl/html/simple-page2html.xsl"/>
+          <map:serialize type="xml"/>
+        </map:match>
+
+        <!-- XSL obtained from the matcher 'xsl-source', right above, and applied -->
+        <map:match pattern="xsl-cocoon">
+          <map:generate src="content/simple.xml"/>
+          <map:transform src="cocoon:/xsl-source"/>
+          <map:transform type="servletLinkRewriter"/>
+          <map:serialize/>
+        </map:match>
+
+        <!-- XSL obtained from the matcher 'xsl-source', absolute reference, and applied -->
+        <map:match pattern="xsl-cocoon-root">
+          <map:generate src="content/simple.xml"/>
+          <map:transform src="cocoon://sources/xsl-source">
+            <map:parameter name="servletPath" value="{request:servletPath}"/>
+            <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:parameter name="remove" value="{0}"/>
+            <map:parameter name="file" value="content/simple.xml"/>
+          </map:transform>
+          <map:serialize/>
+        </map:match>
+
+        <!-- XSL obtained from the external HTTP server, and applied -->
+        <map:match pattern="xsl-http">
+          <map:generate src="content/simple.xml"/>
+          <map:transform src="http://{request:serverName}:{request:serverPort}/{request:contextPath}/{servlet:/}/sources/xsl-source">
+            <map:parameter name="servletPath" value="{request:servletPath}"/>
+            <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:parameter name="remove" value="{0}"/>
+            <map:parameter name="file" value="content/simple.xml"/>
+          </map:transform>
+          <map:serialize/>
+        </map:match>
+
+        <!-- XSL obtained from the matcher 'xsl-dynamic-source'. Beware: Slow! -->
+        <map:match pattern="xsl-dynamic">
+          <map:generate src="content/simple.xml"/>
+          <map:transform src="cocoon:/xsp/xsl-dynamic-source">
+            <map:parameter name="servletPath" value="{request:servletPath}"/>
+            <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:parameter name="remove" value="{0}"/>
+            <map:parameter name="file" value="content/simple.xml"/>
+          </map:transform>
+          <map:serialize/>
+        </map:match>
+      </map:match>
+
+
+      <!-- Uploaded xml as source. Beware: Very cool! -->
+      <map:match pattern="xml-upload">
+        <map:generate src="content/upload.xml"/>
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-page2html"/>
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="xml-upload-post">
+        <map:generate src="upload://formFieldOne"/>
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+        </map:serialize>
+      </map:match>
+
+
+      <!-- Zip file entry as a source. -->
+      <map:match pattern="zip/test.xml">
+        <map:generate src="zip:test.zip!/test.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="zip/content.xml">
+        <map:generate src="zip:test.sxw!/content.xml"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+
+</map:sitemap>

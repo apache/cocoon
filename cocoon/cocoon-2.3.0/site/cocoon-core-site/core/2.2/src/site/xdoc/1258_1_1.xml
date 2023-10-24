@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Overview</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Overview</h1><p>The main goal for the new Cocoon 2.2 configuration system is to avoid
+patching of any provided configuration file (If you're familiar with previous
+versions of Cocoon you might remember the patching of the cocoon.xconf or
+web.xml to satisfy your project needs.) To reach this goal a new mechanism is
+used which provides features like automatic inclusion of configuration files,
+property handling and property replacement in configuration files. You will find
+more information about these things in the various documents about configuring
+Cocoon. But let's start with getting Cocoon up and running in your web
+application.</p><p>Cocoon is a framework consisting of many different components. All these
+components are managed by a component container. Starting with Cocoon 2.2 this
+container is the <a href="http://www.springframework.org">Spring framework</a>.
+So the first step in setting up Cocoon is actually setting up the container and
+configuring the Cocoon components in the container.</p><div class="note"><div><strong>Note: </strong>In previous versions of Cocoon, the container was setup by
+Cocoon itself which created a strong dependency between the container and Cocoon
+and made integrating Cocoon with other frameworks very difficult.</div></div><div class="note"><div><strong>Note: </strong>You can get a skeleton Cocoon application by using the Cocoon
+archetypes for Maven 2 - so you don't need to do most of the stuff described
+here by hand. The <a href="../../../../2.2/1159_1_1.html">Getting Started</a> tutorial explains in
+detail how to use them.</div></div><p>There are various ways to setup a Spring container (have a look at the
+<a href="http://www.springframework.org/">Spring</a> documentation), but we
+suggest to setup a Spring application context using the context loader listener
+in your <tt>web.xml</tt>. In addition, Cocoon requires to setup Spring's
+RequestContext. The easiest way is to add Spring's request context listener for
+this purpose. Have a look at the
+<a href="http://www.springframework.org/">Spring</a> documentation for
+alternative configurations.</p><pre>  ...
+  &lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+  &lt;/listener&gt;
+  &lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.request.RequestContextListener&lt;/listener-class&gt;
+  &lt;/listener&gt;
+  ...
+</pre><p>This context listener is invoked by the servlet container on startup of your
+web application. By default the configuration for the application context is
+read from the file <tt>WEB-INF/applicationContext.xml</tt>. This is the place to
+add the global Cocoon configuration. Cocoon uses the namespace authoring
+features of Spring 2.0:</p><pre>&lt;beans xmlns="http://www.springframework.org/schema/beans""
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:configurator="http://cocoon.apache.org/schema/configurator"
+       xmlns:avalon="http://cocoon.apache.org/schema/avalon"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+                           http://cocoon.apache.org/schema/configurator http://cocoon.apache.org/schema/configurator/cocoon-configurator-1.0.1.xsd
+                           http://cocoon.apache.org/schema/avalon http://cocoon.apache.org/schema/avalon/cocoon-avalon-1.0.xsd"&gt;
+
+  &lt;!-- Activate Cocoon Spring Configurator --&gt;
+  &lt;configurator:settings/&gt;
+
+  &lt;!-- Activate the Avalon bridge --&gt;
+  &lt;avalon:bridge/&gt;
+
+  &lt;!-- Add your own spring beans here or in separate configuration files --&gt;
+
+&lt;/beans&gt;
+</pre><p>The two elements shown above are required to get Cocoon up and running inside
+your web application. The first one, <tt>configurator:settings</tt>, initializes
+the <a href="../../../../subprojects/configuration/spring-configurator/index.html">Cocoon Spring-Configurator.</a> The second element,
+<tt>avalon:bridge</tt>, sets up the Spring-Avalon-Bridge. This bridge allows you
+to run Avalon-based components in a Spring container; these Avalon components
+are configured using the well-known Avalon-configuration files. And that's it.
+</p><p>These two innocent looking statements do a lot of work behind the scenes and
+add all necessary beans to the Spring application context. Once the application
+context is up and running, Cocoon is ready as well. You can either use the
+provided servlets to map requests to Cocoon or you can integrate Cocoon into
+your web application framework by getting the Cocoon beans from the Spring
+application context.</p><p>For more information on how to configure Cocoon, we suggest to read the
+documentation about the <a href="../../../../subprojects/configuration/spring-configurator/index.html">Cocoon Spring Configurator</a>
+first and then continue with the other configuration documents.</p></div></div>
+       </body></document>

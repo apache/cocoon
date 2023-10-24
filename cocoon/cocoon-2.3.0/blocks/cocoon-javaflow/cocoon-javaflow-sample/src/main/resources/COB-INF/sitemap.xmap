@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+                                                                                                                                                                               
+      http://www.apache.org/licenses/LICENSE-2.0
+                                                                                                                                                                               
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <!-- =========================== Components =================================== -->
+
+  <map:components>
+
+    <!-- =========================== Generators =================================== -->
+
+    <map:generators default="file">
+      <map:generator name="mygenerator" src="org.apache.cocoon.samples.reloading.MyGenerator" />
+    </map:generators>
+
+    <!-- =========================== Transformers =================================== -->
+
+    <map:transformers default="xslt">
+      <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
+        <catalogues default="other">
+          <catalogue id="other" name="OtherMessages" location="servlet:forms:/resource/internal/i18n" />
+          <catalogue id="forms" name="FormsMessages" location="servlet:forms:/resource/internal/i18n" />
+        </catalogues>
+        <cache-at-startup>true</cache-at-startup>
+      </map:transformer>
+    </map:transformers>
+
+    <!-- =========================== Classloader =================================== -->
+
+    <map:classloader factory-role="org.apache.cocoon.classloader.ClassLoaderFactory/reloading">
+      <class-dir src="../../../../../../blocks/cocoon-javaflow/cocoon-javaflow-sample/target/classes">
+        <store class="org.apache.cocoon.components.flow.java.JavaflowResourceStore" />
+      </class-dir>
+      <class-dir src="../../../../../../blocks/cocoon-javaflow/cocoon-javaflow-impl/target/classes">
+        <store class="org.apache.cocoon.components.flow.java.JavaflowResourceStore" />
+      </class-dir>
+      <include-classes pattern="org.apache.cocoon.forms.flow.java.FormInstance" />
+      <include-classes pattern="org.apache.cocoon.samples.flow.java.**" />
+      <include-classes pattern="org.apache.cocoon.components.flow.java.AbstractContinuable" />
+    </map:classloader>
+
+    <!--map:classloader factory-role="org.apache.cocoon.classloader.ClassLoaderFactory/reloading">
+      <class-dir src="/home/mau/workspace/cocoon2.2/blocks/cocoon-javaflow/cocoon-javaflow-sample/target/classes">
+      <store class="org.apache.commons.jci.stores.MemoryResourceStore"/>
+      </class-dir>
+      <include-classes pattern="org.apache.cocoon.samples.reloading.java.**"/>
+      </map:classloader-->
+
+  </map:components>
+
+  <!-- =========================== Flows =================================== -->
+
+  <map:flow language="java">
+    <map:script src="org.apache.cocoon.samples.flow.java.CalculatorFlow" />
+    <!--
+      <map:script src="org.apache.cocoon.samples.flow.java.FormFlow"/>
+      <map:script src="org.apache.cocoon.samples.flow.java.PersistenceFlow"/>
+    -->
+  </map:flow>
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml" />
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <!-- Make use of servlet services -->
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style-default:/service/system/xml2html" />
+      </map:serialize>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links" />
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines ================================= -->
+
+  <map:pipelines>
+    <map:pipeline>
+      <!--+
+        | produces the screens called by the flowscript
+        +-->
+      <map:match pattern="page/*">
+        <map:generate type="jx" src="screens/{1}.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="form/*">
+        <map:generate src="forms/{1}-template.xml" />
+        <map:transform type="forms" />
+        <map:transform type="i18n">
+          <map:parameter name="locale" value="en-US" />
+        </map:transform>
+        <map:transform src="resources/forms-samples-styling.xsl">
+          <map:parameter name="dojo-resources" value="{servlet:ajax:/resource/external/dojo}" />
+          <map:parameter name="forms-resources" value="{servlet:forms:/resource/external/forms}" />
+        </map:transform>
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/complex-page2html" />
+        </map:serialize>
+      </map:match>
+
+    </map:pipeline>
+
+    <map:pipeline>
+      <map:match pattern="reloading">
+        <map:generate type="mygenerator" />
+        <map:serialize type="html" />
+      </map:match>
+
+
+      <map:match pattern="">
+        <map:generate src="samples.xml" />
+        <!-- Make use of servlet services -->
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style-default:/service/common/simple-samples2html" />
+        </map:serialize>
+      </map:match>
+
+      <!--+
+        | matches the page with the continuation ID and calls the flowscript
+        | associated to this sitemap with the given continuation ID. The flow
+        | engine will then look into the continuation store, retrieve
+        | the correct continuation and resume execution of the flowscript
+        | with that continuation. This guarantees transparent state 
+        | resumption between requests without the need for anything else
+        | (cookies or URL-encoded session IDs)
+        +-->
+      <map:match pattern="*.cont">
+        <map:call continuation="{1}" />
+      </map:match>
+
+      <!--+
+        | matches the call to the beginning of the flow and calls the flow
+        | from its entry point which, in this case is the 'calculator()'
+        | javascript function.
+        +-->
+      <map:match pattern="*.do">
+        <map:call function="{1}" />
+      </map:match>
+
+      <map:match pattern="resources/**">
+        <map:redirect-to uri="servlet:forms:/resources/{1}" />
+      </map:match>
+
+    </map:pipeline>
+  </map:pipelines>
+</map:sitemap>

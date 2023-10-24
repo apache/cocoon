@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- This file is similar to form1_template_action.xml. They differ in group layout,
+     form's action attribute (to use continuations) and, this one is a dynamic form
+     template that changes the 'contacts' repeater layout depending on its size -->
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+      
+  <!-- Import the macros that define CForms template elements -->
+  <jx:import uri="servlet:forms:/resource/internal/generation/jx-macros.xml"/>
+  <h4 class="samplesGroup">Repeater widget with advanced interaction</h4>
+  <title>Repeater widget with advanced interaction</title>
+  <style type="text/css">
+    .forms-row td {
+       padding: 5px;
+    }
+
+    /* Ensure the inline edit is visible on selected rows */
+    .forms-row-selected .editableRegion {
+       color: black;
+    }
+  </style>
+  
+  <content>
+    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST" ajax="true">
+    
+    <p>This example expands on the <a href="do-dynaRepeater.flow">dynamic repeater sample</a> and uses
+       <a href="http://dojotoolkit.org">Dojo</a> to provide additional interaction features.
+       After adding rows in the repeater below you will be able to:</p>
+    <ul>
+      <li>reorder rows using drag-and-drop,</li>
+      <li>select and deselect rows by clicking anywhere rather than in a checkbox,</li>
+      <li>use in-place editing (an input appears when you click on the text).</li>
+    </ul>
+      <ft:repeater id="contacts">
+        <div dojoType="forms:CFormsRepeater" orderable="true" select="select">
+        <jx:choose>
+          <jx:when test="${repeater.getSize() == 0}">
+            <p><strong><em>There are no contacts to display</em></strong></p>
+          </jx:when>
+          <jx:otherwise>
+
+            <table border="1">
+              <tr>
+                <th width="300"><ft:repeater-widget-label widget-id="firstname"/></th>
+                <th width="300"><ft:repeater-widget-label widget-id="lastname"/></th>
+                <th><ft:repeater-widget-label widget-id="ID"/></th>
+              </tr>
+              <tbody>
+                  <!-- The contents of the repeater-widget element is a template that will
+                       be applied to each row in the repeater. -->
+                  <ft:repeater-rows>
+                    <tr class="forms-row">
+                      <td><ft:widget id="firstname" fi:type="inplace" fi:submit-on-change="true"/></td>
+                      <td><ft:widget id="lastname" fi:type="inplace"/>
+		              </td>
+                      <td><ft:widget id="ID"/>
+                        <ft:widget id="select">
+	                      <fi:styling style="display: none"/>
+	                    </ft:widget>
+                      </td>
+                    </tr>
+                  </ft:repeater-rows>
+                </tbody>
+            </table>
+                </jx:otherwise>
+              </jx:choose>
+             <p>
+                  <ft:widget id="../addcontact"/>
+                  <jx:if test="${widget.getSize() > 0}">
+                    <ft:widget id="../removecontacts"/>
+                  </jx:if>
+              </p>
+              </div>
+            </ft:repeater>
+            <ft:widget id="ok"/><br/>
+            <a href="./do-dojoRepeater.flow">Restart this sample</a> - <a href="./">Back to samples</a>
+
+    </ft:form-template>
+  </content>
+</page>

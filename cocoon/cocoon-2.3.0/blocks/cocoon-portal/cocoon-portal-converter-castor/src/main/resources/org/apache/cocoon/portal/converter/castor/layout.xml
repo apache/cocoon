@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- @version $Id$ -->
+<mapping>
+  <description>Portalprofile mapping file</description>
+
+  <class name="org.apache.cocoon.portal.om.AbstractParameters">
+    <field name="parameters"
+           type="org.exolab.castor.mapping.MapItem"
+           collection="map"
+           handler="org.apache.cocoon.portal.converter.castor.ParametersFieldHandler">
+      <bind-xml name="parameter" node="element"/>
+    </field>
+  </class>
+
+  <class name="org.apache.cocoon.portal.om.Layout"
+         extends="org.apache.cocoon.portal.om.AbstractParameters"
+         verify-constructable="false">
+
+    <field name="rendererName" type="java.lang.String"
+           handler="org.apache.cocoon.portal.converter.castor.ReferenceFieldHandler">
+      <bind-xml name="renderer" node="attribute"/>
+    </field>
+
+    <field name="static" type="java.lang.Boolean" set-method="setIsStatic" get-method="isStatic">
+      <bind-xml name="static" node="attribute"/>
+    </field>
+
+    <field name="layoutType"
+           type="java.lang.String"
+           handler="org.apache.cocoon.portal.converter.castor.ReferenceFieldHandler">
+      <bind-xml name="type" node="attribute"/>
+    </field>
+  </class>
+
+  <class name="org.apache.cocoon.portal.om.LinkLayout"
+         extends="org.apache.cocoon.portal.om.Layout"
+         verify-constructable="false">
+    <map-to xml="link-layout"/>
+
+    <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
+      <bind-xml name="id" node="attribute" />
+    </field>
+
+    <field name="profileName" type="java.lang.String">
+      <bind-xml name="profile-name" node="attribute"/>
+    </field>
+    <field name="layoutId" type="java.lang.String">
+      <bind-xml name="layout-id" node="attribute"/>
+    </field>
+  </class>
+
+  <class name="org.apache.cocoon.portal.om.CompositeLayout"
+         extends="org.apache.cocoon.portal.om.Layout"
+         verify-constructable="false">
+    <map-to xml="composite-layout"/>
+
+    <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
+      <bind-xml name="id" node="attribute" />
+    </field>
+
+    <field name="items" type="org.apache.cocoon.portal.om.Item"
+           collection="collection" set-method="addItem" get-method="getItems">
+      <bind-xml matches="named-item item"/>
+    </field>
+  </class>
+
+  <class name="org.apache.cocoon.portal.om.CopletLayout"
+         auto-complete="false"
+         extends="org.apache.cocoon.portal.om.Layout"
+         verify-constructable="false">
+    <map-to xml="coplet-layout"/>
+
+    <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
+      <bind-xml name="id" node="attribute" />
+    </field>
+
+    <field name="copletInstanceId"
+           type="java.lang.String">
+      <bind-xml name="coplet-instance"/>
+    </field>
+  </class>
+
+  <class name="org.apache.cocoon.portal.om.FrameLayout"
+         extends="org.apache.cocoon.portal.om.Layout"
+         verify-constructable="false">
+    <map-to xml="frame-layout"/>
+
+    <field name="id" type="java.lang.String" set-method="%1" get-method="getId">
+      <bind-xml name="id" node="attribute" />
+    </field>
+
+    <field name="source" type="java.lang.String"/>
+  </class>
+
+  <class name="org.apache.cocoon.portal.om.Item"
+         extends="org.apache.cocoon.portal.om.AbstractParameters">
+    <field name="layout" type="org.apache.cocoon.portal.om.Layout">
+      <bind-xml matches="frame-layout link-layout composite-layout coplet-layout"/>
+    </field>
+  </class>
+
+  <class name="org.apache.cocoon.portal.om.NamedItem"
+         extends="org.apache.cocoon.portal.om.Item">
+    <map-to xml="named-item"/>
+    <field name="name" type="java.lang.String">
+      <bind-xml name="name" node="attribute"/>
+    </field>
+  </class>
+
+  <class name="org.exolab.castor.mapping.MapItem">
+    <field name="key" type="java.lang.String">
+      <bind-xml name="name" node="attribute"/>
+    </field>
+
+    <field name="value" type="java.lang.String">
+      <bind-xml name="value" node="attribute"/>
+    </field>
+  </class>
+
+</mapping>

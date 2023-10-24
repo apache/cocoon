@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!-- $Id$ -->
+<project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd"
+         name="Cocoon">
+
+  <skin>
+    <groupId>org.apache.cocoon</groupId>
+    <artifactId>cocoon-thien-maven-site-skin</artifactId>
+    <version>1.0.1</version>
+  </skin>
+    
+  <body>
+    <menu name="About Cocoon">
+      <item name="Welcome" href="./index.html"/>
+      <item name="Features" href="./1363_1_1.html"/>
+      <item name="Versions &amp; Download" href="./1284_1_1.html"/>
+      <item name="Professional Services" href="./1271_1_1.html"/>
+      <item name="Who uses Cocoon?" href="./1365_1_1.html" collapse="true">
+        <item name="Products" href="./1365_1_1.html"/>
+        <item name="Live Sites - 3.0" href="./live_sites_3.0.html"/>
+        <item name="Live Sites - 2.2" href="./706_1_1.html"/>
+        <item name="Live Sites - 2.1.8" href="./705_1_1.html"/>
+        <item name="Live Sites - 2.1.7" href="./704_1_1.html"/>
+        <item name="Live Sites - 2.1.6" href="./703_1_1.html"/>
+        <item name="Live Sites - 2.1.4" href="./701_1_1.html"/>
+        <item name="Live Sites - 2.1.3" href="./700_1_1.html"/>
+        <item name="Live Sites - 2.1.2" href="./699_1_1.html"/>
+        <item name="Live Sites - 2.1.1" href="./698_1_1.html"/>
+        <item name="Live Sites - 2.1" href="./697_1_1.html"/>
+        <item name="Live Site Template" href="./696_1_1.html"/>
+      </item>
+      <item name="Weblogs" href="./1272_1_1.html"/>
+      <item name="History" href="./1178_1_1.html"/>
+      <item name="Privacy Policy" href="./1508_1_1.html"/>
+    </menu>
+
+    <menu name="Getting Started">
+      <item name="Tutorials" href="./1370_1_1.html"/>          
+    </menu>
+
+    <menu name="Getting Better">
+      <item name="About the online documentation" href="./1286_1_1.html"/>
+      <item name="Presentations" href="./1287_1_1.html"/>
+      <item name="How-Tos" href="./1368_1_1.html"/>
+      <item name="Articles" href="./1288_1_1.html"/>
+      <item name="Books" href="./1289_1_1.html"/>
+    </menu>
+    
+    <menu name="Getting involved">
+      <item href="1273_1_1.html" name="How to contribute?"/>
+      <item href="1275_1_1.html" name="Communication tools that we use"/>
+      <item collapse="true" href="1199_1_1.html" name="Committer's and contributor's section">
+        <item href="1199_1_1.html" name="Releasing Cocoon"/>
+        <item href="798_1_1.html" name="Working with Cocoon from SVN">
+          <item href="798_1_1.html" name="Building Cocoon 2.2"/>
+          <item href="1214_1_1.html" name="How to mount the Cocoon 2.2 projects in Eclipse"/>
+          <item href="1164_1_1.html" name="How to solve Maven 2 problems"/>
+        </item>
+        <item href="1301_1_1.html" name="Debugging Cocoon in  Eclipse"/>
+      </item>
+    </menu>
+
+    <menu ref="reports" inherit="bottom"/>
+  </body>
+</project>

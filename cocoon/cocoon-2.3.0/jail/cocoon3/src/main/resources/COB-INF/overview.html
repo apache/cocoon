@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html>
+  <head>
+    <title>Cocoon 3 Samples and Integration Tests: Overview </title>
+    <link type="text/css" href="read/style.css" rel="stylesheet"/>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <base target="_blank"/>
+  </head>
+  <body>
+    <header>
+      <section id="logo">
+        <img src="images/cocoon.gif" alt="Cocoon logo"/>
+      </section>
+      <section id="page-title">
+        <h1>Cocoon 3 Samples and Integration Tests: Overview </h1>
+      </section>
+    </header>
+    <article>
+      <section id="map-read">
+        <h2>map:read</h2>
+        <ul>
+          <li><a href="read/javascript-resource-explicit">Javascript Resource</a>: Test explicit setting of mime-type.</li>
+          <li><a href="read/javascript-resource-implicit.js">Javascript Resource</a>: Test automatic setting of mime-type.</li>
+        </ul>
+      </section>
+      <section id="sax-pipelines">
+        <h2>SAX Pipelines</h2>
+        <ul>
+          <li><a href="sax-pipeline/simple">SAX Pipeline</a>: Simplest possible pipeline that has a generator, transformer and serializer.</li>
+          <li><a href="sax-pipeline/simple-xhtml">SAX Pipeline</a>: Same as before but creates XHTML as output format.</li>
+          <li><a href="sax-pipeline/simple-xml">SAX Pipeline</a>: Same as before but creates XML as output format.</li>
+          <li><a href="sax-pipeline/simple-txt">SAX Pipeline</a>: Same as before but creates TXT as output format</li>
+          <li><a href="sax-pipeline/simple-xsd">SAX Pipeline</a>: Same as before but creates XML as output format after validating the input.</li>
+          <li><a href="sax-pipeline/unauthorized">Status code</a>: Set status code '401' at pipeline.</li>
+        </ul>
+      </section>
+      <section id="stax-pipelines">
+        <h2>StAX Pipelines</h2>
+        <ul>
+          <li><a href="stax-pipeline/simple">StAX Pipeline</a>: Simplest possible pipeline that has a generator and serializer but processing is based on StAX instead of SAX!</li>
+        </ul>
+      </section>
+      <section id="caching">
+        <h2>Caching</h2>
+        <ul>
+          <li><a href="caching-pipeline/off">Non-Caching pipeline</a>: The pipeline doesn't cache (although it's components support it)</li>
+          <li><a href="caching-pipeline/on">Caching pipeline</a>: The result of the pipeline is cached for 1.5 seconds. The next request that occurs
+            after the cached response has expires, triggers a reexecution of the pipeline in the same thread.</li>
+          <li><a href="async-caching-pipeline/on">Async-Caching pipeline</a>: The result of the pipeline is cached for 1.5 seconds. The next request that occurs
+            after the cached response has expires, triggers a reexecution of the pipeline in a separate thread.</li>
+          <li><a href="/expires/caching-pipeline/on">Expires-Caching pipeline</a>: The pipeline returns a cached result for defined period,
+            independently from whether components used in the pipeline support caching or not. The pipeline result is cached for 2 seconds. The
+            recreation of the pipeline result is done in the same thread as the servlet request.</li>
+          <li><a href="/expires/async-caching-pipeline/on">Expires-Async-Caching pipeline</a>: The pipeline returns a cached result for defined period,
+            independently from whether components used in the pipeline support caching or not. The pipeline result is cached for 2 seconds. The recreation of the
+            pipeline result is done in a separate thread than the servlet request.</li>
+        </ul>
+      </section>
+      <section id="error-handling">
+        <h2>Error handling</h2>
+        <ul>
+          <li><a href="123456789123456789">ResourceNotFound</a>: The error handler catches all exceptions, in this case no matcher matches.</li>
+          <li><a href="error-handling/custom-error">Custom error - Sitemap</a>: Catch a custom error in the sitemap.</li>
+          <li><a href="error-handling/custom-error-per-pipeline-error-handling">Custom error - Pipeline</a>: Catch a custom error using a per-pipeline error handler.</li>
+        </ul>
+      </section>
+      <section id="servlet-service">
+        <h2>Servlet-Service-Components and servlet: protocol</h2>
+        <ul>
+          <li><a href="ssf/local">servlet:/</a>: Using a local servlet service.</li>
+          <li><a href="internal-only/simple-xml">ResourceNotFound/</a>: Try to access directly an internal-only pipeline.</li>
+          <li><a href="ssf/local-internal-only">servlet:/</a>: Using a local servlet service provided by an internal-only pipeline.</li>
+          <li><a href="ssf/calling-a-transformer-servlet-service">Servlet service transformer</a>: Call another pipeline that performs a transformation.</li>
+          <li><a href="ssf/calling-a-serializer-servlet-service">Servlet service serializer</a>: Call another pipeline that performs the serialization step.</li>
+        </ul>
+      </section>
+      <section id="expression-language">
+        <h2>Expression language</h2>
+        <ul>
+          <li><a href="expression-language/jexl?fileName=simple">request attribute (jexl)</a>: Accessing a request attribute using Jexl.</li>
+          <li><a href="expression-language/map-numbers/simple">sitemap parameter</a>: Accessing a sitemap parameter.</li>
+          <li><a href="expression-language/map-named-parameters/simple">sitemap parameter</a>: Accessing a sitemap parameter using named parameters in the pattern.</li>
+          <li><a href="expression-language/nested/simple">nested matchers</a>: Accessing a parameter from one level above.</li>
+        </ul>
+      </section>
+      <section id="redirects">
+        <h2>Redirects</h2>
+        <ul>
+          <li><a href="redirect/www.orf.at">Temporary (302)</a>: Temporary redirect to orf.at.</li>
+          <li><a href="redirect/sax-pipeline/simple-xml">servlet</a>: Redirect to a servlet: URL.</li>
+        </ul>
+      </section>
+      <section id="object-model">
+        <h2>Object Model</h2>
+        <ul>
+          <li><a href="object-model/request-parameters?a=1&amp;b=2&amp;c=3">All request parameters</a>: Print all request parameters.</li>
+        </ul>
+      </section>
+      <section id="i18n">
+        <h2>i18N</h2>
+        <ul>
+          <li><a href="i18n/localefrombrowser">Get locale from browser's preferred</a>: Translate with locale from browser's preferred.</li>
+          <li>Get locale from request parameter: <a href="i18n/localefromparameter?lang=de">de</a>|<a href="i18n/localefromparameter?lang=es">es</a>|<a href="i18n/localefromparameter?lang=it">it</a>: Translate with locale from request parameter.</li>
+        </ul>
+      </section>
+      <section id="advanced-matching">
+        <h2>Advanced Matching</h2>
+        <p>(using a JEXL expression to set a test value)</p>
+        <ul>
+          <li><a href="advanced-matching?myparam=11">Equals matcher</a> (using an JEXL expression to set a test value)</li>
+          <li><a href="advanced-matching?myparam=22">Regular expression</a> matcher (using an JEXL expression to set a test value)</li>
+          <li><a href="advanced-matching?myparam=55">Ends-with matcher</a> (using an JEXL expression to set a test value)</li>
+          <li><a href="advanced-matching">Otherwise</a> Reach the otherwise section</li>
+          <li><a href="advanced-matching-2?myparam=1">Uncomplete pipeline: when</a> Adding a transformer</li>
+          <li><a href="advanced-matching-2?myparam=2">Uncomplete pipeline: otherwise</a> Adding a transformer</li>
+          <li><a href="advanced-matching-3?myparam=1&amp;yourparam=2">Two matchers:</a> Two matchers that add components to a pipeline.</li>
+        </ul>
+      </section>
+      <section id="aggregation">
+        <h2>Aggregation</h2>
+        <ul>
+          <li><a href="aggregation/include-transformer">Include-Transformer</a>: Aggregate XML using the IncludeTransformer.</li>
+          <li><a href="aggregation/xinclude-transformer">XInclude-Transformer</a>: Aggregate XML using the XIncludeTransformer, working according to the <a href="http://www.w3.org/TR/xinclude/">XInclude specification</a>.</li>
+        </ul>
+      </section>
+      <section id="link-rewriting">
+        <h2>Link rewriting</h2>
+        <ul>
+          <li><a href="linkrewriting/regexplinkrewriter-transformer">RegexpLinkRewriter-Transformer</a>: Rewrite links according to given regular expressions.</li>
+        </ul>
+      </section>
+      <section id="xslt">
+        <h2>XSLT</h2>
+        <ul>
+          <li><a href="xslt/main">XSLT Transformation</a>: An XSLT transformation that includes stylesheets via file and servlet protocol.</li>
+        </ul>
+      </section>
+      <section id="sitemap-rest-controller">
+        <h2>Sitemap REST Controller</h2>
+        <ul>
+          <li><a href="controller/abc/foo?reqparam=1">GET request</a>: Invoke a controller and pass two parameters</li>
+          <li><a href="controller/conditional-get/abc/foo?reqparam=1">Conditional GET request </a>: A controller that implements the o.a.c.rest.controller.method.ConditionalGet
+            interface and provides a cache key.</li>
+        </ul>
+      </section>
+      <section id="jaxrs-rest-controller">
+        <h2>JAX-RS REST Controller</h2>
+        <ul>
+          <li><a href="jax-rs/sample/parameter-passing/5?req-param=7">JAX-RS REST endpoint</a>: A JAX-RS resources as a controller that returns a Cocoon resources.</li>
+        </ul>
+      </section>
+      <section id="fop">
+        <h2>FOP</h2>
+        <ul>
+          <li><a href="fop/test.pdf">PDF</a>: Create a PDF document by using Apache FOP.</li>
+        </ul>
+      </section>
+      <section id="json">
+        <h2>JSON</h2>
+        <ul>
+          <li><a href="json/xml2json">JSON</a>: Serialize pipeline to JSON string.</li>
+          <li><a href="json/json2xml">JSON</a>: Generate SAX events from JSON string.</li>
+        </ul>
+      </section>
+      <section id="encoding-serializers">
+        <h2>Encoding Serializers</h2>
+        <ul>
+          <li><a href="serializers/exml">eXML</a>: A XML serializer not relying on the JAXP API.</li>
+          <li><a href="serializers/exhtml">eXHTML</a>: A pedantinc XHTML serializer encoding all recognized entities with their proper HTML names.</li>
+          <li><a href="serializers/ehtml">eHTML</a>: A serializer converting XHTML into plain old HTML.</li>
+        </ul>
+      </section>
+      <section id="cocoon-wicket-integration">
+        <h2>Cocoon-Wicket integration</h2>
+        <ul>
+          <li><a href="wicket/">Wicket Reader</a>: A reader defers redirects a request to a Wicket application.</li>
+        </ul>
+      </section>
+      <section id="stringtemplate">
+        <h2>StringTemplate</h2>
+        <ul>
+          <li><a href="string-template/generator">StringTemplateGenerator</a>: A generator using <a href="http://www.stringtemplate.org/">StringTemplate</a> template engine.</li>
+          <li><a href="string-template/transformer">StringTemplateTransformer</a>: A transformer using <a href="http://www.stringtemplate.org/">StringTemplate</a> template engine.</li>
+        </ul>
+      </section>
+    </article>
+    <nav>
+      <ul>
+        <li><a href="#map-read" target="_self">map:read</a></li>
+        <li><a href="#sax-pipelines" target="_self">SAX Pipelines</a></li>
+        <li><a href="#stax-pipelines" target="_self">StAX Pipelines</a></li>
+        <li><a href="#caching" target="_self">Caching</a></li>
+        <li><a href="#error-handling" target="_self">Error handling</a></li>
+        <li><a href="#servlet-service" target="_self">Servlet-Service-Components and servlet: protocol</a></li>
+        <li><a href="#expression-language" target="_self">Expression language</a></li>
+        <li><a href="#redirects" target="_self">Redirects</a></li>
+        <li><a href="#object-model" target="_self">Object Model</a></li>
+        <li><a href="#i18n" target="_self">i18N</a></li>
+        <li><a href="#advanced-matching" target="_self">Advanced Matching</a></li>
+        <li><a href="#aggregation" target="_self">Aggregation</a></li>
+        <li><a href="#link-rewriting" target="_self">Link rewriting</a></li>
+        <li><a href="#xslt" target="_self">XSLT</a></li>
+        <li><a href="#sitemap-rest-controller" target="_self">Sitemap REST Controller</a></li>
+        <li><a href="#jaxrs-rest-controller" target="_self">JAX-RS REST Controller</a></li>
+        <li><a href="#fop" target="_self">FOP</a></li>
+        <li><a href="#json" target="_self">JSON</a></li>
+        <li><a href="#encoding-serializers" target="_self">Encoding Serializers</a></li>
+        <li><a href="#cocoon-wicket-integration" target="_self">Cocoon-Wicket integration</a></li>
+        <li><a href="#stringtemplate" target="_self">StringTemplate</a></li>
+      </ul>
+    </nav>
+  </body>
+</html>

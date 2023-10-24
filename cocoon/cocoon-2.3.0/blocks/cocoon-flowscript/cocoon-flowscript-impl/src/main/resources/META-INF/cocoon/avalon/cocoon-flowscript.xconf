@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- SVN $Id$ -->
+<components>
+
+  <!--+
+      |  The <flow-interpreters> element is used to describe the flowscript
+      |  engines usedd by the current instance.
+      |
+      |  The attributes recognized by the <flow-interpreters> element are:
+      |
+      |    default (string value):
+      |
+      |       the default interpreted language assumed for <map:script>
+      |       elements which do not specify a "language" attribute. If not
+      |       present, the first language that's described within the
+      |       <flow-interpreters> element is assumed to be the default
+      |       language.
+      |
+      |  Within <flow-interpreters> only <component-instance> elements are
+      |  recognized. The attributes recognized by this element are "name"
+      |  and "class". "name" specifies the name of a scripting language,
+      |  and "class" defines the Java class that implements it. See
+      |  org.apache.cocoon.components.flow.Interpreter for the Cocoon
+      |  interface with an scripting language interpreter.
+      |
+      |  A <component-instance> element contains as subelements the
+      |  following elements:
+      |
+      |    reload-scripts (boolean value, default false):
+      |       whether to check if the scripts source files are modified.
+      |       Checking for modification is an expensive operation, so leave
+      |       it disabled in a production environment. If not present it is
+      |       assumed to be "false" (if no property is overriding this). When
+      |       "true" *all* script files are
+      |       checked for modification on each function invocation done using
+      |       <map:call function="...">, but not more frequent than the value
+      |       of "check-time" (see below).
+      |       The default for this function is determined by the value of the
+      |       reloading property 'org.apache.cocoon.reloading.flow'.
+      |
+      |    check-time (long value, default 1000):
+      |       time in miliseconds between the checks for the last modification
+      |       date of script files.
+      |
+      |    debugger (boolean value, default false):
+      |       whether support for the JavaScript debugger should be enabled in
+      |       the control flow.
+      +-->
+  <flow-interpreters default="javascript">
+    <component-instance name="javascript"
+                        logger="flow"
+                        exported="false"
+                        class="org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptInterpreter">
+      <load-on-startup>resource://org/apache/cocoon/components/flow/javascript/fom/fom_system.js</load-on-startup>
+      <!--
+        <reload-scripts>true</reload-scripts>
+        <check-time>4000</check-time>
+        -->
+      <!-- JavaScript Debugger support -->  
+      <debugger>${org.apache.cocoon.flowscript.debugger}</debugger>
+    </component-instance>
+  </flow-interpreters>
+  
+</components>

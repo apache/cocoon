@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+      -->
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	  xmlns="http://maven.apache.org/XDOC/2.0" 
+	  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>Cocoon Main Site - How to build the site locally</title>
+    <author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author>
+    </properties>
+
+    <body>
+      <div id="contentBody">
+	<div id="bodyText">
+
+	  <h1 class="docTitle">How to build the site locally</h1>
+
+	  <p>This page explains how to build the Cocoon documentation site with the <a href="http://maven.apache.org/plugins/maven-site-plugin/">maven-site-plugin</a>.</p>
+
+	  <h1>Existing site checkout</h1>
+	  <p>The live website is generated from <a href="http://maven.apache.org/doxia/references/xdoc-format.html">XDOC</a> sources and published via <a href="http://www.apache.org/dev/cms.html#svnpubsub">Svnpubsub</a></p>
+	  <p>You can fetch a copy of the live website with
+	  <pre>svn co https://svn.apache.org/repos/asf/cocoon/site/site $LIVEWEBSITE</pre>
+	  where $LIVEWEBSITE is the directory that will contain the website.</p>
+
+	  <h1>Site sources checkout</h1>
+	  <ul>
+	    <li>For Cocoon 2.2:
+<pre>svn co https://svn.apache.org/repos/asf/cocoon/trunk/site $SITESOURCES22</pre>
+	    where $SITESOURCES22 is the root directory for 2.2 site sources.</li>
+	    <li>For Cocoon 3.0:
+<pre>svn co https://svn.apache.org/repos/asf/cocoon/cocoon3/trunk/parent $SITESOURCES30</pre>
+	    where $SITESOURCES30 is the directory for 3.0 site sources.</li>
+	  </ul>
+
+	  <h1>Building the website</h1>
+	  <ol>
+	    <li>Once you have made some modifications, cd into one of $SITESOURCES22 subdirectories or into $SITESOURCES30 (depending on what portion of the site you would like to build) and launch
+<pre>mvn site-deploy -Ddocs.deploymentBaseUrl=file://$LIVEWEBSITE</pre>
+	    </li>
+	    <li>Point your favorite browser to file://$LIVEWEBSITE</li>
+	  </ol>
+	</div>
+      </div>
+    </body>
+</document>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Live Sites - 2.1.8</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Live Sites - 2.1.8</h1><p>This is a list of live sites proudly powered by Apache Cocoon.</p><h1>Cocoon 2.1.8-dev</h1><ul>
+<li><a href="http://oszone.org/">The Open Source Zone</a> - The Open Source
+Zone's aim is to create a storefront for access to Open Source projects. The
+storefront will have the same level of participation that users give back to
+Amazon or iTunes by providing their personal feedback in form of reviews,
+ratings, comments, developers who liked this project also liked this other one.
+</li>
+</ul><h1>Cocoon 2.1.8</h1><section name="Encyclopedia of Life Sciences - Wiley InterScience" style="background:none;padding:0;"/><em>Date added: 2006-07-24</em><br/>
+<strong>URL:</strong>
+<a href="http://www.mrw.interscience.wiley.com/emrw/047001590X/home">http://www.mrw.interscience.wiley.com/emrw/047001590X/home</a>
+<br/>
+<strong>Contact:</strong> epritcha [AT] wiley.co.uk<p><strong><em>Cocoon version used:</em></strong> 2.1.8 (with AJAX module and
+some patches from 2.1.9)<br/>
+<strong><em>Short summary:</em></strong> Major Reference work in Wiley
+InterScience, first of many to be published using Cocoon-based architecture.
+<br/>
+<em><strong>How can we verify this site is actually built with Cocoon?</strong>
+</em>Check out the X-Cocoon-Version header...</p><p><strong><em>How much time did it take to build the site from design to
+publication?</em></strong><br/>
+Original IA Specification in October 2005, specs for source XML took
+approximately 2 months, actual build 3 months; 3 Cocoon-based engineers, 1
+focusing on search, 1 on XHTML/CSS, and one on the rest of the site. We also had
+some hard-working Content people working on pre-rendering of XML blobs and
+MathML images, and a whole bunch of people in India marking up the XML content
+documents.</p><p><strong><em>How much traffic does the site handle?</em></strong><br/>
+20000 hits on launch day (24 July 2006).</p><p><strong><em>What made you choose Cocoon to build the site?</em></strong>
+<br/>
+6 month review of available technologies, Cocoon stood out on handling of XML,
+Caching, Component re-use and the Sitemap. We also love Views and the concept of
+Flows.</p><p><strong><em>What other information do you want to disclose (e.g. how does it
+work, how did you build it, what parts of Cocoon did you use)?</em></strong></p><p>We've actually got some other parts of the site already implemented using
+Cocoon, namely ForwardLinking (Citation-Tracking link on Journal Abstract pages:
+Crossref web-service based), Author Services (production process tracking for
+authors: uses web-services and FlowScript), plus our (yet to be launched) RSS
+and OPML feeds, and will be moving forward with the rest of InterScience
+along-side a back-end re-architecture.</p><p>We've been able to re-use a number of components from the other Cocoon
+projects already, and the bulk of Cocoon work for this site has been XSL and
+Sitemap wrangling, rather than application-specific Java code.</p><p>We wrote our own Generators and Transformers for DB access and Search
+integration (we use back-end CORBA repositories and custom DOA for DB access,
+and a legacy Verity engine for search), plus some generic transformers for SAX
+manipulation, e.g. pulling single nodes for our AJAX based topic-tree out of a
+huge source document. However, the bulk of the functionality is XSLT based,
+using a file-system store (i.e. exactly the kind of thing Cocoon was designed
+for), preferring Inclusion to Aggregation in most cases.</p><p>Access control is not implemented using Cocoon simply due to an existing
+available web-server plugin, although we use a Cocoon-based 'Action' for access
+control in other parts of the site.</p><p>Cocoon has vastly improved our abilty to deliver feature-rich sites on-time
+and on-cost, plus, its fun!</p><section name="Computer Science Department 2 Erlangen University" style="background:none;padding:0;"/><p><em>Date added: 2006-06-29</em></p><p>Webpages of the programming systems group at the Friedrich-Alexander
+University Erlangen-Nuremberg.</p><p><strong>URL:</strong>
+<a href="http://www2.informatik.uni-erlangen.de/">http://www2.informatik.uni-erlangen.de/</a>
+<br/>
+<strong>Contact</strong>: Thorsten.Meinl [AT] informatik [DOT] uni-erlangen
+[DOT] de</p><h4>Additional information</h4><h5>How much time did it take to build the site from design to publication?</h5><p>2 months.</p><h5>How much traffic does this site handle?</h5><p>  ~300MB/day, ~15,000 hits/day</p><h5>What made you choose Cocoon to build the site?</h5><p>Our university-wide information system (UnivIS,
+<a href="http://univis.uni-erlangen.de/%29">http://univis.uni-erlangen.de/)</a>
+offers an XML export of all data (lecture, publications, person, projects, ...)
+To avoid maintaining the data at multiple places we import these data and use
+Cocoon to produce our webpages more or less automatically.</p><h5>What other information do you want to disclose (e.g. how does it work, how
+did you build it, what parts of Cocoon did you use)?</h5><p>Most importantly, we use eXist as XML database to store the imported data and
+use the XMLDBTransformer to include it into the pipeline.</p><section name="Dutch Ministry of Finance" style="background:none;padding:0;"/><p><em>Date added: 2006-05-18</em></p><p>The main website of the Dutch Ministry of Finance is built entirely in Cocoon
+2.1.8. Launched in April 2006.</p><p><strong>URL:</strong> <a href="http://www.minfin.nl">http://www.minfin.nl</a>
+</p><h4>Additional information</h4><h5>How much time did it take to build the site from design to publication?</h5><p>Total development took around 4 months.</p><section name="Other sites" style="background:none;padding:0;"/><ul>
+<li><a href="http://www.pyxx.org/">Pyxx.org</a> - live site on XML-related
+authoring and publishing for web and on-line learning.</li>
+</ul></div></div>
+       </body></document>

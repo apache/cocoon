@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - Presentations</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Presentations</h1><h1>Cocoon 2.2</h1><ul>
+<li><a href="http://www.indoqa.com/en/people/reinhard.poetz/blog/558">Cocoon 2.2
+- A long Journey</a>,
+<a href="http://www.indoqa.com/en/people/reinhard.poetz/">Reinhard Pötz</a>,
+Cocoon GetTogether 2007<br/>
+October 2007</li>
+<li><a href="http://blog.reverycodes.com/archives/000045.html">Cocoon 2.2
+Classic</a>,
+<a href="http://wiki.apache.org/cocoon/VadimGritsenko">VadimGritsenko</a>,
+Cocoon GetTogether 2007<br/>
+October 2007</li>
+<li><a href="http://people.apache.org/~asavory/apacheconeu2007/">Web 2.0 with
+Apache Cocoon 2.2</a>, Andrew Savory, ApacheConEU 2007<br/>
+May 2007</li>
+<li>
+<a href="http://wiki.apache.org/cocoon-data/attachments/GT2006Notes/attachments/12-CocoonBlocks.pdf">Resusable
+webapps with Cocoon blocks</a>, Daniel Fagerstrom, Cocoon GT 2006<br/>
+October 2006</li>
+</ul><h1>Cocoon 2.1</h1><ul>
+<li><a href="http://people.apache.org/%7Ejreijn/apachecon.html">Basic Web
+Application development with Apache Cocoon 2.1</a>, Jeroen Reijn &amp; Jasha
+Joachimsthal, ApacheConEU 2007<br/>
+May 2007</li>
+</ul>If you do not find your presentation here, use the <em>Edit</em> link below
+and add yourself. If you are not familiar with the CMS, read the
+<em>General</em><em> documentation</em> section of
+<a href="http://cocoon.zones.apache.org/daisy/cdocs-site-main/g4/1273.html">How
+to contribute?</a>.</div></div>
+       </body></document>

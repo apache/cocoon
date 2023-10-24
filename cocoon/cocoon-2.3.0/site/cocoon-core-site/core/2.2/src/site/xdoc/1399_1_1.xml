@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Core - Logging configuration</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Logging configuration</h1><h1>Introduction</h1><p>Cocoon uses Log4j library for logging and uses it quite extensively so log
+files can be very valuable source of information how things are performed. There
+are five standard log levels to choose in order to limit amount of information
+dumped to log files:</p><ul>
+<li>FATAL_ERROR</li>
+<li>ERROR</li>
+<li>WARN</li>
+<li>INFO</li>
+<li>DEBUG</li>
+</ul>In production environment it is reasonable to set a log level to
+<tt>ERROR</tt> or <tt>FATAL_ERROR</tt> so only very important events are logged
+(like crashes). While developing an application you would probably like to see
+much more. It's up to you to choose an approporiate log level; little
+experimantation will give you sense of each setting.<h1>Tweaking the configuration</h1>Configuration in Cocoon is handled by <a href="../../../../subprojects/configuration/spring-configurator/index.html">Spring
+configurator</a>, go there for general information.<section name="How to set up a log level" style="background:none;padding:0;"/><div class="note"><div><strong>Note: </strong>Instructions put below assume that you have created a block
+according to this <a href="../../../../2.2/1159_1_1.html">tutorial</a>. Please refer to it, first.
+</div></div>Steps that you need to perform:<ol type="1">
+<li>
+create a <tt>properties</tt> subfolder in your block:
+
+<pre>myBlock1/src/main/resources/META-INF/cocoon/properties</pre>
+</li>
+<li>
+create a new file in that folder that should have as ending
+<tt>.properties</tt>, e.g. <tt>settings.properties</tt>
+</li>
+<li>inside that file you have to put this line if you want to set log level to
+<tt>DEBUG</tt>:<br/>
+
+<pre>org.apache.cocoon.log4j.loglevel=debug</pre>
+</li>
+</ol>That's all! Restart your webapp and you should see now a detailed log
+information in a file in:<pre>myBlock1/target/work/log/log4j.log</pre></div></div>
+       </body></document>

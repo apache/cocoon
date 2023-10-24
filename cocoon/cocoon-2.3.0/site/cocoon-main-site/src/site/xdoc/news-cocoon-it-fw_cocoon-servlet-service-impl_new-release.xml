@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    -->
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Cocoon Main Site - Apache Cocoon 3</title>
+    <author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author>
+  </properties>
+  <body>
+    <div id="contentBody">
+      <div id="bodyText">
+        <h1 class="docTitle">Apache Cocoon Integration Test Framework 1.0.1 and Servlet Service Implementation 1.3.2</h1>
+        <p>
+          The Apache Cocoon team is pleased to announce the release of subprojects
+          Cocoon Integration Test Framework 1.0.1 and Servlet Service Implementation 1.3.2. 
+        </p>
+        <p>
+          Apache Cocoon is an XML processing framework built around the concepts of
+          separation of concerns and component-based development.
+        </p>
+        <p>
+          Apache Cocoon 3 is a major rewrite of Cocoon 2.2. Like Cocoon 2 it
+          is based around the concept of pipelines and sitemaps and it is
+          very similar to Cocoon 2.2 in many respects but is slimmed down and
+          designed to be easily used with Java code (= no frameworks required!).
+          On top of this, Cocoon 3 has the goal of becoming the best available
+          platform for RESTful web services and web applications.
+        </p>
+        <p>
+          Subprojects are libraries, shared by different Apache Cocoon versions,
+          that can be used independently from the rest of Cocoon (1.x, 2.x 3.x),
+          or any of its parts (such as sitemap, pipelines, blocks, etc.).
+        </p>
+        <p>
+          Take a look at 
+          <a href="http://cocoon.apache.org/subprojects/">subprojects site</a> and 
+          <a href="http://cocoon.apache.org/2.2/maven-plugins/">Maven plugin site</a> for more details.
+        </p>
+      </div>
+    </div>
+  </body>
+</document>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    -->
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Cocoon Main Site - News archive</title>
+    <author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author>
+  </properties>
+  <body>
+    <div id="contentBody">
+      <div id="bodyText">
+        <h1 class="docTitle">News archive</h1>
+          <dl class="news">
+            <dt>Apache Cocoon 3.0.0-alpha-1 Released</dt>
+            <dd>The Apache Cocoon Community is proud to announce the release of Cocoon 3.0.0-alpha-1.
+              Apache Cocoon 3 is a major rewrite of Cocoon 2.2.
+              Like Cocoon 2 it is based around the concept of pipelines and sitemaps and it is very
+              similar to Cocoon 2.2 in many respects but is slimmed down and
+              designed to be *easily usable from within any Java environment*.
+              [<a href="news-c3-alpha-1-released.html">more</a>] 
+            </dd>
+            <dd class="newsMeta">submitted by Reinhard Pötz, 01/24/09 12:53:55 GMT</dd>
+          </dl>
+          <dl class="news">
+            <dt>Apache Cocoon 3</dt>
+            <dd>Corona was accepted by the Cocoon PMC to become Apache Cocoon 3. The Cocoon 3 website has more details. A first ALPHA release will follow soon.
+              [<a href="1487_1_1.html">more</a>] 
+            </dd>
+            <dd class="newsMeta">submitted by Reinhard Pötz, 8/14/08 7:23:55 AM</dd>
+          </dl>
+          <dl class="news">
+            <dt>Apache Cocoon 2.2.0 Released</dt>
+            <dd>The Apache Cocoon Community is proud to announce the release of Cocoon 2.2.0. Apache Cocoon is a Spring-based framework (since version 2.2 of Cocoon) built around the concepts of separation of concerns and component-based development. Cocoon implements these concepts...
+              [<a href="1445_1_1.html">more</a>] 
+            </dd>
+            <dd class="newsMeta">submitted by Reinhard Pötz, 5/15/08 5:19:52 AM</dd>
+          </dl>
+          <dl class="news">
+            <dt>Apache Cocoon 2.1.11 Released</dt>
+            <dd>The Apache Cocoon Community is proud to announce the new release   of Apache Cocoon.   Apache Cocoon is a web development framework built around the concept   of separation of concerns (that is: allowing people to do their job without having to step on each other...
+              [<a href="1426_1_1.html">more</a>] 
+            </dd>
+            <dd class="newsMeta">submitted by Grzegorz Kossakowski, 1/9/08 6:57:35 PM</dd>
+          </dl>
+        <dl class="news">
+          <dt>Apache Cocoon 2.2-RC2 Released</dt>
+          <dd>The Apache Cocoon Community is proud to announce the second release candidate of Cocoon 2.2. Apache Cocoon is a Spring-based framework (since version 2.2) built around the concepts of separation of concerns and component-based development. Cocoon implements these c...
+            [<a href="1421_1_1.html">more</a>] 
+          </dd>
+          <dd class="newsMeta">submitted by Reinhard Pötz, 10/29/07 7:23:01 AM</dd>
+        </dl>
+        <dl class="news">
+          <dt>Cocoon GetTogether 2007 in Rome</dt>
+          <dd> After being three times in Gent, twice in Amsterdam the this year Cocoon GetTogether edition took place iin Rome from Oct 3rd to 5th. Again it was a great event that started with a two days Hackathon followed by a conference day. Most of the presentations are available at our Wiki.  A few folks ...
+            [<a href="1417_1_1.html">more</a>] 
+          </dd>
+          <dd class="newsMeta">submitted by Reinhard Pötz, 10/11/07 8:06:43 AM</dd>
+        </dl>
+        <dl class="news">
+          <dt>Relaunch of cocoon.apache.org</dt>
+          <dd> We are pleased to announce the publishing of the new website of Apache Cocoon. This relaunch comprises a new design for the main site and the Cocoon 2.2 documentation. The new documentation reflects the new structure of Cocoon 2.2 with a  small core which is based on the subprojects "Cocoon Conf... 
+            [<a href="1416_1_1.html">more</a>] 
+          </dd>
+          <dd class="newsMeta">submitted by Reinhard Pötz, 10/2/07 8:01:22 AM</dd>
+        </dl>
+        <dl class="news">
+          <dt>[Cocoon GetTogether 2007 - Rome] The program is out!</dt>
+          <dd> The CocoonGT team is pleased to announce the conference schedule has been finalized and is available at http://www.cocoongt.org/PROGRAM.html  As usual, we had a great number of high-quality submissions. In keeping with the tradition of having a conference day packed full with great content, we m...
+            [<a href="1414_1_1.html">more</a>] 
+          </dd>
+          <dd class="newsMeta">submitted by Reinhard Pötz, 9/28/07 2:20:11 PM</dd>
+        </dl>
+      </div>
+    </div>
+  </body>
+</document>

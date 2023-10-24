@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    -->
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Cocoon Main Site - Apache Cocoon 3</title>
+    <author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author>
+  </properties>
+  <body>
+    <div id="contentBody">
+      <div id="bodyText">
+        <h1 class="docTitle">Apache Cocoon 3.0.0-alpha-1 Released</h1>
+        <pre>
+The Apache Cocoon 3 team is pleased to announce the Apache Cocoon 3.0.0-alpha-3 release!
+
+Apache Cocoon 3 is a major rewrite of Cocoon 2.2. Like Cocoon 2 it is
+based around the concept of pipelines and sitemaps and it is very
+similar to Cocoon 2.2 in many respects but is slimed down and designed
+to be easily used with Java code (= no frameworks required!). On top
+of this, Cocoon 3 has the goal of becoming the best available platform
+for RESTful webservices and web applications.
+
+Changes in this version include:
+
+New features:
+o [cocoon-sax] Added the SAX Pipeline DSL
+o [cocoon-pipeline] Added the Pipeline DSL
+o [cocoon-rest] Add the interface o.a.c.rest.controller.method.ConditionalGet. It requires the implementation of 
+        the method #constructCacheKey() which returns a o.a.c.pipeline.caching.CacheKey.
+        This cache key is used to support conditional GET requests based on the ETag header.
+o [cocoon-servlet] Add the method 'emulatedMethod()' to the request object. It supports the RubyOnRails way of 
+        sending an alternative HTTP method to the server in cases where only GET and POST work reliably.
+        The method returns either the value of the request parameter '_method' or if not available, the actually
+        used HTTP method. In future versions of Cocoon this behavior might become the default behavior of Cocoon.
+
+Fixed Bugs:
+o [cocoon-sax] The org.apache.cocoon.optional.pipeline.components.sax.jaxb.JAXBGenerator is incomplete.  Issue: COCOON3-58.
+o [cocoon-sax] Add the LogAsXMLTransformer, prints out the complete XML document; useful for debugging.  Issue: COCOON3-57.
+o [cocoon-sax][cocoon-sitemap] The LinkRewriter Transformer needs to be integrated in the sitemap.  Issue: COCOON3-56.
+o [cocoon-sax][cocoon-sitemap] The XInclude Transformer needs to be integrated in the sitemap.  Issue: COCOON3-55.
+o [cocoon-sax] Added the LinkRewriterTransformer component.  Issue: COCOON3-54.
+o [cocoon-pipeline] XMLSerializer caches all.  Issue: COCOON3-53.
+o [cocoon-sax] XMLSerializer setup method resets output method to xml.  Issue: COCOON3-52.
+o [cocoon-sax] XIncludeTransformer was sending extra startDocument and endDocument events.  Issue: COCOON3-51.
+o [cocoon-sax] SAXException related to endPrefixMapping in XIncludeTransformer.  Issue: COCOON3-50.
+o [cocoon-stringtemplate] Upgrade to latest version of StringTemplate.  Issue: COCOON3-44.
+o [cocoon-pipeline] Add the timestamp value to the TimestampCacheKey hashcode.
+
+Changes:
+o [cocoon-sax] XSLTTransformer and SchemaProcessorTransformer created resources have been cached.
+o [cocoon-controller] The o.a.c.controller.SpringControllerComponent became a CachingPipelineComponent.
+        For that purpose the controller invocation was separated into a setup and an execution phase. 
+        If the controller provides  a cache key after the setup, this is returned by the SpringControllerComponent 
+        and the pipeline that embeds the controllers becomes cacheable.
+o [all] Upgrade to cocoon-jnet-1.2.0
+o [all] Upgrade all modules that have a dependency on Spring version 3.0.5.RELEASE
+         </pre>
+      </div>
+    </div>
+  </body>
+</document>

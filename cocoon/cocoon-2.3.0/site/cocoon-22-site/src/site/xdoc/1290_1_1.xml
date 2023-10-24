@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon 2.2 Site - Your first XML pipeline (publishing)</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Your first XML pipeline (publishing)</h1><p>This tutorial is based on the <a href="1159_1_1.html">"Your first Cocoon
+application using Maven 2"</a> guide which shows how to bootstrap a Cocoon
+project.</p><p>In this tutorial you will</p><ol type="1">
+<li>get an overview of what Cocoon pipelines and sitemaps are</li>
+<li>create your first pipeline that emits XML</li>
+<li>enhance this first pipeline by adding an XML transformation step based on
+XSLT that produces HTML as output</li>
+<li>write a pipeline that creates a PDF document</li>
+</ol><h1>Overview</h1><img src="images/pipeline.gif" alt="pipeline" /><br/>Cocoon is based around the concept of pipelines: If a request comes in, a <a href="../2.2/core-modules/core/2.2/850_1_1.html"><strong>generator</strong>
+</a>produces <a href="http://www.saxproject.org/">SAX events</a> that represent
+the XML, <a href="../2.2/core-modules/core/2.2/851_1_1.html"><strong>tranformers</strong> </a>can alter the
+stream of SAX events and a
+<a href="../2.2/core-modules/core/2.2/849_1_1.html"><strong>serializ<strong>e</strong></strong><strong>r</strong></a>
+finally creates an output stream which is sent to the client.
+<strong>Sitemaps</strong> are used to define those pipelines and connect them
+with requests. These connections are defined by some kind of rules. In the
+context  of Cocoon  those rules are named matchers. Whenever one of those rules
+(<em>matcher</em>) matches, a pipeline is executed.<h1>Create a pipeline in the sitemap</h1>First, open <tt>src\main\resources\COB-INF\sitemap.xmap</tt> in your favorite
+XML editor. That's your block's base sitemap. There are already some pipelines
+there (<tt>/sitemap/pipelines</tt>) but for the sake of this tutorial, let's
+create your own pipeline.<pre>&lt;map:sitemap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://apache.org/cocoon/sitemap/1.0 
+  http://cocoon.apache.org/schema/sitemap/cocoon-sitemap-1.0.xsd"
+ xmlns:map="http://apache.org/cocoon/sitemap/1.0"&gt;
+
+  &lt;map:pipelines&gt;
+<strong>    &lt;map:pipeline&gt;
+<strong>      &lt;map:match pattern="myFirstPipeline"&gt;
+        &lt;map:generate src="myXmlFile.xml" type="file"/&gt;
+        &lt;map:serialize type="xml"/&gt;
+      &lt;/map:match&gt;</strong>
+    &lt;/map:pipeline&gt;</strong>
+    [...]
+  &lt;/map:pipelines&gt;
+
+&lt;/map:sitemap&gt;
+</pre>The <tt>map:match </tt>element has an attribute <tt>@pattern</tt>. If the
+request <tt>http://localhost:8888/myBlock1/<strong>myFirstPipeline</strong></tt>
+comes in, this matcher <em>matches</em> and the request processing continues
+with the generation of <tt>myXmlFile.xml</tt>. This file has to be in the same
+directory as the sitemap:<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;content&gt;test&lt;/content&gt;
+</pre><div class="note"><div><strong>Note: </strong>You might wonder why the matcher only has to look for the
+pattern myFirstPipeline. The reason is that <tt>myBlock1</tt> is handled by the
+block dispatching mechanism. In particular for your block, this path is set in
+<tt>src/main/resources/META-INF/cocoon/spring/servlet-service.xml</tt> in
+<tt>/beans/bean[id='com.mycompany.myBlock4.block']/context/@mount-path</tt></div></div><p>After saving the sitemap and the XML file, you can point you browser to
+<tt>http://localhost:8888/myBlock</tt><tt><tt>1</tt>/myFirstPipeline</tt> and
+you will see the output of your first own pipeline serialized as XML
+(<tt>&lt;map:serialize type="xml"/&gt;</tt>).</p><h1>Adding an XSLT transformation step</h1><p>The first pipeline wasn't really exciting, just reading some XML file and
+serializing it without changing anything. The second example will add a
+transformation step based on <a href="http://www.w3.org/TR/xslt">XSLT</a>:</p><pre>&lt;map:sitemap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://apache.org/cocoon/sitemap/1.0 
+  http://cocoon.apache.org/schema/sitemap/cocoon-sitemap-1.0.xsd"
+ xmlns:map="http://apache.org/cocoon/sitemap/1.0"&gt;
+
+  &lt;map:pipelines&gt;
+    &lt;map:pipeline&gt;
+      &lt;map:match pattern="myFirstPipeline"&gt;
+        &lt;map:generate src="myXmlFile.xml" type="file"/&gt;
+        &lt;map:serialize type="xml"/&gt;
+      &lt;/map:match&gt; <strong><strong><strong>      
+      &lt;map:match pattern="mySecondPipeline"&gt;
+        &lt;map:generate src="myXmlFile.xml" type="file"/&gt;
+</strong></strong><strong><strong><strong><strong>        &lt;map:transform src="myXsltFile.xslt" type="xslt"/&gt;</strong></strong></strong></strong>
+<strong><strong>        &lt;map:serialize type="html"/&gt;
+      &lt;/map:match&gt;</strong></strong></strong>
+    &lt;/map:pipeline&gt;
+    [...]
+  &lt;/map:pipelines&gt;
+
+&lt;/map:sitemap&gt;</pre><p>The XSLT file is very simple and creates an XML following the structure of
+XHTML (though without using any namespaces in order to keep things simple):</p><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;My second XML Pipeline&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        My second XML Pipeline:
+        &lt;xsl:value-of select="/content"/&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</pre><p>After saving the sitemap and the XSLT file, you can point you browser to
+<tt>http://localhost:8888/myBlock</tt><tt><tt>1</tt>/mySecondPipeline</tt> and
+you will see the output, this time its HTML because of the use of the HTML
+serializer.</p><div class="note"><div><strong>Note: </strong>In this tutorial you have already implemented two pipelines but
+there is only one pipeline element used in the sitemap. Given this is confusing
+when you use Cocoon sitemaps the first time. However, there is a reason for
+this: The <tt>&lt;pipeline&gt; </tt>element indicates which <em>pipeline
+implementation</em> is used. If there is no <tt>@type</tt> attribute, the
+generators, tranformers and serializers are invoked from a caching pipeline
+implementation. <br/>
+When Cocoon developers talk about pipelines, they mean a series of a matcher
+that includes at least a generator and a serializer. Transformers and other
+sitemap components are optional.</div></div><h1>Creating a PDF</h1><p>The first example created XML and the second one HTML. One of the strength of
+Cocoon is that it makes it very simple to support many different output formats.
+The result of this third example will be a PDF, again based on
+<em>myXmlFile.xml</em>:</p><pre>&lt;map:sitemap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://apache.org/cocoon/sitemap/1.0 
+  http://cocoon.apache.org/schema/sitemap/cocoon-sitemap-1.0.xsd"
+ xmlns:map="http://apache.org/cocoon/sitemap/1.0"&gt;
+
+  &lt;map:pipelines&gt;
+    &lt;map:pipeline&gt;       
+      &lt;map:match pattern="myFirstPipeline"&gt;
+        &lt;map:generate src="myXmlFile.xml" type="file"/&gt;
+        &lt;map:serialize type="xml"/&gt;
+      &lt;/map:match&gt;       
+      &lt;map:match pattern="mySecondPipeline"&gt;
+        &lt;map:generate src="myXmlFile.xml" type="file"/&gt;
+        &lt;map:transform src="myXsltFile.xslt" type="xslt"/&gt;
+        &lt;map:serialize type="html"/&gt;
+      &lt;/map:match&gt; <strong><strong><strong>      
+      &lt;map:match pattern="myThirdPipeline"&gt;
+        &lt;map:generate src="myXmlFile.xml" type="file"/&gt;
+</strong></strong><strong><strong><strong><strong>        &lt;map:transform src="myXml2PdfFile.xslt" type="xslt"/&gt;</strong></strong></strong></strong>
+<strong><strong>        &lt;map:serialize type="fo2pdf"/&gt;
+      &lt;/map:match&gt;</strong></strong></strong>
+    &lt;/map:pipeline&gt;
+    [...]
+  &lt;/map:pipelines&gt;
+
+&lt;/map:sitemap&gt;</pre><p>This pipeline needs a different XSLT file which transforms the XML of
+myXmlFile.xml to some XML that can be used by
+<a href="http://xmlgraphics.apache.org/fop/">FOP</a> to create PDF:</p><pre>&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:fo="http://www.w3.org/1999/XSL/Format"&gt;
+
+  &lt;xsl:template match="/"&gt;
+    &lt;fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"&gt;
+      &lt;fo:layout-master-set&gt;
+        &lt;fo:simple-page-master master-name="page"
+          page-height="29.7cm"
+          page-width="21cm"
+          margin-top="1cm"
+          margin-bottom="2cm"
+          margin-left="2.5cm"
+          margin-right="2.5cm"&gt;
+          &lt;fo:region-before extent="3cm"/&gt;
+          &lt;fo:region-body margin-top="3cm"/&gt;
+          &lt;fo:region-after extent="1.5cm"/&gt;
+        &lt;/fo:simple-page-master&gt;
+
+        &lt;fo:page-sequence-master master-name="all"&gt;
+          &lt;fo:repeatable-page-master-alternatives&gt;
+            &lt;fo:conditional-page-master-reference 
+             master-reference="page" page-position="first"/&gt;
+          &lt;/fo:repeatable-page-master-alternatives&gt;
+        &lt;/fo:page-sequence-master&gt;
+      &lt;/fo:layout-master-set&gt;
+
+      &lt;fo:page-sequence master-reference="all"&gt;
+        &lt;fo:static-content flow-name="xsl-region-after"&gt;
+          &lt;fo:block text-align="center"
+            font-size="10pt"
+            font-family="serif"
+            line-height="14pt"&gt;page &lt;fo:page-number/&gt;&lt;/fo:block&gt;
+        &lt;/fo:static-content&gt;
+
+        &lt;fo:flow flow-name="xsl-region-body"&gt;
+          &lt;fo:block font-size="36pt" space-before.optimum="24pt" 
+           text-align="center"&gt;
+             My second XML Pipeline
+          &lt;/fo:block&gt;
+          &lt;fo:block font-size="12pt" space-before.optimum="12pt" 
+           text-align="center"&gt;
+           &lt;xsl:value-of select="/content"/&gt;
+          &lt;/fo:block&gt;
+        &lt;/fo:flow&gt;
+      &lt;/fo:page-sequence&gt;
+    &lt;/fo:root&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</pre><p>You also have to use a different serializer for this example, a serializer
+that can use the XML created by the stylesheet and produce PDF based on it.
+Cocoon ships this serializer as part of the FOP block. Since the block that you
+created probably doesn't have the FOP block added as dependency, this has to be
+done before you can test your pipeline. Adding a block requires editing the
+pom.xml of your block:</p><pre>  &lt;dependencies&gt;
+    [...]
+    &lt;dependency&gt;
+      &lt;groupId&gt;<strong>org.apache.cocoon</strong>&lt;/groupId&gt;
+      &lt;artifactId&gt;<strong>cocoon-fop-impl</strong>&lt;/artifactId&gt;
+      &lt;version&gt;<strong>1.0.0</strong>&lt;/version&gt;
+    &lt;/dependency&gt;
+    [...]
+  &lt;/dependencies&gt;</pre><p>Rebuild your block</p><pre>mvn compile</pre><p>and start the servlet container again:</p><pre>mvn jetty:run</pre><p>Now you can point your browser at
+<tt>http://localhost:8888/myBlock</tt><tt><tt>1</tt>/myThirdPipeline</tt> and
+you will get a PDF as result.</p></div></div>
+       </body></document>

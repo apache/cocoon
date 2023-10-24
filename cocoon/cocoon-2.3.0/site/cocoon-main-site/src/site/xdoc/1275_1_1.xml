@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Cocoon Main Site - Communication tools that we use</title>
+    <author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author>
+  </properties>
+  <body>
+    <div id="contentBody">
+      <div id="bodyText">
+        <h1 class="docTitle">Communication tools that we use</h1>
+        <h1>Mailing lists</h1>
+        <p>See below for descriptions of the Cocon mailing lists. A list of all
+          available lists as well as links is available a the
+          <a href="mail-lists.html">overview</a> page.
+        </p>
+        <p>When posting, please observe common-sense netiquette when posting.  In
+          particular:
+        </p>
+        <ul>
+          <li>When replying, please
+            <a href="http://en.wikipedia.org/wiki/Top-posting#Inline_replying">edit the original message</a>
+            and include only enough to establish context, not the entire message.
+          </li>
+          <li>Don't crosspost to the user and developer lists.  The developers also read
+            the users list.
+          </li>
+          <li>Only reply to a message if you are really posting a reply on that thread;
+            don't use your mailer's "Reply" function as a shortcut to get the list address
+            into the "To:" field.  Instead, use your mailer's "new message" function to
+            start a fresh thread.  When people abuse "Reply" and just change the "Subject:"
+            line to a new topic, it makes it harder for threaded mailreaders to display the
+            subjects accurately.  This can make it less likely that your message will be
+            seen and replied to.
+          </li>
+        </ul>Regarding content:
+        <ul>
+          <li>Please ask your questions on the list.  If someone helps you out, don't
+            email them off-list to ask your next question.  You will get the best answers if
+            you stay on-list, and that way the question and answers can also benefit the
+            current and future community.
+          </li>
+          <li>When asking for help, don't forget to include:</li>
+          <ul>
+            <li>The version of Cocoon you are using (the most important thing to not forget!
+              :-)
+            </li>
+            <li>The servlet container (e.g. Jetty, Tomcat etc.) you are using.</li>
+            <li>Platform details: JDK version and host OS</li>
+            <li>Any relevant sitemap configuration, XSLT, Java or Javascript source code you
+              are working with
+            </li>
+            <li>If you're getting an exception thrown, include the stack trace</li>
+          </ul>
+
+          <li>Don't just say that something "doesn't work"; explain (a) exactly what you
+            did; (b) what you expected to happen; and (c) what happened instead of what you
+            expected.  That type of explanation gives people a lot more information to work
+            with.
+          </li>
+          <li>If you can show that you at least made some effort to figure something out,
+            you will in turn get a more helpful response.  In particular, if you have in
+            mind some idea that might help and it is an easy thing to try, don't post to the
+            list to ask "Can I....".  Just try it for yourself and see! :-)
+          </li>
+          <li>A very common response to user questions is "What are you trying to
+            accomplish"?  Try to supply that information when you first ask the question,
+            and you will get a definitive answer that much sooner.  Cocoon is a rich
+            framework that gives you a lot of tools, so that it's not always obvious to new
+            users which tool set is the best to use for a particular problem.  New users
+            sometimes get wrapped around the axle on some detail of the solution they are
+            trying to make for a given scenario, and then end up posting to the list to ask
+            how to do some exotic or bizarre thing.  If you can take a step back and
+            describe the scenario itself, the more experienced users may be able to suggest
+            one or more simpler solutions.
+          </li>
+          <li>If you ask for help with something, and then you later figure it out for
+            yourself, please follow up on the list and describe what you did to fix the
+            problem.  We like to prepend "SOLVED: " to the Subject: line when doing this.
+          </li>
+          <li>If you feel you must say "Please reply to me off-list, since I'm not
+            subscribed", you can certainly do that; you just may or may not get a helpful
+            reply!  You'll almost certainly get better results if you let people repond
+            on-list.  See the Gmane links below to learn how easy it is to read the Cocoon
+            lists without subscribing your own email address.
+          </li>
+        </ul>
+        <section name="User list" style="background:none;padding:0;"/>This is the general community help list and for 
+        Cocoon. Use it to learn Cocoon stuff, and share your own knowledge with somebody else!
+        Please remember that this list is not really the place to ask questions
+        about XSLT, HTML, CSS, Java programming, etc.
+        <br/>
+        Of course, new Cocoon releases are announced on this list.
+        <h3>Archive</h3>
+        All available archives are reported on the 
+        <a href="mail-lists.html">overview</a> page.
+        <br/>
+        Note that the mail-archive site changed in July 2003.
+        <ul>
+          <li>
+            <a href="http://www.mail-archive.com/users@cocoon.apache.org/">http://www.mail-archive.com/users@cocoon.apache.org/
+            </a>(since July 2003)
+          </li>
+          <li>
+            <a href="http://www.mail-archive.com/cocoon-users%40xml.apache.org/">http://www.mail-archive.com/cocoon-users%40xml.apache.orgtwo</a>
+            (before July 2003)
+          </li>
+        </ul>
+        <section name="Developer list" style="background:none;padding:0;"/>This list is for anyone interested in 
+        <a href="1273_1_1.html">working on Cocoon itself</a> (application developers making applications
+        <em>with</em>Cocoon are Cocoon 
+        <em>users</em>). Anyone can read or post to this list; you don't have to
+        be a Cocoon committer.  Read this list if you want to learn more about the inner
+        workings of Cocoon, or for detailed discussions about bugs or future enhancement
+        requests. Please don't post routine user questions to the dev list, though.
+        <br/>
+        The topic of this list is 
+        <em>Cocoon development</em>. If you post a question in the user list, and the 
+        discussion gets so geeky that it has to move to the dev list... don't forget to come back to the user
+        list with a "SOLVED:" post, once you've gotten everything ironed out! :-)
+        <br/>
+        The dev list gets automatic update notifications from the 
+        <a href="https://issues.apache.org/jira/browse/COCOON">JIRA</a> issue tracking system and from the
+        <a href="https://builds.apache.org/view/A-F/view/Cocoon/">Jenkins</a> build system.
+        <h3>Archive</h3>
+        All available archives are reported on the 
+        <a href="mail-lists.html">overview</a> page.
+        <br/>
+        Note that the mail-archive site changed in July 2003.
+        <ul>
+          <li>
+            <a href="http://www.mail-archive.com/dev@cocoon.apache.org/">http://www.mail-archive.com/dev@cocoon.apache.org/</a>
+            (since July 2003)
+          </li>
+          <li>
+            <a href="http://www.mail-archive.com/cocoon-dev%40xml.apache.org/">http://www.mail-archive.com/cocoon-dev%40xml.apache.orgtwo</a>
+            (before July 2003)
+          </li>
+        </ul>
+        <section name="Documentation list" style="background:none;padding:0;"/>This 
+        <strong>read-only</strong> list is of interest to people who are
+        <a href="1273_1_1.html">working on the Cocoon documentation</a>.
+        It consists solely of update notifications from the 
+        <a href="http://wiki.apache.org/cocoon">Wiki</a>.
+        <h3>Archive</h3>
+        All available archives are reported on the 
+        <a href="mail-lists.html">overview</a> page.
+        <section name="SVN repository update list" style="background:none;padding:0;"/>
+        This list is probably only of interest to hard-core Cocoon developers. It is a 
+        <strong>read-only</strong> list that consists solely of automated update
+        notifications from the Subversion source code management system.  The name
+        "cocoon-cvs" is a holdover from when the Cocoon project used CVS.
+        <h3>Archive</h3>
+        All available archives are reported on the 
+        <a href="mail-lists.html">overview</a> page.
+        <h1>Wiki</h1>There's a 
+        <a href="http://wiki.apache.org/cocoon/">Cocoon Wiki</a>.  YMMV
+        <h1>IRC</h1>The Cocoon community chat room is the #cocoon channel at
+        <a href="http://freenode.net">freenode.net</a>. Get over there and shake things up!
+        <h1>JIRA</h1>Bug/issue tracking on the Cocoon project
+        <a href="https://issues.apache.org/jira/browse/COCOON">uses Atlassian JIRA</a>.
+        This is a communication medium in its own right. Updates to JIRA
+        issues trigger notifications to the dev mailing list, so you can monitor each
+        issue's mini-discussion from the dev mailing list.
+      </div>
+    </div>
+  </body>
+</document>

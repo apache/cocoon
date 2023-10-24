@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Servlet Service Implementation - Overview</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Architecture</h1><p>This is the implementation of the Servlet-Service framework. It doesn't have
+any dependencies on Cocoon core and can be used to introduce standardized
+communication between any servlets.</p><div class="note"><div><strong>Note: </strong>You can easily check dependencies of Servlet Service Framework
+yourself
+<a href="dependencies.html">here</a>.
+</div></div><h1>Introduction to architecture</h1><p>Servlet Services Framework (SSF) is built around a few concepts:</p><ul>
+<li>request dispatching</li>
+<li>standarized communication between servlets</li>
+<li>object-oriented techniques</li>
+<ul>
+<li>abstraction/composition</li>
+<li>inheritance</li>
+<li>polymporhism</li>
+<li>encapsulation</li>
+</ul>
+
+</ul><section name="Servlet Management" style="background:none;padding:0;"/>The current implementation of the Servlet-Service-Framework uses Spring to
+manage servlets. All those servlets are ordinary Spring beans that implement the
+<tt>javax.servlet.Servlet</tt> interface. It's important to note that these
+servlets are not available from within a the servlet container (Jetty, Tomcat,
+etc.). The connection to the outside world is the <tt>DispatcherServlet</tt>
+that delegates requests to one of the mounted servlets (for details see the next
+section). This is the only servlet that is exposed in the web.xml and can
+directly be accessed using an HTTP call to the servlet container.<img width="473" height="387" name="cocoon22_ssf" alt="cocoon22_ssf" src="images/1430_1_1.img"/><section name="Request dispatching" style="background:none;padding:0;"/>The most basic functionality is request dispatching that is handled by the
+<a href="apidocs/org/apache/cocoon/servletservice/DispatcherServlet.html"><tt>DispatcherServlet</tt></a>.
+Each servlet is registered by setting the property <tt>mount-path</tt>. This
+property defines the request path which can be used to access a particular
+servlet. When a request is being handled by the DispatcherServlet, it scans all
+the registered servlets and checks if  the <tt>mount-path</tt> property of any
+servlet matches the request path. If such a servlet is found, the
+<tt>DispatcherServlet </tt>dispatches the request. For that request, the
+matching mount-path is truncated from the request URI.The following diagram illustrates the process.<img width="600" height="604" name="servlet service basic dispatching" alt="servlet service basic dispatching" src="images/1427_1_1.img"/>The fact that the <tt>mount-path</tt> is being omitted frees servlet
+implementator from bothering about it at development stage. It also enables the
+configuration of the <tt>mount-path</tt> at deployment time.<section name="Connecting servlets" style="background:none;padding:0;"/>The Servlet Service Framework establishes a standarized way for the
+communication between components (in this case servlets) that follow standards
+like Servlet API and HTTP. In order to communicate with other servlets you just
+need to make a <strong>connection</strong> to it and then create a request. For
+the called servlet there is no difference if the request comes from another
+servlet or is an external request.<p><img width="600" height="462" name="servlet service connecting" alt="servlet service connecting" src="images/1428_1_1.img"/></p><p>You should notice two things while looking at the diagram:</p><ul>
+<li>The <tt>DispatcherServlet </tt>is <strong>not</strong> involved in
+communication between connected servlets (it is performed using
+<a href="apidocs/org/apache/cocoon/servletservice/ServletConnection.html">ServletConnection</a>
+object). It also means that <tt>mount-path</tt> property has no application
+here.</li>
+<li>The Request path is passed unchanged.</li>
+</ul><section name="Inheritance and polymorphism" style="background:none;padding:0;"/>A Servlet can act as a component thus it can extend another one and override
+its resource (request) handling. The idea is that one servlet can override the
+resource handling of another one. To make it clear, inheritance in the context
+of the Servlet-Service Framework does not mean overriding methods of the Java
+servlet class. (Of course that's still possible but a concept that is already
+covered by Java object-orientation.)<br/>
+Basically, it means that all widely known concepts of Object-Oriented
+Programming are applied to resources. In order to help you understand how
+various notions map from OOP to Resource Oriented Architecture (ROA), take a
+look at following table:<table class="bodyTable">
+<tbody>
+<tr class="a">
+<th>
+Object Oriented Programming
+</th>
+<th>
+<p>Resource Oriented Architecture</p>
+</th>
+<th>
+<p>Remarks</p>
+</th>
+</tr>
+<tr class="b">
+<td>
+<p>calling <tt>getFooBar()</tt> method</p>
+</td>
+<td>
+<p>requesting <tt>/fooBar</tt> resource</p>
+</td>
+<td>
+<p>for making request HTTP GET method is used</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p>calling <tt>getFooBar(value1, value2)</tt> method</p>
+</td>
+<td>
+<p>requesting <tt>/fooBar?param1=value1&amp;param2=value2</tt> resource</p>
+</td>
+<td>
+<p>if one of parameters contains binary data, then POST (or PUT but we won't get
+into details too much here) request is being made</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><tt>classB</tt> extends <tt>classA</tt></p>
+</td>
+<td>
+<p><tt>servletB </tt>connects to <tt>servletA</tt> using the connection named
+<tt>super</tt></p>
+</td>
+<td>
+<p>Connection named "super" is reserved for inheritance implementation</p>
+</td>
+</tr>
+<tr class="a">
+<td>
+<p><tt>classA </tt>implements <tt>interfaceB</tt></p>
+</td>
+<td>
+<p>N/A</p>
+</td>
+<td>
+<p>Servlet Service Framework does no have any equivalent for strong typing known
+from programming languages so it cannot check if equivalent of interface is
+being implemented.<br/>
+The interface concept known from OOP maps best to just an abstract contract.
+It's a servletA's contract to handle various resources but check if it really
+does can be made at runtime only. It's similar situation to scripting languages
+like Javascript.</p>
+</td>
+</tr>
+<tr class="b">
+<td>
+<p><tt>classB </tt>overrides method <tt>getFooBar()</tt> implemented in
+<tt>classA</tt></p>
+</td>
+<td>
+<p><tt>servletB </tt>implements handling of <tt>/fooBar</tt> resource.</p>
+</td>
+<td/>
+</tr>
+</tbody>
+</table><h3>Example</h3><p>Now let's have a look at a concrete example how (external) requests are
+handled by the Servlet-Service Framework: This diagram describes in the first
+part how the servlets are connected to each other. Servlet A is the super
+servlet of Servlet B.  This means that if Servlet B can't handle a request, it
+is forwarded to Servlet A.</p><p>The second part of this diagram explains this process in more detail. Servlet
+B doesn't provide the requested resource and returns a 404 (NOT_FOUND) HTTP
+status code.</p><p>The third sequence shows that because Servlet B doesn't contain the resource,
+the super servlet (Servlet A) is being asked for it. Servlet A can handle the
+request and returns a response with the resource and a 200 HTTP status code.</p><p><img width="700" height="1347" name="servlet service inheritance" alt="servlet service inheritance" src="images/1429_1_1.img"/></p><p>Now few remarks are needed:</p><ul>
+<li>If the request is being made by a servlet using connection it would look
+similar to this one. It turns out that connection object is not a trivial object
+linking two servlets because it's the connection's task to make all this magic
+of dispatching request to the super servlet if original one does not handle
+requested resource.</li>
+<li>Servlet B returns 404 status code as response and this simply means that
+Servlet B does not override handling of /foo/bar resource from servlet A. If
+servlet B had returned 200 status code, then DispatcherServlet would not make a
+second request to servlet A and would finish with response got from Servlet B.
+</li>
+<li>Mulitple levels of inheritance are possible (servlet A could connect to
+another servlet with connection named "super").</li>
+</ul></div></div>
+       </body></document>

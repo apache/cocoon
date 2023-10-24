@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  - Cocoon error handling samples sitemap
+  -
+  - $Id$
+  -->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:components>
+    <map:generators default="file">
+      <map:generator name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionGenerator"/>
+    </map:generators>
+
+    <map:selectors default="browser">
+      <map:selector name="exception" src="org.apache.cocoon.selection.XPathExceptionSelector">
+        <exception name="application" class="org.apache.cocoon.samples.errorhandling.ApplicationException">
+          <xpath name="application1" test="errorCode=1"/>
+          <xpath name="application2" test="errorCode=2"/>
+        </exception>
+        <exception name="validation" class="org.apache.cocoon.samples.errorhandling.ValidationException"/>
+        <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
+        <exception class="java.lang.Throwable" unroll="true"/>
+      </map:selector>
+    </map:selectors>
+
+    <map:actions>
+      <map:action name="exception" src="org.apache.cocoon.samples.errorhandling.ExceptionAction"/>
+    </map:actions>
+  </map:components>
+
+  <!-- =========================== Views =================================== -->
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view name="pretty-content" from-label="content">
+      <map:serialize type="servletService">
+        <map:parameter name="service" value="servlet:style:/service/system/xml2html"/>
+      </map:serialize>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+  <!-- =========================== Pipelines =============================== -->
+
+  <map:pipelines>
+    <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="welcome"/>
+      </map:match>
+
+      <map:match pattern="welcome">
+        <map:generate src="samples.xml"/>
+        <map:serialize type="servletService">
+          <map:parameter name="service" value="servlet:style:/service/common/simple-samples2html"/>
+        </map:serialize>
+      </map:match>
+
+      <map:match pattern="not-exists">
+        <map:generate src="{0}.xml"/>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="*">
+        <map:generate type="exception" src="{1}"/>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="internal/**">
+        <map:mount uri-prefix="internal" src="internal/"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline>
+      <map:mount uri-prefix="exception" src="exception/"/>
+
+      <map:handle-errors>
+        <map:select type="exception">
+          <map:when test="not-found">
+            <map:generate src="notFound.html"/>
+            <map:serialize/>
+          </map:when>
+        </map:select>
+      </map:handle-errors>
+    </map:pipeline>
+
+    <map:handle-errors>
+      <map:generate type="notifying"/>
+      <map:transform src="servlet:style:/stylesheets/system/error2html.xslt"/>
+    </map:handle-errors>
+  </map:pipelines>
+
+</map:sitemap>

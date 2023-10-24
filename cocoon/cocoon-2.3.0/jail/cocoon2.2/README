@@ -1,0 +1,7 @@
+For building samples for the jail, you need to
+
+1. checkout https://svn.apache.org/repos/asf/cocoon/trunk
+
+2. cd trunk && mvn -P allblocks install -Dmaven.test.skip=true
+
+The webapp WAR will be available under core/cocoon-webapp/target

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Spring Configurator - Dynamic Registry Support</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">Dynamic Registry Support</h1><section name="Dynamic Registries" style="background:none;padding:0;"/><p>If you want to develop a managing bean which acts like a registry, you face
+the problem of how to configure this bean. Usually this bean makes use of some
+kind of a map which stores the registered beans under some key. If you want to
+configure this in Spring you have to know which registered beans are available
+at this point of time. Apart from the amount of configuration you have to type,
+this approach is not dynamic. Adding new registered beans requires to change the
+configuration of the managing bean. Especially with the spring-configurator,
+beans can be added dynamically just by dropping a jar into the class-path. The
+approach of this configuration style will simply not work in these cases.</p><section name="The Bean Map" style="background:none;padding:0;"/><p>The spring-configurator provides a dynamic bean map just for this purpose. It
+can either be used as a standalone bean or as a property of another bean. If you
+want to use it as a standalone bean, you have to specify either the name or the
+id attribute (like you do with the usual Spring bean definition as well):</p><pre>&lt;configurator:bean-map id/name="optional" type="the.class.of.the.registered.beans" check-parent="true" strip-prefix="true"&gt;
+
+&lt;/configurator:bean-map&gt;
+</pre><p>This will create a map which contains all registered beans which
+support/implement the given type.</p><p>The key to store the registered beans in the map is the bean name, or if
+"check-parent" is set to true and the bean name starts with the type followed by
+either a "." or a "/" then the postfix is used as the key.</p><p>TBC</p></div></div>
+       </body></document>

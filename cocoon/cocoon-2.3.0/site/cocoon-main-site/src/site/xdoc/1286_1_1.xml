@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    --><document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd"><properties><title>Cocoon Main Site - About the online documentation</title><author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author></properties><body>
+         <div id="contentBody"><div id="bodyText"><h1 class="docTitle">About the online documentation</h1><h1>Overview</h1><p>Each version of Cocoon comes with its own documentation</p><ul>
+<li>Cocoon 2.2</li>
+<li>Cocoon 2.1</li>
+<li>Cocoon 2.0</li>
+<li>Cocoon 1.x</li>
+</ul>You can reach it at http://cocoon.apache.org/[version].<h1>Main documentation</h1>You can find the main Cocoon documentation at http://cocoon.apache.org  It
+consists of version-independant information (e.g. the project team, project
+guidelines) and references to external resources (articles, books and
+presentations).<h1>Cocoon 2.2 specific documentation</h1>With the introduction of Cocoon 2.2 it became possible to break out a lot of
+Cocoon's functionality into independent blocks with their own release cycle. 
+There are comprehensive lists of these blocks as follows:<ul>
+<li><a href="2.2/core-modules/1210_1_1.html">Core modules</a> (Modules essential to the Cocoon
+framework)</li>
+<li><a href="2.2/blocks/1204_1_1.html">Blocks</a> (All non-essential Cocoon blocks)</li>
+<li><a href="subprojects/1306_1_1.html">Sub projects</a> (Code that has no dependency on
+Cocoon)</li>
+<li><a href="2.2/maven-plugins/1208_1_1.html">Maven 2 plugins</a> (Maven archetypes specific to
+Cocoon)</li>
+</ul></div></div>
+       </body></document>

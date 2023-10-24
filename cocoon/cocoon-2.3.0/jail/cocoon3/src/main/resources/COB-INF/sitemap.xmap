@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!-- $Id$ -->
+<map:sitemap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://apache.org/cocoon/sitemap"
+             xmlns:servlet="http://apache.org/cocoon/servlet" xmlns:controller="http://apache.org/cocoon/controller">
+
+  <map:pipelines>
+    <!-- ~~~~~~~~~~~~~~~~ map:read ~~~~~~~~~~~~~~~ -->
+    <map:pipeline jmx-group-name="read">
+      <map:match pattern="">
+        <map:read src="overview.html" />
+      </map:match>
+      <map:match pattern="read/javascript-resource-explicit">
+        <map:read src="read/javascript-resource" mime-type="text/javascript" />
+      </map:match>
+      <map:match pattern="read/javascript-resource-implicit.js">
+        <map:read src="read/javascript-resource.js" />
+      </map:match>
+      <map:match pattern="read/javascript-resource-implicit.abc">
+        <map:read src="read/javascript-resource.js" />
+      </map:match>
+      <map:match pattern="images/{filename}.{extension}">
+        <map:read src="read/{map:filename}.{map:extension}" />
+      </map:match>
+      <map:match pattern="favicon.ico">
+        <map:read src="read/favicon.ico" />
+      </map:match>
+      <map:match pattern="read/style.css">
+        <map:read src="read/style.css"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ sax pipelines ~~~~~~~~~~~~~~~ -->
+    <map:pipeline jmx-group-name="sax" type="noncaching">
+      <map:match equals="sax-pipeline/simple">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="1" />
+        </map:transform>
+        <map:transform type="logasxml"/>
+        <map:transform type="log"/>
+        <map:serialize />
+      </map:match>
+      <map:match equals="sax-pipeline/simple-1">
+        <map:generate src="sax-pipeline/simple-1.xml" />
+        <map:serialize />
+      </map:match>
+      <map:match equals="sax-pipeline/simple-2">
+        <map:generate src="sax-pipeline/simple-2.xml" />
+        <map:serialize />
+      </map:match>
+      <map:match pattern="sax-pipeline/simple-xhtml">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="2" />
+        </map:transform>
+        <map:serialize type="xhtml" />
+      </map:match>
+      <map:match pattern="sax-pipeline/simple-xml">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="3-{jexl:cocoon.request.ssf}" />
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="sax-pipeline/simple-txt">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="3-{jexl:cocoon.request.ssf}" />
+        </map:transform>
+        <map:serialize type="txt" />
+      </map:match>
+      <map:match equals="sax-pipeline/simple-xsd">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform type="schema" src="sax-pipeline/simple.xsd" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="sax-pipeline/unauthorized">
+        <map:generate src="sax-pipeline/unauthorized.xml" />
+        <map:serialize type="xhtml" status-code="401" />
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ stax pipelines ~~~~~~~~~~~~~~~ -->
+    <map:pipeline jmx-group-name="stax">
+      <map:match equals="stax-pipeline/simple">
+        <map:generate type="stax" src="sax-pipeline/simple.xml" />
+        <map:serialize  type="stax"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ caching of pipelines ~~~~~~~~~~~~~~~ -->
+    <map:pipeline jmx-group-name="timestamp-caching">
+      <map:match pattern="caching-pipeline/on">
+        <map:generate type="timestamp-caching" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline type="async-caching" jmx-group-name="async-caching">
+      <map:match pattern="async-caching-pipeline/on">
+        <map:generate type="timestamp-caching" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline type="noncaching" jmx-group-name="nocaching">
+      <map:match pattern="caching-pipeline/off">
+        <map:generate type="timestamp-caching" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline expires="2" expires-cache-key="some-key">
+      <map:match pattern="expires/caching-pipeline/on">
+        <map:generate type="timestamp-noncaching" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline expires="2">
+      <map:match pattern="expires/caching-pipeline/invalid">
+        <map:generate type="timestamp-noncaching" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline type="async-caching" expires="2" expires-cache-key="some-other-key">
+      <map:match pattern="expires/async-caching-pipeline/on">
+        <map:generate type="timestamp-noncaching" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ servlet service framework ~~~~~~~~~~~~~~~ -->
+    <map:pipeline internal-only="true">
+      <map:match pattern="internal-only/simple-xml">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="3-{jexl:cocoon.request.ssf}" />
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline jmx-group-name="servlet-service">
+      <map:match pattern="ssf/local">
+        <map:generate src="servlet:/sax-pipeline/simple-xml" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="ssf/local-internal-only">
+        <map:generate src="servlet:/internal-only/simple-xml" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="ssf/read-resource">
+        <map:read src="servlet:/read/javascript-resource-explicit" />
+      </map:match>
+      <map:match pattern="ssf/service-consumer">
+        <map:generate type="service-consumer" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="ssf/transformer-pipeline">
+        <map:generate type="service-consumer" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="transformer-pipeline" />
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="ssf/serializer-pipeline">
+        <map:generate type="service-consumer" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="serializer-pipeline" />
+        </map:transform>
+        <map:serialize type="xml" status-code="210"/>
+      </map:match>
+      <map:match pattern="ssf/calling-a-transformer-servlet-service">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform type="servlet-service">
+          <map:parameter name="service" value="servlet:/ssf/transformer-pipeline" />
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="ssf/calling-a-serializer-servlet-service">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:serialize type="servlet-service">
+          <map:parameter name="service" value="servlet:/ssf/serializer-pipeline" />
+        </map:serialize>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ expression language ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="expression-language/jexl">
+        <map:generate src="sax-pipeline/{jexl:cocoon.request.fileName}.xml" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="expression-language/map-numbers/*">
+        <map:generate src="sax-pipeline/{map:1}.xml" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="expression-language/map-named-parameters/{id}">
+        <map:generate src="sax-pipeline/{map:id}.xml" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match pattern="**">
+        <map:match pattern="expression-language/*/*">
+          <map:match pattern="expression-language/nested/*">
+            <map:generate src="sax-pipeline/{map:../2}.xml" />
+            <map:serialize type="xml" />
+          </map:match>
+          <map:match pattern="expression-language/nested2/*">
+            <map:generate src="sax-pipeline/{map:1}.xml" />
+            <map:serialize type="xml" />
+          </map:match>
+        </map:match>
+      </map:match>
+      <map:match pattern="expression-language/**">
+        <map:match pattern="expression-language/nested3/*">
+          <map:generate src="sax-pipeline/{map:1}.xml" />
+          <map:serialize type="xml" />
+        </map:match>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ advanced matching (when/otherwise) ~~~~~~~~~~~~~~~ -->
+    <map:pipeline type="noncaching">
+      <map:match pattern="advanced-matching">
+        <map:select value="{jexl:cocoon.request.myparam}">
+          <map:when equals="11">
+            <map:generate src="sax-pipeline/simple.xml" />
+            <map:transform src="sax-pipeline/simple.xslt">
+              <map:parameter name="myParam" value="{map:0}" />
+            </map:transform>
+            <map:serialize />
+          </map:when>
+          <map:when ends-with="5">
+            <map:generate src="sax-pipeline/simple.xml" />
+            <map:transform src="sax-pipeline/simple.xslt">
+              <map:parameter name="myParam" value="{map:1}" />
+            </map:transform>
+            <map:serialize />
+          </map:when>
+          <map:when regexp="2(.)">
+            <map:generate src="sax-pipeline/simple.xml" />
+            <map:transform src="sax-pipeline/simple.xslt">
+              <map:parameter name="myParam" value="{map:1}" />
+            </map:transform>
+            <map:serialize />
+          </map:when>
+          <map:otherwise>
+            <map:generate src="sax-pipeline/simple.xml" />
+            <map:transform src="sax-pipeline/simple.xslt">
+              <map:parameter name="myParam" value="otherwise" />
+            </map:transform>
+            <map:serialize />
+          </map:otherwise>
+        </map:select>
+      </map:match>
+      <map:match wildcard="advanced-matching-2">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:select value="{jexl:cocoon.request.myparam}">
+          <map:when equals="1">
+            <map:transform src="sax-pipeline/simple.xslt">
+              <map:parameter name="myParam" value="1" />
+            </map:transform>
+          </map:when>
+          <map:otherwise>
+            <map:transform src="sax-pipeline/simple.xslt">
+              <map:parameter name="myParam" value="otherwise" />
+            </map:transform>
+          </map:otherwise>
+        </map:select>
+        <map:serialize />
+      </map:match>
+      <map:match wildcard="advanced-matching-3">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:match value="{jexl:cocoon.request.myparam}" equals="1">
+          <map:transform src="sax-pipeline/simple.xslt">
+            <map:parameter name="myParam" value="1" />
+          </map:transform>
+        </map:match>
+        <map:match value="{jexl:cocoon.request.yourparam}" equals="2">
+          <map:transform src="sax-pipeline/add-paragraph.xslt">
+            <map:parameter name="text" value="2"/>
+          </map:transform>
+        </map:match>
+        <map:serialize />
+      </map:match>
+      <map:match wildcard="advanced-matching-4">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="1" />
+        </map:transform>
+        <map:match value="{jexl:cocoon.request.param_a}" equals="1">
+          <map:select value="{jexl:cocoon.request.param_b}">
+            <map:when equals="1">
+              <map:transform src="sax-pipeline/add-paragraph.xslt">
+                <map:parameter name="text" value="2"/>
+              </map:transform>
+              <map:match value="{jexl:cocoon.request.param_c}" equals="1">
+                <map:transform src="sax-pipeline/add-paragraph.xslt">
+                  <map:parameter name="text" value="3"/>
+                </map:transform>
+                <map:select value="{jexl:cocoon.request.param_d}">
+                  <map:when equals="1">
+                    <map:transform src="sax-pipeline/add-paragraph.xslt">
+                      <map:parameter name="text" value="4"/>
+                    </map:transform>
+                  </map:when>
+                </map:select>
+              </map:match>
+            </map:when>
+            <map:otherwise>
+              <map:transform src="sax-pipeline/add-paragraph.xslt">
+                <map:parameter name="text" value="5"/>
+              </map:transform>
+            </map:otherwise>
+          </map:select>
+        </map:match>
+        <map:match value="{jexl:cocoon.request.param_e}" equals="1">
+          <map:transform src="sax-pipeline/add-paragraph.xslt">
+            <map:parameter name="text" value="6"/>
+          </map:transform>
+        </map:match>
+        <map:select value="{jexl:cocoon.request.param_f}">
+          <map:when equals="1" />
+          <map:otherwise>
+            <map:transform src="sax-pipeline/add-paragraph.xslt">
+              <map:parameter name="text" value="7"/>
+            </map:transform>
+          </map:otherwise>
+        </map:select>
+        <map:select value="{jexl:cocoon.request.param_g}">
+          <map:when regexp="(?!1\b)\b.+\b">
+            <map:transform src="sax-pipeline/add-paragraph.xslt">
+              <map:parameter name="text" value="8"/>
+            </map:transform>
+          </map:when>
+        </map:select>
+        <map:serialize />
+      </map:match>
+
+      <!-- named matcher -->
+      <map:match wildcard="named-matcher/{a}" name="m1">
+        <map:match value="{jexl:cocoon.request.param_a}" equals="1">
+          <map:match value="{jexl:cocoon.request.param_b}" equals="1">
+            <map:generate src="sax-pipeline/simple.xml" />
+            <map:transform src="sax-pipeline/simple.xslt">
+              <map:parameter name="myParam" value="{map:m1/a}" />
+            </map:transform>
+            <map:serialize />
+          </map:match>
+        </map:match>
+      </map:match>
+
+      <!-- deep relative matcher -->
+      <map:match wildcard="deep-relative-matcher/{a}">
+        <map:match value="{jexl:cocoon.request.param_a}" equals="1">
+          <map:match value="{jexl:cocoon.request.param_b}" equals="1">
+            <map:generate src="sax-pipeline/simple.xml" />
+            <map:transform src="sax-pipeline/simple.xslt">
+              <map:parameter name="myParam" value="{map:../../a}" />
+            </map:transform>
+            <map:serialize />
+          </map:match>
+        </map:match>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ aggregation ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match equals="aggregation/include-transformer">
+        <map:generate src="aggregation/include.xml" />
+        <map:transform type="include" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match equals="aggregation/xinclude-transformer">
+        <map:generate src="aggregation/xinclude.xml" />
+        <map:transform type="xinclude">
+          <map:parameter name="cacheKey" value="{map:0}"/>
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match equals="aggregation/sub-request">
+        <map:generate src="aggregation/sub.xml" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ link rewriting ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match equals="linkrewriting/regexplinkrewriter-transformer">
+        <map:generate src="linkrewriting/apache_home.html" />
+        <map:transform type="regexplinkrewriter">
+          <map:parameter name="element1"
+                         value="a href"/>
+          <map:parameter name="element2"
+                         value="http://www.w3.org/1999/xhtml link * href"/>
+          <map:parameter name="regexp1"
+                         value="^\./([\.]*) http://www.apache.org/$1"/>
+          <map:parameter name="regexp2"
+                         value="^/([\.]*) http://www.apache.org/$1"/>
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ xslt ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match equals="xslt/main">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="xslt/main.xslt" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match equals="xslt/sub-servlet.xslt">
+        <map:generate src="xslt/sub-servlet.xslt" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ matcher: parameter passing ~~~~~~~~~~~~~~~ -->
+    <!--
+    <map:pipeline>
+      <map:match pattern="parameter-passing/failing">
+        <map:match type="parameter-passing">
+          <map:generate src="sax-pipeline/simple.xml" />
+          <map:serialize />
+        </map:match>
+      </map:match>
+      <map:match pattern="parameter-passing/working">
+        <map:match type="parameter-passing">
+          <map:generate src="sax-pipeline/simple.xml" />
+          <map:serialize type="xml" />
+        </map:match>
+      </map:match>
+    </map:pipeline>
+    -->
+
+    <!-- ~~~~~~~~~~~~~~~~ object model ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match equals="object-model/request-parameters">
+        <map:generate type="request-parameters" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ i18N ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match equals="i18n/localefrombrowser">
+        <map:generate src="i18n/base.xml" />
+        <map:transform type="i18n">
+          <map:parameter name="locale" value="{jexl:cocoon.request.locale.language}" />
+          <map:parameter name="bundle" value="COB-INF/i18n/base" />
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
+      <map:match equals="i18n/localefromparameter">
+        <map:generate src="i18n/base.xml" />
+        <map:transform type="i18n">
+          <map:parameter name="locale" value="{jexl:cocoon.request.lang}" />
+          <map:parameter name="bundle" value="COB-INF/i18n/base" />
+        </map:transform>
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+    
+    <!-- ~~~~~~~~~~~~~~~~ controller ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="controller/conditional-get/{id}/{name}">
+        <controller:call controller="rest-controller" select="org.apache.cocoon.sample.controller.CacheableDemoRESTController">
+          <map:parameter name="id" value="{map:id}" />
+          <map:parameter name="name" value="{map:name}" />
+        </controller:call>
+      </map:match>
+      <map:match pattern="controller/{id}/{name}">
+        <controller:call controller="rest-controller" select="org.apache.cocoon.sample.controller.DemoRESTController">
+          <map:parameter name="id" value="{map:id}" />
+          <map:parameter name="name" value="{map:name}" />
+        </controller:call>
+      </map:match>
+    </map:pipeline>
+    <map:pipeline type="noncaching">
+      <map:match pattern="controller/screen">
+        <map:generate src="controller/demo.html" type="controller-aware-string-template" />
+        <map:serialize type="xml" status-code="202" />
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ redirect ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match equals="redirect/www.orf.at">
+        <servlet:redirect-to uri="http://www.orf.at" />
+      </map:match>
+      <!-- Redirecting to a servlet service doesn't work -->
+      <map:match equals="redirect/sax-pipeline/simple-xml">
+        <servlet:redirect-to uri="servlet:/sax-pipeline/simple-xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- ~~~~~~~~~~~~~~~~ error handling ~~~~~~~~~~~~~~~ -->
+    <map:pipeline>
+      <map:match pattern="error-handling/custom-error">
+        <map:act type="error-throwing" />
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:serialize type="xml" />
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline>
+      <map:match equals="error-handling/custom-error-per-pipeline-error-handling">
+        <map:act type="error-throwing" />
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:serialize type="xml" />
+      </map:match>
+      <map:handle-errors>
+        <map:generate src="error-handling/501.xml" />
+        <map:serialize type="xhtml" status-code="501" />
+      </map:handle-errors>
+    </map:pipeline>
+
+    <!-- FOP -->
+    <map:pipeline>
+      <map:match equals="fop/test.pdf">
+        <map:generate src="fop/page.xml" />
+        <map:transform src="fop/page2fo.xsl" />
+        <map:serialize type="fo2pdf" />
+      </map:match>
+    </map:pipeline>
+
+    <!-- Encoding serializers -->
+    <map:pipeline>
+      <map:match equals="serializers/exml">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="1" />
+        </map:transform>
+        <map:serialize type="exml" indent="2"/>
+      </map:match>
+      <map:match equals="serializers/exhtml">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="2" />
+        </map:transform>
+        <map:serialize type="exhtml" doctype-default="strict" />
+      </map:match>
+      <map:match equals="serializers/ehtml">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="2" />
+        </map:transform>
+        <map:serialize type="ehtml" encoding="iso-8859-1"/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- JSON -->
+    <map:pipeline>
+      <map:match equals="json/xml2json">
+        <map:generate src="sax-pipeline/simple.xml" />
+        <map:transform src="sax-pipeline/simple.xslt">
+          <map:parameter name="myParam" value="1" />
+        </map:transform>
+        <map:serialize type="json"/>
+      </map:match>
+      <map:match equals="json/json2xml">
+        <map:generate type="json" src="servlet:/json/xml2json" />
+        <map:serialize/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- Cocoon Wicket integration -->
+    <map:pipeline type="noncaching">
+      <map:match wildcard="wicket/**">
+        <map:read type="wicket" base-path="/wicket" />
+      </map:match>
+    </map:pipeline>
+
+    <!-- StringTemplate -->
+    <map:pipeline type="noncaching">
+      <map:match wildcard="string-template/generator">
+        <map:generate type="string-template" src="string-template/template.xml">
+          <map:parameter name="parameter" value="A value"/>
+          <map:parameter name="booleanParameter" value="{jexl:true}"/>
+        </map:generate>
+        <map:serialize/>
+      </map:match>
+      <map:match wildcard="string-template/transformer">
+        <map:generate src="string-template/template.xml"/>
+        <map:transform type="string-template">
+          <map:parameter name="parameter" value="Another value"/>
+          <map:parameter name="booleanParameter" value="{jexl:false}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+    </map:pipeline>
+
+    <!-- Global error handling -->
+    <map:handle-errors>
+      <map:select value="{jexl:cocoon.exception.class.name}">
+        <map:when contains="NoMatchingPipelineException">
+          <map:generate src="error-handling/404.xml" />
+          <map:serialize type="xhtml" status-code="404" />
+        </map:when>
+        <map:when ends-with="CustomException">
+          <map:generate src="error-handling/500.xml" />
+          <map:serialize type="xhtml" status-code="500" />
+        </map:when>
+        <map:otherwise>
+          <map:generate type="exception" />
+          <map:serialize type="xml" status-code="500" />
+        </map:otherwise>
+      </map:select>
+      <!--
+        <map:select type="custom-exception">
+        <map:when test="not-found">
+        <map:generate src="error-handling/404.xml" />
+        <map:serialize type="xhtml" status-code="404" />
+        </map:when>
+        <map:when test="custom-exception">
+        <map:generate src="error-handling/500.xml" />
+        <map:serialize type="xhtml" status-code="500" />
+        </map:when>
+        <map:otherwise>
+        <map:generate type="exception" src="error-handling/503.xml" />
+        <map:serialize type="xhtml" status-code="503" />
+        </map:otherwise>
+        </map:select>
+      -->
+    </map:handle-errors>
+  </map:pipelines>
+
+</map:sitemap>

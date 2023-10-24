@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+      Licensed to the Apache Software Foundation (ASF) under one
+      or more contributor license agreements.  See the NOTICE file
+      distributed with this work for additional information
+      regarding copyright ownership.  The ASF licenses this file
+      to you under the Apache License, Version 2.0 (the
+      "License"); you may not use this file except in compliance
+      with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing,
+      software distributed under the License is distributed on an
+      "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+      KIND, either express or implied.  See the License for the
+      specific language governing permissions and limitations
+      under the License.
+    -->
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/XDOC/2.0" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Cocoon Main Site - Apache Cocoon 3</title>
+    <author email="cocoon-docs@apache.org">Apache Cocoon Documentation Team</author>
+  </properties>
+  <body>
+    <div id="contentBody">
+      <div id="bodyText">
+        <h1 class="docTitle">Apache Cocoon 3.0.0-alpha-1 Released</h1>
+        <pre>
+The Apache Cocoon Community is proud to announce the release of Cocoon 3.0.0-alpha-1.
+
+  Apache Cocoon 3 is a major rewrite of Cocoon 2.2. Like Cocoon 2 it is
+  based around the concept of pipelines and sitemaps and it is very
+  similar to Cocoon 2.2 in many respects but is slimmed down and
+  designed to be *easily usable from within any Java environment*.
+
+  Here is an example of a pipeline that uses SAX components:
+
+    Pipeline pipeline = new NonCachingPipeline();
+    pipeline.addComponent(new StringGenerator("&lt;x&gt;&lt;/x&gt;"));
+    pipeline.addComponent(new XSLTTransformer(
+        this.getClass().getResource("/test1.xslt")));
+    pipeline.addComponent(new XSLTTransformer(
+        this.getClass().getResource("/test2.xslt")));
+    pipeline.addComponent(new XMLSerializer());
+
+    pipeline.setup(System.out);
+    pipeline.execute();
+
+
+  On top of this, Cocoon 3 has the goal to become an integration
+  platform for RESTful webservices and web applications.
+
+  There are several Maven 2 archetypes available that help you to get
+  started. Find a list and usage instructions at
+  http://cocoon.apache.org/3.0/download.html
+
+  The release artifacts are available from the central Maven repository
+  (http://repo1.maven.org/maven2/) or you can download them from the
+  distribution area (http://cocoon.apache.org/3.0/download.html).
+
+  More information about Cocoon 3 is available at
+  http://cocoon.apache.org/3.0/
+
+  *************************** W A R N I N G ***************************
+
+  Some user accessible points in this software package should be
+  considered "alpha". This means that the developer team is not
+  investing _any_ effort to provide backward compatibility between alpha
+  releases for these parts. This software will continue to be released
+  as "alpha" until its code, schemas, and APIs are considered stable.
+
+  Until then, there will be no warranty that newer versions will
+  maintain backward compatibility for such parts, even in the most
+  simple cases. However, once "beta" status is reached, backward
+  incompatible changes will be made only when absolutely necessary to
+  reach "final" status.
+
+  The Cocoon development team understands the importance of reliable
+  software as well protecting user investments through the creation of a
+  solid development platform that doesn't change. On the other hand,
+  Cocoon 3 should give its developers the freedom to experiment and to
+  react quickly on feedback. Thus, reliability cannot be guaranteed
+  before the software achieves its "final" status.
+
+  Until then, no effort will be provided to guarantee backward
+  compatibility for any parts considered alpha.
+
+  You have been warned.
+
+  *************************** W A R N I N G ***************************
+
+The Apache Cocoon Project
+</pre>
+      </div>
+    </div>
+  </body>
+</document>

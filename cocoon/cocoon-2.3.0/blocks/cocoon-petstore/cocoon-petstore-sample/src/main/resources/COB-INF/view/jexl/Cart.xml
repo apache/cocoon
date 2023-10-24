@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page xmlns:c="http://apache.org/cocoon/templates/jx/1.0">
+    <site signOn="${accountForm.signOn}" view="jexl">
+        <cart name="${label}" >
+            <backpointer name="Main Menu" do="index.do" />
+            <c:forEach var="cartItem" items="${cartItems}" >
+                <item productId="${cartItem.item.productId}" id="${cartItem.item.itemId}">
+                    <desc>${cartItem.item.attr1} ${cartItem.item.attr2} ${cartItem.item.attr3} ${cartItem.item.attr4} ${cartItem.item.attr5} ${cartItem.product.name}</desc>
+                    <quantity>${cartItem.quantity}</quantity>
+                    <listPrice>${cartItem.item.listPrice}</listPrice>
+                    <total>${cartItem.total}</total>
+                </item>
+            </c:forEach>
+            <subTotal label="Sub Total" label1="Total">${cartForm.cart.subTotal}</subTotal>
+            <c:if test="${label == 'Checkout Summary'}">
+                <nextpointer img="images/button_continue.gif" do="${cocoon.continuation.id}.kont"/>
+            </c:if>
+            <c:if test="${label == 'Shopping Cart'}">
+                <nextpointer do="checkout.do" img="images/button_checkout.gif" />
+            </c:if>
+        </cart>
+    </site>
+</page>
+
+
+
+
