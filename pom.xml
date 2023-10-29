@@ -2608,7 +2608,7 @@
         <configuration>
           <!-- Tell the plugin to always release all modules using the same version -->
           <autoVersionSubmodules>true</autoVersionSubmodules>
-          <releaseProfiles>apache-release</releaseProfiles>
+          <releaseProfiles>apache-release,allblocks,alldists</releaseProfiles>
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.3/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
