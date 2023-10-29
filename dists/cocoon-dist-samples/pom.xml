@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-dists-modules</artifactId>
-    <version>2.3.0-SNAPSHOT</version>
+    <version>2.3.0</version>
   </parent>
 
   <artifactId>cocoon-dist-samples</artifactId>
-  <version>2.3.0-SNAPSHOT</version>
+  <version>2.3.0</version>
   <packaging>war</packaging>
 
   <name>Cocoon Samples Distribution</name>
@@ -78,7 +78,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-webapp</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
       <type>war</type>
     </dependency>
 
@@ -86,7 +86,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-main-sample</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
     </dependency>
     <!--dependency>
       <groupId>org.apache.cocoon</groupId>
@@ -108,33 +108,33 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-ajax-sample</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-batik-sample</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-fop-sample</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-sample</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-sample</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
     </dependency>
     <!-- Many of old samples require XSP -->
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-xsp-sample</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
+      <version>2.3.0</version>
     </dependency>
   </dependencies>
 
@@ -145,12 +145,12 @@
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-databases-sample</artifactId>
-          <version>2.3.0-SNAPSHOT</version>
+          <version>2.3.0</version>
         </dependency>    
         <dependency>
           <groupId>org.apache.cocoon</groupId>
           <artifactId>cocoon-portal-sample</artifactId>
-          <version>2.3.0-SNAPSHOT</version>
+          <version>2.3.0</version>
         </dependency>    
       </dependencies>
     </profile>
