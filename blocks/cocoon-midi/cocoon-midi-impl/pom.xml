@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-midi</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.3.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-midi-impl</artifactId>
-  <version>2.3.1-SNAPSHOT</version>
+  <version>2.3.0-SNAPSHOT</version>
 
   <name>Midi Block Implementation</name>
 
@@ -49,12 +49,12 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.3.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core</artifactId>
-      <version>2.3.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -90,7 +90,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-pipeline-impl</artifactId>
-      <version>2.3.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -99,7 +99,7 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-sitemap-impl</artifactId>
-      <version>2.3.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
       <scope>test</scope>
       <type>test-jar</type>
     </dependency>

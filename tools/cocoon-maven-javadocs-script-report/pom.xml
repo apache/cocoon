@@ -23,11 +23,11 @@
   <parent>
     <artifactId>cocoon-tools-modules</artifactId>
     <groupId>org.apache.cocoon</groupId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.3.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-maven-javadocs-script-report</artifactId>
-  <version>2.3.1-SNAPSHOT</version>
+  <version>2.3.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Cocoon Maven Javadocs Script Report</name>

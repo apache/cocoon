@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-batik</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.3.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-batik-sample</artifactId>
-  <version>2.3.1-SNAPSHOT</version>
+  <version>2.3.0-SNAPSHOT</version>
 
   <name>Cocoon Batik Block Samples</name>
 
@@ -35,17 +35,17 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-batik-impl</artifactId>
-      <version>2.3.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-main-sample</artifactId>
-      <version>2.3.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-samples-style-default</artifactId>
-      <version>2.3.1-SNAPSHOT</version>
+      <version>2.3.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
