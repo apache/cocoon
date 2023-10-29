@@ -23,11 +23,11 @@
   <parent>
     <groupId>org.apache.cocoon</groupId>
     <artifactId>cocoon-apples</artifactId>
-    <version>2.3.0</version>
+    <version>2.3.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>cocoon-apples-sample</artifactId>
-  <version>2.3.0</version>
+  <version>2.3.1-SNAPSHOT</version>
 
   <name>Cocoon Apples Block Samples</name>
 
@@ -35,27 +35,27 @@
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-apples-impl</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-core-main-sample</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-template-impl</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-forms-impl</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cocoon</groupId>
       <artifactId>cocoon-samples-style-default</artifactId>
-      <version>2.3.0</version>
+      <version>2.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
