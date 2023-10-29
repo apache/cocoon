@@ -1279,6 +1279,7 @@
     <!-- TODO: This is the latest Spring version that we support -->
     <spring.version>4.3.30.RELEASE</spring.version>
     <logback.version>1.4.5</logback.version>
+    <exlipse.jdt.version>3.33.0</exlipse.jdt.version>
   </properties>
 
   <modules>
@@ -2067,7 +2068,7 @@
       <dependency>
         <groupId>org.eclipse.jdt</groupId>
         <artifactId>org.eclipse.jdt.core</artifactId>
-        <version>3.33.0</version>
+        <version>${exlipse.jdt.version}</version>
       </dependency>
       <dependency>
         <groupId>net.sourceforge.jena</groupId>
@@ -2607,7 +2608,7 @@
         <configuration>
           <!-- Tell the plugin to always release all modules using the same version -->
           <autoVersionSubmodules>true</autoVersionSubmodules>
-          <releaseProfiles>apache-release</releaseProfiles>
+          <releaseProfiles>apache-release,allblocks,alldists</releaseProfiles>
           <tagBase>https://svn.apache.org/repos/asf/cocoon/tags/cocoon-2.3/${project.artifactId}</tagBase>
         </configuration>
       </plugin>
@@ -2739,6 +2740,21 @@
   </reporting>
 
   <profiles>
+    <!--
+      Some dependencies in their latest version are no longer compatible with Jaca 1.8,
+      so if we're building with Java 1.8, we need to downgrade some of them.
+    -->
+    <profile>
+      <id>.Java-1.8</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <properties>
+        <logback.version>1.3.11</logback.version>
+        <exlipse.jdt.version>3.26.0</exlipse.jdt.version>
+      </properties>
+    </profile>
+
     <profile>
       <id>javadocs-script</id>
       <reporting>
