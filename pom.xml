@@ -1277,7 +1277,7 @@
     <batik.version>1.16</batik.version>
     <slf4j.version>2.0.6</slf4j.version>
     <!-- TODO: This is the latest Spring version that we support -->
-    <spring.version>4.3.30.RELEASE</spring.version>
+    <spring.version>6.0.17</spring.version>
     <logback.version>1.4.5</logback.version>
     <exlipse.jdt.version>3.33.0</exlipse.jdt.version>
   </properties>
