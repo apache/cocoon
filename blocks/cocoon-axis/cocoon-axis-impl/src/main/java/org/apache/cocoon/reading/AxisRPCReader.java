@@ -254,7 +254,7 @@ public class AxisRPCReader extends ServiceableReader
             }
         } catch (AxisFault fault) {
             if (getLogger().isErrorEnabled()) {
-                getLogger().error("Axis fault occured while perforing request", fault);
+                getLogger().error("Axis fault occurred while perforing request", fault);
             }
             processAxisFault(fault);
             configureResponseFromAxisFault(res, fault);
